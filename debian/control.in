@@ -49,8 +49,6 @@ Depends: ${shlibs:Depends},
          ${misc:Depends}
 Suggests: @GST_PKGNAME@-tools,
           @GST_PKGNAME@-plugins-base
-Conflicts: libgstreamer-plugins-base0.10-0 (<< 0.10.11cvs20070110-0ubuntu5),
-           gstreamer0.10-plugins-base (<< 0.10.25.2)
 Replaces: gobject-introspection-repository (<< 0.6.5-2)
 Description: Core GStreamer libraries and elements
  GStreamer is a streaming media framework, based on graphs of filters
@@ -92,8 +90,6 @@ Depends: @GST_LIB@ (= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends},
          gir1.2-gstreamer-@GST_ABI@ (= ${binary:Version})
-Replaces: gstreamer-tools (<< 0.10.20-2),
-          gobject-introspection-repository (<< 0.6.5-2)
 Recommends: debhelper
 Suggests: @GST_PKGNAME@-doc
 Description: GStreamer core development files
@@ -146,24 +142,6 @@ Description: Tools for use with GStreamer
  .
  This package contains versioned command-line tools for GStreamer.
 
-Package: gstreamer-tools
-Architecture: any
-Section: utils
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         gstreamer0.10-tools | gstreamer0.8-tools
-Conflicts: gstreamer0.8-tools (<< 0.8.11-2)
-Description: Tools for use with GStreamer
- GStreamer is a streaming media framework, based on graphs of filters
- which operate on media data.  Applications using this library can do
- anything from real-time sound processing to playing videos, and just
- about anything else media-related.  Its plugin-based architecture means
- that new data types or processing capabilities can be added simply by
- installing new plug-ins.
- .
- This package contains unversioned command-line tools for GStreamer
- that work with different major/minor versions of GStreamer.
-
 Package: gir1.2-gstreamer-@GST_ABI@
 Section: libs
 Architecture: any
@@ -171,10 +149,6 @@ Depends: ${gir:Depends},
          ${shlibs:Depends},
          ${misc:Depends},
          ${gir:Depends}
-Conflicts: gir1.0-gstreamer-@GST_ABI@
-Replaces: @GST_LIB@ (<< 0.10.25-3),
-          gobject-introspection-repository (<< 0.6.5-2),
-          gir1.0-gstreamer-@GST_ABI@
 Description: Description: GObject introspection data for the GStreamer library
  This package contains introspection data for the GStreamer streaming media
  framework.

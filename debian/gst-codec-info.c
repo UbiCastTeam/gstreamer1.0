@@ -27,11 +27,11 @@
 #include <string.h>
 
 static const gchar *virtual_packages[] = {
-  "gstreamer0.10-audiosink",
-  "gstreamer0.10-audiosource",
-  "gstreamer0.10-videosink",
-  "gstreamer0.10-videosource",
-  "gstreamer0.10-visualization",
+  "gstreamer0.11-audiosink",
+  "gstreamer0.11-audiosource",
+  "gstreamer0.11-videosink",
+  "gstreamer0.11-videosource",
+  "gstreamer0.11-visualization",
   NULL
 };
 
@@ -316,7 +316,7 @@ collect_codecs (GstElementFactory * factory)
 
   if (caps == NULL) {
     g_printerr ("W: Couldn't find static pad template for '%s'\n",
-        GST_PLUGIN_FEATURE_NAME (factory));
+        GST_OBJECT_NAME (factory));
     return;
   }
 
