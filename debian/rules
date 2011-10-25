@@ -51,6 +51,8 @@ PKGFILES=\
 	debian/$(gst_lib).install \
 	debian/$(gst_lib).symbols \
 	debian/$(gst_lib_dev).install \
+	debian/$(gst_lib_dev).preinst \
+	debian/$(gst_lib_dev).postrm \
 	debian/$(gst_pkgname)-doc.install \
 	debian/$(gst_pkgname)-doc.links \
 	debian/$(gst_pkgname)-doc.lintian \
@@ -116,6 +118,18 @@ debian/$(gst_lib_dev).install: debian/libgstreamer-dev.install debian/rules
 		sed 's/@GST_ABI@/$(gst_abi)/g' | \
 		sed 's/@GST_PKGNAME@/$(gst_pkgname)/g' | \
 		sed 's/@GST_LIB_PREFIX@/$(gst_lib_prefix)/g' \
+		> $@
+
+debian/$(gst_lib_dev).preinst: debian/libgstreamer-dev.preinst debian/rules
+	rm -f $@
+	cat $< | \
+		sed 's/@GST_LIB_DEV@/$(gst_lib_dev)/g' \
+		> $@
+
+debian/$(gst_lib_dev).postrm: debian/libgstreamer-dev.postrm debian/rules
+	rm -f $@
+	cat $< | \
+		sed 's/@GST_LIB_DEV@/$(gst_lib_dev)/g' \
 		> $@
 
 debian/$(gst_pkgname)-doc.install: debian/gstreamer-doc.install debian/rules
