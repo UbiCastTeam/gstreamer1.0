@@ -1,5 +1,6 @@
-gstreamer0.11 (0.11.1-1) unstable; urgency=low
+gstreamer0.11 (0.11.1-1) experimental; urgency=low
 
+  [ Nicolas Dechesne ]
   * New upstream release.
     + debian/libstreamer.symbols
     + debian/control.in
@@ -11,7 +12,39 @@ gstreamer0.11 (0.11.1-1) unstable; urgency=low
       - removed xmllaunch, feedback and xmlinspect
       - replaced reference to GST_PLUGIN_FEATURE_NAME to GST_OBJECT_NAME
 
- -- Nicolas Dechesne <n-dechesne@ti.com>  Thu, 29 Sep 2011 20:45:16 +0200
+  [ Sebastian Dröge ]
+  * debian/copyright:
+    + Clean up, fix and complete copyright file.
+  * Merge 0.10.35.2-1.
+  * Upload to experimental
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 12 Dec 2011 11:44:42 +0100
+
+gstreamer0.10 (0.10.35.2-1) experimental; urgency=low
+
+  * New upstream pre-release:
+    + debian/control.in:
+      - Build-depend on GLib >= 2.24.
+    + debian/patches/99_ltmain_as-needed.patch:
+      - Refreshed to apply cleanly again.
+    + debian/libgstreamer.symbols:
+      - Update symbols file with new API.
+  * debian/rules:
+    + Remove all dependency_libs from the .la files (Closes: #633319).
+  * debian/control.in:
+    + Put GI package into section introspection.
+  * debian/compat,
+    debian/control.in,
+    debian/gir1.2-gstreamer.install,
+    debian/libgstreamer-dev.install,
+    debian/libgstreamer.install,
+    debian/patches/79_multiarch-backwards-compat.patch,
+    debian/patches/80_ia32-hack.patch,
+    debian/rules:
+    + Transition package to multi-arch (Closes: #647481).
+      Patch taken from the Ubuntu package.
+
+ -- Sebastian Dröge <slomo@debian.org>  Sun, 11 Dec 2011 18:52:12 +0100
 
 gstreamer0.10 (0.10.35-1) unstable; urgency=low
 

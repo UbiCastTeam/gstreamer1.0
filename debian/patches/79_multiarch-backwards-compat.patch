@@ -1,0 +1,28 @@
+=== modified file 'gst/gstregistry.c'
+Index: gstreamer0.11/gst/gstregistry.c
+===================================================================
+--- gstreamer0.11.orig/gst/gstregistry.c	2011-12-12 11:37:12.173735080 +0100
++++ gstreamer0.11/gst/gstregistry.c	2011-12-12 11:50:39.093747189 +0100
+@@ -1507,7 +1507,7 @@
+    * path, and the plugins installed in the user's home directory */
+   plugin_path = g_getenv ("GST_PLUGIN_SYSTEM_PATH");
+   if (plugin_path == NULL) {
+-    char *home_plugins;
++    char *home_plugins, *backwards_compat_plugins;
+ 
+     GST_DEBUG ("GST_PLUGIN_SYSTEM_PATH not set");
+ 
+@@ -1524,6 +1524,13 @@
+     GST_DEBUG ("scanning main plugins %s", PLUGINDIR);
+     changed |= gst_registry_scan_path_internal (&context, PLUGINDIR);
+ 
++    /* finally, look in the /usr/lib backwards-compatibility path. */
++    backwards_compat_plugins = g_build_filename ("/usr/lib",
++        "gstreamer-" GST_MAJORMINOR, NULL);
++    GST_DEBUG ("scanning plugins %s", backwards_compat_plugins);
++    changed |= gst_registry_scan_path_internal (&context, backwards_compat_plugins);
++    g_free (backwards_compat_plugins);
++
+ #ifdef G_OS_WIN32
+     {
+       char *base_dir;

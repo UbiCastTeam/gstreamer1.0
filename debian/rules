@@ -196,6 +196,8 @@ common_conf_flags = \
 	--disable-examples \
 	--enable-DEBUG \
 	--enable-debug \
+	--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+	--libexecdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH)/gstreamer0.11 \
 	--with-package-name=$(GST_PACKAGE_NAME) \
 	--with-package-origin=$(GST_PACKAGE_ORIGIN)
 
@@ -222,9 +224,9 @@ common-install-indep::
 	mkdir -p debian/$(gst_pkgname)-doc/usr/share/lintian/overrides/
 	cp -a debian/$(gst_pkgname)-doc.lintian debian/$(gst_pkgname)-doc/usr/share/lintian/overrides/$(gst_pkgname)-doc
 
-DEB_DH_MAKESHLIBS_ARGS_$(gst_lib) += -X "/usr/lib/gstreamer-$(gst_abi)" -V $(gst_shlibs_dep) -- -c4
+DEB_DH_MAKESHLIBS_ARGS_$(gst_lib) += -X "/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-$(gst_abi)" -V $(gst_shlibs_dep) -- -c4
 DEB_INSTALL_DOCS_ALL += debian/README.Debian NEWS
-DEB_SHLIBDEPS_INCLUDE += debian/$(gst_lib)/usr/lib
+DEB_SHLIBDEPS_INCLUDE += debian/$(gst_lib)/usr/lib/$(DEB_HOST_MULTIARCH)
 
 # override shlibs for libraries from this source before computing dependencies
 # of packages generated from this source; we already have inter-dependencies
@@ -246,7 +248,7 @@ common-binary-predeb-arch::
 	-rm -f debian/shlibs.local
 
 install/$(gst_lib_dev)::
-	gcc -o debian/tmp/usr/bin/gst-codec-info-0.11 debian/gst-codec-info.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) `pkg-config --libs --cflags glib-2.0 gthread-2.0 gmodule-no-export-2.0 gobject-2.0 libxml-2.0` debian/tmp/usr/lib/libgstreamer-0.11.so -Idebian/tmp/usr/include/gstreamer-0.11
+	gcc -o debian/tmp/usr/bin/gst-codec-info-0.11 debian/gst-codec-info.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) `pkg-config --libs --cflags glib-2.0 gthread-2.0 gmodule-no-export-2.0 gobject-2.0 libxml-2.0` debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libgstreamer-0.11.so -Idebian/tmp/usr/include/gstreamer-0.11
 	perldoc -o man debian/dh_gstscancodecs > debian/tmp/usr/share/man/man1/dh_gstscancodecs.1
 
 .PHONY: maint
