@@ -2,7 +2,7 @@ Source: gstreamer0.11
 Section: libs
 Priority: optional
 Maintainer: Maintainers of GStreamer packages <pkg-gstreamer-maintainers@lists.alioth.debian.org>
-Uploaders: Loic Minier <lool@dooz.org>,
+Uploaders: Loïc Minier <lool@debian.org>,
            Sebastien Bacher <seb128@debian.org>,
            Sebastian Dröge <slomo@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>
@@ -10,8 +10,11 @@ Build-Depends: debhelper (>= 8.1.3~),
                cdbs (>= 0.4.93~),
                gnome-pkg-tools (>= 0.7),
                autotools-dev,
+               automake (>= 1.10),
+               autoconf (>= 2.60),
+               libtool (>= 2.0),
                dh-autoreconf,
-               autopoint,
+               autopoint (>= 0.17),
                zlib1g-dev (>= 1:1.1.4),
                libglib2.0-dev (>= 2.26),
                libgmp3-dev,
