@@ -150,10 +150,10 @@ static void
 cleanup_plugin_info (void)
 {
   if (encoders)
-    gst_caps_do_simplify (encoders);
+    gst_caps_simplify (encoders);
 
   if (decoders)
-    gst_caps_do_simplify (decoders);
+    gst_caps_simplify (decoders);
 
   elements = g_list_sort (elements, (GCompareFunc) strcmp);
   uri_sources = g_list_sort (uri_sources, (GCompareFunc) strcmp);
@@ -373,7 +373,7 @@ collect_plugin_info (GstPlugin * plugin)
 
   plugin_name = gst_plugin_get_name (plugin);
 
-  features = gst_registry_get_feature_list (gst_registry_get_default (),
+  features = gst_registry_get_feature_list (gst_registry_get (),
       GST_TYPE_ELEMENT_FACTORY);
 
   for (l = features; l; l = l->next) {
