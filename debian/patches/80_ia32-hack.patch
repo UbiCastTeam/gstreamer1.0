@@ -26,7 +26,7 @@ Index: gstreamer0.11/gst/gstregistry.c
 @@ -1527,6 +1534,16 @@
      /* finally, look in the /usr/lib backwards-compatibility path. */
      backwards_compat_plugins = g_build_filename ("/usr/lib",
-         "gstreamer-" GST_MAJORMINOR, NULL);
+         "gstreamer-" GST_API_VERSION, NULL);
 +#if defined(__linux__) && defined (__i386__)
 +    uname(&uts);
 +    if (!strcmp("x86_64", uts.machine)
@@ -34,7 +34,7 @@ Index: gstreamer0.11/gst/gstregistry.c
 +    {
 +       g_free (backwards_compat_plugins);
 +       backwards_compat_plugins = g_build_filename ("/usr/lib32",
-+           "gstreamer-" GST_MAJORMINOR, NULL);
++           "gstreamer-" GST_API_VERSION, NULL);
 +    }
 +#endif
      GST_DEBUG ("scanning plugins %s", backwards_compat_plugins);
