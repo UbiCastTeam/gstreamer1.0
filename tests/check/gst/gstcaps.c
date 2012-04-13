@@ -190,16 +190,14 @@ check_string_list (const GValue * format_value)
 GST_START_TEST (test_simplify)
 {
   GstStructure *s1;
-  gboolean did_simplify;
   GstCaps *caps;
 
   caps = gst_caps_from_string (non_simple_caps_string);
   fail_unless (caps != NULL,
       "gst_caps_from_string (non_simple_caps_string) failed");
 
-  did_simplify = gst_caps_do_simplify (caps);
-  fail_unless (did_simplify == TRUE,
-      "gst_caps_do_simplify() should have worked");
+  caps = gst_caps_simplify (caps);
+  fail_unless (caps != NULL, "gst_caps_simplify() should have worked");
 
   /* check simplified caps, should be:
    *
@@ -272,7 +270,7 @@ GST_START_TEST (test_truncate)
   fail_unless (caps != NULL,
       "gst_caps_from_string (non_simple_caps_string) failed");
   fail_unless_equals_int (gst_caps_get_size (caps), 4);
-  gst_caps_truncate (caps);
+  caps = gst_caps_truncate (caps);
   fail_unless_equals_int (gst_caps_get_size (caps), 1);
   gst_caps_unref (caps);
 }
@@ -325,7 +323,7 @@ GST_START_TEST (test_merge_fundamental)
   /* ANY + specific = ANY */
   c1 = gst_caps_from_string ("audio/x-raw,rate=44100");
   c2 = gst_caps_new_any ();
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 0, NULL);
   fail_unless (gst_caps_is_any (c2), NULL);
@@ -334,7 +332,7 @@ GST_START_TEST (test_merge_fundamental)
   /* specific + ANY = ANY */
   c2 = gst_caps_from_string ("audio/x-raw,rate=44100");
   c1 = gst_caps_new_any ();
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 0, NULL);
   fail_unless (gst_caps_is_any (c2), NULL);
@@ -343,7 +341,7 @@ GST_START_TEST (test_merge_fundamental)
   /* EMPTY + specific = specific */
   c1 = gst_caps_from_string ("audio/x-raw,rate=44100");
   c2 = gst_caps_new_empty ();
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   fail_if (gst_caps_is_empty (c2), NULL);
@@ -352,7 +350,7 @@ GST_START_TEST (test_merge_fundamental)
   /* specific + EMPTY = specific */
   c2 = gst_caps_from_string ("audio/x-raw,rate=44100");
   c1 = gst_caps_new_empty ();
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   fail_if (gst_caps_is_empty (c2), NULL);
@@ -368,7 +366,7 @@ GST_START_TEST (test_merge_same)
   /* this is the same */
   c1 = gst_caps_from_string ("audio/x-raw,rate=44100,channels=1");
   c2 = gst_caps_from_string ("audio/x-raw,rate=44100,channels=1");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw,rate=44100,channels=1");
@@ -379,35 +377,35 @@ GST_START_TEST (test_merge_same)
   /* and so is this */
   c1 = gst_caps_from_string ("audio/x-raw,rate=44100,channels=1");
   c2 = gst_caps_from_string ("audio/x-raw,channels=1,rate=44100");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   gst_caps_unref (c2);
 
   c1 = gst_caps_from_string ("video/x-foo, data=(buffer)AA");
   c2 = gst_caps_from_string ("video/x-foo, data=(buffer)AABB");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   gst_caps_unref (c2);
 
   c1 = gst_caps_from_string ("video/x-foo, data=(buffer)AABB");
   c2 = gst_caps_from_string ("video/x-foo, data=(buffer)AA");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   gst_caps_unref (c2);
 
   c1 = gst_caps_from_string ("video/x-foo, data=(buffer)AA");
   c2 = gst_caps_from_string ("video/x-foo, data=(buffer)AA");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   gst_caps_unref (c2);
 
   c1 = gst_caps_from_string ("video/x-foo, data=(buffer)AA");
   c2 = gst_caps_from_string ("video/x-bar, data=(buffer)AA");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   gst_caps_unref (c2);
@@ -422,7 +420,7 @@ GST_START_TEST (test_merge_subset)
   /* the 2nd is already covered */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[1,2]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=1");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=[1,2]");
@@ -433,7 +431,7 @@ GST_START_TEST (test_merge_subset)
   /* here it is not */
   c2 = gst_caps_from_string ("audio/x-raw,channels=1,rate=44100");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[1,2],rate=44100");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=[1,2],rate=44100");
@@ -444,7 +442,7 @@ GST_START_TEST (test_merge_subset)
   /* second one was already contained in the first one */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[1,3]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[1,2]");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=[1,3]");
@@ -455,7 +453,7 @@ GST_START_TEST (test_merge_subset)
   /* second one was already contained in the first one */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[1,2]");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
@@ -466,7 +464,7 @@ GST_START_TEST (test_merge_subset)
   /* second one was already contained in the first one */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[2,4]");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
@@ -477,7 +475,7 @@ GST_START_TEST (test_merge_subset)
   /* second one was already contained in the first one */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[2,3]");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
@@ -488,7 +486,7 @@ GST_START_TEST (test_merge_subset)
   /* these caps cannot be merged */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[2,3]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[1,4]");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   test =
@@ -501,7 +499,7 @@ GST_START_TEST (test_merge_subset)
   /* these caps cannot be merged */
   c2 = gst_caps_from_string ("audio/x-raw,channels=[1,2]");
   c1 = gst_caps_from_string ("audio/x-raw,channels=[1,3]");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   test =
@@ -513,7 +511,7 @@ GST_START_TEST (test_merge_subset)
 
   c2 = gst_caps_from_string ("audio/x-raw,channels={1,2}");
   c1 = gst_caps_from_string ("audio/x-raw,channels={1,2,3,4}");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels={1,2};"
@@ -524,7 +522,7 @@ GST_START_TEST (test_merge_subset)
 
   c2 = gst_caps_from_string ("audio/x-raw,channels={1,2}");
   c1 = gst_caps_from_string ("audio/x-raw,channels={1,3}");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels={1,2};"
@@ -536,7 +534,7 @@ GST_START_TEST (test_merge_subset)
   c2 = gst_caps_from_string ("video/x-raw, framerate=(fraction){ 15/2, 5/1 }");
   c1 = gst_caps_from_string ("video/x-raw, framerate=(fraction){ 15/1, 5/1 }");
   test = gst_caps_copy (c1);
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_is_subset (test, c2));
   gst_caps_unref (test);
@@ -544,7 +542,7 @@ GST_START_TEST (test_merge_subset)
 
   c2 = gst_caps_from_string ("audio/x-raw");
   c1 = gst_caps_from_string ("audio/x-raw,channels=1");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 1, NULL);
   test = gst_caps_from_string ("audio/x-raw");
@@ -554,7 +552,7 @@ GST_START_TEST (test_merge_subset)
 
   c2 = gst_caps_from_string ("audio/x-raw,channels=1");
   c1 = gst_caps_from_string ("audio/x-raw");
-  gst_caps_merge (c2, c1);
+  c2 = gst_caps_merge (c2, c1);
   GST_DEBUG ("merged: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (c2), c2);
   fail_unless (gst_caps_get_size (c2) == 2, NULL);
   test = gst_caps_from_string ("audio/x-raw,channels=1; audio/x-raw");
@@ -841,7 +839,6 @@ GST_START_TEST (test_normalize)
     fail_unless (gst_structure_foreach (st, _caps_is_fixed_foreach, NULL));
   }
 
-  gst_caps_unref (in);
   gst_caps_unref (out);
   gst_caps_unref (norm);
 
@@ -860,7 +857,6 @@ GST_START_TEST (test_normalize)
     fail_unless (gst_structure_foreach (st, _caps_is_fixed_foreach, NULL));
   }
 
-  gst_caps_unref (in);
   gst_caps_unref (out);
   gst_caps_unref (norm);
 
@@ -878,7 +874,6 @@ GST_START_TEST (test_normalize)
     fail_unless (gst_structure_foreach (st, _caps_is_fixed_foreach, NULL));
   }
 
-  gst_caps_unref (in);
   gst_caps_unref (out);
   gst_caps_unref (norm);
 }

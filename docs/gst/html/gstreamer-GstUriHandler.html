@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstUriHandler</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstTypeFindFactory.html" title="GstTypeFindFactory">
 <link rel="next" href="gstreamer-GstUtils.html" title="GstUtils">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="GstTypeFindFactory.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-GstUtils.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -26,8 +26,6 @@
                   <a href="#gstreamer-GstUriHandler.description" class="shortcut">Description</a>
                    | 
                   <a href="#gstreamer-GstUriHandler.object-hierarchy" class="shortcut">Object Hierarchy</a>
-                   | 
-                  <a href="#gstreamer-GstUriHandler.signals" class="shortcut">Signals</a>
 </td></tr>
 </table>
 <div class="refentry">
@@ -47,6 +45,8 @@
                     <a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler-struct" title="GstURIHandler">GstURIHandler</a>;
 struct              <a class="link" href="gstreamer-GstUriHandler.html#GstURIHandlerInterface" title="struct GstURIHandlerInterface">GstURIHandlerInterface</a>;
 enum                <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType">GstURIType</a>;
+enum                <a class="link" href="gstreamer-GstUriHandler.html#GstURIError" title="enum GstURIError">GstURIError</a>;
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-error-quark" title="gst_uri_error_quark ()">gst_uri_error_quark</a>                 (<em class="parameter"><code><span class="type">void</span></code></em>);
 #define             <a class="link" href="gstreamer-GstUriHandler.html#GST-URI-TYPE-IS-VALID:CAPS" title="GST_URI_TYPE_IS_VALID()">GST_URI_TYPE_IS_VALID</a>               (type)
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-protocol-is-valid" title="gst_uri_protocol_is_valid ()">gst_uri_protocol_is_valid</a>           (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *protocol</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-protocol-is-supported" title="gst_uri_protocol_is_supported ()">gst_uri_protocol_is_supported</a>       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="type">GstURIType</span></a> type</code></em>,
@@ -63,13 +63,12 @@ enum                <a class="link" href="gstreamer-GstUriHandler.html#GstURITyp
 <a class="link" href="GstElement.html" title="GstElement"><span class="returnvalue">GstElement</span></a> *        <a class="link" href="gstreamer-GstUriHandler.html#gst-element-make-from-uri" title="gst_element_make_from_uri ()">gst_element_make_from_uri</a>           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="type">GstURIType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *elementname</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-uri-type" title="gst_uri_handler_get_uri_type ()">gst_uri_handler_get_uri_type</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-protocols" title="gst_uri_handler_get_protocols ()">gst_uri_handler_get_protocols</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
-const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-uri" title="gst_uri_handler_get_uri ()">gst_uri_handler_get_uri</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
+<a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="returnvalue">GstURIType</span></a>          <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-uri-type" title="gst_uri_handler_get_uri_type ()">gst_uri_handler_get_uri_type</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> * const * <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-protocols" title="gst_uri_handler_get_protocols ()">gst_uri_handler_get_protocols</a>     (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-uri" title="gst_uri_handler_get_uri ()">gst_uri_handler_get_uri</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-set-uri" title="gst_uri_handler_set_uri ()">gst_uri_handler_set_uri</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-new-uri" title="gst_uri_handler_new_uri ()">gst_uri_handler_new_uri</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -80,15 +79,9 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 </pre>
 </div>
 <div class="refsect1">
-<a name="gstreamer-GstUriHandler.signals"></a><h2>Signals</h2>
-<pre class="synopsis">
-  "<a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler-new-uri" title='The "new-uri" signal'>new-uri</a>"                                        : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
-</pre>
-</div>
-<div class="refsect1">
 <a name="gstreamer-GstUriHandler.description"></a><h2>Description</h2>
 <p>
-The URIHandler is an interface that is implemented by Source and Sink 
+The URIHandler is an interface that is implemented by Source and Sink
 <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to simplify then handling of URI.
 </p>
 <p>
@@ -116,16 +109,18 @@ Opaque <a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span c
 <div class="refsect2">
 <a name="GstURIHandlerInterface"></a><h3>struct GstURIHandlerInterface</h3>
 <pre class="programlisting">struct GstURIHandlerInterface {
-  GTypeInterface parent;
+  GTypeInterface parent;
 
+  /* vtable */
   /* querying capabilities */
-  GstURIType		(* get_type)		(GType type);
-  gchar **		(* get_protocols) (GType type);
+  GstURIType             (* get_type)           (GType type);
+  const gchar * const *  (* get_protocols)      (GType type);
 
   /* using the interface */
-  const gchar *		(* get_uri)		(GstURIHandler * handler);
-  gboolean		(* set_uri)		(GstURIHandler * handler,
-						 const gchar *	 uri);
+  gchar *                (* get_uri)            (GstURIHandler * handler);
+  gboolean               (* set_uri)            (GstURIHandler * handler,
+                                                 const gchar   * uri,
+                                                 GError       ** error);
 };
 </pre>
 <p>
@@ -189,6 +184,52 @@ The different types of URI direction.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstURIError"></a><h3>enum GstURIError</h3>
+<pre class="programlisting">typedef enum {
+  GST_URI_ERROR_BAD_PROTOCOL,
+  GST_URI_ERROR_BAD_URI,
+  GST_URI_ERROR_BAD_STATE,
+  GST_URI_ERROR_BAD_REFERENCE
+} GstURIError;
+</pre>
+<p>
+Different URI-related errors that can occur.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="GST-URI-ERROR-BAD-PROTOCOL:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_BAD_PROTOCOL</code></span></p></td>
+<td>The protocol is not supported
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-URI-ERROR-BAD-URI:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_BAD_URI</code></span></p></td>
+<td>There was a problem with the URI
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-URI-ERROR-BAD-STATE:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_BAD_STATE</code></span></p></td>
+<td>Could not set or change the URI because the
+    URI handler was in a state where that is not possible or not permitted
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-URI-ERROR-BAD-REFERENCE:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_BAD_REFERENCE</code></span></p></td>
+<td>There was a problem with the entity that
+    the URI references
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-uri-error-quark"></a><h3>gst_uri_error_quark ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              gst_uri_error_quark                 (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -459,7 +500,7 @@ Creates an element for handling the given URI.
 <hr>
 <div class="refsect2">
 <a name="gst-uri-handler-get-uri-type"></a><h3>gst_uri_handler_get_uri_type ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               gst_uri_handler_get_uri_type        (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="returnvalue">GstURIType</span></a>          gst_uri_handler_get_uri_type        (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
 <p>
 Gets the type of the given URI handler
 </p>
@@ -481,7 +522,7 @@ Returns <a class="link" href="gstreamer-GstUriHandler.html#GST-URI-UNKNOWN:CAPS"
 <hr>
 <div class="refsect2">
 <a name="gst-uri-handler-get-protocols"></a><h3>gst_uri_handler_get_protocols ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            gst_uri_handler_get_protocols       (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> * const * gst_uri_handler_get_protocols     (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
 <p>
 Gets the list of protocols supported by <em class="parameter"><code>handler</code></em>. This list may not be
 modified.
@@ -506,7 +547,7 @@ properly, or the <em class="parameter"><code>handler</code></em> doesn't support
 <hr>
 <div class="refsect2">
 <a name="gst-uri-handler-get-uri"></a><h3>gst_uri_handler_get_uri ()</h3>
-<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       gst_uri_handler_get_uri             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             gst_uri_handler_get_uri             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
 <p>
 Gets the currently handled URI.
 </p>
@@ -522,7 +563,7 @@ Gets the currently handled URI.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the URI currently handled by the <em class="parameter"><code>handler</code></em>.
 Returns NULL if there are no URI currently handled. The
-returned string must not be modified or freed. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+returned string must be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when no longer needed. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -532,7 +573,8 @@ returned string must not be modified or freed. <span class="annotation">[<acrony
 <div class="refsect2">
 <a name="gst-uri-handler-set-uri"></a><h3>gst_uri_handler_set_uri ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_uri_handler_set_uri             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 Tries to set the URI of the given handler.
 </p>
@@ -549,62 +591,14 @@ Tries to set the URI of the given handler.
 <td>URI to set</td>
 </tr>
 <tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td>address where to store a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> in case of
+an error, or NULL. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>TRUE if the URI was set successfully, else FALSE.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-uri-handler-new-uri"></a><h3>gst_uri_handler_new_uri ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_uri_handler_new_uri             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
-<p>
-Emits the new-uri signal for a given handler, when that handler has a new URI.
-This function should only be called by URI handlers themselves.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>handler</code></em> :</span></p></td>
-<td>A <a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
-<td>new URI or NULL if it was unset</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-</div>
-<div class="refsect1">
-<a name="gstreamer-GstUriHandler.signal-details"></a><h2>Signal Details</h2>
-<div class="refsect2">
-<a name="GstURIHandler-new-uri"></a><h3>The <code class="literal">"new-uri"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>         *uri,
-                                                        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
-<p>
-The URI of the given <em class="parameter"><code>handler</code></em> has changed.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>handler</code></em> :</span></p></td>
-<td>The <a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> which emitted the signal</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
-<td>The new URI, or NULL if the URI was removed. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
 </tr>
 </tbody>
 </table></div>

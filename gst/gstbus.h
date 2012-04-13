@@ -28,7 +28,6 @@ typedef struct _GstBusClass GstBusClass;
 
 #include <gst/gstmessage.h>
 #include <gst/gstclock.h>
-#include <gst/gstatomicqueue.h>
 
 G_BEGIN_DECLS
 
@@ -116,18 +115,9 @@ struct _GstBus
   GstObject         object;
 
   /*< private >*/
-  GstAtomicQueue   *queue;
-  GMutex           *queue_lock;
-
-  GstBusSyncHandler sync_handler;
-  gpointer          sync_handler_data;
-
-  guint             signal_watch_id;
-  guint             num_signal_watchers;
-
-  /*< private >*/
   GstBusPrivate    *priv;
-  gpointer _gst_reserved[GST_PADDING - 1];
+
+  gpointer _gst_reserved[GST_PADDING];
 };
 
 struct _GstBusClass
@@ -172,7 +162,7 @@ guint                   gst_bus_add_watch               (GstBus * bus,
 
 /* polling the bus */
 GstMessage*             gst_bus_poll                    (GstBus *bus, GstMessageType events,
-                                                         GstClockTimeDiff timeout);
+                                                         GstClockTime timeout);
 
 /* signal based dispatching helper functions. */
 gboolean                gst_bus_async_signal_func       (GstBus *bus, GstMessage *message,

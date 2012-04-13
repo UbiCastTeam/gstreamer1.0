@@ -52,7 +52,6 @@
 #include <string.h>
 
 #include "gstfakesrc.h"
-#include <gst/gstmarshal.h>
 
 static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src",
     GST_PAD_SRC,
@@ -81,7 +80,7 @@ enum
 #define DEFAULT_PATTERN         NULL
 #define DEFAULT_EOS             FALSE
 #define DEFAULT_SIGNAL_HANDOFFS FALSE
-#define DEFAULT_SILENT          FALSE
+#define DEFAULT_SILENT          TRUE
 #define DEFAULT_DUMP            FALSE
 #define DEFAULT_PARENTSIZE      4096*10
 #define DEFAULT_CAN_ACTIVATE_PULL TRUE
@@ -227,34 +226,6 @@ static guint gst_fake_src_signals[LAST_SIGNAL] = { 0 };
 static GParamSpec *pspec_last_message = NULL;
 
 static void
-marshal_VOID__MINIOBJECT_OBJECT (GClosure * closure, GValue * return_value,
-    guint n_param_values, const GValue * param_values, gpointer invocation_hint,
-    gpointer marshal_data)
-{
-  typedef void (*marshalfunc_VOID__MINIOBJECT_OBJECT) (gpointer obj,
-      gpointer arg1, gpointer arg2, gpointer data2);
-  register marshalfunc_VOID__MINIOBJECT_OBJECT callback;
-  register GCClosure *cc = (GCClosure *) closure;
-  register gpointer data1, data2;
-
-  g_return_if_fail (n_param_values == 3);
-
-  if (G_CCLOSURE_SWAP_DATA (closure)) {
-    data1 = closure->data;
-    data2 = g_value_peek_pointer (param_values + 0);
-  } else {
-    data1 = g_value_peek_pointer (param_values + 0);
-    data2 = closure->data;
-  }
-  callback =
-      (marshalfunc_VOID__MINIOBJECT_OBJECT) (marshal_data ? marshal_data :
-      cc->callback);
-
-  callback (data1, g_value_get_boxed (param_values + 1),
-      g_value_get_object (param_values + 2), data2);
-}
-
-static void
 gst_fake_src_class_init (GstFakeSrcClass * klass)
 {
   GObjectClass *gobject_class;
@@ -363,10 +334,10 @@ gst_fake_src_class_init (GstFakeSrcClass * klass)
   gst_fake_src_signals[SIGNAL_HANDOFF] =
       g_signal_new ("handoff", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_LAST,
       G_STRUCT_OFFSET (GstFakeSrcClass, handoff), NULL, NULL,
-      marshal_VOID__MINIOBJECT_OBJECT, G_TYPE_NONE, 2, GST_TYPE_BUFFER,
-      GST_TYPE_PAD);
+      g_cclosure_marshal_generic, G_TYPE_NONE, 2,
+      GST_TYPE_BUFFER | G_SIGNAL_TYPE_STATIC_SCOPE, GST_TYPE_PAD);
 
-  gst_element_class_set_details_simple (gstelement_class,
+  gst_element_class_set_static_metadata (gstelement_class,
       "Fake Source",
       "Source",
       "Push empty (no data) buffers around",
@@ -429,10 +400,13 @@ gst_fake_src_event_handler (GstBaseSrc * basesrc, GstEvent * event)
 
   if (!src->silent) {
     const GstStructure *s;
+    const gchar *tstr;
     gchar *sstr;
 
     GST_OBJECT_LOCK (src);
     g_free (src->last_message);
+
+    tstr = gst_event_type_get_name (GST_EVENT_TYPE (event));
 
     if ((s = gst_event_get_structure (event)))
       sstr = gst_structure_to_string (s);
@@ -440,16 +414,13 @@ gst_fake_src_event_handler (GstBaseSrc * basesrc, GstEvent * event)
       sstr = g_strdup ("");
 
     src->last_message =
-        g_strdup_printf ("event   ******* E (type: %d, %s) %p",
-        GST_EVENT_TYPE (event), sstr, event);
+        g_strdup_printf ("event   ******* (%s:%s) E (type: %s (%d), %s) %p",
+        GST_DEBUG_PAD_NAME (GST_BASE_SRC_CAST (src)->srcpad),
+        tstr, GST_EVENT_TYPE (event), sstr, event);
     g_free (sstr);
     GST_OBJECT_UNLOCK (src);
 
-#if !GLIB_CHECK_VERSION(2,26,0)
-    g_object_notify ((GObject *) src, "last-message");
-#else
     g_object_notify_by_pspec ((GObject *) src, pspec_last_message);
-#endif
   }
 
   return GST_BASE_SRC_CLASS (parent_class)->event (basesrc, event);
@@ -460,7 +431,7 @@ gst_fake_src_alloc_parent (GstFakeSrc * src)
 {
   GstBuffer *buf;
 
-  buf = gst_buffer_new_allocate (NULL, src->parentsize, 0);
+  buf = gst_buffer_new_allocate (NULL, src->parentsize, NULL);
 
   src->parent = buf;
   src->parentoffset = 0;
@@ -526,11 +497,13 @@ gst_fake_src_set_property (GObject * object, guint prop_id,
       src->dump = g_value_get_boolean (value);
       break;
     case PROP_CAN_ACTIVATE_PUSH:
-      g_return_if_fail (!GST_OBJECT_FLAG_IS_SET (object, GST_BASE_SRC_STARTED));
+      g_return_if_fail (!GST_OBJECT_FLAG_IS_SET (object,
+              GST_BASE_SRC_FLAG_STARTED));
       GST_BASE_SRC (src)->can_activate_push = g_value_get_boolean (value);
       break;
     case PROP_CAN_ACTIVATE_PULL:
-      g_return_if_fail (!GST_OBJECT_FLAG_IS_SET (object, GST_BASE_SRC_STARTED));
+      g_return_if_fail (!GST_OBJECT_FLAG_IS_SET (object,
+              GST_BASE_SRC_FLAG_STARTED));
       src->can_activate_pull = g_value_get_boolean (value);
       break;
     case PROP_IS_LIVE:
@@ -686,8 +659,8 @@ gst_fake_src_alloc_buffer (GstFakeSrc * src, guint size)
     if (do_prepare)
       gst_fake_src_prepare_buffer (src, data, size);
 
-    gst_buffer_take_memory (buf, -1,
-        gst_memory_new_wrapped (0, data, g_free, size, 0, size));
+    gst_buffer_append_memory (buf,
+        gst_memory_new_wrapped (0, data, size, 0, size, data, g_free));
   }
 
   return buf;
@@ -720,7 +693,7 @@ gst_fake_src_create_buffer (GstFakeSrc * src, gsize * bufsize)
   GstBuffer *buf;
   gsize size = gst_fake_src_get_size (src);
   gboolean dump = src->dump;
-  guint8 *data;
+  GstMapInfo info;
 
   *bufsize = size;
 
@@ -747,9 +720,9 @@ gst_fake_src_create_buffer (GstFakeSrc * src, gsize * bufsize)
         /* try again (this will allocate a new parent) */
         return gst_fake_src_create_buffer (src, bufsize);
       }
-      data = gst_buffer_map (buf, &size, NULL, GST_MAP_WRITE);
-      gst_fake_src_prepare_buffer (src, data, size);
-      gst_buffer_unmap (buf, data, size);
+      gst_buffer_map (buf, &info, GST_MAP_WRITE);
+      gst_fake_src_prepare_buffer (src, info.data, info.size);
+      gst_buffer_unmap (buf, &info);
       break;
     default:
       g_warning ("fakesrc: dunno how to allocate buffers !");
@@ -757,9 +730,9 @@ gst_fake_src_create_buffer (GstFakeSrc * src, gsize * bufsize)
       break;
   }
   if (dump) {
-    data = gst_buffer_map (buf, &size, NULL, GST_MAP_READ);
-    gst_util_dump_mem (data, size);
-    gst_buffer_unmap (buf, data, size);
+    gst_buffer_map (buf, &info, GST_MAP_READ);
+    gst_util_dump_mem (info.data, info.size);
+    gst_buffer_unmap (buf, &info);
   }
 
   return buf;
@@ -775,12 +748,16 @@ gst_fake_src_get_times (GstBaseSrc * basesrc, GstBuffer * buffer,
 
   /* sync on the timestamp of the buffer if requested. */
   if (src->sync) {
-    GstClockTime timestamp = GST_BUFFER_TIMESTAMP (buffer);
+    GstClockTime timestamp, duration;
+
+    /* first sync on DTS, else use PTS */
+    timestamp = GST_BUFFER_DTS (buffer);
+    if (!GST_CLOCK_TIME_IS_VALID (timestamp))
+      timestamp = GST_BUFFER_PTS (buffer);
 
     if (GST_CLOCK_TIME_IS_VALID (timestamp)) {
       /* get duration to calculate end time */
-      GstClockTime duration = GST_BUFFER_DURATION (buffer);
-
+      duration = GST_BUFFER_DURATION (buffer);
       if (GST_CLOCK_TIME_IS_VALID (duration)) {
         *end = timestamp + duration;
       }
@@ -827,21 +804,28 @@ gst_fake_src_create (GstBaseSrc * basesrc, guint64 offset, guint length,
     time = GST_CLOCK_TIME_NONE;
   }
 
-  GST_BUFFER_TIMESTAMP (buf) = time;
+  GST_BUFFER_DTS (buf) = time;
+  GST_BUFFER_PTS (buf) = time;
 
   if (!src->silent) {
-    gchar ts_str[64], dur_str[64];
+    gchar dts_str[64], pts_str[64], dur_str[64];
+    gchar flag_str[100];
 
     GST_OBJECT_LOCK (src);
     g_free (src->last_message);
 
-    if (GST_BUFFER_TIMESTAMP (buf) != GST_CLOCK_TIME_NONE) {
-      g_snprintf (ts_str, sizeof (ts_str), "%" GST_TIME_FORMAT,
-          GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
+    if (GST_BUFFER_DTS (buf) != GST_CLOCK_TIME_NONE) {
+      g_snprintf (dts_str, sizeof (dts_str), "%" GST_TIME_FORMAT,
+          GST_TIME_ARGS (GST_BUFFER_DTS (buf)));
     } else {
-      g_strlcpy (ts_str, "none", sizeof (ts_str));
+      g_strlcpy (dts_str, "none", sizeof (dts_str));
     }
-
+    if (GST_BUFFER_PTS (buf) != GST_CLOCK_TIME_NONE) {
+      g_snprintf (pts_str, sizeof (pts_str), "%" GST_TIME_FORMAT,
+          GST_TIME_ARGS (GST_BUFFER_PTS (buf)));
+    } else {
+      g_strlcpy (pts_str, "none", sizeof (pts_str));
+    }
     if (GST_BUFFER_DURATION (buf) != GST_CLOCK_TIME_NONE) {
       g_snprintf (dur_str, sizeof (dur_str), "%" GST_TIME_FORMAT,
           GST_TIME_ARGS (GST_BUFFER_DURATION (buf)));
@@ -849,19 +833,36 @@ gst_fake_src_create (GstBaseSrc * basesrc, guint64 offset, guint length,
       g_strlcpy (dur_str, "none", sizeof (dur_str));
     }
 
+    {
+      const char *flag_list[15] = {
+        "", "", "", "", "live", "decode-only", "discont", "resync", "corrupted",
+        "marker", "header", "gap", "droppable", "delta-unit", "in-caps"
+      };
+      int i;
+      char *end = flag_str;
+      end[0] = '\0';
+      for (i = 0; i < G_N_ELEMENTS (flag_list); i++) {
+        if (GST_MINI_OBJECT_CAST (buf)->flags & (1 << i)) {
+          strcpy (end, flag_list[i]);
+          end += strlen (end);
+          end[0] = ' ';
+          end[1] = '\0';
+          end++;
+        }
+      }
+    }
+
     src->last_message =
-        g_strdup_printf ("get      ******* > (%5d bytes, timestamp: %s"
+        g_strdup_printf ("create   ******* (%s:%s) (%u bytes, dts: %s, pts:%s"
         ", duration: %s, offset: %" G_GINT64_FORMAT ", offset_end: %"
-        G_GINT64_FORMAT ", flags: %d) %p", (gint) size, ts_str,
-        dur_str, GST_BUFFER_OFFSET (buf), GST_BUFFER_OFFSET_END (buf),
-        GST_MINI_OBJECT_CAST (buf)->flags, buf);
+        G_GINT64_FORMAT ", flags: %d %s) %p",
+        GST_DEBUG_PAD_NAME (GST_BASE_SRC_CAST (src)->srcpad), (guint) size,
+        dts_str, pts_str, dur_str, GST_BUFFER_OFFSET (buf),
+        GST_BUFFER_OFFSET_END (buf), GST_MINI_OBJECT_CAST (buf)->flags,
+        flag_str, buf);
     GST_OBJECT_UNLOCK (src);
 
-#if !GLIB_CHECK_VERSION(2,26,0)
-    g_object_notify ((GObject *) src, "last-message");
-#else
     g_object_notify_by_pspec ((GObject *) src, pspec_last_message);
-#endif
   }
 
   if (src->signal_handoffs) {

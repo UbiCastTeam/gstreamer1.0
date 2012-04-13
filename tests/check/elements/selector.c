@@ -34,12 +34,12 @@ static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src",
     GST_STATIC_CAPS_ANY);
 
 /* Data probe cb to drop everything but count buffers and events */
-static GstProbeReturn
-probe_cb (GstPad * pad, GstProbeType type, GstMiniObject * obj,
-    gpointer user_data)
+static GstPadProbeReturn
+probe_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 {
   gint count = 0;
   const gchar *count_type = NULL;
+  GstMiniObject *obj = GST_PAD_PROBE_INFO_DATA (info);
 
   GST_LOG_OBJECT (pad, "got data");
 
@@ -57,7 +57,7 @@ probe_cb (GstPad * pad, GstProbeType type, GstMiniObject * obj,
   g_object_set_data (G_OBJECT (pad), count_type, GINT_TO_POINTER (count));
 
   /* drop everything */
-  return GST_PROBE_DROP;
+  return GST_PAD_PROBE_DROP;
 }
 
 /* Create and link output pad: selector:src%d ! output_pad */
@@ -76,13 +76,13 @@ setup_output_pad (GstElement * element, GstStaticPadTemplate * tmpl)
 
   /* add probe */
   probe_id =
-      gst_pad_add_probe (output_pad, GST_PROBE_TYPE_DATA,
+      gst_pad_add_probe (output_pad, GST_PAD_PROBE_TYPE_DATA_BOTH,
       (GstPadProbeCallback) probe_cb, NULL, NULL);
   g_object_set_data (G_OBJECT (output_pad), "probe_id",
       GINT_TO_POINTER (probe_id));
 
   /* request src pad */
-  srcpad = gst_element_get_request_pad (element, "src%d");
+  srcpad = gst_element_get_request_pad (element, "src_%u");
   fail_if (srcpad == NULL, "Could not get source pad from %s",
       GST_ELEMENT_NAME (element));
 
@@ -198,6 +198,29 @@ selector_set_active_pad (GstElement * elem, GstPad * selpad)
   g_free (padname);
 }
 
+static void
+push_newsegment_events (GList * input_pads)
+{
+  GstSegment seg;
+  GList *l;
+
+  seg.flags = GST_SEGMENT_FLAG_NONE;
+  seg.rate = seg.applied_rate = 1.0;
+  seg.format = GST_FORMAT_BYTES;
+  seg.base = 0;
+  seg.start = 0;
+  seg.stop = -1;
+  seg.time = 0;
+  seg.position = 0;
+  seg.duration = -1;
+
+  for (l = input_pads; l; l = l->next) {
+    GstPad *pad = l->data;
+
+    gst_pad_push_event (pad, gst_event_new_segment (&seg));
+  }
+}
+
 /* Push buffers and switch for each selector pad */
 static void
 push_switched_buffers (GList * input_pads,
@@ -241,7 +264,7 @@ run_output_selector_buffer_count (gint num_output_pads,
   gint i = 0;
   GList *output_pads = NULL, *input_pads = NULL;
   GstElement *sel = gst_check_setup_element ("output-selector");
-  GstPad *input_pad = gst_check_setup_src_pad (sel, &srctemplate, NULL);
+  GstPad *input_pad = gst_check_setup_src_pad (sel, &srctemplate);
 
   input_pads = g_list_append (input_pads, input_pad);
   gst_pad_set_active (input_pad, TRUE);
@@ -253,6 +276,7 @@ run_output_selector_buffer_count (gint num_output_pads,
   fail_unless (gst_element_set_state (sel,
           GST_STATE_PLAYING) == GST_STATE_CHANGE_SUCCESS,
       "could not set to playing");
+  push_newsegment_events (input_pads);
   push_switched_buffers (input_pads, sel, output_pads, num_buffers_per_output);
   count_output_buffers (output_pads, num_buffers_per_output);
   fail_unless (gst_element_set_state (sel,
@@ -278,7 +302,7 @@ setup_input_pad (GstElement * element)
   fail_if (input_pad == NULL, "Could not create a input_pad");
 
   /* request sink pad */
-  sinkpad = gst_element_get_request_pad (element, "sink%d");
+  sinkpad = gst_element_get_request_pad (element, "sink_%u");
   fail_if (sinkpad == NULL, "Could not get sink pad from %s",
       GST_ELEMENT_NAME (element));
 
@@ -308,7 +332,7 @@ run_input_selector_buffer_count (gint num_input_pads,
   gint i = 0, probe_id = 0;
   GList *input_pads = NULL, *output_pads = NULL;
   GstElement *sel = gst_check_setup_element ("input-selector");
-  GstPad *output_pad = gst_check_setup_sink_pad (sel, &sinktemplate, NULL);
+  GstPad *output_pad = gst_check_setup_sink_pad (sel, &sinktemplate);
 
   output_pads = g_list_append (output_pads, output_pad);
   gst_pad_set_active (output_pad, TRUE);
@@ -317,7 +341,7 @@ run_input_selector_buffer_count (gint num_input_pads,
   }
   /* add probe */
   probe_id =
-      gst_pad_add_probe (output_pad, GST_PROBE_TYPE_DATA,
+      gst_pad_add_probe (output_pad, GST_PAD_PROBE_TYPE_DATA_BOTH,
       (GstPadProbeCallback) probe_cb, NULL, NULL);
   g_object_set_data (G_OBJECT (output_pad), "probe_id",
       GINT_TO_POINTER (probe_id));
@@ -326,6 +350,7 @@ run_input_selector_buffer_count (gint num_input_pads,
   fail_unless (gst_element_set_state (sel,
           GST_STATE_PLAYING) == GST_STATE_CHANGE_SUCCESS,
       "could not set to playing");
+  push_newsegment_events (input_pads);
   push_switched_buffers (input_pads, sel, input_pads, num_buffers_per_input);
   count_output_buffers (output_pads, (num_input_pads * num_buffers_per_input));
   fail_unless (gst_element_set_state (sel,
@@ -397,12 +422,12 @@ GST_START_TEST (test_output_selector_no_srcpad_negotiation);
      * setcaps should accept any caps when there are no srcpads */
     g_object_set (sel, "pad-negotiation-mode", i, NULL);
 
-    caps = gst_pad_get_caps (pad, NULL);
+    caps = gst_pad_query_caps (pad, NULL);
     fail_unless (gst_caps_is_any (caps));
 
     gst_caps_unref (caps);
 
-    caps = gst_caps_new_simple ("mymedia/mycaps", NULL);
+    caps = gst_caps_new_empty_simple ("mymedia/mycaps");
     fail_unless (gst_pad_set_caps (pad, caps));
     gst_caps_unref (caps);
   }
@@ -434,7 +459,7 @@ static void
 setup_output_selector (void)
 {
   sel = gst_check_setup_element ("output-selector");
-  input_pad = gst_check_setup_src_pad (sel, &srctemplate, NULL);
+  input_pad = gst_check_setup_src_pad (sel, &srctemplate);
   gst_pad_set_active (input_pad, TRUE);
 
   output_pads = g_list_append (output_pads, setup_output_pad (sel,
@@ -474,7 +499,7 @@ GST_START_TEST (test_output_selector_getcaps_none);
 
     g_object_set (sel, "active-pad", pad, NULL);
 
-    caps = gst_pad_peer_get_caps (input_pad, NULL);
+    caps = gst_pad_peer_query_caps (input_pad, NULL);
 
     /* in 'none' mode, the getcaps returns the template, which is ANY */
     g_assert (gst_caps_is_any (caps));
@@ -504,7 +529,7 @@ GST_START_TEST (test_output_selector_getcaps_all);
 
   /* in 'all' mode, the intersection of the srcpad caps should be returned on
    * the sinkpad's getcaps */
-  expected = gst_caps_new_simple ("format/abc", NULL);
+  expected = gst_caps_new_empty_simple ("format/abc");
 
   for (walker = output_pads; walker; walker = g_list_next (walker)) {
     GstCaps *caps;
@@ -514,7 +539,7 @@ GST_START_TEST (test_output_selector_getcaps_all);
 
     g_object_set (sel, "active-pad", pad, NULL);
 
-    caps = gst_pad_peer_get_caps (input_pad, NULL);
+    caps = gst_pad_peer_query_caps (input_pad, NULL);
 
     g_assert (gst_caps_is_equal (caps, expected));
     gst_caps_unref (caps);
@@ -545,6 +570,7 @@ GST_START_TEST (test_output_selector_getcaps_active);
   for (walker = output_pads; walker; walker = g_list_next (walker)) {
     GstCaps *caps;
     GstPad *pad;
+    GstPadTemplate *templ;
 
     pad = gst_pad_get_peer ((GstPad *) walker->data);
 
@@ -553,13 +579,14 @@ GST_START_TEST (test_output_selector_getcaps_active);
     /* in 'active' mode, the active srcpad peer's caps should be returned on
      * the sinkpad's getcaps */
 
-    expected = gst_pad_template_get_caps (gst_pad_get_pad_template ((GstPad *)
-            walker->data));
-    caps = gst_pad_peer_get_caps (input_pad, NULL);
+    templ = gst_pad_get_pad_template ((GstPad *) walker->data);
+    expected = gst_pad_template_get_caps (templ);
+    caps = gst_pad_peer_query_caps (input_pad, NULL);
 
     g_assert (gst_caps_is_equal (caps, expected));
     gst_caps_unref (caps);
     gst_caps_unref (expected);
+    gst_object_unref (templ);
     gst_object_unref (pad);
   }
 

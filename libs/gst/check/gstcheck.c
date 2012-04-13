@@ -98,7 +98,7 @@ print_plugins (void)
 {
   GList *plugins, *l;
 
-  plugins = gst_default_registry_get_plugin_list ();
+  plugins = gst_registry_get_plugin_list (gst_registry_get ());
   plugins = g_list_sort (plugins, (GCompareFunc) sort_plugins);
   for (l = plugins; l != NULL; l = l->next) {
     GstPlugin *plugin = GST_PLUGIN (l->data);
@@ -160,9 +160,9 @@ gst_check_message_error (GstMessage * message, GstMessageType type,
 
 /* helper functions */
 GstFlowReturn
-gst_check_chain_func (GstPad * pad, GstBuffer * buffer)
+gst_check_chain_func (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 {
-  GST_DEBUG ("chain_func: received buffer %p", buffer);
+  GST_DEBUG_OBJECT (pad, "chain_func: received buffer %p", buffer);
   buffers = g_list_append (buffers, buffer);
 
   g_mutex_lock (check_mutex);
@@ -197,19 +197,10 @@ gst_check_teardown_element (GstElement * element)
   gst_object_unref (element);
 }
 
-/* FIXME: set_caps isn't that useful
- */
 GstPad *
-gst_check_setup_src_pad (GstElement * element,
-    GstStaticPadTemplate * tmpl, GstCaps * caps)
+gst_check_setup_src_pad (GstElement * element, GstStaticPadTemplate * tmpl)
 {
-  GstPad *srcpad;
-
-  srcpad = gst_check_setup_src_pad_by_name (element, tmpl, "sink");
-  if (caps)
-    fail_unless (gst_pad_push_event (srcpad, gst_event_new_caps (caps)),
-        "could not set caps on pad");
-  return srcpad;
+  return gst_check_setup_src_pad_by_name (element, tmpl, "sink");
 }
 
 GstPad *
@@ -277,19 +268,10 @@ gst_check_teardown_src_pad (GstElement * element)
   gst_check_teardown_pad_by_name (element, "sink");
 }
 
-/* FIXME: set_caps isn't that useful; might want to check if fixed,
- * then use set_use_fixed or somesuch */
 GstPad *
-gst_check_setup_sink_pad (GstElement * element, GstStaticPadTemplate * tmpl,
-    GstCaps * caps)
+gst_check_setup_sink_pad (GstElement * element, GstStaticPadTemplate * tmpl)
 {
-  GstPad *sinkpad;
-
-  sinkpad = gst_check_setup_sink_pad_by_name (element, tmpl, "src");
-  if (caps)
-    fail_unless (gst_pad_send_event (sinkpad, gst_event_new_caps (caps)),
-        "Could not set pad caps");
-  return sinkpad;
+  return gst_check_setup_sink_pad_by_name (element, tmpl, "src");
 }
 
 GstPad *
@@ -377,19 +359,48 @@ gst_check_caps_equal (GstCaps * caps1, GstCaps * caps2)
 void
 gst_check_buffer_data (GstBuffer * buffer, gconstpointer data, gsize size)
 {
-  guint8 *bdata;
-  gsize bsize;
+  GstMapInfo info;
 
-  bdata = gst_buffer_map (buffer, &bsize, NULL, GST_MAP_READ);
-  fail_unless (memcmp (bdata, data, size) == 0, "buffer contents not equal");
-  gst_buffer_unmap (buffer, bdata, bsize);
+  gst_buffer_map (buffer, &info, GST_MAP_READ);
+  GST_MEMDUMP ("Converted data", info.data, info.size);
+  GST_MEMDUMP ("Expected data", data, size);
+  if (memcmp (info.data, data, size) != 0) {
+    g_print ("\nConverted data:\n");
+    gst_util_dump_mem (info.data, info.size);
+    g_print ("\nExpected data:\n");
+    gst_util_dump_mem (data, size);
+  }
+  fail_unless (memcmp (info.data, data, size) == 0,
+      "buffer contents not equal");
+  gst_buffer_unmap (buffer, &info);
+}
+
+static gboolean
+buffer_event_function (GstPad * pad, GstObject * noparent, GstEvent * event)
+{
+  if (GST_EVENT_TYPE (event) == GST_EVENT_CAPS) {
+    GstCaps *event_caps, *current_caps;
+
+    current_caps = gst_pad_get_current_caps (pad);
+    gst_event_parse_caps (event, &event_caps);
+    fail_unless (gst_caps_is_fixed (current_caps));
+    fail_unless (gst_caps_is_fixed (event_caps));
+    fail_unless (gst_caps_is_equal_fixed (event_caps, current_caps));
+    gst_caps_unref (current_caps);
+    gst_event_unref (event);
+    return TRUE;
+  }
+
+  return gst_pad_event_default (pad, noparent, event);
 }
 
 /**
  * gst_check_element_push_buffer_list:
  * @element_name: name of the element that needs to be created
- * @buffer_in: a list of buffers that needs to be puched to the element
- * @buffer_out: a list of buffers that we expect from the element
+ * @buffer_in: (element-type GstBuffer) (transfer full): a list of buffers that needs to be
+ *  puched to the element
+ * @buffer_out: (element-type GstBuffer) (transfer full): a list of buffers that we expect from
+ * the element
  * @last_flow_return: the last buffer push needs to give this GstFlowReturn
  *
  * Create an @element with the factory with the name and push the buffers in
@@ -406,12 +417,9 @@ gst_check_buffer_data (GstBuffer * buffer, gconstpointer data, gsize size)
 /* FIXME 0.11: rename this function now that there's GstBufferList? */
 void
 gst_check_element_push_buffer_list (const gchar * element_name,
-    GList * buffer_in, GList * buffer_out, GstFlowReturn last_flow_return)
+    GList * buffer_in, GstCaps * caps_in, GList * buffer_out,
+    GstCaps * caps_out, GstFlowReturn last_flow_return)
 {
-#if 0
-  GstCaps *sink_caps;
-  GstCaps *src_caps = NULL;
-#endif
   GstElement *element;
   GstPad *pad_peer;
   GstPad *sink_pad = NULL;
@@ -428,52 +436,50 @@ gst_check_element_push_buffer_list (const gchar * element_name,
   buffer = GST_BUFFER (buffer_in->data);
 
   fail_unless (GST_IS_BUFFER (buffer), "There should be a buffer in buffer_in");
-#if 0
-  src_caps = GST_BUFFER_CAPS (buffer);
-#endif
-  src_pad = gst_pad_new (NULL, GST_PAD_SRC);
-#if 0
-  gst_pad_set_caps (src_pad, src_caps);
-#endif
+  src_pad = gst_pad_new ("src", GST_PAD_SRC);
+  if (caps_in) {
+    fail_unless (gst_caps_is_fixed (caps_in));
+    gst_pad_use_fixed_caps (src_pad);
+  }
+  /* activate the pad */
+  gst_pad_set_active (src_pad, TRUE);
+  GST_DEBUG ("src pad activated");
+  if (caps_in)
+    fail_unless (gst_pad_set_caps (src_pad, caps_in));
   pad_peer = gst_element_get_static_pad (element, "sink");
   fail_if (pad_peer == NULL);
   fail_unless (gst_pad_link (src_pad, pad_peer) == GST_PAD_LINK_OK,
       "Could not link source and %s sink pads", GST_ELEMENT_NAME (element));
   gst_object_unref (pad_peer);
-  /* activate the pad */
-  gst_pad_set_active (src_pad, TRUE);
-  GST_DEBUG ("src pad activated");
   /* don't create the sink_pad if there is no buffer_out list */
   if (buffer_out != NULL) {
-#if 0
-    gchar *temp;
-#endif
 
     GST_DEBUG ("buffer out detected, creating the sink pad");
     /* get the sink caps */
-#if 0
-    sink_caps = GST_BUFFER_CAPS (GST_BUFFER (buffer_out->data));
-    fail_unless (GST_IS_CAPS (sink_caps), "buffer out don't have caps");
-    temp = gst_caps_to_string (sink_caps);
+    if (caps_out) {
+      gchar *temp;
 
-    GST_DEBUG ("sink caps requested by buffer out: '%s'", temp);
-    g_free (temp);
-    fail_unless (gst_caps_is_fixed (sink_caps), "we need fixed caps");
-#endif
+      fail_unless (gst_caps_is_fixed (caps_out));
+      temp = gst_caps_to_string (caps_out);
+
+      GST_DEBUG ("sink caps requested by buffer out: '%s'", temp);
+      g_free (temp);
+    }
+
     /* get the sink pad */
-    sink_pad = gst_pad_new (NULL, GST_PAD_SINK);
+    sink_pad = gst_pad_new ("sink", GST_PAD_SINK);
     fail_unless (GST_IS_PAD (sink_pad));
-#if 0
-    gst_pad_set_caps (sink_pad, sink_caps);
-#endif
+    /* configure the sink pad */
+    gst_pad_set_chain_function (sink_pad, gst_check_chain_func);
+    gst_pad_set_active (sink_pad, TRUE);
+    gst_pad_set_caps (sink_pad, caps_out);
+    if (caps_out)
+      gst_pad_set_event_function (sink_pad, buffer_event_function);
     /* get the peer pad */
     pad_peer = gst_element_get_static_pad (element, "src");
     fail_unless (gst_pad_link (pad_peer, sink_pad) == GST_PAD_LINK_OK,
         "Could not link sink and %s source pads", GST_ELEMENT_NAME (element));
     gst_object_unref (pad_peer);
-    /* configure the sink pad */
-    gst_pad_set_chain_function (sink_pad, gst_check_chain_func);
-    gst_pad_set_active (sink_pad, TRUE);
   }
   fail_unless (gst_element_set_state (element,
           GST_STATE_PLAYING) == GST_STATE_CHANGE_SUCCESS,
@@ -502,30 +508,30 @@ gst_check_element_push_buffer_list (const gchar * element_name,
   while (buffers != NULL) {
     GstBuffer *new = GST_BUFFER (buffers->data);
     GstBuffer *orig = GST_BUFFER (buffer_out->data);
-    gsize newsize, origsize;
-    guint8 *newdata, *origdata;
+    GstMapInfo newinfo, originfo;
 
-    newdata = gst_buffer_map (new, &newsize, NULL, GST_MAP_READ);
-    origdata = gst_buffer_map (orig, &origsize, NULL, GST_MAP_READ);
+    gst_buffer_map (new, &newinfo, GST_MAP_READ);
+    gst_buffer_map (orig, &originfo, GST_MAP_READ);
 
-    GST_LOG ("orig buffer: size %" G_GSIZE_FORMAT, origsize);
-    GST_LOG ("new  buffer: size %" G_GSIZE_FORMAT, newsize);
-    GST_MEMDUMP ("orig buffer", origdata, origsize);
-    GST_MEMDUMP ("new  buffer", newdata, newsize);
+    GST_LOG ("orig buffer: size %" G_GSIZE_FORMAT, originfo.size);
+    GST_LOG ("new  buffer: size %" G_GSIZE_FORMAT, newinfo.size);
+    GST_MEMDUMP ("orig buffer", originfo.data, originfo.size);
+    GST_MEMDUMP ("new  buffer", newinfo.data, newinfo.size);
 
     /* remove the buffers */
     buffers = g_list_remove (buffers, new);
     buffer_out = g_list_remove (buffer_out, orig);
 
-    fail_unless (origsize == newsize, "size of the buffers are not the same");
-    fail_unless (memcmp (origdata, newdata, newsize) == 0,
+    fail_unless (originfo.size == newinfo.size,
+        "size of the buffers are not the same");
+    fail_unless (memcmp (originfo.data, newinfo.data, newinfo.size) == 0,
         "data is not the same");
 #if 0
     gst_check_caps_equal (GST_BUFFER_CAPS (orig), GST_BUFFER_CAPS (new));
 #endif
 
-    gst_buffer_unmap (orig, origdata, origsize);
-    gst_buffer_unmap (new, newdata, newsize);
+    gst_buffer_unmap (orig, &originfo);
+    gst_buffer_unmap (new, &newinfo);
 
     gst_buffer_unref (new);
     gst_buffer_unref (orig);
@@ -553,7 +559,8 @@ gst_check_element_push_buffer_list (const gchar * element_name,
  */
 void
 gst_check_element_push_buffer (const gchar * element_name,
-    GstBuffer * buffer_in, GstBuffer * buffer_out)
+    GstBuffer * buffer_in, GstCaps * caps_in, GstBuffer * buffer_out,
+    GstCaps * caps_out)
 {
   GList *in = NULL;
   GList *out = NULL;
@@ -561,7 +568,8 @@ gst_check_element_push_buffer (const gchar * element_name,
   in = g_list_append (in, buffer_in);
   out = g_list_append (out, buffer_out);
 
-  gst_check_element_push_buffer_list (element_name, in, out, GST_FLOW_OK);
+  gst_check_element_push_buffer_list (element_name, in, caps_in, out, caps_out,
+      GST_FLOW_OK);
 }
 
 void

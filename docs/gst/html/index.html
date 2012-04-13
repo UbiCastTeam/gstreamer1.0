@@ -2,9 +2,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 0.11 Core Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<title>GStreamer 1.0 Core Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="next" href="gstreamer.html" title="GStreamer Overview">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -13,9 +13,9 @@
 <div class="book">
 <div class="titlepage">
 <div>
-<div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">GStreamer 0.11 Core Reference Manual</p></th></tr></table></div>
+<div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">GStreamer 1.0 Core Reference Manual</p></th></tr></table></div>
 <div><p class="releaseinfo">
-      for GStreamer Core 0.11 (0.11.1)
+      for GStreamer Core 1.0 (0.11.89.1)
       The latest version of this documentation can be found on-line at
       <a class="ulink" href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/" target="_top">http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/</a>.
     </p></div>
@@ -49,7 +49,7 @@ How to run and debug your GStreamer application
 <span class="refentrytitle"><a href="GstBin.html">GstBin</a></span><span class="refpurpose"> — Base class and element that can contain other elements</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gstreamer-GstBuffer.html">GstBuffer</a></span><span class="refpurpose"> — Data-passing buffer type, supporting sub-buffers.</span>
+<span class="refentrytitle"><a href="gstreamer-GstBuffer.html">GstBuffer</a></span><span class="refpurpose"> — Data-passing buffer type</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gstreamer-GstBufferList.html">GstBufferList</a></span><span class="refpurpose"> — Lists of buffers for data-passing</span>
@@ -64,6 +64,9 @@ How to run and debug your GStreamer application
 <span class="refentrytitle"><a href="gstreamer-GstCaps.html">GstCaps</a></span><span class="refpurpose"> — Structure describing sets of media formats</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="gstreamer-GstSample.html">GstSample</a></span><span class="refpurpose"> — A media sample</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GstChildProxy.html">GstChildProxy</a></span><span class="refpurpose"> — Interface for multi child elements.</span>
 </dt>
 <dt>
@@ -71,6 +74,12 @@ How to run and debug your GStreamer application
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gstreamer-gstconfig.html">gstconfig</a></span><span class="refpurpose"> — Build configuration options</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstControlBinding.html">GstControlBinding</a></span><span class="refpurpose"> — attachment for control source sources</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstControlSource.html">GstControlSource</a></span><span class="refpurpose"> — base class for control source sources</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gstreamer-GstDateTime.html">GstDateTime</a></span><span class="refpurpose"> — A date, time and timezone structure</span>
@@ -89,19 +98,10 @@ How to run and debug your GStreamer application
                     a pipeline</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gstreamer-GstFilter.html">GstFilter</a></span><span class="refpurpose"> — A utility function to filter GLists.</span>
-</dt>
-<dt>
 <span class="refentrytitle"><a href="gstreamer-GstFormat.html">GstFormat</a></span><span class="refpurpose"> — Dynamically register new data formats</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstGhostPad.html">GstGhostPad</a></span><span class="refpurpose"> — Pseudo link pads</span>
-</dt>
-<dt>
-<span class="refentrytitle"><a href="GstIndex.html">GstIndex</a></span><span class="refpurpose"> — Generate indexes on objects</span>
-</dt>
-<dt>
-<span class="refentrytitle"><a href="GstIndexFactory.html">GstIndexFactory</a></span><span class="refpurpose"> — Create GstIndexes from a factory</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gstreamer-GstIterator.html">GstIterator</a></span><span class="refpurpose"> — Object to retrieve multiple elements in a threadsafe
@@ -155,8 +155,8 @@ to GStreamer</span>
 <span class="refentrytitle"><a href="GstPreset.html">GstPreset</a></span><span class="refpurpose"> — helper interface for element presets</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gstreamer-GstQuery.html">GstQuery</a></span><span class="refpurpose"> — Dynamically register new query types. Provide functions
-                    to create queries, and to set and parse values in them.</span>
+<span class="refentrytitle"><a href="gstreamer-GstQuery.html">GstQuery</a></span><span class="refpurpose"> — Provide functions to create queries, and to set and parse
+                    values in them.</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstRegistry.html">GstRegistry</a></span><span class="refpurpose"> — Abstract base class for management of <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> objects</span>
@@ -185,6 +185,13 @@ to GStreamer</span>
 <span class="refentrytitle"><a href="GstTaskPool.html">GstTaskPool</a></span><span class="refpurpose"> — Pool of GStreamer streaming threads</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="gstreamer-GstToc.html">GstToc</a></span><span class="refpurpose"> — Generic table of contents support</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gstreamer-GstTocSetter.html">GstTocSetter</a></span><span class="refpurpose"> — Element interface that allows setting and retrieval
+                    of the TOC</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="gstreamer-GstTypeFind.html">GstTypeFind</a></span><span class="refpurpose"> — Stream type detection</span>
 </dt>
 <dt>
@@ -205,14 +212,9 @@ to GStreamer</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gstreamer-support.html">GStreamer Core Support</a></span></dt>
-<dd><dl>
-<dt>
+<dd><dl><dt>
 <span class="refentrytitle"><a href="gstreamer-GstInfo.html">GstInfo</a></span><span class="refpurpose"> — Debugging and logging facilities</span>
-</dt>
-<dt>
-<span class="refentrytitle"><a href="gstreamer-GstTrace.html">GstTrace</a></span><span class="refpurpose"> — Tracing functionality</span>
-</dt>
-</dl></dd>
+</dt></dl></dd>
 <dt><span class="chapter"><a href="gstreamer-hierarchy.html">Object Hierarchy</a></span></dt>
 <dt><span class="index"><a href="api-index-full.html">API Index</a></span></dt>
 <dt><span class="index"><a href="api-index-deprecated.html">Index of deprecated API</a></span></dt>

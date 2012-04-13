@@ -102,7 +102,7 @@ GST_START_TEST (test_parsing)
     GstTagList *tag;
 
     /* FIXME, do some more tag adding */
-    tag = gst_tag_list_new ();
+    tag = gst_tag_list_new_empty ();
     fail_if (tag == NULL);
     message = gst_message_new_tag (NULL, tag);
     fail_if (message == NULL);
@@ -208,7 +208,7 @@ GST_START_TEST (test_parsing)
 
     /* create a task with some dummy function, we're not actually going to run
      * the task here */
-    task = gst_task_create ((GstTaskFunction) gst_object_unref, NULL);
+    task = gst_task_new ((GstTaskFunction) gst_object_unref, NULL);
 
     ASSERT_OBJECT_REFCOUNT (task, "task", 1);
 

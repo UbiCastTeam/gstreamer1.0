@@ -106,7 +106,7 @@ static void gst_fd_sink_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec);
 static void gst_fd_sink_dispose (GObject * obj);
 
-static gboolean gst_fd_sink_query (GstPad * pad, GstQuery * query);
+static gboolean gst_fd_sink_query (GstBaseSink * bsink, GstQuery * query);
 static GstFlowReturn gst_fd_sink_render (GstBaseSink * sink,
     GstBuffer * buffer);
 static gboolean gst_fd_sink_start (GstBaseSink * basesink);
@@ -132,7 +132,7 @@ gst_fd_sink_class_init (GstFdSinkClass * klass)
   gobject_class->get_property = gst_fd_sink_get_property;
   gobject_class->dispose = gst_fd_sink_dispose;
 
-  gst_element_class_set_details_simple (gstelement_class,
+  gst_element_class_set_static_metadata (gstelement_class,
       "Filedescriptor Sink",
       "Sink/File",
       "Write data to a file descriptor", "Erik Walthinsen <omega@cse.ogi.edu>");
@@ -145,6 +145,7 @@ gst_fd_sink_class_init (GstFdSinkClass * klass)
   gstbasesink_class->unlock = GST_DEBUG_FUNCPTR (gst_fd_sink_unlock);
   gstbasesink_class->unlock_stop = GST_DEBUG_FUNCPTR (gst_fd_sink_unlock_stop);
   gstbasesink_class->event = GST_DEBUG_FUNCPTR (gst_fd_sink_event);
+  gstbasesink_class->query = GST_DEBUG_FUNCPTR (gst_fd_sink_query);
 
   g_object_class_install_property (gobject_class, ARG_FD,
       g_param_spec_int ("fd", "fd", "An open file descriptor to write to",
@@ -154,11 +155,6 @@ gst_fd_sink_class_init (GstFdSinkClass * klass)
 static void
 gst_fd_sink_init (GstFdSink * fdsink)
 {
-  GstPad *pad;
-
-  pad = GST_BASE_SINK_PAD (fdsink);
-  gst_pad_set_query_function (pad, GST_DEBUG_FUNCPTR (gst_fd_sink_query));
-
   fdsink->fd = 1;
   fdsink->uri = g_strdup_printf ("fd://%d", fdsink->fd);
   fdsink->bytes_written = 0;
@@ -179,44 +175,67 @@ gst_fd_sink_dispose (GObject * obj)
 }
 
 static gboolean
-gst_fd_sink_query (GstPad * pad, GstQuery * query)
+gst_fd_sink_query (GstBaseSink * bsink, GstQuery * query)
 {
+  gboolean res = FALSE;
   GstFdSink *fdsink;
-  GstFormat format;
 
-  fdsink = GST_FD_SINK (GST_PAD_PARENT (pad));
+  fdsink = GST_FD_SINK (bsink);
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_POSITION:
+    {
+      GstFormat format;
+
       gst_query_parse_position (query, &format, NULL);
+
       switch (format) {
         case GST_FORMAT_DEFAULT:
         case GST_FORMAT_BYTES:
           gst_query_set_position (query, GST_FORMAT_BYTES, fdsink->current_pos);
-          return TRUE;
+          res = TRUE;
+          break;
         default:
-          return FALSE;
+          break;
       }
-
+      break;
+    }
     case GST_QUERY_FORMATS:
       gst_query_set_formats (query, 2, GST_FORMAT_DEFAULT, GST_FORMAT_BYTES);
-      return TRUE;
-
+      res = TRUE;
+      break;
     case GST_QUERY_URI:
       gst_query_set_uri (query, fdsink->uri);
-      return TRUE;
+      res = TRUE;
+      break;
+    case GST_QUERY_SEEKING:{
+      GstFormat format;
 
+      gst_query_parse_seeking (query, &format, NULL, NULL, NULL);
+      if (format == GST_FORMAT_BYTES || format == GST_FORMAT_DEFAULT) {
+        gst_query_set_seeking (query, GST_FORMAT_BYTES, fdsink->seekable, 0,
+            -1);
+      } else {
+        gst_query_set_seeking (query, format, FALSE, 0, -1);
+      }
+      res = TRUE;
+      break;
+    }
     default:
-      return gst_pad_query_default (pad, query);
+      res = GST_BASE_SINK_CLASS (parent_class)->query (bsink, query);
+      break;
+
   }
+  return res;
 }
 
 static GstFlowReturn
 gst_fd_sink_render (GstBaseSink * sink, GstBuffer * buffer)
 {
   GstFdSink *fdsink;
-  guint8 *data, *ptr;
-  gsize size, left;
+  GstMapInfo info;
+  guint8 *ptr;
+  gsize left;
   gint written;
 
 #ifndef HAVE_WIN32
@@ -227,16 +246,16 @@ gst_fd_sink_render (GstBaseSink * sink, GstBuffer * buffer)
 
   g_return_val_if_fail (fdsink->fd >= 0, GST_FLOW_ERROR);
 
-  data = gst_buffer_map (buffer, &size, NULL, GST_MAP_READ);
+  gst_buffer_map (buffer, &info, GST_MAP_READ);
 
-  ptr = data;
-  left = size;
+  ptr = info.data;
+  left = info.size;
 
 again:
 #ifndef HAVE_WIN32
   do {
     GST_DEBUG_OBJECT (fdsink, "going into select, have %" G_GSIZE_FORMAT
-        " bytes to write", size);
+        " bytes to write", info.size);
     retval = gst_poll_wait (fdsink->fdset, GST_CLOCK_TIME_NONE);
   } while (retval == -1 && (errno == EINTR || errno == EAGAIN));
 
@@ -249,7 +268,7 @@ again:
 #endif
 
   GST_DEBUG_OBJECT (fdsink, "writing %" G_GSIZE_FORMAT " bytes to"
-      " file descriptor %d", size, fdsink->fd);
+      " file descriptor %d", info.size, fdsink->fd);
 
   written = write (fdsink->fd, ptr, left);
 
@@ -276,7 +295,7 @@ again:
   if (G_UNLIKELY (left > 0))
     goto again;
 
-  gst_buffer_unmap (buffer, data, size);
+  gst_buffer_unmap (buffer, &info);
 
   return GST_FLOW_OK;
 
@@ -286,14 +305,14 @@ select_error:
     GST_ELEMENT_ERROR (fdsink, RESOURCE, READ, (NULL),
         ("select on file descriptor: %s.", g_strerror (errno)));
     GST_DEBUG_OBJECT (fdsink, "Error during select");
-    gst_buffer_unmap (buffer, data, size);
+    gst_buffer_unmap (buffer, &info);
     return GST_FLOW_ERROR;
   }
 stopped:
   {
     GST_DEBUG_OBJECT (fdsink, "Select stopped");
-    gst_buffer_unmap (buffer, data, size);
-    return GST_FLOW_WRONG_STATE;
+    gst_buffer_unmap (buffer, &info);
+    return GST_FLOW_FLUSHING;
   }
 #endif
 
@@ -309,13 +328,13 @@ write_error:
                 fdsink->fd, g_strerror (errno)));
       }
     }
-    gst_buffer_unmap (buffer, data, size);
+    gst_buffer_unmap (buffer, &info);
     return GST_FLOW_ERROR;
   }
 }
 
 static gboolean
-gst_fd_sink_check_fd (GstFdSink * fdsink, int fd)
+gst_fd_sink_check_fd (GstFdSink * fdsink, int fd, GError ** error)
 {
   struct stat stat_results;
   off_t result;
@@ -347,6 +366,8 @@ invalid:
   {
     GST_ELEMENT_ERROR (fdsink, RESOURCE, WRITE, (NULL),
         ("File descriptor %d is not valid: %s", fd, g_strerror (errno)));
+    g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_BAD_REFERENCE,
+        "File descriptor %d is not valid: %s", fd, g_strerror (errno));
     return FALSE;
   }
 not_seekable:
@@ -363,7 +384,7 @@ gst_fd_sink_start (GstBaseSink * basesink)
   GstPollFD fd = GST_POLL_FD_INIT;
 
   fdsink = GST_FD_SINK (basesink);
-  if (!gst_fd_sink_check_fd (fdsink, fdsink->fd))
+  if (!gst_fd_sink_check_fd (fdsink, fdsink->fd, NULL))
     return FALSE;
 
   if ((fdsink->fdset = gst_poll_new (TRUE)) == NULL)
@@ -375,6 +396,9 @@ gst_fd_sink_start (GstBaseSink * basesink)
 
   fdsink->bytes_written = 0;
   fdsink->current_pos = 0;
+
+  fdsink->seekable = gst_fd_sink_do_seek (fdsink, 0);
+  GST_INFO_OBJECT (fdsink, "seeking supported: %d", fdsink->seekable);
 
   return TRUE;
 
@@ -427,12 +451,15 @@ gst_fd_sink_unlock_stop (GstBaseSink * basesink)
 }
 
 static gboolean
-gst_fd_sink_update_fd (GstFdSink * fdsink, int new_fd)
+gst_fd_sink_update_fd (GstFdSink * fdsink, int new_fd, GError ** error)
 {
-  if (new_fd < 0)
+  if (new_fd < 0) {
+    g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_BAD_REFERENCE,
+        "File descriptor %d is not valid", new_fd);
     return FALSE;
+  }
 
-  if (!gst_fd_sink_check_fd (fdsink, new_fd))
+  if (!gst_fd_sink_check_fd (fdsink, new_fd, error))
     goto invalid;
 
   /* assign the fd */
@@ -474,7 +501,7 @@ gst_fd_sink_set_property (GObject * object, guint prop_id,
       int fd;
 
       fd = g_value_get_int (value);
-      gst_fd_sink_update_fd (fdsink, fd);
+      gst_fd_sink_update_fd (fdsink, fd, NULL);
       break;
     }
     default:
@@ -566,13 +593,14 @@ gst_fd_sink_event (GstBaseSink * sink, GstEvent * event)
       break;
   }
 
-  return TRUE;
+  return GST_BASE_SINK_CLASS (parent_class)->event (sink, event);
 
 seek_failed:
   {
     GST_ELEMENT_ERROR (fdsink, RESOURCE, SEEK, (NULL),
         ("Error while seeking on file descriptor %d: %s",
             fdsink->fd, g_strerror (errno)));
+    gst_event_unref (event);
     return FALSE;
   }
 
@@ -586,40 +614,37 @@ gst_fd_sink_uri_get_type (GType type)
   return GST_URI_SINK;
 }
 
-static gchar **
+static const gchar *const *
 gst_fd_sink_uri_get_protocols (GType type)
 {
-  static gchar *protocols[] = { (char *) "fd", NULL };
+  static const gchar *protocols[] = { "fd", NULL };
 
   return protocols;
 }
 
-static const gchar *
+static gchar *
 gst_fd_sink_uri_get_uri (GstURIHandler * handler)
 {
   GstFdSink *sink = GST_FD_SINK (handler);
 
-  return sink->uri;
+  /* FIXME: make thread-safe */
+  return g_strdup (sink->uri);
 }
 
 static gboolean
-gst_fd_sink_uri_set_uri (GstURIHandler * handler, const gchar * uri)
+gst_fd_sink_uri_set_uri (GstURIHandler * handler, const gchar * uri,
+    GError ** error)
 {
-  gchar *protocol;
   GstFdSink *sink = GST_FD_SINK (handler);
   gint fd;
 
-  protocol = gst_uri_get_protocol (uri);
-  if (strcmp (protocol, "fd") != 0) {
-    g_free (protocol);
+  if (sscanf (uri, "fd://%d", &fd) != 1) {
+    g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_BAD_URI,
+        "File descriptor URI could not be parsed");
     return FALSE;
   }
-  g_free (protocol);
 
-  if (sscanf (uri, "fd://%d", &fd) != 1)
-    return FALSE;
-
-  return gst_fd_sink_update_fd (sink, fd);
+  return gst_fd_sink_update_fd (sink, fd, error);
 }
 
 static void

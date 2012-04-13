@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>filesrc</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer Core Plugins 0.11 Plugins Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-fdsrc.html" title="fdsrc">
 <link rel="next" href="gstreamer-plugins-filesink.html" title="filesink">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-plugins-fdsrc.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer Core Plugins 0.11 Plugins Reference Manual</th>
+<th width="100%" align="center">GStreamer Core Plugins 1.0 Plugins Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-plugins-filesink.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -51,9 +51,9 @@
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-         +----<a href="../gstreamer-0.11/GstObject.html">GstObject</a>
-               +----<a href="../gstreamer-0.11/GstElement.html">GstElement</a>
-                     +----<a href="../gstreamer-libs-0.11/GstBaseSrc.html">GstBaseSrc</a>
+         +----<a href="../gstreamer-1.0/GstObject.html">GstObject</a>
+               +----<a href="../gstreamer-1.0/GstElement.html">GstElement</a>
+                     +----<a href="../gstreamer-libs-1.0/GstBaseSrc.html">GstBaseSrc</a>
                            +----GstFileSrc
 </pre>
 </div>
@@ -61,7 +61,7 @@
 <a name="gstreamer-plugins-filesrc.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GstFileSrc implements
- <a href="../gstreamer-0.11/gstreamer-GstUriHandler.html#GstURIHandler">GstURIHandler</a>.</p>
+ <a href="../gstreamer-1.0/gstreamer-GstUriHandler.html#GstURIHandler">GstURIHandler</a>.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesrc.properties"></a><h2>Properties</h2>
@@ -82,17 +82,25 @@ Read data from a file in the local file system.
 <p>
 </p>
 <div class="refsect2">
-<a name="id364123"></a><h3>Example launch line</h3>
-<div class="informalexample"><pre class="programlisting">
-gst-launch filesrc location=song.ogg ! decodebin2 ! autoaudiosink
-</pre></div> Play a song.ogg from local dir.
+<a name="idp7280672"></a><h3>Example launch line</h3>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin2 <span class="gtkdoc opt">!</span> autoaudiosink</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ Play a song.ogg from local dir.
 </div>
 <p>
 </p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id398931"></a><h3>Element Information</h3>
+<a name="idp7283280"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -115,7 +123,7 @@ gst-launch filesrc location=song.ogg ! decodebin2 ! autoaudiosink
 </div>
 <hr>
 <div class="refsect2">
-<a name="id398993"></a><h3>Element Pads</h3>
+<a name="idp9769648"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>

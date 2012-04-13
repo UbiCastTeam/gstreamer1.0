@@ -13,100 +13,33 @@
 # <SUBSECTION Private>
 # </SECTION>
 
-<SECTION>
-<FILE>gstdataprotocol</FILE>
-<INCLUDE>gst/dataprotocol/dataprotocol.h</INCLUDE>
-GstDPHeaderFlag
-GstDPPayloadType
-
-GST_DP_HEADER_LENGTH
-GstDPVersion
-GST_DP_VERSION_MAJOR
-GST_DP_VERSION_MINOR
-
-gst_dp_init
-
-GstDPHeaderFromBufferFunction
-GstDPPacketFromCapsFunction
-GstDPPacketFromEventFunction
-GstDPPacketizer
-gst_dp_packetizer_new
-gst_dp_packetizer_free
-
-gst_dp_crc
-
-gst_dp_header_payload_length
-gst_dp_header_payload_type
-
-gst_dp_buffer_from_header
-gst_dp_caps_from_packet
-gst_dp_event_from_packet
-
-gst_dp_validate_header
-gst_dp_validate_payload
-gst_dp_validate_packet
-<SUBSECTION Standard>
-GST_TYPE_DP_VERSION
-gst_dp_version_get_type
-</SECTION>
+# control source classes
 
 <SECTION>
-<FILE>gstcontroller</FILE>
-<TITLE>GstController</TITLE>
-<INCLUDE>gst/controller/gstcontroller.h</INCLUDE>
-GstController
-gst_controller_init
-gst_controller_new
-gst_controller_new_list
-gst_controller_new_valist
-gst_controller_remove_properties
-gst_controller_remove_properties_list
-gst_controller_remove_properties_valist
-gst_controller_set_disabled
-gst_controller_set_property_disabled
-gst_controller_suggest_next_sync
-gst_controller_sync_values
-gst_controller_get_control_source
-gst_controller_set_control_source
-gst_controller_get
-gst_controller_get_value_arrays
-gst_controller_get_value_array
+<FILE>gsttimedvaluecontrolsource</FILE>
+<TITLE>GstTimedValueControlSource</TITLE>
+<INCLUDE>libs/controller/gsttimedvaluecontrolsource.h</INCLUDE>
+GstTimedValueControlSource
+gst_timed_value_control_source_find_control_point_iter
+gst_timed_value_control_source_set
+gst_timed_value_control_source_set_from_list
+gst_timed_value_control_source_get_all
+gst_timed_value_control_source_unset
+gst_timed_value_control_source_unset_all
+gst_timed_value_control_source_get_count
+gst_timed_value_control_source_get_base_value_type
+gst_timed_value_control_invalidate_cache
 <SUBSECTION Standard>
-GstControllerClass
-GstControllerPrivate
-GST_CONTROLLER
-GST_IS_CONTROLLER
-GST_CONTROLLER_CLASS
-GST_IS_CONTROLLER_CLASS
-GST_CONTROLLER_GET_CLASS
-GST_TYPE_CONTROLLER
+GstTimedValueControlSourceClass
+GstTimedValueControlSourcePrivate
+GST_TIMED_VALUE_CONTROL_SOURCE
+GST_IS_TIMED_VALUE_CONTROL_SOURCE
+GST_TIMED_VALUE_CONTROL_SOURCE_CLASS
+GST_IS_TIMED_VALUE_CONTROL_SOURCE_CLASS
+GST_TIMED_VALUE_CONTROL_SOURCE_GET_CLASS
+GST_TYPE_TIMED_VALUE_CONTROL_SOURCE
 <SUBSECTION Private>
-gst_controller_get_type
-</SECTION>
-
-<SECTION>
-<FILE>gstcontrolsource</FILE>
-<TITLE>GstControlSource</TITLE>
-<INCLUDE>libs/controller/gstcontrolsource.h</INCLUDE>
-GstControlSource
-GstControlSourceClass
-GstControlSourceBind
-GstControlSourceGetValue
-GstControlSourceGetValueArray
-GstTimedValue
-GstValueArray
-gst_control_source_bind
-gst_control_source_get_value
-gst_control_source_get_value_array
-<SUBSECTION Standard>
-GST_CONTROL_SOURCE
-GST_IS_CONTROL_SOURCE
-GST_CONTROL_SOURCE_CLASS
-GST_IS_CONTROL_SOURCE_CLASS
-GST_CONTROL_SOURCE_GET_CLASS
-GST_TYPE_CONTROL_SOURCE
-<SUBSECTION Private>
-gst_control_source_get_type
+gst_timed_value_control_source_get_type
 </SECTION>
 
 <SECTION>
@@ -114,15 +47,8 @@ gst_control_source_get_type
 <TITLE>GstInterpolationControlSource</TITLE>
 <INCLUDE>libs/controller/gstinterpolationcontrolsource.h</INCLUDE>
 GstInterpolationControlSource
-GstInterpolateMode
+GstInterpolationMode
 gst_interpolation_control_source_new
-gst_interpolation_control_source_set
-gst_interpolation_control_source_set_from_list
-gst_interpolation_control_source_set_interpolation_mode
-gst_interpolation_control_source_get_all
-gst_interpolation_control_source_unset
-gst_interpolation_control_source_unset_all
-gst_interpolation_control_source_get_count
 <SUBSECTION Standard>
 GstInterpolationControlSourceClass
 GstInterpolationControlSourcePrivate
@@ -132,8 +58,10 @@ GST_INTERPOLATION_CONTROL_SOURCE_CLASS
 GST_IS_INTERPOLATION_CONTROL_SOURCE_CLASS
 GST_INTERPOLATION_CONTROL_SOURCE_GET_CLASS
 GST_TYPE_INTERPOLATION_CONTROL_SOURCE
+GST_TYPE_INTERPOLATION_MODE
 <SUBSECTION Private>
 gst_interpolation_control_source_get_type
+gst_interpolation_mode_get_type
 </SECTION>
 
 <SECTION>
@@ -159,23 +87,22 @@ gst_lfo_waveform_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gstcontrollergobject</FILE>
-<TITLE>GstControllerGObject</TITLE>
-<INCLUDE>libs/controller/gstcontroller.h</INCLUDE>
-gst_object_control_properties
-gst_object_uncontrol_properties
-gst_object_get_controller
-gst_object_set_controller
-gst_object_suggest_next_sync
-gst_object_sync_values
-gst_object_get_control_source
-gst_object_set_control_source
-gst_object_get_value_arrays
-gst_object_get_value_array
-gst_object_get_control_rate
-gst_object_set_control_rate
+<FILE>gsttriggercontrolsource</FILE>
+<TITLE>GstTriggerControlSource</TITLE>
+<INCLUDE>libs/controller/gsttriggercontrolsource.h</INCLUDE>
+GstTriggerControlSource
+gst_trigger_control_source_new
 <SUBSECTION Standard>
+GstTriggerControlSourceClass
+GstTriggerControlSourcePrivate
+GST_TRIGGER_CONTROL_SOURCE
+GST_IS_TRIGGER_CONTROL_SOURCE
+GST_TRIGGER_CONTROL_SOURCE_CLASS
+GST_IS_TRIGGER_CONTROL_SOURCE_CLASS
+GST_TRIGGER_CONTROL_SOURCE_GET_CLASS
+GST_TYPE_TRIGGER_CONTROL_SOURCE
 <SUBSECTION Private>
+gst_trigger_control_source_get_type
 </SECTION>
 
 # base classes
@@ -197,7 +124,8 @@ gst_adapter_available_fast
 gst_adapter_take
 gst_adapter_take_buffer
 gst_adapter_take_list
-gst_adapter_prev_timestamp
+gst_adapter_prev_pts
+gst_adapter_prev_dts
 gst_adapter_masked_scan_uint32
 gst_adapter_masked_scan_uint32_peek
 <SUBSECTION Standard>
@@ -323,7 +251,7 @@ gst_base_sink_set_render_delay
 gst_base_sink_get_render_delay
 gst_base_sink_set_last_buffer_enabled
 gst_base_sink_is_last_buffer_enabled
-gst_base_sink_get_last_buffer
+gst_base_sink_get_last_sample
 gst_base_sink_set_blocksize
 gst_base_sink_get_blocksize
 gst_base_sink_get_throttle_time
@@ -378,9 +306,6 @@ GST_BASE_TRANSFORM_SINK_PAD
 GST_BASE_TRANSFORM_SRC_PAD
 
 GST_BASE_TRANSFORM_FLOW_DROPPED
-
-GST_BASE_TRANSFORM_LOCK
-GST_BASE_TRANSFORM_UNLOCK
 
 <SUBSECTION Standard>
 GST_BASE_TRANSFORM
@@ -690,52 +615,70 @@ GST_BYTE_WRITER
 </SECTION>
 
 <SECTION>
-<FILE>gstcollectpads</FILE>
-<TITLE>GstCollectPads</TITLE>
-<INCLUDE>gst/base/gstcollectpads.h</INCLUDE>
-GstCollectData
-GstCollectPads
-GstCollectPadsFunction
-GstCollectPadsClipFunction
-GstCollectDataDestroyNotify
-gst_collect_pads_new
-gst_collect_pads_set_function
-gst_collect_pads_set_clip_function
-gst_collect_pads_add_pad
-gst_collect_pads_add_pad_full
-gst_collect_pads_remove_pad
-gst_collect_pads_is_active
-gst_collect_pads_collect
-gst_collect_pads_collect_range
-gst_collect_pads_start
-gst_collect_pads_stop
-gst_collect_pads_set_flushing
-gst_collect_pads_peek
-gst_collect_pads_pop
-gst_collect_pads_available
-gst_collect_pads_read_buffer
-gst_collect_pads_take_buffer
-gst_collect_pads_flush
-<SUBSECTION Standard>
-GstCollectPadsClass
-GstCollectPadsPrivate
-GST_COLLECT_PADS
-GST_IS_COLLECT_PADS
-GST_TYPE_COLLECT_PADS
-GST_COLLECT_PADS_CLASS
-GST_IS_COLLECT_PADS_CLASS
-GST_COLLECT_PADS_GET_CLASS
-<SUBSECTION Private>
-gst_collect_pads_get_type
-GST_COLLECT_PADS_GET_PAD_LOCK
-GST_COLLECT_PADS_PAD_LOCK
-GST_COLLECT_PADS_PAD_UNLOCK
-GST_COLLECT_PADS_BROADCAST
-GST_COLLECT_PADS_GET_COND
-GST_COLLECT_PADS_SIGNAL
-GST_COLLECT_PADS_WAIT
-</SECTION>
+<FILE>gstcollectpads2</FILE>
+<TITLE>GstCollectPads2</TITLE>
+<INCLUDE>gst/base/gstcollectpads2.h</INCLUDE>
+GstCollectPads2
+GstCollectData2
 
+GstCollectData2DestroyNotify
+GstCollectPads2BufferFunction
+GstCollectPads2CompareFunction
+GstCollectPads2EventFunction
+GstCollectPads2ClipFunction
+GstCollectPads2Function
+GstCollectPads2StateFlags
+
+GST_COLLECT_PADS2_STATE
+GST_COLLECT_PADS2_STATE_IS_SET
+GST_COLLECT_PADS2_STATE_SET
+GST_COLLECT_PADS2_STATE_UNSET
+
+GST_COLLECT_PADS2_GET_STREAM_LOCK
+GST_COLLECT_PADS2_STREAM_LOCK
+GST_COLLECT_PADS2_STREAM_UNLOCK
+
+gst_collect_pads2_new
+
+gst_collect_pads2_add_pad
+gst_collect_pads2_add_pad_full
+gst_collect_pads2_remove_pad
+
+gst_collect_pads2_start
+gst_collect_pads2_stop
+
+gst_collect_pads2_available
+gst_collect_pads2_is_active
+
+gst_collect_pads2_collect
+gst_collect_pads2_collect_range
+
+gst_collect_pads2_flush
+gst_collect_pads2_peek
+gst_collect_pads2_pop
+
+gst_collect_pads2_read
+gst_collect_pads2_read_buffer
+gst_collect_pads2_take_buffer
+
+gst_collect_pads2_set_buffer_function
+gst_collect_pads2_set_compare_function
+gst_collect_pads2_set_event_function
+gst_collect_pads2_set_clip_function
+gst_collect_pads2_set_flushing
+gst_collect_pads2_set_function
+gst_collect_pads2_set_waiting
+<SUBSECTION Standard>
+GstCollectPads2Class
+GST_COLLECT_PADS2
+GST_COLLECT_PADS2_CLASS
+GST_TYPE_COLLECT_PADS2
+GST_IS_COLLECT_PADS2
+GST_IS_COLLECT_PADS2_CLASS
+GST_COLLECT_PADS2_GET_CLASS
+gst_collect_pads2_get_type
+<SUBSECTION Private>
+</SECTION>
 
 <SECTION>
 <FILE>gstpushsrc</FILE>
@@ -766,38 +709,6 @@ GstTypeFindHelperGetRangeFunction
 gst_type_find_helper_get_range
 gst_type_find_helper_get_range_ext
 <SUBSECTION Private>
-</SECTION>
-
-<SECTION>
-<FILE>gstdataqueue</FILE>
-<TITLE>GstDataQueue</TITLE>
-<INCLUDE>gst/base/gstdataqueue.h</INCLUDE>
-GstDataQueue
-GstDataQueueSize
-GstDataQueueCheckFullFunction
-GstDataQueueItem
-GstDataQueueEmptyCallback
-GstDataQueueFullCallback
-gst_data_queue_new
-gst_data_queue_new_full
-gst_data_queue_push
-gst_data_queue_pop
-gst_data_queue_flush
-gst_data_queue_set_flushing
-gst_data_queue_drop_head
-gst_data_queue_is_full
-gst_data_queue_is_empty
-gst_data_queue_get_level
-gst_data_queue_limits_changed
-<SUBSECTION Standard>
-GstDataQueueClass
-GST_DATA_QUEUE
-GST_IS_DATA_QUEUE
-GST_TYPE_DATA_QUEUE
-GST_DATA_QUEUE_CLASS
-GST_IS_DATA_QUEUE_CLASS
-<SUBSECTION Private>
-gst_data_queue_get_type
 </SECTION>
 
 # net

@@ -37,7 +37,7 @@ static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_STATIC_CAPS_ANY);
 
 static gboolean
-event_func (GstPad * pad, GstEvent * event)
+event_func (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   gboolean res = TRUE;
 
@@ -73,7 +73,7 @@ setup_filesrc (void)
 
   GST_DEBUG ("setup_filesrc");
   filesrc = gst_check_setup_element ("filesrc");
-  mysinkpad = gst_check_setup_sink_pad (filesrc, &sinktemplate, NULL);
+  mysinkpad = gst_check_setup_sink_pad (filesrc, &sinktemplate);
   gst_pad_set_event_function (mysinkpad, event_func);
   gst_pad_set_active (mysinkpad, TRUE);
 
@@ -171,8 +171,7 @@ GST_START_TEST (test_pull)
   GstPad *pad;
   GstFlowReturn ret;
   GstBuffer *buffer1, *buffer2;
-  guint8 *data1, *data2;
-  gsize size1, size2;
+  GstMapInfo info1, info2;
 
   src = setup_filesrc ();
 
@@ -186,7 +185,7 @@ GST_START_TEST (test_pull)
   fail_unless (pad != NULL);
 
   /* activate the pad in pull mode */
-  res = gst_pad_activate_pull (pad, TRUE);
+  res = gst_pad_activate_mode (pad, GST_PAD_MODE_PULL, TRUE);
   fail_unless (res == TRUE);
 
   /* not start playing */
@@ -207,40 +206,44 @@ GST_START_TEST (test_pull)
   gst_query_unref (seeking_query);
 
   /* do some pulls */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, 0, 100, &buffer1);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer1 != NULL);
   fail_unless (gst_buffer_get_size (buffer1) == 100);
 
+  buffer2 = NULL;
   ret = gst_pad_get_range (pad, 0, 50, &buffer2);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer2 != NULL);
   fail_unless (gst_buffer_get_size (buffer2) == 50);
 
   /* this should be the same */
-  data1 = gst_buffer_map (buffer1, &size1, NULL, GST_MAP_READ);
-  data2 = gst_buffer_map (buffer2, &size2, NULL, GST_MAP_READ);
-  fail_unless (memcmp (data1, data2, 50) == 0);
-  gst_buffer_unmap (buffer2, data2, size2);
+  fail_unless (gst_buffer_map (buffer1, &info1, GST_MAP_READ));
+  fail_unless (gst_buffer_map (buffer2, &info2, GST_MAP_READ));
+  fail_unless (memcmp (info1.data, info2.data, 50) == 0);
+  gst_buffer_unmap (buffer2, &info2);
 
   gst_buffer_unref (buffer2);
 
   /* read next 50 bytes */
+  buffer2 = NULL;
   ret = gst_pad_get_range (pad, 50, 50, &buffer2);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer2 != NULL);
   fail_unless (gst_buffer_get_size (buffer2) == 50);
 
   /* compare with previously read data */
-  data2 = gst_buffer_map (buffer2, &size2, NULL, GST_MAP_READ);
-  fail_unless (memcmp (data1 + 50, data2, 50) == 0);
-  gst_buffer_unmap (buffer2, data2, size2);
+  fail_unless (gst_buffer_map (buffer2, &info2, GST_MAP_READ));
+  fail_unless (memcmp ((guint8 *) info1.data + 50, info2.data, 50) == 0);
+  gst_buffer_unmap (buffer2, &info2);
 
-  gst_buffer_unmap (buffer1, data1, size1);
+  gst_buffer_unmap (buffer1, &info1);
   gst_buffer_unref (buffer1);
   gst_buffer_unref (buffer2);
 
   /* read 10 bytes at end-10 should give exactly 10 bytes */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop - 10, 10, &buffer1);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer1 != NULL);
@@ -248,6 +251,7 @@ GST_START_TEST (test_pull)
   gst_buffer_unref (buffer1);
 
   /* read 20 bytes at end-10 should give exactly 10 bytes */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop - 10, 20, &buffer1);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer1 != NULL);
@@ -255,6 +259,7 @@ GST_START_TEST (test_pull)
   gst_buffer_unref (buffer1);
 
   /* read 0 bytes at end-1 should return 0 bytes */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop - 1, 0, &buffer1);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer1 != NULL);
@@ -262,6 +267,7 @@ GST_START_TEST (test_pull)
   gst_buffer_unref (buffer1);
 
   /* read 10 bytes at end-1 should return 1 byte */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop - 1, 10, &buffer1);
   fail_unless (ret == GST_FLOW_OK);
   fail_unless (buffer1 != NULL);
@@ -269,20 +275,24 @@ GST_START_TEST (test_pull)
   gst_buffer_unref (buffer1);
 
   /* read 0 bytes at end should EOS */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop, 0, &buffer1);
-  fail_unless (ret == GST_FLOW_UNEXPECTED);
+  fail_unless (ret == GST_FLOW_EOS);
 
   /* read 10 bytes before end should EOS */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop, 10, &buffer1);
-  fail_unless (ret == GST_FLOW_UNEXPECTED);
+  fail_unless (ret == GST_FLOW_EOS);
 
   /* read 0 bytes after end should EOS */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop + 10, 0, &buffer1);
-  fail_unless (ret == GST_FLOW_UNEXPECTED);
+  fail_unless (ret == GST_FLOW_EOS);
 
   /* read 10 bytes after end should EOS too */
+  buffer1 = NULL;
   ret = gst_pad_get_range (pad, stop + 10, 10, &buffer1);
-  fail_unless (ret == GST_FLOW_UNEXPECTED);
+  fail_unless (ret == GST_FLOW_EOS);
 
   fail_unless (gst_element_set_state (src,
           GST_STATE_NULL) == GST_STATE_CHANGE_SUCCESS, "could not set to null");
@@ -349,23 +359,26 @@ GST_START_TEST (test_uri_interface)
   fail_unless_equals_string (location, "/i/do/not/exist");
   g_free (location);
 
-  location = (gchar *) gst_uri_handler_get_uri (GST_URI_HANDLER (src));
+  location = gst_uri_handler_get_uri (GST_URI_HANDLER (src));
   fail_unless_equals_string (location, "file:///i/do/not/exist");
+  g_free (location);
 
   /* should accept file:///foo/bar URIs */
   fail_unless (gst_uri_handler_set_uri (GST_URI_HANDLER (src),
-          "file:///foo/bar"));
-  location = (gchar *) gst_uri_handler_get_uri (GST_URI_HANDLER (src));
+          "file:///foo/bar", NULL));
+  location = gst_uri_handler_get_uri (GST_URI_HANDLER (src));
   fail_unless_equals_string (location, "file:///foo/bar");
+  g_free (location);
   g_object_get (G_OBJECT (src), "location", &location, NULL);
   fail_unless_equals_string (location, "/foo/bar");
   g_free (location);
 
   /* should accept file://localhost/foo/bar URIs */
   fail_unless (gst_uri_handler_set_uri (GST_URI_HANDLER (src),
-          "file://localhost/foo/baz"));
-  location = (gchar *) gst_uri_handler_get_uri (GST_URI_HANDLER (src));
+          "file://localhost/foo/baz", NULL));
+  location = gst_uri_handler_get_uri (GST_URI_HANDLER (src));
   fail_unless_equals_string (location, "file:///foo/baz");
+  g_free (location);
   g_object_get (G_OBJECT (src), "location", &location, NULL);
   fail_unless_equals_string (location, "/foo/baz");
   g_free (location);
@@ -375,12 +388,13 @@ GST_START_TEST (test_uri_interface)
   g_object_get (G_OBJECT (src), "location", &location, NULL);
   fail_unless_equals_string (location, "/foo/b?r");
   g_free (location);
-  location = (gchar *) gst_uri_handler_get_uri (GST_URI_HANDLER (src));
+  location = gst_uri_handler_get_uri (GST_URI_HANDLER (src));
   fail_unless_equals_string (location, "file:///foo/b%3Fr");
+  g_free (location);
 
   /* should fail with other hostnames */
   fail_if (gst_uri_handler_set_uri (GST_URI_HANDLER (src),
-          "file://hostname/foo/foo"));
+          "file://hostname/foo/foo", NULL));
 
   /* cleanup */
   gst_element_set_bus (src, NULL);
@@ -396,7 +410,7 @@ check_uri_for_uri (GstElement * e, const gchar * in_uri, const gchar * uri)
   GstQuery *query;
   gchar *query_uri = NULL;
 
-  gst_uri_handler_set_uri (GST_URI_HANDLER (e), in_uri);
+  gst_uri_handler_set_uri (GST_URI_HANDLER (e), in_uri, NULL);
 
   query = gst_query_new_uri ();
   fail_unless (gst_element_query (e, query));

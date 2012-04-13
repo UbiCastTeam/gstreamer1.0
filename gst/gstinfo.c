@@ -133,14 +133,13 @@
 
 /* disabled by default, as soon as some threshold is set > NONE,
  * it becomes enabled. */
-gboolean __gst_debug_enabled = FALSE;
-GstDebugLevel __gst_debug_min = GST_LEVEL_NONE;
+gboolean _gst_debug_enabled = FALSE;
+GstDebugLevel _gst_debug_min = GST_LEVEL_NONE;
 
 GstDebugCategory *GST_CAT_DEFAULT = NULL;
 
 GstDebugCategory *GST_CAT_GST_INIT = NULL;
-GstDebugCategory *GST_CAT_AUTOPLUG = NULL;
-GstDebugCategory *GST_CAT_AUTOPLUG_ATTEMPT = NULL;
+GstDebugCategory *GST_CAT_MEMORY = NULL;
 GstDebugCategory *GST_CAT_PARENTAGE = NULL;
 GstDebugCategory *GST_CAT_STATES = NULL;
 GstDebugCategory *GST_CAT_SCHEDULING = NULL;
@@ -157,7 +156,6 @@ GstDebugCategory *GST_CAT_PIPELINE = NULL;
 GstDebugCategory *GST_CAT_PLUGIN_LOADING = NULL;
 GstDebugCategory *GST_CAT_PLUGIN_INFO = NULL;
 GstDebugCategory *GST_CAT_PROPERTIES = NULL;
-GstDebugCategory *GST_CAT_TYPES = NULL;
 GstDebugCategory *GST_CAT_NEGOTIATION = NULL;
 GstDebugCategory *GST_CAT_REFCOUNTING = NULL;
 GstDebugCategory *GST_CAT_ERROR_SYSTEM = NULL;
@@ -170,6 +168,7 @@ GstDebugCategory *GST_CAT_PROBE = NULL;
 GstDebugCategory *GST_CAT_REGISTRY = NULL;
 GstDebugCategory *GST_CAT_QOS = NULL;
 GstDebugCategory *_priv_GST_CAT_POLL = NULL;
+GstDebugCategory *GST_CAT_META = NULL;
 
 
 #endif /* !defined(GST_DISABLE_GST_DEBUG) || !defined(GST_REMOVE_DISABLED) */
@@ -239,7 +238,7 @@ struct _GstDebugMessage
 };
 
 /* list of all name/level pairs from --gst-debug and GST_DEBUG */
-static GStaticMutex __level_name_mutex = G_STATIC_MUTEX_INIT;
+static GMutex __level_name_mutex;
 static GSList *__level_name = NULL;
 typedef struct
 {
@@ -249,7 +248,7 @@ typedef struct
 LevelNameEntry;
 
 /* list of all categories */
-static GStaticMutex __cat_mutex = G_STATIC_MUTEX_INIT;
+static GMutex __cat_mutex;
 static GSList *__categories = NULL;
 
 /* all registered debug handlers */
@@ -259,7 +258,7 @@ typedef struct
   gpointer user_data;
 }
 LogFuncEntry;
-static GStaticMutex __log_func_mutex = G_STATIC_MUTEX_INIT;
+static GMutex __log_func_mutex;
 static GSList *__log_functions = NULL;
 
 #define PRETTY_TAGS_DEFAULT  TRUE
@@ -303,14 +302,9 @@ _priv_gst_in_valgrind (void)
   return (in_valgrind == GST_VG_INSIDE);
 }
 
-/**
- * _gst_debug_init:
- *
- * Initializes the debugging system.
- * Normally you don't want to call this, because gst_init() does it for you.
- */
+/* Initialize the debugging system */
 void
-_gst_debug_init (void)
+_priv_gst_debug_init (void)
 {
   const gchar *env;
 
@@ -358,10 +352,8 @@ _gst_debug_init (void)
   /* FIXME: add descriptions here */
   GST_CAT_GST_INIT = _gst_debug_category_new ("GST_INIT",
       GST_DEBUG_BOLD | GST_DEBUG_FG_RED, NULL);
-  GST_CAT_AUTOPLUG = _gst_debug_category_new ("GST_AUTOPLUG",
-      GST_DEBUG_BOLD | GST_DEBUG_FG_BLUE, NULL);
-  GST_CAT_AUTOPLUG_ATTEMPT = _gst_debug_category_new ("GST_AUTOPLUG_ATTEMPT",
-      GST_DEBUG_BOLD | GST_DEBUG_FG_CYAN | GST_DEBUG_BG_BLUE, NULL);
+  GST_CAT_MEMORY = _gst_debug_category_new ("GST_MEMORY",
+      GST_DEBUG_BOLD | GST_DEBUG_FG_BLUE, "memory");
   GST_CAT_PARENTAGE = _gst_debug_category_new ("GST_PARENTAGE",
       GST_DEBUG_BOLD | GST_DEBUG_FG_WHITE | GST_DEBUG_BG_RED, NULL);
   GST_CAT_STATES = _gst_debug_category_new ("GST_STATES",
@@ -391,8 +383,6 @@ _gst_debug_init (void)
       GST_DEBUG_BOLD | GST_DEBUG_FG_CYAN, NULL);
   GST_CAT_PROPERTIES = _gst_debug_category_new ("GST_PROPERTIES",
       GST_DEBUG_BOLD | GST_DEBUG_FG_WHITE | GST_DEBUG_BG_BLUE, NULL);
-  GST_CAT_TYPES = _gst_debug_category_new ("GST_TYPES",
-      GST_DEBUG_BOLD | GST_DEBUG_FG_WHITE | GST_DEBUG_BG_RED, NULL);
   GST_CAT_NEGOTIATION = _gst_debug_category_new ("GST_NEGOTIATION",
       GST_DEBUG_BOLD | GST_DEBUG_FG_BLUE, NULL);
   GST_CAT_REFCOUNTING = _gst_debug_category_new ("GST_REFCOUNTING",
@@ -415,6 +405,7 @@ _gst_debug_init (void)
   GST_CAT_REGISTRY = _gst_debug_category_new ("GST_REGISTRY", 0, "registry");
   GST_CAT_QOS = _gst_debug_category_new ("GST_QOS", 0, "QoS");
   _priv_GST_CAT_POLL = _gst_debug_category_new ("GST_POLL", 0, "poll");
+  GST_CAT_META = _gst_debug_category_new ("GST_META", 0, "meta");
 
 
   /* print out the valgrind message if we're in valgrind */
@@ -629,6 +620,20 @@ gst_debug_print_object (gpointer ptr)
   if (*(GType *) ptr == GST_TYPE_STRUCTURE) {
     return gst_info_structure_to_string ((const GstStructure *) ptr);
   }
+  if (GST_IS_BUFFER (ptr)) {
+    GstBuffer *buf = (GstBuffer *) ptr;
+    gchar *ret;
+
+    ret =
+        g_strdup_printf ("%p, pts %" GST_TIME_FORMAT ", dts %" GST_TIME_FORMAT
+        ", dur %" GST_TIME_FORMAT ", size %" G_GSIZE_FORMAT ", offset %"
+        G_GUINT64_FORMAT ", offset_end %" G_GUINT64_FORMAT, buf,
+        GST_TIME_ARGS (GST_BUFFER_PTS (buf)),
+        GST_TIME_ARGS (GST_BUFFER_DTS (buf)),
+        GST_TIME_ARGS (GST_BUFFER_DURATION (buf)), gst_buffer_get_size (buf),
+        GST_BUFFER_OFFSET (buf), GST_BUFFER_OFFSET_END (buf));
+    return ret;
+  }
 #ifdef USE_POISONING
   if (*(guint32 *) ptr == 0xffffffff) {
     return g_strdup_printf ("<poisoned@%p>", ptr);
@@ -722,10 +727,12 @@ gst_debug_print_segment (gpointer ptr)
     case GST_FORMAT_TIME:{
       return g_strdup_printf ("time segment start=%" GST_TIME_FORMAT
           ", stop=%" GST_TIME_FORMAT ", rate=%f, applied_rate=%f"
-          ", flags=0x%02x, time=%" GST_TIME_FORMAT ", base=%" GST_TIME_FORMAT,
+          ", flags=0x%02x, time=%" GST_TIME_FORMAT ", base=%" GST_TIME_FORMAT
+          ", position %" GST_TIME_FORMAT ", duration %" GST_TIME_FORMAT,
           GST_TIME_ARGS (segment->start), GST_TIME_ARGS (segment->stop),
           segment->rate, segment->applied_rate, (guint) segment->flags,
-          GST_TIME_ARGS (segment->time), GST_TIME_ARGS (segment->base));
+          GST_TIME_ARGS (segment->time), GST_TIME_ARGS (segment->base),
+          GST_TIME_ARGS (segment->position), GST_TIME_ARGS (segment->duration));
     }
     default:{
       const gchar *format_name;
@@ -735,10 +742,11 @@ gst_debug_print_segment (gpointer ptr)
         format_name = "(UNKNOWN FORMAT)";
       return g_strdup_printf ("%s segment start=%" G_GINT64_FORMAT
           ", stop=%" G_GINT64_FORMAT ", rate=%f, applied_rate=%f"
-          ", flags=0x%02x, time=%" GST_TIME_FORMAT ", base=%" GST_TIME_FORMAT,
+          ", flags=0x%02x, time=%" G_GINT64_FORMAT ", base=%" G_GINT64_FORMAT
+          ", position %" G_GINT64_FORMAT ", duration %" G_GINT64_FORMAT,
           format_name, segment->start, segment->stop, segment->rate,
           segment->applied_rate, (guint) segment->flags,
-          GST_TIME_ARGS (segment->time), GST_TIME_ARGS (segment->base));
+          segment->time, segment->base, segment->position, segment->duration);
     }
   }
 }
@@ -968,13 +976,13 @@ gst_debug_log_default (GstDebugCategory * category, GstDebugLevel level,
     /* colors, windows. We take a lock to keep colors and content together.
      * Maybe there is a better way but for now this will do the right
      * thing. */
-    static GStaticMutex win_print_mutex = G_STATIC_MUTEX_INIT;
+    static GMutex win_print_mutex;
     const gint clear = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 #define SET_COLOR(c) G_STMT_START { \
   if (log_file == stderr) \
     SetConsoleTextAttribute (GetStdHandle (STD_ERROR_HANDLE), (c)); \
   } G_STMT_END
-    g_static_mutex_lock (&win_print_mutex);
+    g_mutex_lock (&win_print_mutex);
     /* timestamp */
     fprintf (log_file, "%" GST_TIME_FORMAT " ", GST_TIME_ARGS (elapsed));
     fflush (log_file);
@@ -1000,7 +1008,7 @@ gst_debug_log_default (GstDebugCategory * category, GstDebugLevel level,
     SET_COLOR (clear);
     fprintf (log_file, " %s\n", gst_debug_message_get (message));
     fflush (log_file);
-    g_static_mutex_unlock (&win_print_mutex);
+    g_mutex_unlock (&win_print_mutex);
 #endif
   } else {
     /* no color, all platforms */
@@ -1078,10 +1086,10 @@ gst_debug_add_log_function (GstLogFunction func, gpointer data)
    * It'd probably be clever to use some kind of RCU here, but I don't know
    * anything about that.
    */
-  g_static_mutex_lock (&__log_func_mutex);
+  g_mutex_lock (&__log_func_mutex);
   list = g_slist_copy (__log_functions);
   __log_functions = g_slist_prepend (list, entry);
-  g_static_mutex_unlock (&__log_func_mutex);
+  g_mutex_unlock (&__log_func_mutex);
 
   GST_DEBUG ("prepended log function %p (user data %p) to log functions",
       func, data);
@@ -1110,7 +1118,7 @@ gst_debug_remove_with_compare_func (GCompareFunc func, gpointer data)
   GSList *new;
   guint removals = 0;
 
-  g_static_mutex_lock (&__log_func_mutex);
+  g_mutex_lock (&__log_func_mutex);
   new = __log_functions;
   while ((found = g_slist_find_custom (new, data, func))) {
     if (new == __log_functions) {
@@ -1125,7 +1133,7 @@ gst_debug_remove_with_compare_func (GCompareFunc func, gpointer data)
   }
   /* FIXME: We leak the old list here. See _add_log_function for why. */
   __log_functions = new;
-  g_static_mutex_unlock (&__log_func_mutex);
+  g_mutex_unlock (&__log_func_mutex);
 
   return removals;
 }
@@ -1218,11 +1226,11 @@ gst_debug_is_colored (void)
 void
 gst_debug_set_active (gboolean active)
 {
-  __gst_debug_enabled = active;
+  _gst_debug_enabled = active;
   if (active)
-    __gst_debug_min = GST_LEVEL_COUNT;
+    _gst_debug_min = GST_LEVEL_COUNT;
   else
-    __gst_debug_min = GST_LEVEL_NONE;
+    _gst_debug_min = GST_LEVEL_NONE;
 }
 
 /**
@@ -1235,7 +1243,7 @@ gst_debug_set_active (gboolean active)
 gboolean
 gst_debug_is_active (void)
 {
-  return __gst_debug_enabled;
+  return _gst_debug_enabled;
 }
 
 /**
@@ -1273,7 +1281,7 @@ gst_debug_reset_threshold (gpointer category, gpointer unused)
   GstDebugCategory *cat = (GstDebugCategory *) category;
   GSList *walk;
 
-  g_static_mutex_lock (&__level_name_mutex);
+  g_mutex_lock (&__level_name_mutex);
   walk = __level_name;
   while (walk) {
     LevelNameEntry *entry = walk->data;
@@ -1289,15 +1297,15 @@ gst_debug_reset_threshold (gpointer category, gpointer unused)
   gst_debug_category_set_threshold (cat, gst_debug_get_default_threshold ());
 
 exit:
-  g_static_mutex_unlock (&__level_name_mutex);
+  g_mutex_unlock (&__level_name_mutex);
 }
 
 static void
 gst_debug_reset_all_thresholds (void)
 {
-  g_static_mutex_lock (&__cat_mutex);
+  g_mutex_lock (&__cat_mutex);
   g_slist_foreach (__categories, gst_debug_reset_threshold, NULL);
-  g_static_mutex_unlock (&__cat_mutex);
+  g_mutex_unlock (&__cat_mutex);
 }
 
 static void
@@ -1333,12 +1341,12 @@ gst_debug_set_threshold_for_name (const gchar * name, GstDebugLevel level)
   entry = g_slice_new (LevelNameEntry);
   entry->pat = pat;
   entry->level = level;
-  g_static_mutex_lock (&__level_name_mutex);
+  g_mutex_lock (&__level_name_mutex);
   __level_name = g_slist_prepend (__level_name, entry);
-  g_static_mutex_unlock (&__level_name_mutex);
-  g_static_mutex_lock (&__cat_mutex);
+  g_mutex_unlock (&__level_name_mutex);
+  g_mutex_lock (&__cat_mutex);
   g_slist_foreach (__categories, for_each_threshold_by_entry, entry);
-  g_static_mutex_unlock (&__cat_mutex);
+  g_mutex_unlock (&__cat_mutex);
 }
 
 /**
@@ -1356,7 +1364,7 @@ gst_debug_unset_threshold_for_name (const gchar * name)
   g_return_if_fail (name != NULL);
 
   pat = g_pattern_spec_new (name);
-  g_static_mutex_lock (&__level_name_mutex);
+  g_mutex_lock (&__level_name_mutex);
   walk = __level_name;
   /* improve this if you want, it's mighty slow */
   while (walk) {
@@ -1370,7 +1378,7 @@ gst_debug_unset_threshold_for_name (const gchar * name)
       walk = __level_name;
     }
   }
-  g_static_mutex_unlock (&__level_name_mutex);
+  g_mutex_unlock (&__level_name_mutex);
   g_pattern_spec_free (pat);
   gst_debug_reset_all_thresholds ();
 }
@@ -1395,9 +1403,9 @@ _gst_debug_category_new (const gchar * name, guint color,
   gst_debug_reset_threshold (cat, NULL);
 
   /* add to category list */
-  g_static_mutex_lock (&__cat_mutex);
+  g_mutex_lock (&__cat_mutex);
   __categories = g_slist_prepend (__categories, cat);
-  g_static_mutex_unlock (&__cat_mutex);
+  g_mutex_unlock (&__cat_mutex);
 
   return cat;
 }
@@ -1415,9 +1423,9 @@ gst_debug_category_free (GstDebugCategory * category)
     return;
 
   /* remove from category list */
-  g_static_mutex_lock (&__cat_mutex);
+  g_mutex_lock (&__cat_mutex);
   __categories = g_slist_remove (__categories, category);
-  g_static_mutex_unlock (&__cat_mutex);
+  g_mutex_unlock (&__cat_mutex);
 
   g_free ((gpointer) category->name);
   g_free ((gpointer) category->description);
@@ -1444,9 +1452,9 @@ gst_debug_category_set_threshold (GstDebugCategory * category,
 {
   g_return_if_fail (category != NULL);
 
-  if (level > __gst_debug_min) {
-    __gst_debug_enabled = TRUE;
-    __gst_debug_min = level;
+  if (level > _gst_debug_min) {
+    _gst_debug_enabled = TRUE;
+    _gst_debug_min = level;
   }
 
   g_atomic_int_set (&category->threshold, level);
@@ -1540,9 +1548,9 @@ gst_debug_get_all_categories (void)
 {
   GSList *ret;
 
-  g_static_mutex_lock (&__cat_mutex);
+  g_mutex_lock (&__cat_mutex);
   ret = g_slist_copy (__categories);
-  g_static_mutex_unlock (&__cat_mutex);
+  g_mutex_unlock (&__cat_mutex);
 
   return ret;
 }
@@ -1565,7 +1573,7 @@ _gst_debug_get_category (const gchar * name)
 /*** FUNCTION POINTERS ********************************************************/
 
 static GHashTable *__gst_function_pointers;     /* NULL */
-static GStaticMutex __dbg_functions_mutex = G_STATIC_MUTEX_INIT;
+static GMutex __dbg_functions_mutex;
 
 /* This function MUST NOT return NULL */
 const gchar *
@@ -1580,14 +1588,14 @@ _gst_debug_nameof_funcptr (GstDebugFuncPtr func)
   if (G_UNLIKELY (func == NULL))
     return "(NULL)";
 
-  g_static_mutex_lock (&__dbg_functions_mutex);
+  g_mutex_lock (&__dbg_functions_mutex);
   if (G_LIKELY (__gst_function_pointers)) {
     ptrname = g_hash_table_lookup (__gst_function_pointers, (gpointer) func);
-    g_static_mutex_unlock (&__dbg_functions_mutex);
+    g_mutex_unlock (&__dbg_functions_mutex);
     if (G_LIKELY (ptrname))
       return ptrname;
   } else {
-    g_static_mutex_unlock (&__dbg_functions_mutex);
+    g_mutex_unlock (&__dbg_functions_mutex);
   }
   /* we need to create an entry in the hash table for this one so we don't leak
    * the name */
@@ -1612,14 +1620,14 @@ _gst_debug_register_funcptr (GstDebugFuncPtr func, const gchar * ptrname)
 {
   gpointer ptr = (gpointer) func;
 
-  g_static_mutex_lock (&__dbg_functions_mutex);
+  g_mutex_lock (&__dbg_functions_mutex);
 
   if (!__gst_function_pointers)
     __gst_function_pointers = g_hash_table_new (g_direct_hash, g_direct_equal);
   if (!g_hash_table_lookup (__gst_function_pointers, ptr))
     g_hash_table_insert (__gst_function_pointers, ptr, (gpointer) ptrname);
 
-  g_static_mutex_unlock (&__dbg_functions_mutex);
+  g_mutex_unlock (&__dbg_functions_mutex);
 }
 
 /*** PRINTF EXTENSIONS ********************************************************/

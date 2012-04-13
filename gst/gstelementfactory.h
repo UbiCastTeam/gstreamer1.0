@@ -34,6 +34,7 @@ typedef struct _GstElementFactoryClass GstElementFactoryClass;
 #include <gst/gstpluginfeature.h>
 #include <gst/gstpadtemplate.h>
 #include <gst/gstiterator.h>
+#include <gst/gsturi.h>
 
 G_BEGIN_DECLS
 
@@ -56,13 +57,13 @@ struct _GstElementFactory {
 
   GType                 type;                   /* unique GType of element or 0 if not loaded */
 
-  gpointer		metadata;
+  gpointer              metadata;
 
   GList *               staticpadtemplates;     /* GstStaticPadTemplate list */
   guint                 numpadtemplates;
 
   /* URI interface stuff */
-  guint                 uri_type;
+  GstURIType            uri_type;
   gchar **              uri_protocols;
 
   GList *               interfaces;             /* interface type names this element implements */
@@ -88,21 +89,16 @@ const gchar *           gst_element_factory_get_metadata        (GstElementFacto
 guint                   gst_element_factory_get_num_pad_templates (GstElementFactory *factory);
 const GList *           gst_element_factory_get_static_pad_templates (GstElementFactory *factory);
 
-gint                    gst_element_factory_get_uri_type        (GstElementFactory *factory);
-gchar **                gst_element_factory_get_uri_protocols   (GstElementFactory *factory);
+GstURIType              gst_element_factory_get_uri_type        (GstElementFactory *factory);
+const gchar * const *   gst_element_factory_get_uri_protocols   (GstElementFactory *factory);
 
 gboolean                gst_element_factory_has_interface       (GstElementFactory *factory,
                                                                  const gchar *interfacename);
 
 GstElement*             gst_element_factory_create              (GstElementFactory *factory,
-                                                                 const gchar *name);
-GstElement*             gst_element_factory_make                (const gchar *factoryname, const gchar *name);
+                                                                 const gchar *name) G_GNUC_MALLOC;
+GstElement*             gst_element_factory_make                (const gchar *factoryname, const gchar *name) G_GNUC_MALLOC;
 
-/* FIXME 0.11: move these two into our private headers */
-void                    __gst_element_factory_add_static_pad_template (GstElementFactory *elementfactory,
-                                                                 GstStaticPadTemplate *templ);
-void                    __gst_element_factory_add_interface     (GstElementFactory *elementfactory,
-                                                                 const gchar *interfacename);
 gboolean                gst_element_register                    (GstPlugin *plugin, const gchar *name,
                                                                  guint rank, GType type);
 
@@ -172,7 +168,7 @@ typedef guint64 GstElementFactoryListType;
  * Elements matching any of the defined GST_ELEMENT_FACTORY_TYPE_MEDIA types
  *
  * Note: Do not use this if you wish to not filter against any of the defined
- * media types. If you wish to do this, simply don't specify any 
+ * media types. If you wish to do this, simply don't specify any
  * GST_ELEMENT_FACTORY_TYPE_MEDIA flag.
  *
  * Since: 0.10.31
@@ -217,33 +213,33 @@ typedef guint64 GstElementFactoryListType;
   (GST_ELEMENT_FACTORY_TYPE_DECODER | GST_ELEMENT_FACTORY_TYPE_DEMUXER | GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER | GST_ELEMENT_FACTORY_TYPE_PARSER)
 
 /* Element klass defines */
-#define GST_ELEMENT_FACTORY_KLASS_DECODER		"Decoder"
-#define GST_ELEMENT_FACTORY_KLASS_ENCODER		"Encoder"
-#define GST_ELEMENT_FACTORY_KLASS_SINK			"Sink"
-#define GST_ELEMENT_FACTORY_KLASS_SRC			"Source"
-#define GST_ELEMENT_FACTORY_KLASS_MUXER			"Muxer"
-#define GST_ELEMENT_FACTORY_KLASS_DEMUXER		"Demuxer"
-#define GST_ELEMENT_FACTORY_KLASS_PARSER		"Parser"
-#define GST_ELEMENT_FACTORY_KLASS_PAYLOADER		"Payloader"
-#define GST_ELEMENT_FACTORY_KLASS_DEPAYLOADER		"Depayloader"
-#define GST_ELEMENT_FACTORY_KLASS_FORMATTER		"Formatter"
+#define GST_ELEMENT_FACTORY_KLASS_DECODER               "Decoder"
+#define GST_ELEMENT_FACTORY_KLASS_ENCODER               "Encoder"
+#define GST_ELEMENT_FACTORY_KLASS_SINK                  "Sink"
+#define GST_ELEMENT_FACTORY_KLASS_SRC                   "Source"
+#define GST_ELEMENT_FACTORY_KLASS_MUXER                 "Muxer"
+#define GST_ELEMENT_FACTORY_KLASS_DEMUXER               "Demuxer"
+#define GST_ELEMENT_FACTORY_KLASS_PARSER                "Parser"
+#define GST_ELEMENT_FACTORY_KLASS_PAYLOADER             "Payloader"
+#define GST_ELEMENT_FACTORY_KLASS_DEPAYLOADER           "Depayloader"
+#define GST_ELEMENT_FACTORY_KLASS_FORMATTER             "Formatter"
 
-#define GST_ELEMENT_FACTORY_KLASS_MEDIA_VIDEO		"Video"
-#define GST_ELEMENT_FACTORY_KLASS_MEDIA_AUDIO		"Audio"
-#define GST_ELEMENT_FACTORY_KLASS_MEDIA_IMAGE		"Image"
-#define GST_ELEMENT_FACTORY_KLASS_MEDIA_SUBTITLE	"Subtitle"
-#define GST_ELEMENT_FACTORY_KLASS_MEDIA_METADATA	"Metadata"
+#define GST_ELEMENT_FACTORY_KLASS_MEDIA_VIDEO           "Video"
+#define GST_ELEMENT_FACTORY_KLASS_MEDIA_AUDIO           "Audio"
+#define GST_ELEMENT_FACTORY_KLASS_MEDIA_IMAGE           "Image"
+#define GST_ELEMENT_FACTORY_KLASS_MEDIA_SUBTITLE        "Subtitle"
+#define GST_ELEMENT_FACTORY_KLASS_MEDIA_METADATA        "Metadata"
 
 gboolean      gst_element_factory_list_is_type      (GstElementFactory *factory,
-						     GstElementFactoryListType type);
+                                                     GstElementFactoryListType type);
 
 GList *       gst_element_factory_list_get_elements (GstElementFactoryListType type,
-						     GstRank minrank);
+                                                     GstRank minrank) G_GNUC_MALLOC;
 
 
 GList *       gst_element_factory_list_filter       (GList *list, const GstCaps *caps,
-						     GstPadDirection direction,
-						     gboolean subsetonly);
+                                                     GstPadDirection direction,
+                                                     gboolean subsetonly) G_GNUC_MALLOC;
 G_END_DECLS
 
 #endif /* __GST_ELEMENT_FACTORY_H__ */

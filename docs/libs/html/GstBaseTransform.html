@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBaseTransform</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Library Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseSink.html" title="GstBaseSink">
 <link rel="next" href="GstPushSrc.html" title="GstPushSrc">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="GstBaseSink.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="gstreamer-base.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Library Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Library Reference Manual</th>
 <td><a accesskey="n" href="GstPushSrc.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -57,21 +57,15 @@ struct              <a class="link" href="GstBaseTransform.html#GstBaseTransform
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> enabled</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstBaseTransform.html#gst-base-transform-update-qos" title="gst_base_transform_update_qos ()">gst_base_transform_update_qos</a>       (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> proportion</code></em>,
-                                                         <em class="parameter"><code><a href="../gstreamer-0.11/GstClock.html#GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> diff</code></em>,
-                                                         <em class="parameter"><code><a href="../gstreamer-0.11/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstClock.html#GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> diff</code></em>,
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstBaseTransform.html#gst-base-transform-set-gap-aware" title="gst_base_transform_set_gap_aware ()">gst_base_transform_set_gap_aware</a>    (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> gap_aware</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="GstBaseTransform.html#gst-base-transform-suggest" title="gst_base_transform_suggest ()">gst_base_transform_suggest</a>          (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>,
-                                                         <em class="parameter"><code><a href="../gstreamer-0.11/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="GstBaseTransform.html#gst-base-transform-reconfigure" title="gst_base_transform_reconfigure ()">gst_base_transform_reconfigure</a>      (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>);
 #define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-SINK-NAME:CAPS" title="GST_BASE_TRANSFORM_SINK_NAME">GST_BASE_TRANSFORM_SINK_NAME</a>
 #define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-SRC-NAME:CAPS" title="GST_BASE_TRANSFORM_SRC_NAME">GST_BASE_TRANSFORM_SRC_NAME</a>
 #define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-SINK-PAD:CAPS" title="GST_BASE_TRANSFORM_SINK_PAD()">GST_BASE_TRANSFORM_SINK_PAD</a>         (obj)
 #define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-SRC-PAD:CAPS" title="GST_BASE_TRANSFORM_SRC_PAD()">GST_BASE_TRANSFORM_SRC_PAD</a>          (obj)
 #define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-FLOW-DROPPED:CAPS" title="GST_BASE_TRANSFORM_FLOW_DROPPED">GST_BASE_TRANSFORM_FLOW_DROPPED</a>
-#define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-LOCK:CAPS" title="GST_BASE_TRANSFORM_LOCK()">GST_BASE_TRANSFORM_LOCK</a>             (obj)
-#define             <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-UNLOCK:CAPS" title="GST_BASE_TRANSFORM_UNLOCK()">GST_BASE_TRANSFORM_UNLOCK</a>           (obj)
 </pre>
 </div>
 <div class="refsect1">
@@ -79,8 +73,8 @@ struct              <a class="link" href="GstBaseTransform.html#GstBaseTransform
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-         +----<a href="../gstreamer-0.11/GstObject.html">GstObject</a>
-               +----<a href="../gstreamer-0.11/GstElement.html">GstElement</a>
+         +----<a href="../gstreamer-1.0/GstObject.html">GstObject</a>
+               +----<a href="../gstreamer-1.0/GstElement.html">GstElement</a>
                      +----GstBaseTransform
 </pre>
 </div>
@@ -117,7 +111,7 @@ It provides for:
 <p>
 </p>
 <div class="refsect2">
-<a name="id529984"></a><h3>Use Cases</h3>
+<a name="idp8766032"></a><h3>Use Cases</h3>
 <p>
 </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
@@ -257,7 +251,7 @@ It provides for:
 </p>
 <hr>
 <div class="refsect2">
-<a name="id494548"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
+<a name="idp10669744"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
 <p>
 </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
@@ -325,12 +319,13 @@ The opaque <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"
   GstElementClass parent_class;
 
   gboolean       passthrough_on_same_caps;
+  gboolean       transform_ip_on_passthrough;
 
   /* virtual methods for subclasses */
   GstCaps* (*transform_caps) (GstBaseTransform *trans,
                                    GstPadDirection direction,
                                    GstCaps *caps, GstCaps *filter);
-  void		(*fixate_caps)	  (GstBaseTransform *trans,
+  GstCaps* (*fixate_caps)	  (GstBaseTransform *trans,
                                    GstPadDirection direction, GstCaps *caps,
                                    GstCaps *othercaps);
   gboolean      (*accept_caps)    (GstBaseTransform *trans, GstPadDirection direction,
@@ -340,10 +335,13 @@ The opaque <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"
   gboolean      (*query)          (GstBaseTransform *trans, GstPadDirection direction,
                                    GstQuery *query);
 
-  /* propose allocation query parameters for input buffers */
-  gboolean      (*propose_allocation) (GstBaseTransform *trans, GstQuery *query);
   /* decide allocation query for output buffers */
-  gboolean      (*decide_allocation) (GstBaseTransform *trans, GstQuery *query);
+  gboolean      (*decide_allocation)  (GstBaseTransform *trans, GstQuery *query);
+  gboolean      (*filter_meta)        (GstBaseTransform *trans, GstQuery *query, GType api);
+
+  /* propose allocation query parameters for input buffers */
+  gboolean      (*propose_allocation) (GstBaseTransform *trans, GstQuery *decide_query,
+                                       GstQuery *query);
 
   /* transform size */
   gboolean      (*transform_size) (GstBaseTransform *trans,
@@ -365,8 +363,11 @@ The opaque <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"
   GstFlowReturn (*prepare_output_buffer) (GstBaseTransform * trans,
                                           GstBuffer *input, GstBuffer **outbuf);
 
-  gboolean      (*copy_metadata)     (GstBaseTransform * trans, GstBuffer *input,
+  /* metadata */
+  gboolean      (*copy_metadata)     (GstBaseTransform *trans, GstBuffer *input,
                                       GstBuffer *outbuf);
+  gboolean      (*transform_meta)    (GstBaseTransform *trans, GstBuffer *outbuf,
+                                      GstMeta *meta, GstBuffer *inbuf);
 
   void          (*before_transform)  (GstBaseTransform *trans, GstBuffer *buffer);
 
@@ -386,13 +387,22 @@ same type and quantity) it should provide <em class="parameter"><code>transform_
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="../gstreamer-0.11/GstElement.html#GstElementClass"><span class="type">GstElementClass</span></a> <em class="structfield"><code><a name="GstBaseTransformClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td><p><span class="term"><a href="../gstreamer-1.0/GstElement.html#GstElementClass"><span class="type">GstElementClass</span></a> <em class="structfield"><code><a name="GstBaseTransformClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Element parent class</td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GstBaseTransformClass.passthrough-on-same-caps"></a>passthrough_on_same_caps</code></em>;</span></p></td>
-<td>If set to TRUE, passthrough mode will be
-automatically enabled if the caps are the same.</td>
+<td>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, passthrough mode will be
+automatically enabled if the caps are the same.
+Set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> by default.</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GstBaseTransformClass.transform-ip-on-passthrough"></a>transform_ip_on_passthrough</code></em>;</span></p></td>
+<td>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, <em class="parameter"><code>transform_ip</code></em> will be called in
+passthrough mode. The passed buffer might not be
+writable. When <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, neither <em class="parameter"><code>transform</code></em> nor
+<em class="parameter"><code>transform_ip</code></em> will be called in passthrough mode.
+Set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> by default.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.transform-caps"></a>transform_caps</code></em> ()</span></p></td>
@@ -403,7 +413,9 @@ element ?</td>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.fixate-caps"></a>fixate_caps</code></em> ()</span></p></td>
 <td>Optional. Given the pad in this direction and the given
-caps, fixate the caps on the other pad.</td>
+caps, fixate the caps on the other pad. The function takes
+ownership of <em class="parameter"><code>othercaps</code></em> and returns a fixated version of
+<em class="parameter"><code>othercaps</code></em>. <em class="parameter"><code>othercaps</code></em> is not guaranteed to be writable.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.accept-caps"></a>accept_caps</code></em> ()</span></p></td>
@@ -424,18 +436,32 @@ should must chain up to the parent if they didn't handle the
 query</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.propose-allocation"></a>propose_allocation</code></em> ()</span></p></td>
-<td>Propose buffer allocation parameters for upstream elements.
-This function is only called when not operating in
-passthrough mode. The default implementation is NULL.</td>
-</tr>
-<tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.decide-allocation"></a>decide_allocation</code></em> ()</span></p></td>
 <td>Setup the allocation parameters for allocating output
 buffers. The passed in query contains the result of the
 downstream allocation query. This function is only called
 when not operating in passthrough mode. The default
-implementation is NULL.</td>
+implementation will remove all memory dependent metadata.
+If there is ia <em class="parameter"><code>filter_meta</code></em> method implementation, it will
+be called for all metadata API in the downstream query,
+otherwise the metadata API is removed.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.filter-meta"></a>filter_meta</code></em> ()</span></p></td>
+<td>Return TRUE if the metadata API should be proposed in the
+upstream allocation query. The default implementation is NULL
+and will cause all metadata to be removed.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.propose-allocation"></a>propose_allocation</code></em> ()</span></p></td>
+<td>Propose buffer allocation parameters for upstream elements.
+This function must be implemented if the element reads or
+writes the buffer content. The query that was passed to
+the decide_allocation is passed in this method (or NULL
+when the element is in passthrough mode). The default
+implementation will pass the query downstream when in
+passthrough mode and will copy all the filtered metadata
+API in non-passthrough mode.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.transform-size"></a>transform_size</code></em> ()</span></p></td>
@@ -492,6 +518,13 @@ will return the input buffer in passthrough mode.</td>
 Copy the metadata from the input buffer to the output buffer.
 The default implementation will copy the flags, timestamps and
 offsets of the buffer.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.transform-meta"></a>transform_meta</code></em> ()</span></p></td>
+<td>Optional. Transform the metadata on the input buffer to the
+output buffer. By default this method is NULL and no
+metadata is copied. subclasses can implement this method and
+return TRUE if the metadata is to be copied.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseTransformClass.before-transform"></a>before_transform</code></em> ()</span></p></td>
@@ -678,8 +711,8 @@ MT safe.
 <a name="gst-base-transform-update-qos"></a><h3>gst_base_transform_update_qos ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_base_transform_update_qos       (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> proportion</code></em>,
-                                                         <em class="parameter"><code><a href="../gstreamer-0.11/GstClock.html#GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> diff</code></em>,
-                                                         <em class="parameter"><code><a href="../gstreamer-0.11/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstClock.html#GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> diff</code></em>,
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);</pre>
 <p>
 Set the QoS parameters in the transform. This function is called internally
 when a QOS event is received but subclasses can provide custom information
@@ -720,7 +753,7 @@ running_time.</td>
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> gap_aware</code></em>);</pre>
 <p>
 If <em class="parameter"><code>gap_aware</code></em> is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> (the default), output buffers will have the
-<a href="../gstreamer-0.11/gstreamer-GstBuffer.html#GST-BUFFER-FLAG-GAP:CAPS"><code class="literal">GST_BUFFER_FLAG_GAP</code></a> flag unset.
+<a href="../gstreamer-1.0/gstreamer-GstBuffer.html#GST-BUFFER-FLAG-GAP:CAPS"><code class="literal">GST_BUFFER_FLAG_GAP</code></a> flag unset.
 </p>
 <p>
 If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the element must handle output buffers with this flag set
@@ -748,56 +781,6 @@ MT safe.
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-base-transform-suggest"></a><h3>gst_base_transform_suggest ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_base_transform_suggest          (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>,
-                                                         <em class="parameter"><code><a href="../gstreamer-0.11/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>);</pre>
-<p>
-Instructs <em class="parameter"><code>trans</code></em> to suggest new <em class="parameter"><code>caps</code></em> upstream. A copy of <em class="parameter"><code>caps</code></em> will be
-taken.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
-<td>a <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
-<td>caps to suggest. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
-<td>buffer size to suggest</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.21</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-base-transform-reconfigure"></a><h3>gst_base_transform_reconfigure ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_base_transform_reconfigure      (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>);</pre>
-<p>
-Instructs <em class="parameter"><code>trans</code></em> to renegotiate a new downstream transform on the next
-buffer. This function is typically called after properties on the transform
-were set that influence the output format.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
-<td>a <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a>
-</td>
-</tr></tbody>
-</table></div>
-<p class="since">Since 0.10.21</p>
-</div>
-<hr>
-<div class="refsect2">
 <a name="GST-BASE-TRANSFORM-SINK-NAME:CAPS"></a><h3>GST_BASE_TRANSFORM_SINK_NAME</h3>
 <pre class="programlisting">#define GST_BASE_TRANSFORM_SINK_NAME "sink"
 </pre>
@@ -820,7 +803,7 @@ The name of the templates for the source pad.
 <pre class="programlisting">#define GST_BASE_TRANSFORM_SINK_PAD(obj) (GST_BASE_TRANSFORM_CAST (obj)-&gt;sinkpad)
 </pre>
 <p>
-Gives the pointer to the sink <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a> object of the element.
+Gives the pointer to the sink <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -837,7 +820,7 @@ Gives the pointer to the sink <a href="../gstreamer-0.11/GstPad.html"><span clas
 <pre class="programlisting">#define GST_BASE_TRANSFORM_SRC_PAD(obj)		(GST_BASE_TRANSFORM_CAST (obj)-&gt;srcpad)
 </pre>
 <p>
-Gives the pointer to the source <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a> object of the element.
+Gives the pointer to the source <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -854,43 +837,9 @@ Gives the pointer to the source <a href="../gstreamer-0.11/GstPad.html"><span cl
 <pre class="programlisting">#define GST_BASE_TRANSFORM_FLOW_DROPPED   GST_FLOW_CUSTOM_SUCCESS
 </pre>
 <p>
-A <a href="../gstreamer-0.11/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> that can be returned from transform and transform_ip to
+A <a href="../gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> that can be returned from transform and transform_ip to
 indicate that no output buffer was generated.
 </p>
-<p class="since">Since 0.10.13</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-BASE-TRANSFORM-LOCK:CAPS"></a><h3>GST_BASE_TRANSFORM_LOCK()</h3>
-<pre class="programlisting">#define GST_BASE_TRANSFORM_LOCK(obj)   g_mutex_lock (GST_BASE_TRANSFORM_CAST (obj)-&gt;transform_lock)
-</pre>
-<p>
-Obtain a lock to protect the transform function from concurrent access.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
-<td>base transform instance</td>
-</tr></tbody>
-</table></div>
-<p class="since">Since 0.10.13</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-BASE-TRANSFORM-UNLOCK:CAPS"></a><h3>GST_BASE_TRANSFORM_UNLOCK()</h3>
-<pre class="programlisting">#define GST_BASE_TRANSFORM_UNLOCK(obj) g_mutex_unlock (GST_BASE_TRANSFORM_CAST (obj)-&gt;transform_lock)
-</pre>
-<p>
-Release the lock that protects the transform function from concurrent access.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
-<td>base transform instance</td>
-</tr></tbody>
-</table></div>
 <p class="since">Since 0.10.13</p>
 </div>
 </div>

@@ -67,7 +67,7 @@ check_tags_empty (const GstTagList * list)
 #define NEW_LIST_FIXED(mode)                                    \
 G_STMT_START {                                                  \
   if (list) gst_tag_list_free (list);                           \
-  list = gst_tag_list_new ();                                   \
+  list = gst_tag_list_new_empty ();                                   \
   gst_tag_list_add (list, mode, FTAG, FIXED1, FTAG, FIXED2,     \
                     FTAG, FIXED3, FTAG, FIXED4, NULL);          \
   mark_point();                                                 \
@@ -76,7 +76,7 @@ G_STMT_START {                                                  \
 #define NEW_LIST_UNFIXED(mode)                                  \
 G_STMT_START {                                                  \
   if (list) gst_tag_list_free (list);                           \
-  list = gst_tag_list_new ();                                   \
+  list = gst_tag_list_new_empty ();                                   \
   gst_tag_list_add (list, mode, UTAG, UNFIXED1, UTAG, UNFIXED2, \
                     UTAG, UNFIXED3, UTAG, UNFIXED4, NULL);      \
   mark_point();                                                 \
@@ -85,11 +85,11 @@ G_STMT_START {                                                  \
 #define NEW_LISTS_FIXED(mode)                                   \
 G_STMT_START {                                                  \
   if (list) gst_tag_list_free (list);                           \
-  list = gst_tag_list_new ();                                   \
+  list = gst_tag_list_new_empty ();                                   \
   gst_tag_list_add (list, GST_TAG_MERGE_APPEND, FTAG, FIXED1,   \
                     FTAG, FIXED2, NULL);                        \
   if (list2) gst_tag_list_free (list2);                         \
-  list2 = gst_tag_list_new ();                                  \
+  list2 = gst_tag_list_new_empty ();                                  \
   gst_tag_list_add (list2, GST_TAG_MERGE_APPEND, FTAG, FIXED3,  \
                     FTAG, FIXED4, NULL);                        \
   if (merge) gst_tag_list_free (merge);                         \
@@ -100,11 +100,11 @@ G_STMT_START {                                                  \
 #define NEW_LISTS_UNFIXED(mode)                                 \
 G_STMT_START {                                                  \
   if (list) gst_tag_list_free (list);                           \
-  list = gst_tag_list_new ();                                   \
+  list = gst_tag_list_new_empty ();                                   \
   gst_tag_list_add (list, GST_TAG_MERGE_APPEND, UTAG, UNFIXED1, \
                     UTAG, UNFIXED2, NULL);                      \
   if (list2) gst_tag_list_free (list2);                         \
-  list2 = gst_tag_list_new ();                                  \
+  list2 = gst_tag_list_new_empty ();                                  \
   gst_tag_list_add (list2, GST_TAG_MERGE_APPEND, UTAG, UNFIXED3,\
                     UTAG, UNFIXED4, NULL);                      \
   if (merge) gst_tag_list_free (merge);                         \
@@ -117,7 +117,7 @@ G_STMT_START {                                                  \
   if (list) gst_tag_list_free (list);                           \
   list = NULL;                                                  \
   if (list2) gst_tag_list_free (list2);                         \
-  list2 = gst_tag_list_new ();                                  \
+  list2 = gst_tag_list_new_empty ();                                  \
   gst_tag_list_add (list2, GST_TAG_MERGE_APPEND, FTAG, FIXED3,  \
                     FTAG, FIXED4, NULL);                        \
   if (merge) gst_tag_list_free (merge);                         \
@@ -128,7 +128,7 @@ G_STMT_START {                                                  \
 #define NEW_LISTS_EMPTY2(mode)                                   \
 G_STMT_START {                                                  \
   if (list) gst_tag_list_free (list);                           \
-  list = gst_tag_list_new ();                                   \
+  list = gst_tag_list_new_empty ();                                   \
   gst_tag_list_add (list, GST_TAG_MERGE_APPEND, FTAG, FIXED1,   \
                     FTAG, FIXED2, NULL);                        \
   if (list2) gst_tag_list_free (list2);                         \
@@ -271,16 +271,17 @@ GST_START_TEST (test_date_tags)
   gchar *str;
 
   date = g_date_new_dmy (14, 10, 2005);
-  tag_list = gst_tag_list_new ();
+  tag_list = gst_tag_list_new_empty ();
   gst_tag_list_add (tag_list, GST_TAG_MERGE_APPEND, GST_TAG_DATE, date, NULL);
 
-  str = gst_structure_to_string (tag_list);
+  str = gst_tag_list_to_string (tag_list);
   fail_if (str == NULL);
   fail_if (strstr (str, "2005-10-14") == NULL);
 
-  tag_list2 = gst_structure_from_string (str, NULL);
+  tag_list2 = gst_tag_list_new_from_string (str);
   fail_if (tag_list2 == NULL);
   fail_if (!gst_tag_list_get_date (tag_list2, GST_TAG_DATE, &date2));
+  fail_unless (gst_tag_list_is_equal (tag_list2, tag_list));
   gst_tag_list_free (tag_list2);
   g_free (str);
 
@@ -303,7 +304,7 @@ GST_START_TEST (test_type)
 {
   GstTagList *taglist;
 
-  taglist = gst_tag_list_new ();
+  taglist = gst_tag_list_new_empty ();
   fail_unless (GST_IS_TAG_LIST (taglist));
   fail_unless (gst_is_tag_list (taglist));
   gst_tag_list_free (taglist);
@@ -316,7 +317,7 @@ GST_START_TEST (test_type)
 
   /* check gst_tag_list_is_empty */
   ASSERT_CRITICAL (gst_tag_list_is_empty (NULL));
-  taglist = gst_tag_list_new ();
+  taglist = gst_tag_list_new_empty ();
   fail_unless (gst_tag_list_is_empty (taglist));
   gst_tag_list_add (taglist, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "JD", NULL);
   fail_if (gst_tag_list_is_empty (taglist));
@@ -330,7 +331,7 @@ GST_START_TEST (test_set_non_utf8_string)
   GstTagList *taglist;
   guint8 foobar[2] = { 0xff, 0x00 };    /* not UTF-8 */
 
-  taglist = gst_tag_list_new ();
+  taglist = gst_tag_list_new_empty ();
   fail_unless (taglist != NULL);
 
   ASSERT_WARNING (gst_tag_list_add (taglist, GST_TAG_MERGE_APPEND,
@@ -349,7 +350,7 @@ GST_START_TEST (test_buffer_tags)
   GstTagList *tags;
   GstBuffer *buf1, *buf2;
 
-  tags = gst_tag_list_new ();
+  tags = gst_tag_list_new_empty ();
   buf1 = gst_buffer_new_and_alloc (222);
   buf2 = gst_buffer_new_and_alloc (100);
   gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_IMAGE, buf1,
@@ -392,7 +393,7 @@ GST_START_TEST (test_empty_tags)
   if (GST_VERSION_NANO != 1)
     return;
 
-  tags = gst_tag_list_new ();
+  tags = gst_tag_list_new_empty ();
   ASSERT_WARNING (gst_tag_list_add (tags, GST_TAG_MERGE_APPEND,
           GST_TAG_ARTIST, NULL, NULL));
   ASSERT_WARNING (gst_tag_list_add (tags, GST_TAG_MERGE_APPEND,
@@ -410,7 +411,7 @@ GST_START_TEST (test_new_full)
   gdouble track_gain;
   guint track_num;
 
-  tags = gst_tag_list_new_full (GST_TAG_ARTIST, "Arty Ist",
+  tags = gst_tag_list_new (GST_TAG_ARTIST, "Arty Ist",
       GST_TAG_TRACK_NUMBER, 9, GST_TAG_TRACK_GAIN, 4.242, GST_TAG_TITLE,
       "Title!", NULL);
 
@@ -436,7 +437,7 @@ GST_START_TEST (test_merge_strings_with_comma)
   GstTagList *tags;
   gchar *artists = NULL;
 
-  tags = gst_tag_list_new ();
+  tags = gst_tag_list_new_empty ();
   gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Foo", NULL);
   gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Bar", NULL);
   gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Yay", NULL);
@@ -448,6 +449,43 @@ GST_START_TEST (test_merge_strings_with_comma)
   fail_unless (strstr (artists, "Yay") != NULL);
   g_free (artists);
   gst_tag_list_free (tags);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_equal)
+{
+  GstTagList *tags, *tags2;
+
+  tags = gst_tag_list_new_empty ();
+  gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Foo", NULL);
+  gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Bar", NULL);
+  gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Yay", NULL);
+
+  tags2 = gst_tag_list_new_empty ();
+  fail_unless (!gst_tag_list_is_equal (tags2, tags));
+  gst_tag_list_add (tags2, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Yay", NULL);
+  fail_unless (!gst_tag_list_is_equal (tags2, tags));
+  gst_tag_list_add (tags2, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Bar", NULL);
+  fail_unless (!gst_tag_list_is_equal (tags2, tags));
+  gst_tag_list_add (tags2, GST_TAG_MERGE_APPEND, GST_TAG_ARTIST, "Foo", NULL);
+  fail_unless (gst_tag_list_is_equal (tags2, tags));
+
+  gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_REFERENCE_LEVEL,
+      9.87654321, NULL);
+  fail_unless (!gst_tag_list_is_equal (tags2, tags));
+  gst_tag_list_add (tags2, GST_TAG_MERGE_APPEND, GST_TAG_REFERENCE_LEVEL,
+      9.87654320, NULL);
+  /* want these two double values to be equal despite minor differences */
+  fail_unless (gst_tag_list_is_equal (tags2, tags));
+
+  /* want this to be unequal though, difference too large */
+  gst_tag_list_add (tags2, GST_TAG_MERGE_REPLACE, GST_TAG_REFERENCE_LEVEL,
+      9.87654310, NULL);
+  fail_unless (!gst_tag_list_is_equal (tags2, tags));
+
+  gst_tag_list_free (tags);
+  gst_tag_list_free (tags2);
 }
 
 GST_END_TEST;
@@ -469,6 +507,7 @@ gst_tag_suite (void)
   tcase_add_test (tc_chain, test_buffer_tags);
   tcase_add_test (tc_chain, test_empty_tags);
   tcase_add_test (tc_chain, test_new_full);
+  tcase_add_test (tc_chain, test_equal);
 
   return s;
 }

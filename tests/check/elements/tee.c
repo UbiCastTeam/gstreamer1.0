@@ -78,7 +78,7 @@ GST_START_TEST (test_num_buffers)
     g_object_set (sinks[i], "signal-handoffs", TRUE, NULL);
     g_signal_connect (sinks[i], "handoff", (GCallback) handoff, &counts[i]);
 
-    req_pads[i] = gst_element_get_request_pad (tee, "src%d");
+    req_pads[i] = gst_element_get_request_pad (tee, "src_%u");
     fail_unless (req_pads[i] != NULL);
 
     qpad = gst_element_get_static_pad (queues[i], "sink");
@@ -123,7 +123,7 @@ GST_START_TEST (test_stress)
 
   /* Pump 1000 buffers (10 bytes each) per second through tee for 5 secs */
   desc = "fakesrc datarate=10000 sizemin=10 sizemax=10 num-buffers=5000 ! "
-      "video/x-raw-rgb,framerate=25/1 ! tee name=t ! "
+      "video/x-raw,framerate=25/1 ! tee name=t ! "
       "queue max-size-buffers=2 ! fakesink sync=true";
 
   pipeline = gst_parse_launch (desc, NULL);
@@ -144,7 +144,7 @@ GST_START_TEST (test_stress)
   for (i = 0; i < 50000; i++) {
     GstPad *pad;
 
-    pad = gst_element_get_request_pad (tee, "src%d");
+    pad = gst_element_get_request_pad (tee, "src_%u");
     gst_element_release_request_pad (tee, pad);
     gst_object_unref (pad);
 
@@ -183,6 +183,8 @@ typedef struct
 static void
 buffer_alloc_harness_setup (BufferAllocHarness * h, gint countdown)
 {
+  h->app_thread = NULL;
+
   h->tee = gst_check_setup_element ("tee");
   fail_if (h->tee == NULL);
 
@@ -191,7 +193,7 @@ buffer_alloc_harness_setup (BufferAllocHarness * h, gint countdown)
   fail_unless_equals_int (gst_element_set_state (h->tee, GST_STATE_PLAYING),
       TRUE);
 
-  h->caps = gst_caps_new_simple ("video/x-raw-yuv", NULL);
+  h->caps = gst_caps_new_empty_simple ("video/x-raw");
 
   h->start_srcpad = gst_pad_new ("src", GST_PAD_SRC);
   fail_if (h->start_srcpad == NULL);
@@ -201,7 +203,7 @@ buffer_alloc_harness_setup (BufferAllocHarness * h, gint countdown)
   h->tee_sinkpad = gst_element_get_static_pad (h->tee, "sink");
   fail_if (h->tee_sinkpad == NULL);
 
-  h->tee_srcpad = gst_element_get_request_pad (h->tee, "src%d");
+  h->tee_srcpad = gst_element_get_request_pad (h->tee, "src_%u");
   fail_if (h->tee_srcpad == NULL);
 
   h->final_sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
@@ -353,7 +355,7 @@ GST_START_TEST (test_internal_links)
   fail_unless (res == GST_ITERATOR_DONE);
   fail_unless (g_value_get_object (&val1) == NULL);
 
-  srcpad1 = gst_element_get_request_pad (tee, "src%d");
+  srcpad1 = gst_element_get_request_pad (tee, "src_%u");
   fail_unless (srcpad1 != NULL);
 
   /* iterator should resync */
@@ -373,7 +375,7 @@ GST_START_TEST (test_internal_links)
   fail_unless (res == GST_ITERATOR_DONE);
   fail_unless (g_value_get_object (&val1) == NULL);
 
-  srcpad2 = gst_element_get_request_pad (tee, "src%d");
+  srcpad2 = gst_element_get_request_pad (tee, "src_%u");
   fail_unless (srcpad2 != NULL);
 
   /* iterator should resync */
@@ -439,14 +441,14 @@ GST_START_TEST (test_internal_links)
 GST_END_TEST;
 
 static GstFlowReturn
-_fake_chain (GstPad * pad, GstBuffer * buffer)
+_fake_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 {
   gst_buffer_unref (buffer);
   return GST_FLOW_OK;
 }
 
 static GstFlowReturn
-_fake_chain_error (GstPad * pad, GstBuffer * buffer)
+_fake_chain_error (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 {
   gst_buffer_unref (buffer);
   return GST_FLOW_ERROR;
@@ -460,15 +462,15 @@ GST_START_TEST (test_flow_aggregation)
   GstBuffer *buffer;
   GstCaps *caps;
 
-  caps = gst_caps_new_simple ("test/test", NULL);
+  caps = gst_caps_new_empty_simple ("test/test");
 
   tee = gst_element_factory_make ("tee", NULL);
   fail_unless (tee != NULL);
   teesink = gst_element_get_static_pad (tee, "sink");
   fail_unless (teesink != NULL);
-  teesrc1 = gst_element_get_request_pad (tee, "src%d");
+  teesrc1 = gst_element_get_request_pad (tee, "src_%u");
   fail_unless (teesrc1 != NULL);
-  teesrc2 = gst_element_get_request_pad (tee, "src%d");
+  teesrc2 = gst_element_get_request_pad (tee, "src_%u");
   fail_unless (teesrc2 != NULL);
 
   GST_DEBUG ("Creating mysink1");
@@ -509,19 +511,19 @@ GST_START_TEST (test_flow_aggregation)
   GST_DEBUG ("Trying to push with mysink2 disabled");
   gst_pad_set_active (mysink2, FALSE);
   fail_unless (gst_pad_push (mysrc,
-          gst_buffer_ref (buffer)) == GST_FLOW_WRONG_STATE);
+          gst_buffer_ref (buffer)) == GST_FLOW_FLUSHING);
 
   GST_DEBUG ("Trying to push with mysink2 disabled");
   gst_pad_set_active (mysink1, FALSE);
   gst_pad_set_active (mysink2, TRUE);
   gst_pad_set_caps (mysink2, caps);
   fail_unless (gst_pad_push (mysrc,
-          gst_buffer_ref (buffer)) == GST_FLOW_WRONG_STATE);
+          gst_buffer_ref (buffer)) == GST_FLOW_FLUSHING);
 
   GST_DEBUG ("Trying to push with mysink2 and mysink1 disabled");
   gst_pad_set_active (mysink2, FALSE);
   fail_unless (gst_pad_push (mysrc,
-          gst_buffer_ref (buffer)) == GST_FLOW_WRONG_STATE);
+          gst_buffer_ref (buffer)) == GST_FLOW_FLUSHING);
 
   /* Test if everything still works in normal state */
   GST_DEBUG ("Reactivate both pads and try pushing");

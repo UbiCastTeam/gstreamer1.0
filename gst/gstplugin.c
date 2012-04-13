@@ -90,7 +90,7 @@ static char *_gst_plugin_fault_handler_filename = NULL;
  * MIT/X11: http://www.opensource.org/licenses/mit-license.php
  * 3-clause BSD: http://www.opensource.org/licenses/bsd-license.php
  */
-static const gchar *valid_licenses[] = {
+static const gchar *const valid_licenses[] = {
   "LGPL",                       /* GNU Lesser General Public License */
   "GPL",                        /* GNU General Public License */
   "QPL",                        /* Trolltech Qt Public License */
@@ -123,15 +123,20 @@ static void
 gst_plugin_finalize (GObject * object)
 {
   GstPlugin *plugin = GST_PLUGIN_CAST (object);
-  GstRegistry *registry = gst_registry_get_default ();
-  GList *g;
 
   GST_DEBUG ("finalizing plugin %" GST_PTR_FORMAT, plugin);
+
+  /* FIXME: make registry add a weak ref instead */
+#if 0
+  GstRegistry *registry = gst_registry_get ();
+  GList *g;
   for (g = registry->plugins; g; g = g->next) {
     if (g->data == (gpointer) plugin) {
       g_warning ("removing plugin that is still in registry");
     }
   }
+#endif
+
   g_free (plugin->filename);
   g_free (plugin->basename);
 
@@ -221,7 +226,7 @@ gst_plugin_register_static (gint major_version, gint minor_version,
   plugin = g_object_newv (GST_TYPE_PLUGIN, 0, NULL);
   if (gst_plugin_register_func (plugin, &desc, NULL) != NULL) {
     GST_INFO ("registered static plugin \"%s\"", name);
-    res = gst_default_registry_add_plugin (plugin);
+    res = gst_registry_add_plugin (gst_registry_get (), plugin);
     GST_INFO ("added static plugin \"%s\", result: %d", name, res);
   }
   return res;
@@ -291,7 +296,7 @@ gst_plugin_register_static_full (gint major_version, gint minor_version,
   plugin = g_object_newv (GST_TYPE_PLUGIN, 0, NULL);
   if (gst_plugin_register_func (plugin, &desc, user_data) != NULL) {
     GST_INFO ("registered static plugin \"%s\"", name);
-    res = gst_default_registry_add_plugin (plugin);
+    res = gst_registry_add_plugin (gst_registry_get (), plugin);
     GST_INFO ("added static plugin \"%s\", result: %d", name, res);
   }
   return res;
@@ -455,7 +460,7 @@ priv_gst_plugin_loading_get_whitelist_hash (void)
 static gboolean
 gst_plugin_check_license (const gchar * license)
 {
-  const gchar **check_license = valid_licenses;
+  const gchar *const *check_license = valid_licenses;
 
   g_assert (check_license);
 
@@ -472,7 +477,7 @@ gst_plugin_check_version (gint major, gint minor)
 {
   /* return NULL if the major and minor version numbers are not compatible */
   /* with ours. */
-  if (major != GST_VERSION_MAJOR || minor != GST_VERSION_MINOR)
+  if (major != GST_VERSION_MAJOR || minor > GST_VERSION_MINOR)
     return FALSE;
 
   return TRUE;
@@ -654,7 +659,7 @@ check_release_datetime (const gchar * date_time)
   return (*date_time == '\0');
 }
 
-static GStaticMutex gst_plugin_loading_mutex = G_STATIC_MUTEX_INIT;
+static GMutex gst_plugin_loading_mutex;
 
 #define CHECK_PLUGIN_DESC_FIELD(desc,field,fn)                               \
   if (G_UNLIKELY ((desc)->field == NULL)) {                                  \
@@ -686,14 +691,14 @@ gst_plugin_load_file (const gchar * filename, GError ** error)
 
   g_return_val_if_fail (filename != NULL, NULL);
 
-  registry = gst_registry_get_default ();
-  g_static_mutex_lock (&gst_plugin_loading_mutex);
+  registry = gst_registry_get ();
+  g_mutex_lock (&gst_plugin_loading_mutex);
 
   plugin = gst_registry_lookup (registry, filename);
   if (plugin) {
     if (plugin->module) {
       /* already loaded */
-      g_static_mutex_unlock (&gst_plugin_loading_mutex);
+      g_mutex_unlock (&gst_plugin_loading_mutex);
       return plugin;
     } else {
       /* load plugin and update fields */
@@ -828,17 +833,17 @@ gst_plugin_load_file (const gchar * filename, GError ** error)
 
   if (new_plugin) {
     gst_object_ref (plugin);
-    gst_default_registry_add_plugin (plugin);
+    gst_registry_add_plugin (gst_registry_get (), plugin);
   }
 
-  g_static_mutex_unlock (&gst_plugin_loading_mutex);
+  g_mutex_unlock (&gst_plugin_loading_mutex);
   return plugin;
 
 return_error:
   {
     if (plugin)
       gst_object_unref (plugin);
-    g_static_mutex_unlock (&gst_plugin_loading_mutex);
+    g_mutex_unlock (&gst_plugin_loading_mutex);
     return NULL;
   }
 }
@@ -1259,7 +1264,7 @@ gst_plugin_load_by_name (const gchar * name)
   GError *error = NULL;
 
   GST_DEBUG ("looking up plugin %s in default registry", name);
-  plugin = gst_registry_find_plugin (gst_registry_get_default (), name);
+  plugin = gst_registry_find_plugin (gst_registry_get (), name);
   if (plugin) {
     GST_DEBUG ("loading plugin %s from file %s", name, plugin->filename);
     newplugin = gst_plugin_load_file (plugin->filename, &error);
@@ -1419,12 +1424,11 @@ _priv_plugin_deps_env_vars_changed (GstPlugin * plugin)
   return FALSE;
 }
 
-static GList *
+static void
 gst_plugin_ext_dep_extract_env_vars_paths (GstPlugin * plugin,
-    GstPluginDep * dep)
+    GstPluginDep * dep, GQueue * paths)
 {
   gchar **evars;
-  GList *paths = NULL;
 
   for (evars = dep->env_vars; evars != NULL && *evars != NULL; ++evars) {
     const gchar *e;
@@ -1471,9 +1475,9 @@ gst_plugin_ext_dep_extract_env_vars_paths (GstPlugin * plugin,
           full_path = g_strdup (arr[i]);
         }
 
-        if (!g_list_find_custom (paths, full_path, (GCompareFunc) strcmp)) {
+        if (!g_queue_find_custom (paths, full_path, (GCompareFunc) strcmp)) {
           GST_LOG_OBJECT (plugin, "path: '%s'", full_path);
-          paths = g_list_prepend (paths, full_path);
+          g_queue_push_tail (paths, full_path);
           full_path = NULL;
         } else {
           GST_LOG_OBJECT (plugin, "path: '%s' (duplicate,ignoring)", full_path);
@@ -1487,10 +1491,7 @@ gst_plugin_ext_dep_extract_env_vars_paths (GstPlugin * plugin,
     g_strfreev (components);
   }
 
-  GST_LOG_OBJECT (plugin, "Extracted %d paths from environment",
-      g_list_length (paths));
-
-  return paths;
+  GST_LOG_OBJECT (plugin, "Extracted %d paths from environment", paths->length);
 }
 
 static guint
@@ -1636,43 +1637,37 @@ static guint
 gst_plugin_ext_dep_get_stat_hash (GstPlugin * plugin, GstPluginDep * dep)
 {
   gboolean paths_are_default_only;
-  GList *scan_paths;
+  GQueue scan_paths = G_QUEUE_INIT;
   guint scan_hash = 0;
+  gchar *path;
 
   GST_LOG_OBJECT (plugin, "start");
 
   paths_are_default_only =
       dep->flags & GST_PLUGIN_DEPENDENCY_FLAG_PATHS_ARE_DEFAULT_ONLY;
 
-  scan_paths = gst_plugin_ext_dep_extract_env_vars_paths (plugin, dep);
+  gst_plugin_ext_dep_extract_env_vars_paths (plugin, dep, &scan_paths);
 
-  if (scan_paths == NULL || !paths_are_default_only) {
+  if (g_queue_is_empty (&scan_paths) || !paths_are_default_only) {
     gchar **paths;
 
     for (paths = dep->paths; paths != NULL && *paths != NULL; ++paths) {
       const gchar *path = *paths;
 
-      if (!g_list_find_custom (scan_paths, path, (GCompareFunc) strcmp)) {
+      if (!g_queue_find_custom (&scan_paths, path, (GCompareFunc) strcmp)) {
         GST_LOG_OBJECT (plugin, "path: '%s'", path);
-        scan_paths = g_list_prepend (scan_paths, g_strdup (path));
+        g_queue_push_tail (&scan_paths, g_strdup (path));
       } else {
         GST_LOG_OBJECT (plugin, "path: '%s' (duplicate, ignoring)", path);
       }
     }
   }
 
-  /* not that the order really matters, but it makes debugging easier */
-  scan_paths = g_list_reverse (scan_paths);
-
-  while (scan_paths != NULL) {
-    const gchar *path = scan_paths->data;
-
+  while ((path = g_queue_pop_head (&scan_paths))) {
     scan_hash += gst_plugin_ext_dep_scan_path_with_filenames (plugin, path,
         (const gchar **) dep->names, dep->flags);
     scan_hash = scan_hash << 1;
-
-    g_free (scan_paths->data);
-    scan_paths = g_list_delete_link (scan_paths, scan_paths);
+    g_free (path);
   }
 
   GST_LOG_OBJECT (plugin, "done, scan_hash: %08x", scan_hash);

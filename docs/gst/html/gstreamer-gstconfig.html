@@ -3,11 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>gstconfig</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstClock.html" title="GstClock">
-<link rel="next" href="gstreamer-GstDateTime.html" title="GstDateTime">
+<link rel="next" href="GstControlBinding.html" title="GstControlBinding">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -17,8 +17,8 @@
 <td><a accesskey="p" href="GstClock.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
-<td><a accesskey="n" href="gstreamer-GstDateTime.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
+<td><a accesskey="n" href="GstControlBinding.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#gstreamer-gstconfig.synopsis" class="shortcut">Top</a>
@@ -69,11 +69,21 @@ If a subsystem is disabled in GStreamer, a value is defined in
 </p>
 <div class="example">
 <a name="example-gstconfig"></a><p class="title"><b>Example 5. Doing subsystem specific things</b></p>
-<div class="example-contents"><pre class="programlisting">
-#ifndef GST_DISABLE_GST_DEBUG
-// do stuff specific to the debugging subsystem
-#endif // GST_DISABLE_GST_DEBUG
-</pre></div>
+<div class="example-contents">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="gtkdoc ppc">#ifndef GST_DISABLE_GST_DEBUG</span>
+<span class="gtkdoc slc">// do stuff specific to the debugging subsystem</span>
+<span class="gtkdoc ppc">#endif</span> <span class="gtkdoc slc">// GST_DISABLE_GST_DEBUG</span><span class="gtkdoc ppc"></span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 </div>
 <p><br class="example-break">
 </p>

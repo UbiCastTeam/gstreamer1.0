@@ -30,6 +30,11 @@
  * Buffer lists are created with gst_buffer_list_new() and filled with data
  * using a gst_buffer_list_insert().
  *
+ * Buffer lists can be pushed on a srcpad with gst_pad_push_list(). This is
+ * interesting when multiple buffers need to be pushed in one go because it
+ * can reduce the amount of overhead for pushing each buffer individually.
+ *
+ * Last reviewed on 2012-03-28 (0.11.3)
  */
 #include "gst_private.h"
 
@@ -69,7 +74,7 @@ _gst_buffer_list_copy (GstBufferList * list)
   guint i, len;
 
   len = list->array->len;
-  copy = gst_buffer_list_sized_new (len);
+  copy = gst_buffer_list_new_sized (len);
 
   /* add and ref all buffers in the array */
   for (i = 0; i < len; i++) {
@@ -110,7 +115,7 @@ gst_buffer_list_init (GstBufferList * list, gsize size, guint asize)
 }
 
 /**
- * gst_buffer_list_sized_new:
+ * gst_buffer_list_new_sized:
  * @size: an initial reserved size
  *
  * Creates a new, empty #GstBufferList. The caller is responsible for unreffing
@@ -125,7 +130,7 @@ gst_buffer_list_init (GstBufferList * list, gsize size, guint asize)
  * Since: 0.10.24
  */
 GstBufferList *
-gst_buffer_list_sized_new (guint size)
+gst_buffer_list_new_sized (guint size)
 {
   GstBufferList *list;
 
@@ -154,11 +159,11 @@ gst_buffer_list_sized_new (guint size)
 GstBufferList *
 gst_buffer_list_new (void)
 {
-  return gst_buffer_list_sized_new (8);
+  return gst_buffer_list_new_sized (8);
 }
 
 /**
- * gst_buffer_list_len:
+ * gst_buffer_list_length:
  * @list: a #GstBufferList
  *
  * Returns the number of buffers in @list.
@@ -168,7 +173,7 @@ gst_buffer_list_new (void)
  * Since: 0.10.24
  */
 guint
-gst_buffer_list_len (GstBufferList * list)
+gst_buffer_list_length (GstBufferList * list)
 {
   g_return_val_if_fail (GST_IS_BUFFER_LIST (list), 0);
 
@@ -184,8 +189,8 @@ gst_buffer_list_len (GstBufferList * list)
  * Call @func with @data for each buffer in @list.
  *
  * @func can modify the passed buffer pointer or its contents. The return value
- * of @func define if this function returns or if the remaining buffers in a
- * group should be skipped.
+ * of @func define if this function returns or if the remaining buffers in
+ * the list should be skipped.
  *
  * Since: 0.10.24
  */
@@ -210,6 +215,7 @@ gst_buffer_list_foreach (GstBufferList * list, GstBufferListFunc func,
     if (buf != buf_ret) {
       if (buf_ret == NULL) {
         g_array_remove_index (list->array, i);
+        len--;
       } else {
         g_array_index (list->array, GstBuffer *, i) = buf_ret;
       }
@@ -274,6 +280,15 @@ gst_buffer_list_insert (GstBufferList * list, guint idx, GstBuffer * buffer)
   }
 }
 
+/**
+ * gst_buffer_list_remove:
+ * @list: a #GstBufferList
+ * @idx: the index
+ * @length: the amount to remove
+ *
+ * Remove @length buffers starting from @idx in @list. The following buffers are
+ * moved to close the gap.
+ */
 void
 gst_buffer_list_remove (GstBufferList * list, guint idx, guint length)
 {

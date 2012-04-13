@@ -80,7 +80,7 @@ struct _GstTypeFind {
 
   void            (* suggest)    (gpointer         data,
                                   guint            probability,
-                                  const GstCaps *  caps);
+                                  GstCaps         *caps);
 
   gpointer         data;
 
@@ -100,7 +100,7 @@ const guint8 *  gst_type_find_peek       (GstTypeFind   * find,
 
 void            gst_type_find_suggest    (GstTypeFind   * find,
                                           guint           probability,
-                                          const GstCaps * caps);
+                                          GstCaps       * caps);
 
 void            gst_type_find_suggest_simple (GstTypeFind * find,
                                               guint         probability,
@@ -114,8 +114,8 @@ gboolean  gst_type_find_register   (GstPlugin            * plugin,
                                     const gchar          * name,
                                     guint                  rank,
                                     GstTypeFindFunction    func,
-                                    gchar               ** extensions,
-                                    const GstCaps        * possible_caps,
+                                    const gchar          * extensions,
+                                    GstCaps              * possible_caps,
                                     gpointer               data,
                                     GDestroyNotify         data_notify);
 

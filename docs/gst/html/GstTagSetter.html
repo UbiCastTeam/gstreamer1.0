@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTagSetter</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstTagList.html" title="GstTagList">
 <link rel="next" href="GstTask.html" title="GstTask">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstTagList.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="GstTask.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -46,7 +46,7 @@
 #include &lt;gst/gst.h&gt;
 
                     <a class="link" href="GstTagSetter.html#GstTagSetter-struct" title="GstTagSetter">GstTagSetter</a>;
-struct              <a class="link" href="GstTagSetter.html#GstTagSetterIFace" title="struct GstTagSetterIFace">GstTagSetterIFace</a>;
+struct              <a class="link" href="GstTagSetter.html#GstTagSetterInterface" title="struct GstTagSetterInterface">GstTagSetterInterface</a>;
 <span class="returnvalue">void</span>                <a class="link" href="GstTagSetter.html#gst-tag-setter-reset-tags" title="gst_tag_setter_reset_tags ()">gst_tag_setter_reset_tags</a>           (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstTagSetter.html#gst-tag-setter-merge-tags" title="gst_tag_setter_merge_tags ()">gst_tag_setter_merge_tags</a>           (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
@@ -118,27 +118,53 @@ the interface. This can be done like this:
 </p>
 <p>
 </p>
-<div class="informalexample"><pre class="programlisting">
-GstTagMergeMode merge_mode;
-const GstTagList *application_tags;
-const GstTagList *event_tags;
-GstTagSetter *tagsetter;
-GstTagList *result;
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td>
+        <td class="listing_code"><pre class="programlisting">GstTagMergeMode merge_mode<span class="gtkdoc opt">;</span>
+<span class="gtkdoc kwb">const</span> GstTagList <span class="gtkdoc opt">*</span>application_tags<span class="gtkdoc opt">;</span>
+<span class="gtkdoc kwb">const</span> GstTagList <span class="gtkdoc opt">*</span>event_tags<span class="gtkdoc opt">;</span>
+GstTagSetter <span class="gtkdoc opt">*</span>tagsetter<span class="gtkdoc opt">;</span>
+GstTagList <span class="gtkdoc opt">*</span>result<span class="gtkdoc opt">;</span>
  
-tagsetter = GST_TAG_SETTER (element);
+tagsetter <span class="gtkdoc opt">=</span> <span class="function">GST_TAG_SETTER</span> <span class="gtkdoc opt">(</span>element<span class="gtkdoc opt">);</span>
  
-merge_mode = gst_tag_setter_get_tag_merge_mode (tagsetter);
-application_tags = gst_tag_setter_get_tag_list (tagsetter);
-event_tags = (const GstTagList *) element-&gt;event_tags;
+merge_mode <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstTagSetter.html#gst-tag-setter-get-tag-merge-mode">gst_tag_setter_get_tag_merge_mode</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">);</span>
+application_tags <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstTagSetter.html#gst-tag-setter-get-tag-list">gst_tag_setter_get_tag_list</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">);</span>
+event_tags <span class="gtkdoc opt">= (</span><span class="gtkdoc kwb">const</span> GstTagList <span class="gtkdoc opt">*)</span> element<span class="gtkdoc opt">-&gt;</span>event_tags<span class="gtkdoc opt">;</span>
  
-GST_LOG_OBJECT (tagsetter, "merging tags, merge mode = %d", merge_mode);
-GST_LOG_OBJECT (tagsetter, "event tags: %" GST_PTR_FORMAT, event_tags);
-GST_LOG_OBJECT (tagsetter, "set   tags: %" GST_PTR_FORMAT, application_tags);
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;merging tags, merge mode = %d&quot;</span><span class="gtkdoc opt">,</span> merge_mode<span class="gtkdoc opt">);</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;event tags: %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> event_tags<span class="gtkdoc opt">);</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;set   tags: %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> application_tags<span class="gtkdoc opt">);</span>
  
-result = gst_tag_list_merge (application_tags, event_tags, merge_mode);
+result <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstTagList.html#gst-tag-list-merge">gst_tag_list_merge</a></span> <span class="gtkdoc opt">(</span>application_tags<span class="gtkdoc opt">,</span> event_tags<span class="gtkdoc opt">,</span> merge_mode<span class="gtkdoc opt">);</span>
  
-GST_LOG_OBJECT (tagsetter, "final tags: %" GST_PTR_FORMAT, result);
-</pre></div>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;final tags: %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> result<span class="gtkdoc opt">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 </p>
 <p>
@@ -156,8 +182,8 @@ Opaque <a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstTagSetterIFace"></a><h3>struct GstTagSetterIFace</h3>
-<pre class="programlisting">struct GstTagSetterIFace {
+<a name="GstTagSetterInterface"></a><h3>struct GstTagSetterInterface</h3>
+<pre class="programlisting">struct GstTagSetterInterface {
   GTypeInterface g_iface;
 
   /* signals */
@@ -166,12 +192,12 @@ Opaque <a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class
 };
 </pre>
 <p>
-<a class="link" href="GstTagSetter.html#GstTagSetterIFace" title="struct GstTagSetterIFace"><span class="type">GstTagSetterIFace</span></a> interface.
+<a class="link" href="GstTagSetter.html#GstTagSetterInterface" title="struct GstTagSetterInterface"><span class="type">GstTagSetterInterface</span></a> interface.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstTagSetterIFace.g-iface"></a>g_iface</code></em>;</span></p></td>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstTagSetterInterface.g-iface"></a>g_iface</code></em>;</span></p></td>
 <td>parent interface type.</td>
 </tr></tbody>
 </table></div>

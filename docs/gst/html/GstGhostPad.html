@@ -3,11 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstGhostPad</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstFormat.html" title="GstFormat">
-<link rel="next" href="GstIndex.html" title="GstIndex">
+<link rel="next" href="gstreamer-GstIterator.html" title="GstIterator">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -17,8 +17,8 @@
 <td><a accesskey="p" href="gstreamer-GstFormat.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
-<td><a accesskey="n" href="GstIndex.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
+<td><a accesskey="n" href="gstreamer-GstIterator.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#GstGhostPad.synopsis" class="shortcut">Top</a>
@@ -61,38 +61,36 @@ struct              <a class="link" href="GstGhostPad.html#GstGhostPad-struct" t
 <span class="returnvalue">void</span>                <a class="link" href="GstGhostPad.html#gst-ghost-pad-unlink-default" title="gst_ghost_pad_unlink_default ()">gst_ghost_pad_unlink_default</a>        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a class="link" href="GstPad.html#GstPadLinkReturn" title="enum GstPadLinkReturn"><span class="returnvalue">GstPadLinkReturn</span></a>    <a class="link" href="GstGhostPad.html#gst-ghost-pad-link-default" title="gst_ghost_pad_link_default ()">gst_ghost_pad_link_default</a>          (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *peer</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-ghost-pad-activate-pull-default" title="gst_ghost_pad_activate_pull_default ()">gst_ghost_pad_activate_pull_default</a> (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-ghost-pad-activate-mode-default" title="gst_ghost_pad_activate_mode_default ()">gst_ghost_pad_activate_mode_default</a> (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-ghost-pad-activate-push-default" title="gst_ghost_pad_activate_push_default ()">gst_ghost_pad_activate_push_default</a> (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-ghost-pad-internal-activate-push-default" title="gst_ghost_pad_internal_activate_push_default ()">gst_ghost_pad_internal_activate_push_default</a>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-ghost-pad-internal-activate-mode-default" title="gst_ghost_pad_internal_activate_mode_default ()">gst_ghost_pad_internal_activate_mode_default</a>
                                                         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-ghost-pad-internal-activate-pull-default" title="gst_ghost_pad_internal_activate_pull_default ()">gst_ghost_pad_internal_activate_pull_default</a>
-                                                        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
 <a class="link" href="GstGhostPad.html#GstProxyPad"><span class="returnvalue">GstProxyPad</span></a> *       <a class="link" href="GstGhostPad.html#gst-proxy-pad-get-internal" title="gst_proxy_pad_get_internal ()">gst_proxy_pad_get_internal</a>          (<em class="parameter"><code><a class="link" href="GstGhostPad.html#GstProxyPad"><span class="type">GstProxyPad</span></a> *pad</code></em>);
-const <a class="link" href="gstreamer-GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="returnvalue">GstQueryType</span></a> * <a class="link" href="GstGhostPad.html#gst-proxy-pad-query-type-default" title="gst_proxy_pad_query_type_default ()">gst_proxy_pad_query_type_default</a>   (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-proxy-pad-event-default" title="gst_proxy_pad_event_default ()">gst_proxy_pad_event_default</a>         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-proxy-pad-query-default" title="gst_proxy_pad_query_default ()">gst_proxy_pad_query_default</a>         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);
 <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *       <a class="link" href="GstGhostPad.html#gst-proxy-pad-iterate-internal-links-default" title="gst_proxy_pad_iterate_internal_links_default ()">gst_proxy_pad_iterate_internal_links_default</a>
-                                                        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
+                                                        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>);
 <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       <a class="link" href="GstGhostPad.html#gst-proxy-pad-chain-default" title="gst_proxy_pad_chain_default ()">gst_proxy_pad_chain_default</a>         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);
 <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       <a class="link" href="GstGhostPad.html#gst-proxy-pad-chain-list-default" title="gst_proxy_pad_chain_list_default ()">gst_proxy_pad_chain_list_default</a>    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);
 <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       <a class="link" href="GstGhostPad.html#gst-proxy-pad-getrange-default" title="gst_proxy_pad_getrange_default ()">gst_proxy_pad_getrange_default</a>      (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> offset</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code><span class="type">guint64</span> offset</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buffer</code></em>);
-<a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *           <a class="link" href="GstGhostPad.html#gst-proxy-pad-getcaps-default" title="gst_proxy_pad_getcaps_default ()">gst_proxy_pad_getcaps_default</a>       (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstGhostPad.html#gst-proxy-pad-acceptcaps-default" title="gst_proxy_pad_acceptcaps_default ()">gst_proxy_pad_acceptcaps_default</a>    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="GstGhostPad.html#gst-proxy-pad-fixatecaps-default" title="gst_proxy_pad_fixatecaps_default ()">gst_proxy_pad_fixatecaps_default</a>    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstGhostPad.html#gst-proxy-pad-unlink-default" title="gst_proxy_pad_unlink_default ()">gst_proxy_pad_unlink_default</a>        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 </pre>
 </div>
@@ -179,7 +177,7 @@ Will ref the target.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or NULL in case of an error. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+<td>a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or NULL in case of an error. <span class="annotation">[transfer floating]</span>
 </td>
 </tr>
 </tbody>
@@ -389,7 +387,7 @@ Invoke the default unlink function of a ghost pad.
 <td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to link.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -417,15 +415,17 @@ Invoke the default link function of a ghost pad.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-ghost-pad-activate-pull-default"></a><h3>gst_ghost_pad_activate_pull_default ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_ghost_pad_activate_pull_default (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+<a name="gst-ghost-pad-activate-mode-default"></a><h3>gst_ghost_pad_activate_mode_default ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_ghost_pad_activate_mode_default (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
 <p>
-Invoke the default activate pull function of a ghost pad.
+Invoke the default activate mode function of a ghost pad.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -433,6 +433,14 @@ Invoke the default activate pull function of a ghost pad.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to activate or deactivate.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the requested activation mode</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>active</code></em> :</span></p></td>
@@ -445,44 +453,17 @@ Invoke the default activate pull function of a ghost pad.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-ghost-pad-activate-push-default"></a><h3>gst_ghost_pad_activate_push_default ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_ghost_pad_activate_push_default (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
-<p>
-Invoke the default activate push function of a ghost pad.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to activate or deactivate.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>active</code></em> :</span></p></td>
-<td>whether the pad should be active or not.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the operation was successful.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.35</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-ghost-pad-internal-activate-push-default"></a><h3>gst_ghost_pad_internal_activate_push_default ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_ghost_pad_internal_activate_push_default
+<a name="gst-ghost-pad-internal-activate-mode-default"></a><h3>gst_ghost_pad_internal_activate_mode_default ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_ghost_pad_internal_activate_mode_default
                                                         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
 <p>
-Invoke the default activate push function of a proxy pad that is
+Invoke the default activate mode function of a proxy pad that is
 owned by a ghost pad.
 </p>
 <div class="variablelist"><table border="0">
@@ -493,34 +474,12 @@ owned by a ghost pad.
 <td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to activate or deactivate.</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>active</code></em> :</span></p></td>
-<td>whether the pad should be active or not.</td>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the operation was successful.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.35</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-ghost-pad-internal-activate-pull-default"></a><h3>gst_ghost_pad_internal_activate_pull_default ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_ghost_pad_internal_activate_pull_default
-                                                        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
-<p>
-Invoke the default activate pull function of a proxy pad that is
-owned by a ghost pad.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to activate or deactivate.</td>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the requested activation mode</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>active</code></em> :</span></p></td>
@@ -533,7 +492,6 @@ owned by a ghost pad.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -562,36 +520,13 @@ Unref target pad after usage. <span class="annotation">[<acronym title="Free dat
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-proxy-pad-query-type-default"></a><h3>gst_proxy_pad_query_type_default ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="returnvalue">GstQueryType</span></a> * gst_proxy_pad_query_type_default   (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
-<p>
-Invoke the default query type handler of the proxy pad.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a zero-terminated array
-of <a class="link" href="gstreamer-GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="type">GstQueryType</span></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-proxy-pad-event-default"></a><h3>gst_proxy_pad_event_default ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_proxy_pad_event_default         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
 <p>
 Invoke the default event of the proxy pad.
@@ -604,6 +539,10 @@ Invoke the default event of the proxy pad.
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to push the event to.</td>
 </tr>
 <tr>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
+</tr>
+<tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> to send to the pad. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
@@ -614,12 +553,13 @@ Invoke the default event of the proxy pad.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-proxy-pad-query-default"></a><h3>gst_proxy_pad_query_default ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_proxy_pad_query_default         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
 <p>
 Invoke the default query function of the proxy pad.
@@ -632,6 +572,10 @@ Invoke the default query function of the proxy pad.
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to invoke the default query on.</td>
 </tr>
 <tr>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
+</tr>
+<tr>
 <td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> to perform. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
@@ -642,18 +586,42 @@ Invoke the default query function of the proxy pad.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-proxy-pad-iterate-internal-links-default"></a><h3>gst_proxy_pad_iterate_internal_links_default ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *       gst_proxy_pad_iterate_internal_links_default
-                                                        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+                                                        (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>);</pre>
+<p>
+Invoke the default iterate internal links function of the proxy pad.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to get the internal links of.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or NULL if <em class="parameter"><code>pad</code></em> has no parent. Unref each
+returned pad with <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a>.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-proxy-pad-chain-default"></a><h3>gst_proxy_pad_chain_default ()</h3>
 <pre class="programlisting"><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       gst_proxy_pad_chain_default         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
 <p>
 Invoke the default chain function of the proxy pad.
@@ -664,6 +632,10 @@ Invoke the default chain function of the proxy pad.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>a sink <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, returns GST_FLOW_ERROR if not.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
@@ -677,12 +649,13 @@ if not. <span class="annotation">[<acronym title="Free data after the code is do
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-proxy-pad-chain-list-default"></a><h3>gst_proxy_pad_chain_list_default ()</h3>
 <pre class="programlisting"><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       gst_proxy_pad_chain_list_default    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);</pre>
 <p>
 Invoke the default chain list function of the proxy pad.
@@ -693,6 +666,10 @@ Invoke the default chain list function of the proxy pad.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>a sink <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, returns GST_FLOW_ERROR if not.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
+<td>the parent of <em class="parameter"><code>pad</code></em> or NULL</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -706,93 +683,16 @@ if not. <span class="annotation">[<acronym title="Free data after the code is do
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-proxy-pad-getrange-default"></a><h3>gst_proxy_pad_getrange_default ()</h3>
 <pre class="programlisting"><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       gst_proxy_pad_getrange_default      (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> offset</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code><span class="type">guint64</span> offset</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buffer</code></em>);</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-proxy-pad-getcaps-default"></a><h3>gst_proxy_pad_getcaps_default ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *           gst_proxy_pad_getcaps_default       (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
-<p>
-Invoke the default getcaps function of the proxy pad.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to get the capabilities of.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>filter</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> filter.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the caps of the pad with incremented ref-count. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.35</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-proxy-pad-acceptcaps-default"></a><h3>gst_proxy_pad_acceptcaps_default ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_proxy_pad_acceptcaps_default    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
-<p>
-Invoke the default acceptcaps function of the proxy pad.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to check</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> to check on the pad</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE if the pad can accept the caps.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.35</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-proxy-pad-fixatecaps-default"></a><h3>gst_proxy_pad_fixatecaps_default ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_proxy_pad_fixatecaps_default    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
-<p>
-Invoke the default fixatecaps function of the proxy pad.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>a  <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to fixate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
-<td>the  <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> to fixate</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.35</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -808,7 +708,7 @@ Invoke the default unlink function of the proxy pad.
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to unlink</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 </div>
 <div class="refsect1">

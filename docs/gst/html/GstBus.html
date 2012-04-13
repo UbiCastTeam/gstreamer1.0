@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBus</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstBufferPool.html" title="GstBufferPool">
 <link rel="next" href="gstreamer-GstCaps.html" title="GstCaps">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstBufferPool.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-GstCaps.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -98,7 +98,7 @@ enum                <a class="link" href="GstBus.html#GstBusSyncReply" title="en
 <span class="returnvalue">void</span>                <a class="link" href="GstBus.html#gst-bus-remove-signal-watch" title="gst_bus_remove_signal_watch ()">gst_bus_remove_signal_watch</a>         (<em class="parameter"><code><a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> *bus</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="GstBus.html#gst-bus-poll" title="gst_bus_poll ()">gst_bus_poll</a>                        (<em class="parameter"><code><a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> *bus</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessageType" title="enum GstMessageType"><span class="type">GstMessageType</span></a> events</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> timeout</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timeout</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -175,7 +175,7 @@ Note that a <a class="link" href="GstPipeline.html" title="GstPipeline"><span cl
 from READY to NULL state.
 </p>
 <p>
-Last reviewed on 2006-03-12 (0.10.5)
+Last reviewed on 2012-03-28 (0.11.3)
 </p>
 </div>
 <div class="refsect1">
@@ -742,6 +742,7 @@ from <em class="parameter"><code>func</code></em>.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The event source id.
+Rename to: gst_bus_add_watch
 MT safe.</td>
 </tr>
 </tbody>
@@ -943,8 +944,8 @@ responsible for calling <a class="link" href="GstBus.html#gst-bus-remove-signal-
 function is called.
 </p>
 <p>
-There can only be a single bus watch per bus, you most remove all signal watch
-before you can set another type of watch.
+There can only be a single bus watch per bus, you must remove any signal
+watch before you can set another type of watch.
 </p>
 <p>
 MT safe.
@@ -986,7 +987,7 @@ MT safe.
 <a name="gst-bus-poll"></a><h3>gst_bus_poll ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_bus_poll                        (<em class="parameter"><code><a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> *bus</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessageType" title="enum GstMessageType"><span class="type">GstMessageType</span></a> events</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> timeout</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timeout</code></em>);</pre>
 <p>
 Poll the bus for messages. Will block while waiting for messages to come.
 You can specify a maximum time to poll with the <em class="parameter"><code>timeout</code></em> parameter. If
@@ -1040,7 +1041,7 @@ poll for.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>timeout</code></em> :</span></p></td>
-<td>the poll timeout, as a <a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a>, or -1 to poll
+<td>the poll timeout, as a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a>, or <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><span class="type">GST_CLOCK_TIME_NONE</span></a> to poll
 indefinitely.</td>
 </tr>
 <tr>

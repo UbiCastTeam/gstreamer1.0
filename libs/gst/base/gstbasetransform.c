@@ -207,8 +207,8 @@
 
 #include "../../../gst/gst_private.h"
 #include "../../../gst/gst-i18n-lib.h"
+#include "../../../gst/glib-compat-private.h"
 #include "gstbasetransform.h"
-#include <gst/gstmarshal.h>
 
 GST_DEBUG_CATEGORY_STATIC (gst_base_transform_debug);
 #define GST_CAT_DEFAULT gst_base_transform_debug
@@ -233,6 +233,18 @@ enum
 
 struct _GstBaseTransformPrivate
 {
+  /* Set by sub-class */
+  gboolean passthrough;
+  gboolean always_in_place;
+
+  GstCaps *cache_caps1;
+  gsize cache_caps1_size;
+  GstCaps *cache_caps2;
+  gsize cache_caps2_size;
+  gboolean have_same_caps;
+
+  gboolean negotiated;
+
   /* QoS *//* with LOCK */
   gboolean qos_enabled;
   gdouble proportion;
@@ -240,7 +252,7 @@ struct _GstBaseTransformPrivate
   /* previous buffer had a discont */
   gboolean discont;
 
-  GstActivateMode pad_mode;
+  GstPadMode pad_mode;
 
   gboolean gap_aware;
 
@@ -253,9 +265,10 @@ struct _GstBaseTransformPrivate
   GstClockTime position_out;
 
   GstBufferPool *pool;
-  const GstAllocator *allocator;
-  guint prefix;
-  guint alignment;
+  gboolean pool_active;
+  GstAllocator *allocator;
+  GstAllocationParams params;
+  GstQuery *query;
 };
 
 
@@ -298,35 +311,48 @@ static void gst_base_transform_set_property (GObject * object, guint prop_id,
     const GValue * value, GParamSpec * pspec);
 static void gst_base_transform_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec);
-static gboolean gst_base_transform_src_activate_pull (GstPad * pad,
-    gboolean active);
-static gboolean gst_base_transform_sink_activate_push (GstPad * pad,
-    gboolean active);
+static gboolean gst_base_transform_src_activate_mode (GstPad * pad,
+    GstObject * parent, GstPadMode mode, gboolean active);
+static gboolean gst_base_transform_sink_activate_mode (GstPad * pad,
+    GstObject * parent, GstPadMode mode, gboolean active);
 static gboolean gst_base_transform_activate (GstBaseTransform * trans,
     gboolean active);
 static gboolean gst_base_transform_get_unit_size (GstBaseTransform * trans,
     GstCaps * caps, gsize * size);
 
-static gboolean gst_base_transform_src_event (GstPad * pad, GstEvent * event);
+static gboolean gst_base_transform_src_event (GstPad * pad, GstObject * parent,
+    GstEvent * event);
 static gboolean gst_base_transform_src_eventfunc (GstBaseTransform * trans,
     GstEvent * event);
-static gboolean gst_base_transform_sink_event (GstPad * pad, GstEvent * event);
+static gboolean gst_base_transform_sink_event (GstPad * pad, GstObject * parent,
+    GstEvent * event);
 static gboolean gst_base_transform_sink_eventfunc (GstBaseTransform * trans,
     GstEvent * event);
-static GstFlowReturn gst_base_transform_getrange (GstPad * pad, guint64 offset,
-    guint length, GstBuffer ** buffer);
-static GstFlowReturn gst_base_transform_chain (GstPad * pad,
+static GstFlowReturn gst_base_transform_getrange (GstPad * pad,
+    GstObject * parent, guint64 offset, guint length, GstBuffer ** buffer);
+static GstFlowReturn gst_base_transform_chain (GstPad * pad, GstObject * parent,
     GstBuffer * buffer);
-static GstCaps *gst_base_transform_getcaps (GstPad * pad, GstCaps * filter);
-static gboolean gst_base_transform_acceptcaps (GstPad * pad, GstCaps * caps);
+static GstCaps *gst_base_transform_default_transform_caps (GstBaseTransform *
+    trans, GstPadDirection direction, GstCaps * caps, GstCaps * filter);
+static GstCaps *gst_base_transform_default_fixate_caps (GstBaseTransform *
+    trans, GstPadDirection direction, GstCaps * caps, GstCaps * othercaps);
+static GstCaps *gst_base_transform_query_caps (GstBaseTransform * trans,
+    GstPad * pad, GstCaps * filter);
 static gboolean gst_base_transform_acceptcaps_default (GstBaseTransform * trans,
     GstPadDirection direction, GstCaps * caps);
 static gboolean gst_base_transform_setcaps (GstBaseTransform * trans,
     GstPad * pad, GstCaps * caps);
-static gboolean gst_base_transform_query (GstPad * pad, GstQuery * query);
+static gboolean gst_base_transform_default_decide_allocation (GstBaseTransform
+    * trans, GstQuery * query);
+static gboolean gst_base_transform_default_propose_allocation (GstBaseTransform
+    * trans, GstQuery * decide_query, GstQuery * query);
+static gboolean gst_base_transform_query (GstPad * pad, GstObject * parent,
+    GstQuery * query);
 static gboolean gst_base_transform_default_query (GstBaseTransform * trans,
     GstPadDirection direction, GstQuery * query);
-static const GstQueryType *gst_base_transform_query_type (GstPad * pad);
+static gboolean gst_base_transform_default_transform_size (GstBaseTransform *
+    trans, GstPadDirection direction, GstCaps * caps, gsize size,
+    GstCaps * othercaps, gsize * othersize);
 
 static GstFlowReturn default_prepare_output_buffer (GstBaseTransform * trans,
     GstBuffer * inbuf, GstBuffer ** outbuf);
@@ -339,12 +365,6 @@ static gboolean default_copy_metadata (GstBaseTransform * trans,
 static void
 gst_base_transform_finalize (GObject * object)
 {
-  GstBaseTransform *trans;
-
-  trans = GST_BASE_TRANSFORM (object);
-
-  g_mutex_free (trans->transform_lock);
-
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -374,14 +394,27 @@ gst_base_transform_class_init (GstBaseTransformClass * klass)
   gobject_class->finalize = gst_base_transform_finalize;
 
   klass->passthrough_on_same_caps = FALSE;
-  klass->sink_event = GST_DEBUG_FUNCPTR (gst_base_transform_sink_eventfunc);
-  klass->src_event = GST_DEBUG_FUNCPTR (gst_base_transform_src_eventfunc);
+  klass->transform_ip_on_passthrough = TRUE;
+
+  klass->transform_caps =
+      GST_DEBUG_FUNCPTR (gst_base_transform_default_transform_caps);
+  klass->fixate_caps =
+      GST_DEBUG_FUNCPTR (gst_base_transform_default_fixate_caps);
   klass->accept_caps =
       GST_DEBUG_FUNCPTR (gst_base_transform_acceptcaps_default);
+  klass->query = GST_DEBUG_FUNCPTR (gst_base_transform_default_query);
+  klass->decide_allocation =
+      GST_DEBUG_FUNCPTR (gst_base_transform_default_decide_allocation);
+  klass->propose_allocation =
+      GST_DEBUG_FUNCPTR (gst_base_transform_default_propose_allocation);
+  klass->transform_size =
+      GST_DEBUG_FUNCPTR (gst_base_transform_default_transform_size);
+
+  klass->sink_event = GST_DEBUG_FUNCPTR (gst_base_transform_sink_eventfunc);
+  klass->src_event = GST_DEBUG_FUNCPTR (gst_base_transform_src_eventfunc);
   klass->prepare_output_buffer =
       GST_DEBUG_FUNCPTR (default_prepare_output_buffer);
   klass->copy_metadata = GST_DEBUG_FUNCPTR (default_copy_metadata);
-  klass->query = GST_DEBUG_FUNCPTR (gst_base_transform_default_query);
 }
 
 static void
@@ -389,72 +422,76 @@ gst_base_transform_init (GstBaseTransform * trans,
     GstBaseTransformClass * bclass)
 {
   GstPadTemplate *pad_template;
+  GstBaseTransformPrivate *priv;
 
   GST_DEBUG ("gst_base_transform_init");
 
-  trans->priv = GST_BASE_TRANSFORM_GET_PRIVATE (trans);
+  priv = trans->priv = GST_BASE_TRANSFORM_GET_PRIVATE (trans);
 
   pad_template =
       gst_element_class_get_pad_template (GST_ELEMENT_CLASS (bclass), "sink");
   g_return_if_fail (pad_template != NULL);
   trans->sinkpad = gst_pad_new_from_template (pad_template, "sink");
-  gst_pad_set_getcaps_function (trans->sinkpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_getcaps));
-  gst_pad_set_acceptcaps_function (trans->sinkpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_acceptcaps));
   gst_pad_set_event_function (trans->sinkpad,
       GST_DEBUG_FUNCPTR (gst_base_transform_sink_event));
   gst_pad_set_chain_function (trans->sinkpad,
       GST_DEBUG_FUNCPTR (gst_base_transform_chain));
-  gst_pad_set_activatepush_function (trans->sinkpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_sink_activate_push));
+  gst_pad_set_activatemode_function (trans->sinkpad,
+      GST_DEBUG_FUNCPTR (gst_base_transform_sink_activate_mode));
   gst_pad_set_query_function (trans->sinkpad,
       GST_DEBUG_FUNCPTR (gst_base_transform_query));
-  gst_pad_set_query_type_function (trans->sinkpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_query_type));
   gst_element_add_pad (GST_ELEMENT (trans), trans->sinkpad);
 
   pad_template =
       gst_element_class_get_pad_template (GST_ELEMENT_CLASS (bclass), "src");
   g_return_if_fail (pad_template != NULL);
   trans->srcpad = gst_pad_new_from_template (pad_template, "src");
-  gst_pad_set_getcaps_function (trans->srcpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_getcaps));
-  gst_pad_set_acceptcaps_function (trans->srcpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_acceptcaps));
   gst_pad_set_event_function (trans->srcpad,
       GST_DEBUG_FUNCPTR (gst_base_transform_src_event));
   gst_pad_set_getrange_function (trans->srcpad,
       GST_DEBUG_FUNCPTR (gst_base_transform_getrange));
-  gst_pad_set_activatepull_function (trans->srcpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_src_activate_pull));
+  gst_pad_set_activatemode_function (trans->srcpad,
+      GST_DEBUG_FUNCPTR (gst_base_transform_src_activate_mode));
   gst_pad_set_query_function (trans->srcpad,
       GST_DEBUG_FUNCPTR (gst_base_transform_query));
-  gst_pad_set_query_type_function (trans->srcpad,
-      GST_DEBUG_FUNCPTR (gst_base_transform_query_type));
   gst_element_add_pad (GST_ELEMENT (trans), trans->srcpad);
 
-  trans->transform_lock = g_mutex_new ();
-  trans->priv->qos_enabled = DEFAULT_PROP_QOS;
-  trans->cache_caps1 = NULL;
-  trans->cache_caps2 = NULL;
-  trans->priv->pad_mode = GST_ACTIVATE_NONE;
-  trans->priv->gap_aware = FALSE;
+  priv->qos_enabled = DEFAULT_PROP_QOS;
+  priv->cache_caps1 = NULL;
+  priv->cache_caps2 = NULL;
+  priv->pad_mode = GST_PAD_MODE_NONE;
+  priv->gap_aware = FALSE;
 
-  trans->passthrough = FALSE;
+  priv->passthrough = FALSE;
   if (bclass->transform == NULL) {
     /* If no transform function, always_in_place is TRUE */
     GST_DEBUG_OBJECT (trans, "setting in_place TRUE");
-    trans->always_in_place = TRUE;
+    priv->always_in_place = TRUE;
 
     if (bclass->transform_ip == NULL) {
       GST_DEBUG_OBJECT (trans, "setting passthrough TRUE");
-      trans->passthrough = TRUE;
+      priv->passthrough = TRUE;
     }
   }
 
-  trans->priv->processed = 0;
-  trans->priv->dropped = 0;
+  priv->processed = 0;
+  priv->dropped = 0;
+}
+
+static GstCaps *
+gst_base_transform_default_transform_caps (GstBaseTransform * trans,
+    GstPadDirection direction, GstCaps * caps, GstCaps * filter)
+{
+  GstCaps *ret;
+
+  GST_DEBUG_OBJECT (trans, "identity from: %" GST_PTR_FORMAT, caps);
+  /* no transform function, use the identity transform */
+  if (filter) {
+    ret = gst_caps_intersect_full (filter, caps, GST_CAPS_INTERSECT_FIRST);
+  } else {
+    ret = gst_caps_ref (caps);
+  }
+  return ret;
 }
 
 /* given @caps on the src or sink pad (given by @direction)
@@ -466,7 +503,7 @@ static GstCaps *
 gst_base_transform_transform_caps (GstBaseTransform * trans,
     GstPadDirection direction, GstCaps * caps, GstCaps * filter)
 {
-  GstCaps *ret;
+  GstCaps *ret = NULL;
   GstBaseTransformClass *klass;
 
   if (caps == NULL)
@@ -476,7 +513,6 @@ gst_base_transform_transform_caps (GstBaseTransform * trans,
 
   /* if there is a custom transform function, use this */
   if (klass->transform_caps) {
-
     GST_DEBUG_OBJECT (trans, "transform caps (direction = %d)", direction);
 
     GST_LOG_OBJECT (trans, "from: %" GST_PTR_FORMAT, caps);
@@ -497,61 +533,32 @@ gst_base_transform_transform_caps (GstBaseTransform * trans,
 
         intersection =
             gst_caps_intersect_full (filter, ret, GST_CAPS_INTERSECT_FIRST);
-        gst_caps_unref (intersection);
+        gst_caps_unref (ret);
         ret = intersection;
       }
     }
 #endif
-  } else {
-    GST_DEBUG_OBJECT (trans, "identity from: %" GST_PTR_FORMAT, caps);
-    /* no transform function, use the identity transform */
-    if (filter) {
-      ret = gst_caps_intersect_full (filter, caps, GST_CAPS_INTERSECT_FIRST);
-    } else {
-      ret = gst_caps_ref (caps);
-    }
   }
 
-  GST_DEBUG_OBJECT (trans, "to: (%d) %" GST_PTR_FORMAT, gst_caps_get_size (ret),
-      ret);
+  GST_DEBUG_OBJECT (trans, "to: %" GST_PTR_FORMAT, ret);
 
   return ret;
 }
 
-/* transform a buffer of @size with @caps on the pad with @direction to
- * the size of a buffer with @othercaps and store the result in @othersize
- *
- * We have two ways of doing this:
- *  1) use a custom transform size function, this is for complicated custom
- *     cases with no fixed unit_size.
- *  2) use the unit_size functions where there is a relationship between the
- *     caps and the size of a buffer.
- */
 static gboolean
-gst_base_transform_transform_size (GstBaseTransform * trans,
-    GstPadDirection direction, GstCaps * caps,
-    gsize size, GstCaps * othercaps, gsize * othersize)
+gst_base_transform_default_transform_size (GstBaseTransform * trans,
+    GstPadDirection direction, GstCaps * caps, gsize size,
+    GstCaps * othercaps, gsize * othersize)
 {
   gsize inunitsize, outunitsize, units;
   GstBaseTransformClass *klass;
-  gboolean ret;
 
   klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
-  GST_DEBUG_OBJECT (trans,
-      "asked to transform size %" G_GSIZE_FORMAT " for caps %"
-      GST_PTR_FORMAT " to size for caps %" GST_PTR_FORMAT " in direction %s",
-      size, caps, othercaps, direction == GST_PAD_SRC ? "SRC" : "SINK");
-
-  if (klass->transform_size) {
-    /* if there is a custom transform function, use this */
-    ret = klass->transform_size (trans, direction, caps, size, othercaps,
-        othersize);
-  } else if (klass->get_unit_size == NULL) {
+  if (klass->get_unit_size == NULL) {
     /* if there is no transform_size and no unit_size, it means the
      * element does not modify the size of a buffer */
     *othersize = size;
-    ret = TRUE;
   } else {
     /* there is no transform_size function, we have to use the unit_size
      * functions. This method assumes there is a fixed unit_size associated with
@@ -579,10 +586,8 @@ gst_base_transform_transform_size (GstBaseTransform * trans,
     *othersize = units * outunitsize;
     GST_DEBUG_OBJECT (trans, "transformed size to %" G_GSIZE_FORMAT,
         *othersize);
-
-    ret = TRUE;
   }
-  return ret;
+  return TRUE;
 
   /* ERRORS */
 no_in_size:
@@ -607,6 +612,38 @@ no_out_size:
   }
 }
 
+/* transform a buffer of @size with @caps on the pad with @direction to
+ * the size of a buffer with @othercaps and store the result in @othersize
+ *
+ * We have two ways of doing this:
+ *  1) use a custom transform size function, this is for complicated custom
+ *     cases with no fixed unit_size.
+ *  2) use the unit_size functions where there is a relationship between the
+ *     caps and the size of a buffer.
+ */
+static gboolean
+gst_base_transform_transform_size (GstBaseTransform * trans,
+    GstPadDirection direction, GstCaps * caps,
+    gsize size, GstCaps * othercaps, gsize * othersize)
+{
+  GstBaseTransformClass *klass;
+  gboolean ret = FALSE;
+
+  klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
+
+  GST_DEBUG_OBJECT (trans,
+      "asked to transform size %" G_GSIZE_FORMAT " for caps %"
+      GST_PTR_FORMAT " to size for caps %" GST_PTR_FORMAT " in direction %s",
+      size, caps, othercaps, direction == GST_PAD_SRC ? "SRC" : "SINK");
+
+  if (klass->transform_size) {
+    /* if there is a custom transform function, use this */
+    ret = klass->transform_size (trans, direction, caps, size, othercaps,
+        othersize);
+  }
+  return ret;
+}
+
 /* get the caps that can be handled by @pad. We perform:
  *
  *  - take the caps of peer of otherpad,
@@ -617,28 +654,26 @@ no_out_size:
  * If there is no peer, we simply return the caps of the padtemplate of pad.
  */
 static GstCaps *
-gst_base_transform_getcaps (GstPad * pad, GstCaps * filter)
+gst_base_transform_query_caps (GstBaseTransform * trans, GstPad * pad,
+    GstCaps * filter)
 {
-  GstBaseTransform *trans;
   GstPad *otherpad;
   GstCaps *peercaps, *caps, *temp, *peerfilter = NULL;
-  GstCaps *templ;
-
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
+  GstCaps *templ, *otempl;
 
   otherpad = (pad == trans->srcpad) ? trans->sinkpad : trans->srcpad;
 
+  templ = gst_pad_get_pad_template_caps (pad);
+  otempl = gst_pad_get_pad_template_caps (otherpad);
+
   /* we can do what the peer can */
   if (filter) {
-
     GST_DEBUG_OBJECT (pad, "filter caps  %" GST_PTR_FORMAT, filter);
 
     /* filtered against our padtemplate on the other side */
-    templ = gst_pad_get_pad_template_caps (pad);
     GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, templ);
     temp = gst_caps_intersect_full (filter, templ, GST_CAPS_INTERSECT_FIRST);
     GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
-    gst_caps_unref (templ);
 
     /* then see what we can transform this to */
     peerfilter = gst_base_transform_transform_caps (trans,
@@ -647,18 +682,16 @@ gst_base_transform_getcaps (GstPad * pad, GstCaps * filter)
     gst_caps_unref (temp);
 
     /* and filter against the template of this pad */
-    templ = gst_pad_get_pad_template_caps (otherpad);
-    GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, templ);
+    GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, otempl);
     /* We keep the caps sorted like the returned caps */
     temp =
-        gst_caps_intersect_full (peerfilter, templ, GST_CAPS_INTERSECT_FIRST);
+        gst_caps_intersect_full (peerfilter, otempl, GST_CAPS_INTERSECT_FIRST);
     GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
     gst_caps_unref (peerfilter);
-    gst_caps_unref (templ);
     peerfilter = temp;
   }
 
-  peercaps = gst_pad_peer_get_caps (otherpad, peerfilter);
+  peercaps = gst_pad_peer_query_caps (otherpad, peerfilter);
 
   if (peerfilter)
     gst_caps_unref (peerfilter);
@@ -667,13 +700,11 @@ gst_base_transform_getcaps (GstPad * pad, GstCaps * filter)
     GST_DEBUG_OBJECT (pad, "peer caps  %" GST_PTR_FORMAT, peercaps);
 
     /* filtered against our padtemplate on the other side */
-    templ = gst_pad_get_pad_template_caps (otherpad);
-    GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, templ);
-    temp = gst_caps_intersect_full (peercaps, templ, GST_CAPS_INTERSECT_FIRST);
+    GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, otempl);
+    temp = gst_caps_intersect_full (peercaps, otempl, GST_CAPS_INTERSECT_FIRST);
     GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
-    gst_caps_unref (templ);
   } else {
-    temp = gst_caps_copy (gst_pad_get_pad_template_caps (otherpad));
+    temp = gst_caps_ref (otempl);
   }
 
   /* then see what we can transform this to */
@@ -684,35 +715,29 @@ gst_base_transform_getcaps (GstPad * pad, GstCaps * filter)
   if (caps == NULL)
     goto done;
 
-  /* and filter against the template of this pad */
-  templ = gst_pad_get_pad_template_caps (pad);
-  GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, templ);
-  /* We keep the caps sorted like the returned caps */
-  temp = gst_caps_intersect_full (caps, templ, GST_CAPS_INTERSECT_FIRST);
-  GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
-  gst_caps_unref (caps);
-  gst_caps_unref (templ);
-  caps = temp;
-
   if (peercaps) {
+    /* and filter against the template of this pad */
+    GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, templ);
+    /* We keep the caps sorted like the returned caps */
+    temp = gst_caps_intersect_full (caps, templ, GST_CAPS_INTERSECT_FIRST);
+    GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
+    gst_caps_unref (caps);
+    caps = temp;
+
     /* Now try if we can put the untransformed downstream caps first */
     temp = gst_caps_intersect_full (peercaps, caps, GST_CAPS_INTERSECT_FIRST);
     if (!gst_caps_is_empty (temp)) {
-      gst_caps_merge (temp, caps);
-      caps = temp;
+      caps = gst_caps_merge (temp, caps);
     } else {
       gst_caps_unref (temp);
     }
   } else {
+    gst_caps_unref (caps);
     /* no peer or the peer can do anything, our padtemplate is enough then */
-    caps = gst_pad_get_pad_template_caps (pad);
-
     if (filter) {
-      GstCaps *temp;
-
-      temp = gst_caps_intersect_full (filter, caps, GST_CAPS_INTERSECT_FIRST);
-      gst_caps_unref (caps);
-      caps = temp;
+      caps = gst_caps_intersect_full (filter, templ, GST_CAPS_INTERSECT_FIRST);
+    } else {
+      caps = gst_caps_ref (templ);
     }
   }
 
@@ -722,32 +747,38 @@ done:
   if (peercaps)
     gst_caps_unref (peercaps);
 
-  gst_object_unref (trans);
+  gst_caps_unref (templ);
+  gst_caps_unref (otempl);
 
   return caps;
 }
 
+/* takes ownership of the pool, allocator and query */
 static gboolean
 gst_base_transform_set_allocation (GstBaseTransform * trans,
-    GstBufferPool * pool, const GstAllocator * allocator, guint prefix,
-    guint alignment)
+    GstBufferPool * pool, GstAllocator * allocator,
+    GstAllocationParams * params, GstQuery * query)
 {
+  GstAllocator *oldalloc;
   GstBufferPool *oldpool;
+  GstQuery *oldquery;
   GstBaseTransformPrivate *priv = trans->priv;
-
-  /* activate */
-  if (pool) {
-    GST_DEBUG_OBJECT (trans, "setting pool %p active", pool);
-    if (!gst_buffer_pool_set_active (pool, TRUE))
-      goto activate_failed;
-  }
 
   GST_OBJECT_LOCK (trans);
   oldpool = priv->pool;
   priv->pool = pool;
+  priv->pool_active = FALSE;
+
+  oldalloc = priv->allocator;
   priv->allocator = allocator;
-  priv->prefix = prefix;
-  priv->alignment = alignment;
+
+  oldquery = priv->query;
+  priv->query = query;
+
+  if (params)
+    priv->params = *params;
+  else
+    gst_allocation_params_init (&priv->params);
   GST_OBJECT_UNLOCK (trans);
 
   if (oldpool) {
@@ -755,14 +786,57 @@ gst_base_transform_set_allocation (GstBaseTransform * trans,
     gst_buffer_pool_set_active (oldpool, FALSE);
     gst_object_unref (oldpool);
   }
+  if (oldalloc) {
+    gst_allocator_unref (oldalloc);
+  }
+  if (oldquery) {
+    gst_query_unref (oldquery);
+  }
   return TRUE;
 
-  /* ERRORS */
-activate_failed:
-  {
-    GST_ERROR_OBJECT (trans, "failed to activate bufferpool.");
-    return FALSE;
+}
+
+static gboolean
+gst_base_transform_default_decide_allocation (GstBaseTransform * trans,
+    GstQuery * query)
+{
+  guint i, n_metas;
+  GstBaseTransformClass *klass;
+
+  klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
+
+  n_metas = gst_query_get_n_allocation_metas (query);
+  for (i = 0; i < n_metas; i++) {
+    GType api;
+    gboolean remove;
+
+    api = gst_query_parse_nth_allocation_meta (query, i);
+
+    /* by default we remove all metadata, subclasses should implement a
+     * filter_meta function */
+    if (gst_meta_api_type_has_tag (api, GST_META_TAG_MEMORY)) {
+      /* remove all memory dependent metadata because we are going to have to
+       * allocate different memory for input and output. */
+      GST_LOG_OBJECT (trans, "removing memory specific metadata %s",
+          g_type_name (api));
+      remove = TRUE;
+    } else if (G_LIKELY (klass->filter_meta)) {
+      /* remove if the subclass said so */
+      remove = !klass->filter_meta (trans, query, api);
+      GST_LOG_OBJECT (trans, "filter_meta for api %s returned: %s",
+          g_type_name (api), (remove ? "remove" : "keep"));
+    } else {
+      GST_LOG_OBJECT (trans, "removing metadata %s", g_type_name (api));
+      remove = TRUE;
+    }
+
+    if (remove) {
+      gst_query_remove_nth_allocation_meta (query, i);
+      i--;
+      n_metas--;
+    }
   }
+  return TRUE;
 }
 
 static gboolean
@@ -770,10 +844,12 @@ gst_base_transform_do_bufferpool (GstBaseTransform * trans, GstCaps * outcaps)
 {
   GstQuery *query;
   gboolean result = TRUE;
-  GstBufferPool *pool = NULL, *oldpool;
-  guint size, min, max, prefix, alignment;
+  GstBufferPool *pool;
+  guint size, min, max;
   GstBaseTransformClass *klass;
-  const GstAllocator *allocator = NULL;
+  GstBaseTransformPrivate *priv = trans->priv;
+  GstAllocator *allocator;
+  GstAllocationParams params;
 
   /* there are these possibilities:
    *
@@ -782,24 +858,15 @@ gst_base_transform_do_bufferpool (GstBaseTransform * trans, GstCaps * outcaps)
    * 2) we need to do a transform, we need to get a bufferpool from downstream
    *    and configure it. When upstream does the ALLOCATION query, the
    *    propose_allocation vmethod will be called and we will configure the
-   *    upstream allocator with our porposed values then.
+   *    upstream allocator with our proposed values then.
    */
-
-  /* clear old pool */
-  oldpool = trans->priv->pool;
-  if (oldpool) {
-    GST_DEBUG_OBJECT (trans, "unreffing old pool");
-    gst_buffer_pool_set_active (oldpool, FALSE);
-    gst_object_unref (oldpool);
-    trans->priv->pool = oldpool = NULL;
-  }
-
-  if (trans->passthrough || trans->always_in_place) {
+  if (priv->passthrough || priv->always_in_place) {
     /* we are in passthrough, the input buffer is never copied and always passed
      * along. We never allocate an output buffer on the srcpad. What we do is
      * let the upstream element decide if it wants to use a bufferpool and
      * then we will proxy the downstream pool */
     GST_DEBUG_OBJECT (trans, "we're passthough, delay bufferpool");
+    gst_base_transform_set_allocation (trans, NULL, NULL, NULL, NULL);
     return TRUE;
   }
 
@@ -816,41 +883,56 @@ gst_base_transform_do_bufferpool (GstBaseTransform * trans, GstCaps * outcaps)
 
   GST_DEBUG_OBJECT (trans, "calling decide_allocation");
   if (G_LIKELY (klass->decide_allocation))
-    result = klass->decide_allocation (trans, query);
+    if ((result = klass->decide_allocation (trans, query)) == FALSE)
+      goto no_decide_allocation;
 
-  /* we got configuration from our peer, parse them */
-  gst_query_parse_allocation_params (query, &size, &min, &max, &prefix,
-      &alignment, &pool);
-  gst_query_unref (query);
-
-  if (size == 0) {
-    const gchar *mem = NULL;
-
-    /* no size, we have variable size buffers */
-    if (gst_query_get_n_allocation_memories (query) > 0) {
-      mem = gst_query_parse_nth_allocation_memory (query, 0);
-    }
-    allocator = gst_allocator_find (mem);
-    GST_DEBUG_OBJECT (trans, "no size, using allocator %s", GST_STR_NULL (mem));
-  } else if (pool == NULL) {
-    GstStructure *config;
-
-    /* we did not get a pool, make one ourselves then */
-    pool = gst_buffer_pool_new ();
-
-    GST_DEBUG_OBJECT (trans, "no pool, making one");
-    config = gst_buffer_pool_get_config (pool);
-    gst_buffer_pool_config_set (config, outcaps, size, min, max, prefix,
-        alignment);
-    gst_buffer_pool_set_config (pool, config);
+  /* we got configuration from our peer or the decide_allocation method,
+   * parse them */
+  if (gst_query_get_n_allocation_params (query) > 0) {
+    /* try the allocator */
+    gst_query_parse_nth_allocation_param (query, 0, &allocator, &params);
+  } else {
+    allocator = NULL;
+    gst_allocation_params_init (&params);
   }
 
+  if (gst_query_get_n_allocation_pools (query) > 0) {
+    gst_query_parse_nth_allocation_pool (query, 0, &pool, &size, &min, &max);
+
+    if (pool == NULL) {
+      /* no pool, just parameters, we can make our own */
+      GST_DEBUG_OBJECT (trans, "no pool, making new pool");
+      pool = gst_buffer_pool_new ();
+    }
+  } else {
+    pool = NULL;
+    size = min = max = 0;
+  }
+
+  /* now configure */
+  if (pool) {
+    GstStructure *config;
+
+    config = gst_buffer_pool_get_config (pool);
+    gst_buffer_pool_config_set_params (config, outcaps, size, min, max);
+    gst_buffer_pool_config_set_allocator (config, allocator, &params);
+    gst_buffer_pool_set_config (pool, config);
+  }
   /* and store */
   result =
-      gst_base_transform_set_allocation (trans, pool, allocator, prefix,
-      alignment);
+      gst_base_transform_set_allocation (trans, pool, allocator, &params,
+      query);
 
   return result;
+
+  /* Errors */
+no_decide_allocation:
+  {
+    GST_WARNING_OBJECT (trans, "Subclass failed to decide allocation");
+    gst_query_unref (query);
+
+    return result;
+  }
 }
 
 /* function triggered when the in and out caps are negotiated and need
@@ -861,6 +943,7 @@ gst_base_transform_configure_caps (GstBaseTransform * trans, GstCaps * in,
 {
   gboolean ret = TRUE;
   GstBaseTransformClass *klass;
+  GstBaseTransformPrivate *priv = trans->priv;
 
   klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
@@ -868,23 +951,17 @@ gst_base_transform_configure_caps (GstBaseTransform * trans, GstCaps * in,
   GST_DEBUG_OBJECT (trans, "out caps: %" GST_PTR_FORMAT, out);
 
   /* clear the cache */
-  gst_caps_replace (&trans->cache_caps1, NULL);
-  gst_caps_replace (&trans->cache_caps2, NULL);
+  gst_caps_replace (&priv->cache_caps1, NULL);
+  gst_caps_replace (&priv->cache_caps2, NULL);
 
   /* figure out same caps state */
-  trans->have_same_caps = gst_caps_is_equal (in, out);
-  GST_DEBUG_OBJECT (trans, "have_same_caps: %d", trans->have_same_caps);
-
-  /* If we've a transform_ip method and same input/output caps, set in_place
-   * by default. If for some reason the sub-class prefers using a transform
-   * function, it can clear the in place flag in the set_caps */
-  gst_base_transform_set_in_place (trans,
-      klass->transform_ip && trans->have_same_caps);
+  priv->have_same_caps = gst_caps_is_equal (in, out);
+  GST_DEBUG_OBJECT (trans, "have_same_caps: %d", priv->have_same_caps);
 
   /* Set the passthrough if the class wants passthrough_on_same_caps
    * and we have the same caps on each pad */
   if (klass->passthrough_on_same_caps)
-    gst_base_transform_set_passthrough (trans, trans->have_same_caps);
+    gst_base_transform_set_passthrough (trans, priv->have_same_caps);
 
   /* now configure the element with the caps */
   if (klass->set_caps) {
@@ -892,9 +969,17 @@ gst_base_transform_configure_caps (GstBaseTransform * trans, GstCaps * in,
     ret = klass->set_caps (trans, in, out);
   }
 
-  trans->negotiated = ret;
-
   return ret;
+}
+
+static GstCaps *
+gst_base_transform_default_fixate_caps (GstBaseTransform * trans,
+    GstPadDirection direction, GstCaps * caps, GstCaps * othercaps)
+{
+  othercaps = gst_caps_fixate (othercaps);
+  GST_DEBUG_OBJECT (trans, "fixated to %" GST_PTR_FORMAT, othercaps);
+
+  return othercaps;
 }
 
 /* given a fixed @caps on @pad, create the best possible caps for the
@@ -974,31 +1059,38 @@ gst_base_transform_find_transform (GstBaseTransform * trans, GstPad * pad,
       GST_DEBUG_OBJECT (trans,
           "Checking peer caps with filter %" GST_PTR_FORMAT, othercaps);
 
-      peercaps = gst_pad_get_caps (otherpeer, othercaps);
+      peercaps = gst_pad_query_caps (otherpeer, othercaps);
       GST_DEBUG_OBJECT (trans, "Resulted in %" GST_PTR_FORMAT, peercaps);
+      if (!gst_caps_is_empty (peercaps)) {
+        templ_caps = gst_pad_get_pad_template_caps (otherpad);
 
-      templ_caps = gst_pad_get_pad_template_caps (otherpad);
+        GST_DEBUG_OBJECT (trans,
+            "Intersecting with template caps %" GST_PTR_FORMAT, templ_caps);
 
-      GST_DEBUG_OBJECT (trans,
-          "Intersecting with template caps %" GST_PTR_FORMAT, templ_caps);
+        intersection =
+            gst_caps_intersect_full (peercaps, templ_caps,
+            GST_CAPS_INTERSECT_FIRST);
+        GST_DEBUG_OBJECT (trans, "Intersection: %" GST_PTR_FORMAT,
+            intersection);
+        gst_caps_unref (peercaps);
+        gst_caps_unref (templ_caps);
+        peercaps = intersection;
 
-      intersection =
-          gst_caps_intersect_full (peercaps, templ_caps,
-          GST_CAPS_INTERSECT_FIRST);
-      GST_DEBUG_OBJECT (trans, "Intersection: %" GST_PTR_FORMAT, intersection);
-      gst_caps_unref (peercaps);
-      gst_caps_unref (templ_caps);
-      peercaps = intersection;
+        GST_DEBUG_OBJECT (trans,
+            "Intersecting with transformed caps %" GST_PTR_FORMAT, othercaps);
+        intersection =
+            gst_caps_intersect_full (peercaps, othercaps,
+            GST_CAPS_INTERSECT_FIRST);
+        GST_DEBUG_OBJECT (trans, "Intersection: %" GST_PTR_FORMAT,
+            intersection);
+        gst_caps_unref (peercaps);
+        gst_caps_unref (othercaps);
+        othercaps = intersection;
+      } else {
+        gst_caps_unref (othercaps);
+        othercaps = peercaps;
+      }
 
-      GST_DEBUG_OBJECT (trans,
-          "Intersecting with transformed caps %" GST_PTR_FORMAT, othercaps);
-      intersection =
-          gst_caps_intersect_full (peercaps, othercaps,
-          GST_CAPS_INTERSECT_FIRST);
-      GST_DEBUG_OBJECT (trans, "Intersection: %" GST_PTR_FORMAT, intersection);
-      gst_caps_unref (peercaps);
-      gst_caps_unref (othercaps);
-      othercaps = intersection;
       is_fixed = gst_caps_is_fixed (othercaps);
     } else {
       GST_DEBUG_OBJECT (trans, "no peer, doing passthrough");
@@ -1010,52 +1102,21 @@ gst_base_transform_find_transform (GstBaseTransform * trans, GstPad * pad,
   if (gst_caps_is_empty (othercaps))
     goto no_transform_possible;
 
-  /* second attempt at fixation, call the fixate vmethod and
-   * ultimately call the pad fixate function. */
-  if (!is_fixed) {
-    GST_DEBUG_OBJECT (trans,
-        "trying to fixate %" GST_PTR_FORMAT " on pad %s:%s",
-        othercaps, GST_DEBUG_PAD_NAME (otherpad));
+  GST_DEBUG ("have %sfixed caps %" GST_PTR_FORMAT, (is_fixed ? "" : "non-"),
+      othercaps);
 
-    /* since we have no other way to fixate left, we might as well just take
-     * the first of the caps list and fixate that */
-
-    /* FIXME: when fixating using the vmethod, it might make sense to fixate
-     * each of the caps; but Wim doesn't see a use case for that yet */
-    gst_caps_truncate (othercaps);
-
-    if (klass->fixate_caps) {
-      GST_DEBUG_OBJECT (trans, "trying to fixate %" GST_PTR_FORMAT
-          " using caps %" GST_PTR_FORMAT
-          " on pad %s:%s using fixate_caps vmethod", othercaps, caps,
-          GST_DEBUG_PAD_NAME (otherpad));
-      klass->fixate_caps (trans, GST_PAD_DIRECTION (pad), caps, othercaps);
-      is_fixed = gst_caps_is_fixed (othercaps);
-    }
-    /* if still not fixed, no other option but to let the default pad fixate
-     * function do its job */
-    if (!is_fixed) {
-      GST_DEBUG_OBJECT (trans, "trying to fixate %" GST_PTR_FORMAT
-          " on pad %s:%s using gst_pad_fixate_caps", othercaps,
-          GST_DEBUG_PAD_NAME (otherpad));
-      gst_pad_fixate_caps (otherpad, othercaps);
-      is_fixed = gst_caps_is_fixed (othercaps);
-    }
+  /* second attempt at fixation, call the fixate vmethod */
+  /* caps could be fixed but the subclass may want to add fields */
+  if (klass->fixate_caps) {
+    GST_DEBUG_OBJECT (trans, "calling fixate_caps for %" GST_PTR_FORMAT
+        " using caps %" GST_PTR_FORMAT " on pad %s:%s", othercaps, caps,
+        GST_DEBUG_PAD_NAME (otherpad));
+    /* note that we pass the complete array of structures to the fixate
+     * function, it needs to truncate itself */
+    othercaps =
+        klass->fixate_caps (trans, GST_PAD_DIRECTION (pad), caps, othercaps);
+    is_fixed = gst_caps_is_fixed (othercaps);
     GST_DEBUG_OBJECT (trans, "after fixating %" GST_PTR_FORMAT, othercaps);
-  } else {
-    GST_DEBUG ("caps are fixed");
-    /* else caps are fixed but the subclass may want to add fields */
-    if (klass->fixate_caps) {
-      othercaps = gst_caps_make_writable (othercaps);
-
-      GST_DEBUG_OBJECT (trans, "doing fixate %" GST_PTR_FORMAT
-          " using caps %" GST_PTR_FORMAT
-          " on pad %s:%s using fixate_caps vmethod", othercaps, caps,
-          GST_DEBUG_PAD_NAME (otherpad));
-
-      klass->fixate_caps (trans, GST_PAD_DIRECTION (pad), caps, othercaps);
-      is_fixed = gst_caps_is_fixed (othercaps);
-    }
   }
 
   /* caps should be fixed now, if not we have to fail. */
@@ -1063,7 +1124,7 @@ gst_base_transform_find_transform (GstBaseTransform * trans, GstPad * pad,
     goto could_not_fixate;
 
   /* and peer should accept */
-  if (!gst_pad_accept_caps (otherpeer, othercaps))
+  if (otherpeer && !gst_pad_query_accept_caps (otherpeer, othercaps))
     goto peer_no_accept;
 
   GST_DEBUG_OBJECT (trans, "Input caps were %" GST_PTR_FORMAT
@@ -1129,16 +1190,16 @@ gst_base_transform_acceptcaps_default (GstBaseTransform * trans,
   {
     GstCaps *allowed;
 
-    GST_DEBUG_OBJECT (trans, "non fixed accept caps %" GST_PTR_FORMAT, caps);
+    GST_DEBUG_OBJECT (trans, "accept caps %" GST_PTR_FORMAT, caps);
 
     /* get all the formats we can handle on this pad */
     if (direction == GST_PAD_SRC)
-      allowed = gst_pad_get_caps (trans->srcpad, NULL);
+      allowed = gst_pad_query_caps (trans->srcpad, NULL);
     else
-      allowed = gst_pad_get_caps (trans->sinkpad, NULL);
+      allowed = gst_pad_query_caps (trans->sinkpad, NULL);
 
     if (!allowed) {
-      GST_DEBUG_OBJECT (trans, "gst_pad_get_caps() failed");
+      GST_DEBUG_OBJECT (trans, "gst_pad_query_caps() failed");
       goto no_transform_possible;
     }
 
@@ -1185,66 +1246,33 @@ no_transform_possible:
   }
 }
 
-static gboolean
-gst_base_transform_acceptcaps (GstPad * pad, GstCaps * caps)
-{
-  gboolean ret = TRUE;
-  GstBaseTransform *trans;
-  GstBaseTransformClass *bclass;
-
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
-  bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
-
-  if (bclass->accept_caps)
-    ret = bclass->accept_caps (trans, GST_PAD_DIRECTION (pad), caps);
-
-  gst_object_unref (trans);
-
-  return ret;
-}
-
-/* called when new caps arrive on the sink or source pad,
+/* called when new caps arrive on the sink pad,
  * We try to find the best caps for the other side using our _find_transform()
  * function. If there are caps, we configure the transform for this new
  * transformation.
- *
- * FIXME, this function is currently commutative but this should not really be
- * because we never set caps starting from the srcpad.
  */
 static gboolean
 gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
-    GstCaps * caps)
+    GstCaps * incaps)
 {
-  GstPad *otherpad, *otherpeer;
-  GstCaps *othercaps = NULL;
+  GstBaseTransformPrivate *priv = trans->priv;
+  GstCaps *outcaps;
   gboolean ret = TRUE;
-  GstCaps *incaps, *outcaps;
 
-  otherpad = (pad == trans->srcpad) ? trans->sinkpad : trans->srcpad;
-  otherpeer = gst_pad_get_peer (otherpad);
-
-  GST_DEBUG_OBJECT (pad, "have new caps %p %" GST_PTR_FORMAT, caps, caps);
+  GST_DEBUG_OBJECT (pad, "have new caps %p %" GST_PTR_FORMAT, incaps, incaps);
 
   /* find best possible caps for the other pad */
-  othercaps = gst_base_transform_find_transform (trans, pad, caps);
-  if (!othercaps || gst_caps_is_empty (othercaps))
+  outcaps = gst_base_transform_find_transform (trans, pad, incaps);
+  if (!outcaps || gst_caps_is_empty (outcaps))
     goto no_transform_possible;
 
   /* configure the element now */
-  /* make sure in and out caps are correct */
-  if (pad == trans->sinkpad) {
-    incaps = caps;
-    outcaps = othercaps;
-  } else {
-    incaps = othercaps;
-    outcaps = caps;
-  }
 
   /* if we have the same caps, we can optimize and reuse the input caps */
   if (gst_caps_is_equal (incaps, outcaps)) {
     GST_INFO_OBJECT (trans, "reuse caps");
-    gst_caps_unref (othercaps);
-    outcaps = othercaps = gst_caps_ref (incaps);
+    gst_caps_unref (outcaps);
+    outcaps = gst_caps_ref (incaps);
   }
 
   /* call configure now */
@@ -1252,34 +1280,25 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
     goto failed_configure;
 
   GST_OBJECT_LOCK (trans->sinkpad);
-  GST_OBJECT_FLAG_UNSET (trans->srcpad, GST_PAD_NEED_RECONFIGURE);
+  GST_OBJECT_FLAG_UNSET (trans->srcpad, GST_PAD_FLAG_NEED_RECONFIGURE);
   trans->priv->reconfigure = FALSE;
   GST_OBJECT_UNLOCK (trans->sinkpad);
 
-  /* we know this will work, we implement the setcaps */
-  gst_pad_push_event (otherpad, gst_event_new_caps (othercaps));
-
-  if (pad == trans->srcpad && trans->priv->pad_mode == GST_ACTIVATE_PULL) {
-    /* FIXME hm? */
-    ret &= gst_pad_push_event (otherpeer, gst_event_new_caps (othercaps));
-    if (!ret) {
-      GST_INFO_OBJECT (trans, "otherpeer setcaps(%" GST_PTR_FORMAT ") failed",
-          othercaps);
-    }
-  }
+  /* let downstream know about our caps */
+  gst_pad_push_event (trans->srcpad, gst_event_new_caps (outcaps));
 
   if (ret) {
     /* try to get a pool when needed */
-    ret = gst_base_transform_do_bufferpool (trans, othercaps);
+    ret = gst_base_transform_do_bufferpool (trans, outcaps);
   }
 
 done:
-  if (otherpeer)
-    gst_object_unref (otherpeer);
-  if (othercaps)
-    gst_caps_unref (othercaps);
+  if (outcaps)
+    gst_caps_unref (outcaps);
 
-  trans->negotiated = ret;
+  GST_OBJECT_LOCK (trans);
+  priv->negotiated = ret;
+  GST_OBJECT_UNLOCK (trans);
 
   return ret;
 
@@ -1288,17 +1307,43 @@ no_transform_possible:
   {
     GST_WARNING_OBJECT (trans,
         "transform could not transform %" GST_PTR_FORMAT
-        " in anything we support", caps);
+        " in anything we support", incaps);
     ret = FALSE;
     goto done;
   }
 failed_configure:
   {
-    GST_WARNING_OBJECT (trans, "FAILED to configure caps %" GST_PTR_FORMAT
-        " to accept %" GST_PTR_FORMAT, otherpad, othercaps);
+    GST_WARNING_OBJECT (trans, "FAILED to configure incaps %" GST_PTR_FORMAT
+        " and outcaps %" GST_PTR_FORMAT, incaps, outcaps);
     ret = FALSE;
     goto done;
   }
+}
+
+static gboolean
+gst_base_transform_default_propose_allocation (GstBaseTransform * trans,
+    GstQuery * decide_query, GstQuery * query)
+{
+  gboolean ret;
+
+  if (decide_query == NULL) {
+    GST_DEBUG_OBJECT (trans, "doing passthrough query");
+    ret = gst_pad_peer_query (trans->srcpad, query);
+  } else {
+    guint i, n_metas;
+    /* non-passthrough, copy all metadata, decide_query does not contain the
+     * metadata anymore that depends on the buffer memory */
+    n_metas = gst_query_get_n_allocation_metas (decide_query);
+    for (i = 0; i < n_metas; i++) {
+      GType api;
+
+      api = gst_query_parse_nth_allocation_meta (decide_query, i);
+      GST_DEBUG_OBJECT (trans, "proposing metadata %s", g_type_name (api));
+      gst_query_add_allocation_meta (query, api);
+    }
+    ret = TRUE;
+  }
+  return ret;
 }
 
 static gboolean
@@ -1306,38 +1351,54 @@ gst_base_transform_default_query (GstBaseTransform * trans,
     GstPadDirection direction, GstQuery * query)
 {
   gboolean ret = FALSE;
-  GstPad *otherpad;
+  GstPad *pad, *otherpad;
+  GstBaseTransformClass *klass;
+  GstBaseTransformPrivate *priv = trans->priv;
 
-  otherpad = (direction == GST_PAD_SRC) ? trans->sinkpad : trans->srcpad;
+  if (direction == GST_PAD_SRC) {
+    pad = trans->srcpad;
+    otherpad = trans->sinkpad;
+  } else {
+    pad = trans->sinkpad;
+    otherpad = trans->srcpad;
+  }
+
+  klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_ALLOCATION:
     {
-      gboolean passthrough;
+      GstQuery *decide_query = NULL;
+      gboolean negotiated;
 
       /* can only be done on the sinkpad */
       if (direction != GST_PAD_SINK)
         goto done;
 
-      GST_BASE_TRANSFORM_LOCK (trans);
-      passthrough = trans->passthrough || trans->always_in_place;
-      GST_BASE_TRANSFORM_UNLOCK (trans);
-
-      if (passthrough) {
-        GST_DEBUG_OBJECT (trans, "doing passthrough query");
-        ret = gst_pad_peer_query (otherpad, query);
-      } else {
-        GstBaseTransformClass *klass;
-
-        GST_DEBUG_OBJECT (trans, "propose allocation values");
-
-        klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
-        /* pass the query to the propose_allocation vmethod if any */
-        if (G_LIKELY (klass->propose_allocation))
-          ret = klass->propose_allocation (trans, query);
-        else
-          ret = FALSE;
+      GST_OBJECT_LOCK (trans);
+      if (G_UNLIKELY (!(negotiated = priv->negotiated))) {
+        GST_DEBUG_OBJECT (trans,
+            "not negotiated yet, can't answer ALLOCATION query");
+        GST_OBJECT_UNLOCK (trans);
+        goto done;
       }
+      if ((decide_query = trans->priv->query))
+        gst_query_ref (decide_query);
+      GST_OBJECT_UNLOCK (trans);
+
+      GST_DEBUG_OBJECT (trans,
+          "calling propose allocation with query %" GST_PTR_FORMAT,
+          decide_query);
+
+      /* pass the query to the propose_allocation vmethod if any */
+      if (G_LIKELY (klass->propose_allocation))
+        ret = klass->propose_allocation (trans, decide_query, query);
+      else
+        ret = FALSE;
+
+      if (decide_query)
+        gst_query_unref (decide_query);
+
       GST_DEBUG_OBJECT (trans, "ALLOCATION ret %d, %" GST_PTR_FORMAT, ret,
           query);
       break;
@@ -1366,6 +1427,30 @@ gst_base_transform_default_query (GstBaseTransform * trans,
       }
       break;
     }
+    case GST_QUERY_ACCEPT_CAPS:
+    {
+      GstCaps *caps;
+
+      gst_query_parse_accept_caps (query, &caps);
+      if (klass->accept_caps) {
+        ret = klass->accept_caps (trans, direction, caps);
+        gst_query_set_accept_caps_result (query, ret);
+        /* return TRUE, we answered the query */
+        ret = TRUE;
+      }
+      break;
+    }
+    case GST_QUERY_CAPS:
+    {
+      GstCaps *filter, *caps;
+
+      gst_query_parse_caps (query, &filter);
+      caps = gst_base_transform_query_caps (trans, pad, filter);
+      gst_query_set_caps_result (query, caps);
+      gst_caps_unref (caps);
+      ret = TRUE;
+      break;
+    }
     default:
       ret = gst_pad_peer_query (otherpad, query);
       break;
@@ -1376,37 +1461,19 @@ done:
 }
 
 static gboolean
-gst_base_transform_query (GstPad * pad, GstQuery * query)
+gst_base_transform_query (GstPad * pad, GstObject * parent, GstQuery * query)
 {
   GstBaseTransform *trans;
   GstBaseTransformClass *bclass;
-  gboolean ret;
+  gboolean ret = FALSE;
 
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (trans == NULL))
-    return FALSE;
-
+  trans = GST_BASE_TRANSFORM (parent);
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
   if (bclass->query)
     ret = bclass->query (trans, GST_PAD_DIRECTION (pad), query);
-  else
-    ret = gst_pad_query_default (pad, query);
-
-  gst_object_unref (trans);
 
   return ret;
-}
-
-static const GstQueryType *
-gst_base_transform_query_type (GstPad * pad)
-{
-  static const GstQueryType types[] = {
-    GST_QUERY_POSITION,
-    GST_QUERY_NONE
-  };
-
-  return types;
 }
 
 /* this function either returns the input buffer without incrementing the
@@ -1418,67 +1485,88 @@ default_prepare_output_buffer (GstBaseTransform * trans,
   GstBaseTransformPrivate *priv;
   GstFlowReturn ret = GST_FLOW_OK;
   GstBaseTransformClass *bclass;
+  GstCaps *incaps, *outcaps;
+  gsize insize, outsize;
+  gboolean res;
 
   priv = trans->priv;
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
   /* figure out how to allocate an output buffer */
-  if (trans->passthrough) {
+  if (priv->passthrough) {
     /* passthrough, we will not modify the incomming buffer so we can just
      * reuse it */
     GST_DEBUG_OBJECT (trans, "passthrough: reusing input buffer");
     *outbuf = inbuf;
-  } else {
-    /* we can't reuse the input buffer */
-    if (priv->pool) {
-      GST_DEBUG_OBJECT (trans, "using pool alloc");
-      ret = gst_buffer_pool_acquire_buffer (priv->pool, outbuf, NULL);
-    } else {
-      gsize insize, outsize;
-      gboolean res;
-
-      /* no pool, we need to figure out the size of the output buffer first */
-      insize = gst_buffer_get_size (inbuf);
-
-      if (trans->passthrough) {
-        GST_DEBUG_OBJECT (trans, "doing passthrough alloc");
-        /* passthrough, the output size is the same as the input size. */
-        outsize = insize;
-      } else {
-        gboolean want_in_place = (bclass->transform_ip != NULL)
-            && trans->always_in_place;
-
-        if (want_in_place) {
-          GST_DEBUG_OBJECT (trans, "doing inplace alloc");
-          /* we alloc a buffer of the same size as the input */
-          outsize = insize;
-        } else {
-          GstCaps *incaps, *outcaps;
-
-          /* else use the transform function to get the size */
-          incaps = gst_pad_get_current_caps (trans->sinkpad);
-          outcaps = gst_pad_get_current_caps (trans->srcpad);
-
-          GST_DEBUG_OBJECT (trans, "getting output size for alloc");
-          /* copy transform, figure out the output size */
-          res = gst_base_transform_transform_size (trans,
-              GST_PAD_SINK, incaps, insize, outcaps, &outsize);
-
-          gst_caps_unref (incaps);
-          gst_caps_unref (outcaps);
-
-          if (!res)
-            goto unknown_size;
-        }
-      }
-      GST_DEBUG_OBJECT (trans, "doing alloc of size %" G_GSIZE_FORMAT, outsize);
-      *outbuf =
-          gst_buffer_new_allocate (priv->allocator, outsize, priv->alignment);
-    }
+    goto done;
   }
+
+  /* we can't reuse the input buffer */
+  if (priv->pool) {
+    if (!priv->pool_active) {
+      GST_DEBUG_OBJECT (trans, "setting pool %p active", priv->pool);
+      if (!gst_buffer_pool_set_active (priv->pool, TRUE))
+        goto activate_failed;
+      priv->pool_active = TRUE;
+    }
+    GST_DEBUG_OBJECT (trans, "using pool alloc");
+    ret = gst_buffer_pool_acquire_buffer (priv->pool, outbuf, NULL);
+    goto copy_meta;
+  }
+
+  /* no pool, we need to figure out the size of the output buffer first */
+  if ((bclass->transform_ip != NULL) && priv->always_in_place) {
+    /* we want to do an in-place alloc */
+    if (gst_buffer_is_writable (inbuf)) {
+      GST_DEBUG_OBJECT (trans, "inplace reuse writable input buffer");
+      *outbuf = inbuf;
+    } else {
+      GST_DEBUG_OBJECT (trans, "making writable buffer copy");
+      /* we make a copy of the input buffer */
+      *outbuf = gst_buffer_copy (inbuf);
+    }
+    goto done;
+  }
+
+  /* else use the transform function to get the size */
+  incaps = gst_pad_get_current_caps (trans->sinkpad);
+  outcaps = gst_pad_get_current_caps (trans->srcpad);
+
+  GST_DEBUG_OBJECT (trans, "getting output size for alloc");
+  /* copy transform, figure out the output size */
+  insize = gst_buffer_get_size (inbuf);
+  res = gst_base_transform_transform_size (trans,
+      GST_PAD_SINK, incaps, insize, outcaps, &outsize);
+
+  gst_caps_unref (incaps);
+  gst_caps_unref (outcaps);
+
+  if (!res)
+    goto unknown_size;
+
+  GST_DEBUG_OBJECT (trans, "doing alloc of size %" G_GSIZE_FORMAT, outsize);
+  *outbuf = gst_buffer_new_allocate (priv->allocator, outsize, &priv->params);
+
+copy_meta:
+  /* copy the metadata */
+  if (bclass->copy_metadata)
+    if (!bclass->copy_metadata (trans, inbuf, *outbuf)) {
+      /* something failed, post a warning */
+      GST_ELEMENT_WARNING (trans, STREAM, NOT_IMPLEMENTED,
+          ("could not copy metadata"), (NULL));
+    }
+
+done:
   return ret;
 
   /* ERRORS */
+  /* ERRORS */
+activate_failed:
+  {
+    GST_ELEMENT_ERROR (trans, RESOURCE, SETTINGS,
+        ("failed to activate bufferpool"), ("failed to activate bufferpool"));
+    return GST_FLOW_ERROR;
+  }
 unknown_size:
   {
     GST_ERROR_OBJECT (trans, "unknown output size");
@@ -1486,11 +1574,62 @@ unknown_size:
   }
 }
 
+typedef struct
+{
+  GstBaseTransform *trans;
+  GstBuffer *outbuf;
+} CopyMetaData;
+
+static gboolean
+foreach_metadata (GstBuffer * inbuf, GstMeta ** meta, gpointer user_data)
+{
+  CopyMetaData *data = user_data;
+  GstBaseTransform *trans = data->trans;
+  GstBaseTransformClass *klass;
+  const GstMetaInfo *info = (*meta)->info;
+  GstBuffer *outbuf = data->outbuf;
+  gboolean do_copy;
+
+  klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
+
+  if (GST_META_FLAG_IS_SET (*meta, GST_META_FLAG_POOLED)) {
+    /* never call the transform_meta with pool private metadata */
+    GST_DEBUG_OBJECT (trans, "not copying pooled metadata %s",
+        g_type_name (info->api));
+    do_copy = FALSE;
+  } else if (gst_meta_api_type_has_tag (info->api, GST_META_TAG_MEMORY)) {
+    /* never call the transform_meta with memory specific metadata */
+    GST_DEBUG_OBJECT (trans, "not copying memory specific metadata %s",
+        g_type_name (info->api));
+    do_copy = FALSE;
+  } else if (klass->transform_meta) {
+    do_copy = klass->transform_meta (trans, outbuf, *meta, inbuf);
+    GST_DEBUG_OBJECT (trans, "transformed metadata %s: copy: %d",
+        g_type_name (info->api), do_copy);
+  } else {
+    do_copy = FALSE;
+    GST_DEBUG_OBJECT (trans, "not copying metadata %s",
+        g_type_name (info->api));
+  }
+
+  /* we only copy metadata when the subclass implemented a transform_meta
+   * function and when it returns TRUE */
+  if (do_copy) {
+    GstMetaTransformCopy copy_data = { FALSE, 0, -1 };
+    GST_DEBUG_OBJECT (trans, "copy metadata %s", g_type_name (info->api));
+    /* simply copy then */
+    info->transform_func (outbuf, *meta, inbuf,
+        _gst_meta_transform_copy, &copy_data);
+  }
+  return TRUE;
+}
+
 static gboolean
 default_copy_metadata (GstBaseTransform * trans,
     GstBuffer * inbuf, GstBuffer * outbuf)
 {
   GstBaseTransformPrivate *priv = trans->priv;
+  CopyMetaData data;
 
   /* now copy the metadata */
   GST_DEBUG_OBJECT (trans, "copying metadata");
@@ -1507,6 +1646,12 @@ default_copy_metadata (GstBaseTransform * trans,
   /* clear the GAP flag when the subclass does not understand it */
   if (!priv->gap_aware)
     GST_BUFFER_FLAG_UNSET (outbuf, GST_BUFFER_FLAG_GAP);
+
+
+  data.trans = trans;
+  data.outbuf = outbuf;
+
+  gst_buffer_foreach_meta (inbuf, foreach_metadata, &data);
 
   return TRUE;
 
@@ -1537,70 +1682,62 @@ gst_base_transform_get_unit_size (GstBaseTransform * trans, GstCaps * caps,
 {
   gboolean res = FALSE;
   GstBaseTransformClass *bclass;
+  GstBaseTransformPrivate *priv = trans->priv;
 
   /* see if we have the result cached */
-  if (trans->cache_caps1 == caps) {
-    *size = trans->cache_caps1_size;
+  if (priv->cache_caps1 == caps) {
+    *size = priv->cache_caps1_size;
     GST_DEBUG_OBJECT (trans,
         "returned %" G_GSIZE_FORMAT " from first cache", *size);
     return TRUE;
   }
-  if (trans->cache_caps2 == caps) {
-    *size = trans->cache_caps2_size;
+  if (priv->cache_caps2 == caps) {
+    *size = priv->cache_caps2_size;
     GST_DEBUG_OBJECT (trans,
         "returned %" G_GSIZE_FORMAT " from second cached", *size);
     return TRUE;
   }
 
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
-  if (bclass->get_unit_size) {
-    res = bclass->get_unit_size (trans, caps, size);
-    GST_DEBUG_OBJECT (trans,
-        "caps %" GST_PTR_FORMAT ") has unit size %" G_GSIZE_FORMAT ", res %s",
-        caps, *size, res ? "TRUE" : "FALSE");
+  res = bclass->get_unit_size (trans, caps, size);
+  GST_DEBUG_OBJECT (trans,
+      "caps %" GST_PTR_FORMAT ") has unit size %" G_GSIZE_FORMAT ", res %s",
+      caps, *size, res ? "TRUE" : "FALSE");
 
-    if (res) {
-      /* and cache the values */
-      if (trans->cache_caps1 == NULL) {
-        gst_caps_replace (&trans->cache_caps1, caps);
-        trans->cache_caps1_size = *size;
-        GST_DEBUG_OBJECT (trans,
-            "caching %" G_GSIZE_FORMAT " in first cache", *size);
-      } else if (trans->cache_caps2 == NULL) {
-        gst_caps_replace (&trans->cache_caps2, caps);
-        trans->cache_caps2_size = *size;
-        GST_DEBUG_OBJECT (trans,
-            "caching %" G_GSIZE_FORMAT " in second cache", *size);
-      } else {
-        GST_DEBUG_OBJECT (trans, "no free spot to cache unit_size");
-      }
+  if (res) {
+    /* and cache the values */
+    if (priv->cache_caps1 == NULL) {
+      gst_caps_replace (&priv->cache_caps1, caps);
+      priv->cache_caps1_size = *size;
+      GST_DEBUG_OBJECT (trans,
+          "caching %" G_GSIZE_FORMAT " in first cache", *size);
+    } else if (priv->cache_caps2 == NULL) {
+      gst_caps_replace (&priv->cache_caps2, caps);
+      priv->cache_caps2_size = *size;
+      GST_DEBUG_OBJECT (trans,
+          "caching %" G_GSIZE_FORMAT " in second cache", *size);
+    } else {
+      GST_DEBUG_OBJECT (trans, "no free spot to cache unit_size");
     }
-  } else {
-    GST_DEBUG_OBJECT (trans, "Sub-class does not implement get_unit_size");
   }
   return res;
 }
 
 static gboolean
-gst_base_transform_sink_event (GstPad * pad, GstEvent * event)
+gst_base_transform_sink_event (GstPad * pad, GstObject * parent,
+    GstEvent * event)
 {
   GstBaseTransform *trans;
   GstBaseTransformClass *bclass;
   gboolean ret = TRUE;
 
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (trans == NULL)) {
-    gst_event_unref (event);
-    return FALSE;
-  }
+  trans = GST_BASE_TRANSFORM (parent);
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
   if (bclass->sink_event)
     ret = bclass->sink_event (trans, event);
   else
     gst_event_unref (event);
-
-  gst_object_unref (trans);
 
   return ret;
 }
@@ -1609,6 +1746,7 @@ static gboolean
 gst_base_transform_sink_eventfunc (GstBaseTransform * trans, GstEvent * event)
 {
   gboolean ret = TRUE, forward = TRUE;
+  GstBaseTransformPrivate *priv = trans->priv;
 
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_FLUSH_START:
@@ -1616,16 +1754,16 @@ gst_base_transform_sink_eventfunc (GstBaseTransform * trans, GstEvent * event)
     case GST_EVENT_FLUSH_STOP:
       GST_OBJECT_LOCK (trans);
       /* reset QoS parameters */
-      trans->priv->proportion = 1.0;
-      trans->priv->earliest_time = -1;
-      trans->priv->discont = FALSE;
-      trans->priv->processed = 0;
-      trans->priv->dropped = 0;
+      priv->proportion = 1.0;
+      priv->earliest_time = -1;
+      priv->discont = FALSE;
+      priv->processed = 0;
+      priv->dropped = 0;
       GST_OBJECT_UNLOCK (trans);
       /* we need new segment info after the flush. */
       trans->have_segment = FALSE;
       gst_segment_init (&trans->segment, GST_FORMAT_UNDEFINED);
-      trans->priv->position_out = GST_CLOCK_TIME_NONE;
+      priv->position_out = GST_CLOCK_TIME_NONE;
       break;
     case GST_EVENT_EOS:
       break;
@@ -1663,26 +1801,20 @@ gst_base_transform_sink_eventfunc (GstBaseTransform * trans, GstEvent * event)
 }
 
 static gboolean
-gst_base_transform_src_event (GstPad * pad, GstEvent * event)
+gst_base_transform_src_event (GstPad * pad, GstObject * parent,
+    GstEvent * event)
 {
   GstBaseTransform *trans;
   GstBaseTransformClass *bclass;
   gboolean ret = TRUE;
 
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (trans == NULL)) {
-    gst_event_unref (event);
-    return FALSE;
-  }
-
+  trans = GST_BASE_TRANSFORM (parent);
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
   if (bclass->src_event)
     ret = bclass->src_event (trans, event);
   else
     gst_event_unref (event);
-
-  gst_object_unref (trans);
 
   return ret;
 }
@@ -1728,6 +1860,7 @@ gst_base_transform_handle_buffer (GstBaseTransform * trans, GstBuffer * inbuf,
     GstBuffer ** outbuf)
 {
   GstBaseTransformClass *bclass;
+  GstBaseTransformPrivate *priv = trans->priv;
   GstFlowReturn ret = GST_FLOW_OK;
   gboolean want_in_place;
   GstClockTime running_time;
@@ -1738,9 +1871,9 @@ gst_base_transform_handle_buffer (GstBaseTransform * trans, GstBuffer * inbuf,
 
   GST_OBJECT_LOCK (trans->sinkpad);
   reconfigure = GST_PAD_NEEDS_RECONFIGURE (trans->srcpad)
-      || trans->priv->reconfigure;
-  GST_OBJECT_FLAG_UNSET (trans->srcpad, GST_PAD_NEED_RECONFIGURE);
-  trans->priv->reconfigure = FALSE;
+      || priv->reconfigure;
+  GST_OBJECT_FLAG_UNSET (trans->srcpad, GST_PAD_FLAG_NEED_RECONFIGURE);
+  priv->reconfigure = FALSE;
   GST_OBJECT_UNLOCK (trans->sinkpad);
 
   if (G_UNLIKELY (reconfigure)) {
@@ -1752,9 +1885,8 @@ gst_base_transform_handle_buffer (GstBaseTransform * trans, GstBuffer * inbuf,
     if (incaps == NULL)
       goto no_reconfigure;
 
-    /* if we need to reconfigure we pretend a buffer with new caps arrived. This
-     * will reconfigure the transform with the new output format. We can only
-     * do this if the buffer actually has caps. */
+    /* if we need to reconfigure we pretend new caps arrived. This
+     * will reconfigure the transform with the new output format. */
     if (!gst_base_transform_setcaps (trans, trans->sinkpad, incaps)) {
       gst_caps_unref (incaps);
       goto not_negotiated;
@@ -1777,13 +1909,13 @@ no_reconfigure:
    * or if the class doesn't implement a set_caps function (in which case it doesn't
    * care about caps)
    */
-  if (!trans->negotiated && !trans->passthrough && (bclass->set_caps != NULL))
+  if (!priv->negotiated && !priv->passthrough && (bclass->set_caps != NULL))
     goto not_negotiated;
 
   /* Set discont flag so we can mark the outgoing buffer */
   if (GST_BUFFER_IS_DISCONT (inbuf)) {
     GST_DEBUG_OBJECT (trans, "got DISCONT buffer %p", inbuf);
-    trans->priv->discont = TRUE;
+    priv->discont = TRUE;
   }
 
   /* can only do QoS if the segment is in TIME */
@@ -1803,11 +1935,11 @@ no_reconfigure:
     /* lock for getting the QoS parameters that are set (in a different thread)
      * with the QOS events */
     GST_OBJECT_LOCK (trans);
-    earliest_time = trans->priv->earliest_time;
-    proportion = trans->priv->proportion;
+    earliest_time = priv->earliest_time;
+    proportion = priv->proportion;
     /* check for QoS, don't perform conversion for buffers
      * that are known to be late. */
-    need_skip = trans->priv->qos_enabled &&
+    need_skip = priv->qos_enabled &&
         earliest_time != -1 && running_time <= earliest_time;
     GST_OBJECT_UNLOCK (trans);
 
@@ -1821,7 +1953,7 @@ no_reconfigure:
           GST_TIME_FORMAT " <= %" GST_TIME_FORMAT,
           GST_TIME_ARGS (running_time), GST_TIME_ARGS (earliest_time));
 
-      trans->priv->dropped++;
+      priv->dropped++;
 
       duration = GST_BUFFER_DURATION (inbuf);
       stream_time =
@@ -1834,11 +1966,11 @@ no_reconfigure:
           stream_time, timestamp, duration);
       gst_message_set_qos_values (qos_msg, jitter, proportion, 1000000);
       gst_message_set_qos_stats (qos_msg, GST_FORMAT_BUFFERS,
-          trans->priv->processed, trans->priv->dropped);
+          priv->processed, priv->dropped);
       gst_element_post_message (GST_ELEMENT_CAST (trans), qos_msg);
 
       /* mark discont for next buffer */
-      trans->priv->discont = TRUE;
+      priv->discont = TRUE;
       goto skip;
     }
   }
@@ -1857,63 +1989,25 @@ no_qos:
   if (ret != GST_FLOW_OK || *outbuf == NULL)
     goto no_buffer;
 
-  if (inbuf == *outbuf) {
-    GST_DEBUG_OBJECT (trans, "reusing input buffer");
-  } else if (trans->passthrough) {
-    /* we are asked to perform a passthrough transform but the input and
-     * output buffers are different. We have to discard the output buffer and
-     * reuse the input buffer. This is rather weird, it means that the prepare
-     * output buffer does something wrong. */
-    GST_WARNING_OBJECT (trans, "passthrough but different buffers, check the "
-        "prepare_output_buffer implementation");
-    gst_buffer_unref (*outbuf);
-    *outbuf = inbuf;
-  } else {
-    /* copy the metadata */
-    if (bclass->copy_metadata)
-      if (!bclass->copy_metadata (trans, inbuf, *outbuf)) {
-        /* something failed, post a warning */
-        GST_ELEMENT_WARNING (trans, STREAM, NOT_IMPLEMENTED,
-            ("could not copy metadata"), (NULL));
-      }
-  }
   GST_DEBUG_OBJECT (trans, "using allocated buffer in %p, out %p", inbuf,
       *outbuf);
 
   /* now perform the needed transform */
-  if (trans->passthrough) {
+  if (priv->passthrough) {
     /* In passthrough mode, give transform_ip a look at the
      * buffer, without making it writable, or just push the
      * data through */
-    if (bclass->transform_ip) {
-      GST_DEBUG_OBJECT (trans, "doing passthrough transform");
+    if (bclass->transform_ip_on_passthrough && bclass->transform_ip) {
+      GST_DEBUG_OBJECT (trans, "doing passthrough transform_ip");
       ret = bclass->transform_ip (trans, *outbuf);
     } else {
       GST_DEBUG_OBJECT (trans, "element is in passthrough");
     }
   } else {
-    want_in_place = (bclass->transform_ip != NULL) && trans->always_in_place;
+    want_in_place = (bclass->transform_ip != NULL) && priv->always_in_place;
 
     if (want_in_place) {
       GST_DEBUG_OBJECT (trans, "doing inplace transform");
-
-      if (inbuf != *outbuf) {
-        guint8 *indata, *outdata;
-        gsize insize, outsize;
-
-        /* Different buffer. The data can still be the same when we are dealing
-         * with subbuffers of the same buffer. Note that because of the FIXME in
-         * prepare_output_buffer() we have decreased the refcounts of inbuf and
-         * outbuf to keep them writable */
-        indata = gst_buffer_map (inbuf, &insize, NULL, GST_MAP_READ);
-        outdata = gst_buffer_map (*outbuf, &outsize, NULL, GST_MAP_WRITE);
-
-        if (indata != outdata)
-          memcpy (outdata, indata, insize);
-
-        gst_buffer_unmap (inbuf, indata, insize);
-        gst_buffer_unmap (*outbuf, outdata, outsize);
-      }
       ret = bclass->transform_ip (trans, *outbuf);
     } else {
       GST_DEBUG_OBJECT (trans, "doing non-inplace transform");
@@ -1939,7 +2033,7 @@ not_negotiated:
   {
     gst_buffer_unref (inbuf);
     *outbuf = NULL;
-    GST_ELEMENT_ERROR (trans, STREAM, NOT_IMPLEMENTED,
+    GST_ELEMENT_ERROR (trans, STREAM, FORMAT,
         ("not negotiated"), ("not negotiated"));
     return GST_FLOW_NOT_NEGOTIATED;
   }
@@ -1964,15 +2058,15 @@ no_buffer:
  * end based on the transform_size result.
  */
 static GstFlowReturn
-gst_base_transform_getrange (GstPad * pad, guint64 offset,
+gst_base_transform_getrange (GstPad * pad, GstObject * parent, guint64 offset,
     guint length, GstBuffer ** buffer)
 {
   GstBaseTransform *trans;
   GstBaseTransformClass *klass;
   GstFlowReturn ret;
-  GstBuffer *inbuf;
+  GstBuffer *inbuf = NULL;
 
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
+  trans = GST_BASE_TRANSFORM (parent);
 
   ret = gst_pad_pull_range (trans->sinkpad, offset, length, &inbuf);
   if (G_UNLIKELY (ret != GST_FLOW_OK))
@@ -1982,13 +2076,9 @@ gst_base_transform_getrange (GstPad * pad, guint64 offset,
   if (klass->before_transform)
     klass->before_transform (trans, inbuf);
 
-  GST_BASE_TRANSFORM_LOCK (trans);
   ret = gst_base_transform_handle_buffer (trans, inbuf, buffer);
-  GST_BASE_TRANSFORM_UNLOCK (trans);
 
 done:
-  gst_object_unref (trans);
-
   return ret;
 
   /* ERRORS */
@@ -2001,16 +2091,18 @@ pull_error:
 }
 
 static GstFlowReturn
-gst_base_transform_chain (GstPad * pad, GstBuffer * buffer)
+gst_base_transform_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 {
   GstBaseTransform *trans;
   GstBaseTransformClass *klass;
+  GstBaseTransformPrivate *priv;
   GstFlowReturn ret;
   GstClockTime position = GST_CLOCK_TIME_NONE;
   GstClockTime timestamp, duration;
   GstBuffer *outbuf = NULL;
 
-  trans = GST_BASE_TRANSFORM (GST_OBJECT_PARENT (pad));
+  trans = GST_BASE_TRANSFORM (parent);
+  priv = trans->priv;
 
   timestamp = GST_BUFFER_TIMESTAMP (buffer);
   duration = GST_BUFFER_DURATION (buffer);
@@ -2028,9 +2120,7 @@ gst_base_transform_chain (GstPad * pad, GstBuffer * buffer)
     klass->before_transform (trans, buffer);
 
   /* protect transform method and concurrent buffer alloc */
-  GST_BASE_TRANSFORM_LOCK (trans);
   ret = gst_base_transform_handle_buffer (trans, buffer, &outbuf);
-  GST_BASE_TRANSFORM_UNLOCK (trans);
 
   /* outbuf can be NULL, this means a dropped buffer, if we have a buffer but
    * GST_BASE_TRANSFORM_FLOW_DROPPED we will not push either. */
@@ -2052,27 +2142,31 @@ gst_base_transform_chain (GstPad * pad, GstBuffer * buffer)
       }
       if (position_out != GST_CLOCK_TIME_NONE
           && trans->segment.format == GST_FORMAT_TIME)
-        trans->priv->position_out = position_out;
+        priv->position_out = position_out;
 
       /* apply DISCONT flag if the buffer is not yet marked as such */
       if (trans->priv->discont) {
+        GST_DEBUG_OBJECT (trans, "we have a pending DISCONT");
         if (!GST_BUFFER_IS_DISCONT (outbuf)) {
+          GST_DEBUG_OBJECT (trans, "marking DISCONT on output buffer");
           outbuf = gst_buffer_make_writable (outbuf);
           GST_BUFFER_FLAG_SET (outbuf, GST_BUFFER_FLAG_DISCONT);
         }
-        trans->priv->discont = FALSE;
+        priv->discont = FALSE;
       }
-      trans->priv->processed++;
+      priv->processed++;
 
       ret = gst_pad_push (trans->srcpad, outbuf);
     } else {
+      GST_DEBUG_OBJECT (trans, "we got return %s", gst_flow_get_name (ret));
       gst_buffer_unref (outbuf);
     }
   }
 
   /* convert internal flow to OK and mark discont for the next buffer. */
   if (ret == GST_BASE_TRANSFORM_FLOW_DROPPED) {
-    trans->priv->discont = TRUE;
+    GST_DEBUG_OBJECT (trans, "dropped a buffer, marking DISCONT");
+    priv->discont = TRUE;
     ret = GST_FLOW_OK;
   }
 
@@ -2120,6 +2214,7 @@ static gboolean
 gst_base_transform_activate (GstBaseTransform * trans, gboolean active)
 {
   GstBaseTransformClass *bclass;
+  GstBaseTransformPrivate *priv = trans->priv;
   gboolean result = TRUE;
 
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
@@ -2127,7 +2222,7 @@ gst_base_transform_activate (GstBaseTransform * trans, gboolean active)
   if (active) {
     GstCaps *incaps, *outcaps;
 
-    if (trans->priv->pad_mode == GST_ACTIVATE_NONE && bclass->start)
+    if (priv->pad_mode == GST_PAD_MODE_NONE && bclass->start)
       result &= bclass->start (trans);
 
     incaps = gst_pad_get_current_caps (trans->sinkpad);
@@ -2135,20 +2230,20 @@ gst_base_transform_activate (GstBaseTransform * trans, gboolean active)
 
     GST_OBJECT_LOCK (trans);
     if (incaps && outcaps)
-      trans->have_same_caps =
-          gst_caps_is_equal (incaps, outcaps) || trans->passthrough;
+      priv->have_same_caps =
+          gst_caps_is_equal (incaps, outcaps) || priv->passthrough;
     else
-      trans->have_same_caps = trans->passthrough;
-    GST_DEBUG_OBJECT (trans, "have_same_caps %d", trans->have_same_caps);
-    trans->negotiated = FALSE;
+      priv->have_same_caps = priv->passthrough;
+    GST_DEBUG_OBJECT (trans, "have_same_caps %d", priv->have_same_caps);
+    priv->negotiated = FALSE;
     trans->have_segment = FALSE;
     gst_segment_init (&trans->segment, GST_FORMAT_UNDEFINED);
-    trans->priv->position_out = GST_CLOCK_TIME_NONE;
-    trans->priv->proportion = 1.0;
-    trans->priv->earliest_time = -1;
-    trans->priv->discont = FALSE;
-    trans->priv->processed = 0;
-    trans->priv->dropped = 0;
+    priv->position_out = GST_CLOCK_TIME_NONE;
+    priv->proportion = 1.0;
+    priv->earliest_time = -1;
+    priv->discont = FALSE;
+    priv->processed = 0;
+    priv->dropped = 0;
     GST_OBJECT_UNLOCK (trans);
 
     if (incaps)
@@ -2161,59 +2256,76 @@ gst_base_transform_activate (GstBaseTransform * trans, gboolean active)
     GST_PAD_STREAM_LOCK (trans->sinkpad);
     GST_PAD_STREAM_UNLOCK (trans->sinkpad);
 
-    trans->have_same_caps = FALSE;
+    priv->have_same_caps = FALSE;
     /* We can only reset the passthrough mode if the instance told us to 
        handle it in configure_caps */
     if (bclass->passthrough_on_same_caps) {
       gst_base_transform_set_passthrough (trans, FALSE);
     }
-    gst_caps_replace (&trans->cache_caps1, NULL);
-    gst_caps_replace (&trans->cache_caps2, NULL);
+    gst_caps_replace (&priv->cache_caps1, NULL);
+    gst_caps_replace (&priv->cache_caps2, NULL);
 
-    if (trans->priv->pad_mode != GST_ACTIVATE_NONE && bclass->stop)
+    if (priv->pad_mode != GST_PAD_MODE_NONE && bclass->stop)
       result &= bclass->stop (trans);
 
-    gst_base_transform_set_allocation (trans, NULL, NULL, 0, 0);
+    gst_base_transform_set_allocation (trans, NULL, NULL, NULL, NULL);
   }
 
   return result;
 }
 
 static gboolean
-gst_base_transform_sink_activate_push (GstPad * pad, gboolean active)
-{
-  gboolean result = TRUE;
-  GstBaseTransform *trans;
-
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
-
-  result = gst_base_transform_activate (trans, active);
-
-  if (result)
-    trans->priv->pad_mode = active ? GST_ACTIVATE_PUSH : GST_ACTIVATE_NONE;
-
-  gst_object_unref (trans);
-
-  return result;
-}
-
-static gboolean
-gst_base_transform_src_activate_pull (GstPad * pad, gboolean active)
+gst_base_transform_sink_activate_mode (GstPad * pad, GstObject * parent,
+    GstPadMode mode, gboolean active)
 {
   gboolean result = FALSE;
   GstBaseTransform *trans;
 
-  trans = GST_BASE_TRANSFORM (gst_pad_get_parent (pad));
+  trans = GST_BASE_TRANSFORM (parent);
 
-  result = gst_pad_activate_pull (trans->sinkpad, active);
+  switch (mode) {
+    case GST_PAD_MODE_PUSH:
+    {
+      result = gst_base_transform_activate (trans, active);
 
-  if (result)
-    result &= gst_base_transform_activate (trans, active);
+      if (result)
+        trans->priv->pad_mode = active ? GST_PAD_MODE_PUSH : GST_PAD_MODE_NONE;
 
-  if (result)
-    trans->priv->pad_mode = active ? GST_ACTIVATE_PULL : GST_ACTIVATE_NONE;
+      break;
+    }
+    default:
+      result = TRUE;
+      break;
+  }
+  return result;
+}
 
-  gst_object_unref (trans);
+static gboolean
+gst_base_transform_src_activate_mode (GstPad * pad, GstObject * parent,
+    GstPadMode mode, gboolean active)
+{
+  gboolean result = FALSE;
+  GstBaseTransform *trans;
+
+  trans = GST_BASE_TRANSFORM (parent);
+
+  switch (mode) {
+    case GST_PAD_MODE_PULL:
+    {
+      result =
+          gst_pad_activate_mode (trans->sinkpad, GST_PAD_MODE_PULL, active);
+
+      if (result)
+        result &= gst_base_transform_activate (trans, active);
+
+      if (result)
+        trans->priv->pad_mode = active ? mode : GST_PAD_MODE_NONE;
+      break;
+    }
+    default:
+      result = TRUE;
+      break;
+  }
 
   return result;
 }
@@ -2244,12 +2356,12 @@ gst_base_transform_set_passthrough (GstBaseTransform * trans,
   GST_OBJECT_LOCK (trans);
   if (passthrough == FALSE) {
     if (bclass->transform_ip || bclass->transform)
-      trans->passthrough = FALSE;
+      trans->priv->passthrough = FALSE;
   } else {
-    trans->passthrough = TRUE;
+    trans->priv->passthrough = TRUE;
   }
 
-  GST_DEBUG_OBJECT (trans, "set passthrough %d", trans->passthrough);
+  GST_DEBUG_OBJECT (trans, "set passthrough %d", trans->priv->passthrough);
   GST_OBJECT_UNLOCK (trans);
 }
 
@@ -2271,7 +2383,7 @@ gst_base_transform_is_passthrough (GstBaseTransform * trans)
   g_return_val_if_fail (GST_IS_BASE_TRANSFORM (trans), FALSE);
 
   GST_OBJECT_LOCK (trans);
-  result = trans->passthrough;
+  result = trans->priv->passthrough;
   GST_OBJECT_UNLOCK (trans);
 
   return result;
@@ -2306,12 +2418,12 @@ gst_base_transform_set_in_place (GstBaseTransform * trans, gboolean in_place)
   if (in_place) {
     if (bclass->transform_ip) {
       GST_DEBUG_OBJECT (trans, "setting in_place TRUE");
-      trans->always_in_place = TRUE;
+      trans->priv->always_in_place = TRUE;
     }
   } else {
     if (bclass->transform) {
       GST_DEBUG_OBJECT (trans, "setting in_place FALSE");
-      trans->always_in_place = FALSE;
+      trans->priv->always_in_place = FALSE;
     }
   }
 
@@ -2336,7 +2448,7 @@ gst_base_transform_is_in_place (GstBaseTransform * trans)
   g_return_val_if_fail (GST_IS_BASE_TRANSFORM (trans), FALSE);
 
   GST_OBJECT_LOCK (trans);
-  result = trans->always_in_place;
+  result = trans->priv->always_in_place;
   GST_OBJECT_UNLOCK (trans);
 
   return result;
@@ -2362,7 +2474,6 @@ void
 gst_base_transform_update_qos (GstBaseTransform * trans,
     gdouble proportion, GstClockTimeDiff diff, GstClockTime timestamp)
 {
-
   g_return_if_fail (GST_IS_BASE_TRANSFORM (trans));
 
   GST_CAT_DEBUG_OBJECT (GST_CAT_QOS, trans,
@@ -2452,19 +2563,15 @@ gst_base_transform_set_gap_aware (GstBaseTransform * trans, gboolean gap_aware)
 }
 
 /**
- * gst_base_transform_suggest:
+ * gst_base_transform_reconfigure_sink:
  * @trans: a #GstBaseTransform
- * @caps: (transfer none): caps to suggest
- * @size: buffer size to suggest
  *
- * Instructs @trans to suggest new @caps upstream. A copy of @caps will be
- * taken.
- *
- * Since: 0.10.21
+ * Instructs @trans to request renegotiation upstream. This function is
+ * typically called after properties on the transform were set that
+ * influence the input format.
  */
 void
-gst_base_transform_suggest (GstBaseTransform * trans, GstCaps * caps,
-    gsize size)
+gst_base_transform_reconfigure_sink (GstBaseTransform * trans)
 {
   g_return_if_fail (GST_IS_BASE_TRANSFORM (trans));
 
@@ -2475,7 +2582,7 @@ gst_base_transform_suggest (GstBaseTransform * trans, GstCaps * caps,
 }
 
 /**
- * gst_base_transform_reconfigure:
+ * gst_base_transform_reconfigure_src:
  * @trans: a #GstBaseTransform
  *
  * Instructs @trans to renegotiate a new downstream transform on the next
@@ -2485,7 +2592,7 @@ gst_base_transform_suggest (GstBaseTransform * trans, GstCaps * caps,
  * Since: 0.10.21
  */
 void
-gst_base_transform_reconfigure (GstBaseTransform * trans)
+gst_base_transform_reconfigure_src (GstBaseTransform * trans)
 {
   g_return_if_fail (GST_IS_BASE_TRANSFORM (trans));
 

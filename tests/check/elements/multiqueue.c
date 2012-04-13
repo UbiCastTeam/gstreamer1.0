@@ -22,7 +22,7 @@
 
 #include <gst/check/gstcheck.h>
 
-static GStaticMutex _check_lock = G_STATIC_MUTEX_INIT;
+static GMutex _check_lock;
 
 static GstElement *
 setup_multiqueue (GstElement * pipe, GstElement * inputs[],
@@ -41,7 +41,7 @@ setup_multiqueue (GstElement * pipe, GstElement * inputs[],
     GstPad *srcpad = NULL;
 
     /* create multiqueue sink (and source) pad */
-    sinkpad = gst_element_get_request_pad (mq, "sink%d");
+    sinkpad = gst_element_get_request_pad (mq, "sink_%u");
     fail_unless (sinkpad != NULL,
         "failed to create multiqueue request pad #%u", i);
 
@@ -66,10 +66,10 @@ setup_multiqueue (GstElement * pipe, GstElement * inputs[],
 
       /* only the sink pads are by request, the source pads are sometimes pads,
        * so this should return NULL */
-      srcpad = gst_element_get_request_pad (mq, "src%d");
+      srcpad = gst_element_get_request_pad (mq, "src_%u");
       fail_unless (srcpad == NULL);
 
-      g_snprintf (padname, sizeof (padname), "src%d", i);
+      g_snprintf (padname, sizeof (padname), "src_%u", i);
       srcpad = gst_element_get_static_pad (mq, padname);
       fail_unless (srcpad != NULL, "failed to get multiqueue src pad #%u", i);
       fail_unless (GST_PAD_IS_SRC (srcpad),
@@ -193,21 +193,21 @@ GST_START_TEST (test_request_pads)
 
   mq = gst_element_factory_make ("multiqueue", NULL);
 
-  sink1 = gst_element_get_request_pad (mq, "foo%d");
+  sink1 = gst_element_get_request_pad (mq, "foo_%u");
   fail_unless (sink1 == NULL,
-      "Expected NULL pad, as there is no request pad template for 'foo%%d'");
+      "Expected NULL pad, as there is no request pad template for 'foo_%%u'");
 
-  sink1 = gst_element_get_request_pad (mq, "src%d");
+  sink1 = gst_element_get_request_pad (mq, "src_%u");
   fail_unless (sink1 == NULL,
-      "Expected NULL pad, as there is no request pad template for 'src%%d'");
+      "Expected NULL pad, as there is no request pad template for 'src_%%u'");
 
-  sink1 = gst_element_get_request_pad (mq, "sink%d");
+  sink1 = gst_element_get_request_pad (mq, "sink_%u");
   fail_unless (sink1 != NULL);
   fail_unless (GST_IS_PAD (sink1));
   fail_unless (GST_PAD_IS_SINK (sink1));
   GST_LOG ("Got pad %s:%s", GST_DEBUG_PAD_NAME (sink1));
 
-  sink2 = gst_element_get_request_pad (mq, "sink%d");
+  sink2 = gst_element_get_request_pad (mq, "sink_%u");
   fail_unless (sink2 != NULL);
   fail_unless (GST_IS_PAD (sink2));
   fail_unless (GST_PAD_IS_SINK (sink2));
@@ -233,7 +233,7 @@ mq_sinkpad_to_srcpad (GstElement * mq, GstPad * sink)
 
   mq_sinkpad_name = gst_pad_get_name (sink);
   fail_unless (g_str_has_prefix (mq_sinkpad_name, "sink"));
-  mq_srcpad_name = g_strdup_printf ("src%s", mq_sinkpad_name + 4);
+  mq_srcpad_name = g_strdup_printf ("src_%s", mq_sinkpad_name + 5);
   srcpad = gst_element_get_static_pad (mq, mq_srcpad_name);
   fail_unless (srcpad != NULL);
 
@@ -250,33 +250,33 @@ GST_START_TEST (test_request_pads_named)
 
   mq = gst_element_factory_make ("multiqueue", NULL);
 
-  sink1 = gst_element_get_request_pad (mq, "sink1");
+  sink1 = gst_element_get_request_pad (mq, "sink_1");
   fail_unless (sink1 != NULL);
   fail_unless (GST_IS_PAD (sink1));
   fail_unless (GST_PAD_IS_SINK (sink1));
-  fail_unless_equals_string (GST_PAD_NAME (sink1), "sink1");
+  fail_unless_equals_string (GST_PAD_NAME (sink1), "sink_1");
   GST_LOG ("Got pad %s:%s", GST_DEBUG_PAD_NAME (sink1));
 
-  sink3 = gst_element_get_request_pad (mq, "sink3");
+  sink3 = gst_element_get_request_pad (mq, "sink_3");
   fail_unless (sink3 != NULL);
   fail_unless (GST_IS_PAD (sink3));
   fail_unless (GST_PAD_IS_SINK (sink3));
-  fail_unless_equals_string (GST_PAD_NAME (sink3), "sink3");
+  fail_unless_equals_string (GST_PAD_NAME (sink3), "sink_3");
   GST_LOG ("Got pad %s:%s", GST_DEBUG_PAD_NAME (sink3));
 
-  sink2 = gst_element_get_request_pad (mq, "sink2");
+  sink2 = gst_element_get_request_pad (mq, "sink_2");
   fail_unless (sink2 != NULL);
   fail_unless (GST_IS_PAD (sink2));
   fail_unless (GST_PAD_IS_SINK (sink2));
-  fail_unless_equals_string (GST_PAD_NAME (sink2), "sink2");
+  fail_unless_equals_string (GST_PAD_NAME (sink2), "sink_2");
   GST_LOG ("Got pad %s:%s", GST_DEBUG_PAD_NAME (sink2));
 
   /* This gets us the first unused id, sink0 */
-  sink4 = gst_element_get_request_pad (mq, "sink%d");
+  sink4 = gst_element_get_request_pad (mq, "sink_%u");
   fail_unless (sink4 != NULL);
   fail_unless (GST_IS_PAD (sink4));
   fail_unless (GST_PAD_IS_SINK (sink4));
-  fail_unless_equals_string (GST_PAD_NAME (sink4), "sink0");
+  fail_unless_equals_string (GST_PAD_NAME (sink4), "sink_0");
   GST_LOG ("Got pad %s:%s", GST_DEBUG_PAD_NAME (sink4));
 
   GST_LOG ("Cleaning up");
@@ -289,10 +289,27 @@ GST_START_TEST (test_request_pads_named)
 
 GST_END_TEST;
 
-static GstCaps *
-mq_dummypad_getcaps (GstPad * sinkpad, GstCaps * filter)
+static gboolean
+mq_dummypad_query (GstPad * sinkpad, GstObject * parent, GstQuery * query)
 {
-  return (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
+  gboolean res = TRUE;
+
+  switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_CAPS:
+    {
+      GstCaps *filter, *caps;
+
+      gst_query_parse_caps (query, &filter);
+      caps = (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
+      gst_query_set_caps_result (query, caps);
+      gst_caps_unref (caps);
+      break;
+    }
+    default:
+      res = gst_pad_query_default (sinkpad, parent, query);
+      break;
+  }
+  return res;
 }
 
 struct PadData
@@ -309,24 +326,23 @@ struct PadData
 };
 
 static GstFlowReturn
-mq_dummypad_chain (GstPad * sinkpad, GstBuffer * buf)
+mq_dummypad_chain (GstPad * sinkpad, GstObject * parent, GstBuffer * buf)
 {
   guint32 cur_id;
   struct PadData *pad_data;
-  guint8 *data;
-  gsize size;
+  GstMapInfo info;
 
   pad_data = gst_pad_get_element_private (sinkpad);
 
-  g_static_mutex_lock (&_check_lock);
+  g_mutex_lock (&_check_lock);
   fail_if (pad_data == NULL);
   /* Read an ID from the first 4 bytes of the buffer data and check it's
    * what we expect */
-  data = gst_buffer_map (buf, &size, NULL, GST_MAP_READ);
-  fail_unless (size >= 4);
-  g_static_mutex_unlock (&_check_lock);
-  cur_id = GST_READ_UINT32_BE (data);
-  gst_buffer_unmap (buf, data, size);
+  fail_unless (gst_buffer_map (buf, &info, GST_MAP_READ));
+  fail_unless (info.size >= 4);
+  g_mutex_unlock (&_check_lock);
+  cur_id = GST_READ_UINT32_BE (info.data);
+  gst_buffer_unmap (buf, &info);
 
   g_mutex_lock (pad_data->mutex);
 
@@ -336,12 +352,12 @@ mq_dummypad_chain (GstPad * sinkpad, GstBuffer * buf)
   if (!pad_data->is_linked) {
     /* If there are no linked pads, we can't track a max_id for them :) */
     if (pad_data->n_linked > 0 && !pad_data->first_buf) {
-      g_static_mutex_lock (&_check_lock);
+      g_mutex_lock (&_check_lock);
       fail_unless (cur_id <= *(pad_data->max_linked_id_ptr) + 1,
           "Got buffer %u on pad %u before buffer %u was seen on a "
           "linked pad (max: %u)", cur_id, pad_data->pad_num, cur_id - 1,
           *(pad_data->max_linked_id_ptr));
-      g_static_mutex_unlock (&_check_lock);
+      g_mutex_unlock (&_check_lock);
     }
   } else {
     /* Update the max_id value */
@@ -360,14 +376,14 @@ mq_dummypad_chain (GstPad * sinkpad, GstBuffer * buf)
 }
 
 static gboolean
-mq_dummypad_event (GstPad * sinkpad, GstEvent * event)
+mq_dummypad_event (GstPad * sinkpad, GstObject * parent, GstEvent * event)
 {
   struct PadData *pad_data;
 
   pad_data = gst_pad_get_element_private (sinkpad);
-  g_static_mutex_lock (&_check_lock);
+  g_mutex_lock (&_check_lock);
   fail_if (pad_data == NULL);
-  g_static_mutex_unlock (&_check_lock);
+  g_mutex_unlock (&_check_lock);
 
   if (GST_EVENT_TYPE (event) == GST_EVENT_EOS) {
     g_mutex_lock (pad_data->mutex);
@@ -432,11 +448,11 @@ run_output_order_test (gint n_linked)
     name = g_strdup_printf ("dummysrc%d", i);
     inputpads[i] = gst_pad_new (name, GST_PAD_SRC);
     g_free (name);
-    gst_pad_set_getcaps_function (inputpads[i], mq_dummypad_getcaps);
+    gst_pad_set_query_function (inputpads[i], mq_dummypad_query);
 
-    mq_sinkpad = gst_element_get_request_pad (mq, "sink%d");
+    mq_sinkpad = gst_element_get_request_pad (mq, "sink_%u");
     fail_unless (mq_sinkpad != NULL);
-    gst_pad_link (inputpads[i], mq_sinkpad);
+    fail_unless (gst_pad_link (inputpads[i], mq_sinkpad) == GST_PAD_LINK_OK);
 
     gst_pad_set_active (inputpads[i], TRUE);
 
@@ -447,7 +463,7 @@ run_output_order_test (gint n_linked)
     g_free (name);
     gst_pad_set_chain_function (sinkpads[i], mq_dummypad_chain);
     gst_pad_set_event_function (sinkpads[i], mq_dummypad_event);
-    gst_pad_set_getcaps_function (sinkpads[i], mq_dummypad_getcaps);
+    gst_pad_set_query_function (sinkpads[i], mq_dummypad_query);
 
     pad_data[i].pad_num = i;
     pad_data[i].max_linked_id_ptr = &max_linked_id;
@@ -459,7 +475,7 @@ run_output_order_test (gint n_linked)
     pad_data[i].first_buf = TRUE;
     gst_pad_set_element_private (sinkpads[i], pad_data + i);
 
-    gst_pad_link (mq_srcpad, sinkpads[i]);
+    fail_unless (gst_pad_link (mq_srcpad, sinkpads[i]) == GST_PAD_LINK_OK);
     gst_pad_set_active (sinkpads[i], TRUE);
 
     gst_object_unref (mq_sinkpad);
@@ -479,22 +495,22 @@ run_output_order_test (gint n_linked)
     guint8 cur_pad;
     GstBuffer *buf;
     GstFlowReturn ret;
-    gpointer data;
+    GstMapInfo info;
 
     cur_pad = pad_pattern[i % n];
 
     buf = gst_buffer_new_and_alloc (4);
-    g_static_mutex_lock (&_check_lock);
+    g_mutex_lock (&_check_lock);
     fail_if (buf == NULL);
-    g_static_mutex_unlock (&_check_lock);
+    g_mutex_unlock (&_check_lock);
 
-    data = gst_buffer_map (buf, NULL, NULL, GST_MAP_WRITE);
-    GST_WRITE_UINT32_BE (data, i + 1);
-    gst_buffer_unmap (buf, data, 4);
+    fail_unless (gst_buffer_map (buf, &info, GST_MAP_WRITE));
+    GST_WRITE_UINT32_BE (info.data, i + 1);
+    gst_buffer_unmap (buf, &info);
     GST_BUFFER_TIMESTAMP (buf) = (i + 1) * GST_SECOND;
 
     ret = gst_pad_push (inputpads[cur_pad], buf);
-    g_static_mutex_lock (&_check_lock);
+    g_mutex_lock (&_check_lock);
     if (pad_data[cur_pad].is_linked) {
       fail_unless (ret == GST_FLOW_OK,
           "Push on pad %d returned %d when FLOW_OK was expected", cur_pad, ret);
@@ -504,7 +520,7 @@ run_output_order_test (gint n_linked)
           "Push on pad %d returned %d when FLOW_OK or NOT_LINKED  was expected",
           cur_pad, ret);
     }
-    g_static_mutex_unlock (&_check_lock);
+    g_mutex_unlock (&_check_lock);
   }
   for (i = 0; i < NPADS; i++) {
     gst_pad_push_event (inputpads[i], gst_event_new_eos ());
@@ -588,11 +604,11 @@ GST_START_TEST (test_sparse_stream)
     name = g_strdup_printf ("dummysrc%d", i);
     inputpads[i] = gst_pad_new (name, GST_PAD_SRC);
     g_free (name);
-    gst_pad_set_getcaps_function (inputpads[i], mq_dummypad_getcaps);
+    gst_pad_set_query_function (inputpads[i], mq_dummypad_query);
 
-    mq_sinkpad = gst_element_get_request_pad (mq, "sink%d");
+    mq_sinkpad = gst_element_get_request_pad (mq, "sink_%u");
     fail_unless (mq_sinkpad != NULL);
-    gst_pad_link (inputpads[i], mq_sinkpad);
+    fail_unless (gst_pad_link (inputpads[i], mq_sinkpad) == GST_PAD_LINK_OK);
 
     gst_pad_set_active (inputpads[i], TRUE);
 
@@ -603,7 +619,7 @@ GST_START_TEST (test_sparse_stream)
     g_free (name);
     gst_pad_set_chain_function (sinkpads[i], mq_dummypad_chain);
     gst_pad_set_event_function (sinkpads[i], mq_dummypad_event);
-    gst_pad_set_getcaps_function (sinkpads[i], mq_dummypad_getcaps);
+    gst_pad_set_query_function (sinkpads[i], mq_dummypad_query);
 
     pad_data[i].pad_num = i;
     pad_data[i].max_linked_id_ptr = &max_linked_id;
@@ -615,7 +631,7 @@ GST_START_TEST (test_sparse_stream)
     pad_data[i].first_buf = TRUE;
     gst_pad_set_element_private (sinkpads[i], pad_data + i);
 
-    gst_pad_link (mq_srcpad, sinkpads[i]);
+    fail_unless (gst_pad_link (mq_srcpad, sinkpads[i]) == GST_PAD_LINK_OK);
     gst_pad_set_active (sinkpads[i], TRUE);
 
     gst_object_unref (mq_sinkpad);
@@ -638,18 +654,18 @@ GST_START_TEST (test_sparse_stream)
     GstBuffer *buf;
     GstFlowReturn ret;
     GstClockTime ts;
-    gpointer data;
+    GstMapInfo info;
 
     ts = gst_util_uint64_scale_int (GST_SECOND, i, 10);
 
     buf = gst_buffer_new_and_alloc (4);
-    g_static_mutex_lock (&_check_lock);
+    g_mutex_lock (&_check_lock);
     fail_if (buf == NULL);
-    g_static_mutex_unlock (&_check_lock);
+    g_mutex_unlock (&_check_lock);
 
-    data = gst_buffer_map (buf, NULL, NULL, GST_MAP_WRITE);
-    GST_WRITE_UINT32_BE (data, i + 1);
-    gst_buffer_unmap (buf, data, 4);
+    fail_unless (gst_buffer_map (buf, &info, GST_MAP_WRITE));
+    GST_WRITE_UINT32_BE (info.data, i + 1);
+    gst_buffer_unmap (buf, &info);
 
     GST_BUFFER_TIMESTAMP (buf) = gst_util_uint64_scale_int (GST_SECOND, i, 10);
 
@@ -658,10 +674,10 @@ GST_START_TEST (test_sparse_stream)
       ret = gst_pad_push (inputpads[1], gst_buffer_ref (buf));
 
     ret = gst_pad_push (inputpads[0], buf);
-    g_static_mutex_lock (&_check_lock);
+    g_mutex_lock (&_check_lock);
     fail_unless (ret == GST_FLOW_OK,
         "Push on pad %d returned %d when FLOW_OK was expected", 0, ret);
-    g_static_mutex_unlock (&_check_lock);
+    g_mutex_unlock (&_check_lock);
 
     /* Push a new segment update on the 2nd pad */
     gst_segment_init (&segment, GST_FORMAT_TIME);

@@ -55,7 +55,7 @@ init_factories (void)
 {
   /* first filter out the interesting element factories */
   factories = gst_registry_feature_filter (
-      gst_registry_get_default (),
+      gst_registry_get (),
       (GstPluginFeatureFilter) cb_feature_filter, FALSE, NULL);
 
   /* sort them according to their ranks */
@@ -63,7 +63,7 @@ init_factories (void)
 }
 
 /*** block c  from ../../../docs/manual/advanced-autoplugging.xml ***/
-static void try_to_plug (GstPad *pad, const GstCaps *caps);
+static void try_to_plug (GstPad *pad, GstCaps *caps);
 
 static GstElement *audiosink;
 
@@ -74,7 +74,7 @@ cb_newpad (GstElement *element,
 {
   GstCaps *caps;
 
-  caps = gst_pad_get_caps (pad, NULL);
+  caps = gst_pad_query_caps (pad, NULL);
   try_to_plug (pad, caps);
   gst_caps_unref (caps);
 }
@@ -119,7 +119,7 @@ close_link (GstPad      *srcpad,
     switch (templ->presence) {
       case GST_PAD_ALWAYS: {
         GstPad *pad = gst_element_get_static_pad (sinkelement, templ->name_template);
-        GstCaps *caps = gst_pad_get_caps (pad, NULL);
+        GstCaps *caps = gst_pad_query_caps (pad, NULL);
 
         /* link */
         try_to_plug (pad, caps);
@@ -143,7 +143,7 @@ close_link (GstPad      *srcpad,
 
 static void
 try_to_plug (GstPad        *pad,
-	     const GstCaps *caps)
+	     GstCaps       *caps)
 {
   GstObject *parent = GST_OBJECT (GST_OBJECT_PARENT (pad));
   const gchar *mime;
@@ -166,7 +166,7 @@ try_to_plug (GstPad        *pad,
   }
 
   /* can it link to the audiopad? */
-  audiocaps = gst_pad_get_caps (gst_element_get_static_pad (audiosink, "sink"),
+  audiocaps = gst_pad_query_caps (gst_element_get_static_pad (audiosink, "sink"),
   NULL);
   res = gst_caps_intersect (caps, audiocaps);
   if (res && !gst_caps_is_empty (res)) {

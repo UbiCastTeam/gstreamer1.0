@@ -38,18 +38,10 @@
  * scheme is recursive. Thus "child1::child2::property" is valid too, if
  * "child1" and "child2" implement the #GstChildProxy interface.
  */
-/* FIXME-0.11:
- * it would be nice to make gst_child_proxy_get_child_by_name virtual too and
- * use GObject instead of GstObject. We could eventually provide the current
- * implementation as a default if children are GstObjects.
- * This change would allow to propose the interface for inclusion with
- * glib/gobject. IMHO this is useful for GtkContainer and compound widgets too.
- */
 
 #include "gst_private.h"
 
 #include "gstchildproxy.h"
-#include "gstmarshal.h"
 #include <gobject/gvaluecollector.h>
 
 /* signals */
@@ -62,25 +54,12 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-/**
- * gst_child_proxy_get_child_by_name:
- * @parent: the parent object to get the child from
- * @name: the childs name
- *
- * Looks up a child element by the given name.
- *
- * Implementors can use #GstObject together with gst_object_get_name()
- *
- * Returns: (transfer full): the child object or %NULL if not found. Unref
- *     after usage.
- *
- * MT safe.
- */
-GstObject *
-gst_child_proxy_get_child_by_name (GstChildProxy * parent, const gchar * name)
+static GObject *
+gst_child_proxy_default_get_child_by_name (GstChildProxy * parent,
+    const gchar * name)
 {
   guint count, i;
-  GstObject *object, *result;
+  GObject *object, *result;
   gchar *object_name;
 
   g_return_val_if_fail (GST_IS_CHILD_PROXY (parent), NULL);
@@ -95,7 +74,10 @@ gst_child_proxy_get_child_by_name (GstChildProxy * parent, const gchar * name)
     if (!(object = gst_child_proxy_get_child_by_index (parent, i)))
       continue;
 
-    object_name = gst_object_get_name (object);
+    if (!GST_IS_OBJECT (object)) {
+      goto next;
+    }
+    object_name = gst_object_get_name (GST_OBJECT_CAST (object));
     if (object_name == NULL) {
       g_warning ("child %u of parent %s has no name", i,
           GST_OBJECT_NAME (parent));
@@ -109,9 +91,35 @@ gst_child_proxy_get_child_by_name (GstChildProxy * parent, const gchar * name)
       break;
     }
   next:
-    gst_object_unref (object);
+    g_object_unref (object);
   }
   return result;
+}
+
+
+/**
+ * gst_child_proxy_get_child_by_name:
+ * @parent: the parent object to get the child from
+ * @name: the childs name
+ *
+ * Looks up a child element by the given name.
+ *
+ * This virtual method has a default implementation that uses #GstObject
+ * together with gst_object_get_name(). If the interface is to be used with
+ * #GObjects, this methods needs to be overridden.
+ *
+ * Returns: (transfer full): the child object or %NULL if not found. Unref
+ *     after usage.
+ *
+ * MT safe.
+ */
+GObject *
+gst_child_proxy_get_child_by_name (GstChildProxy * parent, const gchar * name)
+{
+  g_return_val_if_fail (GST_IS_CHILD_PROXY (parent), 0);
+
+  return (GST_CHILD_PROXY_GET_INTERFACE (parent)->get_child_by_name (parent,
+          name));
 }
 
 /**
@@ -126,7 +134,7 @@ gst_child_proxy_get_child_by_name (GstChildProxy * parent, const gchar * name)
  *
  * MT safe.
  */
-GstObject *
+GObject *
 gst_child_proxy_get_child_by_index (GstChildProxy * parent, guint index)
 {
   g_return_val_if_fail (GST_IS_CHILD_PROXY (parent), NULL);
@@ -157,7 +165,7 @@ gst_child_proxy_get_children_count (GstChildProxy * parent)
  * gst_child_proxy_lookup:
  * @object: object to lookup the property in
  * @name: name of the property to look up
- * @target: (out) (allow-none) (transfer full): pointer to a #GstObject that
+ * @target: (out) (allow-none) (transfer full): pointer to a #GObject that
  *     takes the real object to set property on
  * @pspec: (out) (allow-none) (transfer full): pointer to take the #GParamSpec
  *     describing the property
@@ -171,25 +179,25 @@ gst_child_proxy_get_children_count (GstChildProxy * parent)
  * MT safe.
  */
 gboolean
-gst_child_proxy_lookup (GstObject * object, const gchar * name,
-    GstObject ** target, GParamSpec ** pspec)
+gst_child_proxy_lookup (GObject * object, const gchar * name,
+    GObject ** target, GParamSpec ** pspec)
 {
   gboolean res = FALSE;
   gchar **names, **current;
 
-  g_return_val_if_fail (GST_IS_OBJECT (object), FALSE);
+  g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
   g_return_val_if_fail (name != NULL, FALSE);
 
   gst_object_ref (object);
 
   current = names = g_strsplit (name, "::", -1);
   while (current[1]) {
-    GstObject *next;
+    GObject *next;
 
     if (!GST_IS_CHILD_PROXY (object)) {
       GST_INFO
           ("object %s is not a parent, so you cannot request a child by name %s",
-          GST_OBJECT_NAME (object), current[0]);
+          (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""), current[0]);
       break;
     }
     next = gst_child_proxy_get_child_by_name (GST_CHILD_PROXY (object),
@@ -232,13 +240,13 @@ gst_child_proxy_lookup (GstObject * object, const gchar * name,
  * You are responsible for freeing it by calling g_value_unset()
  */
 void
-gst_child_proxy_get_property (GstObject * object, const gchar * name,
+gst_child_proxy_get_property (GObject * object, const gchar * name,
     GValue * value)
 {
   GParamSpec *pspec;
-  GstObject *target;
+  GObject *target;
 
-  g_return_if_fail (GST_IS_OBJECT (object));
+  g_return_if_fail (G_IS_OBJECT (object));
   g_return_if_fail (name != NULL);
   g_return_if_fail (G_IS_VALUE (value));
 
@@ -252,7 +260,8 @@ gst_child_proxy_get_property (GstObject * object, const gchar * name,
 
 not_found:
   {
-    g_warning ("no property %s in object %s", name, GST_OBJECT_NAME (object));
+    g_warning ("no property %s in object %s", name,
+        (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""));
     return;
   }
 }
@@ -266,14 +275,14 @@ not_found:
  * Gets properties of the parent object and its children.
  */
 void
-gst_child_proxy_get_valist (GstObject * object,
+gst_child_proxy_get_valist (GObject * object,
     const gchar * first_property_name, va_list var_args)
 {
   const gchar *name;
   gchar *error = NULL;
   GValue value = { 0, };
   GParamSpec *pspec;
-  GstObject *target;
+  GObject *target;
 
   g_return_if_fail (G_IS_OBJECT (object));
 
@@ -298,13 +307,14 @@ gst_child_proxy_get_valist (GstObject * object,
 
 not_found:
   {
-    g_warning ("no property %s in object %s", name, GST_OBJECT_NAME (object));
+    g_warning ("no property %s in object %s", name,
+        (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""));
     return;
   }
 cant_copy:
   {
     g_warning ("error copying value %s in object %s: %s", pspec->name,
-        GST_OBJECT_NAME (object), error);
+        (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""), error);
     g_value_unset (&value);
     return;
   }
@@ -319,11 +329,11 @@ cant_copy:
  * Gets properties of the parent object and its children.
  */
 void
-gst_child_proxy_get (GstObject * object, const gchar * first_property_name, ...)
+gst_child_proxy_get (GObject * object, const gchar * first_property_name, ...)
 {
   va_list var_args;
 
-  g_return_if_fail (GST_IS_OBJECT (object));
+  g_return_if_fail (G_IS_OBJECT (object));
 
   va_start (var_args, first_property_name);
   gst_child_proxy_get_valist (object, first_property_name, var_args);
@@ -339,13 +349,13 @@ gst_child_proxy_get (GstObject * object, const gchar * first_property_name, ...)
  * Sets a single property using the GstChildProxy mechanism.
  */
 void
-gst_child_proxy_set_property (GstObject * object, const gchar * name,
+gst_child_proxy_set_property (GObject * object, const gchar * name,
     const GValue * value)
 {
   GParamSpec *pspec;
-  GstObject *target;
+  GObject *target;
 
-  g_return_if_fail (GST_IS_OBJECT (object));
+  g_return_if_fail (G_IS_OBJECT (object));
   g_return_if_fail (name != NULL);
   g_return_if_fail (G_IS_VALUE (value));
 
@@ -359,7 +369,7 @@ gst_child_proxy_set_property (GstObject * object, const gchar * name,
 not_found:
   {
     g_warning ("cannot set property %s on object %s", name,
-        GST_OBJECT_NAME (object));
+        (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""));
     return;
   }
 }
@@ -373,14 +383,14 @@ not_found:
  * Sets properties of the parent object and its children.
  */
 void
-gst_child_proxy_set_valist (GstObject * object,
+gst_child_proxy_set_valist (GObject * object,
     const gchar * first_property_name, va_list var_args)
 {
   const gchar *name;
   gchar *error = NULL;
   GValue value = { 0, };
   GParamSpec *pspec;
-  GstObject *target;
+  GObject *target;
 
   g_return_if_fail (G_IS_OBJECT (object));
 
@@ -407,13 +417,14 @@ gst_child_proxy_set_valist (GstObject * object,
 
 not_found:
   {
-    g_warning ("no property %s in object %s", name, GST_OBJECT_NAME (object));
+    g_warning ("no property %s in object %s", name,
+        (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""));
     return;
   }
 cant_copy:
   {
     g_warning ("error copying value %s in object %s: %s", pspec->name,
-        GST_OBJECT_NAME (object), error);
+        (GST_IS_OBJECT (object) ? GST_OBJECT_NAME (object) : ""), error);
     g_value_unset (&value);
     gst_object_unref (target);
     return;
@@ -429,11 +440,11 @@ cant_copy:
  * Sets properties of the parent object and its children.
  */
 void
-gst_child_proxy_set (GstObject * object, const gchar * first_property_name, ...)
+gst_child_proxy_set (GObject * object, const gchar * first_property_name, ...)
 {
   va_list var_args;
 
-  g_return_if_fail (GST_IS_OBJECT (object));
+  g_return_if_fail (G_IS_OBJECT (object));
 
   va_start (var_args, first_property_name);
   gst_child_proxy_set_valist (object, first_property_name, var_args);
@@ -444,29 +455,41 @@ gst_child_proxy_set (GstObject * object, const gchar * first_property_name, ...)
  * gst_child_proxy_child_added:
  * @object: the parent object
  * @child: the newly added child
+ * @name: the name of the new child
  *
  * Emits the "child-added" signal.
  */
 void
-gst_child_proxy_child_added (GstObject * object, GstObject * child)
+gst_child_proxy_child_added (GObject * object, GObject * child,
+    const gchar * name)
 {
-  g_signal_emit (G_OBJECT (object), signals[CHILD_ADDED], 0, child);
+  g_signal_emit (G_OBJECT (object), signals[CHILD_ADDED], 0, child, name);
 }
 
 /**
  * gst_child_proxy_child_removed:
  * @object: the parent object
  * @child: the removed child
+ * @name: the name of the old child
  *
  * Emits the "child-removed" signal.
  */
 void
-gst_child_proxy_child_removed (GstObject * object, GstObject * child)
+gst_child_proxy_child_removed (GObject * object, GObject * child,
+    const gchar * name)
 {
-  g_signal_emit (G_OBJECT (object), signals[CHILD_REMOVED], 0, child);
+  g_signal_emit (G_OBJECT (object), signals[CHILD_REMOVED], 0, child, name);
 }
 
 /* gobject methods */
+
+static void
+gst_child_proxy_class_init (gpointer g_class, gpointer class_data)
+{
+  GstChildProxyInterface *iface = (GstChildProxyInterface *) g_class;
+
+  iface->get_child_by_name = gst_child_proxy_default_get_child_by_name;
+}
 
 static void
 gst_child_proxy_base_init (gpointer g_class)
@@ -475,35 +498,33 @@ gst_child_proxy_base_init (gpointer g_class)
 
   if (!initialized) {
     /* create interface signals and properties here. */
-        /**
-	 * GstChildProxy::child-added:
-	 * @child_proxy: the #GstChildProxy
-	 * @object: the #GObject that was added
-	 *
-	 * Will be emitted after the @object was added to the @child_proxy.
-	 */
-    /* FIXME 0.11: use GST_TYPE_OBJECT as GstChildProxy only
-     * supports GstObjects */
+    /**
+     * GstChildProxy::child-added:
+     * @child_proxy: the #GstChildProxy
+     * @object: the #GObject that was added
+     * @name: the name of the new child
+     *
+     * Will be emitted after the @object was added to the @child_proxy.
+     */
     signals[CHILD_ADDED] =
         g_signal_new ("child-added", G_TYPE_FROM_CLASS (g_class),
         G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET (GstChildProxyInterface,
-            child_added), NULL, NULL, gst_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
-        G_TYPE_OBJECT);
+            child_added), NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE,
+        2, G_TYPE_OBJECT, G_TYPE_STRING);
 
-        /**
-	 * GstChildProxy::child-removed:
-	 * @child_proxy: the #GstChildProxy
-	 * @object: the #GObject that was removed
-	 *
-	 * Will be emitted after the @object was removed from the @child_proxy.
-	 */
-    /* FIXME 0.11: use GST_TYPE_OBJECT as GstChildProxy only
-     * supports GstObjects */
+    /**
+     * GstChildProxy::child-removed:
+     * @child_proxy: the #GstChildProxy
+     * @object: the #GObject that was removed
+     * @name: the name of the old child
+     *
+     * Will be emitted after the @object was removed from the @child_proxy.
+     */
     signals[CHILD_REMOVED] =
         g_signal_new ("child-removed", G_TYPE_FROM_CLASS (g_class),
         G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET (GstChildProxyInterface,
-            child_removed), NULL, NULL, gst_marshal_VOID__OBJECT, G_TYPE_NONE,
-        1, G_TYPE_OBJECT);
+            child_removed), NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE,
+        2, G_TYPE_OBJECT, G_TYPE_STRING);
 
     initialized = TRUE;
   }
@@ -520,7 +541,7 @@ gst_child_proxy_get_type (void)
       sizeof (GstChildProxyInterface),
       gst_child_proxy_base_init,        /* base_init */
       NULL,                     /* base_finalize */
-      NULL,                     /* class_init */
+      gst_child_proxy_class_init,       /* class_init */
       NULL,                     /* class_finalize */
       NULL,                     /* class_data */
       0,
@@ -531,7 +552,7 @@ gst_child_proxy_get_type (void)
     _type =
         g_type_register_static (G_TYPE_INTERFACE, "GstChildProxy", &info, 0);
 
-    g_type_interface_add_prerequisite (_type, GST_TYPE_OBJECT);
+    g_type_interface_add_prerequisite (_type, G_TYPE_OBJECT);
     g_once_init_leave (&type, (gsize) _type);
   }
   return type;

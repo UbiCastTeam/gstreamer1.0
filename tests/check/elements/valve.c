@@ -29,18 +29,18 @@
 static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS ("audio/x-raw-int"));
+    GST_STATIC_CAPS ("audio/x-raw"));
 
 static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src",
     GST_PAD_SRC,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS ("audio/x-raw-int"));
+    GST_STATIC_CAPS ("audio/x-raw"));
 
 gboolean event_received = FALSE;
 gboolean buffer_allocated = FALSE;
 
 static gboolean
-event_func (GstPad * pad, GstEvent * event)
+event_func (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   event_received = TRUE;
   gst_event_unref (event);
@@ -70,7 +70,7 @@ GST_START_TEST (test_valve_basic)
   fail_unless (gst_pad_push (src, gst_buffer_new ()) == GST_FLOW_OK);
   fail_unless (gst_pad_push (src, gst_buffer_new ()) == GST_FLOW_OK);
   fail_unless (g_list_length (buffers) == 2);
-  caps = gst_pad_get_caps (src, NULL);
+  caps = gst_pad_query_caps (src, NULL);
   templ_caps = gst_pad_get_pad_template_caps (src);
   fail_unless (caps && gst_caps_is_equal (caps, templ_caps));
   gst_caps_unref (templ_caps);
@@ -85,7 +85,7 @@ GST_START_TEST (test_valve_basic)
   fail_unless (gst_pad_push (src, gst_buffer_new ()) == GST_FLOW_OK);
   fail_unless (gst_pad_push (src, gst_buffer_new ()) == GST_FLOW_OK);
   fail_unless (buffers == NULL);
-  caps = gst_pad_get_caps (src, NULL);
+  caps = gst_pad_query_caps (src, NULL);
   templ_caps = gst_pad_get_pad_template_caps (src);
   fail_unless (caps && gst_caps_is_equal (caps, templ_caps));
   gst_caps_unref (templ_caps);

@@ -59,6 +59,11 @@ struct _GstTypeFindElement {
 
   GList *               cached_events;
   GstCaps *             force_caps;
+
+  /* Only used when driving the pipeline */
+  gboolean need_segment;
+  GstSegment segment;
+  guint64 offset;
 };
 
 struct _GstTypeFindElementClass {
@@ -66,8 +71,8 @@ struct _GstTypeFindElementClass {
 
   /* signals */
   void 			(*have_type) 	(GstTypeFindElement *element,
-					 guint		probability,
-					 const GstCaps *	caps);
+					 guint		     probability,
+					 GstCaps            *caps);
 };
 
 GType gst_type_find_element_get_type (void);

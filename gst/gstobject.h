@@ -75,7 +75,7 @@ typedef enum
  *
  * Acquire a reference to the mutex of this object.
  */
-#define GST_OBJECT_GET_LOCK(obj)               (GST_OBJECT_CAST(obj)->lock)
+#define GST_OBJECT_GET_LOCK(obj)               (&GST_OBJECT_CAST(obj)->lock)
 /**
  * GST_OBJECT_LOCK:
  * @obj: a #GstObject to lock
@@ -149,7 +149,6 @@ typedef enum
  */
 #define GST_OBJECT_FLAG_UNSET(obj,flag)        (GST_OBJECT_FLAGS (obj) &= ~(flag))
 
-
 typedef struct _GstObject GstObject;
 typedef struct _GstObjectClass GstObjectClass;
 
@@ -166,12 +165,16 @@ struct _GstObject {
   GInitiallyUnowned object;
 
   /*< public >*/ /* with LOCK */
-  GMutex        *lock;        /* object LOCK */
+  GMutex         lock;        /* object LOCK */
   gchar         *name;        /* object name */
   GstObject     *parent;      /* this object's parent, weak ref */
   guint32        flags;
 
   /*< private >*/
+  GList         *control_bindings;  /* List of GstControlBinding */
+  guint64        control_rate;
+  guint64        last_sync;
+
   gpointer _gst_reserved;
 };
 
@@ -227,6 +230,33 @@ gchar *		gst_object_get_path_string	(GstObject *object);
 
 /* misc utils */
 gboolean	gst_object_check_uniqueness	(GList *list, const gchar *name);
+
+/* controller functions */
+#include <gst/gstcontrolbinding.h>
+#include <gst/gstcontrolsource.h>
+
+GstClockTime    gst_object_suggest_next_sync      (GstObject * object);
+gboolean        gst_object_sync_values            (GstObject * object, GstClockTime timestamp);
+
+gboolean        gst_object_has_active_control_bindings   (GstObject *object);
+void            gst_object_set_control_bindings_disabled (GstObject *object, gboolean disabled);
+void            gst_object_set_control_binding_disabled  (GstObject *object,
+                                                          const gchar * property_name,
+                                                          gboolean disabled);
+
+gboolean        gst_object_add_control_binding    (GstObject * object, GstControlBinding * binding);
+GstControlBinding *
+                gst_object_get_control_binding    (GstObject *object, const gchar * property_name);
+gboolean        gst_object_remove_control_binding (GstObject * object, GstControlBinding * binding);
+
+GValue *        gst_object_get_value              (GstObject * object, const gchar * property_name,
+                                                   GstClockTime timestamp);
+gboolean        gst_object_get_value_array        (GstObject * object, const gchar * property_name,
+                                                   GstClockTime timestamp, GstClockTime interval,
+                                                   guint n_values, GValue *values);
+
+GstClockTime    gst_object_get_control_rate       (GstObject * object);
+void            gst_object_set_control_rate       (GstObject * object, GstClockTime control_rate);
 
 G_END_DECLS
 

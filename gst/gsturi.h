@@ -26,15 +26,42 @@
 
 #include <glib.h>
 #include <gst/gstelement.h>
-#include <gst/gstpluginfeature.h>
 
 G_BEGIN_DECLS
 
+GQuark gst_uri_error_quark (void);
+
+/**
+ * GST_URI_ERROR:
+ *
+ * Get access to the error quark of the uri subsystem.
+ */
+#define GST_URI_ERROR gst_uri_error_quark ()
+
+/**
+ * GstURIError:
+ * @GST_URI_ERROR_BAD_PROTOCOL: The protocol is not supported
+ * @GST_URI_ERROR_BAD_URI: There was a problem with the URI
+ * @GST_URI_ERROR_BAD_STATE: Could not set or change the URI because the
+ *     URI handler was in a state where that is not possible or not permitted
+ * @GST_URI_ERROR_BAD_REFERENCE: There was a problem with the entity that
+ *     the URI references
+ *
+ * Different URI-related errors that can occur.
+ */
+typedef enum
+{
+  GST_URI_ERROR_BAD_PROTOCOL,
+  GST_URI_ERROR_BAD_URI,
+  GST_URI_ERROR_BAD_STATE,
+  GST_URI_ERROR_BAD_REFERENCE
+} GstURIError;
+
 /**
  * GstURIType:
- * @GST_URI_UNKNOWN	: The URI direction is unknown
- * @GST_URI_SINK	: The URI is a consumer.
- * @GST_URI_SRC		: The URI is a producer.
+ * @GST_URI_UNKNOWN: The URI direction is unknown
+ * @GST_URI_SINK: The URI is a consumer.
+ * @GST_URI_SRC: The URI is a producer.
  *
  * The different types of URI direction.
  */
@@ -54,10 +81,10 @@ typedef enum {
 #define GST_URI_TYPE_IS_VALID(type) ((type) == GST_URI_SRC || (type) == GST_URI_SINK)
 
 /* uri handler functions */
-#define GST_TYPE_URI_HANDLER		(gst_uri_handler_get_type ())
-#define GST_URI_HANDLER(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GST_TYPE_URI_HANDLER, GstURIHandler))
-#define GST_IS_URI_HANDLER(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_URI_HANDLER))
-#define GST_URI_HANDLER_GET_INTERFACE(obj)	(G_TYPE_INSTANCE_GET_INTERFACE ((obj), GST_TYPE_URI_HANDLER, GstURIHandlerInterface))
+#define GST_TYPE_URI_HANDLER               (gst_uri_handler_get_type ())
+#define GST_URI_HANDLER(obj)               (G_TYPE_CHECK_INSTANCE_CAST ((obj), GST_TYPE_URI_HANDLER, GstURIHandler))
+#define GST_IS_URI_HANDLER(obj)            (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_URI_HANDLER))
+#define GST_URI_HANDLER_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GST_TYPE_URI_HANDLER, GstURIHandlerInterface))
 
 /**
  * GstURIHandler:
@@ -78,67 +105,50 @@ typedef struct _GstURIHandlerInterface GstURIHandlerInterface;
  * Any #GstElement using this interface should implement these methods.
  */
 struct _GstURIHandlerInterface {
-  GTypeInterface	parent;
-
-  /*< private >*/
-  /* signals */
-  void		(* new_uri)			(GstURIHandler * handler,
-						 const gchar *   uri);
-  /* idea for the future ?
-  gboolean	(* require_password)		(GstURIHandler * handler,
-						 gchar **	 username,
-						 gchar **	 password);
-   */
+  GTypeInterface parent;
 
   /* vtable */
-
   /*< public >*/
   /* querying capabilities */
-  GstURIType		(* get_type)		(GType type);
-  gchar **		(* get_protocols)	(GType type);
+  GstURIType             (* get_type)           (GType type);
+  const gchar * const *  (* get_protocols)      (GType type);
 
   /* using the interface */
-  const gchar *		(* get_uri)		(GstURIHandler * handler);
-  gboolean		(* set_uri)		(GstURIHandler * handler,
-						 const gchar *	 uri);
-
-  /*< private >*/
-  /* we might want to add functions here to query features,
-   * someone with gnome-vfs knowledge go ahead */
-
-  gpointer _gst_reserved[GST_PADDING];
+  gchar *                (* get_uri)            (GstURIHandler * handler);
+  gboolean               (* set_uri)            (GstURIHandler * handler,
+                                                 const gchar   * uri,
+                                                 GError       ** error);
 };
 
 /* general URI functions */
 
-gboolean	gst_uri_protocol_is_valid	(const gchar * protocol);
-gboolean	gst_uri_protocol_is_supported	(const GstURIType type,
-						 const gchar *protocol);
-gboolean	gst_uri_is_valid		(const gchar * uri);
-gchar *		gst_uri_get_protocol		(const gchar * uri);
+gboolean        gst_uri_protocol_is_valid       (const gchar * protocol);
+gboolean        gst_uri_protocol_is_supported   (const GstURIType type,
+                                                 const gchar *protocol);
+gboolean        gst_uri_is_valid                (const gchar * uri);
+gchar *         gst_uri_get_protocol            (const gchar * uri) G_GNUC_MALLOC;
 gboolean        gst_uri_has_protocol            (const gchar * uri,
                                                  const gchar * protocol);
-gchar *		gst_uri_get_location		(const gchar * uri);
-gchar *		gst_uri_construct		(const gchar * protocol,
-						 const gchar * location);
+gchar *         gst_uri_get_location            (const gchar * uri) G_GNUC_MALLOC;
+gchar *         gst_uri_construct               (const gchar * protocol,
+                                                 const gchar * location) G_GNUC_MALLOC;
 
 gchar *         gst_filename_to_uri             (const gchar * filename,
-                                                 GError     ** error);
+                                                 GError     ** error) G_GNUC_MALLOC;
 
-GstElement *	gst_element_make_from_uri	(const GstURIType type,
-						 const gchar *    uri,
-						 const gchar *    elementname);
+GstElement *    gst_element_make_from_uri       (const GstURIType type,
+                                                 const gchar *    uri,
+                                                 const gchar *    elementname) G_GNUC_MALLOC;
 
 /* accessing the interface */
-GType		gst_uri_handler_get_type	(void);
+GType                 gst_uri_handler_get_type (void);
 
-guint		gst_uri_handler_get_uri_type	(GstURIHandler * handler);
-gchar **	gst_uri_handler_get_protocols	(GstURIHandler * handler);
-const gchar *	gst_uri_handler_get_uri		(GstURIHandler * handler);
-gboolean	gst_uri_handler_set_uri		(GstURIHandler * handler,
-						 const gchar *	 uri);
-void		gst_uri_handler_new_uri		(GstURIHandler * handler,
-						 const gchar *	 uri);
+GstURIType            gst_uri_handler_get_uri_type  (GstURIHandler * handler);
+const gchar * const * gst_uri_handler_get_protocols (GstURIHandler * handler);
+gchar *               gst_uri_handler_get_uri       (GstURIHandler * handler) G_GNUC_MALLOC;
+gboolean              gst_uri_handler_set_uri       (GstURIHandler * handler,
+                                                     const gchar   * uri,
+                                                     GError       ** error);
 
 G_END_DECLS
 

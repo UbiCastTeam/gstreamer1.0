@@ -169,7 +169,7 @@ gst_fd_src_class_init (GstFdSrcClass * klass)
           G_MAXUINT64, DEFAULT_TIMEOUT,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
-  gst_element_class_set_details_simple (gstelement_class,
+  gst_element_class_set_static_metadata (gstelement_class,
       "Filedescriptor Source",
       "Source/File",
       "Read from a file descriptor", "Erik Walthinsen <omega@cse.ogi.edu>");
@@ -392,24 +392,23 @@ gst_fd_src_create (GstPushSrc * psrc, GstBuffer ** outbuf)
   GstBuffer *buf;
   gssize readbytes;
   guint blocksize;
-  GstClockTime timeout;
-  guint8 *data;
-  gsize maxsize;
+  GstMapInfo info;
 
 #ifndef HAVE_WIN32
+  GstClockTime timeout;
   gboolean try_again;
   gint retval;
 #endif
 
   src = GST_FD_SRC (psrc);
 
+#ifndef HAVE_WIN32
   if (src->timeout > 0) {
     timeout = src->timeout * GST_USECOND;
   } else {
     timeout = GST_CLOCK_TIME_NONE;
   }
 
-#ifndef HAVE_WIN32
   do {
     try_again = FALSE;
 
@@ -442,21 +441,22 @@ gst_fd_src_create (GstPushSrc * psrc, GstBuffer ** outbuf)
   blocksize = GST_BASE_SRC (src)->blocksize;
 
   /* create the buffer */
-  buf = gst_buffer_new_allocate (NULL, blocksize, 0);
+  buf = gst_buffer_new_allocate (NULL, blocksize, NULL);
   if (G_UNLIKELY (buf == NULL))
     goto alloc_failed;
 
-  data = gst_buffer_map (buf, NULL, &maxsize, GST_MAP_WRITE);
+  gst_buffer_map (buf, &info, GST_MAP_WRITE);
 
   do {
-    readbytes = read (src->fd, data, blocksize);
+    readbytes = read (src->fd, info.data, blocksize);
     GST_LOG_OBJECT (src, "read %" G_GSSIZE_FORMAT, readbytes);
   } while (readbytes == -1 && errno == EINTR);  /* retry if interrupted */
 
   if (readbytes < 0)
     goto read_error;
 
-  gst_buffer_unmap (buf, data, readbytes);
+  gst_buffer_unmap (buf, &info);
+  gst_buffer_resize (buf, 0, readbytes);
 
   if (readbytes == 0)
     goto eos;
@@ -484,7 +484,7 @@ poll_error:
 stopped:
   {
     GST_DEBUG_OBJECT (psrc, "Poll stopped");
-    return GST_FLOW_WRONG_STATE;
+    return GST_FLOW_FLUSHING;
   }
 #endif
 alloc_failed:
@@ -496,14 +496,14 @@ eos:
   {
     GST_DEBUG_OBJECT (psrc, "Read 0 bytes. EOS.");
     gst_buffer_unref (buf);
-    return GST_FLOW_UNEXPECTED;
+    return GST_FLOW_EOS;
   }
 read_error:
   {
     GST_ELEMENT_ERROR (src, RESOURCE, READ, (NULL),
         ("read on file descriptor: %s.", g_strerror (errno)));
     GST_DEBUG_OBJECT (psrc, "Error reading from fd");
-    gst_buffer_unmap (buf, data, 0);
+    gst_buffer_unmap (buf, &info);
     gst_buffer_unref (buf);
     return GST_FLOW_ERROR;
   }
@@ -605,29 +605,31 @@ gst_fd_src_uri_get_type (GType type)
   return GST_URI_SRC;
 }
 
-static gchar **
+static const gchar *const *
 gst_fd_src_uri_get_protocols (GType type)
 {
-  static gchar *protocols[] = { (char *) "fd", NULL };
+  static const gchar *protocols[] = { "fd", NULL };
 
   return protocols;
 }
 
-static const gchar *
+static gchar *
 gst_fd_src_uri_get_uri (GstURIHandler * handler)
 {
   GstFdSrc *src = GST_FD_SRC (handler);
 
-  return src->uri;
+  /* FIXME: make thread-safe */
+  return g_strdup (src->uri);
 }
 
 static gboolean
-gst_fd_src_uri_set_uri (GstURIHandler * handler, const gchar * uri)
+gst_fd_src_uri_set_uri (GstURIHandler * handler, const gchar * uri,
+    GError ** err)
 {
   gchar *protocol, *q;
   GstFdSrc *src = GST_FD_SRC (handler);
   gint fd;
-  guint64 size = -1;
+  guint64 size = (guint64) - 1;
 
   GST_INFO_OBJECT (src, "checking uri %s", uri);
 

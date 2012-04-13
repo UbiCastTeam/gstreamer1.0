@@ -16,6 +16,15 @@
 /* gettext package name */
 #undef GETTEXT_PACKAGE
 
+/* The GIO library directory. */
+#undef GIO_LIBDIR
+
+/* The GIO modules directory. */
+#undef GIO_MODULE_DIR
+
+/* GStreamer API Version */
+#undef GST_API_VERSION
+
 /* data dir */
 #undef GST_DATADIR
 
@@ -42,9 +51,6 @@
 
 /* GStreamer license */
 #undef GST_LICENSE
-
-/* library major.minor version */
-#undef GST_MAJORMINOR
 
 /* package name in plugins */
 #undef GST_PACKAGE_NAME
@@ -160,15 +166,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `nsl' library (-lnsl). */
-#undef HAVE_LIBNSL
-
-/* Define to 1 if you have the `resolv' library (-lresolv). */
-#undef HAVE_LIBRESOLV
-
-/* Define to 1 if you have the `socket' library (-lsocket). */
-#undef HAVE_LIBSOCKET
-
 /* Define to 1 if you have the `localtime_r' function. */
 #undef HAVE_LOCALTIME_R
 
@@ -240,6 +237,9 @@
 
 /* Define to 1 if you have the <sys/param.h> header file. */
 #undef HAVE_SYS_PARAM_H
+
+/* Define to 1 if you have the <sys/poll.h> header file. */
+#undef HAVE_SYS_POLL_H
 
 /* Define to 1 if you have the <sys/prctl.h> header file. */
 #undef HAVE_SYS_PRCTL_H
@@ -313,9 +313,6 @@
 
 /* Memory alignment by pagesize */
 #undef MEMORY_ALIGNMENT_PAGESIZE
-
-/* Define if you have no native inet_aton() function. */
-#undef NO_INET_ATON
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 #undef NO_MINUS_C_MINUS_O

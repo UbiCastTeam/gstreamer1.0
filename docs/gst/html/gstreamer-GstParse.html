@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstParse</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstParamSpec.html" title="GstParamSpec">
 <link rel="next" href="GstPipeline.html" title="GstPipeline">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstParamSpec.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="GstPipeline.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -231,7 +231,7 @@ can try to play the pipeline.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new element on success, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. If
 more than one toplevel element is specified by the <em class="parameter"><code>pipeline_description</code></em>,
-all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which than is returned. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which than is returned. <span class="annotation">[transfer floating]</span>
 </td>
 </tr>
 </tbody>
@@ -396,7 +396,7 @@ for unlinked source or sink pads within the bin</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a newly-created bin, or NULL if an error occurred. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+<td>a newly-created bin, or NULL if an error occurred. <span class="annotation">[transfer floating]</span>
 </td>
 </tr>
 </tbody>

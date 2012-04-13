@@ -69,6 +69,7 @@ static GstElement *pipeline;
 static EventLoopResult caught_error = ELR_NO_ERROR;
 static gboolean quiet = FALSE;
 static gboolean tags = FALSE;
+static gboolean toc = FALSE;
 static gboolean messages = FALSE;
 static gboolean is_live = FALSE;
 static gboolean waiting_eos = FALSE;
@@ -177,6 +178,7 @@ fault_setup (void)
 }
 #endif /* DISABLE_FAULT_HANDLER */
 
+#if 0
 typedef struct _GstIndexStats
 {
   gint id;
@@ -329,6 +331,7 @@ print_index_stats (GPtrArray * index_stats)
     }
   }
 }
+#endif
 
 /* Kids, use the functions from libgstpbutils in gst-plugins-base in your
  * own code (we can't do that here because it would introduce a circular
@@ -433,6 +436,36 @@ print_tag (const GstTagList * list, const gchar * tag, gpointer unused)
 
     g_free (str);
   }
+}
+
+#define MAX_INDENT 40
+
+static void
+print_toc_entry (gpointer data, gpointer user_data)
+{
+  GstTocEntry *entry = (GstTocEntry *) data;
+  const gchar spc[MAX_INDENT + 1] = "                                        ";
+  const gchar *entry_types[] = { "chapter", "edition" };
+  guint indent = MIN (GPOINTER_TO_UINT (user_data), MAX_INDENT);
+  gint64 start, stop;
+
+  gst_toc_entry_get_start_stop (entry, &start, &stop);
+
+  PRINT ("%s%s:", &spc[MAX_INDENT - indent], entry_types[entry->type]);
+  if (GST_CLOCK_TIME_IS_VALID (start)) {
+    PRINT (" start: %" GST_TIME_FORMAT, GST_TIME_ARGS (start));
+  }
+  if (GST_CLOCK_TIME_IS_VALID (stop)) {
+    PRINT (" stop: %" GST_TIME_FORMAT, GST_TIME_ARGS (stop));
+  }
+  PRINT ("\n");
+  indent += 2;
+
+  /* TODO: print tags */
+
+  /* loop over sub-toc entries */
+  g_list_foreach (entry->subentries, print_toc_entry,
+      GUINT_TO_POINTER (indent));
 }
 
 #ifndef DISABLE_FAULT_HANDLER
@@ -590,7 +623,7 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
       }
       case GST_MESSAGE_TAG:
         if (tags) {
-          GstTagList *tags;
+          GstTagList *tag_list;
 
           if (GST_IS_ELEMENT (GST_MESSAGE_SRC (message))) {
             PRINT (_("FOUND TAG      : found by element \"%s\".\n"),
@@ -605,9 +638,31 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
             PRINT (_("FOUND TAG\n"));
           }
 
-          gst_message_parse_tag (message, &tags);
-          gst_tag_list_foreach (tags, print_tag, NULL);
-          gst_tag_list_free (tags);
+          gst_message_parse_tag (message, &tag_list);
+          gst_tag_list_foreach (tag_list, print_tag, NULL);
+          gst_tag_list_free (tag_list);
+        }
+        break;
+      case GST_MESSAGE_TOC:
+        if (toc) {
+          GstToc *toc_msg;
+          gboolean updated;
+
+          if (GST_IS_ELEMENT (GST_MESSAGE_SRC (message))) {
+            PRINT (_("FOUND TOC      : found by element \"%s\".\n"),
+                GST_MESSAGE_SRC_NAME (message));
+          } else if (GST_IS_OBJECT (GST_MESSAGE_SRC (message))) {
+            PRINT (_("FOUND TOC      : found by object \"%s\".\n"),
+                GST_MESSAGE_SRC_NAME (message));
+          } else {
+            PRINT (_("FOUND TOC\n"));
+          }
+
+          gst_message_parse_toc (message, &toc_msg, &updated);
+          /* recursively loop over toc entries */
+          g_list_foreach (toc_msg->entries, print_toc_entry,
+              GUINT_TO_POINTER (0));
+          gst_toc_free (toc_msg);
         }
         break;
       case GST_MESSAGE_INFO:{
@@ -820,15 +875,18 @@ main (int argc, char *argv[])
   /* options */
   gboolean verbose = FALSE;
   gboolean no_fault = FALSE;
-  gboolean trace = FALSE;
   gboolean eos_on_shutdown = FALSE;
+#if 0
   gboolean check_index = FALSE;
+#endif
   gchar *savefile = NULL;
   gchar *exclude_args = NULL;
 #ifndef GST_DISABLE_OPTION_PARSING
   GOptionEntry options[] = {
     {"tags", 't', 0, G_OPTION_ARG_NONE, &tags,
         N_("Output tags (also known as metadata)"), NULL},
+    {"toc", 'c', 0, G_OPTION_ARG_NONE, &toc,
+        N_("Ouput TOC (chapters and editions)"), NULL},
     {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
         N_("Output status information and property notifications"), NULL},
     {"quiet", 'q', 0, G_OPTION_ARG_NONE, &quiet,
@@ -839,20 +897,22 @@ main (int argc, char *argv[])
         N_("Do not output status information of TYPE"), N_("TYPE1,TYPE2,...")},
     {"no-fault", 'f', 0, G_OPTION_ARG_NONE, &no_fault,
         N_("Do not install a fault handler"), NULL},
-    {"trace", 'T', 0, G_OPTION_ARG_NONE, &trace,
-        N_("Print alloc trace (if enabled at compile time)"), NULL},
     {"eos-on-shutdown", 'e', 0, G_OPTION_ARG_NONE, &eos_on_shutdown,
         N_("Force EOS on sources before shutting the pipeline down"), NULL},
+#if 0
     {"index", 'i', 0, G_OPTION_ARG_NONE, &check_index,
         N_("Gather and print index statistics"), NULL},
+#endif
     GST_TOOLS_GOPTION_VERSION,
     {NULL}
   };
   GOptionContext *ctx;
   GError *err = NULL;
 #endif
+#if 0
   GstIndex *index;
   GPtrArray *index_stats = NULL;
+#endif
   gchar **argvn;
   GError *error = NULL;
   gint res = 0;
@@ -864,8 +924,6 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 #endif
-
-  g_thread_init (NULL);
 
   gst_tools_set_prgname ("gst-launch");
 
@@ -893,15 +951,6 @@ main (int argc, char *argv[])
 
   sigint_setup ();
 #endif
-
-  if (trace) {
-    if (!gst_alloc_trace_available ()) {
-      g_warning ("Trace not available (recompile with trace enabled).");
-    }
-    gst_alloc_trace_set_flags_all (GST_ALLOC_TRACE_LIVE |
-        GST_ALLOC_TRACE_MEM_LIVE);
-    gst_alloc_trace_print_live ();
-  }
 
   /* make a null-terminated version of argv */
   argvn = g_new0 (char *, argc);
@@ -951,7 +1000,7 @@ main (int argc, char *argv[])
       gst_bin_add (GST_BIN (real_pipeline), pipeline);
       pipeline = real_pipeline;
     }
-
+#if 0
     if (check_index) {
       /* gst_index_new() creates a null-index, it does not store anything, but
        * the entry-added signal works and this is what we use to build the
@@ -966,6 +1015,7 @@ main (int argc, char *argv[])
         gst_element_set_index (pipeline, index);
       }
     }
+#endif
 
     bus = gst_element_get_bus (pipeline);
     gst_bus_set_sync_handler (bus, bus_sync_handler, (gpointer) pipeline);
@@ -1059,10 +1109,12 @@ main (int argc, char *argv[])
     gst_element_set_state (pipeline, GST_STATE_READY);
     gst_element_get_state (pipeline, &state, &pending, GST_CLOCK_TIME_NONE);
 
+#if 0
     if (check_index) {
       print_index_stats (index_stats);
       g_ptr_array_free (index_stats, TRUE);
     }
+#endif
 
   end:
     PRINT (_("Setting pipeline to NULL ...\n"));
@@ -1074,8 +1126,6 @@ main (int argc, char *argv[])
   gst_object_unref (pipeline);
 
   gst_deinit ();
-  if (trace)
-    gst_alloc_trace_print_live ();
 
   return res;
 }

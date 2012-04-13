@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstParamSpec</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstPadTemplate.html" title="GstPadTemplate">
 <link rel="next" href="gstreamer-GstParse.html" title="GstParse">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="GstPadTemplate.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-GstParse.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -129,7 +129,7 @@ they can be changed when the element is in the READY or lower state.
 <a name="GstParamSpecFraction"></a><h3>struct GstParamSpecFraction</h3>
 <pre class="programlisting">struct GstParamSpecFraction {
   GParamSpec    parent_instance;
-  
+
   gint          min_num, min_den;
   gint          max_num, max_den;
   gint          def_num, def_den;
@@ -237,7 +237,8 @@ instance_init function.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a newly created parameter specification</td>
+<td>a newly created parameter specification. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>

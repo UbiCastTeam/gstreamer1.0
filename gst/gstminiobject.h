@@ -71,7 +71,7 @@ typedef void (*GstMiniObjectFreeFunction) (GstMiniObject *obj);
  * GstMiniObjectWeakNotify:
  * @data: data that was provided when the weak reference was established
  * @where_the_mini_object_was: the mini object being finalized
- * 
+ *
  * A #GstMiniObjectWeakNotify function can be added to a mini object as a
  * callback that gets triggered when the mini object is finalized. Since the
  * mini object is already being finalized when the #GstMiniObjectWeakNotify is
@@ -84,10 +84,10 @@ typedef void (*GstMiniObjectWeakNotify) (gpointer data,
     GstMiniObject * where_the_mini_object_was);
 
 /**
- * GST_MINI_OBJECT_FLAGS:
- * @obj: MiniObject to return flags for.
+ * GST_MINI_OBJECT_TYPE:
+ * @obj: MiniObject to return type for.
  *
- * This macro returns the entire set of flags for the mini-object.
+ * This macro returns the type of the mini-object.
  */
 #define GST_MINI_OBJECT_TYPE(obj)  (GST_MINI_OBJECT_CAST(obj)->type)
 /**
@@ -198,7 +198,7 @@ struct _GstMiniObject {
 void            gst_mini_object_init            (GstMiniObject *mini_object,
                                                  GType type, gsize size);
 
-GstMiniObject * gst_mini_object_copy		(const GstMiniObject *mini_object);
+GstMiniObject * gst_mini_object_copy		(const GstMiniObject *mini_object) G_GNUC_MALLOC;
 gboolean        gst_mini_object_is_writable	(const GstMiniObject *mini_object);
 GstMiniObject * gst_mini_object_make_writable	(GstMiniObject *mini_object);
 
@@ -217,10 +217,17 @@ gboolean        gst_mini_object_replace         (GstMiniObject **olddata, GstMin
 gboolean        gst_mini_object_take            (GstMiniObject **olddata, GstMiniObject *newdata);
 GstMiniObject * gst_mini_object_steal           (GstMiniObject **olddata);
 
+/**
+ * GST_DEFINE_MINI_OBJECT_TYPE:
+ * @TypeName: name of the new type in CamelCase
+ * @type_name: name of the new type
+ *
+ * Define a new mini-object type with the given name
+ */
 #define GST_DEFINE_MINI_OBJECT_TYPE(TypeName,type_name) \
    G_DEFINE_BOXED_TYPE(TypeName,type_name,              \
        (GBoxedCopyFunc) gst_mini_object_ref,            \
-       (GBoxedFreeFunc)gst_mini_object_unref)
+       (GBoxedFreeFunc) gst_mini_object_unref)
 
 G_END_DECLS
 

@@ -27,7 +27,7 @@
 
 G_BEGIN_DECLS
 
-extern GType _gst_buffer_list_type;
+GST_EXPORT GType _gst_buffer_list_type;
 
 #define GST_TYPE_BUFFER_LIST      (_gst_buffer_list_type)
 #define GST_IS_BUFFER_LIST(obj)   (GST_IS_MINI_OBJECT_TYPE(obj, GST_TYPE_BUFFER_LIST))
@@ -156,10 +156,10 @@ gst_buffer_list_copy (const GstBufferList * list)
 GType                    gst_buffer_list_get_type              (void);
 
 /* allocation */
-GstBufferList *          gst_buffer_list_new                   (void);
-GstBufferList *          gst_buffer_list_sized_new             (guint size);
+GstBufferList *          gst_buffer_list_new                   (void) G_GNUC_MALLOC;
+GstBufferList *          gst_buffer_list_new_sized             (guint size) G_GNUC_MALLOC;
 
-guint                    gst_buffer_list_len                   (GstBufferList *list);
+guint                    gst_buffer_list_length                (GstBufferList *list);
 
 GstBuffer *              gst_buffer_list_get                   (GstBufferList *list, guint idx);
 void                     gst_buffer_list_insert                (GstBufferList *list, guint idx, GstBuffer *buffer);

@@ -83,8 +83,11 @@ typedef struct
 {
   GstTagMergeMode mode;
   GstTagList *list;
-  GStaticMutex lock;
+  GMutex lock;
 } GstTagData;
+
+#define GST_TAG_DATA_LOCK(data) g_mutex_lock(&data->lock)
+#define GST_TAG_DATA_UNLOCK(data) g_mutex_unlock(&data->lock)
 
 GType
 gst_tag_setter_get_type (void)
@@ -94,7 +97,7 @@ gst_tag_setter_get_type (void)
   if (g_once_init_enter (&tag_setter_type)) {
     GType _type;
     static const GTypeInfo tag_setter_info = {
-      sizeof (GstTagSetterIFace),       /* class_size */
+      sizeof (GstTagSetterInterface),   /* class_size */
       NULL,                     /* base_init */
       NULL,                     /* base_finalize */
       NULL,
@@ -125,7 +128,7 @@ gst_tag_data_free (gpointer p)
   if (data->list)
     gst_tag_list_free (data->list);
 
-  g_static_mutex_free (&data->lock);
+  g_mutex_clear (&data->lock);
 
   g_slice_free (GstTagData, data);
 }
@@ -137,20 +140,22 @@ gst_tag_setter_get_data (GstTagSetter * setter)
 
   data = g_object_get_qdata (G_OBJECT (setter), gst_tag_key);
   if (!data) {
-    static GStaticMutex create_mutex = G_STATIC_MUTEX_INIT;
-
     /* make sure no other thread is creating a GstTagData at the same time */
-    g_static_mutex_lock (&create_mutex);
+    static GMutex create_mutex; /* no initialisation required */
+
+    g_mutex_lock (&create_mutex);
+
     data = g_object_get_qdata (G_OBJECT (setter), gst_tag_key);
     if (!data) {
       data = g_slice_new (GstTagData);
-      g_static_mutex_init (&data->lock);
+      g_mutex_init (&data->lock);
       data->list = NULL;
       data->mode = GST_TAG_MERGE_KEEP;
       g_object_set_qdata_full (G_OBJECT (setter), gst_tag_key, data,
           gst_tag_data_free);
     }
-    g_static_mutex_unlock (&create_mutex);
+
+    g_mutex_unlock (&create_mutex);
   }
 
   return data;
@@ -174,12 +179,12 @@ gst_tag_setter_reset_tags (GstTagSetter * setter)
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
   if (data->list) {
     gst_tag_list_free (data->list);
     data->list = NULL;
   }
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 }
 
 /**
@@ -202,14 +207,14 @@ gst_tag_setter_merge_tags (GstTagSetter * setter, const GstTagList * list,
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
   if (data->list == NULL) {
     if (mode != GST_TAG_MERGE_KEEP_ALL)
       data->list = gst_tag_list_copy (list);
   } else {
     gst_tag_list_insert (data->list, list, mode);
   }
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 }
 
 /**
@@ -281,13 +286,13 @@ gst_tag_setter_add_tag_valist (GstTagSetter * setter, GstTagMergeMode mode,
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
   if (!data->list)
-    data->list = gst_tag_list_new ();
+    data->list = gst_tag_list_new_empty ();
 
   gst_tag_list_add_valist (data->list, mode, tag, var_args);
 
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 }
 
 /**
@@ -311,14 +316,14 @@ gst_tag_setter_add_tag_valist_values (GstTagSetter * setter,
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
 
   if (!data->list)
-    data->list = gst_tag_list_new ();
+    data->list = gst_tag_list_new_empty ();
 
   gst_tag_list_add_valist_values (data->list, mode, tag, var_args);
 
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 }
 
 /**
@@ -343,14 +348,14 @@ gst_tag_setter_add_tag_value (GstTagSetter * setter,
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
 
   if (!data->list)
-    data->list = gst_tag_list_new ();
+    data->list = gst_tag_list_new_empty ();
 
   gst_tag_list_add_value (data->list, mode, tag, value);
 
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 }
 
 /**
@@ -392,9 +397,9 @@ gst_tag_setter_set_tag_merge_mode (GstTagSetter * setter, GstTagMergeMode mode)
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
   data->mode = mode;
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 }
 
 /**
@@ -416,9 +421,9 @@ gst_tag_setter_get_tag_merge_mode (GstTagSetter * setter)
 
   data = gst_tag_setter_get_data (setter);
 
-  g_static_mutex_lock (&data->lock);
+  GST_TAG_DATA_LOCK (data);
   mode = data->mode;
-  g_static_mutex_unlock (&data->lock);
+  GST_TAG_DATA_UNLOCK (data);
 
   return mode;
 }

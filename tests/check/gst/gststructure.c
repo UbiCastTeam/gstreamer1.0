@@ -27,16 +27,16 @@
 GST_START_TEST (test_from_string_int)
 {
   const char *strings[] = {
-    "video/x-raw-rgb, width = (int) 123456",
-    "video/x-raw-rgb, stride = (int) -123456",
-    "video/x-raw-rgb, red_mask = (int) 0xFFFF",
-    "video/x-raw-rgb, red_mask = (int) 0x0000FFFF",
-    "video/x-raw-rgb, red_mask = (int) 0x7FFFFFFF",
-    "video/x-raw-rgb, red_mask = (int) 0x80000000",
-    "video/x-raw-rgb, red_mask = (int) 0xFF000000",
+    "video/x-raw, width = (int) 123456",
+    "video/x-raw, stride = (int) -123456",
+    "video/x-raw, red_mask = (int) 0xFFFF",
+    "video/x-raw, red_mask = (int) 0x0000FFFF",
+    "video/x-raw, red_mask = (int) 0x7FFFFFFF",
+    "video/x-raw, red_mask = (int) 0x80000000",
+    "video/x-raw, red_mask = (int) 0xFF000000",
     /* result from
      * gst-launch ... ! "video/x-raw-rgb, red_mask=(int)0xFF000000" ! ... */
-    "video/x-raw-rgb,\\ red_mask=(int)0xFF000000",
+    "video/x-raw,\\ red_mask=(int)0xFF000000",
   };
   gint results[] = {
     123456,
@@ -183,12 +183,12 @@ GST_START_TEST (test_to_string)
 {
   GstStructure *st1;
 
-  ASSERT_CRITICAL (st1 = gst_structure_new ("Foo\nwith-newline", NULL));
+  ASSERT_CRITICAL (st1 = gst_structure_new_empty ("Foo\nwith-newline"));
   fail_unless (st1 == NULL);
 
-  ASSERT_CRITICAL (st1 = gst_structure_new ("Foo with whitespace", NULL));
+  ASSERT_CRITICAL (st1 = gst_structure_new_empty ("Foo with whitespace"));
   fail_unless (st1 == NULL);
-  ASSERT_CRITICAL (st1 = gst_structure_new ("1st", NULL));
+  ASSERT_CRITICAL (st1 = gst_structure_new_empty ("1st"));
   fail_unless (st1 == NULL);
 }
 
@@ -317,12 +317,12 @@ GST_START_TEST (test_structure_new)
 
   domain = g_quark_from_static_string ("test");
   e = g_error_new (domain, 0, "a test error");
-  s = gst_structure_new ("name", "key", GST_TYPE_G_ERROR, e, NULL);
+  s = gst_structure_new ("name", "key", G_TYPE_ERROR, e, NULL);
   g_error_free (e);
   gst_structure_free (s);
 
-  ASSERT_CRITICAL (gst_structure_free (gst_structure_new
-          ("0.10:decoder-video/mpeg", NULL)));
+  ASSERT_CRITICAL (gst_structure_free (gst_structure_new_empty
+          ("0.10:decoder-video/mpeg")));
 
   /* make sure we bail out correctly in case of an error or if parsing fails */
   ASSERT_CRITICAL (s = gst_structure_new ("^joo\nba\ndoo^",
@@ -369,7 +369,7 @@ GST_START_TEST (test_fixate_frac_list)
   gst_value_set_fraction (&frac, 10, 1);
   gst_value_list_append_value (&list, &frac);
 
-  s = gst_structure_new ("name", NULL);
+  s = gst_structure_new_empty ("name");
   gst_structure_set_value (s, "frac", &list);
   g_value_unset (&frac);
   g_value_unset (&list);
@@ -402,6 +402,24 @@ GST_START_TEST (test_fixate_frac_list)
 }
 
 GST_END_TEST;
+
+GST_START_TEST (test_is_subset)
+{
+  GstStructure *s1, *s2;
+
+  s1 = gst_structure_from_string ("test/test, channels=(int){ 1, 2 }", NULL);
+  fail_if (s1 == NULL);
+  s2 = gst_structure_from_string ("test/test, channels=(int)[ 1, 2 ]", NULL);
+  fail_if (s2 == NULL);
+
+  fail_unless (gst_structure_is_subset (s1, s2));
+
+  gst_structure_free (s1);
+  gst_structure_free (s2);
+}
+
+GST_END_TEST;
+
 
 GST_START_TEST (test_structure_nested)
 {
@@ -487,6 +505,7 @@ GST_START_TEST (test_vararg_getters)
   GstBuffer *buf, *buf2;
   gboolean ret;
   GstCaps *caps, *caps2;
+  GstMapInfo info;
   gdouble d;
   gint64 i64;
   gchar *c;
@@ -495,13 +514,14 @@ GST_START_TEST (test_vararg_getters)
 
   buf = gst_buffer_new_and_alloc (3);
 
-  data = gst_buffer_map (buf, NULL, NULL, GST_MAP_WRITE);
+  fail_unless (gst_buffer_map (buf, &info, GST_MAP_WRITE));
+  data = info.data;
   data[0] = 0xf0;
   data[1] = 0x66;
   data[2] = 0x0d;
-  gst_buffer_unmap (buf, data, 3);
+  gst_buffer_unmap (buf, &info);
 
-  caps = gst_caps_new_simple ("video/x-foo", NULL);
+  caps = gst_caps_new_empty_simple ("video/x-foo");
 
   s = gst_structure_new ("test", "int", G_TYPE_INT, 12345678, "string",
       G_TYPE_STRING, "Hello World!", "buf", GST_TYPE_BUFFER, buf, "caps",
@@ -604,6 +624,7 @@ gst_structure_suite (void)
   tcase_add_test (tc_chain, test_structure_new);
   tcase_add_test (tc_chain, test_fixate);
   tcase_add_test (tc_chain, test_fixate_frac_list);
+  tcase_add_test (tc_chain, test_is_subset);
   tcase_add_test (tc_chain, test_structure_nested);
   tcase_add_test (tc_chain, test_structure_nested_from_and_to_string);
   tcase_add_test (tc_chain, test_vararg_getters);

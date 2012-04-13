@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBin</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstAtomicQueue.html" title="GstAtomicQueue">
 <link rel="next" href="gstreamer-GstBuffer.html" title="GstBuffer">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstAtomicQueue.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-GstBuffer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -157,7 +157,7 @@ element is removed from the bin.
 <p>
 </p>
 <div class="refsect2">
-<a name="id472748"></a><h3>Notes</h3>
+<a name="idp9169136"></a><h3>Notes</h3>
 <p>
 A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> posted by its children and
 implements the following default behaviour for each of them:
@@ -270,7 +270,7 @@ returned. If no sinks are in the bin, the event handler will return TRUE.
 <p>
 </p>
 <p>
-Last reviewed on 2006-04-28 (0.10.6)
+Last reviewed on 2012-03-28 (0.11.3)
 </p>
 </div>
 <div class="refsect1">
@@ -311,7 +311,7 @@ the LOCK is taken.
 <td>the list of children in this bin</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GstBin-struct.children-cookie"></a>children_cookie</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">guint32</span> <em class="structfield"><code><a name="GstBin-struct.children-cookie"></a>children_cookie</code></em>;</span></p></td>
 <td>updated whenever <em class="parameter"><code>children</code></em> changes</td>
 </tr>
 <tr>
@@ -406,7 +406,7 @@ Creates a new bin with the given name.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+<td>a new <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>. <span class="annotation">[transfer floating]</span>
 </td>
 </tr>
 </tbody>
@@ -677,7 +677,7 @@ MT safe.  Caller owns returned value.
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *       gst_bin_iterate_sinks               (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
 <p>
 Gets an iterator for all elements in the bin that have the
-<a class="link" href="GstElement.html#GST-ELEMENT-IS-SINK:CAPS"><span class="type">GST_ELEMENT_IS_SINK</span></a> flag set.
+<a class="link" href="GstElement.html#GST-ELEMENT-FLAG-SINK:CAPS"><span class="type">GST_ELEMENT_FLAG_SINK</span></a> flag set.
 </p>
 <p>
 Each element yielded by the iterator will have its refcount increased, so
@@ -744,7 +744,7 @@ MT safe.  Caller owns returned value.
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *       gst_bin_iterate_sources             (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
 <p>
 Gets an iterator for all elements in the bin that have the
-<a class="link" href="GstElement.html#GST-ELEMENT-IS-SOURCE:CAPS"><span class="type">GST_ELEMENT_IS_SOURCE</span></a> flag set.
+<a class="link" href="GstElement.html#GST-ELEMENT-FLAG-SOURCE:CAPS"><span class="type">GST_ELEMENT_FLAG_SOURCE</span></a> flag set.
 </p>
 <p>
 Each element yielded by the iterator will have its refcount increased, so

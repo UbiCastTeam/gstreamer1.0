@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTypeFindFactory</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstTypeFind.html" title="GstTypeFind">
 <link rel="next" href="gstreamer-GstUriHandler.html" title="GstUriHandler">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstTypeFind.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-GstUriHandler.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -72,48 +72,94 @@ the section <GTKDOCLINK HREF="gstreamer-Writing-typefind-functions">
 <p>
 </p>
 <div class="example">
-<a name="id494967"></a><p class="title"><b>Example 14. how to write a simple typefinder</b></p>
-<div class="example-contents"><pre class="programlisting">
-  typedef struct {
-    guint8 *data;
-    guint size;
-    guint probability;
-    GstCaps *data;
-  } MyTypeFind;
-  static void
-  my_peek (gpointer data, gint64 offset, guint size)
-  {
-    MyTypeFind *find = (MyTypeFind *) data;
-    if (offset &gt;= 0 &amp;&amp; offset + size &lt;= find-&gt;size) {
-      return find-&gt;data + offset;
-    }
-    return NULL;
-  }
-  static void
-  my_suggest (gpointer data, guint probability, GstCaps *caps)
-  {
-    MyTypeFind *find = (MyTypeFind *) data;
-    if (probability &gt; find-&gt;probability) {
-      find-&gt;probability = probability;
-      gst_caps_replace (&amp;find-&gt;caps, caps);
-    }
-  }
-  static GstCaps *
-  find_type (guint8 *data, guint size)
-  {
-    GList *walk, *type_list;
-    MyTypeFind find = {data, size, 0, NULL};
-    GstTypeFind gst_find = {my_peek, my_suggest, &amp;find, };
-    walk = type_list = gst_type_find_factory_get_list ();
-    while (walk) {
-      GstTypeFindFactory *factory = GST_TYPE_FIND_FACTORY (walk-&gt;data);
-      walk = g_list_next (walk)
-      gst_type_find_factory_call_function (factory, &amp;gst_find);
-    }
-    g_list_free (type_list);
-    return find.caps;
-  };
-  </pre></div>
+<a name="idp37607504"></a><p class="title"><b>Example 13. how to write a simple typefinder</b></p>
+<div class="example-contents">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="gtkdoc kwc">typedef</span> <span class="gtkdoc kwb">struct</span> <span class="gtkdoc opt">{</span>
+  guint8 <span class="gtkdoc opt">*</span>data<span class="gtkdoc opt">;</span>
+  guint size<span class="gtkdoc opt">;</span>
+  guint probability<span class="gtkdoc opt">;</span>
+  GstCaps <span class="gtkdoc opt">*</span>data<span class="gtkdoc opt">;</span>
+<span class="gtkdoc opt">}</span> MyTypeFind<span class="gtkdoc opt">;</span>
+<span class="gtkdoc kwb">static void</span>
+<span class="function">my_peek</span> <span class="gtkdoc opt">(</span>gpointer data<span class="gtkdoc opt">,</span> gint64 offset<span class="gtkdoc opt">,</span> guint size<span class="gtkdoc opt">)</span>
+<span class="gtkdoc opt">{</span>
+  MyTypeFind <span class="gtkdoc opt">*</span>find <span class="gtkdoc opt">= (</span>MyTypeFind <span class="gtkdoc opt">*)</span> data<span class="gtkdoc opt">;</span>
+  <span class="keyword">if</span> <span class="gtkdoc opt">(</span>offset <span class="gtkdoc opt">&gt;=</span> <span class="number">0</span> <span class="gtkdoc opt">&amp;&amp;</span> offset <span class="gtkdoc opt">+</span> size <span class="gtkdoc opt">&lt;=</span> find<span class="gtkdoc opt">-&gt;</span>size<span class="gtkdoc opt">) {</span>
+    <span class="keyword">return</span> find<span class="gtkdoc opt">-&gt;</span>data <span class="gtkdoc opt">+</span> offset<span class="gtkdoc opt">;</span>
+  <span class="gtkdoc opt">}</span>
+  <span class="keyword">return</span> NULL<span class="gtkdoc opt">;</span>
+<span class="gtkdoc opt">}</span>
+<span class="gtkdoc kwb">static void</span>
+<span class="function">my_suggest</span> <span class="gtkdoc opt">(</span>gpointer data<span class="gtkdoc opt">,</span> guint probability<span class="gtkdoc opt">,</span> GstCaps <span class="gtkdoc opt">*</span>caps<span class="gtkdoc opt">)</span>
+<span class="gtkdoc opt">{</span>
+  MyTypeFind <span class="gtkdoc opt">*</span>find <span class="gtkdoc opt">= (</span>MyTypeFind <span class="gtkdoc opt">*)</span> data<span class="gtkdoc opt">;</span>
+  <span class="keyword">if</span> <span class="gtkdoc opt">(</span>probability <span class="gtkdoc opt">&gt;</span> find<span class="gtkdoc opt">-&gt;</span>probability<span class="gtkdoc opt">) {</span>
+    find<span class="gtkdoc opt">-&gt;</span>probability <span class="gtkdoc opt">=</span> probability<span class="gtkdoc opt">;</span>
+    <span class="function"><a href="../gstreamer-1.0/gstreamer-GstCaps.html#gst-caps-replace">gst_caps_replace</a></span> <span class="gtkdoc opt">(&amp;</span>find<span class="gtkdoc opt">-&gt;</span>caps<span class="gtkdoc opt">,</span> caps<span class="gtkdoc opt">);</span>
+  <span class="gtkdoc opt">}</span>
+<span class="gtkdoc opt">}</span>
+<span class="gtkdoc kwb">static</span> GstCaps <span class="gtkdoc opt">*</span>
+<span class="function">find_type</span> <span class="gtkdoc opt">(</span>guint8 <span class="gtkdoc opt">*</span>data<span class="gtkdoc opt">,</span> guint size<span class="gtkdoc opt">)</span>
+<span class="gtkdoc opt">{</span>
+  GList <span class="gtkdoc opt">*</span>walk<span class="gtkdoc opt">, *</span>type_list<span class="gtkdoc opt">;</span>
+  MyTypeFind find <span class="gtkdoc opt">= {</span>data<span class="gtkdoc opt">,</span> size<span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">};</span>
+  GstTypeFind gst_find <span class="gtkdoc opt">= {</span>my_peek<span class="gtkdoc opt">,</span> my_suggest<span class="gtkdoc opt">, &amp;</span>find<span class="gtkdoc opt">, };</span>
+  walk <span class="gtkdoc opt">=</span> type_list <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstTypeFindFactory.html#gst-type-find-factory-get-list">gst_type_find_factory_get_list</a></span> <span class="gtkdoc opt">();</span>
+  <span class="keyword">while</span> <span class="gtkdoc opt">(</span>walk<span class="gtkdoc opt">) {</span>
+    GstTypeFindFactory <span class="gtkdoc opt">*</span>factory <span class="gtkdoc opt">=</span> <span class="function">GST_TYPE_FIND_FACTORY</span> <span class="gtkdoc opt">(</span>walk<span class="gtkdoc opt">-&gt;</span>data<span class="gtkdoc opt">);</span>
+    walk <span class="gtkdoc opt">=</span> <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#g-list-next">g_list_next</a></span> <span class="gtkdoc opt">(</span>walk<span class="gtkdoc opt">)</span>
+    <span class="function"><a href="../gstreamer-1.0/GstTypeFindFactory.html#gst-type-find-factory-call-function">gst_type_find_factory_call_function</a></span> <span class="gtkdoc opt">(</span>factory<span class="gtkdoc opt">, &amp;</span>gst_find<span class="gtkdoc opt">);</span>
+  <span class="gtkdoc opt">}</span>
+  <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#g-list-free">g_list_free</a></span> <span class="gtkdoc opt">(</span>type_list<span class="gtkdoc opt">);</span>
+  <span class="keyword">return</span> find<span class="gtkdoc opt">.</span>caps<span class="gtkdoc opt">;</span>
+<span class="gtkdoc opt">};</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 </div>
 <p><br class="example-break">
 </p>

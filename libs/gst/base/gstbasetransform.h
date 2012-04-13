@@ -77,26 +77,6 @@ G_BEGIN_DECLS
  */
 #define GST_BASE_TRANSFORM_FLOW_DROPPED   GST_FLOW_CUSTOM_SUCCESS
 
-/**
- * GST_BASE_TRANSFORM_LOCK:
- * @obj: base transform instance
- *
- * Obtain a lock to protect the transform function from concurrent access.
- *
- * Since: 0.10.13
- */
-#define GST_BASE_TRANSFORM_LOCK(obj)   g_mutex_lock (GST_BASE_TRANSFORM_CAST (obj)->transform_lock)
-
-/**
- * GST_BASE_TRANSFORM_UNLOCK:
- * @obj: base transform instance
- *
- * Release the lock that protects the transform function from concurrent access.
- *
- * Since: 0.10.13
- */
-#define GST_BASE_TRANSFORM_UNLOCK(obj) g_mutex_unlock (GST_BASE_TRANSFORM_CAST (obj)->transform_lock)
-
 typedef struct _GstBaseTransform GstBaseTransform;
 typedef struct _GstBaseTransformClass GstBaseTransformClass;
 typedef struct _GstBaseTransformPrivate GstBaseTransformPrivate;
@@ -114,24 +94,9 @@ struct _GstBaseTransform {
   GstPad	*sinkpad;
   GstPad	*srcpad;
 
-  /* Set by sub-class */
-  gboolean	 passthrough;
-  gboolean	 always_in_place;
-
-  GstCaps	*cache_caps1;
-  gsize		 cache_caps1_size;
-  GstCaps	*cache_caps2;
-  gsize		 cache_caps2_size;
-  gboolean	 have_same_caps;
-
-  gboolean	 negotiated;
-
-  gboolean       have_segment;
-
   /* MT-protected (with STREAM_LOCK) */
+  gboolean       have_segment;
   GstSegment     segment;
-
-  GMutex	*transform_lock;
 
   /*< private >*/
   GstBaseTransformPrivate *priv;
@@ -142,13 +107,21 @@ struct _GstBaseTransform {
 /**
  * GstBaseTransformClass:
  * @parent_class:   Element parent class
- * @passthrough_on_same_caps: If set to TRUE, passthrough mode will be
+ * @passthrough_on_same_caps: If set to %TRUE, passthrough mode will be
  *                            automatically enabled if the caps are the same.
+ *                            Set to %FALSE by default.
+ * @transform_ip_on_passthrough: If set to %TRUE, @transform_ip will be called in
+ *                           passthrough mode. The passed buffer might not be
+ *                           writable. When %FALSE, neither @transform nor
+ *                           @transform_ip will be called in passthrough mode.
+ *                           Set to %TRUE by default.
  * @transform_caps: Optional.  Given the pad in this direction and the given
  *                  caps, what caps are allowed on the other pad in this
  *                  element ?
  * @fixate_caps:    Optional. Given the pad in this direction and the given
- *                  caps, fixate the caps on the other pad.
+ *                  caps, fixate the caps on the other pad. The function takes
+ *                  ownership of @othercaps and returns a fixated version of
+ *                  @othercaps. @othercaps is not guaranteed to be writable.
  * @accept_caps:    Optional. Since 0.10.30
  *                  Subclasses can override this method to check if @caps can be
  *                  handled by the element. The default implementation might not be
@@ -158,14 +131,25 @@ struct _GstBaseTransform {
  *                  Handle a requested query. Subclasses that implement this
  *                  should must chain up to the parent if they didn't handle the
  *                  query
- * @propose_allocation: Propose buffer allocation parameters for upstream elements.
- *                      This function is only called when not operating in
- *                      passthrough mode. The default implementation is NULL.
  * @decide_allocation: Setup the allocation parameters for allocating output
  *                    buffers. The passed in query contains the result of the
  *                    downstream allocation query. This function is only called
  *                    when not operating in passthrough mode. The default
- *                    implementation is NULL.
+ *                    implementation will remove all memory dependent metadata.
+ *                    If there is ia @filter_meta method implementation, it will
+ *                    be called for all metadata API in the downstream query,
+ *                    otherwise the metadata API is removed.
+ * @filter_meta: Return TRUE if the metadata API should be proposed in the
+ *               upstream allocation query. The default implementation is NULL
+ *               and will cause all metadata to be removed.
+ * @propose_allocation: Propose buffer allocation parameters for upstream elements.
+ *                      This function must be implemented if the element reads or
+ *                      writes the buffer content. The query that was passed to
+ *                      the decide_allocation is passed in this method (or NULL
+ *                      when the element is in passthrough mode). The default
+ *                      implementation will pass the query downstream when in
+ *                      passthrough mode and will copy all the filtered metadata
+ *                      API in non-passthrough mode.
  * @transform_size: Optional. Given the size of a buffer in the given direction
  *                  with the given caps, calculate the size in bytes of a buffer
  *                  on the other pad with the given other caps.
@@ -198,6 +182,10 @@ struct _GstBaseTransform {
  *                 Copy the metadata from the input buffer to the output buffer.
  *                 The default implementation will copy the flags, timestamps and
  *                 offsets of the buffer.
+ * @transform_meta: Optional. Transform the metadata on the input buffer to the
+ *                  output buffer. By default this method is NULL and no
+ *                  metadata is copied. subclasses can implement this method and
+ *                  return TRUE if the metadata is to be copied.
  * @before_transform: Optional. Since 0.10.22
  *                    This method is called right before the base class will
  *                    start processing. Dynamic properties or other delayed
@@ -219,12 +207,13 @@ struct _GstBaseTransformClass {
 
   /*< public >*/
   gboolean       passthrough_on_same_caps;
+  gboolean       transform_ip_on_passthrough;
 
   /* virtual methods for subclasses */
   GstCaps*	(*transform_caps) (GstBaseTransform *trans,
                                    GstPadDirection direction,
                                    GstCaps *caps, GstCaps *filter);
-  void		(*fixate_caps)	  (GstBaseTransform *trans,
+  GstCaps*	(*fixate_caps)	  (GstBaseTransform *trans,
                                    GstPadDirection direction, GstCaps *caps,
                                    GstCaps *othercaps);
   gboolean      (*accept_caps)    (GstBaseTransform *trans, GstPadDirection direction,
@@ -234,10 +223,13 @@ struct _GstBaseTransformClass {
   gboolean      (*query)          (GstBaseTransform *trans, GstPadDirection direction,
                                    GstQuery *query);
 
-  /* propose allocation query parameters for input buffers */
-  gboolean      (*propose_allocation) (GstBaseTransform *trans, GstQuery *query);
   /* decide allocation query for output buffers */
-  gboolean      (*decide_allocation) (GstBaseTransform *trans, GstQuery *query);
+  gboolean      (*decide_allocation)  (GstBaseTransform *trans, GstQuery *query);
+  gboolean      (*filter_meta)        (GstBaseTransform *trans, GstQuery *query, GType api);
+
+  /* propose allocation query parameters for input buffers */
+  gboolean      (*propose_allocation) (GstBaseTransform *trans, GstQuery *decide_query,
+                                       GstQuery *query);
 
   /* transform size */
   gboolean      (*transform_size) (GstBaseTransform *trans,
@@ -259,8 +251,11 @@ struct _GstBaseTransformClass {
   GstFlowReturn (*prepare_output_buffer) (GstBaseTransform * trans,
                                           GstBuffer *input, GstBuffer **outbuf);
 
-  gboolean      (*copy_metadata)     (GstBaseTransform * trans, GstBuffer *input,
+  /* metadata */
+  gboolean      (*copy_metadata)     (GstBaseTransform *trans, GstBuffer *input,
                                       GstBuffer *outbuf);
+  gboolean      (*transform_meta)    (GstBaseTransform *trans, GstBuffer *outbuf,
+                                      GstMeta *meta, GstBuffer *inbuf);
 
   void          (*before_transform)  (GstBaseTransform *trans, GstBuffer *buffer);
 
@@ -294,9 +289,8 @@ gboolean	gst_base_transform_is_qos_enabled   (GstBaseTransform *trans);
 void            gst_base_transform_set_gap_aware    (GstBaseTransform *trans,
                                                      gboolean gap_aware);
 
-void		gst_base_transform_suggest          (GstBaseTransform *trans,
-	                                             GstCaps *caps, gsize size);
-void		gst_base_transform_reconfigure      (GstBaseTransform *trans);
+void		gst_base_transform_reconfigure_sink (GstBaseTransform *trans);
+void		gst_base_transform_reconfigure_src  (GstBaseTransform *trans);
 G_END_DECLS
 
 #endif /* __GST_BASE_TRANSFORM_H__ */

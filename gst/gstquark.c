@@ -22,6 +22,7 @@
 
 #include "gst_private.h"
 #include "gstquark.h"
+#include "gstelementmetadata.h"
 
 /* These strings must match order and number declared in the GstQuarkId
  * enum in gstquark.h! */
@@ -51,10 +52,15 @@ static const gchar *_quark_strings[] = {
   "message", "GstMessageQOS", "running-time", "stream-time", "jitter",
   "quality", "processed", "dropped", "buffering-ranges", "GstMessageProgress",
   "code", "text", "percent", "timeout", "GstBufferPoolConfig", "caps", "size",
-  "min-buffers", "max-buffers", "prefix", "postfix", "align", "time",
+  "min-buffers", "max-buffers", "prefix", "padding", "align", "time",
   "GstQueryAllocation", "need-pool", "meta", "pool", "GstEventCaps",
   "GstEventReconfigure", "segment", "GstQueryScheduling", "pull-mode",
-  "random-access", "sequential", "allocator", "GstEventFlushStop", "options"
+  "allocator", "GstEventFlushStop", "options", "GstQueryAcceptCaps",
+  "result", "GstQueryCaps", "filter", "modes", "GstEventStreamConfig",
+  "setup-data", "stream-headers", "GstEventGap", "GstQueryDrain", "params",
+  "toc-select", "uid", "toc", GST_ELEMENT_METADATA_LONGNAME,
+  GST_ELEMENT_METADATA_KLASS, GST_ELEMENT_METADATA_DESCRIPTION,
+  GST_ELEMENT_METADATA_AUTHOR
 };
 
 GQuark _priv_gst_quark_table[GST_QUARK_MAX];

@@ -36,20 +36,20 @@ struct TestData
 static void
 setup_test_objects (struct TestData *td, GstPadChainFunction chain_func)
 {
-  td->mycaps = gst_caps_new_simple ("test/test", NULL);
+  td->mycaps = gst_caps_new_empty_simple ("test/test");
 
   td->funnel = gst_element_factory_make ("funnel", NULL);
 
   td->funnelsrc = gst_element_get_static_pad (td->funnel, "src");
   fail_unless (td->funnelsrc != NULL);
 
-  td->funnelsink11 = gst_element_get_request_pad (td->funnel, "sink11");
+  td->funnelsink11 = gst_element_get_request_pad (td->funnel, "sink_11");
   fail_unless (td->funnelsink11 != NULL);
-  fail_unless (!strcmp (GST_OBJECT_NAME (td->funnelsink11), "sink11"));
+  fail_unless (!strcmp (GST_OBJECT_NAME (td->funnelsink11), "sink_11"));
 
-  td->funnelsink22 = gst_element_get_request_pad (td->funnel, "sink22");
+  td->funnelsink22 = gst_element_get_request_pad (td->funnel, "sink_22");
   fail_unless (td->funnelsink22 != NULL);
-  fail_unless (!strcmp (GST_OBJECT_NAME (td->funnelsink22), "sink22"));
+  fail_unless (!strcmp (GST_OBJECT_NAME (td->funnelsink22), "sink_22"));
 
   fail_unless (gst_element_set_state (td->funnel, GST_STATE_PLAYING) ==
       GST_STATE_CHANGE_SUCCESS);
@@ -106,7 +106,7 @@ static gint bufcount = 0;
 static gint alloccount = 0;
 
 static GstFlowReturn
-chain_ok (GstPad * pad, GstBuffer * buffer)
+chain_ok (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 {
   bufcount++;
 

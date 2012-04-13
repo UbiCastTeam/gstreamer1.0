@@ -42,6 +42,11 @@ G_BEGIN_DECLS
  *  that could lead to problems or weird behaviour later on. An example of this
  *  would be clocking issues ("your computer is pretty slow") or broken input
  *  data ("Can't synchronize to stream.")
+ * @GST_LEVEL_FIXME: Fixme messages are messages that indicate that something
+ *  in the executed code path is not fully implemented or handled yet. Note
+ *  that this does not replace proper error handling in any way, the purpose
+ *  of this message is to make it easier to spot incomplete/unfinished pieces
+ *  of code when reading the debug log. (Since: 0.10.23)
  * @GST_LEVEL_INFO: Informational messages should be used to keep the developer
  *  updated about what is happening.
  *  Examples where this should be used are when a typefind function has
@@ -58,11 +63,6 @@ G_BEGIN_DECLS
  *  should never output anything else but LOG messages. Use this log level to
  *  log recurring information in chain functions and loop functions, for
  *  example.
- * @GST_LEVEL_FIXME: Fixme messages are messages that indicate that something
- *  in the executed code path is not fully implemented or handled yet. Note
- *  that this does not replace proper error handling in any way, the purpose
- *  of this message is to make it easier to spot incomplete/unfinished pieces
- *  of code when reading the debug log. (Since: 0.10.23)
  * @GST_LEVEL_TRACE: Tracing-related messages (Since: 0.10.30)
  *  Examples for this are referencing/dereferencing of objects.
  * @GST_LEVEL_MEMDUMP: memory dump messages are used to log (small) chunks of
@@ -75,12 +75,12 @@ G_BEGIN_DECLS
  */
 typedef enum {
   GST_LEVEL_NONE = 0,
-  GST_LEVEL_ERROR,
-  GST_LEVEL_WARNING,
-  GST_LEVEL_INFO,
-  GST_LEVEL_DEBUG,
-  GST_LEVEL_LOG,
-  GST_LEVEL_FIXME = 6,
+  GST_LEVEL_ERROR = 1,
+  GST_LEVEL_WARNING = 2,
+  GST_LEVEL_FIXME = 3,
+  GST_LEVEL_INFO = 4,
+  GST_LEVEL_DEBUG = 5,
+  GST_LEVEL_LOG = 6,
   GST_LEVEL_TRACE = 7,
   /* add more */
   GST_LEVEL_MEMDUMP = 9,
@@ -255,11 +255,6 @@ typedef void (*GstLogFunction)  (GstDebugCategory * category,
                                  GObject          * object,
                                  GstDebugMessage  * message,
                                  gpointer           data);
-
-
-/* FIXME 0.11: move this into private headers */
-void            _gst_debug_init (void);
-
 
 #ifdef GST_USING_PRINTF_EXTENSION
 
@@ -490,11 +485,11 @@ G_STMT_START{                                 \
  */
 GST_EXPORT GstDebugCategory *	GST_CAT_DEFAULT;
 /* this symbol may not be used */
-extern gboolean			__gst_debug_enabled;
+GST_EXPORT gboolean			_gst_debug_enabled;
 
 /* since 0.10.7, the min debug level, used for quickly discarding debug
  * messages that fall under the threshold. */
-GST_EXPORT GstDebugLevel            __gst_debug_min;
+GST_EXPORT GstDebugLevel            _gst_debug_min;
 
 /**
  * GST_CAT_LEVEL_LOG:
@@ -509,7 +504,7 @@ GST_EXPORT GstDebugLevel            __gst_debug_min;
  */
 #ifdef G_HAVE_ISO_VARARGS
 #define GST_CAT_LEVEL_LOG(cat,level,object,...) G_STMT_START{		\
-  if (G_UNLIKELY (level <= __gst_debug_min)) {						\
+  if (G_UNLIKELY (level <= _gst_debug_min)) {						\
     gst_debug_log ((cat), (level), __FILE__, GST_FUNCTION, __LINE__,	\
         (GObject *) (object), __VA_ARGS__);				\
   }									\
@@ -517,7 +512,7 @@ GST_EXPORT GstDebugLevel            __gst_debug_min;
 #else /* G_HAVE_GNUC_VARARGS */
 #ifdef G_HAVE_GNUC_VARARGS
 #define GST_CAT_LEVEL_LOG(cat,level,object,args...) G_STMT_START{	\
-  if (G_UNLIKELY (level <= __gst_debug_min)) {						\
+  if (G_UNLIKELY (level <= _gst_debug_min)) {						\
     gst_debug_log ((cat), (level), __FILE__, GST_FUNCTION, __LINE__,	\
         (GObject *) (object), ##args );					\
   }									\
@@ -527,7 +522,7 @@ static inline void
 GST_CAT_LEVEL_LOG_valist (GstDebugCategory * cat,
     GstDebugLevel level, gpointer object, const char *format, va_list varargs)
 {
-  if (G_UNLIKELY (level <= __gst_debug_min)) {
+  if (G_UNLIKELY (level <= _gst_debug_min)) {
     gst_debug_log_valist (cat, level, "", "", 0, (GObject *) object, format,
         varargs);
   }
@@ -550,7 +545,7 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * other macros and hence in a separate block right here. Docs chunks are
  * with the other doc chunks below though. */
 #define __GST_CAT_MEMDUMP_LOG(cat,object,msg,data,length) G_STMT_START{       \
-  if (G_UNLIKELY (GST_LEVEL_MEMDUMP <= __gst_debug_min)) {                    \
+  if (G_UNLIKELY (GST_LEVEL_MEMDUMP <= _gst_debug_min)) {                    \
     _gst_debug_dump_mem ((cat), __FILE__, GST_FUNCTION, __LINE__,             \
         (GObject *) (object), (msg), (data), (length));                       \
   }                                                                           \
@@ -1260,9 +1255,7 @@ GST_TRACE (const char *format, ...)
 #  pragma GCC poison _gst_debug_category_new
 #endif
 
-#define __gst_debug_min GST_LEVEL_NONE
-
-#define _gst_debug_init()				G_STMT_START{ }G_STMT_END
+#define _gst_debug_min GST_LEVEL_NONE
 
 #define gst_debug_set_default_threshold(level)		G_STMT_START{ }G_STMT_END
 #define gst_debug_get_default_threshold()		(GST_LEVEL_NONE)

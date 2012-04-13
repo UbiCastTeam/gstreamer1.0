@@ -29,8 +29,7 @@
  * A #GstPipeline is a special #GstBin used as the toplevel container for
  * the filter graph. The #GstPipeline will manage the selection and
  * distribution of a global #GstClock as well as provide a #GstBus to the
- * application. It will also implement a default behaviour for managing
- * seek events (see gst_element_seek()).
+ * application.
  *
  * gst_pipeline_new() is used to create a pipeline. when you are done with
  * the pipeline, use gst_object_unref() to free its resources including all
@@ -73,12 +72,7 @@
  * in the PLAYING state. This default behaviour can be changed with the
  * gst_element_set_start_time() method.
  *
- * When sending a flushing seek event to a GstPipeline (see
- * gst_element_seek()), it will make sure that the pipeline is properly
- * PAUSED and resumed as well as set the new running time to 0 when the
- * seek succeeded.
- *
- * Last reviewed on 2009-05-29 (0.10.24)
+ * Last reviewed on 2012-03-29 (0.11.3)
  */
 
 #include "gst_private.h"
@@ -304,7 +298,7 @@ reset_start_time (GstPipeline * pipeline)
  *
  * Create a new pipeline with the given name.
  *
- * Returns: (transfer full): newly created GstPipeline
+ * Returns: (transfer floating): newly created GstPipeline
  *
  * MT safe.
  */
@@ -402,7 +396,9 @@ gst_pipeline_change_state (GstElement * element, GstStateChange transition)
 
       /* running time changed, either with a PAUSED or a flush, we need to check
        * if there is a new clock & update the base time */
-      if (update_clock || last_start_time != start_time) {
+      /* only do this for top-level, however */
+      if (GST_OBJECT_PARENT (element) == NULL &&
+          (update_clock || last_start_time != start_time)) {
         GST_DEBUG_OBJECT (pipeline, "Need to update start_time");
 
         /* when going to PLAYING, select a clock when needed. If we just got
@@ -419,7 +415,7 @@ gst_pipeline_change_state (GstElement * element, GstStateChange transition)
         if (clock) {
           now = gst_clock_get_time (clock);
         } else {
-          GST_DEBUG ("no clock, using base time of NONE");
+          GST_DEBUG_OBJECT (pipeline, "no clock, using base time of NONE");
           now = GST_CLOCK_TIME_NONE;
         }
 

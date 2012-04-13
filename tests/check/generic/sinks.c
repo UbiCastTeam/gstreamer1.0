@@ -763,16 +763,15 @@ GST_END_TEST;
 static GMutex *blocked_lock;
 static GCond *blocked_cond;
 
-static GstProbeReturn
-pad_blocked_cb (GstPad * pad, GstProbeType type, gpointer type_data,
-    gpointer user_data)
+static GstPadProbeReturn
+pad_blocked_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 {
   g_mutex_lock (blocked_lock);
-  GST_DEBUG ("srcpad blocked: %d, sending signal", type);
+  GST_DEBUG ("srcpad blocked: %d, sending signal", info->type);
   g_cond_signal (blocked_cond);
   g_mutex_unlock (blocked_lock);
 
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
 GST_START_TEST (test_add_live2)
@@ -803,8 +802,8 @@ GST_START_TEST (test_add_live2)
   GST_DEBUG ("blocking srcpad");
   /* block source pad */
   srcpad = gst_element_get_static_pad (src, "src");
-  id = gst_pad_add_probe (srcpad, GST_PROBE_TYPE_BLOCK, pad_blocked_cb, NULL,
-      NULL);
+  id = gst_pad_add_probe (srcpad, GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
+      pad_blocked_cb, NULL, NULL);
 
   /* set source to PAUSED without adding it to the pipeline */
   ret = gst_element_set_state (src, GST_STATE_PAUSED);
@@ -1053,7 +1052,7 @@ GST_START_TEST (test_async_done)
   GstEvent *event;
   GstStateChangeReturn ret;
   GstPad *sinkpad;
-  GstFlowReturn res;
+  gboolean res;
   GstBus *bus;
   GThread *thread;
   gint64 position;
@@ -1084,6 +1083,7 @@ GST_START_TEST (test_async_done)
 
   event = gst_event_new_segment (&segment);
   res = gst_pad_send_event (sinkpad, event);
+  fail_unless (res == TRUE);
 
   /* We have not yet received any buffers so we are still in the READY state,
    * the position is therefore still not queryable. */
@@ -1191,6 +1191,7 @@ GST_START_TEST (test_async_done_eos)
   segment.time = 10 * GST_SECOND;
   event = gst_event_new_segment (&segment);
   res = gst_pad_send_event (sinkpad, event);
+  fail_unless (res == TRUE);
 
   /* We have not yet received any buffers so we are still in the READY state,
    * the position is therefore still not queryable. */

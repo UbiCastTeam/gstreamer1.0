@@ -31,20 +31,13 @@
 #include <gst/base/gstbitreader.h>
 #include <gst/base/gstbytereader.h>
 #include <gst/base/gstbytewriter.h>
-#include <gst/base/gstcollectpads.h>
-#include <gst/base/gstdataqueue.h>
+#include <gst/base/gstcollectpads2.h>
 #include <gst/base/gstpushsrc.h>
 #include <gst/base/gsttypefindhelper.h>
 
-#include <gst/controller/gstcontroller.h>
-#include <gst/controller/gstcontrollerprivate.h>
-#include <gst/controller/gstcontrolsource.h>
 #include <gst/controller/gstinterpolationcontrolsource.h>
-#include <gst/controller/gstinterpolationcontrolsourceprivate.h>
 #include <gst/controller/gstlfocontrolsource.h>
-#include <gst/controller/gstlfocontrolsourceprivate.h>
-
-#include <gst/dataprotocol/dataprotocol.h>
+#include <gst/controller/gsttriggercontrolsource.h>
 
 #include <gst/net/gstnetclientclock.h>
 #include <gst/net/gstnet.h>

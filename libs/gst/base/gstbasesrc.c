@@ -160,23 +160,22 @@
 #include <string.h>
 
 #include <gst/gst_private.h>
+#include <gst/glib-compat-private.h>
 
 #include "gstbasesrc.h"
 #include "gsttypefindhelper.h"
-#include <gst/gstmarshal.h>
 #include <gst/gst-i18n-lib.h>
 
 GST_DEBUG_CATEGORY_STATIC (gst_base_src_debug);
 #define GST_CAT_DEFAULT gst_base_src_debug
 
-#define GST_LIVE_GET_LOCK(elem)               (GST_BASE_SRC_CAST(elem)->live_lock)
+#define GST_LIVE_GET_LOCK(elem)               (&GST_BASE_SRC_CAST(elem)->live_lock)
 #define GST_LIVE_LOCK(elem)                   g_mutex_lock(GST_LIVE_GET_LOCK(elem))
 #define GST_LIVE_TRYLOCK(elem)                g_mutex_trylock(GST_LIVE_GET_LOCK(elem))
 #define GST_LIVE_UNLOCK(elem)                 g_mutex_unlock(GST_LIVE_GET_LOCK(elem))
-#define GST_LIVE_GET_COND(elem)               (GST_BASE_SRC_CAST(elem)->live_cond)
+#define GST_LIVE_GET_COND(elem)               (&GST_BASE_SRC_CAST(elem)->live_cond)
 #define GST_LIVE_WAIT(elem)                   g_cond_wait (GST_LIVE_GET_COND (elem), GST_LIVE_GET_LOCK (elem))
-#define GST_LIVE_TIMED_WAIT(elem, timeval)    g_cond_timed_wait (GST_LIVE_GET_COND (elem), GST_LIVE_GET_LOCK (elem),\
-                                                                                timeval)
+#define GST_LIVE_WAIT_UNTIL(elem, end_time)   g_cond_timed_wait (GST_LIVE_GET_COND (elem), GST_LIVE_GET_LOCK (elem), end_time)
 #define GST_LIVE_SIGNAL(elem)                 g_cond_signal (GST_LIVE_GET_COND (elem));
 #define GST_LIVE_BROADCAST(elem)              g_cond_broadcast (GST_LIVE_GET_COND (elem));
 
@@ -209,6 +208,12 @@ struct _GstBaseSrcPrivate
   gboolean discont;
   gboolean flushing;
 
+  GstFlowReturn start_result;
+  gboolean async;
+
+  /* if a stream-start event should be sent */
+  gboolean stream_start_pending;
+
   /* if segment should be sent */
   gboolean segment_pending;
 
@@ -240,9 +245,8 @@ struct _GstBaseSrcPrivate
   GstClockTime earliest_time;
 
   GstBufferPool *pool;
-  const GstAllocator *allocator;
-  guint prefix;
-  guint alignment;
+  GstAllocator *allocator;
+  GstAllocationParams params;
 };
 
 static GstElementClass *parent_class = NULL;
@@ -278,23 +282,25 @@ gst_base_src_get_type (void)
   return base_src_type;
 }
 
-static GstCaps *gst_base_src_getcaps (GstPad * pad, GstCaps * filter);
-static void gst_base_src_default_fixate (GstBaseSrc * src, GstCaps * caps);
-static void gst_base_src_fixate (GstPad * pad, GstCaps * caps);
+static GstCaps *gst_base_src_default_get_caps (GstBaseSrc * bsrc,
+    GstCaps * filter);
+static GstCaps *gst_base_src_default_fixate (GstBaseSrc * src, GstCaps * caps);
+static GstCaps *gst_base_src_fixate (GstBaseSrc * src, GstCaps * caps);
 
 static gboolean gst_base_src_is_random_access (GstBaseSrc * src);
-static gboolean gst_base_src_activate_push (GstPad * pad, gboolean active);
-static gboolean gst_base_src_activate_pull (GstPad * pad, gboolean active);
+static gboolean gst_base_src_activate_mode (GstPad * pad, GstObject * parent,
+    GstPadMode mode, gboolean active);
 static void gst_base_src_set_property (GObject * object, guint prop_id,
     const GValue * value, GParamSpec * pspec);
 static void gst_base_src_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec);
-static gboolean gst_base_src_event_handler (GstPad * pad, GstEvent * event);
+static gboolean gst_base_src_event (GstPad * pad, GstObject * parent,
+    GstEvent * event);
 static gboolean gst_base_src_send_event (GstElement * elem, GstEvent * event);
 static gboolean gst_base_src_default_event (GstBaseSrc * src, GstEvent * event);
-static const GstQueryType *gst_base_src_get_query_types (GstElement * element);
 
-static gboolean gst_base_src_query (GstPad * pad, GstQuery * query);
+static gboolean gst_base_src_query (GstPad * pad, GstObject * parent,
+    GstQuery * query);
 
 static gboolean gst_base_src_activate_pool (GstBaseSrc * basesrc,
     gboolean active);
@@ -311,6 +317,7 @@ static GstFlowReturn gst_base_src_default_alloc (GstBaseSrc * basesrc,
 
 static gboolean gst_base_src_set_flushing (GstBaseSrc * basesrc,
     gboolean flushing, gboolean live_play, gboolean unlock, gboolean * playing);
+
 static gboolean gst_base_src_start (GstBaseSrc * basesrc);
 static gboolean gst_base_src_stop (GstBaseSrc * basesrc);
 
@@ -318,8 +325,8 @@ static GstStateChangeReturn gst_base_src_change_state (GstElement * element,
     GstStateChange transition);
 
 static void gst_base_src_loop (GstPad * pad);
-static GstFlowReturn gst_base_src_pad_get_range (GstPad * pad, guint64 offset,
-    guint length, GstBuffer ** buf);
+static GstFlowReturn gst_base_src_getrange (GstPad * pad, GstObject * parent,
+    guint64 offset, guint length, GstBuffer ** buf);
 static GstFlowReturn gst_base_src_get_range (GstBaseSrc * src, guint64 offset,
     guint length, GstBuffer ** buf);
 static gboolean gst_base_src_seekable (GstBaseSrc * src);
@@ -367,26 +374,23 @@ gst_base_src_class_init (GstBaseSrcClass * klass)
   gstelement_class->change_state =
       GST_DEBUG_FUNCPTR (gst_base_src_change_state);
   gstelement_class->send_event = GST_DEBUG_FUNCPTR (gst_base_src_send_event);
-  gstelement_class->get_query_types =
-      GST_DEBUG_FUNCPTR (gst_base_src_get_query_types);
 
+  klass->get_caps = GST_DEBUG_FUNCPTR (gst_base_src_default_get_caps);
   klass->negotiate = GST_DEBUG_FUNCPTR (gst_base_src_default_negotiate);
-  klass->event = GST_DEBUG_FUNCPTR (gst_base_src_default_event);
-  klass->do_seek = GST_DEBUG_FUNCPTR (gst_base_src_default_do_seek);
-  klass->query = GST_DEBUG_FUNCPTR (gst_base_src_default_query);
+  klass->fixate = GST_DEBUG_FUNCPTR (gst_base_src_default_fixate);
   klass->prepare_seek_segment =
       GST_DEBUG_FUNCPTR (gst_base_src_default_prepare_seek_segment);
-  klass->fixate = GST_DEBUG_FUNCPTR (gst_base_src_default_fixate);
+  klass->do_seek = GST_DEBUG_FUNCPTR (gst_base_src_default_do_seek);
+  klass->query = GST_DEBUG_FUNCPTR (gst_base_src_default_query);
+  klass->event = GST_DEBUG_FUNCPTR (gst_base_src_default_event);
   klass->create = GST_DEBUG_FUNCPTR (gst_base_src_default_create);
   klass->alloc = GST_DEBUG_FUNCPTR (gst_base_src_default_alloc);
 
   /* Registering debug symbols for function pointers */
-  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_activate_push);
-  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_activate_pull);
-  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_event_handler);
+  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_activate_mode);
+  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_event);
   GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_query);
-  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_pad_get_range);
-  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_getcaps);
+  GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_getrange);
   GST_DEBUG_REGISTER_FUNCPTR (gst_base_src_fixate);
 }
 
@@ -399,8 +403,8 @@ gst_base_src_init (GstBaseSrc * basesrc, gpointer g_class)
   basesrc->priv = GST_BASE_SRC_GET_PRIVATE (basesrc);
 
   basesrc->is_live = FALSE;
-  basesrc->live_lock = g_mutex_new ();
-  basesrc->live_cond = g_cond_new ();
+  g_mutex_init (&basesrc->live_lock);
+  g_cond_init (&basesrc->live_cond);
   basesrc->num_buffers = DEFAULT_NUM_BUFFERS;
   basesrc->num_buffers_left = -1;
 
@@ -414,13 +418,10 @@ gst_base_src_init (GstBaseSrc * basesrc, gpointer g_class)
   pad = gst_pad_new_from_template (pad_template, "src");
 
   GST_DEBUG_OBJECT (basesrc, "setting functions on src pad");
-  gst_pad_set_activatepush_function (pad, gst_base_src_activate_push);
-  gst_pad_set_activatepull_function (pad, gst_base_src_activate_pull);
-  gst_pad_set_event_function (pad, gst_base_src_event_handler);
+  gst_pad_set_activatemode_function (pad, gst_base_src_activate_mode);
+  gst_pad_set_event_function (pad, gst_base_src_event);
   gst_pad_set_query_function (pad, gst_base_src_query);
-  gst_pad_set_getrange_function (pad, gst_base_src_pad_get_range);
-  gst_pad_set_getcaps_function (pad, gst_base_src_getcaps);
-  gst_pad_set_fixatecaps_function (pad, gst_base_src_fixate);
+  gst_pad_set_getrange_function (pad, gst_base_src_getrange);
 
   /* hold pointer to pad */
   basesrc->srcpad = pad;
@@ -435,8 +436,10 @@ gst_base_src_init (GstBaseSrc * basesrc, gpointer g_class)
   basesrc->priv->do_timestamp = DEFAULT_DO_TIMESTAMP;
   g_atomic_int_set (&basesrc->priv->have_events, FALSE);
 
-  GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_STARTED);
-  GST_OBJECT_FLAG_SET (basesrc, GST_ELEMENT_IS_SOURCE);
+  basesrc->priv->start_result = GST_FLOW_FLUSHING;
+  GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_FLAG_STARTED);
+  GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_FLAG_STARTING);
+  GST_OBJECT_FLAG_SET (basesrc, GST_ELEMENT_FLAG_SOURCE);
 
   GST_DEBUG_OBJECT (basesrc, "init done");
 }
@@ -449,8 +452,8 @@ gst_base_src_finalize (GObject * object)
 
   basesrc = GST_BASE_SRC (object);
 
-  g_mutex_free (basesrc->live_lock);
-  g_cond_free (basesrc->live_cond);
+  g_mutex_clear (&basesrc->live_lock);
+  g_cond_clear (&basesrc->live_cond);
 
   event_p = &basesrc->pending_seek;
   gst_event_replace (event_p, NULL);
@@ -475,7 +478,7 @@ gst_base_src_finalize (GObject * object)
  * This function will block until a state change to PLAYING happens (in which
  * case this function returns #GST_FLOW_OK) or the processing must be stopped due
  * to a state change to READY or a FLUSH event (in which case this function
- * returns #GST_FLOW_WRONG_STATE).
+ * returns #GST_FLOW_FLUSHING).
  *
  * Since: 0.10.12
  *
@@ -502,7 +505,7 @@ gst_base_src_wait_playing (GstBaseSrc * src)
 flushing:
   {
     GST_DEBUG_OBJECT (src, "we are flushing");
-    return GST_FLOW_WRONG_STATE;
+    return GST_FLOW_FLUSHING;
   }
 }
 
@@ -587,7 +590,7 @@ gst_base_src_set_format (GstBaseSrc * src, GstFormat format)
  * read past current tracked size.  Otherwise, size is checked for upon each
  * read.
  *
- * Since: 0.10.35
+ * Since: 0.10.36
  */
 void
 gst_base_src_set_dynamic_size (GstBaseSrc * src, gboolean dynamic)
@@ -596,6 +599,49 @@ gst_base_src_set_dynamic_size (GstBaseSrc * src, gboolean dynamic)
 
   g_atomic_int_set (&src->priv->dynamic_size, dynamic);
 }
+
+/**
+ * gst_base_src_set_async:
+ * @src: base source instance
+ * @async: new async mode
+ *
+ * Configure async behaviour in @src, no state change will block. The open,
+ * close, start, stop, play and pause virtual methods will be executed in a
+ * different thread and are thus allowed to perform blocking operations. Any
+ * blocking operation should be unblocked with the unlock vmethod.
+ */
+void
+gst_base_src_set_async (GstBaseSrc * src, gboolean async)
+{
+  g_return_if_fail (GST_IS_BASE_SRC (src));
+
+  GST_OBJECT_LOCK (src);
+  src->priv->async = async;
+  GST_OBJECT_UNLOCK (src);
+}
+
+/**
+ * gst_base_src_is_async:
+ * @src: base source instance
+ *
+ * Get the current async behaviour of @src. See also gst_base_src_set_async().
+ *
+ * Returns: %TRUE if @src is operating in async mode.
+ */
+gboolean
+gst_base_src_is_async (GstBaseSrc * src)
+{
+  gboolean res;
+
+  g_return_val_if_fail (GST_IS_BASE_SRC (src), FALSE);
+
+  GST_OBJECT_LOCK (src);
+  res = src->priv->async;
+  GST_OBJECT_UNLOCK (src);
+
+  return res;
+}
+
 
 /**
  * gst_base_src_query_latency:
@@ -785,6 +831,19 @@ gst_base_src_new_seamless_segment (GstBaseSrc * src, gint64 start, gint64 stop,
   return res;
 }
 
+static gboolean
+gst_base_src_send_stream_start (GstBaseSrc * src)
+{
+  gboolean ret = TRUE;
+
+  if (src->priv->stream_start_pending) {
+    ret = gst_pad_push_event (src->srcpad, gst_event_new_stream_start ());
+    src->priv->stream_start_pending = FALSE;
+  }
+
+  return ret;
+}
+
 /**
  * gst_base_src_set_caps:
  * @src: a #GstBaseSrc
@@ -802,6 +861,7 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
+  gst_base_src_send_stream_start (src);
   gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
 
   if (bclass->set_caps)
@@ -811,58 +871,50 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
 }
 
 static GstCaps *
-gst_base_src_getcaps (GstPad * pad, GstCaps * filter)
+gst_base_src_default_get_caps (GstBaseSrc * bsrc, GstCaps * filter)
 {
-  GstBaseSrcClass *bclass;
-  GstBaseSrc *bsrc;
   GstCaps *caps = NULL;
+  GstPadTemplate *pad_template;
+  GstBaseSrcClass *bclass;
 
-  bsrc = GST_BASE_SRC (GST_PAD_PARENT (pad));
   bclass = GST_BASE_SRC_GET_CLASS (bsrc);
-  if (bclass->get_caps)
-    caps = bclass->get_caps (bsrc, filter);
 
-  if (caps == NULL) {
-    GstPadTemplate *pad_template;
+  pad_template =
+      gst_element_class_get_pad_template (GST_ELEMENT_CLASS (bclass), "src");
 
-    pad_template =
-        gst_element_class_get_pad_template (GST_ELEMENT_CLASS (bclass), "src");
-    if (pad_template != NULL) {
-      caps = gst_pad_template_get_caps (pad_template);
+  if (pad_template != NULL) {
+    caps = gst_pad_template_get_caps (pad_template);
 
-      if (filter) {
-        GstCaps *intersection;
+    if (filter) {
+      GstCaps *intersection;
 
-        intersection =
-            gst_caps_intersect_full (filter, caps, GST_CAPS_INTERSECT_FIRST);
-        gst_caps_unref (caps);
-        caps = intersection;
-      }
+      intersection =
+          gst_caps_intersect_full (filter, caps, GST_CAPS_INTERSECT_FIRST);
+      gst_caps_unref (caps);
+      caps = intersection;
     }
   }
   return caps;
 }
 
-static void
-gst_base_src_default_fixate (GstBaseSrc * src, GstCaps * caps)
+static GstCaps *
+gst_base_src_default_fixate (GstBaseSrc * bsrc, GstCaps * caps)
 {
-  GST_DEBUG_OBJECT (src, "using default caps fixate function");
-  gst_caps_fixate (caps);
+  GST_DEBUG_OBJECT (bsrc, "using default caps fixate function");
+  return gst_caps_fixate (caps);
 }
 
-static void
-gst_base_src_fixate (GstPad * pad, GstCaps * caps)
+static GstCaps *
+gst_base_src_fixate (GstBaseSrc * bsrc, GstCaps * caps)
 {
   GstBaseSrcClass *bclass;
-  GstBaseSrc *bsrc;
 
-  bsrc = GST_BASE_SRC (gst_pad_get_parent (pad));
   bclass = GST_BASE_SRC_GET_CLASS (bsrc);
 
   if (bclass->fixate)
-    bclass->fixate (bsrc, caps);
+    caps = bclass->fixate (bsrc, caps);
 
-  gst_object_unref (bsrc);
+  return caps;
 }
 
 static gboolean
@@ -1127,9 +1179,31 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
       /* we can operate in getrange mode if the native format is bytes
        * and we are seekable, this condition is set in the random_access
        * flag and is set in the _start() method. */
-      gst_query_set_scheduling (query, random_access, TRUE, FALSE, 1, -1, 1);
+      gst_query_set_scheduling (query, GST_SCHEDULING_FLAG_SEEKABLE, 1, -1, 0);
+      if (random_access)
+        gst_query_add_scheduling_mode (query, GST_PAD_MODE_PULL);
+      gst_query_add_scheduling_mode (query, GST_PAD_MODE_PUSH);
 
       res = TRUE;
+      break;
+    }
+    case GST_QUERY_CAPS:
+    {
+      GstBaseSrcClass *bclass;
+      GstCaps *caps, *filter;
+
+      bclass = GST_BASE_SRC_GET_CLASS (src);
+      if (bclass->get_caps) {
+        gst_query_parse_caps (query, &filter);
+        if ((caps = bclass->get_caps (src, filter))) {
+          gst_query_set_caps_result (query, caps);
+          gst_caps_unref (caps);
+          res = TRUE;
+        } else {
+          res = FALSE;
+        }
+      } else
+        res = FALSE;
       break;
     }
     default:
@@ -1138,28 +1212,22 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
   }
   GST_DEBUG_OBJECT (src, "query %s returns %d", GST_QUERY_TYPE_NAME (query),
       res);
+
   return res;
 }
 
 static gboolean
-gst_base_src_query (GstPad * pad, GstQuery * query)
+gst_base_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
 {
   GstBaseSrc *src;
   GstBaseSrcClass *bclass;
   gboolean result = FALSE;
 
-  src = GST_BASE_SRC (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (src == NULL))
-    return FALSE;
-
+  src = GST_BASE_SRC (parent);
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
   if (bclass->query)
     result = bclass->query (src, query);
-  else
-    result = gst_pad_query_default (pad, query);
-
-  gst_object_unref (src);
 
   return result;
 }
@@ -1284,12 +1352,16 @@ gst_base_src_default_alloc (GstBaseSrc * src, guint64 offset,
 
   if (priv->pool) {
     ret = gst_buffer_pool_acquire_buffer (priv->pool, buffer, NULL);
-  } else {
-    *buffer = gst_buffer_new_allocate (priv->allocator, size, priv->alignment);
+  } else if (size != -1) {
+    *buffer = gst_buffer_new_allocate (priv->allocator, size, &priv->params);
     if (G_UNLIKELY (*buffer == NULL))
       goto alloc_failed;
 
     ret = GST_FLOW_OK;
+  } else {
+    GST_WARNING_OBJECT (src, "Not trying to alloc %u bytes. Blocksize not set?",
+        size);
+    goto alloc_failed;
   }
   return ret;
 
@@ -1307,6 +1379,7 @@ gst_base_src_default_create (GstBaseSrc * src, guint64 offset,
 {
   GstBaseSrcClass *bclass;
   GstFlowReturn ret;
+  GstBuffer *res_buf;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
@@ -1315,16 +1388,24 @@ gst_base_src_default_create (GstBaseSrc * src, guint64 offset,
   if (G_UNLIKELY (!bclass->fill))
     goto no_function;
 
-  ret = bclass->alloc (src, offset, size, buffer);
-  if (G_UNLIKELY (ret != GST_FLOW_OK))
-    goto alloc_failed;
+  if (*buffer == NULL) {
+    /* downstream did not provide us with a buffer to fill, allocate one
+     * ourselves */
+    ret = bclass->alloc (src, offset, size, &res_buf);
+    if (G_UNLIKELY (ret != GST_FLOW_OK))
+      goto alloc_failed;
+  } else {
+    res_buf = *buffer;
+  }
 
   if (G_LIKELY (size > 0)) {
     /* only call fill when there is a size */
-    ret = bclass->fill (src, offset, size, *buffer);
+    ret = bclass->fill (src, offset, size, res_buf);
     if (G_UNLIKELY (ret != GST_FLOW_OK))
       goto not_ok;
   }
+
+  *buffer = res_buf;
 
   return GST_FLOW_OK;
 
@@ -1343,7 +1424,8 @@ not_ok:
   {
     GST_DEBUG_OBJECT (src, "fill returned %d (%s)", ret,
         gst_flow_get_name (ret));
-    gst_buffer_unref (*buffer);
+    if (*buffer == NULL)
+      gst_buffer_unref (res_buf);
     return ret;
   }
 }
@@ -1579,25 +1661,6 @@ prepare_failed:
   return FALSE;
 }
 
-static const GstQueryType *
-gst_base_src_get_query_types (GstElement * element)
-{
-  static const GstQueryType query_types[] = {
-    GST_QUERY_DURATION,
-    GST_QUERY_POSITION,
-    GST_QUERY_SEEKING,
-    GST_QUERY_SEGMENT,
-    GST_QUERY_FORMATS,
-    GST_QUERY_LATENCY,
-    GST_QUERY_JITTER,
-    GST_QUERY_RATE,
-    GST_QUERY_CONVERT,
-    0
-  };
-
-  return query_types;
-}
-
 /* all events send to this element directly. This is mainly done from the
  * application.
  */
@@ -1692,9 +1755,9 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
       gboolean started;
 
       GST_OBJECT_LOCK (src->srcpad);
-      if (GST_PAD_ACTIVATE_MODE (src->srcpad) == GST_ACTIVATE_PULL)
+      if (GST_PAD_MODE (src->srcpad) == GST_PAD_MODE_PULL)
         goto wrong_mode;
-      started = GST_PAD_ACTIVATE_MODE (src->srcpad) == GST_ACTIVATE_PUSH;
+      started = GST_PAD_MODE (src->srcpad) == GST_PAD_MODE_PUSH;
       GST_OBJECT_UNLOCK (src->srcpad);
 
       if (started) {
@@ -1817,6 +1880,12 @@ gst_base_src_default_event (GstBaseSrc * src, GstEvent * event)
       result = TRUE;
       break;
     }
+    case GST_EVENT_RECONFIGURE:
+      result = TRUE;
+      break;
+    case GST_EVENT_LATENCY:
+      result = TRUE;
+      break;
     default:
       result = FALSE;
       break;
@@ -1832,18 +1901,13 @@ not_seekable:
 }
 
 static gboolean
-gst_base_src_event_handler (GstPad * pad, GstEvent * event)
+gst_base_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   GstBaseSrc *src;
   GstBaseSrcClass *bclass;
   gboolean result = FALSE;
 
-  src = GST_BASE_SRC (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (src == NULL)) {
-    gst_event_unref (event);
-    return FALSE;
-  }
-
+  src = GST_BASE_SRC (parent);
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
   if (bclass->event) {
@@ -1853,7 +1917,6 @@ gst_base_src_event_handler (GstPad * pad, GstEvent * event)
 
 done:
   gst_event_unref (event);
-  gst_object_unref (src);
 
   return result;
 
@@ -2185,6 +2248,7 @@ gst_base_src_get_range (GstBaseSrc * src, guint64 offset, guint length,
   GstFlowReturn ret;
   GstBaseSrcClass *bclass;
   GstClockReturn status;
+  GstBuffer *res_buf;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
@@ -2197,7 +2261,8 @@ again:
     }
   }
 
-  if (G_UNLIKELY (!GST_OBJECT_FLAG_IS_SET (src, GST_BASE_SRC_STARTED)))
+  if (G_UNLIKELY (!GST_BASE_SRC_IS_STARTED (src)
+          && !GST_BASE_SRC_IS_STARTING (src)))
     goto not_started;
 
   if (G_UNLIKELY (!bclass->create))
@@ -2229,15 +2294,17 @@ again:
       "calling create offset %" G_GUINT64_FORMAT " length %u, time %"
       G_GINT64_FORMAT, offset, length, src->segment.time);
 
-  ret = bclass->create (src, offset, length, buf);
+  res_buf = *buf;
+
+  ret = bclass->create (src, offset, length, &res_buf);
 
   /* The create function could be unlocked because we have a pending EOS. It's
    * possible that we have a valid buffer from create that we need to
    * discard when the create function returned _OK. */
   if (G_UNLIKELY (g_atomic_int_get (&src->priv->pending_eos))) {
     if (ret == GST_FLOW_OK) {
-      gst_buffer_unref (*buf);
-      *buf = NULL;
+      if (*buf == NULL)
+        gst_buffer_unref (res_buf);
     }
     goto eos;
   }
@@ -2247,13 +2314,14 @@ again:
 
   /* no timestamp set and we are at offset 0, we can timestamp with 0 */
   if (offset == 0 && src->segment.time == 0
-      && GST_BUFFER_TIMESTAMP (*buf) == -1 && !src->is_live) {
-    *buf = gst_buffer_make_writable (*buf);
-    GST_BUFFER_TIMESTAMP (*buf) = 0;
+      && GST_BUFFER_TIMESTAMP (res_buf) == -1 && !src->is_live) {
+    GST_DEBUG_OBJECT (src, "setting first timestamp to 0");
+    res_buf = gst_buffer_make_writable (res_buf);
+    GST_BUFFER_TIMESTAMP (res_buf) = 0;
   }
 
   /* now sync before pushing the buffer */
-  status = gst_base_src_do_sync (src, *buf);
+  status = gst_base_src_do_sync (src, res_buf);
 
   /* waiting for the clock could have made us flushing */
   if (G_UNLIKELY (src->priv->flushing))
@@ -2272,14 +2340,15 @@ again:
       /* this case is triggered when we were waiting for the clock and
        * it got unlocked because we did a state change. In any case, get rid of
        * the buffer. */
-      gst_buffer_unref (*buf);
-      *buf = NULL;
+      if (*buf == NULL)
+        gst_buffer_unref (res_buf);
+
       if (!src->live_running) {
         /* We return WRONG_STATE when we are not running to stop the dataflow also
          * get rid of the produced buffer. */
         GST_DEBUG_OBJECT (src,
             "clock was unscheduled (%d), returning WRONG_STATE", status);
-        ret = GST_FLOW_WRONG_STATE;
+        ret = GST_FLOW_FLUSHING;
       } else {
         /* If we are running when this happens, we quickly switched between
          * pause and playing. We try to produce a new buffer */
@@ -2293,11 +2362,14 @@ again:
       GST_ELEMENT_ERROR (src, CORE, CLOCK,
           (_("Internal clock error.")),
           ("clock returned unexpected return value %d", status));
-      gst_buffer_unref (*buf);
-      *buf = NULL;
+      if (*buf == NULL)
+        gst_buffer_unref (res_buf);
       ret = GST_FLOW_ERROR;
       break;
   }
+  if (G_LIKELY (ret == GST_FLOW_OK))
+    *buf = res_buf;
+
   return ret;
 
   /* ERROR */
@@ -2316,7 +2388,7 @@ not_ok:
 not_started:
   {
     GST_DEBUG_OBJECT (src, "getrange but not started");
-    return GST_FLOW_WRONG_STATE;
+    return GST_FLOW_FLUSHING;
   }
 no_function:
   {
@@ -2327,35 +2399,35 @@ unexpected_length:
   {
     GST_DEBUG_OBJECT (src, "unexpected length %u (offset=%" G_GUINT64_FORMAT
         ", size=%" G_GINT64_FORMAT ")", length, offset, src->segment.duration);
-    return GST_FLOW_UNEXPECTED;
+    return GST_FLOW_EOS;
   }
 reached_num_buffers:
   {
     GST_DEBUG_OBJECT (src, "sent all buffers");
-    return GST_FLOW_UNEXPECTED;
+    return GST_FLOW_EOS;
   }
 flushing:
   {
     GST_DEBUG_OBJECT (src, "we are flushing");
-    gst_buffer_unref (*buf);
-    *buf = NULL;
-    return GST_FLOW_WRONG_STATE;
+    if (*buf == NULL)
+      gst_buffer_unref (res_buf);
+    return GST_FLOW_FLUSHING;
   }
 eos:
   {
     GST_DEBUG_OBJECT (src, "we are EOS");
-    return GST_FLOW_UNEXPECTED;
+    return GST_FLOW_EOS;
   }
 }
 
 static GstFlowReturn
-gst_base_src_pad_get_range (GstPad * pad, guint64 offset, guint length,
-    GstBuffer ** buf)
+gst_base_src_getrange (GstPad * pad, GstObject * parent, guint64 offset,
+    guint length, GstBuffer ** buf)
 {
   GstBaseSrc *src;
   GstFlowReturn res;
 
-  src = GST_BASE_SRC_CAST (gst_object_ref (GST_OBJECT_PARENT (pad)));
+  src = GST_BASE_SRC_CAST (parent);
 
   GST_LIVE_LOCK (src);
   if (G_UNLIKELY (src->priv->flushing))
@@ -2366,15 +2438,13 @@ gst_base_src_pad_get_range (GstPad * pad, guint64 offset, guint length,
 done:
   GST_LIVE_UNLOCK (src);
 
-  gst_object_unref (src);
-
   return res;
 
   /* ERRORS */
 flushing:
   {
     GST_DEBUG_OBJECT (src, "we are flushing");
-    res = GST_FLOW_WRONG_STATE;
+    res = GST_FLOW_FLUSHING;
     goto done;
   }
 }
@@ -2383,13 +2453,23 @@ static gboolean
 gst_base_src_is_random_access (GstBaseSrc * src)
 {
   /* we need to start the basesrc to check random access */
-  if (!GST_OBJECT_FLAG_IS_SET (src, GST_BASE_SRC_STARTED)) {
+  if (!GST_BASE_SRC_IS_STARTED (src)) {
     GST_LOG_OBJECT (src, "doing start/stop to check get_range support");
-    if (G_LIKELY (gst_base_src_start (src)))
+    if (G_LIKELY (gst_base_src_start (src))) {
+      if (gst_base_src_start_wait (src) != GST_FLOW_OK)
+        goto start_failed;
       gst_base_src_stop (src);
+    }
   }
 
   return src->random_access;
+
+  /* ERRORS */
+start_failed:
+  {
+    GST_DEBUG_OBJECT (src, "failed to start");
+    return FALSE;
+  }
 }
 
 static void
@@ -2407,10 +2487,12 @@ gst_base_src_loop (GstPad * pad)
 
   src = GST_BASE_SRC (GST_OBJECT_PARENT (pad));
 
+  gst_base_src_send_stream_start (src);
+
   /* check if we need to renegotiate */
   if (gst_pad_check_reconfigure (pad)) {
     if (!gst_base_src_negotiate (src))
-      GST_DEBUG_OBJECT (src, "Failed to renegotiate");
+      goto not_negotiated;
   }
 
   GST_LIVE_LOCK (src);
@@ -2543,6 +2625,7 @@ gst_base_src_loop (GstPad * pad)
   }
 
   if (G_UNLIKELY (src->priv->discont)) {
+    GST_INFO_OBJECT (src, "marking pending DISCONT");
     buf = gst_buffer_make_writable (buf);
     GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
     src->priv->discont = FALSE;
@@ -2558,7 +2641,7 @@ gst_base_src_loop (GstPad * pad)
 
   if (G_UNLIKELY (eos)) {
     GST_INFO_OBJECT (src, "pausing after end of segment");
-    ret = GST_FLOW_UNEXPECTED;
+    ret = GST_FLOW_EOS;
     goto pause;
   }
 
@@ -2566,11 +2649,17 @@ done:
   return;
 
   /* special cases */
+not_negotiated:
+  {
+    GST_DEBUG_OBJECT (src, "Failed to renegotiate");
+    ret = GST_FLOW_NOT_NEGOTIATED;
+    goto pause;
+  }
 flushing:
   {
     GST_DEBUG_OBJECT (src, "we are flushing");
     GST_LIVE_UNLOCK (src);
-    ret = GST_FLOW_WRONG_STATE;
+    ret = GST_FLOW_FLUSHING;
     goto pause;
   }
 pause:
@@ -2581,7 +2670,7 @@ pause:
     GST_DEBUG_OBJECT (src, "pausing task, reason %s", reason);
     src->running = FALSE;
     gst_pad_pause_task (pad);
-    if (ret == GST_FLOW_UNEXPECTED) {
+    if (ret == GST_FLOW_EOS) {
       gboolean flag_segment;
       GstFormat format;
       gint64 position;
@@ -2603,7 +2692,7 @@ pause:
         gst_event_set_seqnum (event, src->priv->seqnum);
         gst_pad_push_event (pad, event);
       }
-    } else if (ret == GST_FLOW_NOT_LINKED || ret <= GST_FLOW_UNEXPECTED) {
+    } else if (ret == GST_FLOW_NOT_LINKED || ret <= GST_FLOW_EOS) {
       event = gst_event_new_eos ();
       gst_event_set_seqnum (event, src->priv->seqnum);
       /* for fatal errors we post an error message, post the error
@@ -2630,8 +2719,9 @@ null_buffer:
 
 static gboolean
 gst_base_src_set_allocation (GstBaseSrc * basesrc, GstBufferPool * pool,
-    const GstAllocator * allocator, guint prefix, guint alignment)
+    GstAllocator * allocator, GstAllocationParams * params)
 {
+  GstAllocator *oldalloc;
   GstBufferPool *oldpool;
   GstBaseSrcPrivate *priv = basesrc->priv;
 
@@ -2645,10 +2735,13 @@ gst_base_src_set_allocation (GstBaseSrc * basesrc, GstBufferPool * pool,
   oldpool = priv->pool;
   priv->pool = pool;
 
+  oldalloc = priv->allocator;
   priv->allocator = allocator;
 
-  priv->prefix = prefix;
-  priv->alignment = alignment;
+  if (params)
+    priv->params = *params;
+  else
+    gst_allocation_params_init (&priv->params);
   GST_OBJECT_UNLOCK (basesrc);
 
   if (oldpool) {
@@ -2658,6 +2751,9 @@ gst_base_src_set_allocation (GstBaseSrc * basesrc, GstBufferPool * pool,
       gst_buffer_pool_set_active (oldpool, FALSE);
     }
     gst_object_unref (oldpool);
+  }
+  if (oldalloc) {
+    gst_allocator_unref (oldalloc);
   }
   return TRUE;
 
@@ -2695,8 +2791,9 @@ gst_base_src_prepare_allocation (GstBaseSrc * basesrc, GstCaps * caps)
   gboolean result = TRUE;
   GstQuery *query;
   GstBufferPool *pool = NULL;
-  const GstAllocator *allocator = NULL;
-  guint size, min, max, prefix, alignment;
+  GstAllocator *allocator = NULL;
+  guint size, min, max;
+  GstAllocationParams params;
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
 
@@ -2714,37 +2811,41 @@ gst_base_src_prepare_allocation (GstBaseSrc * basesrc, GstCaps * caps)
 
   GST_DEBUG_OBJECT (basesrc, "ALLOCATION (%d) params: %" GST_PTR_FORMAT, result,
       query);
-  gst_query_parse_allocation_params (query, &size, &min, &max, &prefix,
-      &alignment, &pool);
 
-  if (size == 0) {
-    const gchar *mem = NULL;
+  if (gst_query_get_n_allocation_params (query) > 0) {
+    /* try the allocator */
+    gst_query_parse_nth_allocation_param (query, 0, &allocator, &params);
+  } else {
+    allocator = NULL;
+    gst_allocation_params_init (&params);
+  }
 
-    /* no size, we have variable size buffers */
-    if (gst_query_get_n_allocation_memories (query) > 0) {
-      mem = gst_query_parse_nth_allocation_memory (query, 0);
+  if (gst_query_get_n_allocation_pools (query) > 0) {
+    gst_query_parse_nth_allocation_pool (query, 0, &pool, &size, &min, &max);
+
+    if (pool == NULL) {
+      /* no pool, just parameters, we can make our own */
+      GST_DEBUG_OBJECT (basesrc, "no pool, making new pool");
+      pool = gst_buffer_pool_new ();
     }
-    GST_DEBUG_OBJECT (basesrc, "0 size, getting allocator %s",
-        GST_STR_NULL (mem));
-    allocator = gst_allocator_find (mem);
-  } else if (pool == NULL) {
-    /* fixed size, we can use a bufferpool */
+  } else {
+    pool = NULL;
+    size = min = max = 0;
+  }
+
+  /* now configure */
+  if (pool) {
     GstStructure *config;
 
-    /* we did not get a pool, make one ourselves then */
-    pool = gst_buffer_pool_new ();
-    GST_DEBUG_OBJECT (basesrc, "no pool, making new pool");
-
     config = gst_buffer_pool_get_config (pool);
-    gst_buffer_pool_config_set (config, caps, size, min, max, prefix,
-        alignment);
+    gst_buffer_pool_config_set_params (config, caps, size, min, max);
+    gst_buffer_pool_config_set_allocator (config, allocator, &params);
     gst_buffer_pool_set_config (pool, config);
   }
 
-  gst_query_unref (query);
+  result = gst_base_src_set_allocation (basesrc, pool, allocator, &params);
 
-  result =
-      gst_base_src_set_allocation (basesrc, pool, allocator, prefix, alignment);
+  gst_query_unref (query);
 
   return result;
 
@@ -2764,7 +2865,7 @@ gst_base_src_default_negotiate (GstBaseSrc * basesrc)
   gboolean result = FALSE;
 
   /* first see what is possible on our source pad */
-  thiscaps = gst_pad_get_caps (GST_BASE_SRC_PAD (basesrc), NULL);
+  thiscaps = gst_pad_query_caps (GST_BASE_SRC_PAD (basesrc), NULL);
   GST_DEBUG_OBJECT (basesrc, "caps of src: %" GST_PTR_FORMAT, thiscaps);
   /* nothing or anything is allowed, we're done */
   if (thiscaps == NULL || gst_caps_is_any (thiscaps))
@@ -2774,7 +2875,7 @@ gst_base_src_default_negotiate (GstBaseSrc * basesrc)
     goto no_caps;
 
   /* get the peer caps */
-  peercaps = gst_pad_peer_get_caps (GST_BASE_SRC_PAD (basesrc), thiscaps);
+  peercaps = gst_pad_peer_query_caps (GST_BASE_SRC_PAD (basesrc), thiscaps);
   GST_DEBUG_OBJECT (basesrc, "caps of peer: %" GST_PTR_FORMAT, peercaps);
   if (peercaps) {
     /* The result is already a subset of our caps */
@@ -2785,11 +2886,6 @@ gst_base_src_default_negotiate (GstBaseSrc * basesrc)
     caps = thiscaps;
   }
   if (caps && !gst_caps_is_empty (caps)) {
-    caps = gst_caps_make_writable (caps);
-
-    /* take first (and best, since they are sorted) possibility */
-    gst_caps_truncate (caps);
-
     /* now fixate */
     GST_DEBUG_OBJECT (basesrc, "have caps: %" GST_PTR_FORMAT, caps);
     if (gst_caps_is_any (caps)) {
@@ -2798,7 +2894,7 @@ gst_base_src_default_negotiate (GstBaseSrc * basesrc)
        * nego is not needed */
       result = TRUE;
     } else {
-      gst_pad_fixate_caps (GST_BASE_SRC_PAD (basesrc), caps);
+      caps = gst_base_src_fixate (basesrc, caps);
       GST_DEBUG_OBJECT (basesrc, "fixated to: %" GST_PTR_FORMAT, caps);
       if (gst_caps_is_fixed (caps)) {
         /* yay, fixed caps, use those then, it's possible that the subclass does
@@ -2808,6 +2904,8 @@ gst_base_src_default_negotiate (GstBaseSrc * basesrc)
     }
     gst_caps_unref (caps);
   } else {
+    if (caps)
+      gst_caps_unref (caps);
     GST_DEBUG_OBJECT (basesrc, "no common caps");
   }
   return result;
@@ -2851,6 +2949,9 @@ gst_base_src_negotiate (GstBaseSrc * basesrc)
     caps = gst_pad_get_current_caps (basesrc->srcpad);
 
     result = gst_base_src_prepare_allocation (basesrc, caps);
+
+    if (caps)
+      gst_caps_unref (caps);
   }
   return result;
 }
@@ -2859,24 +2960,23 @@ static gboolean
 gst_base_src_start (GstBaseSrc * basesrc)
 {
   GstBaseSrcClass *bclass;
-  gboolean result, have_size;
-  guint64 size;
-  gboolean seekable;
-  GstFormat format;
+  gboolean result;
 
-  if (GST_OBJECT_FLAG_IS_SET (basesrc, GST_BASE_SRC_STARTED))
-    return TRUE;
+  GST_LIVE_LOCK (basesrc);
+  if (GST_BASE_SRC_IS_STARTING (basesrc))
+    goto was_starting;
+  if (GST_BASE_SRC_IS_STARTED (basesrc))
+    goto was_started;
 
-  GST_DEBUG_OBJECT (basesrc, "starting source");
-
+  basesrc->priv->start_result = GST_FLOW_FLUSHING;
+  GST_OBJECT_FLAG_SET (basesrc, GST_BASE_SRC_FLAG_STARTING);
   basesrc->num_buffers_left = basesrc->num_buffers;
-
+  basesrc->running = FALSE;
+  basesrc->priv->segment_pending = FALSE;
   GST_OBJECT_LOCK (basesrc);
   gst_segment_init (&basesrc->segment, basesrc->segment.format);
   GST_OBJECT_UNLOCK (basesrc);
-
-  basesrc->running = FALSE;
-  basesrc->priv->segment_pending = FALSE;
+  GST_LIVE_UNLOCK (basesrc);
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
   if (bclass->start)
@@ -2887,14 +2987,65 @@ gst_base_src_start (GstBaseSrc * basesrc)
   if (!result)
     goto could_not_start;
 
-  GST_OBJECT_FLAG_SET (basesrc, GST_BASE_SRC_STARTED);
+  if (!gst_base_src_is_async (basesrc))
+    gst_base_src_start_complete (basesrc, GST_FLOW_OK);
 
+  return result;
+
+  /* ERROR */
+was_starting:
+  {
+    GST_DEBUG_OBJECT (basesrc, "was starting");
+    GST_LIVE_UNLOCK (basesrc);
+    return TRUE;
+  }
+was_started:
+  {
+    GST_DEBUG_OBJECT (basesrc, "was started");
+    GST_LIVE_UNLOCK (basesrc);
+    return TRUE;
+  }
+could_not_start:
+  {
+    GST_DEBUG_OBJECT (basesrc, "could not start");
+    /* subclass is supposed to post a message. We don't have to call _stop. */
+    gst_base_src_start_complete (basesrc, GST_FLOW_ERROR);
+    return FALSE;
+  }
+}
+
+/**
+ * gst_base_src_start_complete:
+ * @src: base source instance
+ * @ret: a #GstFlowReturn
+ *
+ * Complete an asynchronous start operation. When the subclass overrides the
+ * start method, it should call gst_base_src_start_complete() when the start
+ * operation completes either from the same thread or from an asynchronous
+ * helper thread.
+ */
+void
+gst_base_src_start_complete (GstBaseSrc * basesrc, GstFlowReturn ret)
+{
+  gboolean have_size;
+  guint64 size;
+  gboolean seekable;
+  GstFormat format;
+  GstPadMode mode;
+  GstEvent *event;
+
+  if (ret != GST_FLOW_OK)
+    goto error;
+
+  GST_DEBUG_OBJECT (basesrc, "starting source");
   format = basesrc->segment.format;
 
   /* figure out the size */
   have_size = FALSE;
   size = -1;
   if (format == GST_FORMAT_BYTES) {
+    GstBaseSrcClass *bclass = GST_BASE_SRC_GET_CLASS (basesrc);
+
     if (bclass->get_size) {
       if (!(have_size = bclass->get_size (basesrc, &size)))
         size = -1;
@@ -2920,16 +3071,107 @@ gst_base_src_start (GstBaseSrc * basesrc)
 
   GST_DEBUG_OBJECT (basesrc, "is random_access: %d", basesrc->random_access);
 
+  /* stop flushing now but for live sources, still block in the LIVE lock when
+   * we are not yet PLAYING */
+  gst_base_src_set_flushing (basesrc, FALSE, FALSE, FALSE, NULL);
+
   gst_pad_mark_reconfigure (GST_BASE_SRC_PAD (basesrc));
 
-  return TRUE;
+  GST_OBJECT_LOCK (basesrc->srcpad);
+  mode = GST_PAD_MODE (basesrc->srcpad);
+  GST_OBJECT_UNLOCK (basesrc->srcpad);
 
-  /* ERROR */
-could_not_start:
+  if (mode == GST_PAD_MODE_PUSH) {
+    /* do initial seek, which will start the task */
+    GST_OBJECT_LOCK (basesrc);
+    event = basesrc->pending_seek;
+    basesrc->pending_seek = NULL;
+    GST_OBJECT_UNLOCK (basesrc);
+
+    /* no need to unlock anything, the task is certainly
+     * not running here. The perform seek code will start the task when
+     * finished. */
+    if (G_UNLIKELY (!gst_base_src_perform_seek (basesrc, event, FALSE)))
+      goto seek_failed;
+
+    if (event)
+      gst_event_unref (event);
+  } else {
+    /* if not random_access, we cannot operate in pull mode for now */
+    if (G_UNLIKELY (!basesrc->random_access))
+      goto no_get_range;
+  }
+
+  GST_LIVE_LOCK (basesrc);
+  GST_OBJECT_FLAG_SET (basesrc, GST_BASE_SRC_FLAG_STARTED);
+  GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_FLAG_STARTING);
+  basesrc->priv->start_result = ret;
+  GST_LIVE_SIGNAL (basesrc);
+  GST_LIVE_UNLOCK (basesrc);
+
+  return;
+
+seek_failed:
   {
-    GST_DEBUG_OBJECT (basesrc, "could not start");
-    /* subclass is supposed to post a message. We don't have to call _stop. */
-    return FALSE;
+    GST_ERROR_OBJECT (basesrc, "Failed to perform initial seek");
+    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
+    if (event)
+      gst_event_unref (event);
+    ret = GST_FLOW_ERROR;
+    goto error;
+  }
+no_get_range:
+  {
+    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
+    GST_ERROR_OBJECT (basesrc, "Cannot operate in pull mode, stopping");
+    ret = GST_FLOW_ERROR;
+    goto error;
+  }
+error:
+  {
+    GST_LIVE_LOCK (basesrc);
+    basesrc->priv->start_result = ret;
+    GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_FLAG_STARTING);
+    GST_LIVE_SIGNAL (basesrc);
+    GST_LIVE_UNLOCK (basesrc);
+    return;
+  }
+}
+
+/**
+ * gst_base_src_start_wait:
+ * @src: base source instance
+ * @ret: a #GstFlowReturn
+ *
+ * Wait until the start operation completes.
+ *
+ * Returns: a #GstFlowReturn.
+ */
+GstFlowReturn
+gst_base_src_start_wait (GstBaseSrc * basesrc)
+{
+  GstFlowReturn result;
+
+  GST_LIVE_LOCK (basesrc);
+  if (G_UNLIKELY (basesrc->priv->flushing))
+    goto flushing;
+
+  while (GST_BASE_SRC_IS_STARTING (basesrc)) {
+    GST_LIVE_WAIT (basesrc);
+    if (G_UNLIKELY (basesrc->priv->flushing))
+      goto flushing;
+  }
+  result = basesrc->priv->start_result;
+  GST_LIVE_UNLOCK (basesrc);
+
+  return result;
+
+  /* ERRORS */
+flushing:
+  {
+    GST_DEBUG_OBJECT (basesrc, "we are flushing");
+    GST_LIVE_UNLOCK (basesrc);
+    return GST_FLOW_FLUSHING;
   }
 }
 
@@ -2939,21 +3181,37 @@ gst_base_src_stop (GstBaseSrc * basesrc)
   GstBaseSrcClass *bclass;
   gboolean result = TRUE;
 
-  if (!GST_OBJECT_FLAG_IS_SET (basesrc, GST_BASE_SRC_STARTED))
-    return TRUE;
-
   GST_DEBUG_OBJECT (basesrc, "stopping source");
+
+  /* flush all */
+  gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
+  /* stop the task */
+  gst_pad_stop_task (basesrc->srcpad);
+
+  GST_LIVE_LOCK (basesrc);
+  if (!GST_BASE_SRC_IS_STARTED (basesrc) && !GST_BASE_SRC_IS_STARTING (basesrc))
+    goto was_stopped;
+
+  GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_FLAG_STARTING);
+  GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_FLAG_STARTED);
+  basesrc->priv->start_result = GST_FLOW_FLUSHING;
+  GST_LIVE_SIGNAL (basesrc);
+  GST_LIVE_UNLOCK (basesrc);
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
   if (bclass->stop)
     result = bclass->stop (basesrc);
 
-  gst_base_src_set_allocation (basesrc, NULL, NULL, 0, 0);
-
-  if (result)
-    GST_OBJECT_FLAG_UNSET (basesrc, GST_BASE_SRC_STARTED);
+  gst_base_src_set_allocation (basesrc, NULL, NULL, NULL);
 
   return result;
+
+was_stopped:
+  {
+    GST_DEBUG_OBJECT (basesrc, "was started");
+    GST_LIVE_UNLOCK (basesrc);
+    return TRUE;
+  }
 }
 
 /* start or stop flushing dataprocessing
@@ -3063,7 +3321,7 @@ gst_base_src_set_playing (GstBaseSrc * basesrc, gboolean live_play)
     /* have to restart the task in case it stopped because of the unlock when
      * we went to PAUSED. Only do this if we operating in push mode. */
     GST_OBJECT_LOCK (basesrc->srcpad);
-    start = (GST_PAD_ACTIVATE_MODE (basesrc->srcpad) == GST_ACTIVATE_PUSH);
+    start = (GST_PAD_MODE (basesrc->srcpad) == GST_PAD_MODE_PUSH);
     GST_OBJECT_UNLOCK (basesrc->srcpad);
     if (start)
       gst_pad_start_task (basesrc->srcpad, (GstTaskFunction) gst_base_src_loop,
@@ -3077,12 +3335,11 @@ gst_base_src_set_playing (GstBaseSrc * basesrc, gboolean live_play)
 }
 
 static gboolean
-gst_base_src_activate_push (GstPad * pad, gboolean active)
+gst_base_src_activate_push (GstPad * pad, GstObject * parent, gboolean active)
 {
   GstBaseSrc *basesrc;
-  GstEvent *event;
 
-  basesrc = GST_BASE_SRC (GST_OBJECT_PARENT (pad));
+  basesrc = GST_BASE_SRC (parent);
 
   /* prepare subclass first */
   if (active) {
@@ -3093,30 +3350,8 @@ gst_base_src_activate_push (GstPad * pad, gboolean active)
 
     if (G_UNLIKELY (!gst_base_src_start (basesrc)))
       goto error_start;
-
-    basesrc->priv->discont = TRUE;
-    gst_base_src_set_flushing (basesrc, FALSE, FALSE, FALSE, NULL);
-
-    /* do initial seek, which will start the task */
-    GST_OBJECT_LOCK (basesrc);
-    event = basesrc->pending_seek;
-    basesrc->pending_seek = NULL;
-    GST_OBJECT_UNLOCK (basesrc);
-
-    /* no need to unlock anything, the task is certainly
-     * not running here. The perform seek code will start the task when
-     * finished. */
-    if (G_UNLIKELY (!gst_base_src_perform_seek (basesrc, event, FALSE)))
-      goto seek_failed;
-
-    if (event)
-      gst_event_unref (event);
   } else {
     GST_DEBUG_OBJECT (basesrc, "Deactivating in push mode");
-    /* flush all */
-    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
-    /* stop the task */
-    gst_pad_stop_task (pad);
     /* now we can stop the source */
     if (G_UNLIKELY (!gst_base_src_stop (basesrc)))
       goto error_stop;
@@ -3134,19 +3369,6 @@ error_start:
     GST_WARNING_OBJECT (basesrc, "Failed to start in push mode");
     return FALSE;
   }
-seek_failed:
-  {
-    GST_ERROR_OBJECT (basesrc, "Failed to perform initial seek");
-    /* flush all */
-    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
-    /* stop the task */
-    gst_pad_stop_task (pad);
-    /* Stop the basesrc */
-    gst_base_src_stop (basesrc);
-    if (event)
-      gst_event_unref (event);
-    return FALSE;
-  }
 error_stop:
   {
     GST_DEBUG_OBJECT (basesrc, "Failed to stop in push mode");
@@ -3155,30 +3377,19 @@ error_stop:
 }
 
 static gboolean
-gst_base_src_activate_pull (GstPad * pad, gboolean active)
+gst_base_src_activate_pull (GstPad * pad, GstObject * parent, gboolean active)
 {
   GstBaseSrc *basesrc;
 
-  basesrc = GST_BASE_SRC (GST_OBJECT_PARENT (pad));
+  basesrc = GST_BASE_SRC (parent);
 
   /* prepare subclass first */
   if (active) {
     GST_DEBUG_OBJECT (basesrc, "Activating in pull mode");
     if (G_UNLIKELY (!gst_base_src_start (basesrc)))
       goto error_start;
-
-    /* if not random_access, we cannot operate in pull mode for now */
-    if (G_UNLIKELY (!gst_base_src_is_random_access (basesrc)))
-      goto no_get_range;
-
-    /* stop flushing now but for live sources, still block in the LIVE lock when
-     * we are not yet PLAYING */
-    gst_base_src_set_flushing (basesrc, FALSE, FALSE, FALSE, NULL);
   } else {
     GST_DEBUG_OBJECT (basesrc, "Deactivating in pull mode");
-    /* flush all, there is no task to stop */
-    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
-
     if (G_UNLIKELY (!gst_base_src_stop (basesrc)))
       goto error_stop;
   }
@@ -3190,18 +3401,34 @@ error_start:
     GST_ERROR_OBJECT (basesrc, "Failed to start in pull mode");
     return FALSE;
   }
-no_get_range:
-  {
-    GST_ERROR_OBJECT (basesrc, "Cannot operate in pull mode, stopping");
-    gst_base_src_stop (basesrc);
-    return FALSE;
-  }
 error_stop:
   {
     GST_ERROR_OBJECT (basesrc, "Failed to stop in pull mode");
     return FALSE;
   }
 }
+
+static gboolean
+gst_base_src_activate_mode (GstPad * pad, GstObject * parent,
+    GstPadMode mode, gboolean active)
+{
+  gboolean res;
+
+  switch (mode) {
+    case GST_PAD_MODE_PULL:
+      res = gst_base_src_activate_pull (pad, parent, active);
+      break;
+    case GST_PAD_MODE_PUSH:
+      res = gst_base_src_activate_push (pad, parent, active);
+      break;
+    default:
+      GST_LOG_OBJECT (pad, "unknown activation mode %d", mode);
+      res = FALSE;
+      break;
+  }
+  return res;
+}
+
 
 static GstStateChangeReturn
 gst_base_src_change_state (GstElement * element, GstStateChange transition)
@@ -3216,6 +3443,7 @@ gst_base_src_change_state (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_NULL_TO_READY:
       break;
     case GST_STATE_CHANGE_READY_TO_PAUSED:
+      basesrc->priv->stream_start_pending = TRUE;
       no_preroll = gst_base_src_is_live (basesrc);
       break;
     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
@@ -3245,13 +3473,11 @@ gst_base_src_change_state (GstElement * element, GstStateChange transition)
       break;
     case GST_STATE_CHANGE_PAUSED_TO_READY:
     {
-      GstEvent **event_p;
-
       /* we don't need to unblock anything here, the pad deactivation code
        * already did this */
       g_atomic_int_set (&basesrc->priv->pending_eos, FALSE);
-      event_p = &basesrc->pending_seek;
-      gst_event_replace (event_p, NULL);
+      gst_event_replace (&basesrc->pending_seek, NULL);
+      basesrc->priv->stream_start_pending = FALSE;
       break;
     }
     case GST_STATE_CHANGE_READY_TO_NULL:
