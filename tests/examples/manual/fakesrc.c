@@ -10,16 +10,15 @@ cb_handoff (GstElement *fakesrc,
 	    gpointer    user_data)
 {
   static gboolean white = FALSE;
-  gpointer data;
-  gsize size;
+  GstMapInfo info;
   
-  data = gst_buffer_map (buffer, &size, NULL, GST_MAP_WRITE);
+  gst_buffer_map (buffer, &info, GST_MAP_WRITE);
 
   /* this makes the image black/white */
-  memset (data, white ? 0xff : 0x0, size);
+  memset (info.data, white ? 0xff : 0x0, info.size);
   white = !white;
 
-  gst_buffer_unmap (buffer, data, size);
+  gst_buffer_unmap (buffer, &info);
 }
 
 gint

@@ -321,27 +321,17 @@ gst_registry_chunks_save_feature (GList ** list, GstPluginFeature * feature)
     }
     /* save caps */
     if (factory->caps) {
-      /* we copy the caps here so we can simplify them before saving. This
-       * is a lot faster when loading them later on */
-      GstCaps *copy = gst_caps_copy (factory->caps);
+      GstCaps *fcaps = gst_caps_ref (factory->caps);
+      /* we simplify the caps before saving. This is a lot faster
+       * when loading them later on */
+      fcaps = gst_caps_simplify (fcaps);
+      str = gst_caps_to_string (fcaps);
+      gst_caps_unref (fcaps);
 
-      gst_caps_do_simplify (copy);
-      str = gst_caps_to_string (copy);
-      gst_caps_unref (copy);
       gst_registry_chunks_save_string (list, str);
     } else {
       gst_registry_chunks_save_const_string (list, "");
     }
-  } else if (GST_IS_INDEX_FACTORY (feature)) {
-    GstIndexFactory *factory = GST_INDEX_FACTORY (feature);
-
-    pf = g_slice_new (GstRegistryChunkPluginFeature);
-    chk =
-        gst_registry_chunks_make_data (pf,
-        sizeof (GstRegistryChunkPluginFeature));
-
-    /* pack element factory strings */
-    gst_registry_chunks_save_const_string (list, factory->longdesc);
   } else {
     GST_WARNING ("unhandled feature type '%s'", type_name);
   }
@@ -503,7 +493,7 @@ gst_registry_chunks_load_pad_template (GstElementFactory * factory, gchar ** in,
   template = g_slice_new (GstStaticPadTemplate);
   template->presence = pt->presence;
   template->direction = (GstPadDirection) pt->direction;
-  template->static_caps.caps.mini_object.refcount = 0;
+  template->static_caps.caps = NULL;
 
   /* unpack pad template strings */
   unpack_const_string (*in, template->name_template, end, fail);
@@ -660,17 +650,6 @@ gst_registry_chunks_load_feature (GstRegistry * registry, gchar ** in,
         factory->extensions[i - 1] = str;
       }
     }
-  } else if (GST_IS_INDEX_FACTORY (feature)) {
-    GstIndexFactory *factory = GST_INDEX_FACTORY (feature);
-
-    align (*in);
-    GST_DEBUG
-        ("Reading/casting for GstRegistryChunkPluginFeature at address %p",
-        *in);
-    unpack_element (*in, pf, GstRegistryChunkPluginFeature, end, fail);
-
-    /* unpack index factory strings */
-    unpack_string (*in, factory->longdesc, end, fail);
   } else {
     GST_WARNING ("unhandled factory type : %s", G_OBJECT_TYPE_NAME (feature));
     goto fail;

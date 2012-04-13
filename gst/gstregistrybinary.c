@@ -219,10 +219,11 @@ gst_registry_binary_cache_write (BinaryRegistryCache * cache,
 {
   long written;
   if (offset != cache->currentoffset) {
-    if (lseek (cache->cache_fd, offset, SEEK_SET) != 0) {
-      GST_ERROR ("Seeking to new offset failed");
-      return FALSE;
+    if (lseek (cache->cache_fd, offset, SEEK_SET) < 0) {
+      GST_ERROR ("Seeking to new offset failed: %s", g_strerror (errno));
+      return -1;
     }
+    GST_LOG ("Seeked from offset %lu to %lu", offset, cache->currentoffset);
     cache->currentoffset = offset;
   }
 
@@ -245,12 +246,13 @@ gst_registry_binary_cache_finish (BinaryRegistryCache * cache, gboolean success)
   if (close (cache->cache_fd) < 0)
     goto close_failed;
 
-  if (success) {
-    /* Only do the rename if we wrote the entire file successfully */
-    if (g_rename (cache->tmp_location, cache->location) < 0) {
-      GST_ERROR ("g_rename() failed: %s", g_strerror (errno));
-      goto rename_failed;
-    }
+  if (!success)
+    goto fail_after_close;
+
+  /* Only do the rename if we wrote the entire file successfully */
+  if (g_rename (cache->tmp_location, cache->location) < 0) {
+    GST_ERROR ("g_rename() failed: %s", g_strerror (errno));
+    goto rename_failed;
   }
 
   g_free (cache->tmp_location);
@@ -353,7 +355,7 @@ gst_registry_binary_initialize_magic (GstBinaryRegistryMagic * m)
  * Returns: %TRUE on success.
  */
 gboolean
-priv_gst_registry_binary_write_cache (GstRegistry * registry,
+priv_gst_registry_binary_write_cache (GstRegistry * registry, GList * plugins,
     const char *location)
 {
   GList *walk;
@@ -370,7 +372,7 @@ priv_gst_registry_binary_write_cache (GstRegistry * registry,
     goto fail;
 
   /* iterate trough the list of plugins and fit them into binary structures */
-  for (walk = registry->plugins; walk; walk = g_list_next (walk)) {
+  for (walk = plugins; walk != NULL; walk = walk->next) {
     GstPlugin *plugin = GST_PLUGIN (walk->data);
 
     if (!plugin->filename)
@@ -523,7 +525,6 @@ priv_gst_registry_binary_read_cache (GstRegistry * registry,
   /* make sure these types exist */
   GST_TYPE_ELEMENT_FACTORY;
   GST_TYPE_TYPE_FIND_FACTORY;
-  GST_TYPE_INDEX_FACTORY;
 
 #ifndef GST_DISABLE_GST_DEBUG
   timer = g_timer_new ();

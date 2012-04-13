@@ -17,7 +17,16 @@
 #undef ENABLE_SUBUNIT
 
 /* gettext package name */
-#define GETTEXT_PACKAGE "gstreamer-0.11"
+#define GETTEXT_PACKAGE "gstreamer-1.0"
+
+/* The GIO library directory. */
+#undef GIO_LIBDIR
+
+/* The GIO modules directory. */
+#undef GIO_MODULE_DIR
+
+/* GStreamer API Version */
+#define GST_API_VERSION "1.0"
 
 /* data dir */
 #define GST_DATADIR PREFIX "\\share"
@@ -46,9 +55,6 @@
 /* GStreamer license */
 #define GST_LICENSE "LGPL"
 
-/* library major.minor version */
-#define GST_MAJORMINOR "0.11"
-
 /* package name in plugins */
 #define GST_PACKAGE_NAME "GStreamer source release"
 
@@ -56,7 +62,7 @@
 #define GST_PACKAGE_ORIGIN "Unknown package origin"
 
 /* GStreamer package release date/time for plugins as YYYY-MM-DD */
-#define GST_PACKAGE_RELEASE_DATETIME "2011-09-29"
+#define GST_PACKAGE_RELEASE_DATETIME "2012-04-12"
 
 /* location of the installed gst-plugin-scanner */
 #define GST_PLUGIN_SCANNER_INSTALLED LIBDIR "\\gst-plugin-scanner"
@@ -163,15 +169,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `nsl' library (-lnsl). */
-#undef HAVE_LIBNSL
-
-/* Define to 1 if you have the `resolv' library (-lresolv). */
-#undef HAVE_LIBRESOLV
-
-/* Define to 1 if you have the `socket' library (-lsocket). */
-#undef HAVE_LIBSOCKET
-
 /* Define to 1 if you have the `localtime_r' function. */
 #undef HAVE_LOCALTIME_R
 
@@ -243,6 +240,9 @@
 
 /* Define to 1 if you have the <sys/param.h> header file. */
 #undef HAVE_SYS_PARAM_H
+
+/* Define to 1 if you have the <sys/poll.h> header file. */
+#undef HAVE_SYS_POLL_H
 
 /* Define to 1 if you have the <sys/prctl.h> header file. */
 #undef HAVE_SYS_PRCTL_H
@@ -321,9 +321,6 @@
 /* Memory alignment by pagesize */
 #undef MEMORY_ALIGNMENT_PAGESIZE
 
-/* Define if you have no native inet_aton() function. */
-#undef NO_INET_ATON
-
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 #undef NO_MINUS_C_MINUS_O
 
@@ -337,7 +334,7 @@
 #define PACKAGE_NAME "GStreamer"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "GStreamer 0.11.1"
+#define PACKAGE_STRING "GStreamer 0.11.90"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gstreamer"
@@ -346,13 +343,13 @@
 #undef PACKAGE_URL
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.11.1"
+#define PACKAGE_VERSION "0.11.90"
 
 /* directory where plugins are located */
 #ifdef _DEBUG
-#  define PLUGINDIR PREFIX "\\debug\\lib\\gstreamer-0.11"
+#  define PLUGINDIR PREFIX "\\debug\\lib\\gstreamer-1.0"
 #else
-#  define PLUGINDIR PREFIX "\\lib\\gstreamer-0.11"
+#  define PLUGINDIR PREFIX "\\lib\\gstreamer-1.0"
 #endif
 
 /* The size of `char', as computed by sizeof. */
@@ -377,7 +374,7 @@
 #undef USE_POISONING
 
 /* Version number of package */
-#define VERSION "0.11.1"
+#define VERSION "0.11.90"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

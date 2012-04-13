@@ -34,10 +34,6 @@ typedef struct _GstSegment GstSegment;
 /**
  * GstSeekType:
  * @GST_SEEK_TYPE_NONE: no change in position is required
- * @GST_SEEK_TYPE_CUR: change relative to currently configured segment. This
- *    can't be used to seek relative to the current playback position - do a
- *    position query, calculate the desired position and then do an absolute
- *    position seek instead if that's what you want to do.
  * @GST_SEEK_TYPE_SET: absolute position is requested
  * @GST_SEEK_TYPE_END: relative position to duration is requested
  *
@@ -47,9 +43,8 @@ typedef struct _GstSegment GstSegment;
 typedef enum {
   /* one of these */
   GST_SEEK_TYPE_NONE            = 0,
-  GST_SEEK_TYPE_CUR             = 1,
-  GST_SEEK_TYPE_SET             = 2,
-  GST_SEEK_TYPE_END             = 3
+  GST_SEEK_TYPE_SET             = 1,
+  GST_SEEK_TYPE_END             = 2
 } GstSeekType;
 
 /**
@@ -147,12 +142,15 @@ struct _GstSegment {
 
   guint64         position;
   guint64         duration;
+
+  /* < private > */
+  gpointer        _gst_reserved[GST_PADDING];
 };
 
 GType        gst_segment_get_type            (void);
 
-GstSegment * gst_segment_new                 (void);
-GstSegment * gst_segment_copy                (const GstSegment *segment);
+GstSegment * gst_segment_new                 (void) G_GNUC_MALLOC;
+GstSegment * gst_segment_copy                (const GstSegment *segment) G_GNUC_MALLOC;
 void         gst_segment_copy_into           (const GstSegment *src, GstSegment *dest);
 void         gst_segment_free                (GstSegment *segment);
 

@@ -24,8 +24,8 @@
 #define __GST_TAGLIST_H__
 
 #include <gst/gstdatetime.h>
+#include <gst/gstsample.h>
 #include <gst/gstbuffer.h>
-#include <gst/gststructure.h>
 #include <gst/glib-compat.h>
 
 G_BEGIN_DECLS
@@ -142,24 +142,12 @@ typedef enum {
 
 #define GST_TAG_FLAG_IS_VALID(flag)     (((flag) > GST_TAG_FLAG_UNDEFINED) && ((flag) < GST_TAG_FLAG_COUNT))
 
-/* FIXME 0.11: Don't typedef GstTagList to be a GstStructure, they're
- *             internally the same but not from an API point of view.
- *             See bug #518934.
- */
 /**
  * GstTagList:
  *
  * Opaque #GstTagList data structure.
  */
-#ifdef _FOOL_GTK_DOC_
 typedef struct _GstTagList GstTagList;
-#else
-#ifdef IN_GOBJECT_INTROSPECTION
-typedef struct _GstTagList GstTagList;
-#else
-typedef GstStructure GstTagList;
-#endif
-#endif
 
 #define GST_TAG_LIST(x)       ((GstTagList *) (x))
 #define GST_IS_TAG_LIST(x)    ((x) != NULL && gst_is_tag_list (GST_TAG_LIST (x)))
@@ -211,19 +199,26 @@ GstTagFlag             gst_tag_get_flag        (const gchar * tag);
 gboolean               gst_tag_is_fixed        (const gchar * tag);
 
 /* tag lists */
-GstTagList * gst_tag_list_new               (void);
-GstTagList * gst_tag_list_new_full          (const gchar * tag, ...);
-GstTagList * gst_tag_list_new_full_valist   (va_list var_args);
+GstTagList * gst_tag_list_new_empty         (void) G_GNUC_MALLOC;
+GstTagList * gst_tag_list_new               (const gchar * tag, ...) G_GNUC_MALLOC;
+GstTagList * gst_tag_list_new_valist        (va_list var_args) G_GNUC_MALLOC;
+
+gchar      * gst_tag_list_to_string         (const GstTagList * list) G_GNUC_MALLOC;
+GstTagList * gst_tag_list_new_from_string   (const gchar      * str) G_GNUC_MALLOC;
 
 gboolean     gst_is_tag_list                (gconstpointer p);
-GstTagList * gst_tag_list_copy              (const GstTagList * list);
+GstTagList * gst_tag_list_copy              (const GstTagList * list) G_GNUC_MALLOC;
+gint         gst_tag_list_n_tags            (const GstTagList * list);
+const gchar* gst_tag_list_nth_tag_name      (const GstTagList * list, guint index);
 gboolean     gst_tag_list_is_empty          (const GstTagList * list);
+gboolean     gst_tag_list_is_equal          (const GstTagList * list1,
+                                             const GstTagList * list2);
 void         gst_tag_list_insert            (GstTagList       * into,
                                              const GstTagList * from,
                                              GstTagMergeMode    mode);
 GstTagList * gst_tag_list_merge             (const GstTagList * list1,
                                              const GstTagList * list2,
-                                             GstTagMergeMode    mode);
+                                             GstTagMergeMode    mode) G_GNUC_MALLOC;
 void         gst_tag_list_free              (GstTagList       * list);
 guint        gst_tag_list_get_tag_size      (const GstTagList * list,
                                              const gchar      * tag);
@@ -262,20 +257,6 @@ gboolean     gst_tag_list_copy_value        (GValue           * dest,
                                              const gchar      * tag);
 
 /* simplifications (FIXME: do we want them?) */
-gboolean     gst_tag_list_get_char          (const GstTagList * list,
-                                             const gchar      * tag,
-                                             gchar            * value);
-gboolean     gst_tag_list_get_char_index    (const GstTagList * list,
-                                             const gchar      * tag,
-                                             guint              index,
-                                             gchar            * value);
-gboolean     gst_tag_list_get_uchar         (const GstTagList * list,
-                                             const gchar      * tag,
-                                             guchar           * value);
-gboolean     gst_tag_list_get_uchar_index   (const GstTagList * list,
-                                             const gchar      * tag,
-                                             guint              index,
-                                             guchar           * value);
 gboolean     gst_tag_list_get_boolean       (const GstTagList * list,
                                              const gchar      * tag,
                                              gboolean         * value);
@@ -297,20 +278,6 @@ gboolean     gst_tag_list_get_uint_index    (const GstTagList * list,
                                              const gchar      * tag,
                                              guint              index,
                                              guint            * value);
-gboolean     gst_tag_list_get_long          (const GstTagList * list,
-                                             const gchar      * tag,
-                                             glong            * value);
-gboolean     gst_tag_list_get_long_index    (const GstTagList * list,
-                                             const gchar      * tag,
-                                             guint              index,
-                                             glong            * value);
-gboolean     gst_tag_list_get_ulong         (const GstTagList * list,
-                                             const gchar      * tag,
-                                             gulong           * value);
-gboolean     gst_tag_list_get_ulong_index   (const GstTagList * list,
-                                             const gchar      * tag,
-                                             guint              index,
-                                             gulong           * value);
 gboolean     gst_tag_list_get_int64         (const GstTagList * list,
                                              const gchar      * tag,
                                              gint64           * value);
@@ -417,8 +384,7 @@ gboolean     gst_tag_list_get_buffer_index  (const GstTagList * list,
  *
  * Since: 0.10.15
  */
-/* FIXME 0.11: change to "artist-sortname" */
-#define GST_TAG_ARTIST_SORTNAME        "musicbrainz-sortname"
+#define GST_TAG_ARTIST_SORTNAME        "artist-sortname"
 /**
  * GST_TAG_ALBUM:
  *
@@ -736,13 +702,28 @@ gboolean     gst_tag_list_get_buffer_index  (const GstTagList * list,
 /**
  * GST_TAG_LANGUAGE_CODE:
  *
- * Language code (ISO-639-1) (string) of the content
+ * ISO-639-2 or ISO-639-1 code for the language the content is in (string)
+ *
+ * There is utility API in libgsttag in gst-plugins-base to obtain a translated
+ * language name from the language code: gst_tag_get_language_name()
  */
 #define GST_TAG_LANGUAGE_CODE          "language-code"
 /**
+ * GST_TAG_LANGUAGE_NAME:
+ *
+ * Name of the language the content is in (string)
+ *
+ * Free-form name of the language the content is in, if a language code
+ * is not available. This tag should not be set in addition to a language
+ * code. It is undefined what language or locale the language name is in.
+ *
+ * Since: 0.10.37
+ */
+#define GST_TAG_LANGUAGE_NAME          "language-name"
+/**
  * GST_TAG_IMAGE:
  *
- * image (buffer) (buffer caps should specify the content type and preferably
+ * image (sample) (sample caps should specify the content type and preferably
  * also set "image-type" field as #GstTagImageType)
  *
  * Since: 0.10.6
@@ -752,7 +733,7 @@ gboolean     gst_tag_list_get_buffer_index  (const GstTagList * list,
  * GST_TAG_PREVIEW_IMAGE:
  *
  * image that is meant for preview purposes, e.g. small icon-sized version
- * (buffer) (buffer caps should specify the content type)
+ * (sample) (sample caps should specify the content type)
  *
  * Since: 0.10.7
  */
@@ -761,7 +742,7 @@ gboolean     gst_tag_list_get_buffer_index  (const GstTagList * list,
 /**
  * GST_TAG_ATTACHMENT:
  *
- * generic file attachment (buffer) (buffer caps should specify the content
+ * generic file attachment (sample) (sample caps should specify the content
  * type and if possible set "filename" to the file name of the
  * attachment)
  *

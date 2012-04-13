@@ -59,28 +59,13 @@
 
 #include "gstinputselector.h"
 
+#include "gst/glib-compat-private.h"
+
 GST_DEBUG_CATEGORY_STATIC (input_selector_debug);
 #define GST_CAT_DEFAULT input_selector_debug
 
-#if GLIB_CHECK_VERSION(2, 26, 0)
-#define NOTIFY_MUTEX_LOCK()
-#define NOTIFY_MUTEX_UNLOCK()
-#else
-static GStaticRecMutex notify_mutex = G_STATIC_REC_MUTEX_INIT;
-#define NOTIFY_MUTEX_LOCK() g_static_rec_mutex_lock (&notify_mutex)
-#define NOTIFY_MUTEX_UNLOCK() g_static_rec_mutex_unlock (&notify_mutex)
-#endif
-
-#define GST_INPUT_SELECTOR_GET_LOCK(sel) (((GstInputSelector*)(sel))->lock)
-#define GST_INPUT_SELECTOR_GET_COND(sel) (((GstInputSelector*)(sel))->cond)
-#define GST_INPUT_SELECTOR_LOCK(sel) (g_mutex_lock (GST_INPUT_SELECTOR_GET_LOCK(sel)))
-#define GST_INPUT_SELECTOR_UNLOCK(sel) (g_mutex_unlock (GST_INPUT_SELECTOR_GET_LOCK(sel)))
-#define GST_INPUT_SELECTOR_WAIT(sel) (g_cond_wait (GST_INPUT_SELECTOR_GET_COND(sel), \
-			GST_INPUT_SELECTOR_GET_LOCK(sel)))
-#define GST_INPUT_SELECTOR_BROADCAST(sel) (g_cond_broadcast (GST_INPUT_SELECTOR_GET_COND(sel)))
-
 static GstStaticPadTemplate gst_input_selector_sink_factory =
-GST_STATIC_PAD_TEMPLATE ("sink%d",
+GST_STATIC_PAD_TEMPLATE ("sink_%u",
     GST_PAD_SINK,
     GST_PAD_REQUEST,
     GST_STATIC_CAPS_ANY);
@@ -99,7 +84,7 @@ enum
   PROP_SYNC_STREAMS
 };
 
-#define DEFAULT_SYNC_STREAMS FALSE
+#define DEFAULT_SYNC_STREAMS TRUE
 
 #define DEFAULT_PAD_ALWAYS_OK TRUE
 
@@ -178,11 +163,14 @@ static void gst_selector_pad_set_property (GObject * object,
 
 static gint64 gst_selector_pad_get_running_time (GstSelectorPad * pad);
 static void gst_selector_pad_reset (GstSelectorPad * pad);
-static gboolean gst_selector_pad_event (GstPad * pad, GstEvent * event);
-static GstCaps *gst_selector_pad_getcaps (GstPad * pad, GstCaps * filter);
-static gboolean gst_selector_pad_acceptcaps (GstPad * pad, GstCaps * caps);
-static GstIterator *gst_selector_pad_iterate_linked_pads (GstPad * pad);
-static GstFlowReturn gst_selector_pad_chain (GstPad * pad, GstBuffer * buf);
+static gboolean gst_selector_pad_event (GstPad * pad, GstObject * parent,
+    GstEvent * event);
+static gboolean gst_selector_pad_query (GstPad * pad, GstObject * parent,
+    GstQuery * query);
+static GstIterator *gst_selector_pad_iterate_linked_pads (GstPad * pad,
+    GstObject * parent);
+static GstFlowReturn gst_selector_pad_chain (GstPad * pad, GstObject * parent,
+    GstBuffer * buf);
 
 G_DEFINE_TYPE (GstSelectorPad, gst_selector_pad, GST_TYPE_PAD);
 
@@ -330,16 +318,14 @@ gst_selector_pad_reset (GstSelectorPad * pad)
 /* strictly get the linked pad from the sinkpad. If the pad is active we return
  * the srcpad else we return NULL */
 static GstIterator *
-gst_selector_pad_iterate_linked_pads (GstPad * pad)
+gst_selector_pad_iterate_linked_pads (GstPad * pad, GstObject * parent)
 {
   GstInputSelector *sel;
   GstPad *otherpad;
   GstIterator *it = NULL;
   GValue val = { 0, };
 
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL))
-    return NULL;
+  sel = GST_INPUT_SELECTOR (parent);
 
   otherpad = gst_input_selector_get_linked_pad (sel, pad, TRUE);
   if (otherpad) {
@@ -349,13 +335,12 @@ gst_selector_pad_iterate_linked_pads (GstPad * pad)
     g_value_unset (&val);
     gst_object_unref (otherpad);
   }
-  gst_object_unref (sel);
 
   return it;
 }
 
 static gboolean
-gst_selector_pad_event (GstPad * pad, GstEvent * event)
+gst_selector_pad_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   gboolean res = TRUE;
   gboolean forward;
@@ -364,11 +349,7 @@ gst_selector_pad_event (GstPad * pad, GstEvent * event)
   GstPad *prev_active_sinkpad;
   GstPad *active_sinkpad;
 
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL)) {
-    gst_event_unref (event);
-    return FALSE;
-  }
+  sel = GST_INPUT_SELECTOR (parent);
   selpad = GST_SELECTOR_PAD_CAST (pad);
 
   GST_INPUT_SELECTOR_LOCK (sel);
@@ -380,9 +361,7 @@ gst_selector_pad_event (GstPad * pad, GstEvent * event)
   GST_INPUT_SELECTOR_UNLOCK (sel);
 
   if (prev_active_sinkpad != active_sinkpad && pad == active_sinkpad) {
-    NOTIFY_MUTEX_LOCK ();
     g_object_notify (G_OBJECT (sel), "active-pad");
-    NOTIFY_MUTEX_UNLOCK ();
   }
 
   switch (GST_EVENT_TYPE (event)) {
@@ -486,44 +465,19 @@ gst_selector_pad_event (GstPad * pad, GstEvent * event)
   } else
     gst_event_unref (event);
 
-  gst_object_unref (sel);
-
   return res;
 }
 
-static GstCaps *
-gst_selector_pad_getcaps (GstPad * pad, GstCaps * filter)
-{
-  GstInputSelector *sel;
-  GstCaps *caps;
-
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL))
-    return (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
-
-  GST_DEBUG_OBJECT (sel, "Getting caps of srcpad peer");
-  caps = gst_pad_peer_get_caps (sel->srcpad, filter);
-  if (caps == NULL)
-    caps = (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
-
-  gst_object_unref (sel);
-
-  return caps;
-}
-
 static gboolean
-gst_selector_pad_acceptcaps (GstPad * pad, GstCaps * caps)
+gst_selector_pad_query (GstPad * pad, GstObject * parent, GstQuery * query)
 {
-  GstInputSelector *sel;
-  gboolean res;
+  gboolean res = FALSE;
 
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL))
-    return FALSE;
-
-  GST_DEBUG_OBJECT (sel, "Checking acceptcaps of srcpad peer");
-  res = gst_pad_peer_accept_caps (sel->srcpad, caps);
-  gst_object_unref (sel);
+  switch (GST_QUERY_TYPE (query)) {
+    default:
+      res = gst_pad_query_default (pad, parent, query);
+      break;
+  }
 
   return res;
 }
@@ -550,7 +504,7 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
   GstPad *active_sinkpad;
   GstSelectorPad *active_selpad;
   GstSegment *seg, *active_seg;
-  GstClockTime running_time, active_running_time = -1;
+  GstClockTime running_time, active_running_time = GST_CLOCK_TIME_NONE;
 
   seg = &pad->segment;
 
@@ -595,9 +549,10 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
    *   d) the active pad has no running time or the active
    *      pad's running time is before this running time
    *   e) the active pad has a non-time segment
+   *   f) the active pad changed and has not pushed anything
    */
-  while (pad != active_selpad && !sel->flushing && !pad->flushing &&
-      (sel->blocked || active_running_time == -1
+  while (pad != active_selpad && !sel->flushing && !pad->flushing
+      && active_selpad->pushed && (sel->blocked || active_running_time == -1
           || running_time >= active_running_time)) {
     if (!sel->blocked)
       GST_DEBUG_OBJECT (pad,
@@ -641,7 +596,7 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
 
 
 static GstFlowReturn
-gst_selector_pad_chain (GstPad * pad, GstBuffer * buf)
+gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
 {
   GstInputSelector *sel;
   GstFlowReturn res;
@@ -652,7 +607,7 @@ gst_selector_pad_chain (GstPad * pad, GstBuffer * buf)
   GstSegment *seg;
   GstEvent *start_event = NULL;
 
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
+  sel = GST_INPUT_SELECTOR (parent);
   selpad = GST_SELECTOR_PAD_CAST (pad);
   seg = &selpad->segment;
 
@@ -701,23 +656,24 @@ gst_selector_pad_chain (GstPad * pad, GstBuffer * buf)
   /* if we have a pending segment, push it out now */
   if (G_UNLIKELY (prev_active_sinkpad != active_sinkpad
           || selpad->segment_pending)) {
-    GST_DEBUG_OBJECT (pad,
-        "pushing pending NEWSEGMENT update %d, rate %lf, applied rate %lf, "
-        "format %d, " "%" G_GINT64_FORMAT " -- %" G_GINT64_FORMAT ", time %"
-        G_GINT64_FORMAT, FALSE, seg->rate, seg->applied_rate, seg->format,
-        seg->start, seg->stop, seg->time);
+    if (G_UNLIKELY (seg->format == GST_FORMAT_UNDEFINED)) {
+      GST_ERROR_OBJECT (pad, "Buffers arrived before NEWSEGMENT event");
+    } else {
+      GST_DEBUG_OBJECT (pad,
+          "pushing pending NEWSEGMENT update %d, rate %lf, applied rate %lf, "
+          "format %d, " "%" G_GINT64_FORMAT " -- %" G_GINT64_FORMAT ", time %"
+          G_GINT64_FORMAT, FALSE, seg->rate, seg->applied_rate, seg->format,
+          seg->start, seg->stop, seg->time);
 
-    start_event = gst_event_new_segment (seg);
-    gst_event_set_seqnum (start_event, selpad->segment_seqnum);
-
-    selpad->segment_pending = FALSE;
+      start_event = gst_event_new_segment (seg);
+      gst_event_set_seqnum (start_event, selpad->segment_seqnum);
+      selpad->segment_pending = FALSE;
+    }
   }
   GST_INPUT_SELECTOR_UNLOCK (sel);
 
   if (prev_active_sinkpad != active_sinkpad && pad == active_sinkpad) {
-    NOTIFY_MUTEX_LOCK ();
     g_object_notify (G_OBJECT (sel), "active-pad");
-    NOTIFY_MUTEX_UNLOCK ();
   }
 
   if (start_event)
@@ -738,7 +694,6 @@ gst_selector_pad_chain (GstPad * pad, GstBuffer * buf)
   selpad->pushed = TRUE;
 
 done:
-  gst_object_unref (sel);
   return res;
 
   /* dropped buffers */
@@ -767,12 +722,13 @@ flushing:
     GST_DEBUG_OBJECT (pad, "We are flushing, discard buffer %p", buf);
     GST_INPUT_SELECTOR_UNLOCK (sel);
     gst_buffer_unref (buf);
-    res = GST_FLOW_WRONG_STATE;
+    res = GST_FLOW_FLUSHING;
     goto done;
   }
 }
 
 static void gst_input_selector_dispose (GObject * object);
+static void gst_input_selector_finalize (GObject * object);
 
 static void gst_input_selector_set_property (GObject * object,
     guint prop_id, const GValue * value, GParamSpec * pspec);
@@ -786,9 +742,10 @@ static void gst_input_selector_release_pad (GstElement * element, GstPad * pad);
 static GstStateChangeReturn gst_input_selector_change_state (GstElement *
     element, GstStateChange transition);
 
-static GstCaps *gst_input_selector_getcaps (GstPad * pad, GstCaps * filter);
-static gboolean gst_input_selector_event (GstPad * pad, GstEvent * event);
-static gboolean gst_input_selector_query (GstPad * pad, GstQuery * query);
+static gboolean gst_input_selector_event (GstPad * pad, GstObject * parent,
+    GstEvent * event);
+static gboolean gst_input_selector_query (GstPad * pad, GstObject * parent,
+    GstQuery * query);
 static gint64 gst_input_selector_block (GstInputSelector * self);
 
 /* FIXME: create these marshallers using glib-genmarshal */
@@ -837,6 +794,7 @@ gst_input_selector_class_init (GstInputSelectorClass * klass)
   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
 
   gobject_class->dispose = gst_input_selector_dispose;
+  gobject_class->finalize = gst_input_selector_finalize;
 
   gobject_class->set_property = gst_input_selector_set_property;
   gobject_class->get_property = gst_input_selector_get_property;
@@ -859,7 +817,7 @@ gst_input_selector_class_init (GstInputSelectorClass * klass)
    * buffers are dropped by input-selector that might be needed
    * when switching the active pad.
    *
-   * Since: 0.10.35
+   * Since: 0.10.36
    */
   g_object_class_install_property (gobject_class, PROP_SYNC_STREAMS,
       g_param_spec_boolean ("sync-streams", "Sync Streams",
@@ -880,7 +838,7 @@ gst_input_selector_class_init (GstInputSelectorClass * klass)
       G_STRUCT_OFFSET (GstInputSelectorClass, block), NULL, NULL,
       gst_input_selector_marshal_INT64__VOID, G_TYPE_INT64, 0);
 
-  gst_element_class_set_details_simple (gstelement_class, "Input selector",
+  gst_element_class_set_static_metadata (gstelement_class, "Input selector",
       "Generic", "N-to-1 input stream selector",
       "Julien Moutte <julien@moutte.net>, "
       "Jan Schmidt <thaytan@mad.scientist.com>, "
@@ -903,20 +861,19 @@ gst_input_selector_init (GstInputSelector * sel)
   sel->srcpad = gst_pad_new ("src", GST_PAD_SRC);
   gst_pad_set_iterate_internal_links_function (sel->srcpad,
       GST_DEBUG_FUNCPTR (gst_selector_pad_iterate_linked_pads));
-  gst_pad_set_getcaps_function (sel->srcpad,
-      GST_DEBUG_FUNCPTR (gst_input_selector_getcaps));
   gst_pad_set_query_function (sel->srcpad,
       GST_DEBUG_FUNCPTR (gst_input_selector_query));
   gst_pad_set_event_function (sel->srcpad,
       GST_DEBUG_FUNCPTR (gst_input_selector_event));
+  GST_OBJECT_FLAG_SET (sel->srcpad, GST_PAD_FLAG_PROXY_CAPS);
   gst_element_add_pad (GST_ELEMENT (sel), sel->srcpad);
   /* sinkpad management */
   sel->active_sinkpad = NULL;
   sel->padcount = 0;
   sel->sync_streams = DEFAULT_SYNC_STREAMS;
 
-  sel->lock = g_mutex_new ();
-  sel->cond = g_cond_new ();
+  g_mutex_init (&sel->lock);
+  g_cond_init (&sel->cond);
   sel->blocked = FALSE;
 }
 
@@ -929,16 +886,18 @@ gst_input_selector_dispose (GObject * object)
     gst_object_unref (sel->active_sinkpad);
     sel->active_sinkpad = NULL;
   }
-  if (sel->lock) {
-    g_mutex_free (sel->lock);
-    sel->lock = NULL;
-  }
-  if (sel->cond) {
-    g_cond_free (sel->cond);
-    sel->cond = NULL;
-  }
-
   G_OBJECT_CLASS (parent_class)->dispose (object);
+}
+
+static void
+gst_input_selector_finalize (GObject * object)
+{
+  GstInputSelector *sel = GST_INPUT_SELECTOR (object);
+
+  g_mutex_clear (&sel->lock);
+  g_cond_clear (&sel->cond);
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 /* this function must be called with the SELECTOR_LOCK. It returns TRUE when the
@@ -1059,7 +1018,7 @@ gst_input_selector_get_linked_pad (GstInputSelector * sel, GstPad * pad,
 }
 
 static gboolean
-gst_input_selector_event (GstPad * pad, GstEvent * event)
+gst_input_selector_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   GstInputSelector *sel;
   gboolean result = FALSE;
@@ -1069,12 +1028,7 @@ gst_input_selector_event (GstPad * pad, GstEvent * event)
   GstPad *eventpad;
   GList *pushed_pads = NULL;
 
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL)) {
-    gst_event_unref (event);
-    return FALSE;
-  }
-
+  sel = GST_INPUT_SELECTOR (parent);
   /* Send upstream events to all sinkpads */
   iter = gst_element_iterate_sink_pads (GST_ELEMENT_CAST (sel));
 
@@ -1124,17 +1078,12 @@ gst_input_selector_event (GstPad * pad, GstEvent * event)
 /* query on the srcpad. We override this function because by default it will
  * only forward the query to one random sinkpad */
 static gboolean
-gst_input_selector_query (GstPad * pad, GstQuery * query)
+gst_input_selector_query (GstPad * pad, GstObject * parent, GstQuery * query)
 {
-  gboolean res = TRUE;
+  gboolean res = FALSE;
   GstInputSelector *sel;
-  GstPad *otherpad;
 
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL))
-    return FALSE;
-
-  otherpad = gst_input_selector_get_linked_pad (sel, pad, TRUE);
+  sel = GST_INPUT_SELECTOR (parent);
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_LATENCY:
@@ -1146,9 +1095,6 @@ gst_input_selector_query (GstPad * pad, GstQuery * query)
       resmin = 0;
       resmax = -1;
       reslive = FALSE;
-
-      /* assume FALSE, we become TRUE if one query succeeds */
-      res = FALSE;
 
       /* perform the query on all sinkpads and combine the results. We take the
        * max of min and the min of max for the result latency. */
@@ -1195,45 +1141,11 @@ gst_input_selector_query (GstPad * pad, GstQuery * query)
       break;
     }
     default:
-      if (otherpad)
-        res = gst_pad_peer_query (otherpad, query);
+      res = gst_pad_query_default (pad, parent, query);
       break;
   }
-  if (otherpad)
-    gst_object_unref (otherpad);
-  gst_object_unref (sel);
 
   return res;
-}
-
-static GstCaps *
-gst_input_selector_getcaps (GstPad * pad, GstCaps * filter)
-{
-  GstPad *otherpad;
-  GstInputSelector *sel;
-  GstCaps *caps;
-
-  sel = GST_INPUT_SELECTOR (gst_pad_get_parent (pad));
-  if (G_UNLIKELY (sel == NULL))
-    return (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
-
-  otherpad = gst_input_selector_get_linked_pad (sel, pad, FALSE);
-
-  if (!otherpad) {
-    GST_DEBUG_OBJECT (pad, "Pad not linked, returning ANY");
-    caps = (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
-  } else {
-    GST_DEBUG_OBJECT (pad, "Pad is linked (to %s:%s), returning peer caps",
-        GST_DEBUG_PAD_NAME (otherpad));
-    /* if the peer has caps, use those. If the pad is not linked, this function
-     * returns NULL and we return ANY */
-    if (!(caps = gst_pad_peer_get_caps (otherpad, filter)))
-      caps = (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
-    gst_object_unref (otherpad);
-  }
-
-  gst_object_unref (sel);
-  return caps;
 }
 
 /* check if the pad is the active sinkpad */
@@ -1286,7 +1198,7 @@ gst_input_selector_request_new_pad (GstElement * element,
   GST_INPUT_SELECTOR_LOCK (sel);
 
   GST_LOG_OBJECT (sel, "Creating new pad %d", sel->padcount);
-  name = g_strdup_printf ("sink%d", sel->padcount++);
+  name = g_strdup_printf ("sink_%u", sel->padcount++);
   sinkpad = g_object_new (GST_TYPE_SELECTOR_PAD,
       "name", name, "direction", templ->direction, "template", templ, NULL);
   g_free (name);
@@ -1295,15 +1207,15 @@ gst_input_selector_request_new_pad (GstElement * element,
 
   gst_pad_set_event_function (sinkpad,
       GST_DEBUG_FUNCPTR (gst_selector_pad_event));
-  gst_pad_set_getcaps_function (sinkpad,
-      GST_DEBUG_FUNCPTR (gst_selector_pad_getcaps));
-  gst_pad_set_acceptcaps_function (sinkpad,
-      GST_DEBUG_FUNCPTR (gst_selector_pad_acceptcaps));
+  gst_pad_set_query_function (sinkpad,
+      GST_DEBUG_FUNCPTR (gst_selector_pad_query));
   gst_pad_set_chain_function (sinkpad,
       GST_DEBUG_FUNCPTR (gst_selector_pad_chain));
   gst_pad_set_iterate_internal_links_function (sinkpad,
       GST_DEBUG_FUNCPTR (gst_selector_pad_iterate_linked_pads));
 
+  GST_OBJECT_FLAG_SET (sinkpad, GST_PAD_FLAG_PROXY_CAPS);
+  GST_OBJECT_FLAG_SET (sinkpad, GST_PAD_FLAG_PROXY_ALLOCATION);
   gst_pad_set_active (sinkpad, TRUE);
   gst_element_add_pad (GST_ELEMENT (sel), sinkpad);
   GST_INPUT_SELECTOR_UNLOCK (sel);

@@ -53,14 +53,11 @@ GST_START_TEST (test_serialize_buffer)
   gchar *serialized;
   static const char *buf_data = "1234567890abcdef";
   gint len;
-  gpointer data;
 
   len = strlen (buf_data);
   buf = gst_buffer_new_and_alloc (len);
 
-  data = gst_buffer_map (buf, NULL, NULL, GST_MAP_WRITE);
-  memcpy (data, buf_data, len);
-  gst_buffer_unmap (buf, data, len);
+  gst_buffer_fill (buf, 0, buf_data, len);
 
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
 
@@ -473,6 +470,33 @@ GST_START_TEST (test_deserialize_flags)
 
 GST_END_TEST;
 
+GST_START_TEST (test_deserialize_bitmask)
+{
+  GValue value = { 0 };
+  const char *strings[] = {
+    "0xffffffffffffffff",
+    "0x1234567890ABCDEF",
+  };
+  guint64 results[] = {
+    0xffffffffffffffffULL,
+    0x1234567890ABCDEFULL,
+  };
+  int i;
+
+  g_value_init (&value, GST_TYPE_BITMASK);
+
+  for (i = 0; i < G_N_ELEMENTS (strings); ++i) {
+    fail_unless (gst_value_deserialize (&value, strings[i]),
+        "could not deserialize %s (%d)", strings[i], i);
+    fail_unless (gst_value_get_bitmask (&value) == results[i],
+        "resulting value is 0x%016" G_GINT64_MODIFIER "x, not 0x%016"
+        G_GINT64_MODIFIER "x, for string %s (%d)",
+        gst_value_get_bitmask (&value), results[i], strings[i], i);
+  }
+}
+
+GST_END_TEST;
+
 GST_START_TEST (test_string)
 {
   const gchar *try[] = {
@@ -737,6 +761,16 @@ GST_START_TEST (test_value_compare)
   g_value_unset (&value1);
   g_value_unset (&value2);
   g_value_unset (&tmp);
+
+  g_value_init (&value1, GST_TYPE_BITMASK);
+  gst_value_set_bitmask (&value1, 0x123);
+  g_value_init (&value2, GST_TYPE_BITMASK);
+  gst_value_set_bitmask (&value2, 0x321);
+  fail_unless (gst_value_compare (&value1, &value2) == GST_VALUE_UNORDERED);
+  fail_unless (gst_value_compare (&value2, &value1) == GST_VALUE_UNORDERED);
+  fail_unless (gst_value_compare (&value1, &value1) == GST_VALUE_EQUAL);
+  g_value_unset (&value1);
+  g_value_unset (&value2);
 }
 
 GST_END_TEST;
@@ -759,20 +793,31 @@ GST_START_TEST (test_value_intersect)
   g_value_unset (&src2);
 
   g_value_init (&src1, G_TYPE_STRING);
-  g_value_set_string (&src1, "YUY2");
+  g_value_set_static_string (&src1, "YUY2");
   g_value_init (&src2, GST_TYPE_LIST);
   g_value_init (&item, G_TYPE_STRING);
-  g_value_set_string (&item, "YUY2");
+  g_value_set_static_string (&item, "YUY2");
   gst_value_list_append_value (&src2, &item);
-  g_value_set_string (&item, "I420");
+  g_value_set_static_string (&item, "I420");
   gst_value_list_append_value (&src2, &item);
-  g_value_set_string (&item, "ABCD");
+  g_value_set_static_string (&item, "ABCD");
   gst_value_list_append_value (&src2, &item);
 
   fail_unless (gst_value_intersect (&dest, &src1, &src2));
   fail_unless (G_VALUE_HOLDS_STRING (&dest));
   fail_unless (g_str_equal (g_value_get_string (&dest), "YUY2"));
 
+  g_value_unset (&src1);
+  g_value_unset (&src2);
+  g_value_unset (&dest);
+
+  g_value_init (&src1, GST_TYPE_BITMASK);
+  gst_value_set_bitmask (&src1, 0xf00f);
+  g_value_init (&src2, GST_TYPE_BITMASK);
+  gst_value_set_bitmask (&src2, 0xff00);
+  ret = gst_value_intersect (&dest, &src1, &src2);
+  fail_unless (ret == TRUE);
+  fail_unless_equals_uint64 (0xf000, gst_value_get_bitmask (&dest));
   g_value_unset (&src1);
   g_value_unset (&src2);
 }
@@ -1874,6 +1919,26 @@ GST_START_TEST (test_value_subtract_fraction_list)
 
 GST_END_TEST;
 
+GST_START_TEST (test_value_subtract_bitmask)
+{
+  GValue result = { 0 };
+  GValue src1 = { 0 };
+  GValue src2 = { 0 };
+
+  /* Subtract 1/4 from 1/2 */
+  g_value_init (&src1, GST_TYPE_BITMASK);
+  g_value_init (&src2, GST_TYPE_BITMASK);
+  gst_value_set_bitmask (&src1, 0xffff);
+  gst_value_set_bitmask (&src2, 0xff00);
+  fail_unless (gst_value_subtract (&result, &src1, &src2) == TRUE);
+  fail_unless_equals_uint64 (0x00ff, gst_value_get_bitmask (&result));
+
+  g_value_unset (&src1);
+  g_value_unset (&src2);
+  g_value_unset (&result);
+}
+
+GST_END_TEST;
 
 GST_START_TEST (test_date)
 {
@@ -1883,11 +1948,10 @@ GST_START_TEST (test_date)
 
   date = g_date_new_dmy (22, 9, 2005);
 
-  s = gst_structure_new ("media/x-type", "SOME_DATE_TAG", GST_TYPE_DATE,
+  s = gst_structure_new ("media/x-type", "SOME_DATE_TAG", G_TYPE_DATE,
       date, NULL);
 
-  fail_unless (gst_structure_has_field_typed (s, "SOME_DATE_TAG",
-          GST_TYPE_DATE));
+  fail_unless (gst_structure_has_field_typed (s, "SOME_DATE_TAG", G_TYPE_DATE));
   fail_unless (gst_structure_get_date (s, "SOME_DATE_TAG", &date2));
   fail_unless (date2 != NULL);
   fail_unless (g_date_valid (date2));
@@ -1911,8 +1975,7 @@ GST_START_TEST (test_date)
 
   fail_unless (s != NULL);
   fail_unless (gst_structure_has_name (s, "media/x-type"));
-  fail_unless (gst_structure_has_field_typed (s, "SOME_DATE_TAG",
-          GST_TYPE_DATE));
+  fail_unless (gst_structure_has_field_typed (s, "SOME_DATE_TAG", G_TYPE_DATE));
   fail_unless (gst_structure_get_date (s, "SOME_DATE_TAG", &date));
   fail_unless (date != NULL);
   fail_unless (g_date_valid (date));
@@ -2399,6 +2462,7 @@ GST_START_TEST (test_serialize_int64_range)
       str = gst_value_serialize (&value);
       fail_unless (strcmp (str, int64_range_strings[idx]) == 0);
       g_free (int64_range_strings[idx]);
+      g_value_unset (&value);
 
       /* now deserialize again to an int64 range */
       s = gst_structure_new ("foo/bar", "range", GST_TYPE_INT64_RANGE,
@@ -2500,7 +2564,164 @@ GST_START_TEST (test_deserialize_int_range)
   g_free (str);
 }
 
-GST_END_TEST static Suite *
+GST_END_TEST;
+
+GST_START_TEST (test_stepped_range_collection)
+{
+  GstStructure *s;
+  const GValue *v;
+
+  s = gst_structure_new ("foo/bar", "range", GST_TYPE_INT_RANGE, 8, 12, NULL);
+  fail_unless (s != NULL);
+  v = gst_structure_get_value (s, "range");
+  fail_unless (v != NULL);
+  fail_unless (gst_value_get_int_range_min (v) == 8);
+  fail_unless (gst_value_get_int_range_max (v) == 12);
+  fail_unless (gst_value_get_int_range_step (v) == 1);
+  gst_structure_free (s);
+
+  s = gst_structure_new ("foo/bar", "range", GST_TYPE_INT64_RANGE, (gint64) 8,
+      (gint64) 12, NULL);
+  fail_unless (s != NULL);
+  v = gst_structure_get_value (s, "range");
+  fail_unless (v != NULL);
+  fail_unless (gst_value_get_int64_range_min (v) == 8);
+  fail_unless (gst_value_get_int64_range_max (v) == 12);
+  fail_unless (gst_value_get_int64_range_step (v) == 1);
+  gst_structure_free (s);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_stepped_int_range_parsing)
+{
+  gchar *str;
+  guint n;
+  gchar *end = NULL;
+  GstStructure *s;
+
+  static const gchar *good_ranges[] = {
+    "[0, 1, 1]",
+    "[-2, 2, 2]",
+    "[16, 4096, 16]",
+  };
+
+  static const gchar *bad_ranges[] = {
+    "[0, 1, -1]",
+    "[1, 2, 2]",
+    "[2, 3, 2]",
+    "[0, 0, 0]",
+  };
+
+  /* check we can parse good ranges */
+  for (n = 0; n < G_N_ELEMENTS (good_ranges); ++n) {
+    str = g_strdup_printf ("foo/bar, range=%s", good_ranges[n]);
+    s = gst_structure_from_string (str, &end);
+    fail_unless (s != NULL);
+    fail_unless (*end == '\0');
+    gst_structure_free (s);
+    g_free (str);
+  }
+
+  /* check we cannot parse bad ranges */
+  for (n = 0; n < G_N_ELEMENTS (bad_ranges); ++n) {
+    str = g_strdup_printf ("foo/bar, range=%s", bad_ranges[n]);
+    ASSERT_CRITICAL (s = gst_structure_from_string (str, &end));
+    gst_structure_free (s);
+    g_free (str);
+  }
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_stepped_int_range_ops)
+{
+  gchar *str1, *str2, *str3;
+  guint n;
+  GstStructure *s1, *s2, *s3;
+  const GValue *v1, *v2, *v3;
+
+  static const struct
+  {
+    const gchar *set1;
+    const gchar *op;
+    const gchar *set2;
+    const gchar *result;
+  } ranges[] = {
+    {
+    "[16, 4096, 16]", "inter", "[100, 200, 10]", "160"}, {
+    "[16, 4096, 16]", "inter", "[100, 200, 100]", NULL}, {
+    "[16, 4096, 16]", "inter", "[0, 512, 256]", "[256, 512, 256]"}, {
+    "[16, 32, 16]", "union", "[32, 96, 16]", "[16, 96, 16]"}, {
+    "[16, 32, 16]", "union", "[48, 96, 16]", "[16, 96, 16]"}, {
+    "[112, 192, 16]", "union", "[48, 96, 16]", "[48, 192, 16]"}, {
+    "[16, 32, 16]", "union", "[64, 96, 16]", NULL}, {
+  "[112, 192, 16]", "union", "[48, 96, 8]", NULL},};
+
+  for (n = 0; n < G_N_ELEMENTS (ranges); ++n) {
+    gchar *end = NULL;
+    GValue dest = { 0 };
+    gboolean ret;
+
+    str1 = g_strdup_printf ("foo/bar, range=%s", ranges[n].set1);
+    s1 = gst_structure_from_string (str1, &end);
+    fail_unless (s1 != NULL);
+    fail_unless (*end == '\0');
+    v1 = gst_structure_get_value (s1, "range");
+    fail_unless (v1 != NULL);
+
+    str2 = g_strdup_printf ("foo/bar, range=%s", ranges[n].set2);
+    s2 = gst_structure_from_string (str2, &end);
+    fail_unless (s2 != NULL);
+    fail_unless (*end == '\0');
+    v2 = gst_structure_get_value (s2, "range");
+    fail_unless (v2 != NULL);
+
+    if (!strcmp (ranges[n].op, "inter")) {
+      ret = gst_value_intersect (&dest, v1, v2);
+    } else if (!strcmp (ranges[n].op, "union")) {
+      ret = gst_value_union (&dest, v1, v2);
+    } else {
+      fail_unless (FALSE);
+      ret = FALSE;
+    }
+
+    if (ranges[n].result) {
+      fail_unless (ret);
+    } else {
+      fail_unless (!ret);
+    }
+
+    if (ret) {
+      str3 = g_strdup_printf ("foo/bar, range=%s", ranges[n].result);
+      s3 = gst_structure_from_string (str3, &end);
+      fail_unless (s3 != NULL);
+      fail_unless (*end == '\0');
+      v3 = gst_structure_get_value (s3, "range");
+      fail_unless (v3 != NULL);
+
+      if (gst_value_compare (&dest, v3) != GST_VALUE_EQUAL) {
+        GST_ERROR ("%s %s %s yielded %s, expected %s", str1, ranges[n].op, str2,
+            gst_value_serialize (&dest), gst_value_serialize (v3));
+        fail_unless (FALSE);
+      }
+
+      gst_structure_free (s3);
+      g_free (str3);
+
+      g_value_unset (&dest);
+    }
+
+    gst_structure_free (s2);
+    g_free (str2);
+    gst_structure_free (s1);
+    g_free (str1);
+  }
+}
+
+GST_END_TEST;
+
+static Suite *
 gst_value_suite (void)
 {
   Suite *s = suite_create ("GstValue");
@@ -2517,6 +2738,7 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_deserialize_guint64);
   tcase_add_test (tc_chain, test_deserialize_guchar);
   tcase_add_test (tc_chain, test_deserialize_gstfraction);
+  tcase_add_test (tc_chain, test_deserialize_bitmask);
   tcase_add_test (tc_chain, test_serialize_flags);
   tcase_add_test (tc_chain, test_deserialize_flags);
   tcase_add_test (tc_chain, test_serialize_deserialize_format_enum);
@@ -2530,6 +2752,7 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_value_subtract_fraction);
   tcase_add_test (tc_chain, test_value_subtract_fraction_range);
   tcase_add_test (tc_chain, test_value_subtract_fraction_list);
+  tcase_add_test (tc_chain, test_value_subtract_bitmask);
   tcase_add_test (tc_chain, test_date);
   tcase_add_test (tc_chain, test_date_time);
   tcase_add_test (tc_chain, test_fraction_range);
@@ -2538,6 +2761,9 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_int64_range);
   tcase_add_test (tc_chain, test_serialize_int64_range);
   tcase_add_test (tc_chain, test_deserialize_int_range);
+  tcase_add_test (tc_chain, test_stepped_range_collection);
+  tcase_add_test (tc_chain, test_stepped_int_range_parsing);
+  tcase_add_test (tc_chain, test_stepped_int_range_ops);
 
   return s;
 }

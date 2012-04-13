@@ -33,12 +33,56 @@
 #include <gst/gststructure.h>
 #include <gst/gstformat.h>
 #include <gst/gstpad.h>
+#include <gst/gsttoc.h>
 
 G_BEGIN_DECLS
 
+typedef struct _GstQuery GstQuery;
+
+/**
+ * GstQueryTypeFlags:
+ * @GST_QUERY_TYPE_UPSTREAM:     Set if the query can travel upstream.
+ * @GST_QUERY_TYPE_DOWNSTREAM:   Set if the query can travel downstream.
+ * @GST_QUERY_TYPE_SERIALIZED:   Set if the query should be serialized with data
+ *                               flow.
+ *
+ * #GstQueryTypeFlags indicate the aspects of the different #GstQueryType
+ * values. You can get the type flags of a #GstQueryType with the
+ * gst_query_type_get_flags() function.
+ */
+typedef enum {
+  GST_QUERY_TYPE_UPSTREAM       = 1 << 0,
+  GST_QUERY_TYPE_DOWNSTREAM     = 1 << 1,
+  GST_QUERY_TYPE_SERIALIZED     = 1 << 2
+} GstQueryTypeFlags;
+
+/**
+ * GST_QUERY_TYPE_BOTH:
+ *
+ * The same thing as #GST_QUERY_TYPE_UPSTREAM | #GST_QUERY_TYPE_DOWNSTREAM.
+ */
+#define GST_QUERY_TYPE_BOTH \
+    (GST_QUERY_TYPE_UPSTREAM | GST_QUERY_TYPE_DOWNSTREAM)
+
+#define GST_QUERY_NUM_SHIFT     (8)
+
+/**
+ * GST_QUERY_MAKE_TYPE:
+ * @num: the query number to create
+ * @flags: the query flags
+ *
+ * when making custom query types, use this macro with the num and
+ * the given flags
+ */
+#define GST_QUERY_MAKE_TYPE(num,flags) \
+    (((num) << GST_QUERY_NUM_SHIFT) | (flags))
+
+#define FLAG(name) GST_QUERY_TYPE_##name
+
+
 /**
  * GstQueryType:
- * @GST_QUERY_NONE: invalid query type
+ * @GST_QUERY_UNKNOWN: unknown query type
  * @GST_QUERY_POSITION: current position in stream
  * @GST_QUERY_DURATION: total duration of the stream
  * @GST_QUERY_LATENCY: latency of stream
@@ -55,70 +99,43 @@ G_BEGIN_DECLS
  * @GST_QUERY_URI: query the URI of the source or sink. Since 0.10.22.
  * @GST_QUERY_ALLOCATION: the buffer allocation properties
  * @GST_QUERY_SCHEDULING: the scheduling properties
+ * @GST_QUERY_ACCEPT_CAPS: the accept caps query
+ * @GST_QUERY_CAPS: the caps query
+ * @GST_QUERY_DRAIN: wait till all serialized data is consumed downstream
+ * @GST_QUERY_TOC: query the full table of contents (TOC) with the marker
+ * for an entry which can be used to extend received TOC. Since 0.10.37.
  *
  * Standard predefined Query types
  */
 /* NOTE: don't forget to update the table in gstquery.c when changing
  * this enum */
 typedef enum {
-  GST_QUERY_NONE = 0,
-  GST_QUERY_POSITION,
-  GST_QUERY_DURATION,
-  GST_QUERY_LATENCY,
-  GST_QUERY_JITTER,     /* not in draft-query, necessary? */
-  GST_QUERY_RATE,
-  GST_QUERY_SEEKING,
-  GST_QUERY_SEGMENT,
-  GST_QUERY_CONVERT,
-  GST_QUERY_FORMATS,
-  GST_QUERY_BUFFERING,
-  GST_QUERY_CUSTOM,
-  GST_QUERY_URI,
-  GST_QUERY_ALLOCATION,
-  GST_QUERY_SCHEDULING
+  GST_QUERY_UNKNOWN      = GST_QUERY_MAKE_TYPE (0, 0),
+  GST_QUERY_POSITION     = GST_QUERY_MAKE_TYPE (10, FLAG(BOTH)),
+  GST_QUERY_DURATION     = GST_QUERY_MAKE_TYPE (20, FLAG(BOTH)),
+  GST_QUERY_LATENCY      = GST_QUERY_MAKE_TYPE (30, FLAG(BOTH)),
+  GST_QUERY_JITTER       = GST_QUERY_MAKE_TYPE (40, FLAG(BOTH)),
+  GST_QUERY_RATE         = GST_QUERY_MAKE_TYPE (50, FLAG(BOTH)),
+  GST_QUERY_SEEKING      = GST_QUERY_MAKE_TYPE (60, FLAG(BOTH)),
+  GST_QUERY_SEGMENT      = GST_QUERY_MAKE_TYPE (70, FLAG(BOTH)),
+  GST_QUERY_CONVERT      = GST_QUERY_MAKE_TYPE (80, FLAG(BOTH)),
+  GST_QUERY_FORMATS      = GST_QUERY_MAKE_TYPE (90, FLAG(BOTH)),
+  GST_QUERY_BUFFERING    = GST_QUERY_MAKE_TYPE (110, FLAG(BOTH)),
+  GST_QUERY_CUSTOM       = GST_QUERY_MAKE_TYPE (120, FLAG(BOTH)),
+  GST_QUERY_URI          = GST_QUERY_MAKE_TYPE (130, FLAG(BOTH)),
+  GST_QUERY_ALLOCATION   = GST_QUERY_MAKE_TYPE (140, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+  GST_QUERY_SCHEDULING   = GST_QUERY_MAKE_TYPE (150, FLAG(UPSTREAM)),
+  GST_QUERY_ACCEPT_CAPS  = GST_QUERY_MAKE_TYPE (160, FLAG(BOTH)),
+  GST_QUERY_CAPS         = GST_QUERY_MAKE_TYPE (170, FLAG(BOTH)),
+  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+  GST_QUERY_TOC          = GST_QUERY_MAKE_TYPE (190, FLAG(BOTH))
 } GstQueryType;
-
-/**
- * GstBufferingMode:
- * @GST_BUFFERING_STREAM: a small amount of data is buffered
- * @GST_BUFFERING_DOWNLOAD: the stream is being downloaded
- * @GST_BUFFERING_TIMESHIFT: the stream is being downloaded in a ringbuffer
- * @GST_BUFFERING_LIVE: the stream is a live stream
- *
- * The different types of buffering methods.
- */
-typedef enum {
-  GST_BUFFERING_STREAM,
-  GST_BUFFERING_DOWNLOAD,
-  GST_BUFFERING_TIMESHIFT,
-  GST_BUFFERING_LIVE
-} GstBufferingMode;
-
-typedef struct _GstQueryTypeDefinition GstQueryTypeDefinition;
-typedef struct _GstQuery GstQuery;
-
-/**
- * GstQueryTypeDefinition:
- * @value: the unique id of the Query type
- * @nick: a short nick
- * @description: a longer description of the query type
- * @quark: the quark for the nick
- *
- * A Query Type definition
- */
-struct _GstQueryTypeDefinition
-{
-  GstQueryType   value;
-  const gchar   *nick;
-  const gchar   *description;
-  GQuark         quark;
-};
+#undef FLAG
 
 #define GST_TYPE_QUERY                         (gst_query_get_type())
 #define GST_IS_QUERY(obj)                      (GST_IS_MINI_OBJECT_TYPE (obj, GST_TYPE_QUERY))
 #define GST_QUERY_CAST(obj)                    ((GstQuery*)(obj))
 #define GST_QUERY(obj)                         (GST_QUERY_CAST(obj))
-
 
 /**
  * GST_QUERY_TYPE:
@@ -138,6 +155,28 @@ struct _GstQueryTypeDefinition
  */
 #define GST_QUERY_TYPE_NAME(query) (gst_query_type_get_name(GST_QUERY_TYPE(query)))
 
+/**
+ * GST_QUERY_IS_UPSTREAM:
+ * @ev: the query to query
+ *
+ * Check if an query can travel upstream.
+ */
+#define GST_QUERY_IS_UPSTREAM(ev)       !!(GST_QUERY_TYPE (ev) & GST_QUERY_TYPE_UPSTREAM)
+/**
+ * GST_QUERY_IS_DOWNSTREAM:
+ * @ev: the query to query
+ *
+ * Check if an query can travel downstream.
+ */
+#define GST_QUERY_IS_DOWNSTREAM(ev)     !!(GST_QUERY_TYPE (ev) & GST_QUERY_TYPE_DOWNSTREAM)
+/**
+ * GST_QUERY_IS_SERIALIZED:
+ * @ev: the query to query
+ *
+ * Check if an query is serialized with the data stream.
+ */
+#define GST_QUERY_IS_SERIALIZED(ev)     !!(GST_QUERY_TYPE (ev) & GST_QUERY_TYPE_SERIALIZED)
+
 
 /**
  * GstQuery:
@@ -154,25 +193,13 @@ struct _GstQuery
   GstQueryType type;
 };
 
-const gchar*    gst_query_type_get_name        (GstQueryType query);
-GQuark          gst_query_type_to_quark        (GstQueryType query);
+const gchar*    gst_query_type_get_name        (GstQueryType type);
+GQuark          gst_query_type_to_quark        (GstQueryType type);
+GstQueryTypeFlags
+                gst_query_type_get_flags       (GstQueryType type);
+
 
 GType           gst_query_get_type             (void);
-
-/* register a new query */
-GstQueryType    gst_query_type_register        (const gchar *nick,
-                                                const gchar *description);
-GstQueryType    gst_query_type_get_by_nick     (const gchar *nick);
-
-/* check if a query is in an array of querys */
-gboolean        gst_query_types_contains       (const GstQueryType *types,
-                                                GstQueryType type);
-
-/* query for query details */
-
-const GstQueryTypeDefinition*
-                gst_query_type_get_details         (GstQueryType type);
-GstIterator*    gst_query_type_iterate_definitions (void);
 
 /* refcounting */
 /**
@@ -260,49 +287,57 @@ gst_query_copy (const GstQuery * q)
  * query is unreffed, the new one is reffed).
  *
  * Either @new_query or the #GstQuery pointed to by @old_query may be NULL.
+ *
+ * Returns: TRUE if @new_query was different from @old_query
  */
-#define         gst_query_replace(old_query,new_query) \
-    gst_mini_object_replace ((GstMiniObject **)(old_query), GST_MINI_OBJECT_CAST (new_query))
+#ifdef _FOOL_GTK_DOC_
+G_INLINE_FUNC gboolean gst_query_replace (GstQuery **old_query, GstQuery *new_query);
+#endif
 
+static inline gboolean
+gst_query_replace (GstQuery **old_query, GstQuery *new_query)
+{
+  return gst_mini_object_replace ((GstMiniObject **) old_query, (GstMiniObject *) new_query);
+}
 
 /* application specific query */
-GstQuery *      gst_query_new_custom            (GstQueryType type, GstStructure *structure);
+GstQuery *      gst_query_new_custom            (GstQueryType type, GstStructure *structure) G_GNUC_MALLOC;
 const GstStructure *
                 gst_query_get_structure         (GstQuery *query);
 GstStructure *  gst_query_writable_structure    (GstQuery *query);
 
 /* position query */
-GstQuery*       gst_query_new_position          (GstFormat format);
+GstQuery*       gst_query_new_position          (GstFormat format) G_GNUC_MALLOC;
 void            gst_query_set_position          (GstQuery *query, GstFormat format, gint64 cur);
 void            gst_query_parse_position        (GstQuery *query, GstFormat *format, gint64 *cur);
 
 /* duration query */
-GstQuery*       gst_query_new_duration          (GstFormat format);
+GstQuery*       gst_query_new_duration          (GstFormat format) G_GNUC_MALLOC;
 void            gst_query_set_duration          (GstQuery *query, GstFormat format, gint64 duration);
 void            gst_query_parse_duration        (GstQuery *query, GstFormat *format, gint64 *duration);
 
 /* latency query */
-GstQuery*       gst_query_new_latency           (void);
+GstQuery*       gst_query_new_latency           (void) G_GNUC_MALLOC;
 void            gst_query_set_latency           (GstQuery *query, gboolean live, GstClockTime min_latency,
                                                  GstClockTime max_latency);
 void            gst_query_parse_latency         (GstQuery *query, gboolean *live, GstClockTime *min_latency,
                                                  GstClockTime *max_latency);
 
 /* convert query */
-GstQuery*       gst_query_new_convert           (GstFormat src_format, gint64 value, GstFormat dest_format);
+GstQuery*       gst_query_new_convert           (GstFormat src_format, gint64 value, GstFormat dest_format) G_GNUC_MALLOC;
 void            gst_query_set_convert           (GstQuery *query, GstFormat src_format, gint64 src_value,
                                                  GstFormat dest_format, gint64 dest_value);
 void            gst_query_parse_convert         (GstQuery *query, GstFormat *src_format, gint64 *src_value,
                                                  GstFormat *dest_format, gint64 *dest_value);
 /* segment query */
-GstQuery*       gst_query_new_segment           (GstFormat format);
+GstQuery*       gst_query_new_segment           (GstFormat format) G_GNUC_MALLOC;
 void            gst_query_set_segment           (GstQuery *query, gdouble rate, GstFormat format,
                                                  gint64 start_value, gint64 stop_value);
 void            gst_query_parse_segment         (GstQuery *query, gdouble *rate, GstFormat *format,
                                                  gint64 *start_value, gint64 *stop_value);
 
 /* seeking query */
-GstQuery*       gst_query_new_seeking           (GstFormat format);
+GstQuery*       gst_query_new_seeking           (GstFormat format) G_GNUC_MALLOC;
 void            gst_query_set_seeking           (GstQuery *query, GstFormat format,
                                                  gboolean seekable,
                                                  gint64 segment_start,
@@ -312,14 +347,30 @@ void            gst_query_parse_seeking         (GstQuery *query, GstFormat *for
                                                  gint64 *segment_start,
                                                  gint64 *segment_end);
 /* formats query */
-GstQuery*       gst_query_new_formats           (void);
+GstQuery*       gst_query_new_formats           (void) G_GNUC_MALLOC;
 void            gst_query_set_formats           (GstQuery *query, gint n_formats, ...);
 void            gst_query_set_formatsv          (GstQuery *query, gint n_formats, const GstFormat *formats);
 void            gst_query_parse_n_formats       (GstQuery *query, guint *n_formats);
 void            gst_query_parse_nth_format      (GstQuery *query, guint nth, GstFormat *format);
 
 /* buffering query */
-GstQuery*       gst_query_new_buffering           (GstFormat format);
+/**
+ * GstBufferingMode:
+ * @GST_BUFFERING_STREAM: a small amount of data is buffered
+ * @GST_BUFFERING_DOWNLOAD: the stream is being downloaded
+ * @GST_BUFFERING_TIMESHIFT: the stream is being downloaded in a ringbuffer
+ * @GST_BUFFERING_LIVE: the stream is a live stream
+ *
+ * The different types of buffering methods.
+ */
+typedef enum {
+  GST_BUFFERING_STREAM,
+  GST_BUFFERING_DOWNLOAD,
+  GST_BUFFERING_TIMESHIFT,
+  GST_BUFFERING_LIVE
+} GstBufferingMode;
+
+GstQuery*       gst_query_new_buffering           (GstFormat format) G_GNUC_MALLOC;
 void            gst_query_set_buffering_percent   (GstQuery *query, gboolean busy, gint percent);
 void            gst_query_parse_buffering_percent (GstQuery *query, gboolean *busy, gint *percent);
 
@@ -345,39 +396,94 @@ gboolean        gst_query_parse_nth_buffering_range (GstQuery *query,
                                                      gint64 *stop);
 
 /* URI query */
-GstQuery *      gst_query_new_uri                 (void);
-void            gst_query_parse_uri               (GstQuery *query, gchar **uri);
-void            gst_query_set_uri                 (GstQuery *query, const gchar *uri);
+GstQuery *      gst_query_new_uri                    (void) G_GNUC_MALLOC;
+void            gst_query_parse_uri                  (GstQuery *query, gchar **uri);
+void            gst_query_set_uri                    (GstQuery *query, const gchar *uri);
 
 /* allocation query */
-GstQuery *      gst_query_new_allocation          (GstCaps *caps, gboolean need_pool);
-void            gst_query_parse_allocation        (GstQuery *query, GstCaps **caps, gboolean *need_pool);
+GstQuery *      gst_query_new_allocation             (GstCaps *caps, gboolean need_pool) G_GNUC_MALLOC;
+void            gst_query_parse_allocation           (GstQuery *query, GstCaps **caps, gboolean *need_pool);
 
-void            gst_query_set_allocation_params   (GstQuery *query, guint size, guint min_buffers,
-                                                   guint max_buffers, guint prefix, guint alignment,
-                                                   GstBufferPool *pool);
-void            gst_query_parse_allocation_params (GstQuery *query, guint *size, guint *min_buffers,
-                                                   guint *max_buffers, guint *prefix, guint *alignment,
-                                                   GstBufferPool **pool);
+/* pools */
+void            gst_query_add_allocation_pool        (GstQuery *query, GstBufferPool *pool,
+                                                      guint size, guint min_buffers,
+                                                      guint max_buffers);
+guint           gst_query_get_n_allocation_pools     (GstQuery *query);
+void            gst_query_parse_nth_allocation_pool  (GstQuery *query, guint index,
+                                                      GstBufferPool **pool,
+                                                      guint *size, guint *min_buffers,
+                                                      guint *max_buffers);
+void            gst_query_set_nth_allocation_pool    (GstQuery *query, guint index,
+                                                      GstBufferPool *pool,
+                                                      guint size, guint min_buffers,
+                                                      guint max_buffers);
 
-void            gst_query_add_allocation_meta       (GstQuery *query, const gchar *api);
-guint           gst_query_get_n_allocation_metas    (GstQuery *query);
-const gchar *   gst_query_parse_nth_allocation_meta (GstQuery *query, guint index);
-gboolean        gst_query_has_allocation_meta       (GstQuery *query, const gchar *api);
+/* allocators */
+void            gst_query_add_allocation_param       (GstQuery *query, GstAllocator *allocator,
+                                                      const GstAllocationParams *params);
+guint           gst_query_get_n_allocation_params    (GstQuery *query);
+void            gst_query_parse_nth_allocation_param (GstQuery *query, guint index,
+                                                      GstAllocator **allocator,
+                                                      GstAllocationParams *params);
+void            gst_query_set_nth_allocation_param   (GstQuery *query, guint index,
+                                                      GstAllocator *allocator,
+                                                      const GstAllocationParams *params);
 
-void            gst_query_add_allocation_memory       (GstQuery *query, const gchar *alloc);
-guint           gst_query_get_n_allocation_memories   (GstQuery *query);
-const gchar *   gst_query_parse_nth_allocation_memory (GstQuery *query, guint index);
+/* metadata */
+void            gst_query_add_allocation_meta        (GstQuery *query, GType api);
+guint           gst_query_get_n_allocation_metas     (GstQuery *query);
+GType           gst_query_parse_nth_allocation_meta  (GstQuery *query, guint index);
+void            gst_query_remove_nth_allocation_meta (GstQuery *query, guint index);
+gboolean        gst_query_has_allocation_meta        (GstQuery *query, GType api);
+
 
 /* scheduling query */
-GstQuery *      gst_query_new_scheduling          (void);
+/**
+ * GstSchedulingFlags:
+ * @GST_SCHEDULING_FLAG_SEEKABLE: if seeking is possible
+ * @GST_SCHEDULING_FLAG_SEQUENTIAL: if sequential access is recommended
+ *
+ * The different scheduling flags.
+ */
+typedef enum {
+  GST_SCHEDULING_FLAG_SEEKABLE      = (1 << 0),
+  GST_SCHEDULING_FLAG_SEQUENTIAL    = (1 << 1)
+} GstSchedulingFlags;
 
-void            gst_query_set_scheduling          (GstQuery *query, gboolean pull_mode,
-                                                   gboolean random_access, gboolean sequential,
+GstQuery *      gst_query_new_scheduling          (void) G_GNUC_MALLOC;
+
+void            gst_query_set_scheduling          (GstQuery *query, GstSchedulingFlags flags,
                                                    gint minsize, gint maxsize, gint align);
-void            gst_query_parse_scheduling        (GstQuery *query, gboolean *pull_mode,
-                                                   gboolean *random_access, gboolean *sequential,
+void            gst_query_parse_scheduling        (GstQuery *query, GstSchedulingFlags *flags,
                                                    gint *minsize, gint *maxsize, gint *align);
+
+void            gst_query_add_scheduling_mode       (GstQuery *query, GstPadMode mode);
+guint           gst_query_get_n_scheduling_modes    (GstQuery *query);
+GstPadMode      gst_query_parse_nth_scheduling_mode (GstQuery *query, guint index);
+gboolean        gst_query_has_scheduling_mode       (GstQuery *query, GstPadMode mode);
+
+/* accept-caps query */
+GstQuery *      gst_query_new_accept_caps          (GstCaps *caps) G_GNUC_MALLOC;
+void            gst_query_parse_accept_caps        (GstQuery *query, GstCaps **caps);
+void            gst_query_set_accept_caps_result   (GstQuery *query, gboolean result);
+void            gst_query_parse_accept_caps_result (GstQuery *query, gboolean *result);
+
+/* caps query */
+GstQuery *      gst_query_new_caps                 (GstCaps *filter) G_GNUC_MALLOC;
+void            gst_query_parse_caps               (GstQuery *query, GstCaps **filter);
+
+void            gst_query_set_caps_result          (GstQuery *query, GstCaps *caps);
+void            gst_query_parse_caps_result        (GstQuery *query, GstCaps **caps);
+
+void            gst_query_intersect_caps_result    (GstQuery *query, GstCaps *filter,
+                                                    GstCapsIntersectMode mode);
+/* drain query */
+GstQuery *      gst_query_new_drain                (void) G_GNUC_MALLOC;
+
+/* TOC query */
+GstQuery *      gst_query_new_toc                 (void);
+void            gst_query_set_toc                 (GstQuery *query, GstToc *toc, const gchar *extend_uid);
+void            gst_query_parse_toc               (GstQuery *query, GstToc **toc, gchar **extend_uid);
 
 G_END_DECLS
 

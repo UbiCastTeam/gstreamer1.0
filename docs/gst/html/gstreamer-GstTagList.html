@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTagList</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstSystemClock.html" title="GstSystemClock">
 <link rel="next" href="GstTagSetter.html" title="GstTagSetter">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="GstSystemClock.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="GstTagSetter.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -40,7 +40,7 @@
 <pre class="synopsis">
 #include &lt;gst/gst.h&gt;
 
-typedef             <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList">GstTagList</a>;
+                    <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList">GstTagList</a>;
 enum                <a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode">GstTagMergeMode</a>;
 enum                <a class="link" href="gstreamer-GstTagList.html#GstTagFlag" title="enum GstTagFlag">GstTagFlag</a>;
 <span class="returnvalue">void</span>                (<a class="link" href="gstreamer-GstTagList.html#GstTagForeachFunc" title="GstTagForeachFunc ()">*GstTagForeachFunc</a>)                (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
@@ -98,6 +98,7 @@ enum                <a class="link" href="gstreamer-GstTagList.html#GstTagFlag" 
 #define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-ALBUM-PEAK:CAPS" title="GST_TAG_ALBUM_PEAK">GST_TAG_ALBUM_PEAK</a>
 #define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-REFERENCE-LEVEL:CAPS" title="GST_TAG_REFERENCE_LEVEL">GST_TAG_REFERENCE_LEVEL</a>
 #define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-LANGUAGE-CODE:CAPS" title="GST_TAG_LANGUAGE_CODE">GST_TAG_LANGUAGE_CODE</a>
+#define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-LANGUAGE-NAME:CAPS" title="GST_TAG_LANGUAGE_NAME">GST_TAG_LANGUAGE_NAME</a>
 #define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-IMAGE:CAPS" title="GST_TAG_IMAGE">GST_TAG_IMAGE</a>
 #define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-PREVIEW-IMAGE:CAPS" title="GST_TAG_PREVIEW_IMAGE">GST_TAG_PREVIEW_IMAGE</a>
 #define             <a class="link" href="gstreamer-GstTagList.html#GST-TAG-ATTACHMENT:CAPS" title="GST_TAG_ATTACHMENT">GST_TAG_ATTACHMENT</a>
@@ -143,12 +144,16 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstTagList.html#gst-tag-get-description" title="gst_tag_get_description ()">gst_tag_get_description</a>             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>);
 <a class="link" href="gstreamer-GstTagList.html#GstTagFlag" title="enum GstTagFlag"><span class="returnvalue">GstTagFlag</span></a>          <a class="link" href="gstreamer-GstTagList.html#gst-tag-get-flag" title="gst_tag_get_flag ()">gst_tag_get_flag</a>                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-is-fixed" title="gst_tag_is_fixed ()">gst_tag_is_fixed</a>                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>);
-<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new" title="gst_tag_list_new ()">gst_tag_list_new</a>                    (<em class="parameter"><code><span class="type">void</span></code></em>);
-<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-full" title="gst_tag_list_new_full ()">gst_tag_list_new_full</a>               (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new" title="gst_tag_list_new ()">gst_tag_list_new</a>                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
-<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-full-valist" title="gst_tag_list_new_full_valist ()">gst_tag_list_new_full_valist</a>        (<em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);
+<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-empty" title="gst_tag_list_new_empty ()">gst_tag_list_new_empty</a>              (<em class="parameter"><code><span class="type">void</span></code></em>);
+<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-valist" title="gst_tag_list_new_valist ()">gst_tag_list_new_valist</a>             (<em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);
+<a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-from-string" title="gst_tag_list_new_from_string ()">gst_tag_list_new_from_string</a>        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-to-string" title="gst_tag_list_to_string ()">gst_tag_list_to_string</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-is-tag-list" title="gst_is_tag_list ()">gst_is_tag_list</a>                     (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> p</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-is-empty" title="gst_tag_list_is_empty ()">gst_tag_list_is_empty</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-is-equal" title="gst_tag_list_is_equal ()">gst_tag_list_is_equal</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list1</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list2</code></em>);
 <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-copy" title="gst_tag_list_copy ()">gst_tag_list_copy</a>                   (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-insert" title="gst_tag_list_insert ()">gst_tag_list_insert</a>                 (<em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *into</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *from</code></em>,
@@ -159,6 +164,9 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-free" title="gst_tag_list_free ()">gst_tag_list_free</a>                   (<em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-tag-size" title="gst_tag_list_get_tag_size ()">gst_tag_list_get_tag_size</a>           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-n-tags" title="gst_tag_list_n_tags ()">gst_tag_list_n_tags</a>                 (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-nth-tag-name" title="gst_tag_list_nth_tag_name ()">gst_tag_list_nth_tag_name</a>           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-add" title="gst_tag_list_add ()">gst_tag_list_add</a>                    (<em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
@@ -190,20 +198,6 @@ const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-v
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-copy-value" title="gst_tag_list_copy_value ()">gst_tag_list_copy_value</a>             (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-char" title="gst_tag_list_get_char ()">gst_tag_list_get_char</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-char-index" title="gst_tag_list_get_char_index ()">gst_tag_list_get_char_index</a>         (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-uchar" title="gst_tag_list_get_uchar ()">gst_tag_list_get_uchar</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-uchar-index" title="gst_tag_list_get_uchar_index ()">gst_tag_list_get_uchar_index</a>        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *value</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-boolean" title="gst_tag_list_get_boolean ()">gst_tag_list_get_boolean</a>            (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *value</code></em>);
@@ -225,34 +219,20 @@ const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-v
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-long" title="gst_tag_list_get_long ()">gst_tag_list_get_long</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-long-index" title="gst_tag_list_get_long_index ()">gst_tag_list_get_long_index</a>         (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-ulong" title="gst_tag_list_get_ulong ()">gst_tag_list_get_ulong</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> *value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-ulong-index" title="gst_tag_list_get_ulong_index ()">gst_tag_list_get_ulong_index</a>        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> *value</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-int64" title="gst_tag_list_get_int64 ()">gst_tag_list_get_int64</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *value</code></em>);
+                                                         <em class="parameter"><code><span class="type">gint64</span> *value</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-int64-index" title="gst_tag_list_get_int64_index ()">gst_tag_list_get_int64_index</a>        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *value</code></em>);
+                                                         <em class="parameter"><code><span class="type">gint64</span> *value</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-uint64" title="gst_tag_list_get_uint64 ()">gst_tag_list_get_uint64</a>             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> *value</code></em>);
+                                                         <em class="parameter"><code><span class="type">guint64</span> *value</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-uint64-index" title="gst_tag_list_get_uint64_index ()">gst_tag_list_get_uint64_index</a>       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> *value</code></em>);
+                                                         <em class="parameter"><code><span class="type">guint64</span> *value</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-float" title="gst_tag_list_get_float ()">gst_tag_list_get_float</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *value</code></em>);
@@ -324,8 +304,7 @@ Last reviewed on 2009-06-09 (0.10.23)
 <a name="gstreamer-GstTagList.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="GstTagList"></a><h3>GstTagList</h3>
-<pre class="programlisting">typedef GstStructure GstTagList;
-</pre>
+<pre class="programlisting">typedef struct _GstTagList GstTagList;</pre>
 <p>
 Opaque <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> data structure.
 </p>
@@ -357,7 +336,7 @@ In the table below this is shown for the cases that a tag exists in the list
 <p>
 </p>
 <div class="table">
-<a name="id732916"></a><p class="title"><b>Table 1. merge mode</b></p>
+<a name="idp42464256"></a><p class="title"><b>Table 1. merge mode</b></p>
 <div class="table-contents"><table summary="merge mode" border="1">
 <colgroup>
 <col>
@@ -608,7 +587,7 @@ The artist name as it should be displayed, e.g. 'Jimi Hendrix' or
 <hr>
 <div class="refsect2">
 <a name="GST-TAG-ARTIST-SORTNAME:CAPS"></a><h3>GST_TAG_ARTIST_SORTNAME</h3>
-<pre class="programlisting">#define GST_TAG_ARTIST_SORTNAME        "musicbrainz-sortname"
+<pre class="programlisting">#define GST_TAG_ARTIST_SORTNAME        "artist-sortname"
 </pre>
 <p>
 person(s) responsible for the recording, as used for sorting (string)
@@ -1066,8 +1045,27 @@ reference level of track and album gain values (double)
 <pre class="programlisting">#define GST_TAG_LANGUAGE_CODE          "language-code"
 </pre>
 <p>
-Language code (ISO-639-1) (string) of the content
+ISO-639-2 or ISO-639-1 code for the language the content is in (string)
 </p>
+<p>
+There is utility API in libgsttag in gst-plugins-base to obtain a translated
+language name from the language code: <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gsttaglanguagecodes.html#gst-tag-get-language-name"><code class="function">gst_tag_get_language_name()</code></a>
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-TAG-LANGUAGE-NAME:CAPS"></a><h3>GST_TAG_LANGUAGE_NAME</h3>
+<pre class="programlisting">#define GST_TAG_LANGUAGE_NAME          "language-name"
+</pre>
+<p>
+Name of the language the content is in (string)
+</p>
+<p>
+Free-form name of the language the content is in, if a language code
+is not available. This tag should not be set in addition to a language
+code. It is undefined what language or locale the language name is in.
+</p>
+<p class="since">Since 0.10.37</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1075,7 +1073,7 @@ Language code (ISO-639-1) (string) of the content
 <pre class="programlisting">#define GST_TAG_IMAGE                  "image"
 </pre>
 <p>
-image (buffer) (buffer caps should specify the content type and preferably
+image (sample) (sample caps should specify the content type and preferably
 also set "image-type" field as <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gsttag.html#GstTagImageType"><span class="type">GstTagImageType</span></a>)
 </p>
 <p class="since">Since 0.10.6</p>
@@ -1087,7 +1085,7 @@ also set "image-type" field as <a href="http://gstreamer.freedesktop.org/data/do
 </pre>
 <p>
 image that is meant for preview purposes, e.g. small icon-sized version
-(buffer) (buffer caps should specify the content type)
+(sample) (sample caps should specify the content type)
 </p>
 <p class="since">Since 0.10.7</p>
 </div>
@@ -1097,7 +1095,7 @@ image that is meant for preview purposes, e.g. small icon-sized version
 <pre class="programlisting">#define GST_TAG_ATTACHMENT             "attachment"
 </pre>
 <p>
-generic file attachment (buffer) (buffer caps should specify the content
+generic file attachment (sample) (sample caps should specify the content
 type and if possible set "filename" to the file name of the
 attachment)
 </p>
@@ -1665,26 +1663,7 @@ Unfixed tags can contain lists of values.
 <hr>
 <div class="refsect2">
 <a name="gst-tag-list-new"></a><h3>gst_tag_list_new ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new                    (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>
-Creates a new empty GstTagList.
-</p>
-<p>
-Free-function: gst_tag_list_free
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>An empty tag list. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-new-full"></a><h3>gst_tag_list_new_full ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new_full               (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new                    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Creates a new taglist and appends the values for the given tags. It expects
@@ -1721,10 +1700,29 @@ when no longer needed. <span class="annotation">[<acronym title="Free data after
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-tag-list-new-full-valist"></a><h3>gst_tag_list_new_full_valist ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new_full_valist        (<em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
+<a name="gst-tag-list-new-empty"></a><h3>gst_tag_list_new_empty ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new_empty              (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>
-Just like <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-full" title="gst_tag_list_new_full ()"><code class="function">gst_tag_list_new_full()</code></a>, only that it takes a va_list argument.
+Creates a new empty GstTagList.
+</p>
+<p>
+Free-function: gst_tag_list_free
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>An empty tag list. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-new-valist"></a><h3>gst_tag_list_new_valist ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new_valist             (<em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
+<p>
+Just like <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new" title="gst_tag_list_new ()"><code class="function">gst_tag_list_new()</code></a>, only that it takes a va_list argument.
 Useful mostly for language bindings.
 </p>
 <p>
@@ -1746,6 +1744,53 @@ when no longer needed. <span class="annotation">[<acronym title="Free data after
 </tbody>
 </table></div>
 <p class="since">Since 0.10.24</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-new-from-string"></a><h3>gst_tag_list_new_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *        gst_tag_list_new_from_string        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>);</pre>
+<p>
+Deserializes a tag list.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>a string created with <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-to-string" title="gst_tag_list_to_string ()"><code class="function">gst_tag_list_to_string()</code></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a new <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a>, or NULL in case of an error.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.10.36</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-to-string"></a><h3>gst_tag_list_to_string ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             gst_tag_list_to_string              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);</pre>
+<p>
+Serializes a tag list to a string.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a newly-allocated string, or NULL in case of an error. The
+string must be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when no longer needed.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1789,6 +1834,33 @@ Checks if the given taglist is empty.
 </tbody>
 </table></div>
 <p class="since">Since 0.10.11</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-is-equal"></a><h3>gst_tag_list_is_equal ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_is_equal               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list1</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list2</code></em>);</pre>
+<p>
+Checks if the two given taglists are equal.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list1</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list2</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE if the taglists are equal, otherwise FALSE</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1916,6 +1988,53 @@ Checks how many value are stored in this tag list for the given tag.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The number of tags stored</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-n-tags"></a><h3>gst_tag_list_n_tags ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                gst_tag_list_n_tags                 (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);</pre>
+<p>
+Get the number of tags in <em class="parameter"><code>list</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
+<td>A <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The number of tags in <em class="parameter"><code>list</code></em>.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-nth-tag-name"></a><h3>gst_tag_list_nth_tag_name ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       gst_tag_list_nth_tag_name           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<p>
+Get the name of the tag in <em class="parameter"><code>list</code></em> at <em class="parameter"><code>index</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
+<td>A <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The name of the tag at <em class="parameter"><code>index</code></em>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -2206,152 +2325,6 @@ given list.</td>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-tag-list-get-char"></a><h3>gst_tag_list_get_char ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_char               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);</pre>
-<p>
-Copies the contents for the given tag into the value, merging multiple values
-into one if multiple values are associated with the tag.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-get-char-index"></a><h3>gst_tag_list_get_char_index ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_char_index         (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);</pre>
-<p>
-Gets the value that is at the given index for the given tag in the given
-list.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>number of entry to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-get-uchar"></a><h3>gst_tag_list_get_uchar ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_uchar              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *value</code></em>);</pre>
-<p>
-Copies the contents for the given tag into the value, merging multiple values
-into one if multiple values are associated with the tag.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-get-uchar-index"></a><h3>gst_tag_list_get_uchar_index ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_uchar_index        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *value</code></em>);</pre>
-<p>
-Gets the value that is at the given index for the given tag in the given
-list.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>number of entry to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="gst-tag-list-get-boolean"></a><h3>gst_tag_list_get_boolean ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_boolean            (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
@@ -2571,183 +2544,10 @@ given list.</td>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-tag-list-get-long"></a><h3>gst_tag_list_get_long ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_long               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> *value</code></em>);</pre>
-<p>
-Copies the contents for the given tag into the value, merging multiple values
-into one if multiple values are associated with the tag.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-get-long-index"></a><h3>gst_tag_list_get_long_index ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_long_index         (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#glong"><span class="type">glong</span></a> *value</code></em>);</pre>
-<p>
-Gets the value that is at the given index for the given tag in the given
-list.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>number of entry to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-get-ulong"></a><h3>gst_tag_list_get_ulong ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_ulong              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> *value</code></em>);</pre>
-<p>
-Copies the contents for the given tag into the value, merging multiple values
-into one if multiple values are associated with the tag.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-tag-list-get-ulong-index"></a><h3>gst_tag_list_get_ulong_index ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_ulong_index        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> *value</code></em>);</pre>
-<p>
-Gets the value that is at the given index for the given tag in the given
-list.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>number of entry to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="gst-tag-list-get-int64"></a><h3>gst_tag_list_get_int64 ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_int64              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *value</code></em>);</pre>
-<p>
-Copies the contents for the given tag into the value, merging multiple values
-into one if multiple values are associated with the tag.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> to get the tag from</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
-<td>tag to read out</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>location for the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a value was copied, FALSE if the tag didn't exist in the
-given list.</td>
-</tr>
-</tbody>
-</table></div>
+                                                         <em class="parameter"><code><span class="type">gint64</span> *value</code></em>);</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -2755,7 +2555,7 @@ given list.</td>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_int64_index        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *value</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">gint64</span> *value</code></em>);</pre>
 <p>
 Gets the value that is at the given index for the given tag in the given
 list.
@@ -2793,7 +2593,7 @@ given list.</td>
 <a name="gst-tag-list-get-uint64"></a><h3>gst_tag_list_get_uint64 ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_uint64             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> *value</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">guint64</span> *value</code></em>);</pre>
 <p>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
@@ -2828,7 +2628,7 @@ given list.</td>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_uint64_index       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> *value</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">guint64</span> *value</code></em>);</pre>
 <p>
 Gets the value that is at the given index for the given tag in the given
 list.

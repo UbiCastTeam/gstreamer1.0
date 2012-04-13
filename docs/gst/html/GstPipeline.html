@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstPipeline</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstParse.html" title="GstParse">
 <link rel="next" href="GstPlugin.html" title="GstPlugin">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstParse.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="GstPlugin.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -86,7 +86,7 @@ GstPipeline implements
 <a name="GstPipeline.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="GstPipeline.html#GstPipeline--auto-flush-bus" title='The "auto-flush-bus" property'>auto-flush-bus</a>"           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
-  "<a class="link" href="GstPipeline.html#GstPipeline--delay" title='The "delay" property'>delay</a>"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write
+  "<a class="link" href="GstPipeline.html#GstPipeline--delay" title='The "delay" property'>delay</a>"                    <span class="type">guint64</span>               : Read / Write
 </pre>
 </div>
 <div class="refsect1">
@@ -95,8 +95,7 @@ GstPipeline implements
 A <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> is a special <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> used as the toplevel container for
 the filter graph. The <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> will manage the selection and
 distribution of a global <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> as well as provide a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> to the
-application. It will also implement a default behaviour for managing
-seek events (see <a class="link" href="GstElement.html#gst-element-seek" title="gst_element_seek ()"><code class="function">gst_element_seek()</code></a>).
+application.
 </p>
 <p>
 <a class="link" href="GstPipeline.html#gst-pipeline-new" title="gst_pipeline_new ()"><code class="function">gst_pipeline_new()</code></a> is used to create a pipeline. when you are done with
@@ -147,13 +146,7 @@ in the PLAYING state. This default behaviour can be changed with the
 <a class="link" href="GstElement.html#gst-element-set-start-time" title="gst_element_set_start_time ()"><code class="function">gst_element_set_start_time()</code></a> method.
 </p>
 <p>
-When sending a flushing seek event to a GstPipeline (see
-<a class="link" href="GstElement.html#gst-element-seek" title="gst_element_seek ()"><code class="function">gst_element_seek()</code></a>), it will make sure that the pipeline is properly
-PAUSED and resumed as well as set the new running time to 0 when the
-seek succeeded.
-</p>
-<p>
-Last reviewed on 2009-05-29 (0.10.24)
+Last reviewed on 2012-03-29 (0.11.3)
 </p>
 </div>
 <div class="refsect1">
@@ -163,7 +156,7 @@ Last reviewed on 2009-05-29 (0.10.24)
 <pre class="programlisting">struct GstPipeline {
   GstClock      *fixed_clock;
 
-  GstClockTime   stream_time;	
+  GstClockTime   stream_time;
   GstClockTime   delay;
 };
 </pre>
@@ -238,7 +231,7 @@ Create a new pipeline with the given name.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>newly created GstPipeline
-MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+MT safe. <span class="annotation">[transfer floating]</span>
 </td>
 </tr>
 </tbody>
@@ -524,7 +517,7 @@ pipeline's bus when going from READY to NULL state. Please see
 <hr>
 <div class="refsect2">
 <a name="GstPipeline--delay"></a><h3>The <code class="literal">"delay"</code> property</h3>
-<pre class="programlisting">  "delay"                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>               : Read / Write</pre>
+<pre class="programlisting">  "delay"                    <span class="type">guint64</span>               : Read / Write</pre>
 <p>
 The expected delay needed for elements to spin up to the
 PLAYING state expressed in nanoseconds.

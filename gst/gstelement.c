@@ -34,7 +34,7 @@
  * core when using the appropriate locking. Do not use this in plug-ins or
  * applications in order to retain ABI compatibility.
  *
- * All elements have pads (of the type #GstPad).  These pads link to pads on
+ * Elements can have pads (of the type #GstPad).  These pads link to pads on
  * other elements.  #GstBuffer flow between these linked pads.
  * A #GstElement has a #GList of #GstPad structures for all their input (or sink)
  * and output (or source) pads.
@@ -44,7 +44,7 @@
  * An existing pad of an element can be retrieved by name with
  * gst_element_get_static_pad(). A new dynamic pad can be created using
  * gst_element_request_pad() with a #GstPadTemplate or 
- * gst_element_get_request_pad() with the template name such as "src_\%d".
+ * gst_element_get_request_pad() with the template name such as "src_\%u".
  * An iterator of all pads can be retrieved with gst_element_iterate_pads().
  *
  * Elements can be linked through their pads.
@@ -65,18 +65,18 @@
  * You can get and set a #GstClock on an element using gst_element_get_clock()
  * and gst_element_set_clock().
  * Some elements can provide a clock for the pipeline if
- * gst_element_provides_clock() returns %TRUE. With the
+ * the #GST_ELEMENT_FLAG_PROVIDE_CLOCK flag is set. With the
  * gst_element_provide_clock() method one can retrieve the clock provided by
  * such an element.
- * Not all elements require a clock to operate correctly. If
- * gst_element_requires_clock() returns %TRUE, a clock should be set on the
+ * Not all elements require a clock to operate correctly. If the
+ * #GST_ELEMENT_FLAG_REQUIRE_CLOCK() flag is set, a clock should be set on the
  * element with gst_element_set_clock().
  *
  * Note that clock slection and distribution is normally handled by the
  * toplevel #GstPipeline so the clock functions are only to be used in very
  * specific situations.
  *
- * Last reviewed on 2009-05-29 (0.10.24)
+ * Last reviewed on 2012-03-28 (0.11.3)
  */
 
 #include "gst_private.h"
@@ -88,13 +88,14 @@
 #include "gstelementmetadata.h"
 #include "gstenumtypes.h"
 #include "gstbus.h"
-#include "gstmarshal.h"
 #include "gsterror.h"
 #include "gstevent.h"
 #include "gstutils.h"
 #include "gstinfo.h"
+#include "gstquark.h"
 #include "gstvalue.h"
 #include "gst-i18n-lib.h"
+#include "glib-compat-private.h"
 
 /* Element signals and args */
 enum
@@ -126,6 +127,8 @@ static GstStateChangeReturn gst_element_get_state_func (GstElement * element,
     GstState * state, GstState * pending, GstClockTime timeout);
 static GstStateChangeReturn gst_element_set_state_func (GstElement * element,
     GstState state);
+static gboolean gst_element_set_clock_func (GstElement * element,
+    GstClock * clock);
 static void gst_element_set_bus_func (GstElement * element, GstBus * bus);
 
 static gboolean gst_element_default_send_event (GstElement * element,
@@ -141,7 +144,7 @@ static GstObjectClass *parent_class = NULL;
 static guint gst_element_signals[LAST_SIGNAL] = { 0 };
 
 /* this is used in gstelementfactory.c:gst_element_register() */
-GQuark _gst_elementclass_factory = 0;
+GQuark __gst_elementclass_factory = 0;
 
 GType
 gst_element_get_type (void)
@@ -166,7 +169,7 @@ gst_element_get_type (void)
     _type = g_type_register_static (GST_TYPE_OBJECT, "GstElement",
         &element_info, G_TYPE_FLAG_ABSTRACT);
 
-    _gst_elementclass_factory =
+    __gst_elementclass_factory =
         g_quark_from_static_string ("GST_ELEMENTCLASS_FACTORY");
     g_once_init_leave (&gst_element_type, _type);
   }
@@ -196,7 +199,7 @@ gst_element_class_init (GstElementClass * klass)
   gst_element_signals[PAD_ADDED] =
       g_signal_new ("pad-added", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_LAST,
       G_STRUCT_OFFSET (GstElementClass, pad_added), NULL, NULL,
-      gst_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GST_TYPE_PAD);
+      g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_PAD);
   /**
    * GstElement::pad-removed:
    * @gstelement: the object which received the signal
@@ -207,7 +210,7 @@ gst_element_class_init (GstElementClass * klass)
   gst_element_signals[PAD_REMOVED] =
       g_signal_new ("pad-removed", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_LAST,
       G_STRUCT_OFFSET (GstElementClass, pad_removed), NULL, NULL,
-      gst_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GST_TYPE_PAD);
+      g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_PAD);
   /**
    * GstElement::no-more-pads:
    * @gstelement: the object which received the signal
@@ -219,7 +222,7 @@ gst_element_class_init (GstElementClass * klass)
   gst_element_signals[NO_MORE_PADS] =
       g_signal_new ("no-more-pads", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstElementClass, no_more_pads), NULL,
-      NULL, gst_marshal_VOID__VOID, G_TYPE_NONE, 0);
+      NULL, g_cclosure_marshal_generic, G_TYPE_NONE, 0);
 
   gobject_class->dispose = gst_element_dispose;
   gobject_class->finalize = gst_element_finalize;
@@ -227,6 +230,7 @@ gst_element_class_init (GstElementClass * klass)
   klass->change_state = GST_DEBUG_FUNCPTR (gst_element_change_state_func);
   klass->set_state = GST_DEBUG_FUNCPTR (gst_element_set_state_func);
   klass->get_state = GST_DEBUG_FUNCPTR (gst_element_get_state_func);
+  klass->set_clock = GST_DEBUG_FUNCPTR (gst_element_set_clock_func);
   klass->set_bus = GST_DEBUG_FUNCPTR (gst_element_set_bus_func);
   klass->query = GST_DEBUG_FUNCPTR (gst_element_default_query);
   klass->send_event = GST_DEBUG_FUNCPTR (gst_element_default_send_event);
@@ -246,7 +250,7 @@ gst_element_base_class_init (gpointer g_class)
    * the details in class_init instead of base_init */
   element_class->metadata =
       element_class->metadata ? gst_structure_copy (element_class->metadata) :
-      gst_structure_empty_new ("metadata");
+      gst_structure_new_empty ("metadata");
 
   /* Copy the pad templates so elements inherit them
    * from their base class but elements can add pad templates in class_init
@@ -262,7 +266,7 @@ gst_element_base_class_init (gpointer g_class)
   /* set the factory, see gst_element_register() */
   element_class->elementfactory =
       g_type_get_qdata (G_TYPE_FROM_CLASS (element_class),
-      _gst_elementclass_factory);
+      __gst_elementclass_factory);
   GST_DEBUG ("type %s : factory %p", G_OBJECT_CLASS_NAME (element_class),
       element_class->elementfactory);
 }
@@ -287,8 +291,8 @@ gst_element_init (GstElement * element)
   GST_STATE_PENDING (element) = GST_STATE_VOID_PENDING;
   GST_STATE_RETURN (element) = GST_STATE_CHANGE_SUCCESS;
 
-  g_static_rec_mutex_init (&element->state_lock);
-  element->state_cond = g_cond_new ();
+  g_rec_mutex_init (&element->state_lock);
+  g_cond_init (&element->state_cond);
 }
 
 /**
@@ -312,6 +316,9 @@ gst_element_release_request_pad (GstElement * element, GstPad * pad)
 
   g_return_if_fail (GST_IS_ELEMENT (element));
   g_return_if_fail (GST_IS_PAD (pad));
+  g_return_if_fail (GST_PAD_PAD_TEMPLATE (pad) == NULL ||
+      GST_PAD_TEMPLATE_PRESENCE (GST_PAD_PAD_TEMPLATE (pad)) ==
+      GST_PAD_REQUEST);
 
   oclass = GST_ELEMENT_GET_CLASS (element);
 
@@ -321,54 +328,6 @@ gst_element_release_request_pad (GstElement * element, GstPad * pad)
     (oclass->release_pad) (element, pad);
   else
     gst_element_remove_pad (element, pad);
-}
-
-/**
- * gst_element_requires_clock:
- * @element: a #GstElement to query
- *
- * Query if the element requires a clock.
- *
- * Returns: %TRUE if the element requires a clock
- *
- * MT safe.
- */
-gboolean
-gst_element_requires_clock (GstElement * element)
-{
-  gboolean result;
-
-  g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
-
-  result = (GST_ELEMENT_GET_CLASS (element)->set_clock != NULL);
-
-  return result;
-}
-
-/**
- * gst_element_provides_clock:
- * @element: a #GstElement to query
- *
- * Query if the element provides a clock. A #GstClock provided by an
- * element can be used as the global #GstClock for the pipeline.
- * An element that can provide a clock is only required to do so in the PAUSED
- * state, this means when it is fully negotiated and has allocated the resources
- * to operate the clock.
- *
- * Returns: %TRUE if the element provides a clock
- *
- * MT safe.
- */
-gboolean
-gst_element_provides_clock (GstElement * element)
-{
-  gboolean result;
-
-  g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
-
-  result = (GST_ELEMENT_GET_CLASS (element)->provide_clock != NULL);
-
-  return result;
 }
 
 /**
@@ -400,6 +359,19 @@ gst_element_provide_clock (GstElement * element)
   return result;
 }
 
+static gboolean
+gst_element_set_clock_func (GstElement * element, GstClock * clock)
+{
+  GstClock **clock_p;
+
+  GST_OBJECT_LOCK (element);
+  clock_p = &element->clock;
+  gst_object_replace ((GstObject **) clock_p, (GstObject *) clock);
+  GST_OBJECT_UNLOCK (element);
+
+  return TRUE;
+}
+
 /**
  * gst_element_set_clock:
  * @element: a #GstElement to set the clock for.
@@ -419,8 +391,7 @@ gboolean
 gst_element_set_clock (GstElement * element, GstClock * clock)
 {
   GstElementClass *oclass;
-  gboolean res = TRUE;
-  GstClock **clock_p;
+  gboolean res = FALSE;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (clock == NULL || GST_IS_CLOCK (clock), FALSE);
@@ -432,13 +403,6 @@ gst_element_set_clock (GstElement * element, GstClock * clock)
   if (oclass->set_clock)
     res = oclass->set_clock (element, clock);
 
-  if (res) {
-    /* only update the clock pointer if the element accepted the clock */
-    GST_OBJECT_LOCK (element);
-    clock_p = &element->clock;
-    gst_object_replace ((GstObject **) clock_p, (GstObject *) clock);
-    GST_OBJECT_UNLOCK (element);
-  }
   return res;
 }
 
@@ -588,28 +552,7 @@ gst_element_get_start_time (GstElement * element)
   return result;
 }
 
-/**
- * gst_element_is_indexable:
- * @element: a #GstElement.
- *
- * Queries if the element can be indexed.
- *
- * Returns: TRUE if the element can be indexed.
- *
- * MT safe.
- */
-gboolean
-gst_element_is_indexable (GstElement * element)
-{
-  gboolean result;
-
-  g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
-
-  result = (GST_ELEMENT_GET_CLASS (element)->set_index != NULL);
-
-  return result;
-}
-
+#if 0
 /**
  * gst_element_set_index:
  * @element: a #GstElement.
@@ -660,6 +603,7 @@ gst_element_get_index (GstElement * element)
 
   return result;
 }
+#endif
 
 /**
  * gst_element_add_pad:
@@ -698,6 +642,7 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
   GST_CAT_INFO_OBJECT (GST_CAT_ELEMENT_PADS, element, "adding pad '%s'",
       GST_STR_NULL (pad_name));
   flushing = GST_PAD_IS_FLUSHING (pad);
+  GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_NEED_PARENT);
   GST_OBJECT_UNLOCK (pad);
 
   /* then check to see if there's already a pad by that name here */
@@ -1135,10 +1080,6 @@ gst_element_get_request_pad (GstElement * element, const gchar * name)
  * Pad templates can be looked up using
  * gst_element_factory_get_static_pad_templates().
  *
- * If the @caps are specified and the element implements thew new
- * request_new_pad_full virtual method, the element will use them to select
- * which pad to create.
- *
  * The pad should be released with gst_element_release_request_pad().
  *
  * Returns: (transfer full): requested #GstPad if found, otherwise %NULL.
@@ -1152,6 +1093,7 @@ gst_element_request_pad (GstElement * element,
 {
   g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
   g_return_val_if_fail (templ != NULL, NULL);
+  g_return_val_if_fail (templ->presence == GST_PAD_REQUEST, NULL);
 
   return _gst_element_request_pad (element, templ, name, caps);
 }
@@ -1263,7 +1205,7 @@ gst_element_class_add_pad_template (GstElementClass * klass,
   }
 
   /* Take ownership of the floating ref */
-  g_object_ref_sink (templ);
+  gst_object_ref_sink (templ);
 
   klass->padtemplates = g_list_append (klass->padtemplates, templ);
   klass->numpadtemplates++;
@@ -1290,6 +1232,34 @@ gst_element_class_add_metadata (GstElementClass * klass,
 }
 
 /**
+ * gst_element_class_add_static_metadata:
+ * @klass: class to set metadata for
+ * @key: the key to set
+ * @value: the value to set
+ *
+ * Set @key with @value as metadata in @klass.
+ *
+ * Same as gst_element_class_add_metadata(), but @value must be a static string
+ * or an inlined string, as it will not be copied. (GStreamer plugins will
+ * be made resident once loaded, so this function can be used even from
+ * dynamically loaded plugins.)
+ */
+void
+gst_element_class_add_static_metadata (GstElementClass * klass,
+    const gchar * key, const gchar * value)
+{
+  GValue val = G_VALUE_INIT;
+
+  g_return_if_fail (GST_IS_ELEMENT_CLASS (klass));
+  g_return_if_fail (key != NULL);
+  g_return_if_fail (value != NULL);
+
+  g_value_init (&val, G_TYPE_STRING);
+  g_value_set_static_string (&val, value);
+  gst_structure_take_value ((GstStructure *) klass->metadata, key, &val);
+}
+
+/**
  * gst_element_class_set_metadata:
  * @klass: class to set metadata for
  * @longname: The long English name of the element. E.g. "File Sink"
@@ -1311,11 +1281,57 @@ gst_element_class_set_metadata (GstElementClass * klass,
 {
   g_return_if_fail (GST_IS_ELEMENT_CLASS (klass));
 
-  gst_structure_set ((GstStructure *) klass->metadata,
-      GST_ELEMENT_METADATA_LONGNAME, G_TYPE_STRING, longname,
-      GST_ELEMENT_METADATA_KLASS, G_TYPE_STRING, classification,
-      GST_ELEMENT_METADATA_DESCRIPTION, G_TYPE_STRING, description,
-      GST_ELEMENT_METADATA_AUTHOR, G_TYPE_STRING, author, NULL);
+  gst_structure_id_set ((GstStructure *) klass->metadata,
+      GST_QUARK (ELEMENT_METADATA_LONGNAME), G_TYPE_STRING, longname,
+      GST_QUARK (ELEMENT_METADATA_KLASS), G_TYPE_STRING, classification,
+      GST_QUARK (ELEMENT_METADATA_DESCRIPTION), G_TYPE_STRING, description,
+      GST_QUARK (ELEMENT_METADATA_AUTHOR), G_TYPE_STRING, author, NULL);
+}
+
+/**
+ * gst_element_class_set_static_metadata:
+ * @klass: class to set metadata for
+ * @longname: The long English name of the element. E.g. "File Sink"
+ * @classification: String describing the type of element, as an unordered list
+ * separated with slashes ('/'). See draft-klass.txt of the design docs
+ * for more details and common types. E.g: "Sink/File"
+ * @description: Sentence describing the purpose of the element.
+ * E.g: "Write stream to a file"
+ * @author: Name and contact details of the author(s). Use \n to separate
+ * multiple author metadata. E.g: "Joe Bloggs &lt;joe.blogs at foo.com&gt;"
+ *
+ * Sets the detailed information for a #GstElementClass.
+ * <note>This function is for use in _class_init functions only.</note>
+ *
+ * Same as gst_element_class_set_metadata(), but @longname, @classification,
+ * @description, and @author must be static strings or inlined strings, as
+ * they will not be copied. (GStreamer plugins will be made resident once
+ * loaded, so this function can be used even from dynamically loaded plugins.)
+ */
+void
+gst_element_class_set_static_metadata (GstElementClass * klass,
+    const gchar * longname, const gchar * classification,
+    const gchar * description, const gchar * author)
+{
+  GstStructure *s = (GstStructure *) klass->metadata;
+  GValue val = G_VALUE_INIT;
+
+  g_return_if_fail (GST_IS_ELEMENT_CLASS (klass));
+
+  g_value_init (&val, G_TYPE_STRING);
+
+  g_value_set_static_string (&val, longname);
+  gst_structure_id_set_value (s, GST_QUARK (ELEMENT_METADATA_LONGNAME), &val);
+
+  g_value_set_static_string (&val, classification);
+  gst_structure_id_set_value (s, GST_QUARK (ELEMENT_METADATA_KLASS), &val);
+
+  g_value_set_static_string (&val, description);
+  gst_structure_id_set_value (s, GST_QUARK (ELEMENT_METADATA_DESCRIPTION),
+      &val);
+
+  g_value_set_static_string (&val, author);
+  gst_structure_id_take_value (s, GST_QUARK (ELEMENT_METADATA_AUTHOR), &val);
 }
 
 /**
@@ -1527,8 +1543,6 @@ gst_element_send_event (GstElement * element, GstEvent * event)
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send %s event on element %s",
         GST_EVENT_TYPE_NAME (event), GST_ELEMENT_NAME (element));
     result = oclass->send_event (element, event);
-  } else {
-    result = gst_element_default_send_event (element, event);
   }
   GST_STATE_UNLOCK (element);
 
@@ -1568,48 +1582,6 @@ gst_element_seek (GstElement * element, gdouble rate, GstFormat format,
       gst_event_new_seek (rate, format, flags, cur_type, cur, stop_type, stop);
   result = gst_element_send_event (element, event);
 
-  return result;
-}
-
-/**
- * gst_element_get_query_types:
- * @element: a #GstElement to query
- *
- * Get an array of query types from the element.
- * If the element doesn't implement a query types function,
- * the query will be forwarded to the peer of a random linked sink pad.
- *
- * Returns: An array of #GstQueryType elements that should not
- * be freed or modified.
- *
- * MT safe.
- */
-const GstQueryType *
-gst_element_get_query_types (GstElement * element)
-{
-  GstElementClass *oclass;
-  const GstQueryType *result = NULL;
-
-  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
-
-  oclass = GST_ELEMENT_GET_CLASS (element);
-
-  if (oclass->get_query_types) {
-    result = oclass->get_query_types (element);
-  } else {
-    GstPad *pad = gst_element_get_random_pad (element, TRUE, GST_PAD_SINK);
-
-    if (pad) {
-      GstPad *peer = gst_pad_get_peer (pad);
-
-      if (peer) {
-        result = gst_pad_get_query_types (peer);
-
-        gst_object_unref (peer);
-      }
-      gst_object_unref (pad);
-    }
-  }
   return result;
 }
 
@@ -1672,8 +1644,6 @@ gst_element_query (GstElement * element, GstQuery * query)
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send query on element %s",
         GST_ELEMENT_NAME (element));
     result = oclass->query (element, query);
-  } else {
-    result = gst_element_default_query (element, query);
   }
   return result;
 }
@@ -1876,7 +1846,7 @@ gst_element_is_locked_state (GstElement * element)
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
 
   GST_OBJECT_LOCK (element);
-  result = GST_OBJECT_FLAG_IS_SET (element, GST_ELEMENT_LOCKED_STATE);
+  result = GST_ELEMENT_IS_LOCKED_STATE (element);
   GST_OBJECT_UNLOCK (element);
 
   return result;
@@ -1903,7 +1873,7 @@ gst_element_set_locked_state (GstElement * element, gboolean locked_state)
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
 
   GST_OBJECT_LOCK (element);
-  old = GST_OBJECT_FLAG_IS_SET (element, GST_ELEMENT_LOCKED_STATE);
+  old = GST_ELEMENT_IS_LOCKED_STATE (element);
 
   if (G_UNLIKELY (old == locked_state))
     goto was_ok;
@@ -1911,11 +1881,11 @@ gst_element_set_locked_state (GstElement * element, gboolean locked_state)
   if (locked_state) {
     GST_CAT_DEBUG (GST_CAT_STATES, "locking state of element %s",
         GST_ELEMENT_NAME (element));
-    GST_OBJECT_FLAG_SET (element, GST_ELEMENT_LOCKED_STATE);
+    GST_OBJECT_FLAG_SET (element, GST_ELEMENT_FLAG_LOCKED_STATE);
   } else {
     GST_CAT_DEBUG (GST_CAT_STATES, "unlocking state of element %s",
         GST_ELEMENT_NAME (element));
-    GST_OBJECT_FLAG_UNSET (element, GST_ELEMENT_LOCKED_STATE);
+    GST_OBJECT_FLAG_UNSET (element, GST_ELEMENT_FLAG_LOCKED_STATE);
   }
   GST_OBJECT_UNLOCK (element);
 
@@ -2027,22 +1997,9 @@ gst_element_get_state_func (GstElement * element,
 
   old_pending = GST_STATE_PENDING (element);
   if (old_pending != GST_STATE_VOID_PENDING) {
-    GTimeVal *timeval, abstimeout;
+    gboolean signaled;
     guint32 cookie;
 
-    if (timeout != GST_CLOCK_TIME_NONE) {
-      glong add = timeout / 1000;
-
-      if (add == 0)
-        goto done;
-
-      /* make timeout absolute */
-      g_get_current_time (&abstimeout);
-      g_time_val_add (&abstimeout, add);
-      timeval = &abstimeout;
-    } else {
-      timeval = NULL;
-    }
     /* get cookie to detect state changes during waiting */
     cookie = element->state_cookie;
 
@@ -2050,7 +2007,17 @@ gst_element_get_state_func (GstElement * element,
         "waiting for element to commit state");
 
     /* we have a pending state change, wait for it to complete */
-    if (!GST_STATE_TIMED_WAIT (element, timeval)) {
+    if (timeout != GST_CLOCK_TIME_NONE) {
+      gint64 end_time;
+      /* make timeout absolute */
+      end_time = g_get_monotonic_time () + (timeout / 1000);
+      signaled = GST_STATE_WAIT_UNTIL (element, end_time);
+    } else {
+      GST_STATE_WAIT (element);
+      signaled = TRUE;
+    }
+
+    if (!signaled) {
       GST_CAT_INFO_OBJECT (GST_CAT_STATES, element, "timed out");
       /* timeout triggered */
       ret = GST_STATE_CHANGE_ASYNC;
@@ -2858,6 +2825,9 @@ gst_element_dispose (GObject * object)
   GstElement *element = GST_ELEMENT_CAST (object);
   GstClock **clock_p;
   GstBus **bus_p;
+  GstElementClass *oclass;
+
+  oclass = GST_ELEMENT_GET_CLASS (element);
 
   GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "dispose");
 
@@ -2868,8 +2838,15 @@ gst_element_dispose (GObject * object)
       "removing %d pads", g_list_length (element->pads));
   /* first we break all our links with the outside */
   while (element->pads && element->pads->data) {
+    GstPad *pad = GST_PAD_CAST (element->pads->data);
+
     /* don't call _remove_pad with NULL */
-    gst_element_remove_pad (element, GST_PAD_CAST (element->pads->data));
+    if (oclass->release_pad && GST_PAD_PAD_TEMPLATE (pad) &&
+        GST_PAD_TEMPLATE_PRESENCE (GST_PAD_PAD_TEMPLATE (pad))
+        == GST_PAD_REQUEST)
+      (oclass->release_pad) (element, GST_PAD_CAST (element->pads->data));
+    else
+      gst_element_remove_pad (element, GST_PAD_CAST (element->pads->data));
   }
   if (G_UNLIKELY (element->pads != NULL)) {
     g_critical ("could not remove pads from element %s",
@@ -2894,7 +2871,7 @@ not_null:
   {
     gboolean is_locked;
 
-    is_locked = GST_OBJECT_FLAG_IS_SET (element, GST_ELEMENT_LOCKED_STATE);
+    is_locked = GST_ELEMENT_IS_LOCKED_STATE (element);
     g_critical
         ("\nTrying to dispose element %s, but it is in %s%s instead of the NULL"
         " state.\n"
@@ -2916,8 +2893,8 @@ gst_element_finalize (GObject * object)
 
   GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "finalize");
 
-  g_cond_free (element->state_cond);
-  g_static_rec_mutex_free (&element->state_lock);
+  g_cond_clear (&element->state_cond);
+  g_rec_mutex_clear (&element->state_lock);
 
   GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "finalize parent");
 

@@ -220,7 +220,7 @@ gst_file_sink_class_init (GstFileSinkClass * klass)
           "Append to an already existing file", DEFAULT_APPEND,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
-  gst_element_class_set_details_simple (gstelement_class,
+  gst_element_class_set_static_metadata (gstelement_class,
       "File Sink",
       "Sink/File", "Write stream to a file",
       "Thomas Vander Stichele <thomas at apestaart dot org>");
@@ -269,7 +269,8 @@ gst_file_sink_dispose (GObject * object)
 }
 
 static gboolean
-gst_file_sink_set_location (GstFileSink * sink, const gchar * location)
+gst_file_sink_set_location (GstFileSink * sink, const gchar * location,
+    GError ** error)
 {
   if (sink->file)
     goto was_open;
@@ -295,6 +296,9 @@ was_open:
   {
     g_warning ("Changing the `location' property on filesink when a file is "
         "open is not supported.");
+    g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_BAD_STATE,
+        "Changing the 'location' property on filesink when a file is "
+        "open is not supported");
     return FALSE;
   }
 }
@@ -307,7 +311,7 @@ gst_file_sink_set_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_LOCATION:
-      gst_file_sink_set_location (sink, g_value_get_string (value));
+      gst_file_sink_set_location (sink, g_value_get_string (value), NULL);
       break;
     case PROP_BUFFER_MODE:
       sink->buffer_mode = g_value_get_enum (value);
@@ -478,6 +482,16 @@ gst_file_sink_query (GstBaseSink * bsink, GstQuery * query)
       res = TRUE;
       break;
 
+    case GST_QUERY_SEEKING:
+      gst_query_parse_seeking (query, &format, NULL, NULL, NULL);
+      if (format == GST_FORMAT_BYTES || format == GST_FORMAT_DEFAULT) {
+        gst_query_set_seeking (query, GST_FORMAT_BYTES, self->seekable, 0, -1);
+      } else {
+        gst_query_set_seeking (query, format, FALSE, 0, -1);
+      }
+      res = TRUE;
+      break;
+
     default:
       res = GST_BASE_SINK_CLASS (parent_class)->query (bsink, query);
       break;
@@ -579,7 +593,7 @@ gst_file_sink_event (GstBaseSink * sink, GstEvent * event)
       break;
   }
 
-  return TRUE;
+  return GST_BASE_SINK_CLASS (parent_class)->event (sink, event);
 
   /* ERRORS */
 seek_failed:
@@ -587,6 +601,7 @@ seek_failed:
     GST_ELEMENT_ERROR (filesink, RESOURCE, SEEK,
         (_("Error while seeking in file \"%s\"."), filesink->filename),
         GST_ERROR_SYSTEM);
+    gst_event_unref (event);
     return FALSE;
   }
 flush_failed:
@@ -594,6 +609,7 @@ flush_failed:
     GST_ELEMENT_ERROR (filesink, RESOURCE, WRITE,
         (_("Error while writing to file \"%s\"."), filesink->filename),
         GST_ERROR_SYSTEM);
+    gst_event_unref (event);
     return FALSE;
   }
 }
@@ -625,24 +641,23 @@ static GstFlowReturn
 gst_file_sink_render (GstBaseSink * sink, GstBuffer * buffer)
 {
   GstFileSink *filesink;
-  gsize size;
-  guint8 *data;
+  GstMapInfo info;
 
   filesink = GST_FILE_SINK (sink);
 
-  data = gst_buffer_map (buffer, &size, NULL, GST_MAP_READ);
+  gst_buffer_map (buffer, &info, GST_MAP_READ);
 
   GST_DEBUG_OBJECT (filesink,
       "writing %" G_GSIZE_FORMAT " bytes at %" G_GUINT64_FORMAT,
-      size, filesink->current_pos);
+      info.size, filesink->current_pos);
 
-  if (size > 0 && data != NULL) {
-    if (fwrite (data, size, 1, filesink->file) != 1)
+  if (info.size > 0 && info.data != NULL) {
+    if (fwrite (info.data, info.size, 1, filesink->file) != 1)
       goto handle_error;
 
-    filesink->current_pos += size;
+    filesink->current_pos += info.size;
   }
-  gst_buffer_unmap (buffer, data, size);
+  gst_buffer_unmap (buffer, &info);
 
   return GST_FLOW_OK;
 
@@ -659,7 +674,7 @@ handle_error:
             ("%s", g_strerror (errno)));
       }
     }
-    gst_buffer_unmap (buffer, data, size);
+    gst_buffer_unmap (buffer, &info);
     return GST_FLOW_ERROR;
   }
 }
@@ -685,35 +700,30 @@ gst_file_sink_uri_get_type (GType type)
   return GST_URI_SINK;
 }
 
-static gchar **
+static const gchar *const *
 gst_file_sink_uri_get_protocols (GType type)
 {
-  static gchar *protocols[] = { (char *) "file", NULL };
+  static const gchar *protocols[] = { "file", NULL };
 
   return protocols;
 }
 
-static const gchar *
+static gchar *
 gst_file_sink_uri_get_uri (GstURIHandler * handler)
 {
   GstFileSink *sink = GST_FILE_SINK (handler);
 
-  return sink->uri;
+  /* FIXME: make thread-safe */
+  return g_strdup (sink->uri);
 }
 
 static gboolean
-gst_file_sink_uri_set_uri (GstURIHandler * handler, const gchar * uri)
+gst_file_sink_uri_set_uri (GstURIHandler * handler, const gchar * uri,
+    GError ** error)
 {
-  gchar *protocol, *location;
+  gchar *location;
   gboolean ret;
   GstFileSink *sink = GST_FILE_SINK (handler);
-
-  protocol = gst_uri_get_protocol (uri);
-  if (strcmp (protocol, "file") != 0) {
-    g_free (protocol);
-    return FALSE;
-  }
-  g_free (protocol);
 
   /* allow file://localhost/foo/bar by stripping localhost but fail
    * for every other hostname */
@@ -730,20 +740,26 @@ gst_file_sink_uri_set_uri (GstURIHandler * handler, const gchar * uri)
     /* Special case for "file://" as this is used by some applications
      *  to test with gst_element_make_from_uri if there's an element
      *  that supports the URI protocol. */
-    gst_file_sink_set_location (sink, NULL);
+    gst_file_sink_set_location (sink, NULL, NULL);
     return TRUE;
   } else {
     location = gst_uri_get_location (uri);
   }
 
-  if (!location)
+  if (!location) {
+    g_set_error_literal (error, GST_URI_ERROR, GST_URI_ERROR_BAD_URI,
+        "File URI without location");
     return FALSE;
+  }
+
   if (!g_path_is_absolute (location)) {
+    g_set_error_literal (error, GST_URI_ERROR, GST_URI_ERROR_BAD_URI,
+        "File URI location must be an absolute path");
     g_free (location);
     return FALSE;
   }
 
-  ret = gst_file_sink_set_location (sink, location);
+  ret = gst_file_sink_set_location (sink, location, error);
   g_free (location);
 
   return ret;

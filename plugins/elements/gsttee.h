@@ -67,18 +67,18 @@ struct _GstTee {
 
   /*< private >*/
   /* lock protecting dynamic pads */
-  GMutex         *dyn_lock;
+  GMutex          dyn_lock;
 
   GstPad         *sinkpad;
   GstPad         *allocpad;
-  gint            pad_counter;
+  guint           pad_counter;
 
   gboolean        has_chain;
   gboolean        has_sink_loop;
   gboolean        silent;
   gchar          *last_message;
 
-  GstActivateMode sink_mode;
+  GstPadMode      sink_mode;
   GstTeePullMode  pull_mode;
   GstPad         *pull_pad;
 };
@@ -87,7 +87,7 @@ struct _GstTeeClass {
   GstElementClass parent_class;
 };
 
-GType 	gst_tee_get_type	(void);
+GType	gst_tee_get_type	(void);
 
 G_END_DECLS
 

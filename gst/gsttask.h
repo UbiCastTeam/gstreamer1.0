@@ -78,7 +78,7 @@ typedef enum {
  *
  * Get access to the cond of the task.
  */
-#define GST_TASK_GET_COND(task)         (GST_TASK_CAST(task)->cond)
+#define GST_TASK_GET_COND(task)         (&GST_TASK_CAST(task)->cond)
 /**
  * GST_TASK_WAIT:
  * @task: Task to wait for
@@ -116,7 +116,7 @@ typedef enum {
  * @leave_thread: a thread is exiting, this is called when the thread is about
  *   to leave its function
  *
- * Custom GstTask thread callback functions that can be installed. 
+ * Custom GstTask thread callback functions that can be installed.
  *
  * Since: 0.10.24
  */
@@ -144,9 +144,9 @@ struct _GstTask {
 
   /*< public >*/ /* with LOCK */
   GstTaskState     state;
-  GCond           *cond;
+  GCond            cond;
 
-  GStaticRecMutex *lock;
+  GRecMutex       *lock;
 
   GstTaskFunction  func;
   gpointer         data;
@@ -175,9 +175,8 @@ void            gst_task_cleanup_all    (void);
 
 GType           gst_task_get_type       (void);
 
-GstTask*        gst_task_create         (GstTaskFunction func, gpointer data);
-void            gst_task_set_lock       (GstTask *task, GStaticRecMutex *mutex);
-void            gst_task_set_priority   (GstTask *task, GThreadPriority priority);
+GstTask*        gst_task_new            (GstTaskFunction func, gpointer data);
+void            gst_task_set_lock       (GstTask *task, GRecMutex *mutex);
 
 GstTaskPool *   gst_task_get_pool       (GstTask *task);
 void            gst_task_set_pool       (GstTask *task, GstTaskPool *pool);

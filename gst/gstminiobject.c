@@ -22,12 +22,25 @@
  * SECTION:gstminiobject
  * @short_description: Lightweight base class for the GStreamer object hierarchy
  *
- * #GstMiniObject is a baseclass like #GObject, but has been stripped down of
- * features to be fast and small.
- * It offers sub-classing and ref-counting in the same way as #GObject does.
- * It has no properties and no signal-support though.
+ * #GstMiniObject is a simple structure that can be used to implement refcounted
+ * types.
  *
- * Last reviewed on 2005-11-23 (0.9.5)
+ * Subclasses will include #GstMiniObject as the first member in their structure
+ * and then call gst_mini_object_init() to initialize the #GstMiniObject fields.
+ *
+ * gst_mini_object_ref() and gst_mini_object_unref() increment and decrement the
+ * refcount respectively. When the refcount of a mini-object reaches 0, the
+ * dispose function is called first and when this returns %TRUE, the free
+ * function of the miniobject is called.
+ *
+ * A copy can be made with gst_mini_object_copy().
+ *
+ * gst_mini_object_is_writable() will return %TRUE when the refcount of the
+ * object is exactly 1, meaning the current caller has the only reference to the
+ * object. gst_mini_object_make_writable() will return a writable version of the
+ * object, which might be a new copy when the refcount was not 1.
+ *
+ * Last reviewed on 2012-03-28 (0.11.3)
  */
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -38,8 +51,6 @@
 #include "gst/gstinfo.h"
 #include <gobject/gvaluecollector.h>
 
-#define GST_DISABLE_TRACE
-
 #ifndef GST_DISABLE_TRACE
 #include "gsttrace.h"
 static GstAllocTrace *_gst_mini_object_trace;
@@ -47,6 +58,14 @@ static GstAllocTrace *_gst_mini_object_trace;
 
 /* Mutex used for weak referencing */
 G_LOCK_DEFINE_STATIC (weak_refs_mutex);
+
+void
+_priv_gst_mini_object_initialize (void)
+{
+#ifndef GST_DISABLE_TRACE
+  _gst_mini_object_trace = _gst_alloc_trace_register ("GstMiniObject", 0);
+#endif
+}
 
 /**
  * gst_mini_object_init:
@@ -69,6 +88,10 @@ gst_mini_object_init (GstMiniObject * mini_object, GType type, gsize size)
   mini_object->size = size;
   mini_object->n_weak_refs = 0;
   mini_object->weak_refs = NULL;
+
+#ifndef GST_DISABLE_TRACE
+  _gst_alloc_trace_new (_gst_mini_object_trace, mini_object);
+#endif
 }
 
 /**
@@ -101,9 +124,8 @@ gst_mini_object_copy (const GstMiniObject * mini_object)
  * @mini_object: the mini-object to check
  *
  * Checks if a mini-object is writable.  A mini-object is writable
- * if the reference count is one and the #GST_MINI_OBJECT_FLAG_READONLY
- * flag is not set.  Modification of a mini-object should only be
- * done after verifying that it is writable.
+ * if the reference count is one. Modification of a mini-object should
+ * only be done after verifying that it is writable.
  *
  * MT safe
  *
@@ -204,12 +226,13 @@ void
 gst_mini_object_unref (GstMiniObject * mini_object)
 {
   g_return_if_fail (mini_object != NULL);
-  g_return_if_fail (mini_object->refcount > 0);
 
   GST_CAT_TRACE (GST_CAT_REFCOUNTING, "%p unref %d->%d",
       mini_object,
       GST_MINI_OBJECT_REFCOUNT_VALUE (mini_object),
       GST_MINI_OBJECT_REFCOUNT_VALUE (mini_object) - 1);
+
+  g_return_if_fail (mini_object->refcount > 0);
 
   if (G_UNLIKELY (g_atomic_int_dec_and_test (&mini_object->refcount))) {
     gboolean do_free;
@@ -227,7 +250,7 @@ gst_mini_object_unref (GstMiniObject * mini_object)
         weak_refs_notify (mini_object);
 
 #ifndef GST_DISABLE_TRACE
-      gst_alloc_trace_free (_gst_mini_object_trace, mini_object);
+      _gst_alloc_trace_free (_gst_mini_object_trace, mini_object);
 #endif
       if (mini_object->free)
         mini_object->free (mini_object);

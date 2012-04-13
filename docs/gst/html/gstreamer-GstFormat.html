@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstFormat</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstFilter.html" title="GstFilter">
+<link rel="prev" href="gstreamer-GstEvent.html" title="GstEvent">
 <link rel="next" href="GstGhostPad.html" title="GstGhostPad">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -14,10 +14,10 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="gstreamer-GstFilter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-GstEvent.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="GstGhostPad.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -68,12 +68,12 @@ operations.
 <div class="refsect2">
 <a name="GstFormat"></a><h3>enum GstFormat</h3>
 <pre class="programlisting">typedef enum {
-  GST_FORMAT_UNDEFINED 	=  0, /* must be first in list */
-  GST_FORMAT_DEFAULT   	=  1,
-  GST_FORMAT_BYTES   	=  2,
-  GST_FORMAT_TIME 	=  3,
-  GST_FORMAT_BUFFERS =  4,
-  GST_FORMAT_PERCENT =  5
+  GST_FORMAT_UNDEFINED  =  0, /* must be first in list */
+  GST_FORMAT_DEFAULT    =  1,
+  GST_FORMAT_BYTES      =  2,
+  GST_FORMAT_TIME       =  3,
+  GST_FORMAT_BUFFERS    =  4,
+  GST_FORMAT_PERCENT    =  5
 } GstFormat;
 </pre>
 <p>
@@ -123,7 +123,7 @@ Standard predefined formats
 <hr>
 <div class="refsect2">
 <a name="GST-FORMAT-PERCENT-MAX:CAPS"></a><h3>GST_FORMAT_PERCENT_MAX</h3>
-<pre class="programlisting">#define GST_FORMAT_PERCENT_MAX		G_GINT64_CONSTANT (1000000)
+<pre class="programlisting">#define GST_FORMAT_PERCENT_MAX          G_GINT64_CONSTANT (1000000)
 </pre>
 <p>
 The PERCENT format is between 0 and this value
@@ -132,7 +132,7 @@ The PERCENT format is between 0 and this value
 <hr>
 <div class="refsect2">
 <a name="GST-FORMAT-PERCENT-SCALE:CAPS"></a><h3>GST_FORMAT_PERCENT_SCALE</h3>
-<pre class="programlisting">#define GST_FORMAT_PERCENT_SCALE G_GINT64_CONSTANT (10000)
+<pre class="programlisting">#define GST_FORMAT_PERCENT_SCALE        G_GINT64_CONSTANT (10000)
 </pre>
 <p>
 The value used to scale down the reported PERCENT format value to

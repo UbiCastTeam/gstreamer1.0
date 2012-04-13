@@ -77,7 +77,7 @@ static void gst_element_factory_cleanup (GstElementFactory * factory);
 /* static guint gst_element_factory_signals[LAST_SIGNAL] = { 0 }; */
 
 /* this is defined in gstelement.c */
-extern GQuark _gst_elementclass_factory;
+extern GQuark __gst_elementclass_factory;
 
 #define _do_init \
 { \
@@ -134,7 +134,7 @@ gst_element_factory_find (const gchar * name)
 
   g_return_val_if_fail (name != NULL, NULL);
 
-  feature = gst_registry_find_feature (gst_registry_get_default (), name,
+  feature = gst_registry_find_feature (gst_registry_get (), name,
       GST_TYPE_ELEMENT_FACTORY);
   if (feature)
     return GST_ELEMENT_FACTORY (feature);
@@ -206,7 +206,7 @@ gst_element_register (GstPlugin * plugin, const gchar * name, guint rank,
   g_return_val_if_fail (name != NULL, FALSE);
   g_return_val_if_fail (g_type_is_a (type, GST_TYPE_ELEMENT), FALSE);
 
-  registry = gst_registry_get_default ();
+  registry = gst_registry_get ();
 
   /* check if feature already exists, if it exists there is no need to update it
    * when the registry is getting updated, outdated plugins and all their
@@ -219,7 +219,7 @@ gst_element_register (GstPlugin * plugin, const gchar * name, guint rank,
     factory = GST_ELEMENT_FACTORY_CAST (existing_feature);
     factory->type = type;
     existing_feature->loaded = TRUE;
-    g_type_set_qdata (type, _gst_elementclass_factory, factory);
+    g_type_set_qdata (type, __gst_elementclass_factory, factory);
     gst_object_unref (existing_feature);
     return TRUE;
   }
@@ -232,7 +232,7 @@ gst_element_register (GstPlugin * plugin, const gchar * name, guint rank,
       g_type_name (type));
 
   /* provide info needed during class structure setup */
-  g_type_set_qdata (type, _gst_elementclass_factory, factory);
+  g_type_set_qdata (type, __gst_elementclass_factory, factory);
   klass = GST_ELEMENT_CLASS (g_type_class_ref (type));
 #if 0
   /* FIXME */
@@ -253,7 +253,7 @@ gst_element_register (GstPlugin * plugin, const gchar * name, guint rank,
     newt->name_template = g_intern_string (templ->name_template);
     newt->direction = templ->direction;
     newt->presence = templ->presence;
-    newt->static_caps.caps.mini_object.refcount = 0;
+    newt->static_caps.caps = NULL;
     newt->static_caps.string = g_intern_string (caps_string);
     factory->staticpadtemplates =
         g_list_append (factory->staticpadtemplates, newt);
@@ -273,8 +273,12 @@ gst_element_register (GstPlugin * plugin, const gchar * name, guint rank,
       factory->uri_type = iface->get_type (factory->type);
     if (!GST_URI_TYPE_IS_VALID (factory->uri_type))
       goto urierror;
-    if (iface->get_protocols)
-      factory->uri_protocols = iface->get_protocols (factory->type);
+    if (iface->get_protocols) {
+      const gchar *const *protocols;
+
+      protocols = iface->get_protocols (factory->type);
+      factory->uri_protocols = g_strdupv ((gchar **) protocols);
+    }
     if (!factory->uri_protocols)
       goto urierror;
   }
@@ -330,7 +334,7 @@ detailserror:
  * It will be given the name supplied, since all elements require a name as
  * their first argument.
  *
- * Returns: (transfer full): new #GstElement or NULL if the element couldn't
+ * Returns: (transfer floating): new #GstElement or NULL if the element couldn't
  *     be created
  */
 GstElement *
@@ -377,7 +381,7 @@ gst_element_factory_create (GstElementFactory * factory, const gchar * name)
    * an element at the same moment
    */
   oclass = GST_ELEMENT_GET_CLASS (element);
-  if (!G_ATOMIC_POINTER_COMPARE_AND_EXCHANGE (&oclass->elementfactory, NULL,
+  if (!g_atomic_pointer_compare_and_exchange (&oclass->elementfactory, NULL,
           factory))
     gst_object_unref (factory);
 
@@ -417,7 +421,7 @@ no_element:
  * consisting of the element factory name and a number.
  * If name is given, it will be given the name supplied.
  *
- * Returns: (transfer full): new #GstElement or NULL if unable to create element
+ * Returns: (transfer floating): new #GstElement or NULL if unable to create element
  */
 GstElement *
 gst_element_factory_make (const gchar * factoryname, const gchar * name)
@@ -488,6 +492,16 @@ gst_element_factory_get_element_type (GstElementFactory * factory)
   return factory->type;
 }
 
+/**
+ * gst_element_factory_get_metadata:
+ * @factory,: a #GstElementFactory
+ * @key: a key
+ *
+ * Get the metadata on @factory with @key.
+ *
+ * Returns: the metadata with @key on @factory or %NULL when there was no
+ * metadata with the given @key.
+ */
 const gchar *
 gst_element_factory_get_metadata (GstElementFactory * factory,
     const gchar * key)
@@ -557,7 +571,7 @@ gst_element_factory_get_static_pad_templates (GstElementFactory * factory)
  *
  * Returns: type of URIs this element supports
  */
-gint
+GstURIType
 gst_element_factory_get_uri_type (GstElementFactory * factory)
 {
   g_return_val_if_fail (GST_IS_ELEMENT_FACTORY (factory), GST_URI_UNKNOWN);
@@ -577,12 +591,12 @@ gst_element_factory_get_uri_type (GstElementFactory * factory)
  * Returns: (transfer none) (array zero-terminated=1): the supported protocols
  *     or NULL
  */
-gchar **
+const gchar *const *
 gst_element_factory_get_uri_protocols (GstElementFactory * factory)
 {
   g_return_val_if_fail (GST_IS_ELEMENT_FACTORY (factory), NULL);
 
-  return factory->uri_protocols;
+  return (const gchar * const *) factory->uri_protocols;
 }
 
 /**
@@ -735,8 +749,8 @@ gst_element_factory_list_get_elements (GstElementFactoryListType type,
   data.minrank = minrank;
 
   /* get the feature list using the filter */
-  result = gst_default_registry_feature_filter ((GstPluginFeatureFilter)
-      element_filter, FALSE, &data);
+  result = gst_registry_feature_filter (gst_registry_get (),
+      (GstPluginFeatureFilter) element_filter, FALSE, &data);
 
   /* sort on rank and name */
   result = g_list_sort (result, gst_plugin_feature_rank_compare_func);
@@ -769,7 +783,7 @@ GList *
 gst_element_factory_list_filter (GList * list,
     const GstCaps * caps, GstPadDirection direction, gboolean subsetonly)
 {
-  GList *result = NULL;
+  GQueue results = G_QUEUE_INIT;
 
   GST_DEBUG ("finding factories");
 
@@ -803,7 +817,7 @@ gst_element_factory_list_filter (GList * list,
         if ((subsetonly && gst_caps_is_subset (caps, tmpl_caps)) ||
             (!subsetonly && gst_caps_can_intersect (caps, tmpl_caps))) {
           /* non empty intersection, we can use this element */
-          result = g_list_prepend (result, gst_object_ref (factory));
+          g_queue_push_tail (&results, gst_object_ref (factory));
           gst_caps_unref (tmpl_caps);
           break;
         }
@@ -811,5 +825,5 @@ gst_element_factory_list_filter (GList * list,
       }
     }
   }
-  return g_list_reverse (result);
+  return results.head;
 }

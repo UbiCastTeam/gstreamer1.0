@@ -57,7 +57,6 @@
 
 #include "gstpushsrc.h"
 #include "gsttypefindhelper.h"
-#include <gst/gstmarshal.h>
 
 GST_DEBUG_CATEGORY_STATIC (gst_push_src_debug);
 #define GST_CAT_DEFAULT gst_push_src_debug
@@ -72,6 +71,8 @@ G_DEFINE_TYPE_WITH_CODE (GstPushSrc, gst_push_src, GST_TYPE_BASE_SRC, _do_init);
 static gboolean gst_push_src_query (GstBaseSrc * src, GstQuery * query);
 static GstFlowReturn gst_push_src_create (GstBaseSrc * bsrc, guint64 offset,
     guint length, GstBuffer ** ret);
+static GstFlowReturn gst_push_src_alloc (GstBaseSrc * bsrc, guint64 offset,
+    guint length, GstBuffer ** ret);
 static GstFlowReturn gst_push_src_fill (GstBaseSrc * bsrc, guint64 offset,
     guint length, GstBuffer * ret);
 
@@ -81,6 +82,7 @@ gst_push_src_class_init (GstPushSrcClass * klass)
   GstBaseSrcClass *gstbasesrc_class = (GstBaseSrcClass *) klass;
 
   gstbasesrc_class->create = GST_DEBUG_FUNCPTR (gst_push_src_create);
+  gstbasesrc_class->alloc = GST_DEBUG_FUNCPTR (gst_push_src_alloc);
   gstbasesrc_class->fill = GST_DEBUG_FUNCPTR (gst_push_src_fill);
   gstbasesrc_class->query = GST_DEBUG_FUNCPTR (gst_push_src_query);
 }
@@ -101,7 +103,10 @@ gst_push_src_query (GstBaseSrc * src, GstQuery * query)
     {
       /* a pushsrc can by default never operate in pull mode override
        * if you want something different. */
-      gst_query_set_scheduling (query, FALSE, FALSE, TRUE, 1, -1, 1);
+      gst_query_set_scheduling (query, GST_SCHEDULING_FLAG_SEQUENTIAL, 1, -1,
+          0);
+      gst_query_add_scheduling_mode (query, GST_PAD_MODE_PUSH);
+
       ret = TRUE;
       break;
     }
@@ -128,6 +133,24 @@ gst_push_src_create (GstBaseSrc * bsrc, guint64 offset, guint length,
   else
     fret =
         GST_BASE_SRC_CLASS (parent_class)->create (bsrc, offset, length, ret);
+
+  return fret;
+}
+
+static GstFlowReturn
+gst_push_src_alloc (GstBaseSrc * bsrc, guint64 offset, guint length,
+    GstBuffer ** ret)
+{
+  GstFlowReturn fret;
+  GstPushSrc *src;
+  GstPushSrcClass *pclass;
+
+  src = GST_PUSH_SRC (bsrc);
+  pclass = GST_PUSH_SRC_GET_CLASS (src);
+  if (pclass->alloc)
+    fret = pclass->alloc (src, ret);
+  else
+    fret = GST_BASE_SRC_CLASS (parent_class)->alloc (bsrc, offset, length, ret);
 
   return fret;
 }

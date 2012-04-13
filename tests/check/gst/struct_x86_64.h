@@ -65,7 +65,7 @@ static GstCheckABIStruct list[] = {
   {"GstSystemClockClass", sizeof (GstSystemClockClass), 352},
   {"GstSystemClock", sizeof (GstSystemClock), 288},
   {"GstTagList", sizeof (GstTagList), 40},
-  {"GstTagSetterIFace", sizeof (GstTagSetterIFace), 16},
+  {"GstTagSetterInterface", sizeof (GstTagSetterInterface), 16},
   {"GstTaskClass", sizeof (GstTaskClass), 280},
   {"GstTask", sizeof (GstTask), 160},
   {"GstTaskPoolClass", sizeof (GstTaskPoolClass), 304},
@@ -76,7 +76,9 @@ static GstCheckABIStruct list[] = {
   {"GstTypeFindFactoryClass", sizeof (GstTypeFindFactoryClass), 304},
   {"GstTypeFindFactory", sizeof (GstTypeFindFactory), 216},
   {"GstTypeFind", sizeof (GstTypeFind), 64},
+#if !defined(GST_DISABLE_DEPRECATED) && !defined(GST_REMOVE_DEPRECATED)
   {"GstTypeNameData", sizeof (GstTypeNameData), 16},
+#endif
   {"GstURIHandlerInterface", sizeof (GstURIHandlerInterface), 88},
   {"GstValueTable", sizeof (GstValueTable), 64},
   {NULL, 0, 0}

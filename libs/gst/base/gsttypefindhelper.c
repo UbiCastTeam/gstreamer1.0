@@ -43,7 +43,13 @@
 /* ********************** typefinding in pull mode ************************ */
 
 static void
-helper_find_suggest (gpointer data, guint probability, const GstCaps * caps);
+helper_find_suggest (gpointer data, guint probability, GstCaps * caps);
+
+typedef struct
+{
+  GstBuffer *buffer;
+  GstMapInfo map;
+} GstMappedBuffer;
 
 typedef struct
 {
@@ -55,6 +61,7 @@ typedef struct
   GstCaps *caps;
   GstTypeFindFactory *factory;  /* for logging */
   GstObject *obj;               /* for logging */
+  GstObject *parent;
 } GstTypeFindHelper;
 
 /*
@@ -79,6 +86,7 @@ helper_find_peek (gpointer data, gint64 offset, guint size)
   GSList *insert_pos = NULL;
   gsize buf_size;
   guint64 buf_offset;
+  GstMappedBuffer *bmap;
 #if 0
   GstCaps *caps;
 #endif
@@ -103,7 +111,8 @@ helper_find_peek (gpointer data, gint64 offset, guint size)
     GSList *walk;
 
     for (walk = helper->buffers; walk; walk = walk->next) {
-      GstBuffer *buf = GST_BUFFER_CAST (walk->data);
+      GstMappedBuffer *bmp = (GstMappedBuffer *) walk->data;
+      GstBuffer *buf = GST_BUFFER_CAST (bmp->buffer);
       guint64 buf_offset = GST_BUFFER_OFFSET (buf);
       guint buf_size = gst_buffer_get_size (buf);
 
@@ -112,12 +121,8 @@ helper_find_peek (gpointer data, gint64 offset, guint size)
        * we're after the searched end offset */
       if (buf_offset <= offset) {
         if ((offset + size) < (buf_offset + buf_size)) {
-          guint8 *data;
-
-          /* FIXME, unmap after usage */
-          data = gst_buffer_map (buf, NULL, NULL, GST_MAP_READ);
-
-          return data + (offset - buf_offset);
+          /* must already have been mapped before */
+          return (guint8 *) bmp->map.data + (offset - buf_offset);
         }
       } else if (offset + size >= buf_offset + buf_size) {
         insert_pos = walk;
@@ -133,7 +138,9 @@ helper_find_peek (gpointer data, gint64 offset, guint size)
    * of the file is also not a problem here, we'll just get a truncated buffer
    * in that case (and we'll have to double-check the size we actually get
    * anyway, see below) */
-  ret = helper->func (helper->obj, offset, MAX (size, 4096), &buffer);
+  ret =
+      helper->func (helper->obj, helper->parent, offset, MAX (size, 4096),
+      &buffer);
 
   if (ret != GST_FLOW_OK)
     goto error;
@@ -166,19 +173,21 @@ helper_find_peek (gpointer data, gint64 offset, guint size)
     return NULL;
   }
 
+  bmap = g_slice_new0 (GstMappedBuffer);
+  bmap->buffer = buffer;
   if (insert_pos) {
-    helper->buffers =
-        g_slist_insert_before (helper->buffers, insert_pos, buffer);
+    helper->buffers = g_slist_insert_before (helper->buffers, insert_pos, bmap);
   } else {
     /* if insert_pos is not set, our offset is bigger than the largest offset
      * we have so far; since we keep the list sorted with highest offsets
      * first, we need to prepend the buffer to the list */
     helper->last_offset = GST_BUFFER_OFFSET (buffer) + buf_size;
-    helper->buffers = g_slist_prepend (helper->buffers, buffer);
+    helper->buffers = g_slist_prepend (helper->buffers, bmap);
   }
 
-  /* FIXME, unmap */
-  return gst_buffer_map (buffer, NULL, NULL, GST_MAP_READ);
+  gst_buffer_map (buffer, &bmap->map, GST_MAP_READ);
+
+  return bmap->map.data;
 
 error:
   {
@@ -197,7 +206,7 @@ error:
  */
 static void
 helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    const GstCaps * caps)
+    GstCaps * caps)
 {
   GstTypeFindHelper *helper = (GstTypeFindHelper *) data;
 
@@ -206,10 +215,7 @@ helper_find_suggest (gpointer data, GstTypeFindProbability probability,
       GST_OBJECT_NAME (helper->factory), probability, caps);
 
   if (probability > helper->best_probability) {
-    GstCaps *copy = gst_caps_copy (caps);
-
-    gst_caps_replace (&helper->caps, copy);
-    gst_caps_unref (copy);
+    gst_caps_replace (&helper->caps, caps);
     helper->best_probability = probability;
   }
 }
@@ -226,8 +232,9 @@ helper_find_get_length (gpointer data)
 }
 
 /**
- * gst_type_find_helper_get_range_ext:
+ * gst_type_find_helper_get_range:
  * @obj: A #GstObject that will be passed as first argument to @func
+ * @parent: the parent of @obj or NULL
  * @func: (scope call): A generic #GstTypeFindHelperGetRangeFunction that will
  *        be used to access data at random offsets when doing the typefinding
  * @size: The length in bytes
@@ -256,7 +263,7 @@ helper_find_get_length (gpointer data)
  * Since: 0.10.26
  */
 GstCaps *
-gst_type_find_helper_get_range_ext (GstObject * obj,
+gst_type_find_helper_get_range (GstObject * obj, GstObject * parent,
     GstTypeFindHelperGetRangeFunction func, guint64 size,
     const gchar * extension, GstTypeFindProbability * prob)
 {
@@ -277,6 +284,7 @@ gst_type_find_helper_get_range_ext (GstObject * obj,
   helper.best_probability = GST_TYPE_FIND_NONE;
   helper.caps = NULL;
   helper.obj = obj;
+  helper.parent = parent;
 
   find.data = &helper;
   find.peek = helper_find_peek;
@@ -340,8 +348,13 @@ gst_type_find_helper_get_range_ext (GstObject * obj,
   }
   gst_plugin_feature_list_free (type_list);
 
-  for (walk = helper.buffers; walk; walk = walk->next)
-    gst_buffer_unref (GST_BUFFER_CAST (walk->data));
+  for (walk = helper.buffers; walk; walk = walk->next) {
+    GstMappedBuffer *bmap = (GstMappedBuffer *) walk->data;
+
+    gst_buffer_unmap (bmap->buffer, &bmap->map);
+    gst_buffer_unref (bmap->buffer);
+    g_slice_free (GstMappedBuffer, bmap);
+  }
   g_slist_free (helper.buffers);
 
   if (helper.best_probability > 0)
@@ -354,37 +367,6 @@ gst_type_find_helper_get_range_ext (GstObject * obj,
       result, (guint) helper.best_probability);
 
   return result;
-}
-
-/**
- * gst_type_find_helper_get_range:
- * @obj: A #GstObject that will be passed as first argument to @func
- * @func: (scope call): A generic #GstTypeFindHelperGetRangeFunction that will
- *        be used to access data at random offsets when doing the typefinding
- * @size: The length in bytes
- * @prob: (out) (allow-none): location to store the probability of the found
- *     caps, or #NULL
- *
- * Utility function to do pull-based typefinding. Unlike gst_type_find_helper()
- * however, this function will use the specified function @func to obtain the
- * data needed by the typefind functions, rather than operating on a given
- * source pad. This is useful mostly for elements like tag demuxers which
- * strip off data at the beginning and/or end of a file and want to typefind
- * the stripped data stream before adding their own source pad (the specified
- * callback can then call the upstream peer pad with offsets adjusted for the
- * tag size, for example).
- *
- * Free-function: gst_caps_unref
- *
- * Returns: (transfer full): the #GstCaps corresponding to the data stream.
- *     Returns #NULL if no #GstCaps matches the data stream.
- */
-GstCaps *
-gst_type_find_helper_get_range (GstObject * obj,
-    GstTypeFindHelperGetRangeFunction func, guint64 size,
-    GstTypeFindProbability * prob)
-{
-  return gst_type_find_helper_get_range_ext (obj, func, size, NULL, prob);
 }
 
 /**
@@ -410,7 +392,8 @@ gst_type_find_helper (GstPad * src, guint64 size)
 
   func = (GstTypeFindHelperGetRangeFunction) (GST_PAD_GETRANGEFUNC (src));
 
-  return gst_type_find_helper_get_range (GST_OBJECT (src), func, size, NULL);
+  return gst_type_find_helper_get_range (GST_OBJECT (src),
+      GST_OBJECT_PARENT (src), func, size, NULL, NULL);
 }
 
 /* ********************** typefinding for buffers ************************* */
@@ -470,7 +453,7 @@ buf_helper_find_peek (gpointer data, gint64 off, guint size)
  */
 static void
 buf_helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    const GstCaps * caps)
+    GstCaps * caps)
 {
   GstTypeFindBufHelper *helper = (GstTypeFindBufHelper *) data;
 
@@ -480,10 +463,7 @@ buf_helper_find_suggest (gpointer data, GstTypeFindProbability probability,
 
   /* Note: not >= as we call typefinders in order of rank, highest first */
   if (probability > helper->best_probability) {
-    GstCaps *copy = gst_caps_copy (caps);
-
-    gst_caps_replace (&helper->caps, copy);
-    gst_caps_unref (copy);
+    gst_caps_replace (&helper->caps, caps);
     helper->best_probability = probability;
   }
 }
@@ -589,17 +569,17 @@ gst_type_find_helper_for_buffer (GstObject * obj, GstBuffer * buf,
     GstTypeFindProbability * prob)
 {
   GstCaps *result;
-  guint8 *data;
-  gsize size;
+  GstMapInfo info;
 
   g_return_val_if_fail (buf != NULL, NULL);
   g_return_val_if_fail (GST_IS_BUFFER (buf), NULL);
   g_return_val_if_fail (GST_BUFFER_OFFSET (buf) == 0 ||
       GST_BUFFER_OFFSET (buf) == GST_BUFFER_OFFSET_NONE, NULL);
 
-  data = gst_buffer_map (buf, &size, NULL, GST_MAP_READ);
-  result = gst_type_find_helper_for_data (obj, data, size, prob);
-  gst_buffer_unmap (buf, data, size);
+  if (!gst_buffer_map (buf, &info, GST_MAP_READ))
+    return NULL;
+  result = gst_type_find_helper_for_data (obj, info.data, info.size, prob);
+  gst_buffer_unmap (buf, &info);
 
   return result;
 }

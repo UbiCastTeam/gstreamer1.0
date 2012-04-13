@@ -38,16 +38,21 @@ G_BEGIN_DECLS
 
 /**
  * GstBaseSrcFlags:
- * @GST_BASE_SRC_STARTED: has source been started
+ * @GST_BASE_SRC_FLAG_STARTING: has source is starting
+ * @GST_BASE_SRC_FLAG_STARTED: has source been started
  * @GST_BASE_SRC_FLAG_LAST: offset to define more flags
  *
  * The #GstElement flags that a basesrc element may have.
  */
 typedef enum {
-  GST_BASE_SRC_STARTED           = (GST_ELEMENT_FLAG_LAST << 0),
+  GST_BASE_SRC_FLAG_STARTING     = (GST_ELEMENT_FLAG_LAST << 0),
+  GST_BASE_SRC_FLAG_STARTED      = (GST_ELEMENT_FLAG_LAST << 1),
   /* padding */
-  GST_BASE_SRC_FLAG_LAST         = (GST_ELEMENT_FLAG_LAST << 2)
+  GST_BASE_SRC_FLAG_LAST         = (GST_ELEMENT_FLAG_LAST << 6)
 } GstBaseSrcFlags;
+
+#define GST_BASE_SRC_IS_STARTING(obj) GST_OBJECT_FLAG_IS_SET ((obj), GST_BASE_SRC_FLAG_STARTING)
+#define GST_BASE_SRC_IS_STARTED(obj)  GST_OBJECT_FLAG_IS_SET ((obj), GST_BASE_SRC_FLAG_STARTED)
 
 typedef struct _GstBaseSrc GstBaseSrc;
 typedef struct _GstBaseSrcClass GstBaseSrcClass;
@@ -75,8 +80,8 @@ struct _GstBaseSrc {
 
   /* available to subclass implementations */
   /* MT-protected (with LIVE_LOCK) */
-  GMutex        *live_lock;
-  GCond         *live_cond;
+  GMutex         live_lock;
+  GCond          live_cond;
   gboolean       is_live;
   gboolean       live_running;
 
@@ -115,7 +120,9 @@ struct _GstBaseSrc {
  * @set_caps: Notify subclass of changed output caps
  * @decide_allocation: configure the allocation query
  * @start: Start processing. Subclasses should open resources and prepare
- *    to produce data.
+ *    to produce data. Implementation should call gst_base_src_start_complete()
+ *    when the operation completes, either from the current thread or any other
+ *    thread that finishes the start operation asynchronously.
  * @stop: Stop processing. Subclasses should use this to close resources.
  * @get_times: Given a buffer, return the start and stop time when it
  *    should be pushed out. The base class will sync on the clock using
@@ -131,8 +138,8 @@ struct _GstBaseSrc {
  * @do_seek: Perform seeking on the resource to the indicated segment.
  * @unlock: Unlock any pending access to the resource. Subclasses should
  *    unblock any blocked function ASAP. In particular, any create() function in
- *    progress should be unblocked and should return GST_FLOW_WRONG_STATE. Any
- *    future @create<!-- -->() function call should also return GST_FLOW_WRONG_STATE
+ *    progress should be unblocked and should return GST_FLOW_FLUSHING. Any
+ *    future @create<!-- -->() function call should also return GST_FLOW_FLUSHING
  *    until the @unlock_stop<!-- -->() function has been called.
  * @unlock_stop: Clear the previous unlock request. Subclasses should clear
  *    any state they set during unlock(), such as clearing command queues.
@@ -142,7 +149,7 @@ struct _GstBaseSrc {
  *   When the subclass returns GST_FLOW_OK, it MUST return a buffer of the
  *   requested size unless fewer bytes are available because an EOS condition
  *   is near. No buffer should be returned when the return value is different
- *   from GST_FLOW_OK. A return value of GST_FLOW_UNEXPECTED signifies that the
+ *   from GST_FLOW_OK. A return value of GST_FLOW_EOS signifies that the
  *   end of stream is reached. The default implementation will call @alloc and
  *   then call @fill.
  * @alloc: Ask the subclass to allocate a buffer with for offset and size. The
@@ -165,7 +172,7 @@ struct _GstBaseSrcClass {
   /* decide on caps */
   gboolean      (*negotiate)    (GstBaseSrc *src);
   /* called if, in negotiation, caps need fixating */
-  void          (*fixate)       (GstBaseSrc *src, GstCaps *caps);
+  GstCaps *     (*fixate)       (GstBaseSrc *src, GstCaps *caps);
   /* notify the subclass of new caps */
   gboolean      (*set_caps)     (GstBaseSrc *src, GstCaps *caps);
 
@@ -232,6 +239,12 @@ gboolean        gst_base_src_is_live          (GstBaseSrc *src);
 void            gst_base_src_set_format       (GstBaseSrc *src, GstFormat format);
 
 void            gst_base_src_set_dynamic_size (GstBaseSrc * src, gboolean dynamic);
+
+void            gst_base_src_set_async        (GstBaseSrc *src, gboolean async);
+gboolean        gst_base_src_is_async         (GstBaseSrc *src);
+
+void            gst_base_src_start_complete   (GstBaseSrc * basesrc, GstFlowReturn ret);
+GstFlowReturn   gst_base_src_start_wait       (GstBaseSrc * basesrc);
 
 gboolean        gst_base_src_query_latency    (GstBaseSrc *src, gboolean * live,
                                                GstClockTime * min_latency,

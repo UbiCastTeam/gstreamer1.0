@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>fakesink</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer Core Plugins 0.11 Plugins Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-fakesrc.html" title="fakesrc">
 <link rel="next" href="gstreamer-plugins-fdsink.html" title="fdsink">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-plugins-fakesrc.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer Core Plugins 0.11 Plugins Reference Manual</th>
+<th width="100%" align="center">GStreamer Core Plugins 1.0 Plugins Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-plugins-fdsink.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -52,9 +52,9 @@ enum                <a class="link" href="gstreamer-plugins-fakesink.html#GstFak
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-         +----<a href="../gstreamer-0.11/GstObject.html">GstObject</a>
-               +----<a href="../gstreamer-0.11/GstElement.html">GstElement</a>
-                     +----<a href="../gstreamer-libs-0.11/GstBaseSink.html">GstBaseSink</a>
+         +----<a href="../gstreamer-1.0/GstObject.html">GstObject</a>
+               +----<a href="../gstreamer-1.0/GstElement.html">GstElement</a>
+                     +----<a href="../gstreamer-libs-1.0/GstBaseSink.html">GstBaseSink</a>
                            +----GstFakeSink
 </pre>
 </div>
@@ -86,17 +86,25 @@ Dummy sink that swallows everything.
 <p>
 </p>
 <div class="refsect2">
-<a name="id396673"></a><h3>Example launch line</h3>
-<div class="informalexample"><pre class="programlisting">
-gst-launch audiotestsrc num-buffers=1000 ! fakesink sync=false
-</pre></div> Render 1000 audio buffers (of default size) as fast as possible.
+<a name="idp8740176"></a><h3>Example launch line</h3>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch audiotestsrc num<span class="gtkdoc opt">-</span>buffers<span class="gtkdoc opt">=</span><span class="number">1000</span> <span class="gtkdoc opt">!</span> fakesink sync<span class="gtkdoc opt">=</span><span class="keyword">false</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ Render 1000 audio buffers (of default size) as fast as possible.
 </div>
 <p>
 </p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id396694"></a><h3>Element Information</h3>
+<a name="idp8742784"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -119,7 +127,7 @@ gst-launch audiotestsrc num-buffers=1000 ! fakesink sync=false
 </div>
 <hr>
 <div class="refsect2">
-<a name="id396757"></a><h3>Element Pads</h3>
+<a name="idp9609776"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -254,7 +262,7 @@ Possible state change errors for the state-error property.
 <a name="GstFakeSink--silent"></a><h3>The <code class="literal">"silent"</code> property</h3>
 <pre class="programlisting">  "silent"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
 <p>Don't produce last_message events.</p>
-<p>Default value: FALSE</p>
+<p>Default value: TRUE</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -268,7 +276,7 @@ Possible state change errors for the state-error property.
 <a name="GstFakeSink--num-buffers"></a><h3>The <code class="literal">"num-buffers"</code> property</h3>
 <pre class="programlisting">  "num-buffers"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write</pre>
 <p>Number of buffers to accept going EOS.</p>
-<p>Allowed values: &gt;= -1</p>
+<p>Allowed values: &gt;= G_MAXULONG</p>
 <p>Default value: -1</p>
 </div>
 </div>
@@ -277,8 +285,8 @@ Possible state change errors for the state-error property.
 <div class="refsect2">
 <a name="GstFakeSink-handoff"></a><h3>The <code class="literal">"handoff"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="gstreamer-plugins-fakesink.html#GstFakeSink"><span class="type">GstFakeSink</span></a> *fakesink,
-                                                        <a href="../gstreamer-0.11/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>   *buffer,
-                                                        <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a>      *pad,
+                                                        <a href="../gstreamer-1.0/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>   *buffer,
+                                                        <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a>      *pad,
                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 This signal gets emitted before unreffing the buffer.
@@ -309,8 +317,8 @@ This signal gets emitted before unreffing the buffer.
 <div class="refsect2">
 <a name="GstFakeSink-preroll-handoff"></a><h3>The <code class="literal">"preroll-handoff"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="gstreamer-plugins-fakesink.html#GstFakeSink"><span class="type">GstFakeSink</span></a> *fakesink,
-                                                        <a href="../gstreamer-0.11/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>   *buffer,
-                                                        <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a>      *pad,
+                                                        <a href="../gstreamer-1.0/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>   *buffer,
+                                                        <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a>      *pad,
                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 This signal gets emitted before unreffing the buffer.

@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBufferList</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstBuffer.html" title="GstBuffer">
 <link rel="next" href="gstreamer-GstBufferPool.html" title="GstBufferPool">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstBuffer.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-GstBufferPool.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -42,8 +42,8 @@
 
                     <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList">GstBufferList</a>;
 <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-new" title="gst_buffer_list_new ()">gst_buffer_list_new</a>                 (<em class="parameter"><code><span class="type">void</span></code></em>);
-<a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-sized-new" title="gst_buffer_list_sized_new ()">gst_buffer_list_sized_new</a>           (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-len" title="gst_buffer_list_len ()">gst_buffer_list_len</a>                 (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);
+<a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-new-sized" title="gst_buffer_list_new_sized ()">gst_buffer_list_new_sized</a>           (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-length" title="gst_buffer_list_length ()">gst_buffer_list_length</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);
 #define             <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-add" title="gst_buffer_list_add()">gst_buffer_list_add</a>                 (l,
                                                          b)
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-insert" title="gst_buffer_list_insert ()">gst_buffer_list_insert</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>,
@@ -75,6 +75,14 @@ Buffer lists are an object containing a list of buffers.
 <p>
 Buffer lists are created with <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-new" title="gst_buffer_list_new ()"><code class="function">gst_buffer_list_new()</code></a> and filled with data
 using a <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-insert" title="gst_buffer_list_insert ()"><code class="function">gst_buffer_list_insert()</code></a>.
+</p>
+<p>
+Buffer lists can be pushed on a srcpad with <a class="link" href="GstPad.html#gst-pad-push-list" title="gst_pad_push_list ()"><code class="function">gst_pad_push_list()</code></a>. This is
+interesting when multiple buffers need to be pushed in one go because it
+can reduce the amount of overhead for pushing each buffer individually.
+</p>
+<p>
+Last reviewed on 2012-03-28 (0.11.3)
 </p>
 </div>
 <div class="refsect1">
@@ -111,8 +119,8 @@ after usage. <span class="annotation">[<acronym title="Free data after the code 
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-buffer-list-sized-new"></a><h3>gst_buffer_list_sized_new ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     gst_buffer_list_sized_new           (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);</pre>
+<a name="gst-buffer-list-new-sized"></a><h3>gst_buffer_list_new_sized ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     gst_buffer_list_new_sized           (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);</pre>
 <p>
 Creates a new, empty <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a>. The caller is responsible for unreffing
 the returned <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a>. The list will have <em class="parameter"><code>size</code></em> space preallocated so
@@ -140,8 +148,8 @@ after usage. <span class="annotation">[<acronym title="Free data after the code 
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-buffer-list-len"></a><h3>gst_buffer_list_len ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               gst_buffer_list_len                 (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);</pre>
+<a name="gst-buffer-list-length"></a><h3>gst_buffer_list_length ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               gst_buffer_list_length              (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);</pre>
 <p>
 Returns the number of buffers in <em class="parameter"><code>list</code></em>.
 </p>
@@ -206,6 +214,28 @@ A -1 value for <em class="parameter"><code>idx</code></em> will append the buffe
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_buffer_list_remove              (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> idx</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> length</code></em>);</pre>
+<p>
+Remove <em class="parameter"><code>length</code></em> buffers starting from <em class="parameter"><code>idx</code></em> in <em class="parameter"><code>list</code></em>. The following buffers are
+moved to close the gap.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>idx</code></em> :</span></p></td>
+<td>the index</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td>the amount to remove</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -384,8 +414,8 @@ Call <em class="parameter"><code>func</code></em> with <em class="parameter"><co
 </p>
 <p>
 <em class="parameter"><code>func</code></em> can modify the passed buffer pointer or its contents. The return value
-of <em class="parameter"><code>func</code></em> define if this function returns or if the remaining buffers in a
-group should be skipped.
+of <em class="parameter"><code>func</code></em> define if this function returns or if the remaining buffers in
+the list should be skipped.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

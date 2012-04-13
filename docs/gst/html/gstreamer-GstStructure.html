@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstStructure</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstSegment.html" title="GstSegment">
 <link rel="next" href="GstSystemClock.html" title="GstSystemClock">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-GstSegment.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
 <td><a accesskey="n" href="GstSystemClock.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -47,15 +47,15 @@ struct              <a class="link" href="gstreamer-GstStructure.html#GstStructu
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            (<a class="link" href="gstreamer-GstStructure.html#GstStructureMapFunc" title="GstStructureMapFunc ()">*GstStructureMapFunc</a>)              (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_id</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);
-<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-empty-new" title="gst_structure_empty_new ()">gst_structure_empty_new</a>             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
-<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-empty-new" title="gst_structure_id_empty_new ()">gst_structure_id_empty_new</a>          (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> quark</code></em>);
+<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-empty" title="gst_structure_new_empty ()">gst_structure_new_empty</a>             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
+<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-id-empty" title="gst_structure_new_id_empty ()">gst_structure_new_id_empty</a>          (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> quark</code></em>);
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new" title="gst_structure_new ()">gst_structure_new</a>                   (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-valist" title="gst_structure_new_valist ()">gst_structure_new_valist</a>            (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
                                                          <em class="parameter"><code><span class="type">va_list</span> varargs</code></em>);
-<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-new" title="gst_structure_id_new ()">gst_structure_id_new</a>                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> name_quark</code></em>,
+<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-id" title="gst_structure_new_id ()">gst_structure_new_id</a>                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> name_quark</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_quark</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-copy" title="gst_structure_copy ()">gst_structure_copy</a>                  (<em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);
@@ -212,17 +212,18 @@ as GQuarks and the values can be of any GType.
 </p>
 <p>
 In addition to the key/value pairs, a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> also has a name. The name
-starts with a letter and can be folled by letters, numbers and any of "/-_.:".
+starts with a letter and can be filled by letters, numbers and any of "/-_.:".
 </p>
 <p>
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> is used by various GStreamer subsystems to store information
 in a flexible and extensible way. A <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> does not have a refcount
-because it usually is part of a higher level object such as <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a>. It
-provides a means to enforce mutability using the refcount of the parent
-with the <a class="link" href="gstreamer-GstStructure.html#gst-structure-set-parent-refcount" title="gst_structure_set_parent_refcount ()"><code class="function">gst_structure_set_parent_refcount()</code></a> method.
+because it usually is part of a higher level object such as <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a>,
+<a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>, <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>, <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>. It provides a means to enforce mutability
+using the refcount of the parent with the <a class="link" href="gstreamer-GstStructure.html#gst-structure-set-parent-refcount" title="gst_structure_set_parent_refcount ()"><code class="function">gst_structure_set_parent_refcount()</code></a>
+method.
 </p>
 <p>
-A <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> can be created with <a class="link" href="gstreamer-GstStructure.html#gst-structure-empty-new" title="gst_structure_empty_new ()"><code class="function">gst_structure_empty_new()</code></a> or
+A <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> can be created with <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-empty" title="gst_structure_new_empty ()"><code class="function">gst_structure_new_empty()</code></a> or
 <a class="link" href="gstreamer-GstStructure.html#gst-structure-new" title="gst_structure_new ()"><code class="function">gst_structure_new()</code></a>, which both take a name and an optional set of
 key/value pairs along with the types of the values.
 </p>
@@ -243,7 +244,7 @@ Strings in structures must be ASCII or UTF-8 encoded. Other encodings are
 not allowed. Strings must not be empty either, but may be NULL.
 </p>
 <p>
-Last reviewed on 2009-06-08 (0.10.23)
+Last reviewed on 2012-03-29 (0.11.3)
 </p>
 </div>
 <div class="refsect1">
@@ -333,8 +334,8 @@ the map operation should stop with FALSE.</td>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-structure-empty-new"></a><h3>gst_structure_empty_new ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_empty_new             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<a name="gst-structure-new-empty"></a><h3>gst_structure_new_empty ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_new_empty             (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>
 Creates a new, empty <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> with the given <em class="parameter"><code>name</code></em>.
 </p>
@@ -361,8 +362,8 @@ Free-function: gst_structure_free
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-structure-id-empty-new"></a><h3>gst_structure_id_empty_new ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_id_empty_new          (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> quark</code></em>);</pre>
+<a name="gst-structure-new-id-empty"></a><h3>gst_structure_new_id_empty ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_new_id_empty          (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> quark</code></em>);</pre>
 <p>
 Creates a new, empty <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> with the given name as a GQuark.
 </p>
@@ -464,15 +465,15 @@ Free-function: gst_structure_free
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-structure-id-new"></a><h3>gst_structure_id_new ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_id_new                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> name_quark</code></em>,
+<a name="gst-structure-new-id"></a><h3>gst_structure_new_id ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_new_id                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> name_quark</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_quark</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Creates a new <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> with the given name as a GQuark, followed by
 fieldname quark, GType, argument(s) "triplets" in the same format as
 <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-set" title="gst_structure_id_set ()"><code class="function">gst_structure_id_set()</code></a>. Basically a convenience wrapper around
-<a class="link" href="gstreamer-GstStructure.html#gst-structure-id-empty-new" title="gst_structure_id_empty_new ()"><code class="function">gst_structure_id_empty_new()</code></a> and <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-set" title="gst_structure_id_set ()"><code class="function">gst_structure_id_set()</code></a>.
+<a class="link" href="gstreamer-GstStructure.html#gst-structure-new-id-empty" title="gst_structure_new_id_empty ()"><code class="function">gst_structure_new_id_empty()</code></a> and <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-set" title="gst_structure_id_set ()"><code class="function">gst_structure_id_set()</code></a>.
 </p>
 <p>
 The last variable argument must be NULL (or 0).
@@ -662,9 +663,9 @@ more efficient since it saves the string-to-quark lookup in the global
 quark hashtable.
 </p>
 <p>
-For refcounted (mini)objects you will acquire your own reference which
+For refcounted (mini)objects you will receive a new reference which
 you must release with a suitable <code class="function">_unref()</code> when no longer needed. For
-strings and boxed types you will acquire a copy which you will need to
+strings and boxed types you will receive a copy which you will need to
 release with either <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> or the suitable function for the boxed type.
 </p>
 <div class="variablelist"><table border="0">
@@ -831,9 +832,9 @@ Variable arguments should be in the form field name, field type
 The last variable argument should be NULL.
 </p>
 <p>
-For refcounted (mini)objects you will acquire your own reference which
+For refcounted (mini)objects you will receive a new reference which
 you must release with a suitable <code class="function">_unref()</code> when no longer needed. For
-strings and boxed types you will acquire a copy which you will need to
+strings and boxed types you will receive a copy which you will need to
 release with either <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> or the suitable function for the boxed type.
 </p>
 <div class="variablelist"><table border="0">
@@ -1374,7 +1375,7 @@ Tests if the two <a class="link" href="gstreamer-GstStructure.html#GstStructure"
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1407,7 +1408,7 @@ structure name and for all fields that are existing in <em class="parameter"><co
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1438,7 +1439,7 @@ would not be empty.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1468,7 +1469,7 @@ Interesects <em class="parameter"><code>struct1</code></em> and <em class="param
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.35</p>
+<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2033,9 +2034,17 @@ Converts <em class="parameter"><code>structure</code></em> to a human-readable s
 <p>
 For debugging purposes its easier to do something like this:
 </p>
-<div class="informalexample"><pre class="programlisting">
-GST_LOG ("structure is %" GST_PTR_FORMAT, structure);
-</pre></div>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-LOG:CAPS">GST_LOG</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;structure is %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> structure<span class="gtkdoc opt">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 This prints the structure in human readble form.
 </p>
@@ -2080,7 +2089,7 @@ Free-function: gst_structure_free
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>end</code></em> :</span></p></td>
-<td>pointer to store the end of the string in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>pointer to store the end of the string in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 <tr>

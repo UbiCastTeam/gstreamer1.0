@@ -704,7 +704,7 @@ guint32
 gst_util_seqnum_next (void)
 {
   static gint counter = 0;
-  return G_ATOMIC_INT_ADD (&counter, 1);
+  return g_atomic_int_add (&counter, 1);
 }
 
 /**
@@ -1083,7 +1083,7 @@ gst_pad_check_link (GstPad * srcpad, GstPad * sinkpad)
  */
 GstPad *
 gst_element_get_compatible_pad (GstElement * element, GstPad * pad,
-    const GstCaps * caps)
+    GstCaps * caps)
 {
   GstIterator *pads;
   GstPadTemplate *templ;
@@ -1140,7 +1140,7 @@ gst_element_get_compatible_pad (GstElement * element, GstPad * pad,
           gboolean compatible;
 
           /* Now check if the two pads' caps are compatible */
-          temp = gst_pad_get_caps (pad, NULL);
+          temp = gst_pad_query_caps (pad, NULL);
           if (caps) {
             intersection = gst_caps_intersect (temp, caps);
             gst_caps_unref (temp);
@@ -1148,7 +1148,7 @@ gst_element_get_compatible_pad (GstElement * element, GstPad * pad,
             intersection = temp;
           }
 
-          temp = gst_pad_get_caps (current, NULL);
+          temp = gst_pad_query_caps (current, NULL);
           compatible = gst_caps_can_intersect (temp, intersection);
           gst_caps_unref (temp);
           gst_caps_unref (intersection);
@@ -1198,7 +1198,7 @@ gst_element_get_compatible_pad (GstElement * element, GstPad * pad,
   /* try to create a new one */
   /* requesting is a little crazy, we need a template. Let's create one */
   /* FIXME: why not gst_pad_get_pad_template (pad); */
-  templcaps = gst_pad_get_caps (pad, NULL);
+  templcaps = gst_pad_query_caps (pad, NULL);
   templ = gst_pad_template_new ((gchar *) GST_PAD_NAME (pad),
       GST_PAD_DIRECTION (pad), GST_PAD_ALWAYS, templcaps);
   gst_caps_unref (templcaps);
@@ -2394,7 +2394,7 @@ gst_element_seek_simple (GstElement * element, GstFormat format,
 void
 gst_pad_use_fixed_caps (GstPad * pad)
 {
-  GST_OBJECT_FLAG_SET (pad, GST_PAD_FIXED_CAPS);
+  GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_FIXED_CAPS);
 }
 
 /**
@@ -2506,321 +2506,130 @@ gst_bin_remove_many (GstBin * bin, GstElement * element_1, ...)
   va_end (args);
 }
 
-static void
-gst_element_populate_std_props (GObjectClass * klass, const gchar * prop_name,
-    guint arg_id, GParamFlags flags)
+typedef struct
 {
-  GQuark prop_id = g_quark_from_string (prop_name);
-  GParamSpec *pspec;
-
-  static GQuark fd_id = 0;
-  static GQuark blocksize_id;
-  static GQuark bytesperread_id;
-  static GQuark dump_id;
-  static GQuark filesize_id;
-  static GQuark mmapsize_id;
-  static GQuark location_id;
-  static GQuark offset_id;
-  static GQuark silent_id;
-  static GQuark touch_id;
-
-  flags |= G_PARAM_STATIC_STRINGS;
-
-  if (!fd_id) {
-    fd_id = g_quark_from_static_string ("fd");
-    blocksize_id = g_quark_from_static_string ("blocksize");
-    bytesperread_id = g_quark_from_static_string ("bytesperread");
-    dump_id = g_quark_from_static_string ("dump");
-    filesize_id = g_quark_from_static_string ("filesize");
-    mmapsize_id = g_quark_from_static_string ("mmapsize");
-    location_id = g_quark_from_static_string ("location");
-    offset_id = g_quark_from_static_string ("offset");
-    silent_id = g_quark_from_static_string ("silent");
-    touch_id = g_quark_from_static_string ("touch");
-  }
-
-  if (prop_id == fd_id) {
-    pspec = g_param_spec_int ("fd", "File-descriptor",
-        "File-descriptor for the file being read", 0, G_MAXINT, 0, flags);
-  } else if (prop_id == blocksize_id) {
-    pspec = g_param_spec_ulong ("blocksize", "Block Size",
-        "Block size to read per buffer", 0, G_MAXULONG, 4096, flags);
-
-  } else if (prop_id == bytesperread_id) {
-    pspec = g_param_spec_int ("bytesperread", "Bytes per read",
-        "Number of bytes to read per buffer", G_MININT, G_MAXINT, 0, flags);
-
-  } else if (prop_id == dump_id) {
-    pspec = g_param_spec_boolean ("dump", "Dump",
-        "Dump bytes to stdout", FALSE, flags);
-
-  } else if (prop_id == filesize_id) {
-    pspec = g_param_spec_int64 ("filesize", "File Size",
-        "Size of the file being read", 0, G_MAXINT64, 0, flags);
-
-  } else if (prop_id == mmapsize_id) {
-    pspec = g_param_spec_ulong ("mmapsize", "mmap() Block Size",
-        "Size in bytes of mmap()d regions", 0, G_MAXULONG, 4 * 1048576, flags);
-
-  } else if (prop_id == location_id) {
-    pspec = g_param_spec_string ("location", "File Location",
-        "Location of the file to read", NULL, flags);
-
-  } else if (prop_id == offset_id) {
-    pspec = g_param_spec_int64 ("offset", "File Offset",
-        "Byte offset of current read pointer", 0, G_MAXINT64, 0, flags);
-
-  } else if (prop_id == silent_id) {
-    pspec = g_param_spec_boolean ("silent", "Silent", "Don't produce events",
-        FALSE, flags);
-
-  } else if (prop_id == touch_id) {
-    pspec = g_param_spec_boolean ("touch", "Touch read data",
-        "Touch data to force disk read before " "push ()", TRUE, flags);
-  } else {
-    g_warning ("Unknown - 'standard' property '%s' id %d from klass %s",
-        prop_name, arg_id, g_type_name (G_OBJECT_CLASS_TYPE (klass)));
-    pspec = NULL;
-  }
-
-  if (pspec) {
-    g_object_class_install_property (klass, arg_id, pspec);
-  }
-}
-
-/**
- * gst_element_class_install_std_props:
- * @klass: the #GstElementClass to add the properties to.
- * @first_name: the name of the first property.
- * in a NULL terminated
- * @...: the id and flags of the first property, followed by
- * further 'name', 'id', 'flags' triplets and terminated by NULL.
- *
- * Adds a list of standardized properties with types to the @klass.
- * the id is for the property switch in your get_prop method, and
- * the flags determine readability / writeability.
- **/
-void
-gst_element_class_install_std_props (GstElementClass * klass,
-    const gchar * first_name, ...)
-{
-  const char *name;
-
-  va_list args;
-
-  g_return_if_fail (GST_IS_ELEMENT_CLASS (klass));
-
-  va_start (args, first_name);
-
-  name = first_name;
-
-  while (name) {
-    int arg_id = va_arg (args, int);
-    GParamFlags flags = (GParamFlags) va_arg (args, int);
-
-    gst_element_populate_std_props ((GObjectClass *) klass, name, arg_id,
-        flags);
-
-    name = va_arg (args, char *);
-  }
-
-  va_end (args);
-}
-
-
-/**
- * gst_buffer_merge:
- * @buf1: (transfer none): the first source #GstBuffer to merge.
- * @buf2: (transfer none): the second source #GstBuffer to merge.
- *
- * Create a new buffer that is the concatenation of the two source
- * buffers.  The original source buffers will not be modified or
- * unref'd.  Make sure you unref the source buffers if they are not used
- * anymore afterwards.
- *
- * If the buffers point to contiguous areas of memory, the buffer
- * is created without copying the data.
- *
- * Free-function: gst_buffer_unref
- *
- * Returns: (transfer full): the new #GstBuffer which is the concatenation
- *     of the source buffers.
- */
-GstBuffer *
-gst_buffer_merge (GstBuffer * buf1, GstBuffer * buf2)
-{
-  GstBuffer *result;
-  gsize size1, size2;
-
-  size1 = gst_buffer_get_size (buf1);
-  size2 = gst_buffer_get_size (buf2);
-
-  /* we're just a specific case of the more general gst_buffer_span() */
-  result = gst_buffer_span (buf1, 0, buf2, size1 + size2);
-
-  return result;
-}
-
-/**
- * gst_buffer_join:
- * @buf1: the first source #GstBuffer.
- * @buf2: the second source #GstBuffer.
- *
- * Create a new buffer that is the concatenation of the two source
- * buffers, and unrefs the original source buffers.
- *
- * If the buffers point to contiguous areas of memory, the buffer
- * is created without copying the data.
- *
- * This is a convenience function for C programmers. See also
- * gst_buffer_merge(), which does the same thing without
- * unreffing the input parameters. Language bindings without
- * explicit reference counting should not wrap this function.
- *
- * Returns: (transfer full): the new #GstBuffer which is the concatenation of
- * the source buffers.
- */
-GstBuffer *
-gst_buffer_join (GstBuffer * buf1, GstBuffer * buf2)
-{
-  GstBuffer *result;
-  gsize size1, size2;
-
-  size1 = gst_buffer_get_size (buf1);
-  size2 = gst_buffer_get_size (buf2);
-
-  result = gst_buffer_span (buf1, 0, buf2, size1 + size2);
-  gst_buffer_unref (buf1);
-  gst_buffer_unref (buf2);
-
-  return result;
-}
+  GstQuery *query;
+  gboolean ret;
+} QueryAcceptCapsData;
 
 static gboolean
-getcaps_fold_func (const GValue * vpad, GValue * ret, GstCaps * filter)
+query_accept_caps_func (GstPad * pad, QueryAcceptCapsData * data)
 {
-  GstPad *pad = g_value_get_object (vpad);
-  gboolean empty = FALSE;
-  GstCaps *peercaps, *existing;
+  if (G_LIKELY (gst_pad_peer_query (pad, data->query))) {
+    gboolean result;
 
-  existing = g_value_get_pointer (ret);
-  peercaps = gst_pad_peer_get_caps (pad, filter);
-  if (G_LIKELY (peercaps)) {
-    GstCaps *intersection = gst_caps_intersect (existing, peercaps);
-
-    empty = gst_caps_is_empty (intersection);
-
-    g_value_set_pointer (ret, intersection);
-    gst_caps_unref (existing);
-    gst_caps_unref (peercaps);
+    gst_query_parse_accept_caps_result (data->query, &result);
+    data->ret &= result;
   }
-  return !empty;
+  return FALSE;
 }
 
 /**
- * gst_pad_proxy_getcaps:
+ * gst_pad_proxy_query_accept_caps:
  * @pad: a #GstPad to proxy.
- * @filter: a #GstCaps filter.
+ * @query: an ACCEPT_CAPS #GstQuery.
  *
- * Calls gst_pad_get_allowed_caps() for every other pad belonging to the
- * same element as @pad, and returns the intersection of the results.
+ * Calls gst_pad_accept_caps() for all internally linked pads of @pad and
+ * returns the intersection of the results.
  *
- * This function is useful as a default getcaps function for an element
+ * This function is useful as a default accept caps query function for an element
+ * that can handle any stream format, but requires caps that are acceptable for
+ * all oposite pads.
+ *
+ * Returns: TRUE if @query could be executed
+ */
+gboolean
+gst_pad_proxy_query_accept_caps (GstPad * pad, GstQuery * query)
+{
+  QueryAcceptCapsData data;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
+  g_return_val_if_fail (GST_IS_QUERY (query), FALSE);
+  g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_ACCEPT_CAPS, FALSE);
+
+  GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad,
+      "proxying accept caps query for %s:%s", GST_DEBUG_PAD_NAME (pad));
+
+  data.query = query;
+  /* value to hold the return, by default it holds TRUE */
+  data.ret = TRUE;
+
+  gst_pad_forward (pad, (GstPadForwardFunction) query_accept_caps_func, &data);
+  gst_query_set_accept_caps_result (query, data.ret);
+
+  return TRUE;
+}
+
+typedef struct
+{
+  GstQuery *query;
+  GstCaps *ret;
+} QueryCapsData;
+
+static gboolean
+query_caps_func (GstPad * pad, QueryCapsData * data)
+{
+  gboolean empty = FALSE;
+
+  if (G_LIKELY (gst_pad_peer_query (pad, data->query))) {
+    GstCaps *peercaps, *intersection;
+
+    gst_query_parse_caps_result (data->query, &peercaps);
+    GST_DEBUG_OBJECT (pad, "intersect with result %" GST_PTR_FORMAT, peercaps);
+    intersection = gst_caps_intersect (data->ret, peercaps);
+    GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, intersection);
+
+    gst_caps_unref (data->ret);
+    data->ret = intersection;
+
+    /* stop when empty */
+    empty = gst_caps_is_empty (intersection);
+  }
+  return empty;
+}
+
+/**
+ * gst_pad_proxy_query_caps:
+ * @pad: a #GstPad to proxy.
+ * @query: a CAPS #GstQuery.
+ *
+ * Calls gst_pad_query_caps() for all internally linked pads fof @pad and returns
+ * the intersection of the results.
+ *
+ * This function is useful as a default caps query function for an element
  * that can handle any stream format, but requires all its pads to have
  * the same caps.  Two such elements are tee and adder.
  *
- * Free-function: gst_caps_unref
- *
- * Returns: (transfer full): the intersection of the other pads' allowed caps.
+ * Returns: TRUE if @query could be executed
  */
-GstCaps *
-gst_pad_proxy_getcaps (GstPad * pad, GstCaps * filter)
+gboolean
+gst_pad_proxy_query_caps (GstPad * pad, GstQuery * query)
 {
-  GstElement *element;
-  GstCaps *caps, *intersected;
-  GstIterator *iter;
-  GstIteratorResult res;
-  GValue ret = { 0, };
+  GstCaps *templ, *intersected;
+  QueryCapsData data;
 
-  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
+  g_return_val_if_fail (GST_IS_QUERY (query), FALSE);
+  g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CAPS, FALSE);
 
-  GST_CAT_DEBUG (GST_CAT_PADS, "proxying getcaps for %s:%s",
+  GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "proxying caps query for %s:%s",
       GST_DEBUG_PAD_NAME (pad));
 
-  element = gst_pad_get_parent_element (pad);
-  if (element == NULL)
-    goto no_parent;
+  data.query = query;
+  /* value to hold the return, by default it holds ANY */
+  data.ret = gst_caps_new_any ();
 
-  /* value to hold the return, by default it holds ANY, the ref is taken by
-   * the GValue. */
-  g_value_init (&ret, G_TYPE_POINTER);
-  g_value_set_pointer (&ret, gst_caps_new_any ());
+  gst_pad_forward (pad, (GstPadForwardFunction) query_caps_func, &data);
 
-  /* only iterate the pads in the oposite direction */
-  if (GST_PAD_IS_SRC (pad))
-    iter = gst_element_iterate_sink_pads (element);
-  else
-    iter = gst_element_iterate_src_pads (element);
+  templ = gst_pad_get_pad_template_caps (pad);
+  intersected = gst_caps_intersect (data.ret, templ);
+  gst_caps_unref (data.ret);
+  gst_caps_unref (templ);
 
-  while (1) {
-    res =
-        gst_iterator_fold (iter, (GstIteratorFoldFunction) getcaps_fold_func,
-        &ret, filter);
-    switch (res) {
-      case GST_ITERATOR_RESYNC:
-        /* unref any value stored */
-        if ((caps = g_value_get_pointer (&ret)))
-          gst_caps_unref (caps);
-        /* need to reset the result again to ANY */
-        g_value_set_pointer (&ret, gst_caps_new_any ());
-        gst_iterator_resync (iter);
-        break;
-      case GST_ITERATOR_DONE:
-        /* all pads iterated, return collected value */
-        goto done;
-      case GST_ITERATOR_OK:
-        /* premature exit (happens if caps intersection is empty) */
-        goto done;
-      default:
-        /* iterator returned _ERROR, mark an error and exit */
-        if ((caps = g_value_get_pointer (&ret)))
-          gst_caps_unref (caps);
-        g_value_set_pointer (&ret, NULL);
-        goto error;
-    }
-  }
-done:
-  gst_iterator_free (iter);
+  gst_query_set_caps_result (query, intersected);
+  gst_caps_unref (intersected);
 
-  gst_object_unref (element);
-
-  caps = g_value_get_pointer (&ret);
-  g_value_unset (&ret);
-
-  if (caps) {
-    intersected =
-        gst_caps_intersect (caps, gst_pad_get_pad_template_caps (pad));
-    gst_caps_unref (caps);
-  } else {
-    intersected = gst_caps_copy (gst_pad_get_pad_template_caps (pad));
-  }
-
-  return intersected;
-
-  /* ERRORS */
-no_parent:
-  {
-    GST_DEBUG_OBJECT (pad, "no parent");
-    return gst_caps_copy (gst_pad_get_pad_template_caps (pad));
-  }
-error:
-  {
-    g_warning ("Pad list returned error on element %s",
-        GST_ELEMENT_NAME (element));
-    gst_iterator_free (iter);
-    gst_object_unref (element);
-    return gst_caps_copy (gst_pad_get_pad_template_caps (pad));
-  }
+  return TRUE;
 }
 
 /**
@@ -2843,18 +2652,15 @@ gst_pad_query_position (GstPad * pad, GstFormat format, gint64 * cur)
   g_return_val_if_fail (format != GST_FORMAT_UNDEFINED, FALSE);
 
   query = gst_query_new_position (format);
-  ret = gst_pad_query (pad, query);
-
-  if (ret)
+  if ((ret = gst_pad_query (pad, query)))
     gst_query_parse_position (query, NULL, cur);
-
   gst_query_unref (query);
 
   return ret;
 }
 
 /**
- * gst_pad_query_peer_position:
+ * gst_pad_peer_query_position:
  * @pad: a #GstPad on whose peer to invoke the position query on.
  *       Must be a sink pad.
  * @format: the #GstFormat requested
@@ -2866,20 +2672,19 @@ gst_pad_query_position (GstPad * pad, GstFormat format, gint64 * cur)
  * Returns: TRUE if the query could be performed.
  */
 gboolean
-gst_pad_query_peer_position (GstPad * pad, GstFormat format, gint64 * cur)
+gst_pad_peer_query_position (GstPad * pad, GstFormat format, gint64 * cur)
 {
+  GstQuery *query;
   gboolean ret = FALSE;
-  GstPad *peer;
 
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
   g_return_val_if_fail (GST_PAD_IS_SINK (pad), FALSE);
   g_return_val_if_fail (format != GST_FORMAT_UNDEFINED, FALSE);
 
-  peer = gst_pad_get_peer (pad);
-  if (peer) {
-    ret = gst_pad_query_position (peer, format, cur);
-    gst_object_unref (peer);
-  }
+  query = gst_query_new_position (format);
+  if ((ret = gst_pad_peer_query (pad, query)))
+    gst_query_parse_position (query, NULL, cur);
+  gst_query_unref (query);
 
   return ret;
 }
@@ -2905,18 +2710,15 @@ gst_pad_query_duration (GstPad * pad, GstFormat format, gint64 * duration)
   g_return_val_if_fail (format != GST_FORMAT_UNDEFINED, FALSE);
 
   query = gst_query_new_duration (format);
-  ret = gst_pad_query (pad, query);
-
-  if (ret)
+  if ((ret = gst_pad_query (pad, query)))
     gst_query_parse_duration (query, NULL, duration);
-
   gst_query_unref (query);
 
   return ret;
 }
 
 /**
- * gst_pad_query_peer_duration:
+ * gst_pad_peer_query_duration:
  * @pad: a #GstPad on whose peer pad to invoke the duration query on.
  *       Must be a sink pad.
  * @format: the #GstFormat requested
@@ -2928,20 +2730,19 @@ gst_pad_query_duration (GstPad * pad, GstFormat format, gint64 * duration)
  * Returns: TRUE if the query could be performed.
  */
 gboolean
-gst_pad_query_peer_duration (GstPad * pad, GstFormat format, gint64 * duration)
+gst_pad_peer_query_duration (GstPad * pad, GstFormat format, gint64 * duration)
 {
+  GstQuery *query;
   gboolean ret = FALSE;
-  GstPad *peer;
 
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
   g_return_val_if_fail (GST_PAD_IS_SINK (pad), FALSE);
   g_return_val_if_fail (format != GST_FORMAT_UNDEFINED, FALSE);
 
-  peer = gst_pad_get_peer (pad);
-  if (peer) {
-    ret = gst_pad_query_duration (peer, format, duration);
-    gst_object_unref (peer);
-  }
+  query = gst_query_new_duration (format);
+  if ((ret = gst_pad_peer_query (pad, query)))
+    gst_query_parse_duration (query, NULL, duration);
+  gst_query_unref (query);
 
   return ret;
 }
@@ -2975,18 +2776,15 @@ gst_pad_query_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
   }
 
   query = gst_query_new_convert (src_format, src_val, dest_format);
-  ret = gst_pad_query (pad, query);
-
-  if (ret)
+  if ((ret = gst_pad_query (pad, query)))
     gst_query_parse_convert (query, NULL, NULL, NULL, dest_val);
-
   gst_query_unref (query);
 
   return ret;
 }
 
 /**
- * gst_pad_query_peer_convert:
+ * gst_pad_peer_query_convert:
  * @pad: a #GstPad, on whose peer pad to invoke the convert query on.
  *       Must be a sink pad.
  * @src_format: a #GstFormat to convert from.
@@ -3000,83 +2798,178 @@ gst_pad_query_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
  * Returns: TRUE if the query could be performed.
  */
 gboolean
-gst_pad_query_peer_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
+gst_pad_peer_query_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
     GstFormat dest_format, gint64 * dest_val)
 {
+  GstQuery *query;
   gboolean ret = FALSE;
-  GstPad *peer;
 
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
   g_return_val_if_fail (GST_PAD_IS_SINK (pad), FALSE);
   g_return_val_if_fail (dest_format != GST_FORMAT_UNDEFINED, FALSE);
   g_return_val_if_fail (dest_val != NULL, FALSE);
 
-  peer = gst_pad_get_peer (pad);
-  if (peer) {
-    ret = gst_pad_query_convert (peer, src_format, src_val, dest_format,
-        dest_val);
-    gst_object_unref (peer);
-  }
+  query = gst_query_new_convert (src_format, src_val, dest_format);
+  if ((ret = gst_pad_peer_query (pad, query)))
+    gst_query_parse_convert (query, NULL, NULL, NULL, dest_val);
+  gst_query_unref (query);
 
   return ret;
 }
 
 /**
- * gst_element_found_tags_for_pad:
- * @element: element for which to post taglist to bus.
- * @pad: (transfer none): pad on which to push tag-event
- * @list: (transfer full): the taglist to post on the bus and create event from
+ * gst_pad_query_caps:
+ * @pad: a  #GstPad to get the capabilities of.
+ * @filter: (allow-none): suggested #GstCaps, or NULL
  *
- * Posts a message to the bus that new tags were found and pushes the
- * tags as event. Takes ownership of the @list.
+ * Gets the capabilities this pad can produce or consume.
+ * Note that this method doesn't necessarily return the caps set by
+ * gst_pad_set_caps() - use gst_pad_get_current_caps() for that instead.
+ * gst_pad_query_caps returns all possible caps a pad can operate with, using
+ * the pad's CAPS query function, If the query fails, this function will return
+ * @filter, if not #NULL, otherwise ANY.
  *
- * This is a utility method for elements. Applications should use the
- * #GstTagSetter interface.
+ * When called on sinkpads @filter contains the caps that
+ * upstream could produce in the order preferred by upstream. When
+ * called on srcpads @filter contains the caps accepted by
+ * downstream in the preffered order. @filter might be %NULL but
+ * if it is not %NULL the returned caps will be a subset of @filter.
+ *
+ * Note that this function does not return writable #GstCaps, use
+ * gst_caps_make_writable() before modifying the caps.
+ *
+ * Returns: (transfer full): the caps of the pad with incremented ref-count.
  */
-void
-gst_element_found_tags_for_pad (GstElement * element,
-    GstPad * pad, GstTagList * list)
+GstCaps *
+gst_pad_query_caps (GstPad * pad, GstCaps * filter)
 {
-  g_return_if_fail (element != NULL);
-  g_return_if_fail (pad != NULL);
-  g_return_if_fail (list != NULL);
+  GstCaps *result = NULL;
+  GstQuery *query;
 
-  gst_pad_push_event (pad, gst_event_new_tag (gst_tag_list_copy (list)));
-}
+  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+  g_return_val_if_fail (filter == NULL || GST_IS_CAPS (filter), NULL);
 
-static void
-push_and_ref (const GValue * vpad, GstEvent * event)
-{
-  GstPad *pad = g_value_get_object (vpad);
+  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad,
+      "get pad caps with filter %" GST_PTR_FORMAT, filter);
 
-  gst_pad_push_event (pad, gst_event_ref (event));
+  query = gst_query_new_caps (filter);
+  if (gst_pad_query (pad, query)) {
+    gst_query_parse_caps_result (query, &result);
+    gst_caps_ref (result);
+    GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad,
+        "query returned %" GST_PTR_FORMAT, result);
+  } else if (filter) {
+    result = gst_caps_ref (filter);
+  } else {
+    result = gst_caps_new_any ();
+  }
+  gst_query_unref (query);
+
+  return result;
 }
 
 /**
- * gst_element_found_tags:
- * @element: element for which we found the tags.
- * @list: (transfer full): list of tags.
+ * gst_pad_peer_query_caps:
+ * @pad: a  #GstPad to get the capabilities of.
+ * @filter: (allow-none): a #GstCaps filter, or NULL.
  *
- * Posts a message to the bus that new tags were found, and pushes an event
- * to all sourcepads. Takes ownership of the @list.
+ * Gets the capabilities of the peer connected to this pad. Similar to
+ * gst_pad_query_caps().
  *
- * This is a utility method for elements. Applications should use the
- * #GstTagSetter interface.
+ * When called on srcpads @filter contains the caps that
+ * upstream could produce in the order preferred by upstream. When
+ * called on sinkpads @filter contains the caps accepted by
+ * downstream in the preffered order. @filter might be %NULL but
+ * if it is not %NULL the returned caps will be a subset of @filter.
+ *
+ * Returns: the caps of the peer pad with incremented ref-count. This function
+ * returns %NULL when there is no peer pad.
  */
-void
-gst_element_found_tags (GstElement * element, GstTagList * list)
+GstCaps *
+gst_pad_peer_query_caps (GstPad * pad, GstCaps * filter)
 {
-  GstIterator *iter;
-  GstEvent *event;
+  GstCaps *result = NULL;
+  GstQuery *query;
 
-  g_return_if_fail (element != NULL);
-  g_return_if_fail (list != NULL);
+  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+  g_return_val_if_fail (filter == NULL || GST_IS_CAPS (filter), NULL);
 
-  iter = gst_element_iterate_src_pads (element);
-  event = gst_event_new_tag (gst_tag_list_copy (list));
-  gst_iterator_foreach (iter, (GstIteratorForeachFunction) push_and_ref, event);
-  gst_iterator_free (iter);
-  gst_event_unref (event);
+  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad,
+      "get pad peer caps with filter %" GST_PTR_FORMAT, filter);
+
+  query = gst_query_new_caps (filter);
+  if (gst_pad_peer_query (pad, query)) {
+    gst_query_parse_caps_result (query, &result);
+    gst_caps_ref (result);
+    GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad,
+        "peer query returned %" GST_PTR_FORMAT, result);
+  } else if (filter) {
+    result = gst_caps_ref (filter);
+  } else {
+    result = gst_caps_new_any ();
+  }
+  gst_query_unref (query);
+
+  return result;
+}
+
+/**
+ * gst_pad_query_accept_caps:
+ * @pad: a #GstPad to check
+ * @caps: a #GstCaps to check on the pad
+ *
+ * Check if the given pad accepts the caps.
+ *
+ * Returns: TRUE if the pad can accept the caps.
+ */
+gboolean
+gst_pad_query_accept_caps (GstPad * pad, GstCaps * caps)
+{
+  gboolean res = TRUE;
+  GstQuery *query;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
+  g_return_val_if_fail (GST_IS_CAPS (caps), FALSE);
+
+  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad, "accept caps of %p", caps);
+
+  query = gst_query_new_accept_caps (caps);
+  if (gst_pad_query (pad, query)) {
+    gst_query_parse_accept_caps_result (query, &res);
+    GST_DEBUG_OBJECT (pad, "query returned %d", res);
+  }
+  gst_query_unref (query);
+
+  return res;
+}
+
+/**
+ * gst_pad_peer_query_accept_caps:
+ * @pad: a  #GstPad to check the peer of
+ * @caps: a #GstCaps to check on the pad
+ *
+ * Check if the peer of @pad accepts @caps. If @pad has no peer, this function
+ * returns TRUE.
+ *
+ * Returns: TRUE if the peer of @pad can accept the caps or @pad has no peer.
+ */
+gboolean
+gst_pad_peer_query_accept_caps (GstPad * pad, GstCaps * caps)
+{
+  gboolean res = TRUE;
+  GstQuery *query;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
+  g_return_val_if_fail (GST_IS_CAPS (caps), FALSE);
+
+  query = gst_query_new_accept_caps (caps);
+  if (gst_pad_peer_query (pad, query)) {
+    gst_query_parse_accept_caps_result (query, &res);
+    GST_DEBUG_OBJECT (pad, "query returned %d", res);
+  }
+  gst_query_unref (query);
+
+  return res;
 }
 
 static GstPad *
@@ -3211,7 +3104,7 @@ gst_bin_find_unlinked_pad (GstBin * bin, GstPadDirection direction)
  * and want them all ghosted, you will have to create the ghost pads
  * yourself).
  *
- * Returns: (transfer full): a newly-created bin, or NULL if an error occurred.
+ * Returns: (transfer floating): a newly-created bin, or NULL if an error occurred.
  *
  * Since: 0.10.3
  */
@@ -3298,76 +3191,6 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
   return NULL;
 #endif
 }
-
-/**
- * gst_type_register_static_full:
- * @parent_type: The GType of the parent type the newly registered type will
- *   derive from
- * @type_name: NULL-terminated string used as the name of the new type
- * @class_size: Size of the class structure.
- * @base_init: Location of the base initialization function (optional).
- * @base_finalize: Location of the base finalization function (optional).
- * @class_init: Location of the class initialization function for class types
- *   Location of the default vtable initialization function for interface
- *   types. (optional)
- * @class_finalize: Location of the class finalization function for class types.
- *   Location of the default vtable finalization function for interface types.
- *   (optional)
- * @class_data: User-supplied data passed to the class init/finalize functions.
- * @instance_size: Size of the instance (object) structure (required for
- *   instantiatable types only).
- * @n_preallocs: The number of pre-allocated (cached) instances to reserve
- *   memory for (0 indicates no caching). Ignored on recent GLib's.
- * @instance_init: Location of the instance initialization function (optional,
- *   for instantiatable types only).
- * @value_table: A GTypeValueTable function table for generic handling of
- *   GValues of this type (usually only useful for fundamental types).
- * @flags: #GTypeFlags for this GType. E.g: G_TYPE_FLAG_ABSTRACT
- *
- * Helper function which constructs a #GTypeInfo structure and registers a
- * GType, but which generates less linker overhead than a static const
- * #GTypeInfo structure. For further details of the parameters, please see
- * #GTypeInfo in the GLib documentation.
- *
- * Registers type_name as the name of a new static type derived from
- * parent_type. The value of flags determines the nature (e.g. abstract or
- * not) of the type. It works by filling a GTypeInfo struct and calling
- * g_type_register_static().
- *
- * Returns: A #GType for the newly-registered type.
- *
- * Since: 0.10.14
- */
-GType
-gst_type_register_static_full (GType parent_type,
-    const gchar * type_name,
-    guint class_size,
-    GBaseInitFunc base_init,
-    GBaseFinalizeFunc base_finalize,
-    GClassInitFunc class_init,
-    GClassFinalizeFunc class_finalize,
-    gconstpointer class_data,
-    guint instance_size,
-    guint16 n_preallocs,
-    GInstanceInitFunc instance_init,
-    const GTypeValueTable * value_table, GTypeFlags flags)
-{
-  GTypeInfo info;
-
-  info.class_size = class_size;
-  info.base_init = base_init;
-  info.base_finalize = base_finalize;
-  info.class_init = class_init;
-  info.class_finalize = class_finalize;
-  info.class_data = class_data;
-  info.instance_size = instance_size;
-  info.n_preallocs = n_preallocs;
-  info.instance_init = instance_init;
-  info.value_table = value_table;
-
-  return g_type_register_static (parent_type, type_name, &info, flags);
-}
-
 
 /**
  * gst_util_get_timestamp:
@@ -3511,6 +3334,32 @@ gst_util_greatest_common_divisor (gint a, gint b)
 
   return ABS (a);
 }
+
+/**
+ * gst_util_greatest_common_divisor_int64:
+ * @a: First value as #gint64
+ * @b: Second value as #gint64
+ *
+ * Calculates the greatest common divisor of @a
+ * and @b.
+ *
+ * Returns: Greatest common divisor of @a and @b
+ *
+ * Since: 0.11.0
+ */
+gint64
+gst_util_greatest_common_divisor_int64 (gint64 a, gint64 b)
+{
+  while (b != 0) {
+    gint64 temp = a;
+
+    a = b;
+    b = temp % b;
+  }
+
+  return ABS (a);
+}
+
 
 /**
  * gst_util_fraction_to_double:

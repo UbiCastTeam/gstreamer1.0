@@ -153,8 +153,6 @@ main (int argc, char *argv[])
   textdomain (GETTEXT_PACKAGE);
 #endif
 
-  g_thread_init (NULL);
-
   gst_tools_set_prgname ("gst-typefind");
 
   ctx = g_option_context_new ("FILES");

@@ -41,6 +41,7 @@ GST_START_TEST (segment_seek_nosize)
   fail_unless (segment.stop == -1);
   fail_unless (update == TRUE);
 
+#if 0
   /* configure segment to stop relative, should not do anything since 
    * size is unknown. */
   gst_segment_do_seek (&segment, 1.0,
@@ -50,6 +51,7 @@ GST_START_TEST (segment_seek_nosize)
   fail_unless (segment.start == 100);
   fail_unless (segment.stop == -1);
   fail_unless (update == FALSE);
+#endif
 
   /* do some clipping on the open range */
   /* completely outside */
@@ -124,7 +126,7 @@ GST_START_TEST (segment_seek_nosize)
   gst_segment_do_seek (&segment, 1.0,
       GST_FORMAT_BYTES,
       GST_SEEK_FLAG_NONE,
-      GST_SEEK_TYPE_CUR, 100, GST_SEEK_TYPE_SET, 300, &update);
+      GST_SEEK_TYPE_SET, 100 + 100, GST_SEEK_TYPE_SET, 300, &update);
   fail_unless (segment.start == 200);
   fail_unless (segment.stop == 300);
   fail_unless (update == TRUE);
@@ -136,7 +138,7 @@ GST_START_TEST (segment_seek_nosize)
   ASSERT_CRITICAL (gst_segment_do_seek (&segment, 1.0,
           GST_FORMAT_BYTES,
           GST_SEEK_FLAG_NONE,
-          GST_SEEK_TYPE_CUR, 100, GST_SEEK_TYPE_SET, 200, &update));
+          GST_SEEK_TYPE_SET, 200 + 100, GST_SEEK_TYPE_SET, 200, &update));
   fail_unless (segment.start == 200);
   fail_unless (segment.stop == 300);
   /* update didn't change */
@@ -241,16 +243,6 @@ GST_START_TEST (segment_seek_size)
   fail_unless (segment.stop == -1);
   fail_unless (update == TRUE);
 
-  /* configure segment to stop relative, does not update stop
-   * since we did not set it before. */
-  gst_segment_do_seek (&segment, 1.0,
-      GST_FORMAT_BYTES,
-      GST_SEEK_FLAG_NONE,
-      GST_SEEK_TYPE_NONE, 200, GST_SEEK_TYPE_CUR, -100, &update);
-  fail_unless (segment.start == 100);
-  fail_unless (segment.stop == -1);
-  fail_unless (update == FALSE);
-
   /* do some clipping on the open range */
   /* completely outside */
   res = gst_segment_clip (&segment, GST_FORMAT_BYTES, 0, 50, &cstart, &cstop);
@@ -276,13 +268,6 @@ GST_START_TEST (segment_seek_size)
   /* completely inside */
   res = gst_segment_clip (&segment, GST_FORMAT_BYTES,
       150, 200, &cstart, &cstop);
-  fail_unless (res == TRUE);
-  fail_unless (cstart == 150);
-  fail_unless (cstop == 200);
-
-  /* partially inside, clip to size */
-  res = gst_segment_clip (&segment, GST_FORMAT_BYTES,
-      150, 300, &cstart, &cstop);
   fail_unless (res == TRUE);
   fail_unless (cstart == 150);
   fail_unless (cstop == 200);
@@ -313,7 +298,7 @@ GST_START_TEST (segment_seek_size)
   gst_segment_do_seek (&segment, 1.0,
       GST_FORMAT_BYTES,
       GST_SEEK_FLAG_NONE,
-      GST_SEEK_TYPE_CUR, 100, GST_SEEK_TYPE_SET, 300, &update);
+      GST_SEEK_TYPE_SET, 100 + 100, GST_SEEK_TYPE_SET, 300, &update);
   fail_unless (segment.start == 200);
   fail_unless (segment.stop == 200);
 
@@ -322,7 +307,7 @@ GST_START_TEST (segment_seek_size)
   gst_segment_do_seek (&segment, 1.0,
       GST_FORMAT_BYTES,
       GST_SEEK_FLAG_NONE,
-      GST_SEEK_TYPE_CUR, 100, GST_SEEK_TYPE_SET, 200, &update);
+      GST_SEEK_TYPE_SET, 200 + 100, GST_SEEK_TYPE_SET, 200, &update);
   fail_unless (segment.start == 200);
   fail_unless (segment.stop == 200);
   fail_unless (update == FALSE);
@@ -427,7 +412,7 @@ GST_START_TEST (segment_seek_reverse)
   gst_segment_do_seek (&segment, -1.0,
       GST_FORMAT_BYTES,
       GST_SEEK_FLAG_NONE,
-      GST_SEEK_TYPE_SET, 10, GST_SEEK_TYPE_CUR, -20, &update);
+      GST_SEEK_TYPE_SET, 10, GST_SEEK_TYPE_SET, 100 - 20, &update);
   fail_unless (segment.start == 10);
   fail_unless (segment.stop == 80);
   fail_unless (segment.time == 10);
@@ -561,6 +546,7 @@ GST_START_TEST (segment_seek_rate)
   fail_unless (segment.stop == 200);
   fail_unless (segment.duration == 200);
 
+#if 0
   /* add 300 to the start, this should be clamped to the duration */
   gst_segment_do_seek (&segment, 2.0,
       GST_FORMAT_BYTES, GST_SEEK_FLAG_NONE,
@@ -577,6 +563,7 @@ GST_START_TEST (segment_seek_rate)
   fail_unless (segment.start == 0);
   fail_unless (segment.stop == 200);
   fail_unless (segment.duration == 200);
+#endif
 }
 
 GST_END_TEST;

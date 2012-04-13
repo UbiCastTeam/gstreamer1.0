@@ -95,7 +95,7 @@ struct _GstQueue2
   gboolean unexpected;
 
   /* the queue of data we're keeping our hands on */
-  GQueue *queue;
+  GQueue queue;
 
   GstQueue2Size cur_level;       /* currently in the queue */
   GstQueue2Size max_level;       /* max. amount of data allowed in the queue */
@@ -124,11 +124,11 @@ struct _GstQueue2
   guint64 bytes_out;
   gdouble byte_out_rate;
 
-  GMutex *qlock;                /* lock for queue (vs object lock) */
+  GMutex qlock;                /* lock for queue (vs object lock) */
   gboolean waiting_add;
-  GCond *item_add;              /* signals buffers now available for reading */
+  GCond item_add;              /* signals buffers now available for reading */
   gboolean waiting_del;
-  GCond *item_del;              /* signals space now available for writing */
+  GCond item_del;              /* signals space now available for writing */
 
   /* temp location stuff */
   gchar *temp_template;
@@ -143,6 +143,9 @@ struct _GstQueue2
    * because we can't save it on the file */
   gboolean segment_event_received;
   GstEvent *starting_segment;
+  gboolean seeking;
+
+  GstEvent *stream_start_event;
 
   guint64 ring_buffer_max_size;
   guint8 * ring_buffer;

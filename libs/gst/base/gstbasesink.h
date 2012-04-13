@@ -44,16 +44,16 @@ G_BEGIN_DECLS
  */
 #define GST_BASE_SINK_PAD(obj)          (GST_BASE_SINK_CAST (obj)->sinkpad)
 
-#define GST_BASE_SINK_GET_PREROLL_LOCK(pad)   (GST_BASE_SINK_CAST(pad)->preroll_lock)
+#define GST_BASE_SINK_GET_PREROLL_LOCK(pad)   (&GST_BASE_SINK_CAST(pad)->preroll_lock)
 #define GST_BASE_SINK_PREROLL_LOCK(pad)       (g_mutex_lock(GST_BASE_SINK_GET_PREROLL_LOCK(pad)))
 #define GST_BASE_SINK_PREROLL_TRYLOCK(pad)    (g_mutex_trylock(GST_BASE_SINK_GET_PREROLL_LOCK(pad)))
 #define GST_BASE_SINK_PREROLL_UNLOCK(pad)     (g_mutex_unlock(GST_BASE_SINK_GET_PREROLL_LOCK(pad)))
 
-#define GST_BASE_SINK_GET_PREROLL_COND(pad)   (GST_BASE_SINK_CAST(pad)->preroll_cond)
+#define GST_BASE_SINK_GET_PREROLL_COND(pad)   (&GST_BASE_SINK_CAST(pad)->preroll_cond)
 #define GST_BASE_SINK_PREROLL_WAIT(pad)       \
       g_cond_wait (GST_BASE_SINK_GET_PREROLL_COND (pad), GST_BASE_SINK_GET_PREROLL_LOCK (pad))
-#define GST_BASE_SINK_PREROLL_TIMED_WAIT(pad, timeval) \
-      g_cond_timed_wait (GST_BASE_SINK_GET_PREROLL_COND (pad), GST_BASE_SINK_GET_PREROLL_LOCK (pad), timeval)
+#define GST_BASE_SINK_PREROLL_WAIT_UNTIL(pad, end_time) \
+      g_cond_wait_until (GST_BASE_SINK_GET_PREROLL_COND (pad), GST_BASE_SINK_GET_PREROLL_LOCK (pad), end_time)
 #define GST_BASE_SINK_PREROLL_SIGNAL(pad)     g_cond_signal (GST_BASE_SINK_GET_PREROLL_COND (pad));
 #define GST_BASE_SINK_PREROLL_BROADCAST(pad)  g_cond_broadcast (GST_BASE_SINK_GET_PREROLL_COND (pad));
 
@@ -71,7 +71,7 @@ struct _GstBaseSink {
 
   /*< protected >*/
   GstPad        *sinkpad;
-  GstActivateMode       pad_mode;
+  GstPadMode     pad_mode;
 
   /*< protected >*/ /* with LOCK */
   guint64        offset;
@@ -79,10 +79,9 @@ struct _GstBaseSink {
   gboolean       can_activate_push;
 
   /*< protected >*/ /* with PREROLL_LOCK */
-  GMutex        *preroll_lock;
-  GCond         *preroll_cond;
+  GMutex         preroll_lock;
+  GCond          preroll_cond;
   gboolean       eos;
-  gboolean       eos_queued;
   gboolean       need_preroll;
   gboolean       have_preroll;
   gboolean       playing_async;
@@ -90,11 +89,9 @@ struct _GstBaseSink {
   /*< protected >*/ /* with STREAM_LOCK */
   gboolean       have_newsegment;
   GstSegment     segment;
-  GstSegment     clip_segment;
 
   /*< private >*/ /* with LOCK */
   GstClockID     clock_id;
-  GstClockTime   end_time;
   gboolean       sync;
   gboolean       flushing;
   gboolean       running;
@@ -112,8 +109,7 @@ struct _GstBaseSink {
  * @parent_class: Element parent class
  * @get_caps: Called to get sink pad caps from the subclass
  * @set_caps: Notify subclass of changed caps
- * @fixate: Only useful in pull mode, this vmethod will be called in response to
- *     gst_pad_fixate_caps() being called on the sink pad. Implement if you have
+ * @fixate: Only useful in pull mode. Implement if you have
  *     ideas about what should be the default values for the caps you support.
  * @activate_pull: Subclasses should override this when they can provide an
  *     alternate method of spawning a thread to drive the pipeline in pull mode.
@@ -130,6 +126,8 @@ struct _GstBaseSink {
  * @unlock_stop: Clear the previous unlock request. Subclasses should clear
  *     any state they set during unlock(), such as clearing command queues.
  * @event: Override this to handle events arriving on the sink pad
+ * @wait_eos: Override this to implement custom logic to wait for the EOS time.
+ *     subclasses should always first chain up to the default implementation.
  * @preroll: Called to present the preroll buffer if desired
  * @render: Called when a buffer should be presented or output, at the
  *     correct moment if the #GstBaseSink has been set to sync to the clock.
@@ -150,7 +148,7 @@ struct _GstBaseSinkClass {
   gboolean      (*set_caps)     (GstBaseSink *sink, GstCaps *caps);
 
   /* fixate sink caps during pull-mode negotiation */
-  void          (*fixate)       (GstBaseSink *sink, GstCaps *caps);
+  GstCaps *     (*fixate)       (GstBaseSink *sink, GstCaps *caps);
   /* start or stop a pulling thread */
   gboolean      (*activate_pull)(GstBaseSink *sink, gboolean active);
 
@@ -176,9 +174,12 @@ struct _GstBaseSinkClass {
   /* notify subclass of query */
   gboolean      (*query)        (GstBaseSink *sink, GstQuery *query);
 
-  /* notify subclass of event, preroll buffer or real buffer */
+  /* notify subclass of event */
   gboolean      (*event)        (GstBaseSink *sink, GstEvent *event);
+  /* wait for eos, subclasses should chain up to parent first */
+  GstFlowReturn (*wait_eos)     (GstBaseSink *sink, GstEvent *event);
 
+  /* notify subclass of preroll buffer or real buffer */
   GstFlowReturn (*preroll)      (GstBaseSink *sink, GstBuffer *buffer);
   GstFlowReturn (*render)       (GstBaseSink *sink, GstBuffer *buffer);
   /* Render a BufferList */
@@ -213,10 +214,10 @@ gboolean        gst_base_sink_is_async_enabled  (GstBaseSink *sink);
 void            gst_base_sink_set_ts_offset     (GstBaseSink *sink, GstClockTimeDiff offset);
 GstClockTimeDiff gst_base_sink_get_ts_offset    (GstBaseSink *sink);
 
-/* last buffer */
-GstBuffer *     gst_base_sink_get_last_buffer   (GstBaseSink *sink);
-void            gst_base_sink_set_last_buffer_enabled (GstBaseSink *sink, gboolean enabled);
-gboolean        gst_base_sink_is_last_buffer_enabled (GstBaseSink *sink);
+/* last sample */
+GstSample *     gst_base_sink_get_last_sample   (GstBaseSink *sink);
+void            gst_base_sink_set_last_sample_enabled (GstBaseSink *sink, gboolean enabled);
+gboolean        gst_base_sink_is_last_sample_enabled (GstBaseSink *sink);
 
 /* latency */
 gboolean        gst_base_sink_query_latency     (GstBaseSink *sink, gboolean *live, gboolean *upstream_live,

@@ -32,48 +32,46 @@ static int n_data_probes = 0;
 static int n_buffer_probes = 0;
 static int n_event_probes = 0;
 
-static GstProbeReturn
-probe_do_nothing (GstPad * pad, GstProbeType type, gpointer type_data,
-    gpointer data)
+static GstPadProbeReturn
+probe_do_nothing (GstPad * pad, GstPadProbeInfo * info, gpointer data)
 {
-  GstMiniObject *obj = type_data;
+  GstMiniObject *obj = GST_PAD_PROBE_INFO_DATA (info);
   GST_DEBUG_OBJECT (pad, "is buffer:%d", GST_IS_BUFFER (obj));
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
-static GstProbeReturn
-data_probe (GstPad * pad, GstProbeType type, gpointer type_data, gpointer data)
+static GstPadProbeReturn
+data_probe (GstPad * pad, GstPadProbeInfo * info, gpointer data)
 {
-  GstMiniObject *obj = type_data;
+  GstMiniObject *obj = GST_PAD_PROBE_INFO_DATA (info);
   n_data_probes++;
   GST_DEBUG_OBJECT (pad, "data probe %d", n_data_probes);
   g_assert (GST_IS_BUFFER (obj) || GST_IS_EVENT (obj));
   g_assert (data == SPECIAL_POINTER (0));
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
-static GstProbeReturn
-buffer_probe (GstPad * pad, GstProbeType type, gpointer type_data,
-    gpointer data)
+static GstPadProbeReturn
+buffer_probe (GstPad * pad, GstPadProbeInfo * info, gpointer data)
 {
-  GstBuffer *obj = type_data;
+  GstBuffer *obj = GST_PAD_PROBE_INFO_BUFFER (info);
   n_buffer_probes++;
   GST_DEBUG_OBJECT (pad, "buffer probe %d", n_buffer_probes);
   g_assert (GST_IS_BUFFER (obj));
   g_assert (data == SPECIAL_POINTER (1));
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
-static GstProbeReturn
-event_probe (GstPad * pad, GstProbeType type, gpointer type_data, gpointer data)
+static GstPadProbeReturn
+event_probe (GstPad * pad, GstPadProbeInfo * info, gpointer data)
 {
-  GstEvent *obj = type_data;
+  GstEvent *obj = GST_PAD_PROBE_INFO_EVENT (info);
   n_event_probes++;
   GST_DEBUG_OBJECT (pad, "event probe %d [%s]",
       n_event_probes, GST_EVENT_TYPE_NAME (obj));
   g_assert (GST_IS_EVENT (obj));
   g_assert (data == SPECIAL_POINTER (2));
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
 GST_START_TEST (test_buffer_probe_n_times)
@@ -95,20 +93,20 @@ GST_START_TEST (test_buffer_probe_n_times)
   pad = gst_element_get_static_pad (fakesink, "sink");
 
   /* add the probes we need for the test */
-  gst_pad_add_probe (pad, GST_PROBE_TYPE_DATA, data_probe, SPECIAL_POINTER (0),
-      NULL);
-  gst_pad_add_probe (pad, GST_PROBE_TYPE_BUFFER, buffer_probe,
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_DATA_BOTH, data_probe,
+      SPECIAL_POINTER (0), NULL);
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_BUFFER, buffer_probe,
       SPECIAL_POINTER (1), NULL);
-  gst_pad_add_probe (pad, GST_PROBE_TYPE_EVENT, event_probe,
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_EVENT_BOTH, event_probe,
       SPECIAL_POINTER (2), NULL);
 
   /* add some string probes just to test that the data is free'd
    * properly as it should be */
-  gst_pad_add_probe (pad, GST_PROBE_TYPE_DATA, probe_do_nothing,
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_DATA_BOTH, probe_do_nothing,
       g_strdup ("data probe string"), (GDestroyNotify) g_free);
-  gst_pad_add_probe (pad, GST_PROBE_TYPE_BUFFER, probe_do_nothing,
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_BUFFER, probe_do_nothing,
       g_strdup ("buffer probe string"), (GDestroyNotify) g_free);
-  gst_pad_add_probe (pad, GST_PROBE_TYPE_EVENT, probe_do_nothing,
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_EVENT_BOTH, probe_do_nothing,
       g_strdup ("event probe string"), (GDestroyNotify) g_free);
 
   gst_object_unref (pad);
@@ -121,55 +119,59 @@ GST_START_TEST (test_buffer_probe_n_times)
   gst_object_unref (bus);
 
   g_assert (n_buffer_probes == 10);     /* one for every buffer */
-  g_assert (n_event_probes == 3);       /* new segment, latency and eos */
-  g_assert (n_data_probes == 13);       /* duh */
+  g_assert (n_event_probes == 4);       /* stream-start, new segment, latency and eos */
+  g_assert (n_data_probes == 14);       /* duh */
 
   gst_element_set_state (pipeline, GST_STATE_NULL);
   gst_object_unref (pipeline);
 
   /* make sure nothing was sent in addition to the above when shutting down */
   g_assert (n_buffer_probes == 10);     /* one for every buffer */
-  g_assert (n_event_probes == 3);       /* new segment, latency and eos */
-  g_assert (n_data_probes == 13);       /* duh */
+  g_assert (n_event_probes == 4);       /* stream-start, new segment, latency and eos */
+  g_assert (n_data_probes == 14);       /* duh */
 } GST_END_TEST;
 
 static int n_data_probes_once = 0;
 static int n_buffer_probes_once = 0;
 static int n_event_probes_once = 0;
 
-static GstProbeReturn
-data_probe_once (GstPad * pad, GstProbeType type, GstMiniObject * obj,
-    guint * data)
+static GstPadProbeReturn
+data_probe_once (GstPad * pad, GstPadProbeInfo * info, guint * data)
 {
+  GstMiniObject *obj = GST_PAD_PROBE_INFO_DATA (info);
+
   n_data_probes_once++;
   g_assert (GST_IS_BUFFER (obj) || GST_IS_EVENT (obj));
 
   gst_pad_remove_probe (pad, *data);
 
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
-static GstProbeReturn
-buffer_probe_once (GstPad * pad, GstProbeType type, GstBuffer * obj,
-    guint * data)
+static GstPadProbeReturn
+buffer_probe_once (GstPad * pad, GstPadProbeInfo * info, guint * data)
 {
+  GstBuffer *obj = GST_PAD_PROBE_INFO_BUFFER (info);
+
   n_buffer_probes_once++;
   g_assert (GST_IS_BUFFER (obj));
 
   gst_pad_remove_probe (pad, *data);
 
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
-static GstProbeReturn
-event_probe_once (GstPad * pad, GstProbeType type, GstEvent * obj, guint * data)
+static GstPadProbeReturn
+event_probe_once (GstPad * pad, GstPadProbeInfo * info, guint * data)
 {
+  GstEvent *obj = GST_PAD_PROBE_INFO_EVENT (info);
+
   n_event_probes_once++;
   g_assert (GST_IS_EVENT (obj));
 
   gst_pad_remove_probe (pad, *data);
 
-  return GST_PROBE_OK;
+  return GST_PAD_PROBE_OK;
 }
 
 GST_START_TEST (test_buffer_probe_once)
@@ -191,13 +193,13 @@ GST_START_TEST (test_buffer_probe_once)
 
   pad = gst_element_get_static_pad (fakesink, "sink");
   id1 =
-      gst_pad_add_probe (pad, GST_PROBE_TYPE_DATA,
+      gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_DATA_BOTH,
       (GstPadProbeCallback) data_probe_once, &id1, NULL);
   id2 =
-      gst_pad_add_probe (pad, GST_PROBE_TYPE_BUFFER,
+      gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_BUFFER,
       (GstPadProbeCallback) buffer_probe_once, &id2, NULL);
   id3 =
-      gst_pad_add_probe (pad, GST_PROBE_TYPE_EVENT,
+      gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_EVENT_BOTH,
       (GstPadProbeCallback) event_probe_once, &id3, NULL);
   gst_object_unref (pad);
 
@@ -487,11 +489,12 @@ GST_START_TEST (test_element_found_tags)
   GstTagList *list;
   GstBus *bus;
   GstMessage *message;
+  GstPad *srcpad;
 
   pipeline = gst_element_factory_make ("pipeline", NULL);
   fakesrc = gst_element_factory_make ("fakesrc", NULL);
   fakesink = gst_element_factory_make ("fakesink", NULL);
-  list = gst_tag_list_new ();
+  list = gst_tag_list_new_empty ();
 
   g_object_set (fakesrc, "num-buffers", (int) 10, NULL);
 
@@ -500,7 +503,9 @@ GST_START_TEST (test_element_found_tags)
 
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
 
-  gst_element_found_tags (GST_ELEMENT (fakesrc), list);
+  srcpad = gst_element_get_static_pad (fakesrc, "src");
+  gst_pad_push_event (srcpad, gst_event_new_tag (list));
+  gst_object_unref (srcpad);
 
   bus = gst_element_get_bus (pipeline);
   message = gst_bus_poll (bus, GST_MESSAGE_EOS, -1);
@@ -970,7 +975,7 @@ GST_END_TEST;
 #endif
 #endif
 
-GST_START_TEST (test_pad_proxy_getcaps_aggregation)
+GST_START_TEST (test_pad_proxy_query_caps_aggregation)
 {
   GstElement *tee, *sink1, *sink2;
   GstCaps *caps;
@@ -979,12 +984,12 @@ GST_START_TEST (test_pad_proxy_getcaps_aggregation)
   tee = gst_element_factory_make ("tee", "tee");
 
   sink1 = gst_element_factory_make ("fakesink", "sink1");
-  tee_src1 = gst_element_get_request_pad (tee, "src%d");
+  tee_src1 = gst_element_get_request_pad (tee, "src_%u");
   sink1_sink = gst_element_get_static_pad (sink1, "sink");
   fail_unless_equals_int (gst_pad_link (tee_src1, sink1_sink), GST_PAD_LINK_OK);
 
   sink2 = gst_element_factory_make ("fakesink", "sink2");
-  tee_src2 = gst_element_get_request_pad (tee, "src%d");
+  tee_src2 = gst_element_get_request_pad (tee, "src_%u");
   sink2_sink = gst_element_get_static_pad (sink2, "sink");
   fail_unless_equals_int (gst_pad_link (tee_src2, sink2_sink), GST_PAD_LINK_OK);
 
@@ -995,24 +1000,24 @@ GST_START_TEST (test_pad_proxy_getcaps_aggregation)
   gst_element_set_state (tee, GST_STATE_PAUSED);
 
   /* by default, ANY caps should intersect to ANY */
-  caps = gst_pad_get_caps (tee_sink, NULL);
+  caps = gst_pad_query_caps (tee_sink, NULL);
   GST_INFO ("got caps: %" GST_PTR_FORMAT, caps);
   fail_unless (caps != NULL);
   fail_unless (gst_caps_is_any (caps));
   gst_caps_unref (caps);
 
   /* these don't intersect we should get empty caps */
-  caps = gst_caps_new_simple ("foo/bar", NULL);
+  caps = gst_caps_new_empty_simple ("foo/bar");
   fail_unless (gst_pad_set_caps (sink1_sink, caps));
   gst_pad_use_fixed_caps (sink1_sink);
   gst_caps_unref (caps);
 
-  caps = gst_caps_new_simple ("bar/ter", NULL);
+  caps = gst_caps_new_empty_simple ("bar/ter");
   fail_unless (gst_pad_set_caps (sink2_sink, caps));
   gst_pad_use_fixed_caps (sink2_sink);
   gst_caps_unref (caps);
 
-  caps = gst_pad_get_caps (tee_sink, NULL);
+  caps = gst_pad_query_caps (tee_sink, NULL);
   GST_INFO ("got caps: %" GST_PTR_FORMAT, caps);
   fail_unless (caps != NULL);
   fail_unless (gst_caps_is_empty (caps));
@@ -1024,7 +1029,7 @@ GST_START_TEST (test_pad_proxy_getcaps_aggregation)
   gst_pad_use_fixed_caps (sink2_sink);
   gst_caps_unref (caps);
 
-  caps = gst_pad_get_caps (tee_sink, NULL);
+  caps = gst_pad_query_caps (tee_sink, NULL);
   GST_INFO ("got caps: %" GST_PTR_FORMAT, caps);
   fail_unless (caps != NULL);
   fail_if (gst_caps_is_empty (caps));
@@ -1108,7 +1113,7 @@ gst_utils_suite (void)
   tcase_add_test (tc_chain, test_set_value_from_string);
   tcase_add_test (tc_chain, test_binary_search);
 
-  tcase_add_test (tc_chain, test_pad_proxy_getcaps_aggregation);
+  tcase_add_test (tc_chain, test_pad_proxy_query_caps_aggregation);
   tcase_add_test (tc_chain, test_greatest_common_divisor);
   return s;
 }

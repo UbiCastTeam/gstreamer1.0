@@ -54,6 +54,9 @@ extern const char             g_log_domain_gstreamer[];
 /* for GstElement */
 #include "gstelement.h"
 
+/* for GstToc */
+#include "gsttoc.h"
+
 G_BEGIN_DECLS
 
 /* used by gstparse.c and grammar.y */
@@ -79,6 +82,7 @@ struct _GstPluginPrivate {
   GstStructure *cache_data;
 };
 
+/* FIXME: could rename all priv_gst_* functions to __gst_* now */
 gboolean priv_gst_plugin_loading_have_whitelist (void);
 
 guint32  priv_gst_plugin_loading_get_whitelist_hash (void);
@@ -93,6 +97,7 @@ gboolean _priv_gst_in_valgrind (void);
 
 /* init functions called from gst_init(). */
 void  _priv_gst_quarks_initialize (void);
+void  _priv_gst_mini_object_initialize (void);
 void  _priv_gst_buffer_initialize (void);
 void  _priv_gst_buffer_list_initialize (void);
 void  _priv_gst_structure_initialize (void);
@@ -104,8 +109,20 @@ void  _priv_gst_memory_initialize (void);
 void  _priv_gst_meta_initialize (void);
 void  _priv_gst_plugin_initialize (void);
 void  _priv_gst_query_initialize (void);
+void  _priv_gst_sample_initialize (void);
 void  _priv_gst_tag_initialize (void);
 void  _priv_gst_value_initialize (void);
+void  _priv_gst_debug_init (void);
+void  _priv_gst_toc_initialize (void);
+
+/* TOC functions */
+/* These functions are used to parse TOC messages, events and queries */
+GstToc*        __gst_toc_from_structure (const GstStructure *toc);
+GstStructure*  __gst_toc_to_structure (const GstToc *toc);
+gboolean       __gst_toc_structure_get_updated (const GstStructure * toc);
+void           __gst_toc_structure_set_updated (GstStructure * toc, gboolean updated);
+gchar*         __gst_toc_structure_get_extend_uid (const GstStructure * toc);
+void           __gst_toc_structure_set_extend_uid (GstStructure * toc, const gchar * extend_uid);
 
 /* Private registry functions */
 gboolean _priv_gst_registry_remove_cache_plugins (GstRegistry *registry);
@@ -123,7 +140,13 @@ gboolean  priv_gst_structure_append_to_gstring (const GstStructure * structure,
                                                 GString            * s);
 /* registry cache backends */
 gboolean		priv_gst_registry_binary_read_cache	(GstRegistry * registry, const char *location);
-gboolean		priv_gst_registry_binary_write_cache	(GstRegistry * registry, const char *location);
+gboolean		priv_gst_registry_binary_write_cache	(GstRegistry * registry, GList * plugins, const char *location);
+
+void      __gst_element_factory_add_static_pad_template (GstElementFactory    * elementfactory,
+                                                         GstStaticPadTemplate * templ);
+
+void      __gst_element_factory_add_interface           (GstElementFactory    * elementfactory,
+                                                         const gchar          * interfacename);
 
 /* used in gstvalue.c and gststructure.c */
 #define GST_ASCII_IS_STRING(c) (g_ascii_isalnum((c)) || ((c) == '_') || \
@@ -135,7 +158,7 @@ gint priv_gst_date_time_compare (gconstpointer dt1, gconstpointer dt2);
 
 #ifndef GST_DISABLE_REGISTRY
 /* Secret variable to initialise gst without registry cache */
-extern gboolean _gst_disable_registry_cache;
+GST_EXPORT gboolean _gst_disable_registry_cache;
 #endif
 
 /* provide inline gst_g_value_get_foo_unchecked(), used in gststructure.c */
@@ -161,8 +184,7 @@ DEFINE_INLINE_G_VALUE_GET_UNCHECKED(const gchar *,string,v_pointer)
 #ifndef GST_REMOVE_GST_DEBUG
 
 GST_EXPORT GstDebugCategory *GST_CAT_GST_INIT;
-GST_EXPORT GstDebugCategory *GST_CAT_AUTOPLUG; /* FIXME 0.11: remove? */
-GST_EXPORT GstDebugCategory *GST_CAT_AUTOPLUG_ATTEMPT; /* FIXME 0.11: remove? */
+GST_EXPORT GstDebugCategory *GST_CAT_MEMORY;
 GST_EXPORT GstDebugCategory *GST_CAT_PARENTAGE;
 GST_EXPORT GstDebugCategory *GST_CAT_STATES;
 GST_EXPORT GstDebugCategory *GST_CAT_SCHEDULING;
@@ -189,7 +211,7 @@ GST_EXPORT GstDebugCategory *GST_CAT_SIGNAL;
 GST_EXPORT GstDebugCategory *GST_CAT_PROBE;
 GST_EXPORT GstDebugCategory *GST_CAT_REGISTRY;
 GST_EXPORT GstDebugCategory *GST_CAT_QOS;
-GST_EXPORT GstDebugCategory *GST_CAT_TYPES; /* FIXME 0.11: remove? */
+GST_EXPORT GstDebugCategory *GST_CAT_META;
 
 /* Categories that should be completely private to
  * libgstreamer should be done like this: */
@@ -230,6 +252,7 @@ extern GstDebugCategory *_priv_GST_CAT_POLL;
 #define GST_CAT_QOS              NULL
 #define GST_CAT_TYPES            NULL
 #define GST_CAT_POLL             NULL
+#define GST_CAT_META             NULL
 
 #endif
 

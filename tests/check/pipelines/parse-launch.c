@@ -95,9 +95,9 @@ static const gchar *test_lines[] = {
   "filesrc location=music.ogg ! tee ! identity silent=true ! identity silent=true ! fakesink silent=true",
   "filesrc location=http://domain.com/music.mp3 ! identity silent=true ! fakesink silent=true",
   "filesrc location=movie.avi ! tee name=demuxer ! ( queue ! identity silent=true ! fakesink silent=true ) ( demuxer. ! queue ! identity silent=true ! fakesink silent=true )",
-  "fakesrc ! video/x-raw-yuv ! fakesink silent=true",
+  "fakesrc ! video/x-raw ! fakesink silent=true",
   "fakesrc !   video/raw,  format=(string)YUY2; video/raw, format=(string)YV12 ! fakesink silent=true",
-  "fakesrc ! audio/x-raw-int, width=[16,  32], depth={16, 24, 32}, signed=TRUE ! fakesink silent=true",
+  "fakesrc ! audio/x-raw, width=[16,  32], depth={16, 24, 32}, signed=TRUE ! fakesink silent=true",
   "fakesrc ! identity silent=true ! identity silent=true ! identity silent=true ! fakesink silent=true",
   "fakesrc name=100 fakesink name=101 silent=true 100. ! 101.",
   "fakesrc ! 1dentity ! fakesink silent=true",
@@ -135,7 +135,7 @@ GST_END_TEST;
 #define PIPELINE4  "fakesrc num-buffers=4 .src ! identity silent=true !.sink identity silent=true .src ! .sink fakesink silent=true"
 #define PIPELINE5  "fakesrc num-buffers=4 name=src identity silent=true name=id1 identity silent=true name = id2 fakesink silent=true name =sink src. ! id1. id1.! id2.sink id2.src!sink.sink"
 #define PIPELINE6  "pipeline.(name=\"john\" fakesrc num-buffers=4 ( bin. ( ! queue ! identity silent=true !( queue ! fakesink silent=true )) ))"
-#define PIPELINE7  "fakesrc num-buffers=4 ! tee name=tee .src%d! queue ! fakesink silent=true tee.src%d ! queue ! fakesink silent=true queue name =\"foo\" ! fakesink silent=true tee.src%d ! foo."
+#define PIPELINE7  "fakesrc num-buffers=4 ! tee name=tee .src_%u! queue ! fakesink silent=true tee.src_%u ! queue ! fakesink silent=true queue name =\"foo\" ! fakesink silent=true tee.src_%u ! foo."
 /* aggregator is borked
  * #define PIPELINE8  "fakesrc num-buffers=4 ! tee name=tee1 .src0,src1 ! .sink0, sink1 aggregator ! fakesink silent=true"
  * */

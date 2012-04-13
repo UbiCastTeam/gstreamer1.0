@@ -72,9 +72,12 @@ static void gst_valve_set_property (GObject * object,
 static void gst_valve_get_property (GObject * object,
     guint prop_id, GValue * value, GParamSpec * pspec);
 
-static gboolean gst_valve_event (GstPad * pad, GstEvent * event);
-static GstFlowReturn gst_valve_chain (GstPad * pad, GstBuffer * buffer);
-static GstCaps *gst_valve_getcaps (GstPad * pad, GstCaps * filter);
+static GstFlowReturn gst_valve_chain (GstPad * pad, GstObject * parent,
+    GstBuffer * buffer);
+static gboolean gst_valve_event (GstPad * pad, GstObject * parent,
+    GstEvent * event);
+static gboolean gst_valve_query (GstPad * pad, GstObject * parent,
+    GstQuery * query);
 
 #define _do_init \
   GST_DEBUG_CATEGORY_INIT (valve_debug, "valve", 0, "Valve");
@@ -103,7 +106,7 @@ gst_valve_class_init (GstValveClass * klass)
   gst_element_class_add_pad_template (gstelement_class,
       gst_static_pad_template_get (&sinktemplate));
 
-  gst_element_class_set_details_simple (gstelement_class, "Valve element",
+  gst_element_class_set_static_metadata (gstelement_class, "Valve element",
       "Filter", "Drops buffers and events or lets them through",
       "Olivier Crete <olivier.crete@collabora.co.uk>");
 }
@@ -115,8 +118,10 @@ gst_valve_init (GstValve * valve)
   valve->discont = FALSE;
 
   valve->srcpad = gst_pad_new_from_static_template (&srctemplate, "src");
-  gst_pad_set_getcaps_function (valve->srcpad,
-      GST_DEBUG_FUNCPTR (gst_valve_getcaps));
+  gst_pad_set_event_function (valve->srcpad,
+      GST_DEBUG_FUNCPTR (gst_valve_event));
+  gst_pad_set_query_function (valve->srcpad,
+      GST_DEBUG_FUNCPTR (gst_valve_query));
   gst_element_add_pad (GST_ELEMENT (valve), valve->srcpad);
 
   valve->sinkpad = gst_pad_new_from_static_template (&sinktemplate, "sink");
@@ -124,8 +129,9 @@ gst_valve_init (GstValve * valve)
       GST_DEBUG_FUNCPTR (gst_valve_chain));
   gst_pad_set_event_function (valve->sinkpad,
       GST_DEBUG_FUNCPTR (gst_valve_event));
-  gst_pad_set_getcaps_function (valve->sinkpad,
-      GST_DEBUG_FUNCPTR (gst_valve_getcaps));
+  gst_pad_set_query_function (valve->sinkpad,
+      GST_DEBUG_FUNCPTR (gst_valve_query));
+  GST_PAD_SET_PROXY_CAPS (valve->sinkpad);
   gst_element_add_pad (GST_ELEMENT (valve), valve->sinkpad);
 }
 
@@ -139,6 +145,7 @@ gst_valve_set_property (GObject * object,
   switch (prop_id) {
     case PROP_DROP:
       g_atomic_int_set (&valve->drop, g_value_get_boolean (value));
+      gst_pad_push_event (valve->sinkpad, gst_event_new_reconfigure ());
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -162,10 +169,29 @@ gst_valve_get_property (GObject * object,
   }
 }
 
-static GstFlowReturn
-gst_valve_chain (GstPad * pad, GstBuffer * buffer)
+
+static gboolean
+forward_sticky_events (GstPad * pad, GstEvent ** event, gpointer user_data)
 {
-  GstValve *valve = GST_VALVE (GST_OBJECT_PARENT (pad));
+  GstValve *valve = user_data;
+
+  if (!gst_pad_push_event (valve->srcpad, gst_event_ref (*event)))
+    valve->need_repush_sticky = TRUE;
+
+  return TRUE;
+}
+
+static void
+gst_valve_repush_sticky (GstValve * valve)
+{
+  valve->need_repush_sticky = FALSE;
+  gst_pad_sticky_events_foreach (valve->sinkpad, forward_sticky_events, valve);
+}
+
+static GstFlowReturn
+gst_valve_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+{
+  GstValve *valve = GST_VALVE (parent);
   GstFlowReturn ret = GST_FLOW_OK;
 
   if (g_atomic_int_get (&valve->drop)) {
@@ -177,6 +203,9 @@ gst_valve_chain (GstPad * pad, GstBuffer * buffer)
       GST_BUFFER_FLAG_SET (buffer, GST_BUFFER_FLAG_DISCONT);
       valve->discont = FALSE;
     }
+
+    if (valve->need_repush_sticky)
+      gst_valve_repush_sticky (valve);
 
     ret = gst_pad_push (valve->srcpad, buffer);
   }
@@ -193,41 +222,42 @@ gst_valve_chain (GstPad * pad, GstBuffer * buffer)
 
 
 static gboolean
-gst_valve_event (GstPad * pad, GstEvent * event)
+gst_valve_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
-  GstValve *valve = GST_VALVE (gst_pad_get_parent_element (pad));
+  GstValve *valve;
   gboolean ret = TRUE;
 
-  if (g_atomic_int_get (&valve->drop))
+  valve = GST_VALVE (parent);
+
+  if (g_atomic_int_get (&valve->drop)) {
+    valve->need_repush_sticky |= GST_EVENT_IS_STICKY (event);
     gst_event_unref (event);
-  else
-    ret = gst_pad_push_event (valve->srcpad, event);
+  } else {
+    if (valve->need_repush_sticky)
+      gst_valve_repush_sticky (valve);
+    ret = gst_pad_event_default (pad, parent, event);
+  }
 
   /* Ignore errors if "drop" was changed while the thread was blocked
    * downwards.
    */
-  if (g_atomic_int_get (&valve->drop))
+  if (g_atomic_int_get (&valve->drop)) {
+    valve->need_repush_sticky |= GST_EVENT_IS_STICKY (event);
     ret = TRUE;
+  }
 
-  gst_object_unref (valve);
   return ret;
 }
 
-static GstCaps *
-gst_valve_getcaps (GstPad * pad, GstCaps * filter)
+
+
+static gboolean
+gst_valve_query (GstPad * pad, GstObject * parent, GstQuery * query)
 {
-  GstValve *valve = GST_VALVE (gst_pad_get_parent (pad));
-  GstCaps *caps;
+  GstValve *valve = GST_VALVE (parent);
 
-  if (pad == valve->sinkpad)
-    caps = gst_pad_peer_get_caps (valve->srcpad, filter);
-  else
-    caps = gst_pad_peer_get_caps (valve->sinkpad, filter);
+  if (g_atomic_int_get (&valve->drop))
+    return FALSE;
 
-  if (caps == NULL)
-    caps = (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
-
-  gst_object_unref (valve);
-
-  return caps;
+  return gst_pad_query_default (pad, parent, query);
 }

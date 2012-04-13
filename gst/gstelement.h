@@ -60,8 +60,6 @@ typedef enum {
 #include <gst/gstelementfactory.h>
 #include <gst/gstplugin.h>
 #include <gst/gstpluginfeature.h>
-#include <gst/gstindex.h>
-#include <gst/gstindexfactory.h>
 #include <gst/gstiterator.h>
 #include <gst/gstmessage.h>
 #include <gst/gstquery.h>
@@ -254,7 +252,7 @@ typedef enum {
  *     Sinks unblock any #GstClock wait calls.
  *   </para></listitem>
  *   <listitem><para>
- *     When a sink does not have a pending buffer to play, it returns 
+ *     When a sink does not have a pending buffer to play, it returns
  *     %GST_STATE_CHANGE_ASYNC from this state change and completes the state
  *     change when it receives a new buffer or an %GST_EVENT_EOS.
  *   </para></listitem>
@@ -276,7 +274,7 @@ typedef enum {
  *     Elements unblock any waits on devices
  *   </para></listitem>
  *   <listitem><para>
- *     Chain or get_range functions return %GST_FLOW_WRONG_STATE.
+ *     Chain or get_range functions return %GST_FLOW_FLUSHING.
  *   </para></listitem>
  *   <listitem><para>
  *     The element pads are deactivated so that streaming becomes impossible and
@@ -315,23 +313,29 @@ typedef enum /*< flags=0 >*/
 
 /**
  * GstElementFlags:
- * @GST_ELEMENT_LOCKED_STATE: ignore state changes from parent
- * @GST_ELEMENT_IS_SINK: the element is a sink
- * @GST_ELEMENT_UNPARENTING: Child is being removed from the parent bin.
+ * @GST_ELEMENT_FLAG_UNPARENTING: Child is being removed from the parent bin.
  *  gst_bin_remove() on a child already being removed immediately returns FALSE
- * @GST_ELEMENT_IS_SOURCE: the element is a source. Since 0.10.31
+ * @GST_ELEMENT_FLAG_LOCKED_STATE: ignore state changes from parent
+ * @GST_ELEMENT_FLAG_SINK: the element is a sink
+ * @GST_ELEMENT_FLAG_SOURCE: the element is a source. Since 0.10.31
+ * @GST_ELEMENT_FLAG_PROVIDE_CLOCK: the element can provide a clock
+ * @GST_ELEMENT_FLAG_REQUIRE_CLOCK: the element requires a clock
+ * @GST_ELEMENT_FLAG_INDEXABLE: the element can use an index
  * @GST_ELEMENT_FLAG_LAST: offset to define more flags
  *
  * The standard flags that an element may have.
  */
 typedef enum
 {
-  GST_ELEMENT_LOCKED_STATE      = (GST_OBJECT_FLAG_LAST << 0),
-  GST_ELEMENT_IS_SINK           = (GST_OBJECT_FLAG_LAST << 1),
-  GST_ELEMENT_UNPARENTING       = (GST_OBJECT_FLAG_LAST << 2),
-  GST_ELEMENT_IS_SOURCE         = (GST_OBJECT_FLAG_LAST << 3),
+  GST_ELEMENT_FLAG_UNPARENTING    = (GST_OBJECT_FLAG_LAST << 0),
+  GST_ELEMENT_FLAG_LOCKED_STATE   = (GST_OBJECT_FLAG_LAST << 1),
+  GST_ELEMENT_FLAG_SINK           = (GST_OBJECT_FLAG_LAST << 2),
+  GST_ELEMENT_FLAG_SOURCE         = (GST_OBJECT_FLAG_LAST << 3),
+  GST_ELEMENT_FLAG_PROVIDE_CLOCK  = (GST_OBJECT_FLAG_LAST << 4),
+  GST_ELEMENT_FLAG_REQUIRE_CLOCK  = (GST_OBJECT_FLAG_LAST << 5),
+  GST_ELEMENT_FLAG_INDEXABLE      = (GST_OBJECT_FLAG_LAST << 6),
   /* padding */
-  GST_ELEMENT_FLAG_LAST         = (GST_OBJECT_FLAG_LAST << 16)
+  GST_ELEMENT_FLAG_LAST           = (GST_OBJECT_FLAG_LAST << 10)
 } GstElementFlags;
 
 /**
@@ -341,7 +345,7 @@ typedef enum
  * Check if the element is in the locked state and therefore will ignore state
  * changes from its parent object.
  */
-#define GST_ELEMENT_IS_LOCKED_STATE(elem)        (GST_OBJECT_FLAG_IS_SET(elem,GST_ELEMENT_LOCKED_STATE))
+#define GST_ELEMENT_IS_LOCKED_STATE(elem)        (GST_OBJECT_FLAG_IS_SET(elem,GST_ELEMENT_FLAG_LOCKED_STATE))
 
 /**
  * GST_ELEMENT_NAME:
@@ -495,17 +499,17 @@ G_STMT_START {                                                          \
  *
  * Get the conditional used to signal the completion of a state change.
  */
-#define GST_STATE_GET_COND(elem)               (GST_ELEMENT_CAST(elem)->state_cond)
+#define GST_STATE_GET_COND(elem)               (&GST_ELEMENT_CAST(elem)->state_cond)
 
-#define GST_STATE_LOCK(elem)                   g_static_rec_mutex_lock(GST_STATE_GET_LOCK(elem))
-#define GST_STATE_TRYLOCK(elem)                g_static_rec_mutex_trylock(GST_STATE_GET_LOCK(elem))
-#define GST_STATE_UNLOCK(elem)                 g_static_rec_mutex_unlock(GST_STATE_GET_LOCK(elem))
-#define GST_STATE_UNLOCK_FULL(elem)            g_static_rec_mutex_unlock_full(GST_STATE_GET_LOCK(elem))
-#define GST_STATE_LOCK_FULL(elem,t)            g_static_rec_mutex_lock_full(GST_STATE_GET_LOCK(elem), t)
+#define GST_STATE_LOCK(elem)                   g_rec_mutex_lock(GST_STATE_GET_LOCK(elem))
+#define GST_STATE_TRYLOCK(elem)                g_rec_mutex_trylock(GST_STATE_GET_LOCK(elem))
+#define GST_STATE_UNLOCK(elem)                 g_rec_mutex_unlock(GST_STATE_GET_LOCK(elem))
+#define GST_STATE_UNLOCK_FULL(elem)            g_rec_mutex_unlock_full(GST_STATE_GET_LOCK(elem))
+#define GST_STATE_LOCK_FULL(elem,t)            g_rec_mutex_lock_full(GST_STATE_GET_LOCK(elem), t)
 #define GST_STATE_WAIT(elem)                   g_cond_wait (GST_STATE_GET_COND (elem), \
                                                         GST_OBJECT_GET_LOCK (elem))
-#define GST_STATE_TIMED_WAIT(elem, timeval)    g_cond_timed_wait (GST_STATE_GET_COND (elem), \
-                                                        GST_OBJECT_GET_LOCK (elem), timeval)
+#define GST_STATE_WAIT_UNTIL(elem, end_time)   g_cond_wait_until (GST_STATE_GET_COND (elem), \
+                                                        GST_OBJECT_GET_LOCK (elem), end_time)
 #define GST_STATE_SIGNAL(elem)                 g_cond_signal (GST_STATE_GET_COND (elem));
 #define GST_STATE_BROADCAST(elem)              g_cond_broadcast (GST_STATE_GET_COND (elem));
 
@@ -545,10 +549,10 @@ struct _GstElement
   GstObject             object;
 
   /*< public >*/ /* with LOCK */
-  GStaticRecMutex       state_lock;
+  GRecMutex             state_lock;
 
   /* element state */
-  GCond                *state_cond;
+  GCond                 state_cond;
   guint32               state_cookie;
   GstState              target_state;
   GstState              current_state;
@@ -593,12 +597,9 @@ struct _GstElement
  * @set_bus: set a #GstBus on the element
  * @provide_clock: gets the #GstClock provided by the element
  * @set_clock: set the #GstClock on the element
- * @get_index: set a #GstIndex on the element
- * @set_index: get the #GstIndex of an element
  * @send_event: send a #GstEvent to the element
- * @get_query_types: get the supported #GstQueryType of this element
  * @query: perform a #GstQuery on the element
- * @state_changed: called immediately after a new state was set. Since: 0.10.35.
+ * @state_changed: called immediately after a new state was set.
  *
  * GStreamer element class. Override the vmethods to implement the element
  * functionality.
@@ -648,18 +649,13 @@ struct _GstElementClass
   GstClock*             (*provide_clock)        (GstElement *element);
   gboolean              (*set_clock)            (GstElement *element, GstClock *clock);
 
-  /* index */
-  GstIndex*             (*get_index)            (GstElement *element);
-  void                  (*set_index)            (GstElement *element, GstIndex *index);
-
   /* query functions */
   gboolean              (*send_event)           (GstElement *element, GstEvent *event);
 
-  const GstQueryType*   (*get_query_types)      (GstElement *element);
   gboolean              (*query)                (GstElement *element, GstQuery *query);
 
   /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
+  gpointer _gst_reserved[GST_PADDING_LARGE];
 };
 
 /* element class pad templates */
@@ -673,9 +669,16 @@ void                    gst_element_class_set_metadata          (GstElementClass
                                                                  const gchar     *classification,
                                                                  const gchar     *description,
                                                                  const gchar     *author);
+void                    gst_element_class_set_static_metadata   (GstElementClass *klass,
+                                                                 const gchar     *longname,
+                                                                 const gchar     *classification,
+                                                                 const gchar     *description,
+                                                                 const gchar     *author);
 void                    gst_element_class_add_metadata          (GstElementClass * klass,
                                                                  const gchar * key, const gchar * value);
-const gchar          *  gst_element_class_get_metadata          (GstElementClass * klass,
+void                    gst_element_class_add_static_metadata   (GstElementClass * klass,
+                                                                 const gchar * key, const gchar * value);
+const gchar *           gst_element_class_get_metadata          (GstElementClass * klass,
                                                                  const gchar * key);
 
 
@@ -727,8 +730,6 @@ GType                   gst_element_get_type            (void);
 #define                 gst_element_set_parent(elem,parent)     gst_object_set_parent(GST_OBJECT_CAST(elem),parent)
 
 /* clocking */
-gboolean                gst_element_requires_clock      (GstElement *element);
-gboolean                gst_element_provides_clock      (GstElement *element);
 GstClock*               gst_element_provide_clock       (GstElement *element);
 GstClock*               gst_element_get_clock           (GstElement *element);
 gboolean                gst_element_set_clock           (GstElement *element, GstClock *clock);
@@ -736,11 +737,6 @@ void                    gst_element_set_base_time       (GstElement *element, Gs
 GstClockTime            gst_element_get_base_time       (GstElement *element);
 void                    gst_element_set_start_time      (GstElement *element, GstClockTime time);
 GstClockTime            gst_element_get_start_time      (GstElement *element);
-
-/* indexes */
-gboolean                gst_element_is_indexable        (GstElement *element);
-void                    gst_element_set_index           (GstElement *element, GstIndex *index);
-GstIndex*               gst_element_get_index           (GstElement *element);
 
 /* bus */
 void                    gst_element_set_bus             (GstElement * element, GstBus * bus);
@@ -767,7 +763,6 @@ gboolean                gst_element_seek                (GstElement *element, gd
                                                          GstFormat format, GstSeekFlags flags,
                                                          GstSeekType cur_type, gint64 cur,
                                                          GstSeekType stop_type, gint64 stop);
-const GstQueryType*     gst_element_get_query_types     (GstElement *element);
 gboolean                gst_element_query               (GstElement *element, GstQuery *query);
 
 /* messages */

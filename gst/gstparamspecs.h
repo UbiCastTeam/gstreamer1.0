@@ -105,7 +105,7 @@ typedef struct _GstParamSpecFraction GstParamSpecFraction;
  */
 struct _GstParamSpecFraction {
   GParamSpec    parent_instance;
-  
+
   gint          min_num, min_den;
   gint          max_num, max_den;
   gint          def_num, def_den;
@@ -120,7 +120,7 @@ GParamSpec  * gst_param_spec_fraction (const gchar * name,
                                        gint min_num, gint min_denom,
                                        gint max_num, gint max_denom,
                                        gint default_num, gint default_denom,
-                                       GParamFlags flags);
+                                       GParamFlags flags) G_GNUC_MALLOC;
 
 G_END_DECLS
 

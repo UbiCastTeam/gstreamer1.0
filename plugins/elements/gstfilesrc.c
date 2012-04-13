@@ -130,8 +130,7 @@ enum
 enum
 {
   PROP_0,
-  PROP_LOCATION,
-  PROP_FD
+  PROP_LOCATION
 };
 
 static void gst_file_src_finalize (GObject * object);
@@ -173,10 +172,6 @@ gst_file_src_class_init (GstFileSrcClass * klass)
   gobject_class->set_property = gst_file_src_set_property;
   gobject_class->get_property = gst_file_src_get_property;
 
-  g_object_class_install_property (gobject_class, PROP_FD,
-      g_param_spec_int ("fd", "File-descriptor",
-          "File-descriptor for the file being mmap()d", 0, G_MAXINT, 0,
-          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_LOCATION,
       g_param_spec_string ("location", "File Location",
           "Location of the file to read", NULL,
@@ -185,7 +180,7 @@ gst_file_src_class_init (GstFileSrcClass * klass)
 
   gobject_class->finalize = gst_file_src_finalize;
 
-  gst_element_class_set_details_simple (gstelement_class,
+  gst_element_class_set_static_metadata (gstelement_class,
       "File Source",
       "Source/File",
       "Read from arbitrary point in a file",
@@ -214,6 +209,8 @@ gst_file_src_init (GstFileSrc * src)
   src->uri = NULL;
 
   src->is_regular = FALSE;
+
+  gst_base_src_set_blocksize (GST_BASE_SRC (src), DEFAULT_BLOCKSIZE);
 }
 
 static void
@@ -257,7 +254,7 @@ gst_file_src_set_location (GstFileSrc * src, const gchar * location)
     GST_INFO ("uri      : %s", src->uri);
   }
   g_object_notify (G_OBJECT (src), "location");
-  gst_uri_handler_new_uri (GST_URI_HANDLER (src), src->uri);
+  /* FIXME 0.11: notify "uri" property once there is one */
 
   return TRUE;
 
@@ -305,9 +302,6 @@ gst_file_src_get_property (GObject * object, guint prop_id, GValue * value,
     case PROP_LOCATION:
       g_value_set_string (value, src->filename);
       break;
-    case PROP_FD:
-      g_value_set_int (value, src->fd);
-      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -329,7 +323,9 @@ gst_file_src_fill (GstBaseSrc * basesrc, guint64 offset, guint length,
     GstBuffer * buf)
 {
   GstFileSrc *src;
+  guint to_read, bytes_read;
   int ret;
+  GstMapInfo info;
   guint8 *data;
 
   src = GST_FILE_SRC_CAST (basesrc);
@@ -344,31 +340,42 @@ gst_file_src_fill (GstBaseSrc * basesrc, guint64 offset, guint length,
     src->read_position = offset;
   }
 
-  data = gst_buffer_map (buf, NULL, NULL, GST_MAP_WRITE);
+  gst_buffer_map (buf, &info, GST_MAP_WRITE);
+  data = info.data;
 
-  GST_LOG_OBJECT (src, "Reading %d bytes at offset 0x%" G_GINT64_MODIFIER "x",
-      length, offset);
+  bytes_read = 0;
+  to_read = length;
+  while (to_read > 0) {
+    GST_LOG_OBJECT (src, "Reading %d bytes at offset 0x%" G_GINT64_MODIFIER "x",
+        to_read, offset + bytes_read);
+    errno = 0;
+    ret = read (src->fd, data + bytes_read, to_read);
+    if (G_UNLIKELY (ret < 0)) {
+      if (errno == EAGAIN || errno == EINTR)
+        continue;
+      goto could_not_read;
+    }
 
-  ret = read (src->fd, data, length);
-  if (G_UNLIKELY (ret < 0))
-    goto could_not_read;
+    /* files should eos if they read 0 and more was requested */
+    if (G_UNLIKELY (ret == 0)) {
+      /* .. but first we should return any remaining data */
+      if (bytes_read > 0)
+        break;
+      goto eos;
+    }
 
-  /* seekable regular files should have given us what we expected */
-  if (G_UNLIKELY ((guint) ret < length && src->seekable))
-    goto unexpected_eos;
+    to_read -= ret;
+    bytes_read += ret;
 
-  /* other files should eos if they read 0 and more was requested */
-  if (G_UNLIKELY (ret == 0))
-    goto eos;
+    src->read_position += ret;
+  }
 
-  length = ret;
-
-  gst_buffer_unmap (buf, data, length);
+  gst_buffer_unmap (buf, &info);
+  if (bytes_read != length)
+    gst_buffer_resize (buf, 0, bytes_read);
 
   GST_BUFFER_OFFSET (buf) = offset;
-  GST_BUFFER_OFFSET_END (buf) = offset + length;
-
-  src->read_position += length;
+  GST_BUFFER_OFFSET_END (buf) = offset + bytes_read;
 
   return GST_FLOW_OK;
 
@@ -381,21 +388,16 @@ seek_failed:
 could_not_read:
   {
     GST_ELEMENT_ERROR (src, RESOURCE, READ, (NULL), GST_ERROR_SYSTEM);
-    gst_buffer_unmap (buf, data, 0);
-    return GST_FLOW_ERROR;
-  }
-unexpected_eos:
-  {
-    GST_ELEMENT_ERROR (src, RESOURCE, READ, (NULL),
-        ("unexpected end of file."));
-    gst_buffer_unmap (buf, data, 0);
+    gst_buffer_unmap (buf, &info);
+    gst_buffer_resize (buf, 0, 0);
     return GST_FLOW_ERROR;
   }
 eos:
   {
-    GST_DEBUG ("non-regular file hits EOS");
-    gst_buffer_unmap (buf, data, 0);
-    return GST_FLOW_UNEXPECTED;
+    GST_DEBUG ("EOS");
+    gst_buffer_unmap (buf, &info);
+    gst_buffer_resize (buf, 0, 0);
+    return GST_FLOW_EOS;
   }
 }
 
@@ -518,7 +520,7 @@ no_filename:
   {
     GST_ELEMENT_ERROR (src, RESOURCE, NOT_FOUND,
         (_("No file name specified for reading.")), (NULL));
-    return FALSE;
+    goto error_exit;
   }
 open_failed:
   {
@@ -533,29 +535,30 @@ open_failed:
             GST_ERROR_SYSTEM);
         break;
     }
-    return FALSE;
+    goto error_exit;
   }
 no_stat:
   {
     GST_ELEMENT_ERROR (src, RESOURCE, OPEN_READ,
         (_("Could not get info on \"%s\"."), src->filename), (NULL));
-    close (src->fd);
-    return FALSE;
+    goto error_close;
   }
 was_directory:
   {
     GST_ELEMENT_ERROR (src, RESOURCE, OPEN_READ,
         (_("\"%s\" is a directory."), src->filename), (NULL));
-    close (src->fd);
-    return FALSE;
+    goto error_close;
   }
 was_socket:
   {
     GST_ELEMENT_ERROR (src, RESOURCE, OPEN_READ,
         (_("File \"%s\" is a socket."), src->filename), (NULL));
-    close (src->fd);
-    return FALSE;
+    goto error_close;
   }
+error_close:
+  close (src->fd);
+error_exit:
+  return FALSE;
 }
 
 /* unmap and close the file */
@@ -582,29 +585,30 @@ gst_file_src_uri_get_type (GType type)
   return GST_URI_SRC;
 }
 
-static gchar **
+static const gchar *const *
 gst_file_src_uri_get_protocols (GType type)
 {
-  static gchar *protocols[] = { (char *) "file", NULL };
+  static const gchar *protocols[] = { "file", NULL };
 
   return protocols;
 }
 
-static const gchar *
+static gchar *
 gst_file_src_uri_get_uri (GstURIHandler * handler)
 {
   GstFileSrc *src = GST_FILE_SRC (handler);
 
-  return src->uri;
+  /* FIXME: make thread-safe */
+  return g_strdup (src->uri);
 }
 
 static gboolean
-gst_file_src_uri_set_uri (GstURIHandler * handler, const gchar * uri)
+gst_file_src_uri_set_uri (GstURIHandler * handler, const gchar * uri,
+    GError ** err)
 {
   gchar *location, *hostname = NULL;
   gboolean ret = FALSE;
   GstFileSrc *src = GST_FILE_SRC (handler);
-  GError *error = NULL;
 
   if (strcmp (uri, "file://") == 0) {
     /* Special case for "file://" as this is used by some applications
@@ -614,22 +618,19 @@ gst_file_src_uri_set_uri (GstURIHandler * handler, const gchar * uri)
     return TRUE;
   }
 
-  location = g_filename_from_uri (uri, &hostname, &error);
+  location = g_filename_from_uri (uri, &hostname, err);
 
-  if (!location || error) {
-    if (error) {
-      GST_WARNING_OBJECT (src, "Invalid URI '%s' for filesrc: %s", uri,
-          error->message);
-      g_error_free (error);
-    } else {
-      GST_WARNING_OBJECT (src, "Invalid URI '%s' for filesrc", uri);
-    }
+  if (!location || (err != NULL && *err != NULL)) {
+    GST_WARNING_OBJECT (src, "Invalid URI '%s' for filesrc: %s", uri,
+        (err != NULL && *err != NULL) ? (*err)->message : "unknown error");
     goto beach;
   }
 
   if ((hostname) && (strcmp (hostname, "localhost"))) {
     /* Only 'localhost' is permitted */
     GST_WARNING_OBJECT (src, "Invalid hostname '%s' for filesrc", hostname);
+    g_set_error (err, GST_URI_ERROR, GST_URI_ERROR_BAD_URI,
+        "File URI with invalid hostname '%s'", hostname);
     goto beach;
   }
 #ifdef G_OS_WIN32

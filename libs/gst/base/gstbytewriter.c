@@ -260,8 +260,8 @@ gst_byte_writer_reset_and_get_buffer (GstByteWriter * writer)
 
   buffer = gst_buffer_new ();
   if (data != NULL) {
-    gst_buffer_take_memory (buffer, -1,
-        gst_memory_new_wrapped (0, data, g_free, size, 0, size));
+    gst_buffer_append_memory (buffer,
+        gst_memory_new_wrapped (0, data, size, 0, size, data, g_free));
   }
 
   return buffer;
@@ -749,4 +749,17 @@ CREATE_WRITE_STRING_FUNC (32, guint32);
  * Returns: %TRUE if the value could be written
  *
  * Since: 0.10.27
+ */
+
+/**
+ * gst_byte_writer_put_buffer:
+ * @writer: #GstByteWriter instance
+ * @buffer: (transfer none): source #GstBuffer
+ * @offset: offset to copy from
+ * @size: total size to copy. If -1, all data is copied
+ *
+ * Writes @size bytes of @data to @writer.
+ *
+ * Returns: %TRUE if the data could be written
+ *
  */

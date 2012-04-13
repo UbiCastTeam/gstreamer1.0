@@ -19,9 +19,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
+
 #include <gst/gst.h>
-#include <gst/controller/gstcontroller.h>
 #include <gst/controller/gstinterpolationcontrolsource.h>
+#include <gst/controller/gstdirectcontrolbinding.h>
 
 /* a song in buzztard can easily reach 30000 here */
 #define NUM_CP 15000
@@ -81,15 +83,13 @@ main (gint argc, gchar * argv[])
   gint i, j;
   GstElement *src, *sink;
   GstElement *bin;
-  GstController *ctrl;
-  GstInterpolationControlSource *csource;
-  GValue freq = { 0, };
+  GstControlSource *cs;
+  GstTimedValueControlSource *tvcs;
   GstClockTime bt, ct;
   GstClockTimeDiff elapsed;
   GstClockTime tick;
 
   gst_init (&argc, &argv);
-  gst_controller_init (&argc, &argv);
 
   /* build pipeline */
   bin = gst_pipeline_new ("pipeline");
@@ -111,20 +111,13 @@ main (gint argc, gchar * argv[])
 
   tick = BLOCK_SIZE * GST_SECOND / 44100;
 
-  /* add a controller to the source */
-  if (!(ctrl = gst_controller_new (G_OBJECT (src), "freq", NULL))) {
-    GST_WARNING ("can't control source element");
-    goto Error;
-  }
-
   /* create and configure control source */
-  csource = gst_interpolation_control_source_new ();
-  gst_controller_set_control_source (ctrl, "freq",
-      GST_CONTROL_SOURCE (csource));
-  gst_interpolation_control_source_set_interpolation_mode (csource,
-      GST_INTERPOLATE_LINEAR);
-  g_value_init (&freq, G_TYPE_DOUBLE);
+  cs = gst_interpolation_control_source_new ();
+  tvcs = (GstTimedValueControlSource *) cs;
 
+  gst_object_add_control_binding (GST_OBJECT (src),
+      gst_direct_control_binding_new (GST_OBJECT (src), "freq", cs));
+  g_object_set (cs, "mode", GST_INTERPOLATION_MODE_LINEAR, NULL);
 
   /* set control values, we set them in a linear order as we would when loading
    * a stored project
@@ -132,8 +125,8 @@ main (gint argc, gchar * argv[])
   bt = gst_util_get_timestamp ();
 
   for (i = 0; i < NUM_CP; i++) {
-    g_value_set_double (&freq, g_random_double_range (50.0, 3000.0));
-    gst_interpolation_control_source_set (csource, i * tick, &freq);
+    gst_timed_value_control_source_set (tvcs, i * tick,
+        g_random_double_range (50.0, 3000.0));
   }
 
   ct = gst_util_get_timestamp ();
@@ -149,8 +142,8 @@ main (gint argc, gchar * argv[])
 
   for (i = 0; i < 100; i++) {
     j = g_random_int_range (0, NUM_CP - 1);
-    g_value_set_double (&freq, g_random_double_range (50.0, 3000.0));
-    gst_interpolation_control_source_set (csource, j * tick, &freq);
+    gst_timed_value_control_source_set (tvcs, j * tick,
+        g_random_double_range (50.0, 3000.0));
   }
 
   ct = gst_util_get_timestamp ();
@@ -161,25 +154,17 @@ main (gint argc, gchar * argv[])
   {
     GstClockTime sample_duration =
         gst_util_uint64_scale_int (1, GST_SECOND, 44100);
-    GstValueArray va = { "freq",
-      BLOCK_SIZE * NUM_CP,
-      sample_duration,
-      NULL
-    };
-
     gdouble *values = g_new0 (gdouble, BLOCK_SIZE * NUM_CP);
-    va.values = (gpointer *) values;
 
     bt = gst_util_get_timestamp ();
-    gst_control_source_get_value_array (GST_CONTROL_SOURCE (csource), 0, &va);
+    gst_control_source_get_value_array (cs, 0, sample_duration,
+        BLOCK_SIZE * NUM_CP, values);
     ct = gst_util_get_timestamp ();
     g_free (values);
     elapsed = GST_CLOCK_DIFF (bt, ct);
     printf ("linear array for control-points: %" GST_TIME_FORMAT "\n",
         GST_TIME_ARGS (elapsed));
   }
-
-  g_object_unref (csource);
 
   /* play, this test sequential reads */
   bt = gst_util_get_timestamp ();
@@ -196,8 +181,8 @@ main (gint argc, gchar * argv[])
       GST_TIME_ARGS (elapsed));
 
   /* cleanup */
-  g_object_unref (G_OBJECT (ctrl));
-  gst_object_unref (G_OBJECT (bin));
+  gst_object_unref (cs);
+  gst_object_unref (bin);
   res = 0;
 Error:
   return res;

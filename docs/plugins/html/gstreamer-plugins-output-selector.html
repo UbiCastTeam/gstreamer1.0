@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>output-selector</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer Core Plugins 0.11 Plugins Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-multiqueue.html" title="multiqueue">
 <link rel="next" href="gstreamer-plugins-queue.html" title="queue">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-plugins-multiqueue.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer Core Plugins 0.11 Plugins Reference Manual</th>
+<th width="100%" align="center">GStreamer Core Plugins 1.0 Plugins Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-plugins-queue.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -49,15 +49,15 @@
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-         +----<a href="../gstreamer-0.11/GstObject.html">GstObject</a>
-               +----<a href="../gstreamer-0.11/GstElement.html">GstElement</a>
+         +----<a href="../gstreamer-1.0/GstObject.html">GstObject</a>
+               +----<a href="../gstreamer-1.0/GstElement.html">GstElement</a>
                      +----GstOutputSelector
 </pre>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-output-selector.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
-  "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--active-pad" title='The "active-pad" property'>active-pad</a>"               <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a>*               : Read / Write
+  "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--active-pad" title='The "active-pad" property'>active-pad</a>"               <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a>*               : Read / Write
   "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--resend-latest" title='The "resend-latest" property'>resend-latest</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
   "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--pad-negotiation-mode" title='The "pad-negotiation-mode" property'>pad-negotiation-mode</a>"     <span class="type">GstOutputSelectorPadNegotiationMode</span>  : Read / Write
 </pre>
@@ -70,7 +70,7 @@ Direct input stream to one out of N output pads.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id387761"></a><h3>Element Information</h3>
+<a name="idp7263568"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -93,7 +93,7 @@ Direct input stream to one out of N output pads.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id398520"></a><h3>Element Pads</h3>
+<a name="idp10296384"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -120,7 +120,7 @@ Direct input stream to one out of N output pads.
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
-<td>src%d</td>
+<td>src_%u</td>
 </tr>
 <tr>
 <td><p><span class="term">direction</span></p></td>
@@ -154,7 +154,7 @@ Direct input stream to one out of N output pads.
 <a name="gstreamer-plugins-output-selector.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GstOutputSelector--active-pad"></a><h3>The <code class="literal">"active-pad"</code> property</h3>
-<pre class="programlisting">  "active-pad"               <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a>*               : Read / Write</pre>
+<pre class="programlisting">  "active-pad"               <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a>*               : Read / Write</pre>
 <p>Currently active src pad.</p>
 </div>
 <hr>

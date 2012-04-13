@@ -118,6 +118,7 @@
 #include <locale.h>             /* for LC_ALL */
 
 #include "gst.h"
+#include "gsttrace.h"
 
 #define GST_CAT_DEFAULT GST_CAT_GST_INIT
 
@@ -283,7 +284,7 @@ DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 #endif
 
 /**
- * gst_init_get_option_group:
+ * gst_init_get_option_group: (skip)
  *
  * Returns a #GOptionGroup with GStreamer's argument specifications. The
  * group is set up to use standard GOption callbacks, so when using this
@@ -360,28 +361,6 @@ gst_init_get_option_group (void)
     {NULL}
   };
 
-  /* Since GLib 2.23.2 calling g_thread_init() 'late' is allowed and is
-   * automatically done as part of g_type_init() */
-  if (glib_check_version (2, 23, 3)) {
-    /* The GLib threading system must be initialised before calling any other
-     * GLib function according to the documentation; if the application hasn't
-     * called gst_init() yet or initialised the threading system otherwise, we
-     * better issue a warning here (since chances are high that the application
-     * has already called other GLib functions such as g_option_context_new() */
-    if (!g_thread_get_initialized ()) {
-      g_warning ("The GStreamer function gst_init_get_option_group() was\n"
-          "\tcalled, but the GLib threading system has not been initialised\n"
-          "\tyet, something that must happen before any other GLib function\n"
-          "\tis called. The application needs to be fixed so that it calls\n"
-          "\t   if (!g_thread_get_initialized ()) g_thread_init(NULL);\n"
-          "\tas very first thing in its main() function. Please file a bug\n"
-          "\tagainst this application.");
-      g_thread_init (NULL);
-    }
-  } else {
-    /* GLib >= 2.23.2 */
-  }
-
   group = g_option_group_new ("gst", _("GStreamer Options"),
       _("Show GStreamer Options"), NULL, NULL);
   g_option_group_set_parse_hooks (group, (GOptionParseFunc) init_pre,
@@ -423,9 +402,6 @@ gst_init_check (int *argc, char **argv[], GError ** err)
   GOptionContext *ctx;
 #endif
   gboolean res;
-
-  if (!g_thread_get_initialized ())
-    g_thread_init (NULL);
 
   if (gst_initialized) {
     GST_DEBUG ("already initialized gst");
@@ -574,10 +550,9 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
 
   g_type_init ();
 
-  /* we need threading to be enabled right here */
-  g_assert (g_thread_get_initialized ());
-
-  _gst_debug_init ();
+#ifndef GST_DISABLE_GST_DEBUG
+  _priv_gst_debug_init ();
+#endif
 
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -652,10 +627,6 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
 {
   GLogLevelFlags llf;
 
-#ifndef GST_DISABLE_TRACE
-  GstTrace *gst_trace;
-#endif /* GST_DISABLE_TRACE */
-
   if (gst_initialized) {
     GST_DEBUG ("already initialized");
     return TRUE;
@@ -664,6 +635,9 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   llf = G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_ERROR | G_LOG_FLAG_FATAL;
   g_log_set_handler (g_log_domain_gstreamer, llf, debug_log_handler, NULL);
 
+  _priv_gst_alloc_trace_initialize ();
+
+  _priv_gst_mini_object_initialize ();
   _priv_gst_quarks_initialize ();
   _priv_gst_memory_initialize ();
   _priv_gst_format_initialize ();
@@ -682,7 +656,6 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_task_get_type ());
   g_type_class_ref (gst_clock_get_type ());
 
-  g_type_class_ref (gst_index_factory_get_type ());
   gst_uri_handler_get_type ();
 
   g_type_class_ref (gst_object_flags_get_type ());
@@ -709,14 +682,9 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_event_type_get_type ());
   g_type_class_ref (gst_seek_type_get_type ());
   g_type_class_ref (gst_seek_flags_get_type ());
+  g_type_class_ref (gst_stream_config_flags_get_type ());
   g_type_class_ref (gst_qos_type_get_type ());
   g_type_class_ref (gst_format_get_type ());
-  g_type_class_ref (gst_index_certainty_get_type ());
-  g_type_class_ref (gst_index_entry_type_get_type ());
-  g_type_class_ref (gst_index_lookup_method_get_type ());
-  g_type_class_ref (gst_assoc_flags_get_type ());
-  g_type_class_ref (gst_index_resolver_method_get_type ());
-  g_type_class_ref (gst_index_flags_get_type ());
   g_type_class_ref (gst_debug_level_get_type ());
   g_type_class_ref (gst_debug_color_flags_get_type ());
   g_type_class_ref (gst_iterator_result_get_type ());
@@ -726,7 +694,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_pad_link_return_get_type ());
   g_type_class_ref (gst_pad_link_check_get_type ());
   g_type_class_ref (gst_flow_return_get_type ());
-  g_type_class_ref (gst_activate_mode_get_type ());
+  g_type_class_ref (gst_pad_mode_get_type ());
   g_type_class_ref (gst_pad_direction_get_type ());
   g_type_class_ref (gst_pad_flags_get_type ());
   g_type_class_ref (gst_pad_presence_get_type ());
@@ -736,6 +704,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_plugin_flags_get_type ());
   g_type_class_ref (gst_plugin_dependency_flags_get_type ());
   g_type_class_ref (gst_rank_get_type ());
+  g_type_class_ref (gst_query_type_flags_get_type ());
   g_type_class_ref (gst_query_type_get_type ());
   g_type_class_ref (gst_buffering_mode_get_type ());
   g_type_class_ref (gst_stream_status_type_get_type ());
@@ -744,33 +713,41 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_tag_flag_get_type ());
   g_type_class_ref (gst_task_pool_get_type ());
   g_type_class_ref (gst_task_state_get_type ());
-  g_type_class_ref (gst_alloc_trace_flags_get_type ());
+  g_type_class_ref (gst_toc_entry_type_get_type ());
   g_type_class_ref (gst_type_find_probability_get_type ());
+  g_type_class_ref (gst_uri_error_get_type ());
   g_type_class_ref (gst_uri_type_get_type ());
   g_type_class_ref (gst_parse_error_get_type ());
   g_type_class_ref (gst_parse_flags_get_type ());
   g_type_class_ref (gst_search_mode_get_type ());
   g_type_class_ref (gst_progress_type_get_type ());
-  g_type_class_ref (gst_buffer_pool_flags_get_type ());
+  g_type_class_ref (gst_buffer_pool_acquire_flags_get_type ());
   g_type_class_ref (gst_memory_flags_get_type ());
   g_type_class_ref (gst_map_flags_get_type ());
   g_type_class_ref (gst_caps_intersect_mode_get_type ());
-  g_type_class_ref (gst_probe_type_get_type ());
-  g_type_class_ref (gst_probe_return_get_type ());
+  g_type_class_ref (gst_pad_probe_type_get_type ());
+  g_type_class_ref (gst_pad_probe_return_get_type ());
   g_type_class_ref (gst_segment_flags_get_type ());
+  g_type_class_ref (gst_scheduling_flags_get_type ());
+  g_type_class_ref (gst_meta_flags_get_type ());
+  g_type_class_ref (gst_toc_entry_type_get_type ());
+
+  g_type_class_ref (gst_control_binding_get_type ());
+  g_type_class_ref (gst_control_source_get_type ());
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
   _priv_gst_message_initialize ();
   _priv_gst_buffer_list_initialize ();
+  _priv_gst_sample_initialize ();
   _priv_gst_value_initialize ();
+
   g_type_class_ref (gst_param_spec_fraction_get_type ());
   _priv_gst_tag_initialize ();
+  _priv_gst_toc_initialize ();
   gst_parse_context_get_type ();
 
   _priv_gst_plugin_initialize ();
-
-  gst_g_error_get_type ();
 
   /* register core plugins */
   gst_plugin_register_static (GST_VERSION_MAJOR, GST_VERSION_MINOR,
@@ -791,14 +768,6 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
 
   if (!gst_update_registry ())
     return FALSE;
-
-#ifndef GST_DISABLE_TRACE
-  _gst_trace_on = 0;
-  if (_gst_trace_on) {
-    gst_trace = gst_trace_new ("gst.trace", 1024);
-    gst_trace_set_default (gst_trace);
-  }
-#endif /* GST_DISABLE_TRACE */
 
   GST_INFO ("GLib runtime version: %d.%d.%d", glib_major_version,
       glib_minor_version, glib_micro_version);
@@ -832,7 +801,7 @@ gst_debug_help (void)
   if (!init_post (NULL, NULL, NULL, NULL))
     exit (1);
 
-  list2 = gst_registry_plugin_filter (gst_registry_get_default (),
+  list2 = gst_registry_plugin_filter (gst_registry_get (),
       select_all, FALSE, NULL);
 
   /* FIXME this is gross.  why don't debug have categories PluginFeatures? */
@@ -912,7 +881,7 @@ parse_one_option (gint opt, const gchar * arg, GError ** err)
       GstDebugLevel tmp = GST_LEVEL_NONE;
 
       tmp = (GstDebugLevel) strtol (arg, NULL, 0);
-      if (tmp >= 0 && tmp < GST_LEVEL_COUNT) {
+      if (((guint) tmp) < GST_LEVEL_COUNT) {
         gst_debug_set_default_threshold (tmp);
       }
       break;
@@ -1042,6 +1011,8 @@ gst_deinit (void)
 
   _priv_gst_registry_cleanup ();
 
+  _priv_gst_alloc_trace_deinit ();
+
   g_type_class_unref (g_type_class_peek (gst_object_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_pad_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_element_factory_get_type ()));
@@ -1050,7 +1021,6 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_bin_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_bus_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_task_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_index_factory_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_object_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_bin_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_buffer_flags_get_type ()));
@@ -1074,6 +1044,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_parse_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_resource_error_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_search_mode_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_stream_config_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stream_error_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stream_status_type_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_structure_change_type_get_type
@@ -1084,23 +1055,17 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_seek_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_qos_type_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_format_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_index_certainty_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_index_entry_type_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_index_lookup_method_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_assoc_flags_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_index_resolver_method_get_type
-          ()));
-  g_type_class_unref (g_type_class_peek (gst_index_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_debug_level_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_debug_color_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_iterator_result_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_iterator_item_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_message_type_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_meta_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_mini_object_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_pad_link_return_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_pad_link_check_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_flow_return_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_activate_mode_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_pad_mode_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_pad_direction_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_pad_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_pad_presence_get_type ()));
@@ -1109,25 +1074,33 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_plugin_error_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_plugin_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_rank_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_query_type_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_query_type_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_buffering_mode_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_tag_merge_mode_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_tag_flag_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_task_state_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_alloc_trace_flags_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_toc_entry_type_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_type_find_probability_get_type
           ()));
   g_type_class_unref (g_type_class_peek (gst_uri_type_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_uri_error_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_parse_error_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_param_spec_fraction_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_progress_type_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_buffer_pool_flags_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_buffer_pool_acquire_flags_get_type
+          ()));
   g_type_class_unref (g_type_class_peek (gst_memory_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_map_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_caps_intersect_mode_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_probe_type_get_type ()));
-  g_type_class_unref (g_type_class_peek (gst_probe_return_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_pad_probe_type_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_pad_probe_return_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_segment_flags_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_scheduling_flags_get_type ()));
+
+  g_type_class_unref (g_type_class_peek (gst_control_binding_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_control_source_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_toc_entry_type_get_type ()));
 
   gst_deinitialized = TRUE;
   GST_INFO ("deinitialized GStreamer");

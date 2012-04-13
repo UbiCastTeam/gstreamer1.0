@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>fakesrc</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer Core Plugins 0.11 Plugins Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-capsfilter.html" title="capsfilter">
 <link rel="next" href="gstreamer-plugins-fakesink.html" title="fakesink">
@@ -17,7 +17,7 @@
 <td><a accesskey="p" href="gstreamer-plugins-capsfilter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer Core Plugins 0.11 Plugins Reference Manual</th>
+<th width="100%" align="center">GStreamer Core Plugins 1.0 Plugins Reference Manual</th>
 <td><a accesskey="n" href="gstreamer-plugins-fakesink.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
@@ -55,9 +55,9 @@ enum                <a class="link" href="gstreamer-plugins-fakesrc.html#GstFake
 <pre class="synopsis">
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-         +----<a href="../gstreamer-0.11/GstObject.html">GstObject</a>
-               +----<a href="../gstreamer-0.11/GstElement.html">GstElement</a>
-                     +----<a href="../gstreamer-libs-0.11/GstBaseSrc.html">GstBaseSrc</a>
+         +----<a href="../gstreamer-1.0/GstObject.html">GstObject</a>
+               +----<a href="../gstreamer-1.0/GstElement.html">GstElement</a>
+                     +----<a href="../gstreamer-libs-1.0/GstBaseSrc.html">GstBaseSrc</a>
                            +----GstFakeSrc
 </pre>
 </div>
@@ -80,7 +80,7 @@ enum                <a class="link" href="gstreamer-plugins-fakesrc.html#GstFake
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--sizemin" title='The "sizemin" property'>sizemin</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--sizetype" title='The "sizetype" property'>sizetype</a>"                 <a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrcSizeType" title="enum GstFakeSrcSizeType"><span class="type">GstFakeSrcSizeType</span></a>    : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--sync" title='The "sync" property'>sync</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
-  "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--format" title='The "format" property'>format</a>"                   <a href="../gstreamer-0.11/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write
+  "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--format" title='The "format" property'>format</a>"                   <a href="../gstreamer-1.0/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write
 </pre>
 </div>
 <div class="refsect1">
@@ -102,10 +102,18 @@ basic <span class="application">GStreamer</span> core functionality is:
 <p>
 </p>
 <div class="refsect2">
-<a name="id364758"></a><h3>Example launch line</h3>
-<div class="informalexample"><pre class="programlisting">
-gst-launch -v fakesrc num-buffers=5 ! fakesink
-</pre></div> This pipeline will push 5 empty buffers to the fakesink element and then
+<a name="idp6947072"></a><h3>Example launch line</h3>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch <span class="gtkdoc opt">-</span>v fakesrc num<span class="gtkdoc opt">-</span>buffers<span class="gtkdoc opt">=</span><span class="number">5</span> <span class="gtkdoc opt">!</span> fakesink</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ This pipeline will push 5 empty buffers to the fakesink element and then
 sends an EOS.
 </div>
 <p>
@@ -116,7 +124,7 @@ Last reviewed on 2008-06-20 (0.10.21)
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id364784"></a><h3>Element Information</h3>
+<a name="idp6950256"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -139,7 +147,7 @@ Last reviewed on 2008-06-20 (0.10.21)
 </div>
 <hr>
 <div class="refsect2">
-<a name="id364846"></a><h3>Element Pads</h3>
+<a name="idp6957664"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -429,7 +437,7 @@ The different size of the allocated buffers.
 <a name="GstFakeSrc--silent"></a><h3>The <code class="literal">"silent"</code> property</h3>
 <pre class="programlisting">  "silent"                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
 <p>Don't produce last_message events.</p>
-<p>Default value: FALSE</p>
+<p>Default value: TRUE</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -464,7 +472,7 @@ The different size of the allocated buffers.
 <hr>
 <div class="refsect2">
 <a name="GstFakeSrc--format"></a><h3>The <code class="literal">"format"</code> property</h3>
-<pre class="programlisting">  "format"                   <a href="../gstreamer-0.11/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write</pre>
+<pre class="programlisting">  "format"                   <a href="../gstreamer-1.0/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write</pre>
 <p>
 Set the format of the newsegment events to produce.
 </p>
@@ -477,8 +485,8 @@ Set the format of the newsegment events to produce.
 <div class="refsect2">
 <a name="GstFakeSrc-handoff"></a><h3>The <code class="literal">"handoff"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc"><span class="type">GstFakeSrc</span></a> *fakesrc,
-                                                        <a href="../gstreamer-0.11/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>  *buffer,
-                                                        <a href="../gstreamer-0.11/GstPad.html"><span class="type">GstPad</span></a>     *pad,
+                                                        <a href="../gstreamer-1.0/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>  *buffer,
+                                                        <a href="../gstreamer-1.0/GstPad.html"><span class="type">GstPad</span></a>     *pad,
                                                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)      : <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
 <p>
 This signal gets emitted before sending the buffer.

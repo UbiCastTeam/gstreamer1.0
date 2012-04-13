@@ -50,26 +50,35 @@ GST_END_TEST;
 
 GST_START_TEST (test_registry)
 {
-  GList *g;
+  GList *list, *g;
   GstRegistry *registry;
 
-  registry = gst_registry_get_default ();
+  registry = gst_registry_get ();
 
-  for (g = registry->plugins; g; g = g->next) {
+  list = gst_registry_get_plugin_list (registry);
+  for (g = list; g; g = g->next) {
     GstPlugin *plugin = GST_PLUGIN (g->data);
 
-    ASSERT_OBJECT_REFCOUNT (plugin, "plugin in registry", 1);
+    /* one for the registry, one for the list */
     GST_DEBUG ("refcount %d %s", GST_OBJECT_REFCOUNT_VALUE (plugin),
         plugin->desc.name);
+    ASSERT_OBJECT_REFCOUNT (plugin, "plugin in registry", 2);
+
+    gst_object_unref (plugin);
   }
-  for (g = registry->features; g; g = g->next) {
+  g_list_free (list);
+
+  list = gst_registry_feature_filter (registry, NULL, FALSE, NULL);
+  for (g = list; g; g = g->next) {
     GstPluginFeature *feature = GST_PLUGIN_FEATURE (g->data);
 
-    fail_if (GST_OBJECT_REFCOUNT_VALUE (feature) != 1,
-        "Feature in registry should have refcount of 1");
+    /* one for the registry, one for the list */
     GST_DEBUG ("refcount %d %s", GST_OBJECT_REFCOUNT_VALUE (feature),
         GST_OBJECT_NAME (feature));
+    ASSERT_OBJECT_REFCOUNT (feature, "feature in registry", 2);
+    gst_object_unref (feature);
   }
+  g_list_free (list);
 }
 
 GST_END_TEST;
@@ -79,7 +88,8 @@ GST_START_TEST (test_load_coreelements)
   GstPlugin *unloaded_plugin;
   GstPlugin *loaded_plugin;
 
-  unloaded_plugin = gst_default_registry_find_plugin ("coreelements");
+  unloaded_plugin = gst_registry_find_plugin (gst_registry_get (),
+      "coreelements");
   fail_if (unloaded_plugin == NULL, "Failed to find coreelements plugin");
   fail_if (GST_OBJECT_REFCOUNT_VALUE (unloaded_plugin) != 2,
       "Refcount of unloaded plugin in registry initially should be 2");
@@ -108,11 +118,11 @@ GST_START_TEST (test_registry_get_plugin_list)
   GList *list;
   GstPlugin *plugin;
 
-  plugin = gst_default_registry_find_plugin ("coreelements");
+  plugin = gst_registry_find_plugin (gst_registry_get (), "coreelements");
   fail_if (GST_OBJECT_REFCOUNT_VALUE (plugin) != 2,
       "Refcount of plugin in registry should be 2");
 
-  list = gst_registry_get_plugin_list (gst_registry_get_default ());
+  list = gst_registry_get_plugin_list (gst_registry_get ());
 
   fail_if (GST_OBJECT_REFCOUNT_VALUE (plugin) != 3,
       "Refcount of plugin in registry+list should be 3");
@@ -131,8 +141,7 @@ GST_START_TEST (test_find_plugin)
 {
   GstPlugin *plugin;
 
-  plugin = gst_registry_find_plugin (gst_registry_get_default (),
-      "coreelements");
+  plugin = gst_registry_find_plugin (gst_registry_get (), "coreelements");
   fail_if (plugin == NULL, "Failed to find coreelements plugin");
   ASSERT_OBJECT_REFCOUNT (plugin, "plugin", 2);
 
@@ -152,7 +161,7 @@ GST_START_TEST (test_find_feature)
 {
   GstPluginFeature *feature;
 
-  feature = gst_registry_find_feature (gst_registry_get_default (),
+  feature = gst_registry_find_feature (gst_registry_get (),
       "identity", GST_TYPE_ELEMENT_FACTORY);
   fail_if (feature == NULL, "Failed to find identity element factory");
   fail_if (strcmp (feature->plugin_name, "coreelements"),
@@ -213,7 +222,7 @@ GST_START_TEST (test_typefind)
       "Refcount of plugin in registry should be 2");
   fail_if (gst_plugin_is_loaded (plugin), "Expected plugin to be unloaded");
 
-  feature = gst_registry_find_feature (gst_registry_get_default (),
+  feature = gst_registry_find_feature (gst_registry_get (),
       "audio/x-au", GST_TYPE_TYPE_FIND_FACTORY);
   fail_if (feature == NULL, "Failed to find audio/x-aw typefind factory");
   fail_if (feature->plugin != plugin,
@@ -235,6 +244,9 @@ GST_START_TEST (test_typefind)
 
 GST_END_TEST;
 #endif
+
+#define gst_default_registry_check_feature_version(name,a,b,c) \
+    gst_registry_check_feature_version(gst_registry_get(),(name),(a),(b),(c))
 
 GST_START_TEST (test_version_checks)
 {

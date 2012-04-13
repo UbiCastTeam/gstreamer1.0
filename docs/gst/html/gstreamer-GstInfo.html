@@ -3,11 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstInfo</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="GStreamer 0.11 Core Reference Manual">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="gstreamer-support.html" title="GStreamer Core Support">
-<link rel="next" href="gstreamer-GstTrace.html" title="GstTrace">
+<link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -17,8 +17,8 @@
 <td><a accesskey="p" href="gstreamer-support.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="gstreamer-support.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">GStreamer 0.11 Core Reference Manual</th>
-<td><a accesskey="n" href="gstreamer-GstTrace.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
+<td><a accesskey="n" href="gstreamer-hierarchy.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#gstreamer-GstInfo.synopsis" class="shortcut">Top</a>
@@ -204,6 +204,12 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-print-stack-trace" title="gst_debug_print_stack_trace ()">gst_debug_print_stack_trace</a>         (<em class="parameter"><code><span class="type">void</span></code></em>);
 #define             <a class="link" href="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS" title="GST_TIME_FORMAT">GST_TIME_FORMAT</a>
 #define             <a class="link" href="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS" title="GST_TIME_ARGS()">GST_TIME_ARGS</a>                       (t)
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file" title="gst_debug_bin_to_dot_file ()">gst_debug_bin_to_dot_file</a>           (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file-with-ts" title="gst_debug_bin_to_dot_file_with_ts ()">gst_debug_bin_to_dot_file_with_ts</a>   (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -237,17 +243,35 @@ categories. This is easily done with 3 lines. At the top of your code,
 declare
 the variables and set the default category.
 </p>
-<div class="informalexample"><pre class="programlisting">
-GST_DEBUG_CATEGORY_STATIC (my_category);     // define category (statically)
-#define GST_CAT_DEFAULT my_category     // set as default
-</pre></div>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">);</span>     <span class="gtkdoc slc">// define category (statically)</span>
+<span class="gtkdoc ppc">#define GST_CAT_DEFAULT my_category</span>     <span class="gtkdoc slc">// set as default</span><span class="gtkdoc ppc"></span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 After that you only need to initialize the category.
 </p>
-<div class="informalexample"><pre class="programlisting">
-GST_DEBUG_CATEGORY_INIT (my_category, "my category",
-                         0, "This is my very own");
-</pre></div>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">,</span> <span class="string">&quot;my category&quot;</span><span class="gtkdoc opt">,</span>
+                         <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;This is my very own&quot;</span><span class="gtkdoc opt">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 Initialization must be done before the category is used first.
 Plugins do this
@@ -280,12 +304,12 @@ categories. These are explained at <a class="link" href="gstreamer-GstInfo.html#
 <a name="GstDebugLevel"></a><h3>enum GstDebugLevel</h3>
 <pre class="programlisting">typedef enum {
   GST_LEVEL_NONE = 0,
-  GST_LEVEL_ERROR,
-  GST_LEVEL_WARNING,
-  GST_LEVEL_INFO,
-  GST_LEVEL_DEBUG,
-  GST_LEVEL_LOG,
-  GST_LEVEL_FIXME = 6,
+  GST_LEVEL_ERROR = 1,
+  GST_LEVEL_WARNING = 2,
+  GST_LEVEL_FIXME = 3,
+  GST_LEVEL_INFO = 4,
+  GST_LEVEL_DEBUG = 5,
+  GST_LEVEL_LOG = 6,
   GST_LEVEL_TRACE = 7,
   /* add more */
   GST_LEVEL_MEMDUMP = 9,
@@ -323,6 +347,15 @@ message is, the greater the probability that the debugging system outputs it.
 </td>
 </tr>
 <tr>
+<td><p><a name="GST-LEVEL-FIXME:CAPS"></a><span class="term"><code class="literal">GST_LEVEL_FIXME</code></span></p></td>
+<td>Fixme messages are messages that indicate that something
+ in the executed code path is not fully implemented or handled yet. Note
+ that this does not replace proper error handling in any way, the purpose
+ of this message is to make it easier to spot incomplete/unfinished pieces
+ of code when reading the debug log. (Since: 0.10.23)
+</td>
+</tr>
+<tr>
 <td><p><a name="GST-LEVEL-INFO:CAPS"></a><span class="term"><code class="literal">GST_LEVEL_INFO</code></span></p></td>
 <td>Informational messages should be used to keep the developer
  updated about what is happening.
@@ -348,15 +381,6 @@ message is, the greater the probability that the debugging system outputs it.
  should never output anything else but LOG messages. Use this log level to
  log recurring information in chain functions and loop functions, for
  example.
-</td>
-</tr>
-<tr>
-<td><p><a name="GST-LEVEL-FIXME:CAPS"></a><span class="term"><code class="literal">GST_LEVEL_FIXME</code></span></p></td>
-<td>Fixme messages are messages that indicate that something
- in the executed code path is not fully implemented or handled yet. Note
- that this does not replace proper error handling in any way, the purpose
- of this message is to make it easier to spot incomplete/unfinished pieces
- of code when reading the debug log. (Since: 0.10.23)
 </td>
 </tr>
 <tr>
@@ -1233,14 +1257,27 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 </p>
 <p>
 </p>
-<div class="informalexample"><pre class="programlisting">
-GST_DEBUG_CATEGORY_STATIC (gst_myplugin_debug);
-#define GST_CAT_DEFAULT gst_myplugin_debug
-GST_DEBUG_CATEGORY_STATIC (GST_CAT_PERFORMANCE);
-...
-GST_DEBUG_CATEGORY_INIT (gst_myplugin_debug, "myplugin", 0, "nice element");
-GST_DEBUG_CATEGORY_GET (GST_CAT_PERFORMANCE, "GST_PERFORMANCE");
-</pre></div>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">);</span>
+<span class="gtkdoc ppc">#define GST_CAT_DEFAULT gst_myplugin_debug</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">);</span>
+<span class="gtkdoc opt">...</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">,</span> <span class="string">&quot;myplugin&quot;</span><span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;nice element&quot;</span><span class="gtkdoc opt">);</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-GET:CAPS">GST_DEBUG_CATEGORY_GET</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">,</span> <span class="string">&quot;GST_PERFORMANCE&quot;</span><span class="gtkdoc opt">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -2314,16 +2351,24 @@ freed by the caller.
 <hr>
 <div class="refsect2">
 <a name="GST-DEBUG-BIN-TO-DOT-FILE:CAPS"></a><h3>GST_DEBUG_BIN_TO_DOT_FILE()</h3>
-<pre class="programlisting">#define GST_DEBUG_BIN_TO_DOT_FILE(bin, details, file_name) _gst_debug_bin_to_dot_file (bin, details, file_name)
+<pre class="programlisting">#define GST_DEBUG_BIN_TO_DOT_FILE(bin, details, file_name) gst_debug_bin_to_dot_file (bin, details, file_name)
 </pre>
 <p>
 To aid debugging applications one can use this method to write out the whole
 network of gstreamer elements that form the pipeline into an dot file.
 This file can be processed with graphviz to get an image.
 </p>
-<div class="informalexample"><pre class="programlisting">
- dot -Tpng -oimage.png graph_lowlevel.dot
-</pre></div>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">dot <span class="gtkdoc opt">-</span>Tpng <span class="gtkdoc opt">-</span>oimage<span class="gtkdoc opt">.</span>png graph_lowlevel<span class="gtkdoc opt">.</span>dot</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 </p>
 <p>
@@ -2354,7 +2399,7 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 <hr>
 <div class="refsect2">
 <a name="GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS"></a><h3>GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()</h3>
-<pre class="programlisting">#define GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS(bin, details, file_name) _gst_debug_bin_to_dot_file_with_ts (bin, details, file_name)
+<pre class="programlisting">#define GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS(bin, details, file_name) gst_debug_bin_to_dot_file_with_ts (bin, details, file_name)
 </pre>
 <p>
 This works like <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>, but adds the current timestamp
@@ -2402,9 +2447,17 @@ the matching arguments.
 <p>
 Example:
 </p>
-<div class="informalexample"><pre class="programlisting">
-printf("%" GST_TIME_FORMAT "\n", GST_TIME_ARGS(ts));
-</pre></div>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_TIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p>
 </p>
 </div>
@@ -2424,6 +2477,20 @@ evaluated more than once.
 </td>
 </tr></tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-bin-to-dot-file"></a><h3>gst_debug_bin_to_dot_file ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_bin_to_dot_file           (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-bin-to-dot-file-with-ts"></a><h3>gst_debug_bin_to_dot_file_with_ts ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_bin_to_dot_file_with_ts   (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
 </div>
 </div>
 <div class="refsect1">

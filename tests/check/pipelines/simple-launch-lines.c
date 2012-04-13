@@ -239,26 +239,8 @@ static void
 got_handoff (GstElement * sink, GstBuffer * buf, GstPad * pad, gpointer unused)
 {
   gst_element_post_message
-      (sink, gst_message_new_application (NULL, gst_structure_new ("foo",
-              NULL)));
-}
-
-static void
-assert_live_count (GType type, gint live)
-{
-  GstAllocTrace *trace;
-  const gchar *name;
-
-  if (gst_alloc_trace_available ()) {
-    name = g_type_name (type);
-    fail_if (name == NULL);
-    trace = gst_alloc_trace_get (name);
-    if (trace) {
-      g_return_if_fail (trace->live == live);
-    }
-  } else {
-    g_print ("\nSkipping live count tests; recompile with traces to enable\n");
-  }
+      (sink, gst_message_new_application (NULL,
+          gst_structure_new_empty ("foo")));
 }
 
 GST_START_TEST (test_stop_from_app)
@@ -268,8 +250,6 @@ GST_START_TEST (test_stop_from_app)
   GstStateChangeReturn ret;
   GstMessageType rmessage;
   GstMessage *message;
-
-  assert_live_count (GST_TYPE_BUFFER, 0);
 
   fakesrc = gst_element_factory_make ("fakesrc", NULL);
   fakesink = gst_element_factory_make ("fakesink", NULL);
@@ -316,8 +296,6 @@ GST_START_TEST (test_stop_from_app)
   gst_element_set_state (pipeline, GST_STATE_NULL);
   gst_object_unref (pipeline);
   gst_object_unref (bus);
-
-  assert_live_count (GST_TYPE_BUFFER, 0);
 }
 
 GST_END_TEST;

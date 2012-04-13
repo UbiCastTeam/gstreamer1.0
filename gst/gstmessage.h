@@ -88,6 +88,8 @@ typedef struct _GstMessage GstMessage;
  * @GST_MESSAGE_QOS: A buffer was dropped or an element changed its processing
  * strategy for Quality of Service reasons. Since: 0.10.29
  * @GST_MESSAGE_PROGRESS: A progress message. Since: 0.10.33
+ * @GST_MESSAGE_TOC: A new table of contents (TOC) was found or previously found TOC
+ * was updated. Since: 0.10.37
  * @GST_MESSAGE_ANY: mask for all of the above messages.
  *
  * The different message types that are available.
@@ -124,6 +126,7 @@ typedef enum
   GST_MESSAGE_STEP_START        = (1 << 23),
   GST_MESSAGE_QOS               = (1 << 24),
   GST_MESSAGE_PROGRESS          = (1 << 25),
+  GST_MESSAGE_TOC               = (1 << 26),
   GST_MESSAGE_ANY               = ~0
 } GstMessageType;
 
@@ -133,13 +136,7 @@ typedef enum
 #include <gst/gsttaglist.h>
 #include <gst/gststructure.h>
 #include <gst/gstquery.h>
-
-/**
- * GST_MESSAGE_TRACE_NAME:
- *
- * The name used for memory allocation tracing
- */
-#define GST_MESSAGE_TRACE_NAME  "GstMessage"
+#include <gst/gsttoc.h>
 
 #define GST_TYPE_MESSAGE                         (gst_message_get_type())
 #define GST_IS_MESSAGE(obj)                      (GST_IS_MINI_OBJECT_TYPE (obj, GST_TYPE_MESSAGE))
@@ -149,12 +146,12 @@ typedef enum
 /* the lock is used to handle the synchronous handling of messages,
  * the emiting thread is block until the handling thread processed
  * the message using this mutex/cond pair */
-#define GST_MESSAGE_GET_LOCK(message)   (GST_MESSAGE_CAST(message)->lock)
+#define GST_MESSAGE_GET_LOCK(message)   (&GST_MESSAGE_CAST(message)->lock)
 #define GST_MESSAGE_LOCK(message)       g_mutex_lock(GST_MESSAGE_GET_LOCK(message))
 #define GST_MESSAGE_UNLOCK(message)     g_mutex_unlock(GST_MESSAGE_GET_LOCK(message))
-#define GST_MESSAGE_COND(message)       (GST_MESSAGE_CAST(message)->cond)
-#define GST_MESSAGE_WAIT(message)       g_cond_wait(GST_MESSAGE_COND(message),GST_MESSAGE_GET_LOCK(message))
-#define GST_MESSAGE_SIGNAL(message)     g_cond_signal(GST_MESSAGE_COND(message))
+#define GST_MESSAGE_GET_COND(message)   (&GST_MESSAGE_CAST(message)->cond)
+#define GST_MESSAGE_WAIT(message)       g_cond_wait(GST_MESSAGE_GET_COND(message),GST_MESSAGE_GET_LOCK(message))
+#define GST_MESSAGE_SIGNAL(message)     g_cond_signal(GST_MESSAGE_GET_COND(message))
 
 /**
  * GST_MESSAGE_TYPE:
@@ -282,17 +279,17 @@ typedef enum {
  */
 struct _GstMessage
 {
-  GstMiniObject mini_object;
+  GstMiniObject   mini_object;
 
   /*< public > *//* with COW */
-  GstMessageType type;
-  guint64 timestamp;
-  GstObject *src;
-  guint32 seqnum;
+  GstMessageType  type;
+  guint64         timestamp;
+  GstObject      *src;
+  guint32         seqnum;
 
   /*< private >*//* with MESSAGE_LOCK */
-  GMutex *lock;                 /* lock and cond for async delivery */
-  GCond *cond;
+  GMutex          lock;                 /* lock and cond for async delivery */
+  GCond           cond;
 };
 
 GType           gst_message_get_type            (void);
@@ -390,15 +387,24 @@ gst_message_copy (const GstMessage * msg)
  * message is unreffed, the new one is reffed).
  *
  * Either @new_message or the #GstMessage pointed to by @old_message may be NULL.
+ *
+ * Returns: TRUE if @new_message was different from @old_message
  */
-#define         gst_message_replace(old_message,new_message) \
-    gst_mini_object_replace ((GstMiniObject **)(old_message), GST_MINI_OBJECT_CAST (new_message))
+#ifdef _FOOL_GTK_DOC_
+G_INLINE_FUNC gboolean gst_message_replace (GstMessage **old_message, GstMessage *new_message);
+#endif
+
+static inline gboolean
+gst_message_replace (GstMessage **old_message, GstMessage *new_message)
+{
+  return gst_mini_object_replace ((GstMiniObject **) old_message, (GstMiniObject *) new_message);
+}
 
 
 /* custom messages */
 GstMessage *    gst_message_new_custom          (GstMessageType type,
                                                  GstObject    * src,
-                                                 GstStructure * structure);
+                                                 GstStructure * structure) G_GNUC_MALLOC;
 const GstStructure *
                 gst_message_get_structure       (GstMessage *message);
 
@@ -409,27 +415,27 @@ guint32         gst_message_get_seqnum          (GstMessage *message);
 void            gst_message_set_seqnum          (GstMessage *message, guint32 seqnum);
 
 /* EOS */
-GstMessage *    gst_message_new_eos             (GstObject * src);
+GstMessage *    gst_message_new_eos             (GstObject * src) G_GNUC_MALLOC;
 
 /* ERROR */
 
-GstMessage *    gst_message_new_error           (GstObject * src, GError * error, const gchar * debug);
+GstMessage *    gst_message_new_error           (GstObject * src, GError * error, const gchar * debug) G_GNUC_MALLOC;
 void            gst_message_parse_error         (GstMessage *message, GError **gerror, gchar **debug);
 
 /* WARNING */
-GstMessage *    gst_message_new_warning         (GstObject * src, GError * error, const gchar * debug);
+GstMessage *    gst_message_new_warning         (GstObject * src, GError * error, const gchar * debug) G_GNUC_MALLOC;
 void            gst_message_parse_warning       (GstMessage *message, GError **gerror, gchar **debug);
 
 /* INFO */
-GstMessage *    gst_message_new_info            (GstObject * src, GError * error, const gchar * debug);
+GstMessage *    gst_message_new_info            (GstObject * src, GError * error, const gchar * debug) G_GNUC_MALLOC;
 void            gst_message_parse_info          (GstMessage *message, GError **gerror, gchar **debug);
 
 /* TAG */
-GstMessage *    gst_message_new_tag             (GstObject * src, GstTagList * tag_list);
+GstMessage *    gst_message_new_tag             (GstObject * src, GstTagList * tag_list) G_GNUC_MALLOC;
 void            gst_message_parse_tag           (GstMessage *message, GstTagList **tag_list);
 
 /* BUFFERING */
-GstMessage *    gst_message_new_buffering         (GstObject * src, gint percent);
+GstMessage *    gst_message_new_buffering         (GstObject * src, gint percent) G_GNUC_MALLOC;
 void            gst_message_parse_buffering       (GstMessage *message, gint *percent);
 void            gst_message_set_buffering_stats   (GstMessage *message, GstBufferingMode mode,
                                                    gint avg_in, gint avg_out,
@@ -440,93 +446,93 @@ void            gst_message_parse_buffering_stats (GstMessage *message, GstBuffe
 
 /* STATE_CHANGED */
 GstMessage *    gst_message_new_state_changed   (GstObject * src, GstState oldstate,
-                                                 GstState newstate, GstState pending);
+                                                 GstState newstate, GstState pending) G_GNUC_MALLOC;
 void            gst_message_parse_state_changed (GstMessage *message, GstState *oldstate,
                                                  GstState *newstate, GstState *pending);
 
 /* STATE_DIRTY */
-GstMessage *    gst_message_new_state_dirty     (GstObject * src);
+GstMessage *    gst_message_new_state_dirty     (GstObject * src) G_GNUC_MALLOC;
 
 /* STEP_DONE */
 GstMessage *    gst_message_new_step_done       (GstObject * src, GstFormat format, guint64 amount,
                                                  gdouble rate, gboolean flush, gboolean intermediate,
-                                                 guint64 duration, gboolean eos);
+                                                 guint64 duration, gboolean eos) G_GNUC_MALLOC;
 void            gst_message_parse_step_done     (GstMessage * message, GstFormat *format, guint64 *amount,
                                                  gdouble *rate, gboolean *flush, gboolean *intermediate,
                                                  guint64 *duration, gboolean *eos);
 /* CLOCK_PROVIDE */
-GstMessage *    gst_message_new_clock_provide   (GstObject * src, GstClock *clock, gboolean ready);
+GstMessage *    gst_message_new_clock_provide   (GstObject * src, GstClock *clock, gboolean ready) G_GNUC_MALLOC;
 void            gst_message_parse_clock_provide (GstMessage *message, GstClock **clock,
                                                  gboolean *ready);
 
 /* CLOCK_LOST */
-GstMessage *    gst_message_new_clock_lost      (GstObject * src, GstClock *clock);
+GstMessage *    gst_message_new_clock_lost      (GstObject * src, GstClock *clock) G_GNUC_MALLOC;
 void            gst_message_parse_clock_lost    (GstMessage *message, GstClock **clock);
 
 /* NEW_CLOCK */
-GstMessage *    gst_message_new_new_clock       (GstObject * src, GstClock *clock);
+GstMessage *    gst_message_new_new_clock       (GstObject * src, GstClock *clock) G_GNUC_MALLOC;
 void            gst_message_parse_new_clock     (GstMessage *message, GstClock **clock);
 
 /* APPLICATION */
-GstMessage *    gst_message_new_application     (GstObject * src, GstStructure * structure);
+GstMessage *    gst_message_new_application     (GstObject * src, GstStructure * structure) G_GNUC_MALLOC;
 
 /* ELEMENT */
-GstMessage *    gst_message_new_element         (GstObject * src, GstStructure * structure);
+GstMessage *    gst_message_new_element         (GstObject * src, GstStructure * structure) G_GNUC_MALLOC;
 
 /* SEGMENT_START */
-GstMessage *    gst_message_new_segment_start   (GstObject * src, GstFormat format, gint64 position);
+GstMessage *    gst_message_new_segment_start   (GstObject * src, GstFormat format, gint64 position) G_GNUC_MALLOC;
 void            gst_message_parse_segment_start (GstMessage *message, GstFormat *format,
                                                  gint64 *position);
 
 /* SEGMENT_DONE */
-GstMessage *    gst_message_new_segment_done    (GstObject * src, GstFormat format, gint64 position);
+GstMessage *    gst_message_new_segment_done    (GstObject * src, GstFormat format, gint64 position) G_GNUC_MALLOC;
 void            gst_message_parse_segment_done  (GstMessage *message, GstFormat *format,
                                                  gint64 *position);
 
 /* DURATION */
-GstMessage *    gst_message_new_duration        (GstObject * src, GstFormat format, gint64 duration);
+GstMessage *    gst_message_new_duration        (GstObject * src, GstFormat format, gint64 duration) G_GNUC_MALLOC;
 void            gst_message_parse_duration      (GstMessage *message, GstFormat *format,
                                                  gint64 *duration);
 
 /* LATENCY */
-GstMessage *    gst_message_new_latency         (GstObject * src);
+GstMessage *    gst_message_new_latency         (GstObject * src) G_GNUC_MALLOC;
 
 /* ASYNC_START */
-GstMessage *    gst_message_new_async_start     (GstObject * src);
+GstMessage *    gst_message_new_async_start     (GstObject * src) G_GNUC_MALLOC;
 
 /* ASYNC_DONE */
-GstMessage *    gst_message_new_async_done      (GstObject * src, gboolean reset_time);
+GstMessage *    gst_message_new_async_done      (GstObject * src, gboolean reset_time) G_GNUC_MALLOC;
 void            gst_message_parse_async_done    (GstMessage *message, gboolean *reset_time);
 
 /* STRUCTURE CHANGE */
 GstMessage *    gst_message_new_structure_change   (GstObject * src, GstStructureChangeType type,
-                                                    GstElement *owner, gboolean busy);
+                                                    GstElement *owner, gboolean busy) G_GNUC_MALLOC;
 void            gst_message_parse_structure_change (GstMessage *message, GstStructureChangeType *type,
                                                     GstElement **owner, gboolean *busy);
 
 /* STREAM STATUS */
 GstMessage *    gst_message_new_stream_status        (GstObject * src, GstStreamStatusType type,
-                                                      GstElement *owner);
+                                                      GstElement *owner) G_GNUC_MALLOC;
 void            gst_message_parse_stream_status      (GstMessage *message, GstStreamStatusType *type,
                                                       GstElement **owner);
 void            gst_message_set_stream_status_object (GstMessage *message, const GValue *object);
 const GValue *  gst_message_get_stream_status_object (GstMessage *message);
 
 /* REQUEST_STATE */
-GstMessage *    gst_message_new_request_state   (GstObject * src, GstState state);
+GstMessage *    gst_message_new_request_state   (GstObject * src, GstState state) G_GNUC_MALLOC;
 void            gst_message_parse_request_state (GstMessage * message, GstState *state);
 
 /* STEP_START */
 GstMessage *    gst_message_new_step_start      (GstObject * src, gboolean active, GstFormat format,
                                                  guint64 amount, gdouble rate, gboolean flush,
-                                                 gboolean intermediate);
+                                                 gboolean intermediate) G_GNUC_MALLOC;
 void            gst_message_parse_step_start    (GstMessage * message, gboolean *active, GstFormat *format,
                                                  guint64 *amount, gdouble *rate, gboolean *flush,
                                                  gboolean *intermediate);
 
 /* QOS */
 GstMessage *    gst_message_new_qos             (GstObject * src, gboolean live, guint64 running_time,
-                                                 guint64 stream_time, guint64 timestamp, guint64 duration);
+                                                 guint64 stream_time, guint64 timestamp, guint64 duration) G_GNUC_MALLOC;
 void            gst_message_set_qos_values      (GstMessage * message, gint64 jitter, gdouble proportion,
                                                  gint quality);
 void            gst_message_set_qos_stats       (GstMessage * message, GstFormat format, guint64 processed,
@@ -539,10 +545,13 @@ void            gst_message_parse_qos_stats     (GstMessage * message, GstFormat
                                                  guint64 * dropped);
 /* PROGRESS */
 GstMessage *    gst_message_new_progress           (GstObject * src, GstProgressType type, const gchar *code,
-                                                    const gchar *text);
+                                                    const gchar *text) G_GNUC_MALLOC;
 void            gst_message_parse_progress         (GstMessage * message, GstProgressType * type, gchar ** code,
                                                     gchar ** text);
 
+/* TOC */
+GstMessage *    gst_message_new_toc             (GstObject *src, GstToc *toc, gboolean updated);
+void            gst_message_parse_toc           (GstMessage *message, GstToc **toc, gboolean *updated);
 
 G_END_DECLS
 
