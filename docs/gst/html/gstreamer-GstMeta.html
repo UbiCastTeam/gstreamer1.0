@@ -142,6 +142,7 @@ as the first member of their structure.
   GST_META_FLAG_NONE        = 0,
   GST_META_FLAG_READONLY    = (1 &lt;&lt; 0),
   GST_META_FLAG_POOLED      = (1 &lt;&lt; 1),
+  GST_META_FLAG_LOCKED      = (1 &lt;&lt; 2),
 
   GST_META_FLAG_LAST        = (1 &lt;&lt; 16)
 } GstMetaFlags;
@@ -164,8 +165,12 @@ Extra metadata flags.
 </tr>
 <tr>
 <td><p><a name="GST-META-FLAG-POOLED:CAPS"></a><span class="term"><code class="literal">GST_META_FLAG_POOLED</code></span></p></td>
-<td>metadata is managed by a bufferpool and should not
-   be removed
+<td>metadata is managed by a bufferpool
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-META-FLAG-LOCKED:CAPS"></a><span class="term"><code class="literal">GST_META_FLAG_LOCKED</code></span></p></td>
+<td>metadata should not be removed
 </td>
 </tr>
 <tr>

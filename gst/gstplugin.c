@@ -90,18 +90,17 @@ static char *_gst_plugin_fault_handler_filename = NULL;
  * MIT/X11: http://www.opensource.org/licenses/mit-license.php
  * 3-clause BSD: http://www.opensource.org/licenses/bsd-license.php
  */
-static const gchar *const valid_licenses[] = {
-  "LGPL",                       /* GNU Lesser General Public License */
-  "GPL",                        /* GNU General Public License */
-  "QPL",                        /* Trolltech Qt Public License */
-  "GPL/QPL",                    /* Combi-license of GPL + QPL */
-  "MPL",                        /* MPL 1.1 license */
-  "BSD",                        /* 3-clause BSD license */
-  "MIT/X11",                    /* MIT/X11 license */
-  "Proprietary",                /* Proprietary license */
-  GST_LICENSE_UNKNOWN,          /* some other license */
-  NULL
-};
+static const gchar valid_licenses[] = "LGPL\000"        /* GNU Lesser General Public License */
+    "GPL\000"                   /* GNU General Public License */
+    "QPL\000"                   /* Trolltech Qt Public License */
+    "GPL/QPL\000"               /* Combi-license of GPL + QPL */
+    "MPL\000"                   /* MPL 1.1 license */
+    "BSD\000"                   /* 3-clause BSD license */
+    "MIT/X11\000"               /* MIT/X11 license */
+    "Proprietary\000"           /* Proprietary license */
+    GST_LICENSE_UNKNOWN;        /* some other license */
+
+static const guint8 valid_licenses_idx[] = { 0, 5, 9, 13, 21, 25, 29, 37, 49 };
 
 static GstPlugin *gst_plugin_register_func (GstPlugin * plugin,
     const GstPluginDesc * desc, gpointer user_data);
@@ -460,14 +459,11 @@ priv_gst_plugin_loading_get_whitelist_hash (void)
 static gboolean
 gst_plugin_check_license (const gchar * license)
 {
-  const gchar *const *check_license = valid_licenses;
+  gint i;
 
-  g_assert (check_license);
-
-  while (*check_license) {
-    if (strcmp (license, *check_license) == 0)
+  for (i = 0; i < G_N_ELEMENTS (valid_licenses_idx); ++i) {
+    if (strcmp (license, valid_licenses + valid_licenses_idx[i]) == 0)
       return TRUE;
-    check_license++;
   }
   return FALSE;
 }
@@ -993,21 +989,26 @@ gst_plugin_get_origin (GstPlugin * plugin)
 }
 
 /**
- * gst_plugin_get_module:
- * @plugin: plugin to query
+ * gst_plugin_get_release_date_string:
+ * @plugin: plugin to get the release date of
  *
- * Gets the #GModule of the plugin. If the plugin isn't loaded yet, NULL is
- * returned.
+ * Get the release date (and possibly time) in form of a string, if available.
  *
- * Returns: (transfer none): module belonging to the plugin or NULL if the
- *          plugin isn't loaded yet.
+ * For normal GStreamer plugin releases this will usually just be a date in
+ * the form of "YYYY-MM-DD", while pre-releases and builds from git may contain
+ * a time component after the date as well, in which case the string will be
+ * formatted like "YYYY-MM-DDTHH:MMZ" (e.g. "2012-04-30T09:30Z").
+ *
+ * There may be plugins that do not have a valid release date set on them.
+ *
+ * Returns: the date string of the plugin, or %NULL if not available.
  */
-GModule *
-gst_plugin_get_module (GstPlugin * plugin)
+const gchar *
+gst_plugin_get_release_date_string (GstPlugin * plugin)
 {
   g_return_val_if_fail (plugin != NULL, NULL);
 
-  return plugin->module;
+  return plugin->desc.release_datetime;
 }
 
 /**
@@ -1154,25 +1155,7 @@ gst_plugin_list_feature_filter (GList * list,
 
   return data.result;
 }
-#endif
 
-/**
- * gst_plugin_name_filter:
- * @plugin: the plugin to check
- * @name: the name of the plugin
- *
- * A standard filter that returns TRUE when the plugin is of the
- * given name.
- *
- * Returns: TRUE if the plugin is of the given name.
- */
-gboolean
-gst_plugin_name_filter (GstPlugin * plugin, const gchar * name)
-{
-  return (plugin->desc.name && !strcmp (plugin->desc.name, name));
-}
-
-#if 0
 /**
  * gst_plugin_find_feature:
  * @plugin: plugin to get the feature from

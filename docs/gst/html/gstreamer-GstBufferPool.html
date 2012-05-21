@@ -178,8 +178,7 @@ variables.
                                     GstBufferPoolAcquireParams *params);
   GstFlowReturn  (*alloc_buffer)   (GstBufferPool *pool, GstBuffer **buffer,
                                     GstBufferPoolAcquireParams *params);
-  void           (*reset_buffer)   (GstBufferPool *pool, GstBuffer *buffer,
-                                    GstBufferPoolAcquireParams *params);
+  void           (*reset_buffer)   (GstBufferPool *pool, GstBuffer *buffer);
   void           (*release_buffer) (GstBufferPool *pool, GstBuffer *buffer);
   void           (*free_buffer)    (GstBufferPool *pool, GstBuffer *buffer);
 };
@@ -225,14 +224,15 @@ be released when there are no buffers available.</td>
 <td>allocate a buffer. the default implementation allocates
 buffers from the configured memory allocator and with the configured
 parameters. All metadata that is present on the allocated buffer will
-be marked as <a class="link" href="gstreamer-GstMeta.html#GST-META-FLAG-POOLED:CAPS"><span class="type">GST_META_FLAG_POOLED</span></a> and will not be removed from the
-buffer in <em class="parameter"><code>reset_buffer</code></em>.</td>
+be marked as <a class="link" href="gstreamer-GstMeta.html#GST-META-FLAG-POOLED:CAPS"><span class="type">GST_META_FLAG_POOLED</span></a> and <a class="link" href="gstreamer-GstMeta.html#GST-META-FLAG-LOCKED:CAPS"><span class="type">GST_META_FLAG_LOCKED</span></a> and will
+not be removed from the buffer in <em class="parameter"><code>reset_buffer</code></em>.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBufferPoolClass.reset-buffer"></a>reset_buffer</code></em> ()</span></p></td>
 <td>reset the buffer to its state when it was freshly allocated.
 The default implementation will clear the flags, timestamps and
-will remove the metadata without the <a class="link" href="gstreamer-GstMeta.html#GST-META-FLAG-POOLED:CAPS"><span class="type">GST_META_FLAG_POOLED</span></a> flag.</td>
+will remove the metadata without the <a class="link" href="gstreamer-GstMeta.html#GST-META-FLAG-POOLED:CAPS"><span class="type">GST_META_FLAG_POOLED</span></a> flag (even
+the metadata with <a class="link" href="gstreamer-GstMeta.html#GST-META-FLAG-LOCKED:CAPS"><span class="type">GST_META_FLAG_LOCKED</span></a>).</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBufferPoolClass.release-buffer"></a>release_buffer</code></em> ()</span></p></td>

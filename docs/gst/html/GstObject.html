@@ -114,6 +114,12 @@ enum                <a class="link" href="GstObject.html#GstObjectFlags" title="
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> interval</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_values</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> values</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstObject.html#gst-object-get-g-value-array" title="gst_object_get_g_value_array ()">gst_object_get_g_value_array</a>        (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> interval</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_values</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>);
 <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="returnvalue">GstClockTime</span></a>        <a class="link" href="GstObject.html#gst-object-get-control-rate" title="gst_object_get_control_rate ()">gst_object_get_control_rate</a>         (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstObject.html#gst-object-set-control-rate" title="gst_object_set_control_rate ()">gst_object_set_control_rate</a>         (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
@@ -179,7 +185,7 @@ of the object.
 <p>
 </p>
 <div class="refsect2">
-<a name="idp25919984"></a><h3>controlled properties</h3>
+<a name="idp27000992"></a><h3>controlled properties</h3>
 <p>
 Controlled properties offers a lightweight way to adjust gobject
 properties over stream-time. It works by using time-stamped value pairs that
@@ -994,7 +1000,7 @@ if no control-rate was set.</td>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_object_sync_values              (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);</pre>
 <p>
-Sets the properties of the object, according to the <a href="../gstreamer-1.0/GstControlSource.html"><span class="type">GstControlSources</span></a> that
+Sets the properties of the object, according to the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html"><span class="type">GstControlSources</span></a> that
 (maybe) handle them and for the given timestamp.
 </p>
 <p>
@@ -1228,11 +1234,69 @@ property isn't controlled.</td>
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> interval</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_values</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> values</code></em>);</pre>
 <p>
-Gets a number of values for the given controllered property starting at the
+Gets a number of values for the given controlled property starting at the
 requested time. The array <em class="parameter"><code>values</code></em> need to hold enough space for <em class="parameter"><code>n_values</code></em> of
 the same type as the objects property's type.
+</p>
+<p>
+This function is useful if one wants to e.g. draw a graph of the control
+curve or apply a control curve sample by sample.
+</p>
+<p>
+The values are unboxed and ready to be used. The similar function 
+<a class="link" href="GstObject.html#gst-object-get-g-value-array" title="gst_object_get_g_value_array ()"><code class="function">gst_object_get_g_value_array()</code></a> returns the array as <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValues</span></a> and is
+better suites for bindings.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
+<td>the object that has controlled properties</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>property_name</code></em> :</span></p></td>
+<td>the name of the property to get</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>timestamp</code></em> :</span></p></td>
+<td>the time that should be processed</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>interval</code></em> :</span></p></td>
+<td>the time spacing between subsequent values</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>n_values</code></em> :</span></p></td>
+<td>the number of values</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>values</code></em> :</span></p></td>
+<td>array to put control-values in</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the given array could be filled, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-object-get-g-value-array"></a><h3>gst_object_get_g_value_array ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_object_get_g_value_array        (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> interval</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_values</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>);</pre>
+<p>
+Gets a number of <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValues</span></a> for the given controlled property starting at the
+requested time. The array <em class="parameter"><code>values</code></em> need to hold enough space for <em class="parameter"><code>n_values</code></em> of
+<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a>.
 </p>
 <p>
 This function is useful if one wants to e.g. draw a graph of the control

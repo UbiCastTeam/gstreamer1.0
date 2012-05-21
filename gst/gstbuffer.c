@@ -235,7 +235,8 @@ _get_merged_memory (GstBuffer * buffer, guint idx, guint length)
         gst_memory_map (mem[i], &sinfo, GST_MAP_READ);
         tocopy = MIN (sinfo.size, left);
         GST_CAT_DEBUG (GST_CAT_PERFORMANCE,
-            "memcpy for merge %p from memory %p", result, mem[i]);
+            "memcpy %" G_GSIZE_FORMAT " bytes for merge %p from memory %p",
+            tocopy, result, mem[i]);
         memcpy (ptr, (guint8 *) sinfo.data, tocopy);
         left -= tocopy;
         ptr += tocopy;
@@ -827,8 +828,8 @@ gst_buffer_get_memory_range (GstBuffer * buffer, guint idx, gint length)
 
   g_return_val_if_fail (GST_IS_BUFFER (buffer), NULL);
   len = GST_BUFFER_MEM_LEN (buffer);
-  g_return_val_if_fail ((length == -1 && idx < len) ||
-      (length > 0 && length + idx <= len), NULL);
+  g_return_val_if_fail ((len == 0 && idx == 0 && length == -1) ||
+      (length == -1 && idx < len) || (length > 0 && length + idx <= len), NULL);
 
   if (length == -1)
     length = len - idx;
@@ -859,8 +860,8 @@ gst_buffer_replace_memory_range (GstBuffer * buffer, guint idx, gint length,
   g_return_if_fail (GST_IS_BUFFER (buffer));
   g_return_if_fail (gst_buffer_is_writable (buffer));
   len = GST_BUFFER_MEM_LEN (buffer);
-  g_return_if_fail ((length == -1 && idx < len) || (length > 0
-          && length + idx <= len));
+  g_return_if_fail ((len == 0 && idx == 0 && length == -1) ||
+      (length == -1 && idx < len) || (length > 0 && length + idx <= len));
 
   if (length == -1)
     length = len - idx;
@@ -887,7 +888,8 @@ gst_buffer_remove_memory_range (GstBuffer * buffer, guint idx, gint length)
   g_return_if_fail (gst_buffer_is_writable (buffer));
 
   len = GST_BUFFER_MEM_LEN (buffer);
-  g_return_if_fail ((length == -1 && idx < len) || length + idx <= len);
+  g_return_if_fail ((len == 0 && idx == 0 && length == -1) ||
+      (length == -1 && idx < len) || length + idx <= len);
 
   if (length == -1)
     length = len - idx;
@@ -997,8 +999,8 @@ gst_buffer_get_sizes_range (GstBuffer * buffer, guint idx, gint length,
 
   g_return_val_if_fail (GST_IS_BUFFER (buffer), 0);
   len = GST_BUFFER_MEM_LEN (buffer);
-  g_return_val_if_fail (len == 0 || (length == -1 && idx < len)
-      || (length + idx <= len), 0);
+  g_return_val_if_fail ((len == 0 && idx == 0 && length == -1) ||
+      (length == -1 && idx < len) || (length + idx <= len), 0);
 
   if (length == -1)
     length = len - idx;
@@ -1062,7 +1064,8 @@ gst_buffer_resize_range (GstBuffer * buffer, guint idx, gint length,
   g_return_if_fail (gst_buffer_is_writable (buffer));
   g_return_if_fail (size >= -1);
   len = GST_BUFFER_MEM_LEN (buffer);
-  g_return_if_fail ((length == -1 && idx < len) || (length + idx <= len));
+  g_return_if_fail ((len == 0 && idx == 0 && length == -1) ||
+      (length == -1 && idx < len) || (length + idx <= len));
 
   if (length == -1)
     length = len - idx;
@@ -1166,9 +1169,8 @@ gst_buffer_map_range (GstBuffer * buffer, guint idx, gint length,
   g_return_val_if_fail (GST_IS_BUFFER (buffer), FALSE);
   g_return_val_if_fail (info != NULL, FALSE);
   len = GST_BUFFER_MEM_LEN (buffer);
-  if (len == 0)
-    goto no_memory;
-  g_return_val_if_fail ((length == -1 && idx < len) || (length > 0
+  g_return_val_if_fail ((len == 0 && idx == 0 && length == -1) ||
+      (length == -1 && idx < len) || (length > 0
           && length + idx <= len), FALSE);
 
   write = (flags & GST_MAP_WRITE) != 0;
@@ -1623,6 +1625,8 @@ gst_buffer_remove_meta (GstBuffer * buffer, GstMeta * meta)
   g_return_val_if_fail (buffer != NULL, FALSE);
   g_return_val_if_fail (meta != NULL, FALSE);
   g_return_val_if_fail (gst_buffer_is_writable (buffer), FALSE);
+  g_return_val_if_fail (!GST_META_FLAG_IS_SET (meta, GST_META_FLAG_LOCKED),
+      FALSE);
 
   /* find the metadata and delete */
   prev = GST_BUFFER_META (buffer);
@@ -1722,6 +1726,7 @@ gst_buffer_foreach_meta (GstBuffer * buffer, GstBufferForeachMetaFunc func,
           g_type_name (info->type));
 
       g_return_if_fail (gst_buffer_is_writable (buffer));
+      g_return_if_fail (!GST_META_FLAG_IS_SET (m, GST_META_FLAG_LOCKED));
 
       /* remove from list */
       if (GST_BUFFER_META (buffer) == walk)
