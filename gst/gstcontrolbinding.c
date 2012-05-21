@@ -25,6 +25,20 @@
  *
  * A value mapping object that attaches control sources to gobject properties.
  */
+/* FIXME(ensonic): should we make gst_object_add_control_binding() internal
+ * - we create the control_binding for a certain object anyway
+ * - we could call gst_object_add_control_binding() at the end of
+ *   gst_control_binding_constructor()
+ * - the weak-ref on object is not nice, as is the same as gst_object_parent()
+ *   once the object is added to the parent
+ *
+ * - another option would be do defer what I am doing in _constructor to when
+ *   the parent is set (need to listen to the signal then)
+ *   then basically I could
+ *   a) remove the obj arg and wait the binding to be added or
+ *   b) add the binding from constructor, unref object there and make obj
+ *      writeonly
+ */
 
 #include "gst_private.h"
 
@@ -130,8 +144,10 @@ gst_control_binding_dispose (GObject * object)
 {
   GstControlBinding *self = GST_CONTROL_BINDING (object);
 
-  if (self->object)
-    gst_object_replace (&self->object, NULL);
+  /* we did not took a reference */
+  g_object_remove_weak_pointer ((GObject *) self->object,
+      (gpointer *) & self->object);
+  self->object = NULL;
 
   ((GObjectClass *) gst_control_binding_parent_class)->dispose (object);
 }
@@ -154,7 +170,10 @@ gst_control_binding_set_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_OBJECT:
-      self->object = g_value_dup_object (value);
+      /* do not ref to avoid a ref cycle */
+      self->object = g_value_get_object (value);
+      g_object_add_weak_pointer ((GObject *) self->object,
+          (gpointer *) & self->object);
       break;
     case PROP_NAME:
       self->name = g_value_dup_string (value);
@@ -261,19 +280,23 @@ gst_control_binding_get_value (GstControlBinding * self, GstClockTime timestamp)
  * @n_values: the number of values
  * @values: array to put control-values in
  *
- * Gets a number of values for the given controllered property starting at the
+ * Gets a number of values for the given controlled property starting at the
  * requested time. The array @values need to hold enough space for @n_values of
  * the same type as the objects property's type.
  *
  * This function is useful if one wants to e.g. draw a graph of the control
  * curve or apply a control curve sample by sample.
  *
+ * The values are unboxed and ready to be used. The similar function 
+ * gst_control_binding_get_g_value_array() returns the array as #GValues and is
+ * better suites for bindings.
+ *
  * Returns: %TRUE if the given array could be filled, %FALSE otherwise
  */
 gboolean
 gst_control_binding_get_value_array (GstControlBinding * self,
     GstClockTime timestamp, GstClockTime interval, guint n_values,
-    GValue * values)
+    gpointer values)
 {
   GstControlBindingClass *klass;
   gboolean ret = FALSE;
@@ -289,6 +312,117 @@ gst_control_binding_get_value_array (GstControlBinding * self,
     ret = klass->get_value_array (self, timestamp, interval, n_values, values);
   } else {
     GST_WARNING_OBJECT (self, "missing get_value_array implementation");
+  }
+  return ret;
+}
+
+#define CONVERT_ARRAY(type,TYPE) \
+{ \
+  g##type *v = g_new (g##type,n_values); \
+  ret = gst_control_binding_get_value_array (self, timestamp, interval, \
+      n_values, v); \
+  if (ret) { \
+    for (i = 0; i < n_values; i++) { \
+      g_value_init (&values[i], G_TYPE_##TYPE); \
+      g_value_set_##type (&values[i], v[i]); \
+    } \
+  } \
+  g_free (v); \
+}
+
+/**
+ * gst_control_binding_get_g_value_array:
+ * @self: the control binding
+ * @timestamp: the time that should be processed
+ * @interval: the time spacing between subsequent values
+ * @n_values: the number of values
+ * @values: array to put control-values in
+ *
+ * Gets a number of #GValues for the given controlled property starting at the
+ * requested time. The array @values need to hold enough space for @n_values of
+ * #GValue.
+ *
+ * This function is useful if one wants to e.g. draw a graph of the control
+ * curve or apply a control curve sample by sample.
+ *
+ * Returns: %TRUE if the given array could be filled, %FALSE otherwise
+ */
+gboolean
+gst_control_binding_get_g_value_array (GstControlBinding * self,
+    GstClockTime timestamp, GstClockTime interval, guint n_values,
+    GValue * values)
+{
+  GstControlBindingClass *klass;
+  gboolean ret = FALSE;
+
+  g_return_val_if_fail (GST_IS_CONTROL_BINDING (self), FALSE);
+  g_return_val_if_fail (GST_CLOCK_TIME_IS_VALID (timestamp), FALSE);
+  g_return_val_if_fail (GST_CLOCK_TIME_IS_VALID (interval), FALSE);
+  g_return_val_if_fail (values, FALSE);
+
+  klass = GST_CONTROL_BINDING_GET_CLASS (self);
+
+  if (G_LIKELY (klass->get_g_value_array != NULL)) {
+    ret =
+        klass->get_g_value_array (self, timestamp, interval, n_values, values);
+  } else {
+    guint i;
+    GType type, base;
+
+    base = type = G_PARAM_SPEC_VALUE_TYPE (GST_CONTROL_BINDING_PSPEC (self));
+    while ((type = g_type_parent (type)))
+      base = type;
+
+    GST_INFO_OBJECT (self, "missing get_g_value_array implementation, we're "
+        "emulating it");
+    switch (base) {
+      case G_TYPE_INT:
+        CONVERT_ARRAY (int, INT);
+        break;
+      case G_TYPE_UINT:
+        CONVERT_ARRAY (uint, UINT);
+        break;
+      case G_TYPE_LONG:
+        CONVERT_ARRAY (long, LONG);
+        break;
+      case G_TYPE_ULONG:
+        CONVERT_ARRAY (ulong, ULONG);
+        break;
+      case G_TYPE_INT64:
+        CONVERT_ARRAY (int64, INT64);
+        break;
+      case G_TYPE_UINT64:
+        CONVERT_ARRAY (uint64, UINT64);
+        break;
+      case G_TYPE_FLOAT:
+        CONVERT_ARRAY (float, FLOAT);
+        break;
+      case G_TYPE_DOUBLE:
+        CONVERT_ARRAY (double, DOUBLE);
+        break;
+      case G_TYPE_BOOLEAN:
+        CONVERT_ARRAY (boolean, BOOLEAN);
+        break;
+      case G_TYPE_ENUM:
+      {
+        gint *v = g_new (gint, n_values);
+        ret = gst_control_binding_get_value_array (self, timestamp, interval,
+            n_values, v);
+        if (ret) {
+          for (i = 0; i < n_values; i++) {
+            g_value_init (&values[i], type);
+            g_value_set_enum (&values[i], v[i]);
+          }
+        }
+        g_free (v);
+      }
+        break;
+      default:
+        GST_WARNING ("incomplete implementation for paramspec type '%s'",
+            G_PARAM_SPEC_TYPE_NAME (GST_CONTROL_BINDING_PSPEC (self)));
+        GST_CONTROL_BINDING_PSPEC (self) = NULL;
+        break;
+    }
   }
   return ret;
 }

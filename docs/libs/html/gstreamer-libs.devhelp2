@@ -13,7 +13,7 @@
         <sub name="GstBitReader" link="gstreamer-libs-GstBitReader.html"/>
         <sub name="GstByteReader" link="gstreamer-libs-GstByteReader.html"/>
         <sub name="GstByteWriter" link="gstreamer-libs-GstByteWriter.html"/>
-        <sub name="GstCollectPads2" link="GstCollectPads2.html"/>
+        <sub name="GstCollectPads" link="GstCollectPads.html"/>
         <sub name="GstTypeFindHelper" link="gstreamer-libs-GstTypeFindHelper.html"/>
       </sub>
       <sub name="GStreamer Dynamic Parameter Control" link="gstreamer-control.html">
@@ -64,7 +64,7 @@
     <keyword type="macro" name="GST_BASE_PARSE_LOST_SYNC()" link="gstreamer-libs-GstBaseParse.html#GST-BASE-PARSE-LOST-SYNC:CAPS" since="0.10.33"/>
     <keyword type="macro" name="GST_BASE_PARSE_SINK_PAD()" link="gstreamer-libs-GstBaseParse.html#GST-BASE-PARSE-SINK-PAD:CAPS" since="0.10.33"/>
     <keyword type="macro" name="GST_BASE_PARSE_SRC_PAD()" link="gstreamer-libs-GstBaseParse.html#GST-BASE-PARSE-SRC-PAD:CAPS" since="0.10.33"/>
-    <keyword type="" name="Controlled shutdown of live sources in applications" link="GstBaseSrc.html#idp9228272"/>
+    <keyword type="" name="Controlled shutdown of live sources in applications" link="GstBaseSrc.html#idp9630832"/>
     <keyword type="struct" name="struct GstBaseSrc" link="GstBaseSrc.html#GstBaseSrc-struct"/>
     <keyword type="struct" name="struct GstBaseSrcClass" link="GstBaseSrc.html#GstBaseSrcClass"/>
     <keyword type="enum" name="enum GstBaseSrcFlags" link="GstBaseSrc.html#GstBaseSrcFlags"/>
@@ -129,8 +129,8 @@
     <keyword type="property" name="The &quot;sync&quot; property" link="GstBaseSink.html#GstBaseSink--sync"/>
     <keyword type="property" name="The &quot;throttle-time&quot; property" link="GstBaseSink.html#GstBaseSink--throttle-time"/>
     <keyword type="property" name="The &quot;ts-offset&quot; property" link="GstBaseSink.html#GstBaseSink--ts-offset"/>
-    <keyword type="" name="Use Cases" link="GstBaseTransform.html#idp8766032"/>
-    <keyword type="" name="Sub-class settable flags on GstBaseTransform" link="GstBaseTransform.html#idp10669744"/>
+    <keyword type="" name="Use Cases" link="GstBaseTransform.html#idp8941488"/>
+    <keyword type="" name="Sub-class settable flags on GstBaseTransform" link="GstBaseTransform.html#idp8166288"/>
     <keyword type="struct" name="struct GstBaseTransform" link="GstBaseTransform.html#GstBaseTransform-struct"/>
     <keyword type="struct" name="struct GstBaseTransformClass" link="GstBaseTransform.html#GstBaseTransformClass"/>
     <keyword type="function" name="gst_base_transform_is_passthrough ()" link="GstBaseTransform.html#gst-base-transform-is-passthrough"/>
@@ -148,7 +148,7 @@
     <keyword type="macro" name="GST_BASE_TRANSFORM_FLOW_DROPPED" link="GstBaseTransform.html#GST-BASE-TRANSFORM-FLOW-DROPPED:CAPS" since="0.10.13"/>
     <keyword type="property" name="The &quot;qos&quot; property" link="GstBaseTransform.html#GstBaseTransform--qos"/>
     <keyword type="struct" name="struct GstPushSrc" link="GstPushSrc.html#GstPushSrc-struct"/>
-    <keyword type="struct" name="struct GstAdapter" link="GstAdapter.html#GstAdapter-struct"/>
+    <keyword type="struct" name="GstAdapter" link="GstAdapter.html#GstAdapter-struct"/>
     <keyword type="function" name="gst_adapter_new ()" link="GstAdapter.html#gst-adapter-new"/>
     <keyword type="function" name="gst_adapter_clear ()" link="GstAdapter.html#gst-adapter-clear"/>
     <keyword type="function" name="gst_adapter_push ()" link="GstAdapter.html#gst-adapter-push"/>
@@ -382,44 +382,44 @@
     <keyword type="function" name="gst_byte_writer_put_float64_le_unchecked ()" link="gstreamer-libs-GstByteWriter.html#gst-byte-writer-put-float64-le-unchecked" since="0.10.31"/>
     <keyword type="function" name="gst_byte_writer_put_data_unchecked ()" link="gstreamer-libs-GstByteWriter.html#gst-byte-writer-put-data-unchecked" since="0.10.31"/>
     <keyword type="function" name="gst_byte_writer_fill_unchecked ()" link="gstreamer-libs-GstByteWriter.html#gst-byte-writer-fill-unchecked" since="0.10.31"/>
-    <keyword type="struct" name="struct GstCollectPads2" link="GstCollectPads2.html#GstCollectPads2-struct"/>
-    <keyword type="struct" name="struct GstCollectData2" link="GstCollectPads2.html#GstCollectData2" since="0.10.36"/>
-    <keyword type="function" name="GstCollectData2DestroyNotify ()" link="GstCollectPads2.html#GstCollectData2DestroyNotify" since="0.10.36"/>
-    <keyword type="function" name="GstCollectPads2BufferFunction ()" link="GstCollectPads2.html#GstCollectPads2BufferFunction" since="0.10.36"/>
-    <keyword type="function" name="GstCollectPads2CompareFunction ()" link="GstCollectPads2.html#GstCollectPads2CompareFunction" since="0.10.36"/>
-    <keyword type="function" name="GstCollectPads2EventFunction ()" link="GstCollectPads2.html#GstCollectPads2EventFunction" since="0.10.36"/>
-    <keyword type="function" name="GstCollectPads2ClipFunction ()" link="GstCollectPads2.html#GstCollectPads2ClipFunction" since="0.10.36"/>
-    <keyword type="function" name="GstCollectPads2Function ()" link="GstCollectPads2.html#GstCollectPads2Function" since="0.10.36"/>
-    <keyword type="enum" name="enum GstCollectPads2StateFlags" link="GstCollectPads2.html#GstCollectPads2StateFlags" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_STATE()" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE:CAPS" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_STATE_IS_SET()" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-IS-SET:CAPS" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_STATE_SET()" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-SET:CAPS" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_STATE_UNSET()" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-UNSET:CAPS" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_GET_STREAM_LOCK()" link="GstCollectPads2.html#GST-COLLECT-PADS2-GET-STREAM-LOCK:CAPS" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_STREAM_LOCK()" link="GstCollectPads2.html#GST-COLLECT-PADS2-STREAM-LOCK:CAPS" since="0.10.36"/>
-    <keyword type="macro" name="GST_COLLECT_PADS2_STREAM_UNLOCK()" link="GstCollectPads2.html#GST-COLLECT-PADS2-STREAM-UNLOCK:CAPS" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_new ()" link="GstCollectPads2.html#gst-collect-pads2-new" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_add_pad ()" link="GstCollectPads2.html#gst-collect-pads2-add-pad" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_add_pad_full ()" link="GstCollectPads2.html#gst-collect-pads2-add-pad-full" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_remove_pad ()" link="GstCollectPads2.html#gst-collect-pads2-remove-pad" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_start ()" link="GstCollectPads2.html#gst-collect-pads2-start" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_stop ()" link="GstCollectPads2.html#gst-collect-pads2-stop" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_available ()" link="GstCollectPads2.html#gst-collect-pads2-available" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_is_active ()" link="GstCollectPads2.html#gst-collect-pads2-is-active" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_collect ()" link="GstCollectPads2.html#gst-collect-pads2-collect" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_collect_range ()" link="GstCollectPads2.html#gst-collect-pads2-collect-range" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_flush ()" link="GstCollectPads2.html#gst-collect-pads2-flush" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_peek ()" link="GstCollectPads2.html#gst-collect-pads2-peek" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_pop ()" link="GstCollectPads2.html#gst-collect-pads2-pop" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_read_buffer ()" link="GstCollectPads2.html#gst-collect-pads2-read-buffer" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_take_buffer ()" link="GstCollectPads2.html#gst-collect-pads2-take-buffer" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_buffer_function ()" link="GstCollectPads2.html#gst-collect-pads2-set-buffer-function" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_compare_function ()" link="GstCollectPads2.html#gst-collect-pads2-set-compare-function" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_event_function ()" link="GstCollectPads2.html#gst-collect-pads2-set-event-function" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_clip_function ()" link="GstCollectPads2.html#gst-collect-pads2-set-clip-function" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_flushing ()" link="GstCollectPads2.html#gst-collect-pads2-set-flushing" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_function ()" link="GstCollectPads2.html#gst-collect-pads2-set-function" since="0.10.36"/>
-    <keyword type="function" name="gst_collect_pads2_set_waiting ()" link="GstCollectPads2.html#gst-collect-pads2-set-waiting" since="0.10.36"/>
+    <keyword type="struct" name="struct GstCollectPads" link="GstCollectPads.html#GstCollectPads-struct"/>
+    <keyword type="struct" name="struct GstCollectData" link="GstCollectPads.html#GstCollectData" since="0.10.36"/>
+    <keyword type="function" name="GstCollectDataDestroyNotify ()" link="GstCollectPads.html#GstCollectDataDestroyNotify" since="0.10.36"/>
+    <keyword type="function" name="GstCollectPadsBufferFunction ()" link="GstCollectPads.html#GstCollectPadsBufferFunction" since="0.10.36"/>
+    <keyword type="function" name="GstCollectPadsCompareFunction ()" link="GstCollectPads.html#GstCollectPadsCompareFunction" since="0.10.36"/>
+    <keyword type="function" name="GstCollectPadsEventFunction ()" link="GstCollectPads.html#GstCollectPadsEventFunction" since="0.10.36"/>
+    <keyword type="function" name="GstCollectPadsClipFunction ()" link="GstCollectPads.html#GstCollectPadsClipFunction" since="0.10.36"/>
+    <keyword type="function" name="GstCollectPadsFunction ()" link="GstCollectPads.html#GstCollectPadsFunction" since="0.10.36"/>
+    <keyword type="enum" name="enum GstCollectPadsStateFlags" link="GstCollectPads.html#GstCollectPadsStateFlags" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_STATE()" link="GstCollectPads.html#GST-COLLECT-PADS-STATE:CAPS" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_STATE_IS_SET()" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-IS-SET:CAPS" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_STATE_SET()" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-SET:CAPS" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_STATE_UNSET()" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-UNSET:CAPS" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_GET_STREAM_LOCK()" link="GstCollectPads.html#GST-COLLECT-PADS-GET-STREAM-LOCK:CAPS" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_STREAM_LOCK()" link="GstCollectPads.html#GST-COLLECT-PADS-STREAM-LOCK:CAPS" since="0.10.36"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_STREAM_UNLOCK()" link="GstCollectPads.html#GST-COLLECT-PADS-STREAM-UNLOCK:CAPS" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_new ()" link="GstCollectPads.html#gst-collect-pads-new" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_add_pad ()" link="GstCollectPads.html#gst-collect-pads-add-pad" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_add_pad_full ()" link="GstCollectPads.html#gst-collect-pads-add-pad-full" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_remove_pad ()" link="GstCollectPads.html#gst-collect-pads-remove-pad" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_start ()" link="GstCollectPads.html#gst-collect-pads-start" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_stop ()" link="GstCollectPads.html#gst-collect-pads-stop" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_available ()" link="GstCollectPads.html#gst-collect-pads-available" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_is_active ()" link="GstCollectPads.html#gst-collect-pads-is-active" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_collect ()" link="GstCollectPads.html#gst-collect-pads-collect" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_collect_range ()" link="GstCollectPads.html#gst-collect-pads-collect-range" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_flush ()" link="GstCollectPads.html#gst-collect-pads-flush" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_peek ()" link="GstCollectPads.html#gst-collect-pads-peek" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_pop ()" link="GstCollectPads.html#gst-collect-pads-pop" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_read_buffer ()" link="GstCollectPads.html#gst-collect-pads-read-buffer" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_take_buffer ()" link="GstCollectPads.html#gst-collect-pads-take-buffer" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_buffer_function ()" link="GstCollectPads.html#gst-collect-pads-set-buffer-function" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_compare_function ()" link="GstCollectPads.html#gst-collect-pads-set-compare-function" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_event_function ()" link="GstCollectPads.html#gst-collect-pads-set-event-function" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_clip_function ()" link="GstCollectPads.html#gst-collect-pads-set-clip-function" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_flushing ()" link="GstCollectPads.html#gst-collect-pads-set-flushing" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_function ()" link="GstCollectPads.html#gst-collect-pads-set-function" since="0.10.36"/>
+    <keyword type="function" name="gst_collect_pads_set_waiting ()" link="GstCollectPads.html#gst-collect-pads-set-waiting" since="0.10.36"/>
     <keyword type="function" name="gst_type_find_helper ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper"/>
     <keyword type="function" name="gst_type_find_helper_for_buffer ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-buffer"/>
     <keyword type="function" name="gst_type_find_helper_for_extension ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-extension" since="0.10.23"/>
@@ -521,11 +521,11 @@
     <keyword type="constant" name="GST_BASE_SRC_FLAG_STARTING" link="GstBaseSrc.html#GST-BASE-SRC-FLAG-STARTING:CAPS"/>
     <keyword type="constant" name="GST_BASE_SRC_FLAG_STARTED" link="GstBaseSrc.html#GST-BASE-SRC-FLAG-STARTED:CAPS"/>
     <keyword type="constant" name="GST_BASE_SRC_FLAG_LAST" link="GstBaseSrc.html#GST-BASE-SRC-FLAG-LAST:CAPS"/>
-    <keyword type="constant" name="GST_COLLECT_PADS2_STATE_EOS" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-EOS:CAPS"/>
-    <keyword type="constant" name="GST_COLLECT_PADS2_STATE_FLUSHING" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-FLUSHING:CAPS"/>
-    <keyword type="constant" name="GST_COLLECT_PADS2_STATE_NEW_SEGMENT" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-NEW-SEGMENT:CAPS"/>
-    <keyword type="constant" name="GST_COLLECT_PADS2_STATE_WAITING" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-WAITING:CAPS"/>
-    <keyword type="constant" name="GST_COLLECT_PADS2_STATE_LOCKED" link="GstCollectPads2.html#GST-COLLECT-PADS2-STATE-LOCKED:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_EOS" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-EOS:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_FLUSHING" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-FLUSHING:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_NEW_SEGMENT" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-NEW-SEGMENT:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_WAITING" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-WAITING:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_LOCKED" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-LOCKED:CAPS"/>
     <keyword type="constant" name="GST_INTERPOLATION_MODE_NONE" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-NONE:CAPS"/>
     <keyword type="constant" name="GST_INTERPOLATION_MODE_LINEAR" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-LINEAR:CAPS"/>
     <keyword type="constant" name="GST_INTERPOLATION_MODE_CUBIC" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-CUBIC:CAPS"/>

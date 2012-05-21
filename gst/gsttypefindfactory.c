@@ -186,12 +186,12 @@ gst_type_find_factory_get_caps (GstTypeFindFactory * factory)
  * Returns: (transfer none) (array zero-terminated=1) (element-type utf8): a
  *     NULL-terminated array of extensions associated with this factory
  */
-gchar **
+const gchar *const *
 gst_type_find_factory_get_extensions (GstTypeFindFactory * factory)
 {
   g_return_val_if_fail (GST_IS_TYPE_FIND_FACTORY (factory), NULL);
 
-  return factory->extensions;
+  return (const gchar * const *) factory->extensions;
 }
 
 /**
@@ -221,4 +221,22 @@ gst_type_find_factory_call_function (GstTypeFindFactory * factory,
       new_factory->function (find, new_factory->user_data);
     gst_object_unref (new_factory);
   }
+}
+
+/**
+ * gst_type_find_factory_has_function:
+ * @factory: A #GstTypeFindFactory
+ *
+ * Check whether the factory has a typefind function. Typefind factories
+ * without typefind functions are a last-effort fallback mechanism to
+ * e.g. assume a certain media type based on the file extension.
+ *
+ * Returns: TRUE if the factory has a typefind functions set, otherwise FALSE
+ */
+gboolean
+gst_type_find_factory_has_function (GstTypeFindFactory * factory)
+{
+  g_return_val_if_fail (GST_IS_TYPE_FIND_FACTORY (factory), FALSE);
+
+  return (factory->function != NULL);
 }

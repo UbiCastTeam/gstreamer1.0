@@ -216,7 +216,7 @@ To do that <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" tit
 the needed parameters to specify seeking time and mode.
 </p>
 <div class="example">
-<a name="idp19681920"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
+<a name="idp20931696"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -241,13 +241,13 @@ gboolean result<span class="gtkdoc opt">;</span>
 <span class="gtkdoc opt">...</span>
 <span class="gtkdoc slc">// construct a seek event to play the media from second 2 to 5, flush</span>
 <span class="gtkdoc slc">// the pipeline to decrease latency.</span>
-event <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstEvent.html#gst-event-new-seek">gst_event_new_seek</a></span> <span class="gtkdoc opt">(</span><span class="number">1.0</span><span class="gtkdoc opt">,</span> 
+event <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstEvent.html#gst-event-new-seek">gst_event_new_seek</a></span> <span class="gtkdoc opt">(</span><span class="number">1.0</span><span class="gtkdoc opt">,</span> 
    GST_FORMAT_TIME<span class="gtkdoc opt">,</span> 
    GST_SEEK_FLAG_FLUSH<span class="gtkdoc opt">,</span>
    GST_SEEK_TYPE_SET<span class="gtkdoc opt">,</span> <span class="number">2</span> <span class="gtkdoc opt">*</span> GST_SECOND<span class="gtkdoc opt">,</span>
    GST_SEEK_TYPE_SET<span class="gtkdoc opt">,</span> <span class="number">5</span> <span class="gtkdoc opt">*</span> GST_SECOND<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span>
-result <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstElement.html#gst-element-send-event">gst_element_send_event</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> event<span class="gtkdoc opt">);</span>
+result <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-send-event">gst_element_send_event</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> event<span class="gtkdoc opt">);</span>
 <span class="keyword">if</span> <span class="gtkdoc opt">(!</span>result<span class="gtkdoc opt">)</span>
   <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Message-Logging.html#g-warning">g_warning</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;seek failed&quot;</span><span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span></pre></td>
@@ -1840,7 +1840,11 @@ The different types of seek events. When constructing a seek event with
   GST_SEEK_FLAG_ACCURATE        = (1 &lt;&lt; 1),
   GST_SEEK_FLAG_KEY_UNIT        = (1 &lt;&lt; 2),
   GST_SEEK_FLAG_SEGMENT         = (1 &lt;&lt; 3),
-  GST_SEEK_FLAG_SKIP            = (1 &lt;&lt; 4)
+  GST_SEEK_FLAG_SKIP            = (1 &lt;&lt; 4),
+  GST_SEEK_FLAG_SNAP_BEFORE     = (1 &lt;&lt; 5),
+  GST_SEEK_FLAG_SNAP_AFTER      = (1 &lt;&lt; 6),
+  GST_SEEK_FLAG_SNAP_NEAREST    = GST_SEEK_FLAG_SNAP_BEFORE | GST_SEEK_FLAG_SNAP_AFTER,
+  /* Careful to restart next flag with 1&lt;&lt;7 here */
 } GstSeekFlags;
 </pre>
 <p>
@@ -1869,6 +1873,17 @@ When doing fast forward (rate &gt; 1.0) or fast reverse (rate &lt; -1.0) trickmo
 playback, the <em class="parameter"><code>GST_SEEK_FLAG_SKIP</code></em> flag can be used to instruct decoders
 and demuxers to adjust the playback rate by skipping frames. This can improve
 performance and decrease CPU usage because not all frames need to be decoded.
+</p>
+<p>
+The <em class="parameter"><code>GST_SEEK_FLAG_SNAP_BEFORE</code></em> flag can be used to snap to the previous
+relevant location, and the <em class="parameter"><code>GST_SEEK_FLAG_SNAP_AFTER</code></em> flag can be used to
+select the next relevant location. If KEY_UNIT is specified, the relevant
+location is a keyframe. If both flags are specified, the nearest of these
+locations will be selected. If none are specified, the implementation is
+free to select whichever it wants.
+The before and after here are in running time, so when playing backwards,
+the next location refers to the one that will played in next, and not the
+one that is located after in the actual source stream.
 </p>
 <p>
 Also see part-seeking.txt in the GStreamer design documentation for more
@@ -1910,6 +1925,29 @@ elements that handle them.
 <td>when doing fast foward or fast reverse playback, allow
                     elements to skip frames instead of generating all
                     frames. Since 0.10.22.
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-SEEK-FLAG-SNAP-BEFORE:CAPS"></a><span class="term"><code class="literal">GST_SEEK_FLAG_SNAP_BEFORE</code></span></p></td>
+<td>go to a location before the requested position,
+                    if KEY_UNIT this means the keyframe at or before the
+                    requested position the one at or before the seek target.
+                    Since 0.10.37.
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-SEEK-FLAG-SNAP-AFTER:CAPS"></a><span class="term"><code class="literal">GST_SEEK_FLAG_SNAP_AFTER</code></span></p></td>
+<td>go to a location after the requested position,
+                    if KEY_UNIT this means the keyframe at of after the
+                    requested position. Since 0.10.37.
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-SEEK-FLAG-SNAP-NEAREST:CAPS"></a><span class="term"><code class="literal">GST_SEEK_FLAG_SNAP_NEAREST</code></span></p></td>
+<td>go to a position near the requested position,
+                    if KEY_UNIT this means the keyframe closest to the
+                    requested position, if both keyframes are at an equal
+                    distance, behaves like SNAP_BEFORE. Since 0.10.37.
 </td>
 </tr>
 </tbody>

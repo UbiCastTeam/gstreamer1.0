@@ -26,19 +26,19 @@
 
 #include <gst/gstconfig.h>
 
-#include <time.h> /* time_t */
-#include <sys/types.h> /* off_t */
-#include <sys/stat.h> /* off_t */
-#include <gmodule.h>
 #include <gst/gstobject.h>
 #include <gst/gstmacros.h>
 #include <gst/gststructure.h>
 
 G_BEGIN_DECLS
 
+/**
+ * GstPlugin:
+ *
+ * The opaque plugin object
+ */
 typedef struct _GstPlugin GstPlugin;
 typedef struct _GstPluginClass GstPluginClass;
-typedef struct _GstPluginPrivate GstPluginPrivate;
 typedef struct _GstPluginDesc GstPluginDesc;
 
 /**
@@ -80,8 +80,8 @@ typedef enum
  */
 typedef enum
 {
-  GST_PLUGIN_FLAG_CACHED = (1<<0),
-  GST_PLUGIN_FLAG_BLACKLISTED = (1<<1)
+  GST_PLUGIN_FLAG_CACHED      = (GST_OBJECT_FLAG_LAST << 0),
+  GST_PLUGIN_FLAG_BLACKLISTED = (GST_OBJECT_FLAG_LAST << 1)
 } GstPluginFlags;
 
 /**
@@ -187,43 +187,6 @@ struct _GstPluginDesc {
 #define GST_PLUGIN_CLASS(klass)        (G_TYPE_CHECK_CLASS_CAST ((klass), GST_TYPE_PLUGIN, GstPluginClass))
 #define GST_PLUGIN_CAST(obj)           ((GstPlugin*)(obj))
 
-/**
- * GstPlugin:
- *
- * The plugin object
- */
-struct _GstPlugin {
-  GstObject       object;
-
-  /*< private >*/
-  GstPluginDesc	desc;
-
-  GstPluginDesc *orig_desc;
-
-  unsigned int  flags;
-
-  gchar *	filename;
-  gchar *	basename;       /* base name (non-dir part) of plugin path */
-
-  GModule *	module;		/* contains the module if plugin is loaded */
-
-  off_t         file_size;
-  time_t        file_mtime;
-  gboolean      registered;     /* TRUE when the registry has seen a filename
-                                 * that matches the plugin's basename */
-
-  GstPluginPrivate *priv;
-
-  gpointer _gst_reserved[GST_PADDING];
-};
-
-struct _GstPluginClass {
-  GstObjectClass  object_class;
-
-  /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
-};
-
 #ifdef GST_PACKAGE_RELEASE_DATETIME
 #define __GST_PACKAGE_RELEASE_DATETIME GST_PACKAGE_RELEASE_DATETIME
 #else
@@ -276,8 +239,7 @@ G_END_DECLS
 /**
  * GST_LICENSE_UNKNOWN:
  *
- * To be used in GST_PLUGIN_DEFINE or GST_PLUGIN_DEFINE_STATIC if usure about
- * the licence.
+ * To be used in GST_PLUGIN_DEFINE if usure about the licence.
  */
 #define GST_LICENSE_UNKNOWN "unknown"
 
@@ -329,13 +291,11 @@ const gchar*		gst_plugin_get_license		(GstPlugin *plugin);
 const gchar*		gst_plugin_get_source		(GstPlugin *plugin);
 const gchar*		gst_plugin_get_package		(GstPlugin *plugin);
 const gchar*		gst_plugin_get_origin		(GstPlugin *plugin);
+const gchar*		gst_plugin_get_release_date_string (GstPlugin *plugin);
 const GstStructure*	gst_plugin_get_cache_data	(GstPlugin * plugin);
 void			gst_plugin_set_cache_data	(GstPlugin * plugin, GstStructure *cache_data);
 
-GModule *		gst_plugin_get_module		(GstPlugin *plugin);
 gboolean		gst_plugin_is_loaded		(GstPlugin *plugin);
-
-gboolean		gst_plugin_name_filter		(GstPlugin *plugin, const gchar *name);
 
 GstPlugin *		gst_plugin_load_file		(const gchar *filename, GError** error);
 

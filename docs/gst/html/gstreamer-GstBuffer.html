@@ -191,7 +191,7 @@ The following example creates a buffer that can hold a given video frame
 with a given width, height and bits per plane.
 </p>
 <div class="example">
-<a name="idp11730400"></a><p class="title"><b>Example 3. Creating a buffer for a video frame</b></p>
+<a name="idp12554816"></a><p class="title"><b>Example 3. Creating a buffer for a video frame</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -210,9 +210,9 @@ GstMemory <span class="gtkdoc opt">*</span>memory<span class="gtkdoc opt">;</spa
 gint size<span class="gtkdoc opt">,</span> width<span class="gtkdoc opt">,</span> height<span class="gtkdoc opt">,</span> bpp<span class="gtkdoc opt">;</span>
 <span class="gtkdoc opt">...</span>
 size <span class="gtkdoc opt">=</span> width <span class="gtkdoc opt">*</span> height <span class="gtkdoc opt">*</span> bpp<span class="gtkdoc opt">;</span>
-buffer <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstBuffer.html#gst-buffer-new">gst_buffer_new</a></span> <span class="gtkdoc opt">();</span>
-memory <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstMemory.html#gst-allocator-alloc">gst_allocator_alloc</a></span> <span class="gtkdoc opt">(</span>NULL<span class="gtkdoc opt">,</span> size<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
-<span class="function"><a href="../gstreamer-1.0/gstreamer-GstBuffer.html#gst-buffer-insert-memory">gst_buffer_insert_memory</a></span> <span class="gtkdoc opt">(</span>buffer<span class="gtkdoc opt">, -</span><span class="number">1</span><span class="gtkdoc opt">,</span> memory<span class="gtkdoc opt">);</span>
+buffer <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#gst-buffer-new">gst_buffer_new</a></span> <span class="gtkdoc opt">();</span>
+memory <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMemory.html#gst-allocator-alloc">gst_allocator_alloc</a></span> <span class="gtkdoc opt">(</span>NULL<span class="gtkdoc opt">,</span> size<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#gst-buffer-insert-memory">gst_buffer_insert_memory</a></span> <span class="gtkdoc opt">(</span>buffer<span class="gtkdoc opt">, -</span><span class="number">1</span><span class="gtkdoc opt">,</span> memory<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span></pre></td>
       </tr>
     </tbody>
@@ -426,7 +426,7 @@ A set of buffer flags used to describe properties of a <a class="link" href="gst
 <td><p><a name="GST-BUFFER-FLAG-MARKER:CAPS"></a><span class="term"><code class="literal">GST_BUFFER_FLAG_MARKER</code></span></p></td>
 <td>the buffer contains a media specific marker. for
                               video this is typically the end of a frame boundary, for audio
-                              this is usually the end of a talkspurt.
+                              this is usually the start of a talkspurt.
 </td>
 </tr>
 <tr>

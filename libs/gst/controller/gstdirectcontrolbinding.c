@@ -52,12 +52,16 @@ static GValue *gst_direct_control_binding_get_value (GstControlBinding * _self,
     GstClockTime timestamp);
 static gboolean gst_direct_control_binding_get_value_array (GstControlBinding *
     _self, GstClockTime timestamp, GstClockTime interval, guint n_values,
+    gpointer values);
+static gboolean gst_direct_control_binding_get_g_value_array (GstControlBinding
+    * _self, GstClockTime timestamp, GstClockTime interval, guint n_values,
     GValue * values);
 
 #define _do_init \
   GST_DEBUG_CATEGORY_INIT (GST_CAT_DEFAULT, "gstdirectcontrolbinding", 0, \
       "dynamic parameter control source attachment");
 
+#define gst_direct_control_binding_parent_class parent_class
 G_DEFINE_TYPE_WITH_CODE (GstDirectControlBinding, gst_direct_control_binding,
     GST_TYPE_CONTROL_BINDING, _do_init);
 
@@ -74,7 +78,7 @@ static GParamSpec *properties[PROP_LAST];
 
 #define DEFINE_CONVERT(type,Type,TYPE) \
 static void \
-convert_to_##type (GstDirectControlBinding *self, gdouble s, GValue *d) \
+convert_g_value_to_##type (GstDirectControlBinding *self, gdouble s, GValue *d) \
 { \
   GParamSpec##Type *pspec = G_PARAM_SPEC_##TYPE (((GstControlBinding *)self)->pspec); \
   g##type v; \
@@ -82,7 +86,18 @@ convert_to_##type (GstDirectControlBinding *self, gdouble s, GValue *d) \
   s = CLAMP (s, 0.0, 1.0); \
   v = pspec->minimum + (g##type) ((pspec->maximum - pspec->minimum) * s); \
   g_value_set_##type (d, v); \
+} \
+\
+static void \
+convert_value_to_##type (GstDirectControlBinding *self, gdouble s, gpointer d_) \
+{ \
+  GParamSpec##Type *pspec = G_PARAM_SPEC_##TYPE (((GstControlBinding *)self)->pspec); \
+  g##type *d = (g##type *)d_; \
+  \
+  s = CLAMP (s, 0.0, 1.0); \
+  *d = pspec->minimum + (g##type) ((pspec->maximum - pspec->minimum) * s); \
 }
+
 
 DEFINE_CONVERT (int, Int, INT);
 DEFINE_CONVERT (uint, UInt, UINT);
@@ -94,14 +109,25 @@ DEFINE_CONVERT (float, Float, FLOAT);
 DEFINE_CONVERT (double, Double, DOUBLE);
 
 static void
-convert_to_boolean (GstDirectControlBinding * self, gdouble s, GValue * d)
+convert_g_value_to_boolean (GstDirectControlBinding * self, gdouble s,
+    GValue * d)
 {
   s = CLAMP (s, 0.0, 1.0);
   g_value_set_boolean (d, (gboolean) (s + 0.5));
 }
 
 static void
-convert_to_enum (GstDirectControlBinding * self, gdouble s, GValue * d)
+convert_value_to_boolean (GstDirectControlBinding * self, gdouble s,
+    gpointer d_)
+{
+  gboolean *d = (gboolean *) d_;
+
+  s = CLAMP (s, 0.0, 1.0);
+  *d = (gboolean) (s + 0.5);
+}
+
+static void
+convert_g_value_to_enum (GstDirectControlBinding * self, gdouble s, GValue * d)
 {
   GParamSpecEnum *pspec =
       G_PARAM_SPEC_ENUM (((GstControlBinding *) self)->pspec);
@@ -111,6 +137,18 @@ convert_to_enum (GstDirectControlBinding * self, gdouble s, GValue * d)
   s = CLAMP (s, 0.0, 1.0);
   v = s * (e->n_values - 1);
   g_value_set_enum (d, e->values[v].value);
+}
+
+static void
+convert_value_to_enum (GstDirectControlBinding * self, gdouble s, gpointer d_)
+{
+  GParamSpecEnum *pspec =
+      G_PARAM_SPEC_ENUM (((GstControlBinding *) self)->pspec);
+  GEnumClass *e = pspec->enum_class;
+  gint *d = (gint *) d_;
+
+  s = CLAMP (s, 0.0, 1.0);
+  *d = e->values[(gint) (s * (e->n_values - 1))].value;
 }
 
 /* vmethods */
@@ -132,6 +170,8 @@ gst_direct_control_binding_class_init (GstDirectControlBindingClass * klass)
   control_binding_class->get_value = gst_direct_control_binding_get_value;
   control_binding_class->get_value_array =
       gst_direct_control_binding_get_value_array;
+  control_binding_class->get_g_value_array =
+      gst_direct_control_binding_get_g_value_array;
 
   properties[PROP_CS] =
       g_param_spec_object ("control-source", "ControlSource",
@@ -154,9 +194,8 @@ gst_direct_control_binding_constructor (GType type, guint n_construct_params,
   GstDirectControlBinding *self;
 
   self =
-      GST_DIRECT_CONTROL_BINDING (G_OBJECT_CLASS
-      (gst_direct_control_binding_parent_class)
-      ->constructor (type, n_construct_params, construct_params));
+      GST_DIRECT_CONTROL_BINDING (G_OBJECT_CLASS (parent_class)->constructor
+      (type, n_construct_params, construct_params));
 
   if (GST_CONTROL_BINDING_PSPEC (self)) {
     GType type, base;
@@ -171,34 +210,54 @@ gst_direct_control_binding_constructor (GType type, guint n_construct_params,
     // select mapping function
     switch (base) {
       case G_TYPE_INT:
-        self->convert = convert_to_int;
+        self->convert_g_value = convert_g_value_to_int;
+        self->convert_value = convert_value_to_int;
+        self->byte_size = sizeof (gint);
         break;
       case G_TYPE_UINT:
-        self->convert = convert_to_uint;
+        self->convert_g_value = convert_g_value_to_uint;
+        self->convert_value = convert_value_to_uint;
+        self->byte_size = sizeof (guint);
         break;
       case G_TYPE_LONG:
-        self->convert = convert_to_long;
+        self->convert_g_value = convert_g_value_to_long;
+        self->convert_value = convert_value_to_long;
+        self->byte_size = sizeof (glong);
         break;
       case G_TYPE_ULONG:
-        self->convert = convert_to_ulong;
+        self->convert_g_value = convert_g_value_to_ulong;
+        self->convert_value = convert_value_to_ulong;
+        self->byte_size = sizeof (gulong);
         break;
       case G_TYPE_INT64:
-        self->convert = convert_to_int64;
+        self->convert_g_value = convert_g_value_to_int64;
+        self->convert_value = convert_value_to_int64;
+        self->byte_size = sizeof (gint64);
         break;
       case G_TYPE_UINT64:
-        self->convert = convert_to_uint64;
+        self->convert_g_value = convert_g_value_to_uint64;
+        self->convert_value = convert_value_to_uint64;
+        self->byte_size = sizeof (guint64);
         break;
       case G_TYPE_FLOAT:
-        self->convert = convert_to_float;
+        self->convert_g_value = convert_g_value_to_float;
+        self->convert_value = convert_value_to_float;
+        self->byte_size = sizeof (gfloat);
         break;
       case G_TYPE_DOUBLE:
-        self->convert = convert_to_double;
+        self->convert_g_value = convert_g_value_to_double;
+        self->convert_value = convert_value_to_double;
+        self->byte_size = sizeof (gdouble);
         break;
       case G_TYPE_BOOLEAN:
-        self->convert = convert_to_boolean;
+        self->convert_g_value = convert_g_value_to_boolean;
+        self->convert_value = convert_value_to_boolean;
+        self->byte_size = sizeof (gboolean);
         break;
       case G_TYPE_ENUM:
-        self->convert = convert_to_enum;
+        self->convert_g_value = convert_g_value_to_enum;
+        self->convert_value = convert_value_to_enum;
+        self->byte_size = sizeof (gint);
         break;
       default:
         GST_WARNING ("incomplete implementation for paramspec type '%s'",
@@ -249,6 +308,8 @@ gst_direct_control_binding_dispose (GObject * object)
 
   if (self->cs)
     gst_object_replace ((GstObject **) & self->cs, NULL);
+
+  G_OBJECT_CLASS (parent_class)->dispose (object);
 }
 
 static void
@@ -257,6 +318,8 @@ gst_direct_control_binding_finalize (GObject * object)
   GstDirectControlBinding *self = GST_DIRECT_CONTROL_BINDING (object);
 
   g_value_unset (&self->cur_value);
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 static gboolean
@@ -286,7 +349,7 @@ gst_direct_control_binding_sync_values (GstControlBinding * _self,
       GST_LOG_OBJECT (object, "  mapping %s to value of type %s", _self->name,
           G_VALUE_TYPE_NAME (dst_val));
       /* run mapping function to convert gdouble to GValue */
-      self->convert (self, src_val, dst_val);
+      self->convert_g_value (self, src_val, dst_val);
       /* we can make this faster
        * http://bugzilla.gnome.org/show_bug.cgi?id=536939
        */
@@ -315,7 +378,7 @@ gst_direct_control_binding_get_value (GstControlBinding * _self,
   if (gst_control_source_get_value (self->cs, timestamp, &src_val)) {
     dst_val = g_new0 (GValue, 1);
     g_value_init (dst_val, G_PARAM_SPEC_VALUE_TYPE (_self->pspec));
-    self->convert (self, src_val, dst_val);
+    self->convert_g_value (self, src_val, dst_val);
   } else {
     GST_LOG ("no control value for property %s at ts %" GST_TIME_FORMAT,
         _self->name, GST_TIME_ARGS (timestamp));
@@ -327,14 +390,15 @@ gst_direct_control_binding_get_value (GstControlBinding * _self,
 static gboolean
 gst_direct_control_binding_get_value_array (GstControlBinding * _self,
     GstClockTime timestamp, GstClockTime interval, guint n_values,
-    GValue * values)
+    gpointer values_)
 {
   GstDirectControlBinding *self = GST_DIRECT_CONTROL_BINDING (_self);
   gint i;
   gdouble *src_val;
   gboolean res = FALSE;
-  GType type;
-  GstDirectControlBindingConvert convert;
+  GstDirectControlBindingConvertValue convert;
+  gint byte_size;
+  guint8 *values = (guint8 *) values_;
 
   g_return_val_if_fail (GST_IS_DIRECT_CONTROL_BINDING (self), FALSE);
   g_return_val_if_fail (GST_CLOCK_TIME_IS_VALID (timestamp), FALSE);
@@ -342,13 +406,56 @@ gst_direct_control_binding_get_value_array (GstControlBinding * _self,
   g_return_val_if_fail (values, FALSE);
   g_return_val_if_fail (GST_CONTROL_BINDING_PSPEC (self), FALSE);
 
-  convert = self->convert;
+  convert = self->convert_value;
+  byte_size = self->byte_size;
+
+  src_val = g_new0 (gdouble, n_values);
+  if ((res = gst_control_source_get_value_array (self->cs, timestamp,
+              interval, n_values, src_val))) {
+    for (i = 0; i < n_values; i++) {
+      /* we will only get NAN for sparse control sources, such as triggers */
+      if (!isnan (src_val[i])) {
+        convert (self, src_val[i], (gpointer) values);
+      } else {
+        GST_LOG ("no control value for property %s at index %d", _self->name,
+            i);
+      }
+      values += byte_size;
+    }
+  } else {
+    GST_LOG ("failed to get control value for property %s at ts %"
+        GST_TIME_FORMAT, _self->name, GST_TIME_ARGS (timestamp));
+  }
+  g_free (src_val);
+  return res;
+}
+
+static gboolean
+gst_direct_control_binding_get_g_value_array (GstControlBinding * _self,
+    GstClockTime timestamp, GstClockTime interval, guint n_values,
+    GValue * values)
+{
+  GstDirectControlBinding *self = GST_DIRECT_CONTROL_BINDING (_self);
+  gint i;
+  gdouble *src_val;
+  gboolean res = FALSE;
+  GType type;
+  GstDirectControlBindingConvertGValue convert;
+
+  g_return_val_if_fail (GST_IS_DIRECT_CONTROL_BINDING (self), FALSE);
+  g_return_val_if_fail (GST_CLOCK_TIME_IS_VALID (timestamp), FALSE);
+  g_return_val_if_fail (GST_CLOCK_TIME_IS_VALID (interval), FALSE);
+  g_return_val_if_fail (values, FALSE);
+  g_return_val_if_fail (GST_CONTROL_BINDING_PSPEC (self), FALSE);
+
+  convert = self->convert_g_value;
   type = G_PARAM_SPEC_VALUE_TYPE (_self->pspec);
 
   src_val = g_new0 (gdouble, n_values);
   if ((res = gst_control_source_get_value_array (self->cs, timestamp,
               interval, n_values, src_val))) {
     for (i = 0; i < n_values; i++) {
+      /* we will only get NAN for sparse control sources, such as triggers */
       if (!isnan (src_val[i])) {
         g_value_init (&values[i], type);
         convert (self, src_val[i], &values[i]);

@@ -31,9 +31,9 @@ How to run and debug your GStreamer application
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
-<a name="idp6093968"></a><h2>Running and debugging GStreamer Applications</h2>
+<a name="idp7942416"></a><h2>Running and debugging GStreamer Applications</h2>
 <div class="refsect2">
-<a name="idp9576704"></a><h3>Environment variables</h3>
+<a name="idp8901600"></a><h3>Environment variables</h3>
 <p> 
 GStreamer inspects a few of environment variables in addition to standard
 variables like <code class="envar">LANG</code>, <code class="envar">PATH</code> or <code class="envar">HOME</code>. 
@@ -80,7 +80,7 @@ to print out different types of debugging information to stderr.
   
 The variable takes a comma-separated list of "category_name:level" pairs
 to set specific levels for the individual categories.
-The level value ranges from 0 (nothing) to 5 (LOG).
+The level value ranges from 0 (nothing) to 9 (MEMDUMP).
     </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -101,7 +101,16 @@ are expected to happen.
 </p></td>
 </tr>
 <tr>
-<td><p><span class="term">3 - <code class="option">INFO</code></span></p></td>
+<td><p><span class="term">3 - <code class="option">FIXME</code></span></p></td>
+<td><p>
+Logs all fixme messages. Fixme messages are messages that indicate that something
+in the executed code path is not fully implemented or handled yet.  The purpose
+of this message is to make it easier to spot incomplete/unfinished pieces of
+code when reading the debug log.
+</p></td>
+</tr>
+<tr>
+<td><p><span class="term">4 - <code class="option">INFO</code></span></p></td>
 <td><p>
 Logs all informational messages.  These are typically used for events in
 the system that only happen once, or are important and rare enough to be
@@ -109,7 +118,7 @@ logged at this level.
 </p></td>
 </tr>
 <tr>
-<td><p><span class="term">4 - <code class="option">DEBUG</code></span></p></td>
+<td><p><span class="term">5 - <code class="option">DEBUG</code></span></p></td>
 <td><p>
 Logs all debug messages.  These are general debug messages for events
 that happen only a limited number of times during an object's lifetime;
@@ -117,11 +126,27 @@ these include setup, teardown, change of parameters, ...
 </p></td>
 </tr>
 <tr>
-<td><p><span class="term">5 - <code class="option">LOG</code></span></p></td>
+<td><p><span class="term">6 - <code class="option">LOG</code></span></p></td>
 <td><p>
 Logs all log messages.  These are messages for events
 that happen repeatedly during an object's lifetime;
 these include streaming and steady-state conditions.
+</p></td>
+</tr>
+<tr>
+<td><p><span class="term">7 - <code class="option">TRACE</code></span></p></td>
+<td><p>
+Logs all trace messages.  These messages for events
+that happen repeatedly during an object's lifetime such as the
+ref/unref cycles.
+</p></td>
+</tr>
+<tr>
+<td><p><span class="term">9 - <code class="option">MEMDUMP</code></span></p></td>
+<td><p>
+Log all memory dump messages. Memory dump messages are used to log
+(small) chunks of data as memory dumps in the log. They will be displayed
+as hexdump with ASCII characters.
 </p></td>
 </tr>
 </tbody>
@@ -131,14 +156,14 @@ these include streaming and steady-state conditions.
  The category_name can contain "<code class="option">*"</code> as a wildcard.
   
 For example, setting <code class="envar">GST_DEBUG</code> to
-<code class="option">GST_AUTOPLUG:5,GST_ELEMENT_*:3</code>, will cause the
+<code class="option">GST_AUTOPLUG:6,GST_ELEMENT_*:4</code>, will cause the
 <code class="option">GST_AUTOPLUG</code> category to be logged at full
 <code class="option">LOG</code> level, while all categories starting with
 <code class="option">GST_ELEMENT_</code> will be logged at <code class="option">INFO</code> level.
   
 To get all possible debug output, set
 <code class="envar">GST_DEBUG</code>
-to <code class="option">*:5</code>
+to <code class="option">*:9</code>
   </p>
 <p><a name="GST_DEBUG_NO_COLOR"></a><b><code class="envar">GST_DEBUG_NO_COLOR</code>. </b>
 Set this environment variable to any value ("1" typically) to switch off
@@ -173,6 +198,37 @@ application.
 Set this environment variable to "no" to prevent GStreamer from updating the
 plugin registry. This is useful for embedded device which is not updating the
 plugins frequently, it will save time when doing gst_init().
+  </p>
+<p><a name="GST_TRACE"></a><b><code class="envar">GST_TRACE</code>. </b>
+    Enable memory allocation tracing. Most GStreamer objects have support for
+    tracing the number of unfreed objects and their memory pointers.
+  
+The variable takes a comma-separated list of tracing options to enable.
+    </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term">live</span></p></td>
+<td><p>
+  Counts all live objects and dumps an overview of the number of unfreed
+  objects at program exit.
+</p></td>
+</tr>
+<tr>
+<td><p><span class="term">mem-live</span></p></td>
+<td><p>
+  Keep track of the unfreed memory pointers and dump an overview of all unfreed
+  memory at program exit. Together with a level 9 debug log this can be used to
+  follow the lifecycle of leaked objects in order to track down where they are
+  leaked.
+</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>
+
+ Use <code class="option">all</code> to enable all tracing flags.
   </p>
 <p><a name="ORC_CODE"></a><b><code class="envar">ORC_CODE</code>. </b>
 Useful Orc environment variable. Set ORC_CODE=debug to enable debuggers
