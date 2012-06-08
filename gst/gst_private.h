@@ -113,7 +113,6 @@ void  _priv_gst_sample_initialize (void);
 void  _priv_gst_tag_initialize (void);
 void  _priv_gst_value_initialize (void);
 void  _priv_gst_debug_init (void);
-void  _priv_gst_toc_initialize (void);
 
 /* TOC functions */
 /* These functions are used to parse TOC messages, events and queries */
@@ -296,6 +295,27 @@ struct _GstPluginClass {
   gpointer _gst_reserved[GST_PADDING];
 };
 
+struct _GstPluginFeature {
+  GstObject      object;
+
+  /*< private >*/
+  gboolean       loaded;
+  guint          rank;
+
+  const gchar   *plugin_name;
+  GstPlugin     *plugin;      /* weak ref */
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING];
+};
+
+struct _GstPluginFeatureClass {
+  GstObjectClass        parent_class;
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING];
+};
+
 #include "gsttypefind.h"
 
 struct _GstTypeFindFactory {
@@ -319,6 +339,31 @@ struct _GstTypeFindFactoryClass {
   gpointer _gst_reserved[GST_PADDING];
 };
 
+struct _GstElementFactory {
+  GstPluginFeature      parent;
+
+  GType                 type;                   /* unique GType of element or 0 if not loaded */
+
+  gpointer              metadata;
+
+  GList *               staticpadtemplates;     /* GstStaticPadTemplate list */
+  guint                 numpadtemplates;
+
+  /* URI interface stuff */
+  GstURIType            uri_type;
+  gchar **              uri_protocols;
+
+  GList *               interfaces;             /* interface type names this element implements */
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING];
+};
+
+struct _GstElementFactoryClass {
+  GstPluginFeatureClass parent_class;
+
+  gpointer _gst_reserved[GST_PADDING];
+};
 
 G_END_DECLS
 #endif /* __GST_PRIVATE_H__ */

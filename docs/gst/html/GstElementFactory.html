@@ -42,7 +42,7 @@
 <pre class="synopsis">
 #include &lt;gst/gst.h&gt;
 
-struct              <a class="link" href="GstElementFactory.html#GstElementFactory-struct" title="struct GstElementFactory">GstElementFactory</a>;
+                    <a class="link" href="GstElementFactory.html#GstElementFactory-struct" title="GstElementFactory">GstElementFactory</a>;
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstElementFactory.html#gst-element-register" title="gst_element_register ()">gst_element_register</a>                (<em class="parameter"><code><a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> *plugin</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> rank</code></em>,
@@ -52,6 +52,8 @@ struct              <a class="link" href="GstElementFactory.html#GstElementFacto
                                                         (<em class="parameter"><code><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> *factory</code></em>);
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="GstElementFactory.html#gst-element-factory-get-metadata" title="gst_element_factory_get_metadata ()">gst_element_factory_get_metadata</a>    (<em class="parameter"><code><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> *factory</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            <a class="link" href="GstElementFactory.html#gst-element-factory-get-metadata-keys" title="gst_element_factory_get_metadata_keys ()">gst_element_factory_get_metadata_keys</a>
+                                                        (<em class="parameter"><code><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> *factory</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="GstElementFactory.html#gst-element-factory-get-num-pad-templates" title="gst_element_factory_get_num_pad_templates ()">gst_element_factory_get_num_pad_templates</a>
                                                         (<em class="parameter"><code><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> *factory</code></em>);
 <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="returnvalue">GstURIType</span></a>          <a class="link" href="GstElementFactory.html#gst-element-factory-get-uri-type" title="gst_element_factory_get_uri_type ()">gst_element_factory_get_uri_type</a>    (<em class="parameter"><code><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> *factory</code></em>);
@@ -139,7 +141,7 @@ The following code example shows you how to create a GstFileSrc element.
 <p>
 </p>
 <div class="example">
-<a name="idp19312496"></a><p class="title"><b>Example 6. Using an element factory</b></p>
+<a name="idp17385776"></a><p class="title"><b>Example 6. Using an element factory</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -183,8 +185,8 @@ Last reviewed on 2005-11-23 (0.9.5)
 <div class="refsect1">
 <a name="GstElementFactory.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="GstElementFactory-struct"></a><h3>struct GstElementFactory</h3>
-<pre class="programlisting">struct GstElementFactory;</pre>
+<a name="GstElementFactory-struct"></a><h3>GstElementFactory</h3>
+<pre class="programlisting">typedef struct _GstElementFactory GstElementFactory;</pre>
 <p>
 The opaque <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> data structure.
 </p>
@@ -303,6 +305,30 @@ Get the metadata on <em class="parameter"><code>factory</code></em> with <em cla
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the metadata with <em class="parameter"><code>key</code></em> on <em class="parameter"><code>factory</code></em> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there was no
 metadata with the given <em class="parameter"><code>key</code></em>.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-factory-get-metadata-keys"></a><h3>gst_element_factory_get_metadata_keys ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **            gst_element_factory_get_metadata_keys
+                                                        (<em class="parameter"><code><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> *factory</code></em>);</pre>
+<p>
+Get the available keys for the metadata on <em class="parameter"><code>factory</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>factory,</code></em> :</span></p></td>
+<td>a <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated array of key strings, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
+there is no metadata. Free with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a> when no longer needd.</td>
 </tr>
 </tbody>
 </table></div>

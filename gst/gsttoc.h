@@ -29,6 +29,9 @@
 
 G_BEGIN_DECLS
 
+#define GST_TYPE_TOC (gst_toc_get_type ())
+#define GST_TYPE_TOC_ENTRY (gst_toc_entry_get_type ())
+
 typedef struct _GstTocEntry GstTocEntry;
 typedef struct _GstToc GstToc;
 
@@ -90,10 +93,14 @@ struct _GstToc {
   gpointer _gst_reserved[GST_PADDING];
 };
 
+/* functions to return type structures */
+GType           gst_toc_get_type                (void);
+GType           gst_toc_entry_get_type          (void);
+
 /* functions to create new structures */
 GstToc *        gst_toc_new                     (void);
 GstTocEntry *   gst_toc_entry_new               (GstTocEntryType type, const gchar *uid);
-GstTocEntry *   gst_toc_entry_new_with_pad      (GstTocEntryType type, const gchar *uid, gpointer pad);
+GstTocEntry *   gst_toc_entry_new_with_pad      (GstTocEntryType type, const gchar *uid, GstPad * pad);
 
 /* functions to free structures */
 void            gst_toc_entry_free              (GstTocEntry *entry);
@@ -105,6 +112,7 @@ GstToc      *   gst_toc_copy                    (const GstToc *toc);
 
 void            gst_toc_entry_set_start_stop    (GstTocEntry *entry, gint64 start, gint64 stop);
 gboolean        gst_toc_entry_get_start_stop    (const GstTocEntry *entry, gint64 *start, gint64 *stop);
+const gchar *   gst_toc_entry_type_get_nick     (GstTocEntryType type);
 
 G_END_DECLS
 

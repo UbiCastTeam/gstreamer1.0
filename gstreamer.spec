@@ -4,7 +4,7 @@
 %define 	_glib2		2.31.14
 
 Name: 		%{gstreamer}
-Version: 	0.11.91
+Version: 	0.11.92
 Release: 	1
 Summary: 	GStreamer streaming media framework runtime
 

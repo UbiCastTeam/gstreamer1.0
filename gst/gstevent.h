@@ -152,7 +152,7 @@ typedef enum {
   GST_EVENT_BUFFERSIZE            = GST_EVENT_MAKE_TYPE (90, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_SINK_MESSAGE          = GST_EVENT_MAKE_TYPE (100, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
   GST_EVENT_EOS                   = GST_EVENT_MAKE_TYPE (110, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
-  GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
+  GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
 
   /* non-sticky downstream serialized */
   GST_EVENT_SEGMENT_DONE          = GST_EVENT_MAKE_TYPE (150, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
@@ -523,7 +523,7 @@ void            gst_event_parse_segment         (GstEvent *event, const GstSegme
 void            gst_event_copy_segment          (GstEvent *event, GstSegment *segment);
 
 /* tag event */
-GstEvent*       gst_event_new_tag               (GstTagList *taglist) G_GNUC_MALLOC;
+GstEvent*       gst_event_new_tag               (const gchar *name, GstTagList *taglist) G_GNUC_MALLOC;
 void            gst_event_parse_tag             (GstEvent *event, GstTagList **taglist);
 
 /* TOC event */
@@ -538,7 +538,7 @@ void            gst_event_parse_buffer_size     (GstEvent *event, GstFormat *for
                                                  gint64 *maxsize, gboolean *async);
 
 /* sink message */
-GstEvent*       gst_event_new_sink_message      (GstMessage *msg) G_GNUC_MALLOC;
+GstEvent*       gst_event_new_sink_message      (const gchar *name, GstMessage *msg) G_GNUC_MALLOC;
 void            gst_event_parse_sink_message    (GstEvent *event, GstMessage **msg);
 
 /* QOS events */

@@ -24,16 +24,19 @@
 #ifndef __GST_ELEMENT_FACTORY_H__
 #define __GST_ELEMENT_FACTORY_H__
 
+/**
+ * GstElementFactory:
+ *
+ * The opaque #GstElementFactory data structure.
+ */
 typedef struct _GstElementFactory GstElementFactory;
 typedef struct _GstElementFactoryClass GstElementFactoryClass;
 
 #include <gst/gstconfig.h>
 #include <gst/gstelement.h>
-#include <gst/gstobject.h>
+#include <gst/gstpad.h>
 #include <gst/gstplugin.h>
 #include <gst/gstpluginfeature.h>
-#include <gst/gstpadtemplate.h>
-#include <gst/gstiterator.h>
 #include <gst/gsturi.h>
 
 G_BEGIN_DECLS
@@ -47,37 +50,6 @@ G_BEGIN_DECLS
 #define GST_IS_ELEMENT_FACTORY_CLASS(klass)     (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_ELEMENT_FACTORY))
 #define GST_ELEMENT_FACTORY_CAST(obj)           ((GstElementFactory *)(obj))
 
-/**
- * GstElementFactory:
- *
- * The opaque #GstElementFactory data structure.
- */
-struct _GstElementFactory {
-  GstPluginFeature      parent;
-
-  GType                 type;                   /* unique GType of element or 0 if not loaded */
-
-  gpointer              metadata;
-
-  GList *               staticpadtemplates;     /* GstStaticPadTemplate list */
-  guint                 numpadtemplates;
-
-  /* URI interface stuff */
-  GstURIType            uri_type;
-  gchar **              uri_protocols;
-
-  GList *               interfaces;             /* interface type names this element implements */
-
-  /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
-};
-
-struct _GstElementFactoryClass {
-  GstPluginFeatureClass parent_class;
-
-  gpointer _gst_reserved[GST_PADDING];
-};
-
 GType                   gst_element_factory_get_type            (void);
 
 GstElementFactory *     gst_element_factory_find                (const gchar *name);
@@ -85,6 +57,7 @@ GstElementFactory *     gst_element_factory_find                (const gchar *na
 GType                   gst_element_factory_get_element_type    (GstElementFactory *factory);
 
 const gchar *           gst_element_factory_get_metadata        (GstElementFactory *factory, const gchar *key);
+gchar **                gst_element_factory_get_metadata_keys   (GstElementFactory *factory);
 
 guint                   gst_element_factory_get_num_pad_templates (GstElementFactory *factory);
 const GList *           gst_element_factory_get_static_pad_templates (GstElementFactory *factory);

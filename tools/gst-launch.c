@@ -466,13 +466,13 @@ print_toc_entry (gpointer data, gpointer user_data)
 {
   GstTocEntry *entry = (GstTocEntry *) data;
   const gchar spc[MAX_INDENT + 1] = "                                        ";
-  const gchar *entry_types[] = { "chapter", "edition" };
   guint indent = MIN (GPOINTER_TO_UINT (user_data), MAX_INDENT);
   gint64 start, stop;
 
   gst_toc_entry_get_start_stop (entry, &start, &stop);
 
-  PRINT ("%s%s:", &spc[MAX_INDENT - indent], entry_types[entry->type]);
+  PRINT ("%s%s:", &spc[MAX_INDENT - indent],
+      gst_toc_entry_type_get_nick (entry->type));
   if (GST_CLOCK_TIME_IS_VALID (start)) {
     PRINT (" start: %" GST_TIME_FORMAT, GST_TIME_ARGS (start));
   }
@@ -484,7 +484,7 @@ print_toc_entry (gpointer data, gpointer user_data)
 
   /* print tags */
   gst_tag_list_foreach (entry->tags, print_tag_foreach,
-      GINT_TO_POINTER (indent));
+      GUINT_TO_POINTER (indent));
 
   /* loop over sub-toc entries */
   g_list_foreach (entry->subentries, print_toc_entry,
@@ -663,7 +663,7 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
 
           gst_message_parse_tag (message, &tag_list);
           gst_tag_list_foreach (tag_list, print_tag, NULL);
-          gst_tag_list_free (tag_list);
+          gst_tag_list_unref (tag_list);
         }
         break;
       case GST_MESSAGE_TOC:
@@ -909,7 +909,7 @@ main (int argc, char *argv[])
     {"tags", 't', 0, G_OPTION_ARG_NONE, &tags,
         N_("Output tags (also known as metadata)"), NULL},
     {"toc", 'c', 0, G_OPTION_ARG_NONE, &toc,
-        N_("Ouput TOC (chapters and editions)"), NULL},
+        N_("Output TOC (chapters and editions)"), NULL},
     {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
         N_("Output status information and property notifications"), NULL},
     {"quiet", 'q', 0, G_OPTION_ARG_NONE, &quiet,
@@ -1099,18 +1099,37 @@ main (int argc, char *argv[])
 
       tfthen = gst_util_get_timestamp ();
       caught_error = event_loop (pipeline, TRUE, GST_STATE_PLAYING);
-      if (eos_on_shutdown && caught_error == ELR_INTERRUPT) {
-        PRINT (_("EOS on shutdown enabled -- Forcing EOS on the pipeline\n"));
-        waiting_eos = TRUE;
-        gst_element_send_event (pipeline, gst_event_new_eos ());
-        PRINT (_("Waiting for EOS...\n"));
-        caught_error = event_loop (pipeline, TRUE, GST_STATE_PLAYING);
+      if (eos_on_shutdown && caught_error != ELR_NO_ERROR) {
+        gboolean ignore_errors;
 
-        if (caught_error == ELR_NO_ERROR) {
-          /* we got EOS */
-          PRINT (_("EOS received - stopping pipeline...\n"));
-        } else if (caught_error == ELR_ERROR) {
-          PRINT (_("An error happened while waiting for EOS\n"));
+        waiting_eos = TRUE;
+        if (caught_error == ELR_INTERRUPT) {
+          PRINT (_("EOS on shutdown enabled -- Forcing EOS on the pipeline\n"));
+          gst_element_send_event (pipeline, gst_event_new_eos ());
+          ignore_errors = FALSE;
+        } else {
+          PRINT (_("EOS on shutdown enabled -- waiting for EOS after Error\n"));
+          ignore_errors = TRUE;
+        }
+        PRINT (_("Waiting for EOS...\n"));
+
+        while (TRUE) {
+          caught_error = event_loop (pipeline, TRUE, GST_STATE_PLAYING);
+
+          if (caught_error == ELR_NO_ERROR) {
+            /* we got EOS */
+            PRINT (_("EOS received - stopping pipeline...\n"));
+            break;
+          } else if (caught_error == ELR_INTERRUPT) {
+            PRINT (_
+                ("Interrupt while waiting for EOS - stopping pipeline...\n"));
+            break;
+          } else if (caught_error == ELR_ERROR) {
+            if (!ignore_errors) {
+              PRINT (_("An error happened while waiting for EOS\n"));
+              break;
+            }
+          }
         }
       }
       tfnow = gst_util_get_timestamp ();

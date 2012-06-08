@@ -139,7 +139,7 @@ extern gboolean _priv_gst_disable_registry_update;
 #endif
 
 #ifndef GST_DISABLE_GST_DEBUG
-extern const gchar *priv_gst_dump_dot_dir;
+const gchar *priv_gst_dump_dot_dir;
 #endif
 
 /* defaults */
@@ -746,7 +746,6 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
 
   g_type_class_ref (gst_param_spec_fraction_get_type ());
   _priv_gst_tag_initialize ();
-  _priv_gst_toc_initialize ();
   gst_parse_context_get_type ();
 
   _priv_gst_plugin_initialize ();

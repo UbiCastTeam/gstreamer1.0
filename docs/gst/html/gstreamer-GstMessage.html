@@ -84,9 +84,9 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **gerror</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **debug</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-tag" title="gst_message_new_tag ()">gst_message_new_tag</a>                 (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *tag_list</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *tag_list</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-tag" title="gst_message_parse_tag ()">gst_message_parse_tag</a>               (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> **tag_list</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> **tag_list</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-buffering" title="gst_message_new_buffering ()">gst_message_new_buffering</a>           (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> percent</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-buffering" title="gst_message_parse_buffering ()">gst_message_parse_buffering</a>         (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
@@ -273,7 +273,7 @@ The basic use pattern of posting a message on a <a class="link" href="GstBus.htm
 <p>
 </p>
 <div class="example">
-<a name="idp29547376"></a><p class="title"><b>Example 10. Posting a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></b></p>
+<a name="idp30136752"></a><p class="title"><b>Example 10. Posting a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -1265,7 +1265,7 @@ or NULL. <span class="annotation">[<acronym title="Parameter for returning resul
 <div class="refsect2">
 <a name="gst-message-new-tag"></a><h3>gst_message_new_tag ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_tag                 (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *tag_list</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *tag_list</code></em>);</pre>
 <p>
 Create a new tag message. The message will take ownership of the tag list.
 The message is posted by elements that discovered a new taglist.
@@ -1296,7 +1296,7 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <div class="refsect2">
 <a name="gst-message-parse-tag"></a><h3>gst_message_parse_tag ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_message_parse_tag               (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> **tag_list</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> **tag_list</code></em>);</pre>
 <p>
 Extracts the tag list from the GstMessage. The tag list returned in the
 output argument is a copy; the caller must free it when done.
@@ -1330,7 +1330,7 @@ Typical usage of this function might be:
     <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#gst-message-parse-tag">gst_message_parse_tag</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>tags<span class="gtkdoc opt">);</span>
     <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Got tags from element %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">));</span>
     <span class="function">handle_tags</span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
-    <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTagList.html#gst-tag-list-free">gst_tag_list_free</a></span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTagList.html#gst-tag-list-unref">gst_tag_list_unref</a></span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
     <span class="keyword">break</span><span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
   <span class="gtkdoc opt">...</span>
@@ -2871,7 +2871,7 @@ MT safe.</td>
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *updated</code></em>);</pre>
 <p>
-Extract the TOC from the <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>. The TOC returned in the
+Extract thef TOC from the <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>. The TOC returned in the
 output argument is a copy; the caller must free it with
 <a class="link" href="gstreamer-GstToc.html#gst-toc-free" title="gst_toc_free ()"><code class="function">gst_toc_free()</code></a> when done.
 </p>

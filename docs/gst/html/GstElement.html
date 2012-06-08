@@ -3473,6 +3473,9 @@ upstream events or a random linked source pad for downstream events.
 This function takes owership of the provided event so you should
 <a class="link" href="gstreamer-GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.
 </p>
+<p>
+MT safe.
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -3488,8 +3491,8 @@ This function takes owership of the provided event so you should
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled.
-MT safe.</td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Events that trigger a preroll (such
+as flushing seeks and steps) will emit <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -3546,8 +3549,8 @@ with <a class="link" href="GstClock.html#GST-MSECOND:CAPS" title="GST_MSECOND"><
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the seek operation succeeded (the seek might not always be
-executed instantly though)</td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the seek operation succeeded. Flushing seeks will trigger a
+preroll, which will emit <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -3568,6 +3571,9 @@ executed instantly though)</td>
 Sends a seek event to an element. See <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" title="gst_event_new_seek ()"><code class="function">gst_event_new_seek()</code></a> for the details of
 the parameters. The seek event is sent to the element using
 <a class="link" href="GstElement.html#gst-element-send-event" title="gst_element_send_event ()"><code class="function">gst_element_send_event()</code></a>.
+</p>
+<p>
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -3607,8 +3613,8 @@ the parameters. The seek event is sent to the element using
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled.
-MT safe.</td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Flushing seeks will trigger a
+preroll, which will emit <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</td>
 </tr>
 </tbody>
 </table></div>

@@ -992,19 +992,30 @@ gst_event_copy_segment (GstEvent * event, GstSegment * segment)
 
 /**
  * gst_event_new_tag:
+ * @name: (transfer none): the name of the event
  * @taglist: (transfer full): metadata list. The event will take ownership
  *     of the taglist.
  *
  * Generates a metadata tag event from the given @taglist.
  *
+ * Since the TAG event has the %GST_EVENT_TYPE_STICKY_MULTI flag set, the
+ * @name will be used to keep track of multiple tag events.
+ *
  * Returns: (transfer full): a new #GstEvent
  */
 GstEvent *
-gst_event_new_tag (GstTagList * taglist)
+gst_event_new_tag (const gchar * name, GstTagList * taglist)
 {
+  GstStructure *s;
+  GValue val = G_VALUE_INIT;
+
   g_return_val_if_fail (taglist != NULL, NULL);
 
-  return gst_event_new_custom (GST_EVENT_TAG, (GstStructure *) taglist);
+  s = gst_structure_new_empty (name);
+  g_value_init (&val, GST_TYPE_TAG_LIST);
+  g_value_take_boxed (&val, taglist);
+  gst_structure_id_take_value (s, GST_QUARK (TAGLIST), &val);
+  return gst_event_new_custom (GST_EVENT_TAG, s);
 }
 
 /**
@@ -1020,11 +1031,16 @@ gst_event_new_tag (GstTagList * taglist)
 void
 gst_event_parse_tag (GstEvent * event, GstTagList ** taglist)
 {
+  const GValue *val;
+
   g_return_if_fail (GST_IS_EVENT (event));
   g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_TAG);
 
+  val = gst_structure_id_get_value (GST_EVENT_STRUCTURE (event),
+      GST_QUARK (TAGLIST));
+
   if (taglist)
-    *taglist = (GstTagList *) GST_EVENT_STRUCTURE (event);
+    *taglist = (GstTagList *) g_value_get_boxed (val);
 }
 
 /* buffersize event */
@@ -1252,13 +1268,13 @@ gst_event_parse_qos (GstEvent * event, GstQOSType * type,
  * from the newly configured start position. 
  *
  * For negative rates, playback will start from the newly configured stop
- * position (if any). If the stop position if updated, it must be different from
- * -1 for negative rates.
+ * position (if any). If the stop position is updated, it must be different from
+ * -1 (#GST_CLOCK_TIME_NONE) for negative rates.
  *
  * It is not possible to seek relative to the current playback position, to do
  * this, PAUSE the pipeline, query the current playback position with
  * #GST_QUERY_POSITION and update the playback segment current position with a
- * #GST_SEEK_TYPE_SET to the desired position. 
+ * #GST_SEEK_TYPE_SET to the desired position.
  *
  * Returns: (transfer full): a new seek event.
  */
@@ -1539,11 +1555,14 @@ gst_event_new_reconfigure (void)
 
 /**
  * gst_event_new_sink_message:
+ * @name: a name for the event
  * @msg: (transfer none): the #GstMessage to be posted
  *
  * Create a new sink-message event. The purpose of the sink-message event is
  * to instruct a sink to post the message contained in the event synchronized
  * with the stream.
+ *
+ * @name is used to store multiple sticky events on one pad.
  *
  * Returns: (transfer full): a new #GstEvent
  *
@@ -1551,7 +1570,7 @@ gst_event_new_reconfigure (void)
  */
 /* FIXME 0.11: take ownership of msg for consistency? */
 GstEvent *
-gst_event_new_sink_message (GstMessage * msg)
+gst_event_new_sink_message (const gchar * name, GstMessage * msg)
 {
   GstEvent *event;
   GstStructure *structure;
@@ -1560,7 +1579,7 @@ gst_event_new_sink_message (GstMessage * msg)
 
   GST_CAT_INFO (GST_CAT_EVENT, "creating sink-message event");
 
-  structure = gst_structure_new_id (GST_QUARK (EVENT_SINK_MESSAGE),
+  structure = gst_structure_new_id (g_quark_from_string (name),
       GST_QUARK (MESSAGE), GST_TYPE_MESSAGE, msg, NULL);
   event = gst_event_new_custom (GST_EVENT_SINK_MESSAGE, structure);
 
@@ -1615,6 +1634,7 @@ gst_event_new_stream_start (void)
 
 /**
  * gst_event_new_toc:
+ * @name: a name for the event
  * @toc: #GstToc structure.
  * @updated: whether @toc was updated or not.
  *

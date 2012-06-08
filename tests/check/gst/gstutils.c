@@ -504,7 +504,7 @@ GST_START_TEST (test_element_found_tags)
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
 
   srcpad = gst_element_get_static_pad (fakesrc, "src");
-  gst_pad_push_event (srcpad, gst_event_new_tag (list));
+  gst_pad_push_event (srcpad, gst_event_new_tag ("test", list));
   gst_object_unref (srcpad);
 
   bus = gst_element_get_bus (pipeline);
@@ -1025,6 +1025,7 @@ GST_START_TEST (test_pad_proxy_query_caps_aggregation)
 
   /* test intersection */
   caps = gst_caps_new_simple ("foo/bar", "barversion", G_TYPE_INT, 1, NULL);
+  GST_OBJECT_FLAG_UNSET (sink2_sink, GST_PAD_FLAG_FIXED_CAPS);
   fail_unless (gst_pad_set_caps (sink2_sink, caps));
   gst_pad_use_fixed_caps (sink2_sink);
   gst_caps_unref (caps);
