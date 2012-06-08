@@ -814,6 +814,7 @@ gst_element_register
 gst_element_factory_find
 gst_element_factory_get_element_type
 gst_element_factory_get_metadata
+gst_element_factory_get_metadata_keys
 gst_element_factory_get_num_pad_templates
 gst_element_factory_get_uri_type
 gst_element_factory_get_uri_protocols
@@ -2042,6 +2043,7 @@ gst_plugin_feature_set_rank
 gst_plugin_feature_set_name
 gst_plugin_feature_get_rank
 gst_plugin_feature_get_name
+gst_plugin_feature_get_plugin
 gst_plugin_feature_load
 gst_plugin_feature_list_copy
 gst_plugin_feature_list_free
@@ -2517,6 +2519,7 @@ GST_TAG_APPLICATION_DATA
 GST_TAG_IMAGE_ORIENTATION
 
 gst_tag_register
+gst_tag_register_static
 gst_tag_merge_use_first
 gst_tag_merge_strings_with_comma
 gst_tag_exists
@@ -2530,13 +2533,15 @@ gst_tag_list_new_empty
 gst_tag_list_new_valist
 gst_tag_list_new_from_string
 gst_tag_list_to_string
-gst_is_tag_list
 gst_tag_list_is_empty
 gst_tag_list_is_equal
 gst_tag_list_copy
+gst_tag_list_ref
+gst_tag_list_unref
+gst_tag_list_is_writable
+gst_tag_list_make_writable
 gst_tag_list_insert
 gst_tag_list_merge
-gst_tag_list_free
 gst_tag_list_get_tag_size
 gst_tag_list_n_tags
 gst_tag_list_nth_tag_name
@@ -2702,6 +2707,7 @@ gst_toc_copy
 gst_toc_find_entry
 gst_toc_entry_get_start_stop
 gst_toc_entry_set_start_stop
+gst_toc_entry_type_get_nick
 <SUBSECTION Standard>
 GST_TYPE_TOC_ENTRY_TYPE
 <SUBSECTION Private>

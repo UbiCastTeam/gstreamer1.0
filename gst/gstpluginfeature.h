@@ -38,6 +38,11 @@ G_BEGIN_DECLS
 #define GST_PLUGIN_FEATURE_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj), GST_TYPE_PLUGIN_FEATURE, GstPluginFeatureClass))
 #define GST_PLUGIN_FEATURE_CAST(obj)            ((GstPluginFeature*)(obj))
 
+/**
+ * GstPluginFeature:
+ *
+ * Opaque #GstPluginFeature structure.
+ */
 typedef struct _GstPluginFeature GstPluginFeature;
 typedef struct _GstPluginFeatureClass GstPluginFeatureClass;
 
@@ -85,32 +90,6 @@ typedef enum {
 #define                 gst_plugin_feature_set_name(feature,name) gst_object_set_name(GST_OBJECT_CAST(feature),name)
 
 /**
- * GstPluginFeature:
- *
- * Opaque #GstPluginFeature structure.
- */
-struct _GstPluginFeature {
-  GstObject      object;
-
-  /*< private >*/
-  gboolean       loaded;
-  guint          rank;
-
-  const gchar   *plugin_name;
-  GstPlugin     *plugin;      /* weak ref */
-
-  /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
-};
-
-struct _GstPluginFeatureClass {
-  GstObjectClass        parent_class;
-
-  /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
-};
-
-/**
  * GstPluginFeatureFilter:
  * @feature: the pluginfeature to check
  * @user_data: the user_data that has been passed on e.g.
@@ -132,6 +111,8 @@ GstPluginFeature *
 
 void            gst_plugin_feature_set_rank             (GstPluginFeature *feature, guint rank);
 guint           gst_plugin_feature_get_rank             (GstPluginFeature *feature);
+
+GstPlugin     * gst_plugin_feature_get_plugin           (GstPluginFeature *feature);
 
 void            gst_plugin_feature_list_free            (GList *list);
 GList          *gst_plugin_feature_list_copy            (GList *list) G_GNUC_MALLOC;

@@ -47,14 +47,22 @@
 #include <gobject/gvaluecollector.h>
 #include <string.h>
 
+/* FIXME: add category for tags */
+#define GST_CAT_TAGS GST_CAT_DEFAULT
+
 #define GST_TAG_IS_VALID(tag)           (gst_tag_get_info (tag) != NULL)
 
 /* FIXME 0.11: make taglists refcounted maybe? */
 /* a tag list is basically a structure, but we don't make this fact public */
-struct _GstTagList
+typedef struct _GstTagListImpl
 {
-  GstStructure structure;
-};
+  GstTagList taglist;
+
+  GstStructure *structure;
+} GstTagListImpl;
+
+#define GST_TAG_LIST_STRUCTURE(taglist) ((GstTagListImpl*)(taglist))->structure
+
 
 /* FIXME 0.11: use GParamSpecs or something similar for tag registrations,
  * possibly even gst_tag_register(). Especially value ranges might be
@@ -64,8 +72,8 @@ typedef struct
 {
   GType type;                   /* type the data is in */
 
-  gchar *nick;                  /* translated name */
-  gchar *blurb;                 /* translated description of type */
+  const gchar *nick;            /* translated short description */
+  const gchar *blurb;           /* translated long description  */
 
   GstTagMergeFunc merge_func;   /* functions to merge the values */
   GstTagFlag flag;              /* type of tag */
@@ -82,298 +90,307 @@ static GMutex __tag_mutex;
 /* tags hash table: maps tag name string => GstTagInfo */
 static GHashTable *__tags;
 
-G_DEFINE_BOXED_TYPE (GstTagList, gst_tag_list,
-    (GBoxedCopyFunc) gst_tag_list_copy, (GBoxedFreeFunc) gst_tag_list_free);
+GST_DEFINE_MINI_OBJECT_TYPE (GstTagList, gst_tag_list);
+
+static void __gst_tag_list_free (GstTagList * list);
+static GstTagList *__gst_tag_list_copy (const GstTagList * list);
 
 /* FIXME: had code:
  *    g_value_register_transform_func (_gst_tag_list_type, G_TYPE_STRING,
  *      _gst_structure_transform_to_string);
  */
-
 void
 _priv_gst_tag_initialize (void)
 {
   g_mutex_init (&__tag_mutex);
 
   __tags = g_hash_table_new (g_str_hash, g_str_equal);
-  gst_tag_register (GST_TAG_TITLE, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_TITLE, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("title"), _("commonly used title"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_TITLE_SORTNAME, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_TITLE_SORTNAME, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("title sortname"), _("commonly used title for sorting purposes"), NULL);
-  gst_tag_register (GST_TAG_ARTIST, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ARTIST, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("artist"),
       _("person(s) responsible for the recording"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_ARTIST_SORTNAME, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ARTIST_SORTNAME, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("artist sortname"),
       _("person(s) responsible for the recording for sorting purposes"), NULL);
-  gst_tag_register (GST_TAG_ALBUM, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("album"),
       _("album containing this data"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_ALBUM_SORTNAME, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_SORTNAME, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("album sortname"),
       _("album containing this data for sorting purposes"), NULL);
-  gst_tag_register (GST_TAG_ALBUM_ARTIST, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_ARTIST, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("album artist"),
       _("The artist of the entire album, as it should be displayed"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_ALBUM_ARTIST_SORTNAME, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_ARTIST_SORTNAME, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("album artist sortname"),
       _("The artist of the entire album, as it should be sorted"), NULL);
-  gst_tag_register (GST_TAG_DATE, GST_TAG_FLAG_META, G_TYPE_DATE,
+  gst_tag_register_static (GST_TAG_DATE, GST_TAG_FLAG_META, G_TYPE_DATE,
       _("date"), _("date the data was created (as a GDate structure)"), NULL);
-  gst_tag_register (GST_TAG_DATE_TIME, GST_TAG_FLAG_META, GST_TYPE_DATE_TIME,
-      _("datetime"),
+  gst_tag_register_static (GST_TAG_DATE_TIME, GST_TAG_FLAG_META,
+      GST_TYPE_DATE_TIME, _("datetime"),
       _("date and time the data was created (as a GstDateTime structure)"),
       NULL);
-  gst_tag_register (GST_TAG_GENRE, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GENRE, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("genre"),
       _("genre this data belongs to"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_COMMENT, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_COMMENT, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("comment"),
       _("free text commenting the data"), gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_EXTENDED_COMMENT, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_EXTENDED_COMMENT, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("extended comment"),
       _("free text commenting the data in key=value or key[en]=comment form"),
       gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_TRACK_NUMBER, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_TRACK_NUMBER, GST_TAG_FLAG_META,
       G_TYPE_UINT,
       _("track number"),
       _("track number inside a collection"), gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_TRACK_COUNT, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_TRACK_COUNT, GST_TAG_FLAG_META,
       G_TYPE_UINT,
       _("track count"),
       _("count of tracks inside collection this track belongs to"),
       gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_ALBUM_VOLUME_NUMBER, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_VOLUME_NUMBER, GST_TAG_FLAG_META,
       G_TYPE_UINT,
       _("disc number"),
       _("disc number inside a collection"), gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_ALBUM_VOLUME_COUNT, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_VOLUME_COUNT, GST_TAG_FLAG_META,
       G_TYPE_UINT,
       _("disc count"),
       _("count of discs inside collection this disc belongs to"),
       gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_LOCATION, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_LOCATION, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("location"), _("Origin of media as a URI (location, where the "
           "original of the file or stream is hosted)"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_HOMEPAGE, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_HOMEPAGE, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("homepage"),
       _("Homepage for this media (i.e. artist or movie homepage)"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_DESCRIPTION, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("description"), _("short text describing the content of the data"),
+  gst_tag_register_static (GST_TAG_DESCRIPTION, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("description"),
+      _("short text describing the content of the data"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_VERSION, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_VERSION, GST_TAG_FLAG_META, G_TYPE_STRING,
       _("version"), _("version of this data"), NULL);
-  gst_tag_register (GST_TAG_ISRC, GST_TAG_FLAG_META, G_TYPE_STRING, _("ISRC"),
+  gst_tag_register_static (GST_TAG_ISRC, GST_TAG_FLAG_META, G_TYPE_STRING,
+      _("ISRC"),
       _
       ("International Standard Recording Code - see http://www.ifpi.org/isrc/"),
       NULL);
   /* FIXME: organization (fix what? tpm) */
-  gst_tag_register (GST_TAG_ORGANIZATION, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("organization"), _("organization"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_COPYRIGHT, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ORGANIZATION, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("organization"), _("organization"),
+      gst_tag_merge_strings_with_comma);
+  gst_tag_register_static (GST_TAG_COPYRIGHT, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("copyright"), _("copyright notice of the data"), NULL);
-  gst_tag_register (GST_TAG_COPYRIGHT_URI, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_COPYRIGHT_URI, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("copyright uri"),
       _("URI to the copyright notice of the data"), NULL);
-  gst_tag_register (GST_TAG_ENCODED_BY, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_ENCODED_BY, GST_TAG_FLAG_META, G_TYPE_STRING,
       _("encoded by"), _("name of the encoding person or organization"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_CONTACT, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_CONTACT, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("contact"), _("contact information"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_LICENSE, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_LICENSE, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("license"), _("license of data"), NULL);
-  gst_tag_register (GST_TAG_LICENSE_URI, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_LICENSE_URI, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("license uri"),
       _("URI to the license of the data"), NULL);
-  gst_tag_register (GST_TAG_PERFORMER, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_PERFORMER, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("performer"),
       _("person(s) performing"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_COMPOSER, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_COMPOSER, GST_TAG_FLAG_META,
       G_TYPE_STRING,
       _("composer"),
       _("person(s) who composed the recording"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_DURATION, GST_TAG_FLAG_DECODED,
+  gst_tag_register_static (GST_TAG_DURATION, GST_TAG_FLAG_DECODED,
       G_TYPE_UINT64,
       _("duration"), _("length in GStreamer time units (nanoseconds)"), NULL);
-  gst_tag_register (GST_TAG_CODEC, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_CODEC, GST_TAG_FLAG_ENCODED,
       G_TYPE_STRING,
       _("codec"),
       _("codec the data is stored in"), gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_VIDEO_CODEC, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_VIDEO_CODEC, GST_TAG_FLAG_ENCODED,
       G_TYPE_STRING,
       _("video codec"), _("codec the video data is stored in"), NULL);
-  gst_tag_register (GST_TAG_AUDIO_CODEC, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_AUDIO_CODEC, GST_TAG_FLAG_ENCODED,
       G_TYPE_STRING,
       _("audio codec"), _("codec the audio data is stored in"), NULL);
-  gst_tag_register (GST_TAG_SUBTITLE_CODEC, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_SUBTITLE_CODEC, GST_TAG_FLAG_ENCODED,
       G_TYPE_STRING,
       _("subtitle codec"), _("codec the subtitle data is stored in"), NULL);
-  gst_tag_register (GST_TAG_CONTAINER_FORMAT, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_CONTAINER_FORMAT, GST_TAG_FLAG_ENCODED,
       G_TYPE_STRING, _("container format"),
       _("container format the data is stored in"), NULL);
-  gst_tag_register (GST_TAG_BITRATE, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_BITRATE, GST_TAG_FLAG_ENCODED,
       G_TYPE_UINT, _("bitrate"), _("exact or average bitrate in bits/s"), NULL);
-  gst_tag_register (GST_TAG_NOMINAL_BITRATE, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_NOMINAL_BITRATE, GST_TAG_FLAG_ENCODED,
       G_TYPE_UINT, _("nominal bitrate"), _("nominal bitrate in bits/s"), NULL);
-  gst_tag_register (GST_TAG_MINIMUM_BITRATE, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_MINIMUM_BITRATE, GST_TAG_FLAG_ENCODED,
       G_TYPE_UINT, _("minimum bitrate"), _("minimum bitrate in bits/s"), NULL);
-  gst_tag_register (GST_TAG_MAXIMUM_BITRATE, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_MAXIMUM_BITRATE, GST_TAG_FLAG_ENCODED,
       G_TYPE_UINT, _("maximum bitrate"), _("maximum bitrate in bits/s"), NULL);
-  gst_tag_register (GST_TAG_ENCODER, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_ENCODER, GST_TAG_FLAG_ENCODED,
       G_TYPE_STRING,
       _("encoder"), _("encoder used to encode this stream"), NULL);
-  gst_tag_register (GST_TAG_ENCODER_VERSION, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_ENCODER_VERSION, GST_TAG_FLAG_ENCODED,
       G_TYPE_UINT,
       _("encoder version"),
       _("version of the encoder used to encode this stream"), NULL);
-  gst_tag_register (GST_TAG_SERIAL, GST_TAG_FLAG_ENCODED,
+  gst_tag_register_static (GST_TAG_SERIAL, GST_TAG_FLAG_ENCODED,
       G_TYPE_UINT, _("serial"), _("serial number of track"), NULL);
-  gst_tag_register (GST_TAG_TRACK_GAIN, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_TRACK_GAIN, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("replaygain track gain"), _("track gain in db"), NULL);
-  gst_tag_register (GST_TAG_TRACK_PEAK, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_TRACK_PEAK, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("replaygain track peak"), _("peak of the track"), NULL);
-  gst_tag_register (GST_TAG_ALBUM_GAIN, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_GAIN, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("replaygain album gain"), _("album gain in db"), NULL);
-  gst_tag_register (GST_TAG_ALBUM_PEAK, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_ALBUM_PEAK, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("replaygain album peak"), _("peak of the album"), NULL);
-  gst_tag_register (GST_TAG_REFERENCE_LEVEL, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_REFERENCE_LEVEL, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("replaygain reference level"),
       _("reference level of track and album gain values"), NULL);
-  gst_tag_register (GST_TAG_LANGUAGE_CODE, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("language code"),
+  gst_tag_register_static (GST_TAG_LANGUAGE_CODE, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("language code"),
       _("language code for this stream, conforming to ISO-639-1 or ISO-639-2"),
       NULL);
-  gst_tag_register (GST_TAG_LANGUAGE_NAME, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("language name"),
+  gst_tag_register_static (GST_TAG_LANGUAGE_NAME, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("language name"),
       _("freeform name of the language this stream is in"), NULL);
-  gst_tag_register (GST_TAG_IMAGE, GST_TAG_FLAG_META, GST_TYPE_SAMPLE,
+  gst_tag_register_static (GST_TAG_IMAGE, GST_TAG_FLAG_META, GST_TYPE_SAMPLE,
       _("image"), _("image related to this stream"), gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_PREVIEW_IMAGE, GST_TAG_FLAG_META, GST_TYPE_SAMPLE,
+  gst_tag_register_static (GST_TAG_PREVIEW_IMAGE, GST_TAG_FLAG_META,
+      GST_TYPE_SAMPLE,
       /* TRANSLATORS: 'preview image' = image that shows a preview of the full image */
       _("preview image"), _("preview image related to this stream"), NULL);
-  gst_tag_register (GST_TAG_ATTACHMENT, GST_TAG_FLAG_META, GST_TYPE_SAMPLE,
-      _("attachment"), _("file attached to this stream"),
+  gst_tag_register_static (GST_TAG_ATTACHMENT, GST_TAG_FLAG_META,
+      GST_TYPE_SAMPLE, _("attachment"), _("file attached to this stream"),
       gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_BEATS_PER_MINUTE, GST_TAG_FLAG_META, G_TYPE_DOUBLE,
-      _("beats per minute"), _("number of beats per minute in audio"), NULL);
-  gst_tag_register (GST_TAG_KEYWORDS, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_BEATS_PER_MINUTE, GST_TAG_FLAG_META,
+      G_TYPE_DOUBLE, _("beats per minute"),
+      _("number of beats per minute in audio"), NULL);
+  gst_tag_register_static (GST_TAG_KEYWORDS, GST_TAG_FLAG_META, G_TYPE_STRING,
       _("keywords"), _("comma separated keywords describing the content"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_GEO_LOCATION_NAME, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("geo location name"), _("human readable descriptive location of where "
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_NAME, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("geo location name"),
+      _("human readable descriptive location of where "
           "the media has been recorded or produced"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_LATITUDE, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_LATITUDE, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("geo location latitude"),
       _("geo latitude location of where the media has been recorded or "
           "produced in degrees according to WGS84 (zero at the equator, "
           "negative values for southern latitudes)"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_LONGITUDE, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_LONGITUDE, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("geo location longitude"),
       _("geo longitude location of where the media has been recorded or "
           "produced in degrees according to WGS84 (zero at the prime meridian "
           "in Greenwich/UK,  negative values for western longitudes)"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_ELEVATION, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_ELEVATION, GST_TAG_FLAG_META,
       G_TYPE_DOUBLE, _("geo location elevation"),
       _("geo elevation of where the media has been recorded or produced in "
           "meters according to WGS84 (zero is average sea level)"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_COUNTRY, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_COUNTRY, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("geo location country"),
       _("country (english name) where the media has been recorded "
           "or produced"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_CITY, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_CITY, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("geo location city"),
       _("city (english name) where the media has been recorded "
           "or produced"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_SUBLOCATION, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_SUBLOCATION, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("geo location sublocation"),
       _("a location whithin a city where the media has been produced "
           "or created (e.g. the neighborhood)"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_HORIZONTAL_ERROR, GST_TAG_FLAG_META,
-      G_TYPE_DOUBLE, _("geo location horizontal error"),
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_HORIZONTAL_ERROR,
+      GST_TAG_FLAG_META, G_TYPE_DOUBLE, _("geo location horizontal error"),
       _("expected error of the horizontal positioning measures (in meters)"),
       NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_MOVEMENT_SPEED, GST_TAG_FLAG_META,
-      G_TYPE_DOUBLE, _("geo location movement speed"),
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_MOVEMENT_SPEED,
+      GST_TAG_FLAG_META, G_TYPE_DOUBLE, _("geo location movement speed"),
       _("movement speed of the capturing device while performing the capture "
           "in m/s"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION, GST_TAG_FLAG_META,
-      G_TYPE_DOUBLE, _("geo location movement direction"),
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION,
+      GST_TAG_FLAG_META, G_TYPE_DOUBLE, _("geo location movement direction"),
       _("indicates the movement direction of the device performing the capture"
           " of a media. It is represented as degrees in floating point "
           "representation, 0 means the geographic north, and increases "
           "clockwise"), NULL);
-  gst_tag_register (GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION, GST_TAG_FLAG_META,
-      G_TYPE_DOUBLE, _("geo location capture direction"),
+  gst_tag_register_static (GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION,
+      GST_TAG_FLAG_META, G_TYPE_DOUBLE, _("geo location capture direction"),
       _("indicates the direction the device is pointing to when capturing "
           " a media. It is represented as degrees in floating point "
           " representation, 0 means the geographic north, and increases "
           "clockwise"), NULL);
-  gst_tag_register (GST_TAG_SHOW_NAME, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_SHOW_NAME, GST_TAG_FLAG_META, G_TYPE_STRING,
       /* TRANSLATORS: 'show name' = 'TV/radio/podcast show name' here */
       _("show name"),
       _("Name of the tv/podcast/series show the media is from"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_SHOW_SORTNAME, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_SHOW_SORTNAME, GST_TAG_FLAG_META,
+      G_TYPE_STRING,
       /* TRANSLATORS: 'show sortname' = 'TV/radio/podcast show name as used for sorting purposes' here */
       _("show sortname"),
       _("Name of the tv/podcast/series show the media is from, for sorting "
           "purposes"), NULL);
-  gst_tag_register (GST_TAG_SHOW_EPISODE_NUMBER, GST_TAG_FLAG_META, G_TYPE_UINT,
-      _("episode number"),
+  gst_tag_register_static (GST_TAG_SHOW_EPISODE_NUMBER, GST_TAG_FLAG_META,
+      G_TYPE_UINT, _("episode number"),
       _("The episode number in the season the media is part of"),
       gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_SHOW_SEASON_NUMBER, GST_TAG_FLAG_META, G_TYPE_UINT,
-      _("season number"),
+  gst_tag_register_static (GST_TAG_SHOW_SEASON_NUMBER, GST_TAG_FLAG_META,
+      G_TYPE_UINT, _("season number"),
       _("The season number of the show the media is part of"),
       gst_tag_merge_use_first);
-  gst_tag_register (GST_TAG_LYRICS, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_LYRICS, GST_TAG_FLAG_META, G_TYPE_STRING,
       _("lyrics"), _("The lyrics of the media, commonly used for songs"),
       gst_tag_merge_strings_with_comma);
-  gst_tag_register (GST_TAG_COMPOSER_SORTNAME, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("composer sortname"),
+  gst_tag_register_static (GST_TAG_COMPOSER_SORTNAME, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("composer sortname"),
       _("person(s) who composed the recording, for sorting purposes"), NULL);
-  gst_tag_register (GST_TAG_GROUPING, GST_TAG_FLAG_META, G_TYPE_STRING,
+  gst_tag_register_static (GST_TAG_GROUPING, GST_TAG_FLAG_META, G_TYPE_STRING,
       _("grouping"),
       _("Groups related media that spans multiple tracks, like the different "
           "pieces of a concerto. It is a higher level than a track, "
           "but lower than an album"), NULL);
-  gst_tag_register (GST_TAG_USER_RATING, GST_TAG_FLAG_META, G_TYPE_UINT,
+  gst_tag_register_static (GST_TAG_USER_RATING, GST_TAG_FLAG_META, G_TYPE_UINT,
       _("user rating"),
       _("Rating attributed by a user. The higher the rank, "
           "the more the user likes this media"), NULL);
-  gst_tag_register (GST_TAG_DEVICE_MANUFACTURER, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_DEVICE_MANUFACTURER, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("device manufacturer"),
       _("Manufacturer of the device used to create this media"), NULL);
-  gst_tag_register (GST_TAG_DEVICE_MODEL, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("device model"),
+  gst_tag_register_static (GST_TAG_DEVICE_MODEL, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("device model"),
       _("Model of the device used to create this media"), NULL);
-  gst_tag_register (GST_TAG_APPLICATION_NAME, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("application name"), _("Application used to create the media"), NULL);
-  gst_tag_register (GST_TAG_APPLICATION_DATA, GST_TAG_FLAG_META,
+  gst_tag_register_static (GST_TAG_APPLICATION_NAME, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("application name"),
+      _("Application used to create the media"), NULL);
+  gst_tag_register_static (GST_TAG_APPLICATION_DATA, GST_TAG_FLAG_META,
       GST_TYPE_BUFFER, _("application data"),
       _("Arbitrary application data to be serialized into the media"), NULL);
-  gst_tag_register (GST_TAG_IMAGE_ORIENTATION, GST_TAG_FLAG_META, G_TYPE_STRING,
-      _("image orientation"),
+  gst_tag_register_static (GST_TAG_IMAGE_ORIENTATION, GST_TAG_FLAG_META,
+      G_TYPE_STRING, _("image orientation"),
       _("How the image should be rotated or flipped before display"), NULL);
 }
 
@@ -470,8 +487,36 @@ void
 gst_tag_register (const gchar * name, GstTagFlag flag, GType type,
     const gchar * nick, const gchar * blurb, GstTagMergeFunc func)
 {
+  g_return_if_fail (name != NULL);
+  g_return_if_fail (nick != NULL);
+  g_return_if_fail (blurb != NULL);
+  g_return_if_fail (type != 0 && type != GST_TYPE_LIST);
+
+  return gst_tag_register_static (g_intern_string (name), flag, type,
+      g_intern_string (nick), g_intern_string (blurb), func);
+}
+
+/**
+ * gst_tag_register_static:
+ * @name: the name or identifier string (string constant)
+ * @flag: a flag describing the type of tag info
+ * @type: the type this data is in
+ * @nick: human-readable name or short description (string constant)
+ * @blurb: a human-readable description for this tag (string constant)
+ * @func: function for merging multiple values of this tag, or NULL
+ *
+ * Registers a new tag type for the use with GStreamer's type system.
+ *
+ * Same as gst_tag_register(), but @name, @nick, and @blurb must be
+ * static strings or inlined strings, as they will not be copied. (GStreamer
+ * plugins will be made resident once loaded, so this function can be used
+ * even from dynamically loaded plugins.)
+ */
+void
+gst_tag_register_static (const gchar * name, GstTagFlag flag, GType type,
+    const gchar * nick, const gchar * blurb, GstTagMergeFunc func)
+{
   GstTagInfo *info;
-  gchar *name_dup;
 
   g_return_if_fail (name != NULL);
   g_return_if_fail (nick != NULL);
@@ -488,17 +533,13 @@ gst_tag_register (const gchar * name, GstTagFlag flag, GType type,
   info = g_slice_new (GstTagInfo);
   info->flag = flag;
   info->type = type;
-  info->nick = g_strdup (nick);
-  info->blurb = g_strdup (blurb);
+  info->name_quark = g_quark_from_static_string (name);
+  info->nick = nick;
+  info->blurb = blurb;
   info->merge_func = func;
 
-  /* we make a copy for the hash table anyway, which will stay around, so
-   * can use that for the quark table too */
-  name_dup = g_strdup (name);
-  info->name_quark = g_quark_from_static_string (name_dup);
-
   TAG_LOCK;
-  g_hash_table_insert (__tags, (gpointer) name_dup, info);
+  g_hash_table_insert (__tags, (gpointer) name, info);
   TAG_UNLOCK;
 }
 
@@ -621,19 +662,82 @@ gst_tag_is_fixed (const gchar * tag)
   return info->merge_func == NULL;
 }
 
+static void
+gst_tag_list_init (GstTagList * taglist, gsize size)
+{
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (taglist),
+      gst_tag_list_get_type (), size);
+
+  taglist->mini_object.copy = (GstMiniObjectCopyFunction) __gst_tag_list_copy;
+  taglist->mini_object.dispose = NULL;
+  taglist->mini_object.free = (GstMiniObjectFreeFunction) __gst_tag_list_free;
+}
+
+/* takes ownership of the structure */
+static GstTagList *
+gst_tag_list_new_internal (GstStructure * s)
+{
+  GstTagList *tag_list;
+
+  g_assert (s != NULL);
+
+  tag_list = (GstTagList *) g_slice_new (GstTagListImpl);
+
+  gst_tag_list_init (tag_list, sizeof (GstTagListImpl));
+
+  GST_TAG_LIST_STRUCTURE (tag_list) = s;
+
+#ifdef DEBUG_REFCOUNT
+  GST_CAT_TRACE (GST_CAT_TAGS, "created taglist %p", tag_list);
+#endif
+
+  return tag_list;
+}
+
+static void
+__gst_tag_list_free (GstTagList * list)
+{
+  g_return_if_fail (GST_IS_TAG_LIST (list));
+
+#ifdef DEBUG_REFCOUNT
+  GST_CAT_TRACE (GST_CAT_TAGS, "freeing caps %p", list);
+#endif
+
+  gst_structure_free (GST_TAG_LIST_STRUCTURE (list));
+
+  /* why not just pass sizeof (GstTagListImpl) here? */
+  g_slice_free1 (GST_MINI_OBJECT_SIZE (list), list);
+}
+
+static GstTagList *
+__gst_tag_list_copy (const GstTagList * list)
+{
+  const GstStructure *s;
+
+  g_return_val_if_fail (GST_IS_TAG_LIST (list), NULL);
+
+  s = GST_TAG_LIST_STRUCTURE (list);
+  return gst_tag_list_new_internal (gst_structure_copy (s));
+}
+
 /**
  * gst_tag_list_new_empty:
  *
  * Creates a new empty GstTagList.
  *
- * Free-function: gst_tag_list_free
+ * Free-function: gst_tag_list_unref
  *
  * Returns: (transfer full): An empty tag list
  */
 GstTagList *
 gst_tag_list_new_empty (void)
 {
-  return GST_TAG_LIST (gst_structure_new_id_empty (GST_QUARK (TAGLIST)));
+  GstStructure *s;
+  GstTagList *tag_list;
+
+  s = gst_structure_new_id_empty (GST_QUARK (TAGLIST));
+  tag_list = gst_tag_list_new_internal (s);
+  return tag_list;
 }
 
 /**
@@ -649,9 +753,9 @@ gst_tag_list_new_empty (void)
  * function. The tag list will make copies of any arguments passed
  * (e.g. strings, buffers).
  *
- * Free-function: gst_tag_list_free
+ * Free-function: gst_tag_list_unref
  *
- * Returns: (transfer full): a new #GstTagList. Free with gst_tag_list_free()
+ * Returns: (transfer full): a new #GstTagList. Free with gst_tag_list_unref()
  *     when no longer needed.
  *
  * Since: 0.10.24
@@ -679,9 +783,9 @@ gst_tag_list_new (const gchar * tag, ...)
  * Just like gst_tag_list_new(), only that it takes a va_list argument.
  * Useful mostly for language bindings.
  *
- * Free-function: gst_tag_list_free
+ * Free-function: gst_tag_list_unref
  *
- * Returns: (transfer full): a new #GstTagList. Free with gst_tag_list_free()
+ * Returns: (transfer full): a new #GstTagList. Free with gst_tag_list_unref()
  *     when no longer needed.
  *
  * Since: 0.10.24
@@ -716,7 +820,7 @@ gst_tag_list_to_string (const GstTagList * list)
 {
   g_return_val_if_fail (GST_IS_TAG_LIST (list), NULL);
 
-  return gst_structure_to_string (GST_STRUCTURE (list));
+  return gst_structure_to_string (GST_TAG_LIST_STRUCTURE (list));
 }
 
 /**
@@ -732,10 +836,13 @@ gst_tag_list_to_string (const GstTagList * list)
 GstTagList *
 gst_tag_list_new_from_string (const gchar * str)
 {
+  GstTagList *tag_list;
+
   g_return_val_if_fail (str != NULL, NULL);
   g_return_val_if_fail (g_str_has_prefix (str, "taglist"), NULL);
 
-  return GST_TAG_LIST (gst_structure_from_string (str, NULL));
+  tag_list = gst_tag_list_new_internal (gst_structure_from_string (str, NULL));
+  return tag_list;
 }
 
 /**
@@ -752,7 +859,7 @@ gst_tag_list_n_tags (const GstTagList * list)
   g_return_val_if_fail (list != NULL, 0);
   g_return_val_if_fail (GST_IS_TAG_LIST (list), 0);
 
-  return gst_structure_n_fields ((GstStructure *) list);
+  return gst_structure_n_fields (GST_TAG_LIST_STRUCTURE (list));
 }
 
 /**
@@ -770,7 +877,7 @@ gst_tag_list_nth_tag_name (const GstTagList * list, guint index)
   g_return_val_if_fail (list != NULL, 0);
   g_return_val_if_fail (GST_IS_TAG_LIST (list), 0);
 
-  return gst_structure_nth_field_name ((GstStructure *) list, index);
+  return gst_structure_nth_field_name (GST_TAG_LIST_STRUCTURE (list), index);
 }
 
 /**
@@ -789,7 +896,7 @@ gst_tag_list_is_empty (const GstTagList * list)
   g_return_val_if_fail (list != NULL, FALSE);
   g_return_val_if_fail (GST_IS_TAG_LIST (list), FALSE);
 
-  return (gst_structure_n_fields ((GstStructure *) list) == 0);
+  return (gst_structure_n_fields (GST_TAG_LIST_STRUCTURE (list)) == 0);
 }
 
 static gboolean
@@ -836,8 +943,8 @@ gst_tag_list_is_equal (const GstTagList * list1, const GstTagList * list2)
   /* we don't just use gst_structure_is_equal() here so we can add some
    * tolerance for doubles, though maybe we should just add that to
    * gst_value_compare_double() as well? */
-  s1 = (const GstStructure *) list1;
-  s2 = (const GstStructure *) list2;
+  s1 = GST_TAG_LIST_STRUCTURE (list1);
+  s2 = GST_TAG_LIST_STRUCTURE (list2);
 
   num_fields1 = gst_structure_n_fields (s1);
   num_fields2 = gst_structure_n_fields (s2);
@@ -863,24 +970,6 @@ gst_tag_list_is_equal (const GstTagList * list1, const GstTagList * list2)
   return TRUE;
 }
 
-/**
- * gst_is_tag_list:
- * @p: Object that might be a taglist
- *
- * Checks if the given pointer is a taglist.
- *
- * Returns: TRUE, if the given pointer is a taglist
- */
-gboolean
-gst_is_tag_list (gconstpointer p)
-{
-  GstStructure *s = (GstStructure *) p;
-
-  g_return_val_if_fail (p != NULL, FALSE);
-
-  return (GST_IS_STRUCTURE (s) && s->name == GST_QUARK (TAGLIST));
-}
-
 typedef struct
 {
   GstTagList *list;
@@ -892,7 +981,7 @@ static void
 gst_tag_list_add_value_internal (GstTagList * tag_list, GstTagMergeMode mode,
     const gchar * tag, const GValue * value, GstTagInfo * info)
 {
-  GstStructure *list = GST_STRUCTURE (tag_list);
+  GstStructure *list = GST_TAG_LIST_STRUCTURE (tag_list);
   const GValue *value2;
   GQuark tag_quark;
 
@@ -981,34 +1070,17 @@ gst_tag_list_insert (GstTagList * into, const GstTagList * from,
   GstTagCopyData data;
 
   g_return_if_fail (GST_IS_TAG_LIST (into));
+  g_return_if_fail (gst_tag_list_is_writable (into));
   g_return_if_fail (GST_IS_TAG_LIST (from));
   g_return_if_fail (GST_TAG_MODE_IS_VALID (mode));
 
   data.list = into;
   data.mode = mode;
   if (mode == GST_TAG_MERGE_REPLACE_ALL) {
-    gst_structure_remove_all_fields (GST_STRUCTURE (data.list));
+    gst_structure_remove_all_fields (GST_TAG_LIST_STRUCTURE (into));
   }
-  gst_structure_foreach ((GstStructure *) from, gst_tag_list_copy_foreach,
-      &data);
-}
-
-/**
- * gst_tag_list_copy:
- * @list: list to copy
- *
- * Copies a given #GstTagList.
- *
- * Free-function: gst_tag_list_free
- *
- * Returns: (transfer full): copy of the given list
- */
-GstTagList *
-gst_tag_list_copy (const GstTagList * list)
-{
-  g_return_val_if_fail (GST_IS_TAG_LIST (list), NULL);
-
-  return GST_TAG_LIST (gst_structure_copy ((GstStructure *) list));
+  gst_structure_foreach (GST_TAG_LIST_STRUCTURE (from),
+      gst_tag_list_copy_foreach, &data);
 }
 
 /**
@@ -1020,7 +1092,7 @@ gst_tag_list_copy (const GstTagList * list)
  * Merges the two given lists into a new list. If one of the lists is NULL, a
  * copy of the other is returned. If both lists are NULL, NULL is returned.
  *
- * Free-function: gst_tag_list_free
+ * Free-function: gst_tag_list_unref
  *
  * Returns: (transfer full): the new list
  */
@@ -1047,22 +1119,9 @@ gst_tag_list_merge (const GstTagList * list1, const GstTagList * list2,
   gst_tag_list_insert (list1_cp, list2_cp, mode);
 
   if (!list2)
-    gst_tag_list_free ((GstTagList *) list2_cp);
+    gst_tag_list_unref ((GstTagList *) list2_cp);
 
   return list1_cp;
-}
-
-/**
- * gst_tag_list_free:
- * @list: (in) (transfer full): the list to free
- *
- * Frees the given list and all associated values.
- */
-void
-gst_tag_list_free (GstTagList * list)
-{
-  g_return_if_fail (GST_IS_TAG_LIST (list));
-  gst_structure_free ((GstStructure *) list);
 }
 
 /**
@@ -1081,7 +1140,7 @@ gst_tag_list_get_tag_size (const GstTagList * list, const gchar * tag)
 
   g_return_val_if_fail (GST_IS_TAG_LIST (list), 0);
 
-  value = gst_structure_get_value ((GstStructure *) list, tag);
+  value = gst_structure_get_value (GST_TAG_LIST_STRUCTURE (list), tag);
   if (value == NULL)
     return 0;
   if (G_VALUE_TYPE (value) != GST_TYPE_LIST)
@@ -1106,6 +1165,7 @@ gst_tag_list_add (GstTagList * list, GstTagMergeMode mode, const gchar * tag,
   va_list args;
 
   g_return_if_fail (GST_IS_TAG_LIST (list));
+  g_return_if_fail (gst_tag_list_is_writable (list));
   g_return_if_fail (GST_TAG_MODE_IS_VALID (mode));
   g_return_if_fail (tag != NULL);
 
@@ -1130,6 +1190,7 @@ gst_tag_list_add_values (GstTagList * list, GstTagMergeMode mode,
   va_list args;
 
   g_return_if_fail (GST_IS_TAG_LIST (list));
+  g_return_if_fail (gst_tag_list_is_writable (list));
   g_return_if_fail (GST_TAG_MODE_IS_VALID (mode));
   g_return_if_fail (tag != NULL);
 
@@ -1155,11 +1216,12 @@ gst_tag_list_add_valist (GstTagList * list, GstTagMergeMode mode,
   gchar *error = NULL;
 
   g_return_if_fail (GST_IS_TAG_LIST (list));
+  g_return_if_fail (gst_tag_list_is_writable (list));
   g_return_if_fail (GST_TAG_MODE_IS_VALID (mode));
   g_return_if_fail (tag != NULL);
 
   if (mode == GST_TAG_MERGE_REPLACE_ALL) {
-    gst_structure_remove_all_fields (GST_STRUCTURE (list));
+    gst_structure_remove_all_fields (GST_TAG_LIST_STRUCTURE (list));
   }
 
   while (tag != NULL) {
@@ -1199,11 +1261,12 @@ gst_tag_list_add_valist_values (GstTagList * list, GstTagMergeMode mode,
     const gchar * tag, va_list var_args)
 {
   g_return_if_fail (GST_IS_TAG_LIST (list));
+  g_return_if_fail (gst_tag_list_is_writable (list));
   g_return_if_fail (GST_TAG_MODE_IS_VALID (mode));
   g_return_if_fail (tag != NULL);
 
   if (mode == GST_TAG_MERGE_REPLACE_ALL) {
-    gst_structure_remove_all_fields (GST_STRUCTURE (list));
+    gst_structure_remove_all_fields (GST_TAG_LIST_STRUCTURE (list));
   }
 
   while (tag != NULL) {
@@ -1236,6 +1299,7 @@ gst_tag_list_add_value (GstTagList * list, GstTagMergeMode mode,
     const gchar * tag, const GValue * value)
 {
   g_return_if_fail (GST_IS_TAG_LIST (list));
+  g_return_if_fail (gst_tag_list_is_writable (list));
   g_return_if_fail (GST_TAG_MODE_IS_VALID (mode));
   g_return_if_fail (tag != NULL);
 
@@ -1255,7 +1319,7 @@ gst_tag_list_remove_tag (GstTagList * list, const gchar * tag)
   g_return_if_fail (GST_IS_TAG_LIST (list));
   g_return_if_fail (tag != NULL);
 
-  gst_structure_remove_field ((GstStructure *) list, tag);
+  gst_structure_remove_field (GST_TAG_LIST_STRUCTURE (list), tag);
 }
 
 typedef struct
@@ -1297,8 +1361,8 @@ gst_tag_list_foreach (const GstTagList * list, GstTagForeachFunc func,
   data.func = func;
   data.tag_list = list;
   data.data = user_data;
-  gst_structure_foreach ((GstStructure *) list, structure_foreach_wrapper,
-      &data);
+  gst_structure_foreach (GST_TAG_LIST_STRUCTURE (list),
+      structure_foreach_wrapper, &data);
 }
 
 /**
@@ -1322,7 +1386,7 @@ gst_tag_list_get_value_index (const GstTagList * list, const gchar * tag,
   g_return_val_if_fail (GST_IS_TAG_LIST (list), NULL);
   g_return_val_if_fail (tag != NULL, NULL);
 
-  value = gst_structure_get_value ((GstStructure *) list, tag);
+  value = gst_structure_get_value (GST_TAG_LIST_STRUCTURE (list), tag);
   if (value == NULL)
     return NULL;
 
@@ -1362,7 +1426,7 @@ gst_tag_list_copy_value (GValue * dest, const GstTagList * list,
   g_return_val_if_fail (dest != NULL, FALSE);
   g_return_val_if_fail (G_VALUE_TYPE (dest) == 0, FALSE);
 
-  src = gst_structure_get_value ((GstStructure *) list, tag);
+  src = gst_structure_get_value (GST_TAG_LIST_STRUCTURE (list), tag);
   if (!src)
     return FALSE;
 

@@ -287,7 +287,7 @@ The following example shows how to query the duration of a pipeline:
 <p>
 </p>
 <div class="example">
-<a name="idp39112944"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
+<a name="idp39385888"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -1694,7 +1694,7 @@ or NULL. <span class="annotation">[<acronym title="Parameter for returning resul
 Constructs a new query object for querying the caps.
 </p>
 <p>
-The CAPS query should return the* allowable caps for a pad in the context
+The CAPS query should return the allowable caps for a pad in the context
 of the element's state, its link to other elements, and the devices or files
 it has opened. These caps must be a subset of the pad template caps. In the
 NULL state with no links, the CAPS query should ideally return the same caps
@@ -1707,6 +1707,11 @@ allowed caps on other pads. For demuxers and decoders, the caps returned by
 the srcpad's getcaps function is directly related to the stream data. Again,
 the CAPS query should return the most specific caps it reasonably can, since this
 helps with autoplugging.
+</p>
+<p>
+The <em class="parameter"><code>filter</code></em> is used to restrict the result caps, only the caps matching
+<em class="parameter"><code>filter</code></em> should be returned from the CAPS query. Specifying a filter might
+greatly reduce the amount of processing an element needs to do.
 </p>
 <p>
 Free-function: gst_query_unref

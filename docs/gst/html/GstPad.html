@@ -502,13 +502,14 @@ The direction of a pad.
 <pre class="programlisting">typedef enum {
   GST_PAD_FLAG_BLOCKED          = (GST_OBJECT_FLAG_LAST &lt;&lt; 0),
   GST_PAD_FLAG_FLUSHING         = (GST_OBJECT_FLAG_LAST &lt;&lt; 1),
-  GST_PAD_FLAG_BLOCKING         = (GST_OBJECT_FLAG_LAST &lt;&lt; 2),
-  GST_PAD_FLAG_NEED_PARENT      = (GST_OBJECT_FLAG_LAST &lt;&lt; 3),
-  GST_PAD_FLAG_NEED_RECONFIGURE = (GST_OBJECT_FLAG_LAST &lt;&lt; 4),
-  GST_PAD_FLAG_PENDING_EVENTS   = (GST_OBJECT_FLAG_LAST &lt;&lt; 5),
-  GST_PAD_FLAG_FIXED_CAPS       = (GST_OBJECT_FLAG_LAST &lt;&lt; 6),
-  GST_PAD_FLAG_PROXY_CAPS       = (GST_OBJECT_FLAG_LAST &lt;&lt; 7),
-  GST_PAD_FLAG_PROXY_ALLOCATION = (GST_OBJECT_FLAG_LAST &lt;&lt; 8),
+  GST_PAD_FLAG_EOS              = (GST_OBJECT_FLAG_LAST &lt;&lt; 2),
+  GST_PAD_FLAG_BLOCKING         = (GST_OBJECT_FLAG_LAST &lt;&lt; 3),
+  GST_PAD_FLAG_NEED_PARENT      = (GST_OBJECT_FLAG_LAST &lt;&lt; 4),
+  GST_PAD_FLAG_NEED_RECONFIGURE = (GST_OBJECT_FLAG_LAST &lt;&lt; 5),
+  GST_PAD_FLAG_PENDING_EVENTS   = (GST_OBJECT_FLAG_LAST &lt;&lt; 6),
+  GST_PAD_FLAG_FIXED_CAPS       = (GST_OBJECT_FLAG_LAST &lt;&lt; 7),
+  GST_PAD_FLAG_PROXY_CAPS       = (GST_OBJECT_FLAG_LAST &lt;&lt; 8),
+  GST_PAD_FLAG_PROXY_ALLOCATION = (GST_OBJECT_FLAG_LAST &lt;&lt; 9),
   /* padding */
   GST_PAD_FLAG_LAST        = (GST_OBJECT_FLAG_LAST &lt;&lt; 16)
 } GstPadFlags;
@@ -526,7 +527,12 @@ Pad state flags
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-FLUSHING:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_FLUSHING</code></span></p></td>
-<td>is pad refusing buffers
+<td>is pad flushing
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-PAD-FLAG-EOS:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_EOS</code></span></p></td>
+<td>is pad in EOS state
 </td>
 </tr>
 <tr>

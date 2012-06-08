@@ -338,6 +338,7 @@ EXPORTS
 	gst_element_factory_find
 	gst_element_factory_get_element_type
 	gst_element_factory_get_metadata
+	gst_element_factory_get_metadata_keys
 	gst_element_factory_get_num_pad_templates
 	gst_element_factory_get_static_pad_templates
 	gst_element_factory_get_type
@@ -483,7 +484,6 @@ EXPORTS
 	gst_int64_range_get_type
 	gst_int_range_get_type
 	gst_is_initialized
-	gst_is_tag_list
 	gst_iterator_copy
 	gst_iterator_filter
 	gst_iterator_find_custom
@@ -748,6 +748,7 @@ EXPORTS
 	gst_plugin_error_get_type
 	gst_plugin_error_quark
 	gst_plugin_feature_check_version
+	gst_plugin_feature_get_plugin
 	gst_plugin_feature_get_rank
 	gst_plugin_feature_get_type
 	gst_plugin_feature_list_copy
@@ -1041,10 +1042,8 @@ EXPORTS
 	gst_tag_list_add_valist_values
 	gst_tag_list_add_value
 	gst_tag_list_add_values
-	gst_tag_list_copy
 	gst_tag_list_copy_value
 	gst_tag_list_foreach
-	gst_tag_list_free
 	gst_tag_list_get_boolean
 	gst_tag_list_get_boolean_index
 	gst_tag_list_get_buffer
@@ -1089,6 +1088,7 @@ EXPORTS
 	gst_tag_merge_strings_with_comma
 	gst_tag_merge_use_first
 	gst_tag_register
+	gst_tag_register_static
 	gst_tag_setter_add_tag_valist
 	gst_tag_setter_add_tag_valist_values
 	gst_tag_setter_add_tag_value
@@ -1124,12 +1124,15 @@ EXPORTS
 	gst_toc_entry_copy
 	gst_toc_entry_free
 	gst_toc_entry_get_start_stop
+	gst_toc_entry_get_type
 	gst_toc_entry_new
 	gst_toc_entry_new_with_pad
 	gst_toc_entry_set_start_stop
+	gst_toc_entry_type_get_nick
 	gst_toc_entry_type_get_type
 	gst_toc_find_entry
 	gst_toc_free
+	gst_toc_get_type
 	gst_toc_new
 	gst_toc_setter_add_toc_entry
 	gst_toc_setter_get_toc

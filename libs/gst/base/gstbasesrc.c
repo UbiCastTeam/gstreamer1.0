@@ -318,7 +318,7 @@ static gboolean gst_base_src_decide_allocation_default (GstBaseSrc * basesrc,
     GstQuery * query);
 
 static gboolean gst_base_src_set_flushing (GstBaseSrc * basesrc,
-    gboolean flushing, gboolean live_play, gboolean unlock, gboolean * playing);
+    gboolean flushing, gboolean live_play, gboolean * playing);
 
 static gboolean gst_base_src_start (GstBaseSrc * basesrc);
 static gboolean gst_base_src_stop (GstBaseSrc * basesrc);
@@ -1481,15 +1481,8 @@ not_ok:
  * when we reach the segment.stop we have to post a segment.done
  * instead of EOS when doing a segment seek.
  */
-/* FIXME (0.11), we have the unlock gboolean here because most current
- * implementations (fdsrc, -base/gst/tcp/, ...) unconditionally unlock, even when
- * the streaming thread isn't running, resulting in bogus unlocks later when it
- * starts. This is fixed by adding unlock_stop, but we should still avoid unlocking
- * unnecessarily for backwards compatibility. Ergo, the unlock variable stays
- * until 0.11
- */
 static gboolean
-gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
+gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
 {
   gboolean res = TRUE, tres;
   gdouble rate;
@@ -1548,7 +1541,7 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
     gst_pad_pause_task (src->srcpad);
 
   /* unblock streaming thread. */
-  gst_base_src_set_flushing (src, TRUE, FALSE, unlock, &playing);
+  gst_base_src_set_flushing (src, TRUE, FALSE, &playing);
 
   /* grab streaming lock, this should eventually be possible, either
    * because the task is paused, our streaming thread stopped
@@ -1563,7 +1556,7 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
     GST_DEBUG_OBJECT (src, "seek with seqnum %" G_GUINT32_FORMAT, seqnum);
   }
 
-  gst_base_src_set_flushing (src, FALSE, playing, unlock, NULL);
+  gst_base_src_set_flushing (src, FALSE, playing, NULL);
 
   /* If we configured the seeksegment above, don't overwrite it now. Otherwise
    * copy the current segment info into the temp segment that we can actually
@@ -1767,8 +1760,8 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
       if (started) {
         GST_DEBUG_OBJECT (src, "performing seek");
         /* when we are running in push mode, we can execute the
-         * seek right now, we need to unlock. */
-        result = gst_base_src_perform_seek (src, event, TRUE);
+         * seek right now. */
+        result = gst_base_src_perform_seek (src, event);
       } else {
         GstEvent **event_p;
 
@@ -1863,15 +1856,15 @@ gst_base_src_default_event (GstBaseSrc * src, GstEvent * event)
       if (!gst_base_src_seekable (src))
         goto not_seekable;
 
-      result = gst_base_src_perform_seek (src, event, TRUE);
+      result = gst_base_src_perform_seek (src, event);
       break;
     case GST_EVENT_FLUSH_START:
       /* cancel any blocking getrange, is normally called
        * when in pull mode. */
-      result = gst_base_src_set_flushing (src, TRUE, FALSE, TRUE, NULL);
+      result = gst_base_src_set_flushing (src, TRUE, FALSE, NULL);
       break;
     case GST_EVENT_FLUSH_STOP:
-      result = gst_base_src_set_flushing (src, FALSE, TRUE, TRUE, NULL);
+      result = gst_base_src_set_flushing (src, FALSE, TRUE, NULL);
       break;
     case GST_EVENT_QOS:
     {
@@ -2020,7 +2013,7 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
   GstClockTime base_time;
   GstClock *clock;
   GstClockTime now = GST_CLOCK_TIME_NONE, timestamp;
-  gboolean do_timestamp, first, pseudo_live;
+  gboolean do_timestamp, first, pseudo_live, is_live;
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
 
@@ -2035,8 +2028,9 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
    * latency. */
   GST_OBJECT_LOCK (basesrc);
 
+  is_live = basesrc->is_live;
   /* if we are asked to sync against the clock we are a pseudo live element */
-  pseudo_live = (start != -1 && basesrc->is_live);
+  pseudo_live = (start != -1 && is_live);
   /* check for the first buffer */
   first = (basesrc->priv->latency == -1);
 
@@ -2064,17 +2058,20 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
     }
   } else if (first) {
     GST_DEBUG_OBJECT (basesrc, "no latency needed, live %d, sync %d",
-        basesrc->is_live, start != -1);
+        is_live, start != -1);
     basesrc->priv->latency = 0;
   }
 
   /* get clock, if no clock, we can't sync or do timestamps */
   if ((clock = GST_ELEMENT_CLOCK (basesrc)) == NULL)
     goto no_clock;
+  else
+    gst_object_ref (clock);
 
   base_time = GST_ELEMENT_CAST (basesrc)->base_time;
 
   do_timestamp = basesrc->priv->do_timestamp;
+  GST_OBJECT_UNLOCK (basesrc);
 
   /* first buffer, calculate the timestamp offset */
   if (first) {
@@ -2132,7 +2129,7 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
   if (!GST_CLOCK_TIME_IS_VALID (start))
     goto no_sync;
 
-  if (basesrc->is_live && GST_CLOCK_TIME_IS_VALID (timestamp)) {
+  if (is_live && GST_CLOCK_TIME_IS_VALID (timestamp)) {
     /* for pseudo live sources, add our ts_offset to the timestamp */
     GST_BUFFER_TIMESTAMP (buffer) += basesrc->priv->ts_offset;
     start += basesrc->priv->ts_offset;
@@ -2142,9 +2139,10 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
       "waiting for clock, base time %" GST_TIME_FORMAT
       ", stream_start %" GST_TIME_FORMAT,
       GST_TIME_ARGS (base_time), GST_TIME_ARGS (start));
-  GST_OBJECT_UNLOCK (basesrc);
 
   result = gst_base_src_wait (basesrc, clock, start + base_time);
+
+  gst_object_unref (clock);
 
   GST_LOG_OBJECT (basesrc, "clock entry done: %d", result);
 
@@ -2160,7 +2158,7 @@ no_clock:
 no_sync:
   {
     GST_DEBUG_OBJECT (basesrc, "no sync needed");
-    GST_OBJECT_UNLOCK (basesrc);
+    gst_object_unref (clock);
     return GST_CLOCK_OK;
   }
 }
@@ -3130,7 +3128,7 @@ gst_base_src_start_complete (GstBaseSrc * basesrc, GstFlowReturn ret)
 
   /* stop flushing now but for live sources, still block in the LIVE lock when
    * we are not yet PLAYING */
-  gst_base_src_set_flushing (basesrc, FALSE, FALSE, FALSE, NULL);
+  gst_base_src_set_flushing (basesrc, FALSE, FALSE, NULL);
 
   gst_pad_mark_reconfigure (GST_BASE_SRC_PAD (basesrc));
 
@@ -3138,6 +3136,9 @@ gst_base_src_start_complete (GstBaseSrc * basesrc, GstFlowReturn ret)
   mode = GST_PAD_MODE (basesrc->srcpad);
   GST_OBJECT_UNLOCK (basesrc->srcpad);
 
+  /* take the stream lock here, we only want to let the task run when we have
+   * set the STARTED flag */
+  GST_PAD_STREAM_LOCK (basesrc->srcpad);
   if (mode == GST_PAD_MODE_PUSH) {
     /* do initial seek, which will start the task */
     GST_OBJECT_LOCK (basesrc);
@@ -3145,10 +3146,8 @@ gst_base_src_start_complete (GstBaseSrc * basesrc, GstFlowReturn ret)
     basesrc->pending_seek = NULL;
     GST_OBJECT_UNLOCK (basesrc);
 
-    /* no need to unlock anything, the task is certainly
-     * not running here. The perform seek code will start the task when
-     * finished. */
-    if (G_UNLIKELY (!gst_base_src_perform_seek (basesrc, event, FALSE)))
+    /* The perform seek code will start the task when finished. */
+    if (G_UNLIKELY (!gst_base_src_perform_seek (basesrc, event)))
       goto seek_failed;
 
     if (event)
@@ -3166,12 +3165,15 @@ gst_base_src_start_complete (GstBaseSrc * basesrc, GstFlowReturn ret)
   GST_LIVE_SIGNAL (basesrc);
   GST_LIVE_UNLOCK (basesrc);
 
+  GST_PAD_STREAM_UNLOCK (basesrc->srcpad);
+
   return;
 
 seek_failed:
   {
+    GST_PAD_STREAM_UNLOCK (basesrc->srcpad);
     GST_ERROR_OBJECT (basesrc, "Failed to perform initial seek");
-    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
+    gst_base_src_set_flushing (basesrc, TRUE, FALSE, NULL);
     if (event)
       gst_event_unref (event);
     ret = GST_FLOW_ERROR;
@@ -3179,7 +3181,8 @@ seek_failed:
   }
 no_get_range:
   {
-    gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
+    GST_PAD_STREAM_UNLOCK (basesrc->srcpad);
+    gst_base_src_set_flushing (basesrc, TRUE, FALSE, NULL);
     GST_ERROR_OBJECT (basesrc, "Cannot operate in pull mode, stopping");
     ret = GST_FLOW_ERROR;
     goto error;
@@ -3241,7 +3244,7 @@ gst_base_src_stop (GstBaseSrc * basesrc)
   GST_DEBUG_OBJECT (basesrc, "stopping source");
 
   /* flush all */
-  gst_base_src_set_flushing (basesrc, TRUE, FALSE, TRUE, NULL);
+  gst_base_src_set_flushing (basesrc, TRUE, FALSE, NULL);
   /* stop the task */
   gst_pad_stop_task (basesrc->srcpad);
 
@@ -3275,13 +3278,13 @@ was_stopped:
  */
 static gboolean
 gst_base_src_set_flushing (GstBaseSrc * basesrc,
-    gboolean flushing, gboolean live_play, gboolean unlock, gboolean * playing)
+    gboolean flushing, gboolean live_play, gboolean * playing)
 {
   GstBaseSrcClass *bclass;
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
 
-  if (flushing && unlock) {
+  if (flushing) {
     gst_base_src_activate_pool (basesrc, FALSE);
     /* unlock any subclasses, we need to do this before grabbing the
      * LIVE_LOCK since we hold this lock before going into ::create. We pass an
@@ -3316,18 +3319,16 @@ gst_base_src_set_flushing (GstBaseSrc * basesrc,
 
     gst_base_src_activate_pool (basesrc, TRUE);
 
-    /* When unlocking drop all delayed events */
-    if (unlock) {
-      GST_OBJECT_LOCK (basesrc);
-      if (basesrc->priv->pending_events) {
-        g_list_foreach (basesrc->priv->pending_events, (GFunc) gst_event_unref,
-            NULL);
-        g_list_free (basesrc->priv->pending_events);
-        basesrc->priv->pending_events = NULL;
-        g_atomic_int_set (&basesrc->priv->have_events, FALSE);
-      }
-      GST_OBJECT_UNLOCK (basesrc);
+    /* Drop all delayed events */
+    GST_OBJECT_LOCK (basesrc);
+    if (basesrc->priv->pending_events) {
+      g_list_foreach (basesrc->priv->pending_events, (GFunc) gst_event_unref,
+          NULL);
+      g_list_free (basesrc->priv->pending_events);
+      basesrc->priv->pending_events = NULL;
+      g_atomic_int_set (&basesrc->priv->have_events, FALSE);
     }
+    GST_OBJECT_UNLOCK (basesrc);
   }
   GST_LIVE_SIGNAL (basesrc);
   GST_LIVE_UNLOCK (basesrc);

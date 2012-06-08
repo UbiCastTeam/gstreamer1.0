@@ -47,7 +47,7 @@ enum                <a class="link" href="gstreamer-GstToc.html#GstTocEntryType"
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>);
 <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="returnvalue">GstTocEntry</span></a> *       <a class="link" href="gstreamer-GstToc.html#gst-toc-entry-new-with-pad" title="gst_toc_entry_new_with_pad ()">gst_toc_entry_new_with_pad</a>          (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstTocEntryType" title="enum GstTocEntryType"><span class="type">GstTocEntryType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> pad</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstToc.html#gst-toc-entry-free" title="gst_toc_entry_free ()">gst_toc_entry_free</a>                  (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);
 <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="returnvalue">GstToc</span></a> *            <a class="link" href="gstreamer-GstToc.html#gst-toc-new" title="gst_toc_new ()">gst_toc_new</a>                         (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstToc.html#gst-toc-free" title="gst_toc_free ()">gst_toc_free</a>                        (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>);
@@ -61,6 +61,7 @@ enum                <a class="link" href="gstreamer-GstToc.html#GstTocEntryType"
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstToc.html#gst-toc-entry-set-start-stop" title="gst_toc_entry_set_start_stop ()">gst_toc_entry_set_start_stop</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> start</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> stop</code></em>);
+const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstToc.html#gst-toc-entry-type-get-nick" title="gst_toc_entry_type_get_nick ()">gst_toc_entry_type_get_nick</a>         (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstTocEntryType" title="enum GstTocEntryType"><span class="type">GstTocEntryType</span></a> type</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -127,7 +128,7 @@ Definition of TOC structure.
 <td>list of <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> entries of the TOC.</td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *<em class="structfield"><code><a name="GstToc.tags"></a>tags</code></em>;</span></p></td>
+<td><p><span class="term"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *<em class="structfield"><code><a name="GstToc.tags"></a>tags</code></em>;</span></p></td>
 <td>tags related to the whole TOC.</td>
 </tr>
 <tr>
@@ -176,7 +177,7 @@ other demuxers could do something else), it should help to track updates of cert
 <td>list of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> objects, related to this <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a>.</td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="GstTagList"><span class="type">GstTagList</span></a> *<em class="structfield"><code><a name="GstTocEntry.tags"></a>tags</code></em>;</span></p></td>
+<td><p><span class="term"><a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *<em class="structfield"><code><a name="GstTocEntry.tags"></a>tags</code></em>;</span></p></td>
 <td>tags related to this entry.</td>
 </tr>
 <tr>
@@ -245,7 +246,7 @@ Create new <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struc
 <a name="gst-toc-entry-new-with-pad"></a><h3>gst_toc_entry_new_with_pad ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="returnvalue">GstTocEntry</span></a> *       gst_toc_entry_new_with_pad          (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstTocEntryType" title="enum GstTocEntryType"><span class="type">GstTocEntryType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> pad</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
 <p>
 Create new <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> structure with <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> related.
 </p>
@@ -467,6 +468,28 @@ Set <em class="parameter"><code>start</code></em> and <em class="parameter"><cod
 </tbody>
 </table></div>
 <p class="since">Since 0.10.37</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-toc-entry-type-get-nick"></a><h3>gst_toc_entry_type_get_nick ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       gst_toc_entry_type_get_nick         (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstTocEntryType" title="enum GstTocEntryType"><span class="type">GstTocEntryType</span></a> type</code></em>);</pre>
+<p>
+Converts <em class="parameter"><code>type</code></em> to a string representation.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstToc.html#GstTocEntryType" title="enum GstTocEntryType"><span class="type">GstTocEntryType</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Returns the human-readable <em class="parameter"><code>type</code></em>. Can be NULL if an error occurred.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 0.11.92</p>
 </div>
 </div>
 <div class="refsect1">

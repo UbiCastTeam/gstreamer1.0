@@ -2364,8 +2364,8 @@ gst_element_query_convert (GstElement * element, GstFormat src_format,
  * PAUSED. If the element supports seek in READY, it will always return %TRUE when
  * it receives the event in the READY state.
  *
- * Returns: %TRUE if the seek operation succeeded (the seek might not always be
- * executed instantly though)
+ * Returns: %TRUE if the seek operation succeeded. Flushing seeks will trigger a
+ * preroll, which will emit %GST_MESSAGE_ASYNC_DONE.
  *
  * Since: 0.10.7
  */
@@ -2931,7 +2931,8 @@ gst_pad_query_accept_caps (GstPad * pad, GstCaps * caps)
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
   g_return_val_if_fail (GST_IS_CAPS (caps), FALSE);
 
-  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad, "accept caps of %p", caps);
+  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad, "accept caps of %"
+      GST_PTR_FORMAT, caps);
 
   query = gst_query_new_accept_caps (caps);
   if (gst_pad_query (pad, query)) {

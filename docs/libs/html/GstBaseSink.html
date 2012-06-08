@@ -329,6 +329,10 @@ The opaque <a class="link" href="GstBaseSink.html" title="GstBaseSink"><span cla
   /* wait for eos, subclasses should chain up to parent first */
   GstFlowReturn (*wait_eos)     (GstBaseSink *sink, GstEvent *event);
 
+  /* notify subclass of buffer or list before doing sync */
+  GstFlowReturn (*prepare)      (GstBaseSink *sink, GstBuffer *buffer);
+  GstFlowReturn (*prepare_list) (GstBaseSink *sink, GstBufferList *buffer_list);
+
   /* notify subclass of preroll buffer or real buffer */
   GstFlowReturn (*preroll)      (GstBaseSink *sink, GstBuffer *buffer);
   GstFlowReturn (*render)       (GstBaseSink *sink, GstBuffer *buffer);
@@ -410,8 +414,18 @@ any state they set during <code class="function">unlock()</code>, such as cleari
 subclasses should always first chain up to the default implementation.</td>
 </tr>
 <tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.prepare"></a>prepare</code></em> ()</span></p></td>
+<td>Called to prepare the buffer for <em class="parameter"><code>render</code></em> and <em class="parameter"><code>preroll</code></em>. This
+function is called before synchronisation is performed.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.prepare-list"></a>prepare_list</code></em> ()</span></p></td>
+<td>Called to prepare the buffer list for <em class="parameter"><code>render_list</code></em>. This
+function is called before synchronisation is performed.</td>
+</tr>
+<tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.preroll"></a>preroll</code></em> ()</span></p></td>
-<td>Called to present the preroll buffer if desired</td>
+<td>Called to present the preroll buffer if desired.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.render"></a>render</code></em> ()</span></p></td>
