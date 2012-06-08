@@ -150,10 +150,10 @@ static void
 cleanup_plugin_info (void)
 {
   if (encoders)
-    gst_caps_simplify (encoders);
+    encoders = gst_caps_simplify (encoders);
 
   if (decoders)
-    gst_caps_simplify (decoders);
+    decoders = gst_caps_simplify (decoders);
 
   elements = g_list_sort (elements, (GCompareFunc) strcmp);
   uri_sources = g_list_sort (uri_sources, (GCompareFunc) strcmp);
@@ -169,7 +169,7 @@ cleanup_plugin_info (void)
 static void
 collect_uri_protocols (GstElementFactory * factory)
 {
-  gchar **protocols, **p;
+  const gchar *const *protocols, *const *p;
 
   protocols = gst_element_factory_get_uri_protocols (factory);
   if (!protocols)
@@ -184,8 +184,9 @@ collect_uri_protocols (GstElementFactory * factory)
       for (p = protocols; *p; p++)
         uri_sources = g_list_prepend (uri_sources, g_strdup (*p));
       break;
+    default:
+      break;
   }
-  g_strfreev (protocols);
 }
 
 static void
@@ -379,9 +380,15 @@ collect_plugin_info (GstPlugin * plugin)
   for (l = features; l; l = l->next) {
     GstPluginFeature *feature = GST_PLUGIN_FEATURE (l->data);
     GstElementFactory *factory = GST_ELEMENT_FACTORY (feature);
+    GstPlugin *f_plugin = gst_plugin_feature_get_plugin (feature);
 
-    if (!g_str_equal (plugin_name, feature->plugin_name))
+    if (!f_plugin)
       continue;
+    if (!g_str_equal (plugin_name, gst_plugin_get_name (f_plugin))) {
+      gst_object_unref (f_plugin);
+      continue;
+    }
+    gst_object_unref (f_plugin);
 
     elements =
         g_list_prepend (elements,
