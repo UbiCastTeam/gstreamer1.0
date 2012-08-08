@@ -46,7 +46,7 @@ G_BEGIN_DECLS
  *  in the executed code path is not fully implemented or handled yet. Note
  *  that this does not replace proper error handling in any way, the purpose
  *  of this message is to make it easier to spot incomplete/unfinished pieces
- *  of code when reading the debug log. (Since: 0.10.23)
+ *  of code when reading the debug log.
  * @GST_LEVEL_INFO: Informational messages should be used to keep the developer
  *  updated about what is happening.
  *  Examples where this should be used are when a typefind function has
@@ -63,11 +63,11 @@ G_BEGIN_DECLS
  *  should never output anything else but LOG messages. Use this log level to
  *  log recurring information in chain functions and loop functions, for
  *  example.
- * @GST_LEVEL_TRACE: Tracing-related messages (Since: 0.10.30)
+ * @GST_LEVEL_TRACE: Tracing-related messages.
  *  Examples for this are referencing/dereferencing of objects.
  * @GST_LEVEL_MEMDUMP: memory dump messages are used to log (small) chunks of
  *  data as memory dumps in the log. They will be displayed as hexdump with
- *  ASCII characters. (Since: 0.10.23)
+ *  ASCII characters.
  * @GST_LEVEL_COUNT: The number of defined debugging levels.
  *
  * The level defines the importance of a debugging message. The more important a
@@ -241,7 +241,7 @@ typedef struct _GstDebugMessage GstDebugMessage;
  * @line: line number
  * @object: a #GObject
  * @message: the message
- * @data: user data for the log function
+ * @user_data: user data for the log function
  *
  * Function prototype for a logging function that can be registered with
  * gst_debug_add_log_function().
@@ -254,7 +254,7 @@ typedef void (*GstLogFunction)  (GstDebugCategory * category,
                                  gint               line,
                                  GObject          * object,
                                  GstDebugMessage  * message,
-                                 gpointer           data);
+                                 gpointer           user_data);
 
 #ifdef GST_USING_PRINTF_EXTENSION
 
@@ -330,7 +330,8 @@ void            gst_debug_log_default    (GstDebugCategory * category,
 const gchar *   gst_debug_level_get_name (GstDebugLevel level);
 
 void            gst_debug_add_log_function            (GstLogFunction func,
-                                                       gpointer       data);
+                                                       gpointer       user_data,
+                                                       GDestroyNotify notify);
 
 guint           gst_debug_remove_log_function         (GstLogFunction func);
 guint           gst_debug_remove_log_function_by_data (gpointer       data);
@@ -365,13 +366,13 @@ gint    gst_debug_construct_win_color  (guint colorinfo);
 
 #ifndef GST_DISABLE_GST_DEBUG
 
-#define gst_debug_add_log_function(func,data) \
-G_STMT_START{                                 \
-  if (func == gst_debug_log_default) {        \
-    gst_debug_add_log_function(NULL,data);    \
-  } else {                                    \
-    gst_debug_add_log_function(func,data);    \
-  }                                           \
+#define gst_debug_add_log_function(func,data,notify) \
+G_STMT_START{                                        \
+  if (func == gst_debug_log_default) {               \
+    gst_debug_add_log_function(NULL,data,notify);    \
+  } else {                                           \
+    gst_debug_add_log_function(func,data,notify);    \
+  }                                                  \
 }G_STMT_END
 
 #define gst_debug_remove_log_function(func)   \
@@ -462,8 +463,6 @@ G_STMT_START{                                 \
  * GST_DEBUG_CATEGORY_INIT (gst_myplugin_debug, "myplugin", 0, "nice element");
  * GST_DEBUG_CATEGORY_GET (GST_CAT_PERFORMANCE, "GST_PERFORMANCE");
  * ]|
- *
- * Since: 0.10.24
  */
 #ifdef GST_CAT_DEFAULT
 #define GST_DEBUG_CATEGORY_GET(cat,name)  G_STMT_START{\
@@ -487,7 +486,7 @@ GST_EXPORT GstDebugCategory *	GST_CAT_DEFAULT;
 /* this symbol may not be used */
 GST_EXPORT gboolean			_gst_debug_enabled;
 
-/* since 0.10.7, the min debug level, used for quickly discarding debug
+/* the min debug level, used for quickly discarding debug
  * messages that fall under the threshold. */
 GST_EXPORT GstDebugLevel            _gst_debug_min;
 
@@ -608,8 +607,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @...: printf-style message to output
  *
  * Output a fixme message belonging to the given object in the given category.
- *
- * Since: 0.10.23
  */
 /**
  * GST_CAT_TRACE_OBJECT:
@@ -619,8 +616,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  *
  * Output a tracing message belonging to the given object in the given
  * category.
- *
- * Since: 0.10.30
  */
 /**
  * GST_CAT_MEMDUMP_OBJECT:
@@ -632,8 +627,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  *
  * Output a hexdump of @data relating to the given object in the given
  * category.
- *
- * Since: 0.10.23
  */
 
 
@@ -678,8 +671,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @...: printf-style message to output
  *
  * Output an fixme message in the given category.
- *
- * Since: 0.10.23
  */
 /**
  * GST_CAT_TRACE:
@@ -687,8 +678,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @...: printf-style message to output
  *
  * Output a tracing message in the given category.
- *
- * Since: 0.10.30
  */
 /**
  * GST_CAT_MEMDUMP:
@@ -698,8 +687,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @length: length of the data to output
  *
  * Output a hexdump of @data in the given category.
- *
- * Since: 0.10.23
  */
 
 
@@ -746,8 +733,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @...: printf-style message to output
  *
  * Output a fixme message belonging to the given object in the default category.
- *
- * Since: 0.10.23
  */
 /**
  * GST_TRACE_OBJECT:
@@ -755,8 +740,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @...: printf-style message to output
  *
  * Output a tracing message belonging to the given object in the default category.
- *
- * Since: 0.10.30
  */
 /**
  * GST_MEMDUMP_OBJECT:
@@ -766,8 +749,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @length: length of the data to output
  *
  * Output a logging message belonging to the given object in the default category.
- *
- * Since: 0.10.23
  */
 
 
@@ -806,16 +787,12 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @...: printf-style message to output
  *
  * Output a fixme message in the default category.
- *
- * Since: 0.10.23
  */
 /**
  * GST_TRACE:
  * @...: printf-style message to output
  *
  * Output a tracing message in the default category.
- *
- * Since: 0.10.30
  */
 /**
  * GST_MEMDUMP:
@@ -824,8 +801,6 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * @length: length of the data to output
  *
  * Output a hexdump of @data.
- *
- * Since: 0.10.23
  */
 
 #ifdef G_HAVE_ISO_VARARGS
@@ -1213,8 +1188,6 @@ GST_TRACE (const char *format, ...)
  * GST_DEBUG_FUNCPTR_NAME().
  *
  * Use this variant of #GST_DEBUG_FUNCPTR if you do not need to use @ptr.
- *
- * Since: 0.10.26
  */
 #define GST_DEBUG_REGISTER_FUNCPTR(ptr) \
   _gst_debug_register_funcptr((GstDebugFuncPtr)(ptr), #ptr)
@@ -1262,7 +1235,7 @@ GST_TRACE (const char *format, ...)
 
 #define gst_debug_level_get_name(level)				("NONE")
 #define gst_debug_message_get(message)  			("")
-#define gst_debug_add_log_function(func,data)		G_STMT_START{ }G_STMT_END
+#define gst_debug_add_log_function(func,data,notify)    G_STMT_START{ }G_STMT_END
 #define gst_debug_set_active(active)			G_STMT_START{ }G_STMT_END
 #define gst_debug_is_active()				(FALSE)
 #define gst_debug_set_colored(colored)			G_STMT_START{ }G_STMT_END

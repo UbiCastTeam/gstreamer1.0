@@ -47,8 +47,6 @@
  * #GST_FLOW_NOT_LINKED
  * </listitem>
  * </itemizedlist>
- *
- * Since: 0.10.32
  */
 
 #ifdef HAVE_CONFIG_H
@@ -84,15 +82,6 @@ gst_input_selector_sync_mode_get_type (void)
   }
   return type;
 }
-
-#if GLIB_CHECK_VERSION(2, 26, 0)
-#define NOTIFY_MUTEX_LOCK()
-#define NOTIFY_MUTEX_UNLOCK()
-#else
-static GStaticRecMutex notify_mutex = G_STATIC_REC_MUTEX_INIT;
-#define NOTIFY_MUTEX_LOCK() g_static_rec_mutex_lock (&notify_mutex)
-#define NOTIFY_MUTEX_UNLOCK() g_static_rec_mutex_unlock (&notify_mutex)
-#endif
 
 #define GST_INPUT_SELECTOR_GET_LOCK(sel) (&((GstInputSelector*)(sel))->lock)
 #define GST_INPUT_SELECTOR_GET_COND(sel) (&((GstInputSelector*)(sel))->cond)
@@ -454,6 +443,7 @@ gst_selector_pad_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   gboolean res = TRUE;
   gboolean forward;
+  gboolean new_tags = FALSE;
   GstInputSelector *sel;
   GstSelectorPad *selpad;
   GstPad *prev_active_sinkpad;
@@ -524,7 +514,7 @@ gst_selector_pad_event (GstPad * pad, GstObject * parent, GstEvent * event)
         gst_tag_list_unref (oldtags);
       GST_DEBUG_OBJECT (pad, "received tags %" GST_PTR_FORMAT, newtags);
 
-      g_object_notify (G_OBJECT (selpad), "tags");
+      new_tags = TRUE;
       break;
     }
     case GST_EVENT_EOS:
@@ -551,6 +541,8 @@ gst_selector_pad_event (GstPad * pad, GstObject * parent, GstEvent * event)
       break;
   }
   GST_INPUT_SELECTOR_UNLOCK (sel);
+  if (new_tags)
+    g_object_notify (G_OBJECT (selpad), "tags");
   if (forward) {
     GST_DEBUG_OBJECT (pad, "forwarding event");
     res = gst_pad_push_event (sel->srcpad, event);
@@ -575,11 +567,32 @@ gst_selector_pad_query (GstPad * pad, GstObject * parent, GstQuery * query)
   gboolean res = FALSE;
 
   switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_ALLOCATION:{
+      GstPad *active_sinkpad;
+      GstInputSelector *sel = GST_INPUT_SELECTOR (parent);
+
+      /* Only do the allocation query for the active sinkpad,
+       * after switching a reconfigure event is sent and upstream
+       * should reconfigure and do a new allocation query
+       */
+      if (GST_PAD_DIRECTION (pad) == GST_PAD_SINK) {
+        GST_INPUT_SELECTOR_LOCK (sel);
+        active_sinkpad = gst_input_selector_activate_sinkpad (sel, pad);
+        GST_INPUT_SELECTOR_UNLOCK (sel);
+
+        if (pad != active_sinkpad) {
+          res = FALSE;
+          goto done;
+        }
+      }
+    }
+      /* fall through */
     default:
       res = gst_pad_query_default (pad, parent, query);
       break;
   }
 
+done:
   return res;
 }
 
@@ -1098,38 +1111,6 @@ static gboolean gst_input_selector_query (GstPad * pad, GstObject * parent,
     GstQuery * query);
 static gint64 gst_input_selector_block (GstInputSelector * self);
 
-/* FIXME: create these marshallers using glib-genmarshal */
-static void
-gst_input_selector_marshal_INT64__VOID (GClosure * closure,
-    GValue * return_value G_GNUC_UNUSED,
-    guint n_param_values,
-    const GValue * param_values,
-    gpointer invocation_hint G_GNUC_UNUSED, gpointer marshal_data)
-{
-  typedef gint64 (*GMarshalFunc_INT64__VOID) (gpointer data1, gpointer data2);
-  register GMarshalFunc_INT64__VOID callback;
-  register GCClosure *cc = (GCClosure *) closure;
-  register gpointer data1, data2;
-  gint64 v_return;
-
-  g_return_if_fail (return_value != NULL);
-  g_return_if_fail (n_param_values == 1);
-
-  if (G_CCLOSURE_SWAP_DATA (closure)) {
-    data1 = closure->data;
-    data2 = g_value_peek_pointer (param_values + 0);
-  } else {
-    data1 = g_value_peek_pointer (param_values + 0);
-    data2 = closure->data;
-  }
-  callback =
-      (GMarshalFunc_INT64__VOID) (marshal_data ? marshal_data : cc->callback);
-
-  v_return = callback (data1, data2);
-
-  g_value_set_int64 (return_value, v_return);
-}
-
 #define _do_init \
     GST_DEBUG_CATEGORY_INIT (input_selector_debug, \
         "input-selector", 0, "An input stream selector element");
@@ -1168,8 +1149,6 @@ gst_input_selector_class_init (GstInputSelectorClass * klass)
    * To make sure no buffers are dropped by input-selector
    * that might be needed when switching the active pad,
    * sync-mode should be set to "clock" and cache-buffers to TRUE.
-   *
-   * Since: 0.10.36
    */
   g_object_class_install_property (gobject_class, PROP_SYNC_STREAMS,
       g_param_spec_boolean ("sync-streams", "Sync Streams",
@@ -1188,8 +1167,6 @@ gst_input_selector_class_init (GstInputSelectorClass * klass)
    * be ahead of current clock time when switching the active pad, as the current
    * active pad may have pushed more buffers than what was displayed/consumed,
    * which may cause delays and some missing buffers.
-   *
-   * Since: 0.10.36
    */
   g_object_class_install_property (gobject_class, PROP_SYNC_MODE,
       g_param_spec_enum ("sync-mode", "Sync mode",
@@ -1229,7 +1206,7 @@ gst_input_selector_class_init (GstInputSelectorClass * klass)
       g_signal_new ("block", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstInputSelectorClass, block), NULL, NULL,
-      gst_input_selector_marshal_INT64__VOID, G_TYPE_INT64, 0);
+      g_cclosure_marshal_generic, G_TYPE_INT64, 0);
 
   gst_element_class_set_static_metadata (gstelement_class, "Input selector",
       "Generic", "N-to-1 input stream selector",
@@ -1327,6 +1304,11 @@ gst_input_selector_set_active_pad (GstInputSelector * self, GstPad * pad)
 
   active_pad_p = &self->active_sinkpad;
   gst_object_replace ((GstObject **) active_pad_p, GST_OBJECT_CAST (pad));
+
+  if (old && old != new)
+    gst_pad_push_event (GST_PAD_CAST (old), gst_event_new_reconfigure ());
+  if (new)
+    gst_pad_push_event (GST_PAD_CAST (new), gst_event_new_reconfigure ());
 
   GST_DEBUG_OBJECT (self, "New active pad is %" GST_PTR_FORMAT,
       self->active_sinkpad);
@@ -1604,12 +1586,24 @@ gst_input_selector_activate_sinkpad (GstInputSelector * sel, GstPad * pad)
 
   selpad->active = TRUE;
   active_sinkpad = sel->active_sinkpad;
-  if (active_sinkpad == NULL) {
-    /* first pad we get activity on becomes the activated pad by default */
-    if (sel->active_sinkpad)
-      gst_object_unref (sel->active_sinkpad);
-    active_sinkpad = sel->active_sinkpad = gst_object_ref (pad);
-    GST_DEBUG_OBJECT (sel, "Activating pad %s:%s", GST_DEBUG_PAD_NAME (pad));
+  if (sel->active_sinkpad == NULL) {
+    GValue item = G_VALUE_INIT;
+    GstIterator *iter = gst_element_iterate_sink_pads (GST_ELEMENT_CAST (sel));
+    GstIteratorResult ires;
+
+    while ((ires = gst_iterator_next (iter, &item)) == GST_ITERATOR_RESYNC)
+      gst_iterator_resync (iter);
+    if (ires == GST_ITERATOR_OK) {
+      /* If no pad is currently selected, we return the first usable pad to
+       * guarantee consistency */
+
+      active_sinkpad = sel->active_sinkpad = g_value_dup_object (&item);
+      g_value_reset (&item);
+      GST_DEBUG_OBJECT (sel, "Activating pad %s:%s",
+          GST_DEBUG_PAD_NAME (active_sinkpad));
+    } else
+      GST_WARNING_OBJECT (sel, "Couldn't find a default sink pad");
+    gst_iterator_free (iter);
   }
 
   return active_sinkpad;

@@ -207,8 +207,6 @@ gst_fake_sink_class_init (GstFakeSinkClass * klass)
    * @pad: the pad that received it
    *
    * This signal gets emitted before unreffing the buffer.
-   *
-   * Since: 0.10.7
    */
   gst_fake_sink_signals[SIGNAL_PREROLL_HANDOFF] =
       g_signal_new ("preroll-handoff", G_TYPE_FROM_CLASS (klass),
@@ -478,7 +476,7 @@ gst_fake_sink_render (GstBaseSink * bsink, GstBuffer * buf)
     sink->last_message =
         g_strdup_printf ("chain   ******* (%s:%s) (%u bytes, dts: %s, pts: %s"
         ", duration: %s, offset: %" G_GINT64_FORMAT ", offset_end: %"
-        G_GINT64_FORMAT ", flags: %d %s) %p",
+        G_GINT64_FORMAT ", flags: %08x %s) %p",
         GST_DEBUG_PAD_NAME (GST_BASE_SINK_CAST (sink)->sinkpad),
         (guint) gst_buffer_get_size (buf), dts_str, pts_str,
         dur_str, GST_BUFFER_OFFSET (buf), GST_BUFFER_OFFSET_END (buf),

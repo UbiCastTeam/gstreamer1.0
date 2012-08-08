@@ -61,6 +61,9 @@
                                                         (<em class="parameter"><code><span class="type">gint64</span> secs</code></em>);
 <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-from-unix-epoch-utc" title="gst_date_time_new_from_unix_epoch_utc ()">gst_date_time_new_from_unix_epoch_utc</a>
                                                         (<em class="parameter"><code><span class="type">gint64</span> secs</code></em>);
+<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-ymd" title="gst_date_time_new_ymd ()">gst_date_time_new_ymd</a>               (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> month</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> day</code></em>);
 <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-local-time" title="gst_date_time_new_local_time ()">gst_date_time_new_local_time</a>        (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> month</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> day</code></em>,
@@ -71,6 +74,19 @@
 <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-now-utc" title="gst_date_time_new_now_utc ()">gst_date_time_new_now_utc</a>           (<em class="parameter"><code><span class="type">void</span></code></em>);
 <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-ref" title="gst_date_time_ref ()">gst_date_time_ref</a>                   (<em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-unref" title="gst_date_time_unref ()">gst_date_time_unref</a>                 (<em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-has-day" title="gst_date_time_has_day ()">gst_date_time_has_day</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-has-month" title="gst_date_time_has_month ()">gst_date_time_has_month</a>             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-has-second" title="gst_date_time_has_second ()">gst_date_time_has_second</a>            (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-has-time" title="gst_date_time_has_time ()">gst_date_time_has_time</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-has-year" title="gst_date_time_has_year ()">gst_date_time_has_year</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-y" title="gst_date_time_new_y ()">gst_date_time_new_y</a>                 (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>);
+<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-ym" title="gst_date_time_new_ym ()">gst_date_time_new_ym</a>                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> month</code></em>);
+<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-from-iso8601-string" title="gst_date_time_new_from_iso8601_string ()">gst_date_time_new_from_iso8601_string</a>
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-to-iso8601-string" title="gst_date_time_to_iso8601_string ()">gst_date_time_to_iso8601_string</a>     (<em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
+<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-new-from-g-date-time" title="gst_date_time_new_from_g_date_time ()">gst_date_time_new_from_g_date_time</a>  (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> *dt</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="returnvalue">GDateTime</span></a> *         <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-to-g-date-time" title="gst_date_time_to_g_date_time ()">gst_date_time_to_g_date_time</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -115,14 +131,14 @@ a boxed <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic
 <td>the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of GstDateTime</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-date-time-get-day"></a><h3>gst_date_time_get_day ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                gst_date_time_get_day               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
 <p>
-Returns the day of this <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>.
+Returns the day of the month of this <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>.
+Call gst_date_time_has_day before, to avoid warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -139,7 +155,6 @@ Returns the day of this <a class="link" href="gstreamer-GstDateTime.html#GstDate
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -147,6 +162,7 @@ Returns the day of this <a class="link" href="gstreamer-GstDateTime.html#GstDate
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                gst_date_time_get_month             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
 <p>
 Returns the month of this <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>. January is 1, February is 2, etc..
+Call gst_date_time_has_month before, to avoid warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -163,7 +179,6 @@ Returns the month of this <a class="link" href="gstreamer-GstDateTime.html#GstDa
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -172,6 +187,7 @@ Returns the month of this <a class="link" href="gstreamer-GstDateTime.html#GstDa
 <p>
 Retrieves the hour of the day represented by <em class="parameter"><code>datetime</code></em> in the gregorian
 calendar. The return is in the range of 0 to 23.
+Call gst_date_time_has_haur before, to avoid warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -187,7 +203,6 @@ calendar. The return is in the range of 0 to 23.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -211,7 +226,6 @@ Retrieves the fractional part of the seconds in microseconds represented by
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -220,6 +234,7 @@ Retrieves the fractional part of the seconds in microseconds represented by
 <p>
 Retrieves the minute of the hour represented by <em class="parameter"><code>datetime</code></em> in the gregorian
 calendar.
+Call gst_date_time_has_minute before, to avoid warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -235,7 +250,6 @@ calendar.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -261,7 +275,6 @@ If <em class="parameter"><code>datetime</code></em> represents UTC time, then th
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -270,6 +283,7 @@ If <em class="parameter"><code>datetime</code></em> represents UTC time, then th
 <p>
 Retrieves the second of the minute represented by <em class="parameter"><code>datetime</code></em> in the gregorian
 calendar.
+Call gst_date_time_has_second before, to avoid warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -286,7 +300,6 @@ calendar.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -294,6 +307,7 @@ calendar.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                gst_date_time_get_year              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
 <p>
 Returns the year of this <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>
+Call gst_date_time_has_year before, to avoid warnings.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -310,7 +324,6 @@ Returns the year of this <a class="link" href="gstreamer-GstDateTime.html#GstDat
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -334,6 +347,12 @@ in the supplied timezone.
 Note that <em class="parameter"><code>tzoffset</code></em> is a float and was chosen so for being able to handle
 some fractional timezones, while it still keeps the readability of
 represeting it in hours for most timezones.
+</p>
+<p>
+If value is -1 then all over value will be ignored. For example
+if <em class="parameter"><code>month</code></em> == -1, then <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> will created only for <em class="parameter"><code>year</code></em>. If
+<em class="parameter"><code>day</code></em> == -1, then <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> will created for <em class="parameter"><code>year</code></em> and <em class="parameter"><code>month</code></em> and
+so on.
 </p>
 <p>
 Free-function: gst_date_time_unref
@@ -376,7 +395,6 @@ Free-function: gst_date_time_unref
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -404,7 +422,6 @@ Free-function: gst_date_time_unref
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -432,24 +449,26 @@ Free-function: gst_date_time_unref
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-date-time-new-local-time"></a><h3>gst_date_time_new_local_time ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_local_time        (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
+<a name="gst-date-time-new-ymd"></a><h3>gst_date_time_new_ymd ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_ymd               (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> month</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> day</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hour</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> minute</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> seconds</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> day</code></em>);</pre>
 <p>
 Creates a new <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> using the date and times in the gregorian calendar
 in the local timezone.
 </p>
 <p>
 <em class="parameter"><code>year</code></em> should be from 1 to 9999, <em class="parameter"><code>month</code></em> should be from 1 to 12, <em class="parameter"><code>day</code></em> from
-1 to 31, <em class="parameter"><code>hour</code></em> from 0 to 23, <em class="parameter"><code>minutes</code></em> and <em class="parameter"><code>seconds</code></em> from 0 to 59.
+1 to 31.
+</p>
+<p>
+If value is -1 then all over value will be ignored. For example
+if <em class="parameter"><code>month</code></em> == -1, then <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> will created only for <em class="parameter"><code>year</code></em>. If
+<em class="parameter"><code>day</code></em> == -1, then <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> will created for <em class="parameter"><code>year</code></em> and <em class="parameter"><code>month</code></em> and
+so on.
 </p>
 <p>
 Free-function: gst_date_time_unref
@@ -470,16 +489,72 @@ Free-function: gst_date_time_unref
 <td>the day of the gregorian month</td>
 </tr>
 <tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the newly created <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-new-local-time"></a><h3>gst_date_time_new_local_time ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_local_time        (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> month</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> day</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hour</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> minute</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> seconds</code></em>);</pre>
+<p>
+Creates a new <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> using the date and times in the gregorian calendar
+in the local timezone.
+</p>
+<p>
+<em class="parameter"><code>year</code></em> should be from 1 to 9999, <em class="parameter"><code>month</code></em> should be from 1 to 12, <em class="parameter"><code>day</code></em> from
+1 to 31, <em class="parameter"><code>hour</code></em> from 0 to 23, <em class="parameter"><code>minutes</code></em> and <em class="parameter"><code>seconds</code></em> from 0 to 59.
+</p>
+<p>
+If <em class="parameter"><code>month</code></em> is -1, then the <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> created will only contain <em class="parameter"><code>year</code></em>,
+and all other fields will be considered not set.
+</p>
+<p>
+If <em class="parameter"><code>day</code></em> is -1, then the <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> created will only contain <em class="parameter"><code>year</code></em> and
+<em class="parameter"><code>month</code></em> and all other fields will be considered not set.
+</p>
+<p>
+If <em class="parameter"><code>hour</code></em> is -1, then the <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> created will only contain <em class="parameter"><code>year</code></em> and
+<em class="parameter"><code>month</code></em> and <em class="parameter"><code>day</code></em>, and the time fields will be considered not set. In this
+case <em class="parameter"><code>minute</code></em> and <em class="parameter"><code>seconds</code></em> should also be -1.
+</p>
+<p>
+Free-function: gst_date_time_unref
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>year</code></em> :</span></p></td>
+<td>the gregorian year</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>month</code></em> :</span></p></td>
+<td>the gregorian month, or -1</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>day</code></em> :</span></p></td>
+<td>the day of the gregorian month, or -1</td>
+</tr>
+<tr>
 <td><p><span class="term"><em class="parameter"><code>hour</code></em> :</span></p></td>
-<td>the hour of the day</td>
+<td>the hour of the day, or -1</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>minute</code></em> :</span></p></td>
-<td>the minute of the hour</td>
+<td>the minute of the hour, or -1</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>seconds</code></em> :</span></p></td>
-<td>the second of the minute</td>
+<td>the second of the minute, or -1</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -488,7 +563,6 @@ Free-function: gst_date_time_unref
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -509,7 +583,6 @@ be freed with <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-unr
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -531,7 +604,6 @@ be freed with <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-unr
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -555,7 +627,6 @@ Atomically increments the reference count of <em class="parameter"><code>datetim
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -573,7 +644,273 @@ reference count reaches zero, the structure is freed.
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-has-day"></a><h3>gst_date_time_has_day ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_date_time_has_day               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE if <em class="parameter"><code>datetime</code></em>'s day field is set, otherwise FALSE</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-has-month"></a><h3>gst_date_time_has_month ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_date_time_has_month             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE if <em class="parameter"><code>datetime</code></em>'s month field is set, otherwise FALSE</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-has-second"></a><h3>gst_date_time_has_second ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_date_time_has_second            (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE if <em class="parameter"><code>datetime</code></em>'s second field is set, otherwise FALSE</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-has-time"></a><h3>gst_date_time_has_time ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_date_time_has_time              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE if <em class="parameter"><code>datetime</code></em>'s hour and minute fields are set,
+otherwise FALSE</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-has-year"></a><h3>gst_date_time_has_year ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_date_time_has_year              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE if <em class="parameter"><code>datetime</code></em>'s year field is set (which should always
+be the case), otherwise FALSE</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-new-y"></a><h3>gst_date_time_new_y ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_y                 (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>);</pre>
+<p>
+Creates a new <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> using the date and times in the gregorian calendar
+in the local timezone.
+</p>
+<p>
+<em class="parameter"><code>year</code></em> should be from 1 to 9999.
+</p>
+<p>
+Free-function: gst_date_time_unref
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>year</code></em> :</span></p></td>
+<td>the gregorian year</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the newly created <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-new-ym"></a><h3>gst_date_time_new_ym ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_ym                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> year</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> month</code></em>);</pre>
+<p>
+Creates a new <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> using the date and times in the gregorian calendar
+in the local timezone.
+</p>
+<p>
+<em class="parameter"><code>year</code></em> should be from 1 to 9999, <em class="parameter"><code>month</code></em> should be from 1 to 12.
+</p>
+<p>
+If value is -1 then all over value will be ignored. For example
+if <em class="parameter"><code>month</code></em> == -1, then <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> will created only for <em class="parameter"><code>year</code></em>.
+</p>
+<p>
+Free-function: gst_date_time_unref
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>year</code></em> :</span></p></td>
+<td>the gregorian year</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>month</code></em> :</span></p></td>
+<td>the gregorian month</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the newly created <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-new-from-iso8601-string"></a><h3>gst_date_time_new_from_iso8601_string ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_from_iso8601_string
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);</pre>
+<p>
+Tries to parse common variants of ISO-8601 datetime strings into a
+<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>.
+</p>
+<p>
+Free-function: gst_date_time_unref
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td>ISO 8601-formatted datetime string.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a newly created <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>, or NULL on error. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-to-iso8601-string"></a><h3>gst_date_time_to_iso8601_string ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             gst_date_time_to_iso8601_string     (<em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<p>
+Create a minimal string compatible with ISO-8601. Possible output formats
+are (for example): 2012, 2012-06, 2012-06-23, 2012-06-23T23:30Z,
+2012-06-23T23:30+0100, 2012-06-23T23:30:59Z, 2012-06-23T23:30:59+0100
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>GstDateTime.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a newly allocated string formatted according to ISO 8601 and
+only including the datetime fields that are valid, or NULL in case
+there was an error. The string should be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-new-from-g-date-time"></a><h3>gst_date_time_new_from_g_date_time ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="returnvalue">GstDateTime</span></a> *       gst_date_time_new_from_g_date_time  (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> *dt</code></em>);</pre>
+<p>
+Creates a new <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> from a <a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> object.
+</p>
+<p>
+Free-function: gst_date_time_unref
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dt</code></em> :</span></p></td>
+<td>the <a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a>. The new <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> takes ownership. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a newly created <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a>, or NULL on error. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-date-time-to-g-date-time"></a><h3>gst_date_time_to_g_date_time ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="returnvalue">GDateTime</span></a> *         gst_date_time_to_g_date_time        (<em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> *datetime</code></em>);</pre>
+<p>
+Creates a new <a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> from a fully defined <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> object.
+</p>
+<p>
+Free-function: g_date_time_unref
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>datetime</code></em> :</span></p></td>
+<td>GstDateTime.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a newly created <a href="http://library.gnome.org/devel/glib/unstable/glib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a>, or NULL on error. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 </div>
 </div>

@@ -67,7 +67,7 @@ typedef struct
   GstStructure *structure;
 } GstMessageImpl;
 
-#define GST_MESSAGE_STRUCTURE(m) (((GstMessageImpl *)(m))->structure)
+#define GST_MESSAGE_STRUCTURE(m)  (((GstMessageImpl *)(m))->structure)
 
 typedef struct
 {
@@ -105,6 +105,7 @@ static GstMessageQuarks message_quarks[] = {
   {GST_MESSAGE_QOS, "qos", 0},
   {GST_MESSAGE_PROGRESS, "progress", 0},
   {GST_MESSAGE_TOC, "toc", 0},
+  {GST_MESSAGE_STREAM_START, "stream-start", 0},
   {0, NULL, 0}
 };
 
@@ -198,11 +199,11 @@ _gst_message_free (GstMessage * message)
     gst_structure_free (structure);
   }
 
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (message), message);
+  g_slice_free1 (sizeof (GstMessageImpl), message);
 }
 
 static void
-gst_message_init (GstMessageImpl * message, gsize size, GstMessageType type,
+gst_message_init (GstMessageImpl * message, GstMessageType type,
     GstObject * src);
 
 static GstMessage *
@@ -217,7 +218,7 @@ _gst_message_copy (GstMessage * message)
 
   copy = g_slice_new0 (GstMessageImpl);
 
-  gst_message_init (copy, sizeof (GstMessageImpl), GST_MESSAGE_TYPE (message),
+  gst_message_init (copy, GST_MESSAGE_TYPE (message),
       GST_MESSAGE_SRC (message));
 
   GST_MESSAGE_TIMESTAMP (copy) = GST_MESSAGE_TIMESTAMP (message);
@@ -236,16 +237,12 @@ _gst_message_copy (GstMessage * message)
 }
 
 static void
-gst_message_init (GstMessageImpl * message, gsize size, GstMessageType type,
+gst_message_init (GstMessageImpl * message, GstMessageType type,
     GstObject * src)
 {
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (message), _gst_message_type,
-      size);
-
-  message->message.mini_object.copy =
-      (GstMiniObjectCopyFunction) _gst_message_copy;
-  message->message.mini_object.free =
-      (GstMiniObjectFreeFunction) _gst_message_free;
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (message), 0, _gst_message_type,
+      (GstMiniObjectCopyFunction) _gst_message_copy, NULL,
+      (GstMiniObjectFreeFunction) _gst_message_free);
 
   GST_MESSAGE_TYPE (message) = type;
   if (src)
@@ -289,7 +286,7 @@ gst_message_new_custom (GstMessageType type, GstObject * src,
             &message->message.mini_object.refcount))
       goto had_parent;
   }
-  gst_message_init (message, sizeof (GstMessageImpl), type, src);
+  gst_message_init (message, type, src);
 
   GST_MESSAGE_STRUCTURE (message) = structure;
 
@@ -298,7 +295,7 @@ gst_message_new_custom (GstMessageType type, GstObject * src,
   /* ERRORS */
 had_parent:
   {
-    g_slice_free1 (GST_MINI_OBJECT_SIZE (message), message);
+    g_slice_free1 (sizeof (GstMessageImpl), message);
     g_warning ("structure is already owned by another object");
     return NULL;
   }
@@ -324,8 +321,6 @@ had_parent:
  * Returns: The message's sequence number.
  *
  * MT safe.
- *
- * Since: 0.10.22
  */
 guint32
 gst_message_get_seqnum (GstMessage * message)
@@ -347,8 +342,6 @@ gst_message_get_seqnum (GstMessage * message)
  * for more information.
  *
  * MT safe.
- *
- * Since: 0.10.22
  */
 void
 gst_message_set_seqnum (GstMessage * message, guint32 seqnum)
@@ -448,8 +441,6 @@ gst_message_new_warning (GstObject * src, GError * error, const gchar * debug)
  * MT safe.
  *
  * Returns: (transfer full): the new info message.
- *
- * Since: 0.10.12
  */
 GstMessage *
 gst_message_new_info (GstObject * src, GError * error, const gchar * debug)
@@ -508,29 +499,29 @@ gst_message_new_tag (GstObject * src, GstTagList * tag_list)
  * The application must be prepared to receive BUFFERING messages in the
  * PREROLLING state and may only set the pipeline to PLAYING after receiving a
  * message with @percent set to 100, which can happen after the pipeline
- * completed prerolling. 
+ * completed prerolling.
  *
  * MT safe.
  *
  * Returns: (transfer full): The new buffering message.
- *
- * Since: 0.10.11
  */
 GstMessage *
 gst_message_new_buffering (GstObject * src, gint percent)
 {
   GstMessage *message;
   GstStructure *structure;
+  gint64 buffering_left;
 
   g_return_val_if_fail (percent >= 0 && percent <= 100, NULL);
+
+  buffering_left = (percent == 100 ? 0 : -1);
 
   structure = gst_structure_new_id (GST_QUARK (MESSAGE_BUFFERING),
       GST_QUARK (BUFFER_PERCENT), G_TYPE_INT, percent,
       GST_QUARK (BUFFERING_MODE), GST_TYPE_BUFFERING_MODE, GST_BUFFERING_STREAM,
       GST_QUARK (AVG_IN_RATE), G_TYPE_INT, -1,
       GST_QUARK (AVG_OUT_RATE), G_TYPE_INT, -1,
-      GST_QUARK (BUFFERING_LEFT), G_TYPE_INT64, G_GINT64_CONSTANT (-1),
-      GST_QUARK (ESTIMATED_TOTAL), G_TYPE_INT64, G_GINT64_CONSTANT (-1), NULL);
+      GST_QUARK (BUFFERING_LEFT), G_TYPE_INT64, buffering_left, NULL);
   message = gst_message_new_custom (GST_MESSAGE_BUFFERING, src, structure);
 
   return message;
@@ -557,7 +548,7 @@ gst_message_new_state_changed (GstObject * src,
   GstMessage *message;
   GstStructure *structure;
 
-  structure = gst_structure_new_id (GST_QUARK (MESSAGE_STATE),
+  structure = gst_structure_new_id (GST_QUARK (MESSAGE_STATE_CHANGED),
       GST_QUARK (OLD_STATE), GST_TYPE_STATE, (gint) oldstate,
       GST_QUARK (NEW_STATE), GST_TYPE_STATE, (gint) newstate,
       GST_QUARK (PENDING_STATE), GST_TYPE_STATE, (gint) pending, NULL);
@@ -690,8 +681,6 @@ gst_message_new_new_clock (GstObject * src, GstClock * clock)
  * Returns: (transfer full): the new structure change message.
  *
  * MT safe.
- *
- * Since: 0.10.22.
  */
 GstMessage *
 gst_message_new_structure_change (GstObject * src, GstStructureChangeType type,
@@ -870,24 +859,26 @@ gst_message_new_async_start (GstObject * src)
 /**
  * gst_message_new_async_done:
  * @src: (transfer none): The object originating the message.
- * @reset_time: if the running_time should be reset
+ * @running_time: the desired running_time
  *
  * The message is posted when elements completed an ASYNC state change.
- * @reset_time is set to TRUE when the element requests a new running_time
- * before going to PLAYING.
+ * @running_time contains the time of the desired running_time when this
+ * elements goes to PLAYING. A value of #GST_CLOCK_TIME_NONE for @running_time
+ * means that the element has no clock interaction and thus doesn't care about
+ * the running_time of the pipeline.
  *
  * Returns: (transfer full): The new async_done message.
  *
  * MT safe.
  */
 GstMessage *
-gst_message_new_async_done (GstObject * src, gboolean reset_time)
+gst_message_new_async_done (GstObject * src, GstClockTime running_time)
 {
   GstMessage *message;
   GstStructure *structure;
 
   structure = gst_structure_new_id (GST_QUARK (MESSAGE_ASYNC_DONE),
-      GST_QUARK (RESET_TIME), G_TYPE_BOOLEAN, reset_time, NULL);
+      GST_QUARK (RUNNING_TIME), G_TYPE_UINT64, running_time, NULL);
   message = gst_message_new_custom (GST_MESSAGE_ASYNC_DONE, src, structure);
 
   return message;
@@ -903,8 +894,6 @@ gst_message_new_async_done (GstObject * src, gboolean reset_time)
  * Returns: (transfer full): The new latency message.
  *
  * MT safe.
- *
- * Since: 0.10.12
  */
 GstMessage *
 gst_message_new_latency (GstObject * src)
@@ -928,8 +917,6 @@ gst_message_new_latency (GstObject * src)
  * Returns: (transfer full): the new requst state message.
  *
  * MT safe.
- *
- * Since: 0.10.23
  */
 GstMessage *
 gst_message_new_request_state (GstObject * src, GstState state)
@@ -973,8 +960,6 @@ gst_message_get_structure (GstMessage * message)
  * check the name of a custom message.
  *
  * Returns: %TRUE if @name matches the name of the message structure.
- *
- * Since: 0.10.20
  */
 gboolean
 gst_message_has_name (GstMessage * message, const gchar * name)
@@ -1038,8 +1023,6 @@ gst_message_parse_tag (GstMessage * message, GstTagList ** tag_list)
  * gst_message_new_buffering().
  *
  * MT safe.
- *
- * Since: 0.10.11
  */
 void
 gst_message_parse_buffering (GstMessage * message, gint * percent)
@@ -1062,8 +1045,6 @@ gst_message_parse_buffering (GstMessage * message, gint * percent)
  * @buffering_left: amount of buffering time left in milliseconds
  *
  * Configures the buffering stats values in @message.
- *
- * Since: 0.10.20
  */
 void
 gst_message_set_buffering_stats (GstMessage * message, GstBufferingMode mode,
@@ -1088,8 +1069,6 @@ gst_message_set_buffering_stats (GstMessage * message, GstBufferingMode mode,
  *     milliseconds, or NULL
  *
  * Extracts the buffering stats values from @message.
- *
- * Since: 0.10.20
  */
 void
 gst_message_parse_buffering_stats (GstMessage * message,
@@ -1275,8 +1254,6 @@ gst_message_parse_new_clock (GstMessage * message, GstClock ** clock)
  * Extracts the change type and completion status from the GstMessage.
  *
  * MT safe.
- *
- * Since: 0.10.22
  */
 void
 gst_message_parse_structure_change (GstMessage * message,
@@ -1416,8 +1393,6 @@ gst_message_parse_warning (GstMessage * message, GError ** gerror,
  * in the output arguments are copies; the caller must free them when done.
  *
  * MT safe.
- *
- * Since: 0.10.12
  */
 void
 gst_message_parse_info (GstMessage * message, GError ** gerror, gchar ** debug)
@@ -1542,14 +1517,14 @@ gst_message_parse_duration (GstMessage * message, GstFormat * format,
 /**
  * gst_message_parse_async_done:
  * @message: A valid #GstMessage of type GST_MESSAGE_ASYNC_DONE.
- * @reset_time: (out): Result location for the reset_time or NULL
+ * @running_time: (out): Result location for the running_time or NULL
  *
- * Extract the reset_time from the async_done message.
+ * Extract the running_time from the async_done message.
  *
  * MT safe.
  */
 void
-gst_message_parse_async_done (GstMessage * message, gboolean * reset_time)
+gst_message_parse_async_done (GstMessage * message, GstClockTime * running_time)
 {
   GstStructure *structure;
 
@@ -1557,10 +1532,10 @@ gst_message_parse_async_done (GstMessage * message, gboolean * reset_time)
   g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_ASYNC_DONE);
 
   structure = GST_MESSAGE_STRUCTURE (message);
-  if (reset_time)
-    *reset_time =
-        g_value_get_boolean (gst_structure_id_get_value (structure,
-            GST_QUARK (RESET_TIME)));
+  if (running_time)
+    *running_time =
+        g_value_get_uint64 (gst_structure_id_get_value (structure,
+            GST_QUARK (RUNNING_TIME)));
 }
 
 /**
@@ -1571,8 +1546,6 @@ gst_message_parse_async_done (GstMessage * message, gboolean * reset_time)
  * Extract the requested state from the request_state message.
  *
  * MT safe.
- *
- * Since: 0.10.23
  */
 void
 gst_message_parse_request_state (GstMessage * message, GstState * state)
@@ -1601,8 +1574,6 @@ gst_message_parse_request_state (GstMessage * message, GstState * state)
  * Returns: (transfer full): the new stream status message.
  *
  * MT safe.
- *
- * Since: 0.10.24.
  */
 GstMessage *
 gst_message_new_stream_status (GstObject * src, GstStreamStatusType type,
@@ -1630,8 +1601,6 @@ gst_message_new_stream_status (GstObject * src, GstStreamStatusType type,
  * should thus not be unreffed.
  *
  * MT safe.
- *
- * Since: 0.10.24.
  */
 void
 gst_message_parse_stream_status (GstMessage * message,
@@ -1662,8 +1631,6 @@ gst_message_parse_stream_status (GstMessage * message,
  *
  * Configures the object handling the streaming thread. This is usually a
  * GstTask object but other objects might be added in the future.
- *
- * Since: 0.10.24
  */
 void
 gst_message_set_stream_status_object (GstMessage * message,
@@ -1687,8 +1654,6 @@ gst_message_set_stream_status_object (GstMessage * message,
  * Returns: a GValue containing the object that manages the streaming thread.
  * This object is usually of type GstTask but other types can be added in the
  * future. The object remains valid as long as @message is valid.
- *
- * Since: 0.10.24
  */
 const GValue *
 gst_message_get_stream_status_object (GstMessage * message)
@@ -1726,8 +1691,6 @@ gst_message_get_stream_status_object (GstMessage * message)
  * Returns: (transfer full): the new step_done message.
  *
  * MT safe.
- *
- * Since: 0.10.24
  */
 GstMessage *
 gst_message_new_step_done (GstObject * src, GstFormat format, guint64 amount,
@@ -1764,8 +1727,6 @@ gst_message_new_step_done (GstObject * src, GstFormat format, guint64 amount,
  * Extract the values the step_done message.
  *
  * MT safe.
- *
- * Since: 0.10.24
  */
 void
 gst_message_parse_step_done (GstMessage * message, GstFormat * format,
@@ -1812,8 +1773,6 @@ gst_message_parse_step_done (GstMessage * message, GstFormat * format,
  * Returns: (transfer full): The new step_start message. 
  *
  * MT safe.
- *
- * Since: 0.10.24
  */
 GstMessage *
 gst_message_new_step_start (GstObject * src, gboolean active, GstFormat format,
@@ -1847,8 +1806,6 @@ gst_message_new_step_start (GstObject * src, gboolean active, GstFormat format,
  * Extract the values from step_start message.
  *
  * MT safe.
- *
- * Since: 0.10.24
  */
 void
 gst_message_parse_step_start (GstMessage * message, gboolean * active,
@@ -1896,8 +1853,6 @@ gst_message_parse_step_start (GstMessage * message, gboolean * active,
  * Returns: (transfer full): The new qos message.
  *
  * MT safe.
- *
- * Since: 0.10.29
  */
 GstMessage *
 gst_message_new_qos (GstObject * src, gboolean live, guint64 running_time,
@@ -1935,8 +1890,6 @@ gst_message_new_qos (GstObject * src, gboolean live, guint64 running_time,
  * Set the QoS values that have been calculated/analysed from the QoS data
  *
  * MT safe.
- *
- * Since: 0.10.29
  */
 void
 gst_message_set_qos_values (GstMessage * message, gint64 jitter,
@@ -1972,8 +1925,6 @@ gst_message_set_qos_values (GstMessage * message, gint64 jitter,
  * invalid. Values of -1 for either @processed or @dropped mean unknown values.
  *
  * MT safe.
- *
- * Since: 0.10.29
  */
 void
 gst_message_set_qos_stats (GstMessage * message, GstFormat format,
@@ -2011,8 +1962,6 @@ gst_message_set_qos_stats (GstMessage * message, GstFormat format,
  * values.
  *
  * MT safe.
- *
- * Since: 0.10.29
  */
 void
 gst_message_parse_qos (GstMessage * message, gboolean * live,
@@ -2047,8 +1996,6 @@ gst_message_parse_qos (GstMessage * message, gboolean * live,
  * Extract the QoS values that have been calculated/analysed from the QoS data
  *
  * MT safe.
- *
- * Since: 0.10.29
  */
 void
 gst_message_parse_qos_values (GstMessage * message, gint64 * jitter,
@@ -2085,8 +2032,6 @@ gst_message_parse_qos_values (GstMessage * message, gint64 * jitter,
  * invalid. Values of -1 for either @processed or @dropped mean unknown values.
  *
  * MT safe.
- *
- * Since: 0.10.29
  */
 void
 gst_message_parse_qos_stats (GstMessage * message, GstFormat * format,
@@ -2118,8 +2063,6 @@ gst_message_parse_qos_stats (GstMessage * message, GstFormat * format,
  * @test should contain a user visible string detailing the current action.
  *
  * Returns: (transfer full): The new qos message.
- *
- * Since: 0.10.33
  */
 GstMessage *
 gst_message_new_progress (GstObject * src, GstProgressType type,
@@ -2154,8 +2097,6 @@ gst_message_new_progress (GstObject * src, GstProgressType type,
  * @text: (out) (allow-none) (transfer full): location for the text
  *
  * Parses the progress @type, @code and @text.
- *
- * Since: 0.10.33
  */
 void
 gst_message_parse_progress (GstMessage * message, GstProgressType * type,
@@ -2176,17 +2117,15 @@ gst_message_parse_progress (GstMessage * message, GstProgressType * type,
 /**
  * gst_message_new_toc:
  * @src: the object originating the message.
- * @toc: #GstToc structure for the message.
+ * @toc: (transfer none): #GstToc structure for the message.
  * @updated: whether TOC was updated or not.
  *
  * Create a new TOC message. The message is posted by elements
  * that discovered or updated a TOC.
  *
- * Returns: a new TOC message.
+ * Returns: (transfer full): a new TOC message.
  *
  * MT safe.
- *
- * Since: 0.10.37
  */
 GstMessage *
 gst_message_new_toc (GstObject * src, GstToc * toc, gboolean updated)
@@ -2195,28 +2134,24 @@ gst_message_new_toc (GstObject * src, GstToc * toc, gboolean updated)
 
   g_return_val_if_fail (toc != NULL, NULL);
 
-  toc_struct = __gst_toc_to_structure (toc);
+  toc_struct = gst_structure_new_id (GST_QUARK (MESSAGE_TOC),
+      GST_QUARK (TOC), GST_TYPE_TOC, toc,
+      GST_QUARK (UPDATED), G_TYPE_BOOLEAN, updated, NULL);
 
-  if (G_LIKELY (toc_struct != NULL)) {
-    __gst_toc_structure_set_updated (toc_struct, updated);
-    return gst_message_new_custom (GST_MESSAGE_TOC, src, toc_struct);
-  } else
-    return NULL;
+  return gst_message_new_custom (GST_MESSAGE_TOC, src, toc_struct);
 }
 
 /**
  * gst_message_parse_toc:
  * @message: a valid #GstMessage of type GST_MESSAGE_TOC.
- * @toc: (out): return location for the TOC.
+ * @toc: (out) (transfer full): return location for the TOC.
  * @updated: (out): return location for the updated flag.
  *
  * Extract thef TOC from the #GstMessage. The TOC returned in the
  * output argument is a copy; the caller must free it with
- * gst_toc_free() when done.
+ * gst_toc_unref() when done.
  *
  * MT safe.
- *
- * Since: 0.10.37
  */
 void
 gst_message_parse_toc (GstMessage * message, GstToc ** toc, gboolean * updated)
@@ -2225,9 +2160,78 @@ gst_message_parse_toc (GstMessage * message, GstToc ** toc, gboolean * updated)
   g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_TOC);
   g_return_if_fail (toc != NULL);
 
-  *toc = __gst_toc_from_structure (GST_MESSAGE_STRUCTURE (message));
+  gst_structure_id_get (GST_MESSAGE_STRUCTURE (message),
+      GST_QUARK (TOC), GST_TYPE_TOC, toc,
+      GST_QUARK (UPDATED), G_TYPE_BOOLEAN, updated, NULL);
+}
 
-  if (updated != NULL)
-    *updated =
-        __gst_toc_structure_get_updated (GST_MESSAGE_STRUCTURE (message));
+/**
+ * gst_message_new_reset_time:
+ * @src: (transfer none): The object originating the message.
+ * @running_time: the requested running-time
+ *
+ * This message is posted when the pipeline running-time should be reset to
+ * @running_time, like after a flushing seek.
+ *
+ * Returns: (transfer full): The new reset_time message.
+ *
+ * MT safe.
+ */
+GstMessage *
+gst_message_new_reset_time (GstObject * src, GstClockTime running_time)
+{
+  GstMessage *message;
+  GstStructure *structure;
+
+  structure = gst_structure_new_id (GST_QUARK (MESSAGE_RESET_TIME),
+      GST_QUARK (RUNNING_TIME), G_TYPE_UINT64, running_time, NULL);
+  message = gst_message_new_custom (GST_MESSAGE_RESET_TIME, src, structure);
+
+  return message;
+}
+
+/**
+ * gst_message_parse_reset_time:
+ * @message: A valid #GstMessage of type GST_MESSAGE_RESET_TIME.
+ * @running_time: (out): Result location for the running_time or NULL
+ *
+ * Extract the running-time from the RESET_TIME message.
+ *
+ * MT safe.
+ */
+void
+gst_message_parse_reset_time (GstMessage * message, GstClockTime * running_time)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_IS_MESSAGE (message));
+  g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_RESET_TIME);
+
+  structure = GST_MESSAGE_STRUCTURE (message);
+  if (running_time)
+    *running_time =
+        g_value_get_uint64 (gst_structure_id_get_value (structure,
+            GST_QUARK (RUNNING_TIME)));
+}
+
+/**
+ * gst_message_new_stream_start:
+ * @src: (transfer none): The object originating the message.
+ *
+ * Create a new stream_start message. This message is generated and posted in
+ * the sink elements of a GstBin. The bin will only forward the STREAM_START
+ * message to the application if all sinks have posted an STREAM_START message.
+ *
+ * Returns: (transfer full): The new stream_start message.
+ *
+ * MT safe.
+ */
+GstMessage *
+gst_message_new_stream_start (GstObject * src)
+{
+  GstMessage *message;
+
+  message = gst_message_new_custom (GST_MESSAGE_STREAM_START, src, NULL);
+
+  return message;
 }

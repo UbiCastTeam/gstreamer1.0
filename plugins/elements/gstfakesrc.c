@@ -315,8 +315,6 @@ gst_fake_src_class_init (GstFakeSrcClass * klass)
    * GstFakeSrc:format
    *
    * Set the format of the newsegment events to produce.
-   *
-   * Since: 0.10.20
    */
   g_object_class_install_property (gobject_class, PROP_FORMAT,
       g_param_spec_enum ("format", "Format",
@@ -854,7 +852,7 @@ gst_fake_src_create (GstBaseSrc * basesrc, guint64 offset, guint length,
     src->last_message =
         g_strdup_printf ("create   ******* (%s:%s) (%u bytes, dts: %s, pts:%s"
         ", duration: %s, offset: %" G_GINT64_FORMAT ", offset_end: %"
-        G_GINT64_FORMAT ", flags: %d %s) %p",
+        G_GINT64_FORMAT ", flags: %08x %s) %p",
         GST_DEBUG_PAD_NAME (GST_BASE_SRC_CAST (src)->srcpad), (guint) size,
         dts_str, pts_str, dur_str, GST_BUFFER_OFFSET (buf),
         GST_BUFFER_OFFSET_END (buf), GST_MINI_OBJECT_CAST (buf)->flags,

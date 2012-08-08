@@ -27,17 +27,19 @@
 
 G_BEGIN_DECLS
 
+#define GST_TYPE_ATOMIC_QUEUE (gst_atomic_queue_get_type())
+
 /**
  * GstAtomicQueue:
  *
  * Opaque atomic data queue.
  *
  * Use the acessor functions to get the stored values.
- *
- * Since: 0.10.33
  */
 typedef struct _GstAtomicQueue GstAtomicQueue;
 
+
+GType              gst_atomic_queue_get_type    (void);
 
 GstAtomicQueue *   gst_atomic_queue_new         (guint initial_size) G_GNUC_MALLOC;
 

@@ -26,6 +26,7 @@
 #define __GST_UTILS_H__
 
 #include <glib.h>
+#include <gst/gstconfig.h>
 #include <gst/gstbin.h>
 #include <gst/gstparse.h>
 
@@ -74,9 +75,6 @@ guint64         gst_util_uint64_scale_int_ceil  (guint64 val, gint num, gint den
 guint32         gst_util_seqnum_next            (void);
 gint32          gst_util_seqnum_compare         (guint32 s1, guint32 s2);
 
-void            gst_print_pad_caps              (GString *buf, gint indent, GstPad *pad);
-void            gst_print_element_args          (GString *buf, gint indent, GstElement *element);
-
 
 /**
  * GST_CALL_PARENT:
@@ -114,20 +112,36 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
 #define _GST_PUT(__data, __idx, __size, __shift, __num) \
     (((guint8 *) (__data))[__idx] = (((guint##__size) (__num)) >> (__shift)) & 0xff)
 
+#if GST_HAVE_UNALIGNED_ACCESS
+static inline guint16 __gst_fast_read16(const guint8 *v) {
+  return *(const guint16*)(v);
+}
+static inline guint32 __gst_fast_read32(const guint8 *v) {
+  return *(const guint32*)(v);
+}
+static inline guint64 __gst_fast_read64(const guint8 *v) {
+  return *(const guint64*)(v);
+}
+static inline guint16 __gst_fast_read_swap16(const guint8 *v) {
+  return GUINT16_SWAP_LE_BE(*(const guint16*)(v));
+}
+static inline guint32 __gst_fast_read_swap32(const guint8 *v) {
+  return GUINT32_SWAP_LE_BE(*(const guint32*)(v));
+}
+static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
+  return GUINT64_SWAP_LE_BE(*(const guint64*)(v));
+}
+# define _GST_FAST_READ(s, d) __gst_fast_read##s((const guint8 *)(d))
+# define _GST_FAST_READ_SWAP(s, d) __gst_fast_read_swap##s((const guint8 *)(d))
+#endif
+
+
 /**
  * GST_READ_UINT64_BE:
  * @data: memory location
  *
  * Read a 64 bit unsigned integer value in big endian format from the memory buffer.
  */
-#define GST_READ_UINT64_BE(data)        (_GST_GET (data, 0, 64, 56) | \
-                                         _GST_GET (data, 1, 64, 48) | \
-                                         _GST_GET (data, 2, 64, 40) | \
-                                         _GST_GET (data, 3, 64, 32) | \
-                                         _GST_GET (data, 4, 64, 24) | \
-                                         _GST_GET (data, 5, 64, 16) | \
-                                         _GST_GET (data, 6, 64,  8) | \
-                                         _GST_GET (data, 7, 64,  0))
 
 /**
  * GST_READ_UINT64_LE:
@@ -135,14 +149,33 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  *
  * Read a 64 bit unsigned integer value in little endian format from the memory buffer.
  */
-#define GST_READ_UINT64_LE(data)        (_GST_GET (data, 7, 64, 56) | \
-                                         _GST_GET (data, 6, 64, 48) | \
-                                         _GST_GET (data, 5, 64, 40) | \
-                                         _GST_GET (data, 4, 64, 32) | \
-                                         _GST_GET (data, 3, 64, 24) | \
-                                         _GST_GET (data, 2, 64, 16) | \
-                                         _GST_GET (data, 1, 64,  8) | \
-                                         _GST_GET (data, 0, 64,  0))
+#if GST_HAVE_UNALIGNED_ACCESS
+# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+#  define GST_READ_UINT64_BE(data)      _GST_FAST_READ (64, data)
+#  define GST_READ_UINT64_LE(data)      _GST_FAST_READ_SWAP (64, data)
+# else
+#  define GST_READ_UINT64_BE(data)      _GST_FAST_READ_SWAP (64, data)
+#  define GST_READ_UINT64_LE(data)      _GST_FAST_READ (64, data)
+# endif
+#else
+# define GST_READ_UINT64_BE(data)	(_GST_GET (data, 0, 64, 56) | \
+					 _GST_GET (data, 1, 64, 48) | \
+					 _GST_GET (data, 2, 64, 40) | \
+					 _GST_GET (data, 3, 64, 32) | \
+					 _GST_GET (data, 4, 64, 24) | \
+					 _GST_GET (data, 5, 64, 16) | \
+					 _GST_GET (data, 6, 64,  8) | \
+					 _GST_GET (data, 7, 64,  0))
+
+# define GST_READ_UINT64_LE(data)	(_GST_GET (data, 7, 64, 56) | \
+					 _GST_GET (data, 6, 64, 48) | \
+					 _GST_GET (data, 5, 64, 40) | \
+					 _GST_GET (data, 4, 64, 32) | \
+					 _GST_GET (data, 3, 64, 24) | \
+					 _GST_GET (data, 2, 64, 16) | \
+					 _GST_GET (data, 1, 64,  8) | \
+					 _GST_GET (data, 0, 64,  0))
+#endif
 
 /**
  * GST_READ_UINT32_BE:
@@ -150,10 +183,6 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  *
  * Read a 32 bit unsigned integer value in big endian format from the memory buffer.
  */
-#define GST_READ_UINT32_BE(data)        (_GST_GET (data, 0, 32, 24) | \
-                                         _GST_GET (data, 1, 32, 16) | \
-                                         _GST_GET (data, 2, 32,  8) | \
-                                         _GST_GET (data, 3, 32,  0))
 
 /**
  * GST_READ_UINT32_LE:
@@ -161,18 +190,31 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  *
  * Read a 32 bit unsigned integer value in little endian format from the memory buffer.
  */
-#define GST_READ_UINT32_LE(data)        (_GST_GET (data, 3, 32, 24) | \
-                                         _GST_GET (data, 2, 32, 16) | \
-                                         _GST_GET (data, 1, 32,  8) | \
-                                         _GST_GET (data, 0, 32,  0))
+#if GST_HAVE_UNALIGNED_ACCESS
+# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+#  define GST_READ_UINT32_BE(data)      _GST_FAST_READ (32, data)
+#  define GST_READ_UINT32_LE(data)      _GST_FAST_READ_SWAP (32, data)
+# else
+#  define GST_READ_UINT32_BE(data)      _GST_FAST_READ_SWAP (32, data)
+#  define GST_READ_UINT32_LE(data)      _GST_FAST_READ (32, data)
+# endif
+#else
+# define GST_READ_UINT32_BE(data)	(_GST_GET (data, 0, 32, 24) | \
+					 _GST_GET (data, 1, 32, 16) | \
+					 _GST_GET (data, 2, 32,  8) | \
+					 _GST_GET (data, 3, 32,  0))
+
+# define GST_READ_UINT32_LE(data)	(_GST_GET (data, 3, 32, 24) | \
+					 _GST_GET (data, 2, 32, 16) | \
+					 _GST_GET (data, 1, 32,  8) | \
+					 _GST_GET (data, 0, 32,  0))
+#endif
 
 /**
  * GST_READ_UINT24_BE:
  * @data: memory location
  *
  * Read a 24 bit unsigned integer value in big endian format from the memory buffer.
- *
- * Since: 0.10.22
  */
 #define GST_READ_UINT24_BE(data)        (_GST_GET (data, 0, 32, 16) | \
                                          _GST_GET (data, 1, 32,  8) | \
@@ -183,8 +225,6 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  * @data: memory location
  *
  * Read a 24 bit unsigned integer value in little endian format from the memory buffer.
- *
- * Since: 0.10.22
  */
 #define GST_READ_UINT24_LE(data)        (_GST_GET (data, 2, 32, 16) | \
                                          _GST_GET (data, 1, 32,  8) | \
@@ -196,17 +236,27 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  *
  * Read a 16 bit unsigned integer value in big endian format from the memory buffer.
  */
-#define GST_READ_UINT16_BE(data)        (_GST_GET (data, 0, 16,  8) | \
-                                         _GST_GET (data, 1, 16,  0))
-
 /**
  * GST_READ_UINT16_LE:
  * @data: memory location
  *
  * Read a 16 bit unsigned integer value in little endian format from the memory buffer.
  */
-#define GST_READ_UINT16_LE(data)        (_GST_GET (data, 1, 16,  8) | \
-                                         _GST_GET (data, 0, 16,  0))
+#if GST_HAVE_UNALIGNED_ACCESS
+# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+#  define GST_READ_UINT16_BE(data)      _GST_FAST_READ (16, data)
+#  define GST_READ_UINT16_LE(data)      _GST_FAST_READ_SWAP (16, data)
+# else
+#  define GST_READ_UINT16_BE(data)      _GST_FAST_READ_SWAP (16, data)
+#  define GST_READ_UINT16_LE(data)      _GST_FAST_READ (16, data)
+# endif
+#else
+# define GST_READ_UINT16_BE(data)	(_GST_GET (data, 0, 16,  8) | \
+					 _GST_GET (data, 1, 16,  0))
+
+# define GST_READ_UINT16_LE(data)	(_GST_GET (data, 1, 16,  8) | \
+					 _GST_GET (data, 0, 16,  0))
+#endif
 
 /**
  * GST_READ_UINT8:
@@ -286,8 +336,6 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  * @num: value to store
  *
  * Store a 24 bit unsigned integer value in big endian format into the memory buffer.
- *
- * Since: 0.10.22
  */
 #define GST_WRITE_UINT24_BE(data, num)  do { \
                                           _GST_PUT (data, 0, 32,  16, num); \
@@ -301,8 +349,6 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  * @num: value to store
  *
  * Store a 24 bit unsigned integer value in little endian format into the memory buffer.
- *
- * Since: 0.10.22
  */
 #define GST_WRITE_UINT24_LE(data, num)  do { \
                                           _GST_PUT (data, 0, 32,  0, num); \
@@ -356,9 +402,6 @@ void            gst_print_element_args          (GString *buf, gint indent, GstE
  * Swap byte order of a 32-bit floating point value (float).
  *
  * Returns: @in byte-swapped.
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gfloat GFLOAT_SWAP_LE_BE (gfloat in);
@@ -385,9 +428,6 @@ GFLOAT_SWAP_LE_BE(gfloat in)
  * Swap byte order of a 64-bit floating point value (double).
  *
  * Returns: @in byte-swapped.
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gdouble GDOUBLE_SWAP_LE_BE (gdouble in);
@@ -413,9 +453,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 64-bit floating point value (double) from native byte order into
  * little endian byte order.
- *
- * Since: 0.10.22
- *
  */
 /**
  * GDOUBLE_TO_BE:
@@ -423,9 +460,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 64-bit floating point value (double) from native byte order into
  * big endian byte order.
- *
- * Since: 0.10.22
- *
  */
 /**
  * GDOUBLE_FROM_LE:
@@ -433,9 +467,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 64-bit floating point value (double) from little endian byte order
  * into native byte order.
- *
- * Since: 0.10.22
- *
  */
 /**
  * GDOUBLE_FROM_BE:
@@ -443,9 +474,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 64-bit floating point value (double) from big endian byte order
  * into native byte order.
- *
- * Since: 0.10.22
- *
  */
 
 /**
@@ -454,9 +482,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 32-bit floating point value (float) from native byte order into
  * little endian byte order.
- *
- * Since: 0.10.22
- *
  */
 /**
  * GFLOAT_TO_BE:
@@ -464,9 +489,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 32-bit floating point value (float) from native byte order into
  * big endian byte order.
- *
- * Since: 0.10.22
- *
  */
 /**
  * GFLOAT_FROM_LE:
@@ -474,9 +496,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 32-bit floating point value (float) from little endian byte order
  * into native byte order.
- *
- * Since: 0.10.22
- *
  */
 /**
  * GFLOAT_FROM_BE:
@@ -484,9 +503,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  *
  * Convert 32-bit floating point value (float) from big endian byte order
  * into native byte order.
- *
- * Since: 0.10.22
- *
  */
 
 #if G_BYTE_ORDER == G_LITTLE_ENDIAN
@@ -519,9 +535,6 @@ GDOUBLE_SWAP_LE_BE(gdouble in)
  * Read a 32 bit float value in little endian format from the memory buffer.
  *
  * Returns: The floating point value read from @data
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gfloat GST_READ_FLOAT_LE (const guint8 *data);
@@ -547,9 +560,6 @@ GST_READ_FLOAT_LE(const guint8 *data)
  * Read a 32 bit float value in big endian format from the memory buffer.
  *
  * Returns: The floating point value read from @data
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gfloat GST_READ_FLOAT_BE (const guint8 *data);
@@ -575,9 +585,6 @@ GST_READ_FLOAT_BE(const guint8 *data)
  * Read a 64 bit double value in little endian format from the memory buffer.
  *
  * Returns: The double-precision floating point value read from @data
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gdouble GST_READ_DOUBLE_LE (const guint8 *data);
@@ -603,9 +610,6 @@ GST_READ_DOUBLE_LE(const guint8 *data)
  * Read a 64 bit double value in big endian format from the memory buffer.
  *
  * Returns: The double-precision floating point value read from @data
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gdouble GST_READ_DOUBLE_BE (const guint8 *data);
@@ -630,9 +634,6 @@ GST_READ_DOUBLE_BE(const guint8 *data)
  * @num: value to store
  *
  * Store a 32 bit float value in little endian format into the memory buffer.
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC void GST_WRITE_FLOAT_LE (guint8 *data, gfloat num);
@@ -657,9 +658,6 @@ GST_WRITE_FLOAT_LE(guint8 *data, gfloat num)
  * @num: value to store
  *
  * Store a 32 bit float value in big endian format into the memory buffer.
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC void GST_WRITE_FLOAT_BE (guint8 *data, gfloat num);
@@ -684,9 +682,6 @@ GST_WRITE_FLOAT_BE(guint8 *data, gfloat num)
  * @num: value to store
  *
  * Store a 64 bit double value in little endian format into the memory buffer.
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC void GST_WRITE_DOUBLE_LE (guint8 *data, gdouble num);
@@ -711,9 +706,6 @@ GST_WRITE_DOUBLE_LE(guint8 *data, gdouble num)
  * @num: value to store
  *
  * Store a 64 bit double value in big endian format into the memory buffer.
- *
- * Since: 0.10.22
- *
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC void GST_WRITE_DOUBLE_BE (guint8 *data, gdouble num);
@@ -782,8 +774,6 @@ GST_WRITE_DOUBLE_BE(guint8 *data, gdouble num)
  * @num: integer value to round down
  *
  * Rounds an integer value down to the next multiple of 2.
- *
- * Since: 0.10.12
  */
 #define GST_ROUND_DOWN_2(num)  ((num)&(~1))
 /**
@@ -791,8 +781,6 @@ GST_WRITE_DOUBLE_BE(guint8 *data, gdouble num)
  * @num: integer value to round down
  *
  * Rounds an integer value down to the next multiple of 4.
- *
- * Since: 0.10.12
  */
 #define GST_ROUND_DOWN_4(num)  ((num)&(~3))
 /**
@@ -800,8 +788,6 @@ GST_WRITE_DOUBLE_BE(guint8 *data, gdouble num)
  * @num: integer value to round down
  *
  * Rounds an integer value down to the next multiple of 8.
- *
- * Since: 0.10.12
  */
 #define GST_ROUND_DOWN_8(num)  ((num)&(~7))
 /**
@@ -809,8 +795,6 @@ GST_WRITE_DOUBLE_BE(guint8 *data, gdouble num)
  * @num: integer value to round down
  *
  * Rounds an integer value down to the next multiple of 16.
- *
- * Since: 0.10.12
  */
 #define GST_ROUND_DOWN_16(num) ((num)&(~15))
 /**
@@ -818,8 +802,6 @@ GST_WRITE_DOUBLE_BE(guint8 *data, gdouble num)
  * @num: integer value to round down
  *
  * Rounds an integer value down to the next multiple of 32.
- *
- * Since: 0.10.12
  */
 #define GST_ROUND_DOWN_32(num) ((num)&(~31))
 /**
@@ -827,8 +809,6 @@ GST_WRITE_DOUBLE_BE(guint8 *data, gdouble num)
  * @num: integer value to round down
  *
  * Rounds an integer value down to the next multiple of 64.
- *
- * Since: 0.10.12
  */
 #define GST_ROUND_DOWN_64(num) ((num)&(~63))
 
@@ -908,6 +888,10 @@ gboolean                gst_pad_peer_query_convert      (GstPad *pad, GstFormat 
 GstCaps *               gst_pad_peer_query_caps         (GstPad * pad, GstCaps *filter);
 gboolean                gst_pad_peer_query_accept_caps  (GstPad * pad, GstCaps *caps);
 
+gchar *                 gst_pad_create_stream_id               (GstPad * pad, GstElement * parent, const gchar *stream_id);
+gchar *                 gst_pad_create_stream_id_printf        (GstPad * pad, GstElement * parent, const gchar *stream_id, ...);
+gchar *                 gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent, const gchar *stream_id, va_list var_args);
+
 /* bin functions */
 void                    gst_bin_add_many                (GstBin *bin, GstElement *element_1, ...) G_GNUC_NULL_TERMINATED;
 void                    gst_bin_remove_many             (GstBin *bin, GstElement *element_1, ...) G_GNUC_NULL_TERMINATED;
@@ -933,8 +917,6 @@ GstClockTime            gst_util_get_timestamp          (void);
  * @GST_SEARCH_MODE_AFTER : Search for an exact match or the element just after.
  *
  * The different search modes.
- *
- * Since: 0.10.23
  */
 typedef enum {
   GST_SEARCH_MODE_EXACT = 0,

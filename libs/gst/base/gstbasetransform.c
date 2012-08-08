@@ -256,8 +256,6 @@ struct _GstBaseTransformPrivate
 
   gboolean gap_aware;
 
-  gboolean reconfigure;
-
   /* QoS stats */
   guint64 processed;
   guint64 dropped;
@@ -787,7 +785,7 @@ gst_base_transform_set_allocation (GstBaseTransform * trans,
     gst_object_unref (oldpool);
   }
   if (oldalloc) {
-    gst_allocator_unref (oldalloc);
+    gst_object_unref (oldalloc);
   }
   if (oldquery) {
     gst_query_unref (oldquery);
@@ -815,9 +813,10 @@ gst_base_transform_default_decide_allocation (GstBaseTransform * trans,
   n_metas = gst_query_get_n_allocation_metas (query);
   for (i = 0; i < n_metas; i++) {
     GType api;
+    const GstStructure *params;
     gboolean remove;
 
-    api = gst_query_parse_nth_allocation_meta (query, i);
+    api = gst_query_parse_nth_allocation_meta (query, i, &params);
 
     /* by default we remove all metadata, subclasses should implement a
      * filter_meta function */
@@ -829,7 +828,7 @@ gst_base_transform_default_decide_allocation (GstBaseTransform * trans,
       remove = TRUE;
     } else if (G_LIKELY (klass->filter_meta)) {
       /* remove if the subclass said so */
-      remove = !klass->filter_meta (trans, query, api);
+      remove = !klass->filter_meta (trans, query, api, params);
       GST_LOG_OBJECT (trans, "filter_meta for api %s returned: %s",
           g_type_name (api), (remove ? "remove" : "keep"));
     } else {
@@ -884,7 +883,7 @@ gst_base_transform_default_decide_allocation (GstBaseTransform * trans,
   else
     gst_query_add_allocation_param (query, allocator, &params);
   if (allocator)
-    gst_allocator_unref (allocator);
+    gst_object_unref (allocator);
 
   if (pool) {
     gst_query_set_nth_allocation_pool (query, 0, pool, size, min, max);
@@ -1318,13 +1317,8 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
   if (!(ret = gst_base_transform_configure_caps (trans, incaps, outcaps)))
     goto failed_configure;
 
-  GST_OBJECT_LOCK (trans->sinkpad);
-  GST_OBJECT_FLAG_UNSET (trans->srcpad, GST_PAD_FLAG_NEED_RECONFIGURE);
-  trans->priv->reconfigure = FALSE;
-  GST_OBJECT_UNLOCK (trans->sinkpad);
-
   /* let downstream know about our caps */
-  gst_pad_push_event (trans->srcpad, gst_event_new_caps (outcaps));
+  ret = gst_pad_set_caps (trans->srcpad, outcaps);
 
   if (ret) {
     /* try to get a pool when needed */
@@ -1375,10 +1369,11 @@ gst_base_transform_default_propose_allocation (GstBaseTransform * trans,
     n_metas = gst_query_get_n_allocation_metas (decide_query);
     for (i = 0; i < n_metas; i++) {
       GType api;
+      const GstStructure *params;
 
-      api = gst_query_parse_nth_allocation_meta (decide_query, i);
+      api = gst_query_parse_nth_allocation_meta (decide_query, i, &params);
       GST_DEBUG_OBJECT (trans, "proposing metadata %s", g_type_name (api));
-      gst_query_add_allocation_meta (query, api);
+      gst_query_add_allocation_meta (query, api, params);
     }
     ret = TRUE;
   }
@@ -1813,6 +1808,8 @@ gst_base_transform_sink_eventfunc (GstBaseTransform * trans, GstEvent * event)
       GstCaps *caps;
 
       gst_event_parse_caps (event, &caps);
+      /* clear any pending reconfigure flag */
+      gst_pad_check_reconfigure (trans->srcpad);
       ret = gst_base_transform_setcaps (trans, trans->sinkpad, caps);
 
       forward = FALSE;
@@ -1908,12 +1905,7 @@ gst_base_transform_handle_buffer (GstBaseTransform * trans, GstBuffer * inbuf,
 
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
-  GST_OBJECT_LOCK (trans->sinkpad);
-  reconfigure = GST_PAD_NEEDS_RECONFIGURE (trans->srcpad)
-      || priv->reconfigure;
-  GST_OBJECT_FLAG_UNSET (trans->srcpad, GST_PAD_FLAG_NEED_RECONFIGURE);
-  priv->reconfigure = FALSE;
-  GST_OBJECT_UNLOCK (trans->sinkpad);
+  reconfigure = gst_pad_check_reconfigure (trans->srcpad);
 
   if (G_UNLIKELY (reconfigure)) {
     GstCaps *incaps;
@@ -2506,8 +2498,6 @@ gst_base_transform_is_in_place (GstBaseTransform * trans)
  * when needed.
  *
  * MT safe.
- *
- * Since: 0.10.5
  */
 void
 gst_base_transform_update_qos (GstBaseTransform * trans,
@@ -2533,8 +2523,6 @@ gst_base_transform_update_qos (GstBaseTransform * trans,
  * Enable or disable QoS handling in the transform.
  *
  * MT safe.
- *
- * Since: 0.10.5
  */
 void
 gst_base_transform_set_qos_enabled (GstBaseTransform * trans, gboolean enabled)
@@ -2557,8 +2545,6 @@ gst_base_transform_set_qos_enabled (GstBaseTransform * trans, gboolean enabled)
  * Returns: TRUE if QoS is enabled.
  *
  * MT safe.
- *
- * Since: 0.10.5
  */
 gboolean
 gst_base_transform_is_qos_enabled (GstBaseTransform * trans)
@@ -2587,8 +2573,6 @@ gst_base_transform_is_qos_enabled (GstBaseTransform * trans)
  * unset the flag if the output is no neutral data.
  *
  * MT safe.
- *
- * Since: 0.10.16
  */
 void
 gst_base_transform_set_gap_aware (GstBaseTransform * trans, gboolean gap_aware)
@@ -2627,16 +2611,11 @@ gst_base_transform_reconfigure_sink (GstBaseTransform * trans)
  * Instructs @trans to renegotiate a new downstream transform on the next
  * buffer. This function is typically called after properties on the transform
  * were set that influence the output format.
- *
- * Since: 0.10.21
  */
 void
 gst_base_transform_reconfigure_src (GstBaseTransform * trans)
 {
   g_return_if_fail (GST_IS_BASE_TRANSFORM (trans));
 
-  GST_OBJECT_LOCK (trans);
-  GST_DEBUG_OBJECT (trans, "marking reconfigure");
-  trans->priv->reconfigure = TRUE;
-  GST_OBJECT_UNLOCK (trans);
+  gst_pad_mark_reconfigure (trans->srcpad);
 }

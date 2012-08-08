@@ -3,7 +3,7 @@ AC_PREREQ(2.62)
 dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
-AC_INIT(GStreamer, 0.11.92,
+AC_INIT(GStreamer, 0.11.93,
     http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer,
     gstreamer)
 AG_GST_INIT
@@ -164,6 +164,32 @@ else
   AC_MSG_WARN([Sissy ! By asking to not build the tests known to fail, you hereby waive your right to customer support.  If you do not agree with this EULA, please press Ctrl-C before the next line is printed.  By allowing the next line to be printed, you expressly acknowledge your acceptance of this EULA.])
 fi
 
+dnl building of benchmarks
+AC_ARG_ENABLE(benchmarks,
+  AC_HELP_STRING([--disable-benchmarks], [disable building benchmarks apps]),
+  [
+    case "${enableval}" in
+      yes) BUILD_BENCHMARKS=yes ;;
+      no)  BUILD_BENCHMARKS=no ;;
+      *)   AC_MSG_ERROR(bad value ${enableval} for --disable-benchmarks) ;;
+    esac
+  ],
+[BUILD_BENCHMARKS=yes]) dnl Default value
+AM_CONDITIONAL(BUILD_BENCHMARKS, test "x$BUILD_BENCHMARKS" = "xyes")
+
+dnl building of tools
+AC_ARG_ENABLE(tools,
+  AC_HELP_STRING([--disable-tools], [disable building tools]),
+  [
+    case "${enableval}" in
+      yes) BUILD_TOOLS=yes ;;
+      no)  BUILD_TOOLS=no ;;
+      *)   AC_MSG_ERROR(bad value ${enableval} for --disable-tools) ;;
+    esac
+  ],
+[BUILD_TOOLS=yes]) dnl Default value
+AM_CONDITIONAL(BUILD_TOOLS, test "x$BUILD_TOOLS" = "xyes")
+
 dnl poison destroyed objects
 AC_ARG_ENABLE(poisoning,
   AC_HELP_STRING([--enable-poisoning],
@@ -270,40 +296,40 @@ dnl check if we have ANSI C header files
 AC_HEADER_STDC
 
 dnl Check for ucontext.h
-AC_CHECK_HEADERS([ucontext.h])
+AC_CHECK_HEADERS([ucontext.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl Check for sys/socket.h
-AC_CHECK_HEADERS([sys/socket.h], HAVE_SYS_SOCKET_H=yes)
+AC_CHECK_HEADERS([sys/socket.h], [HAVE_SYS_SOCKET_H=yes], [HAVE_SYS_SOCKET_H=no], [AC_INCLUDES_DEFAULT])
 AM_CONDITIONAL(HAVE_SYS_SOCKET_H, test "x$HAVE_SYS_SOCKET_H" = "xyes")
 
 dnl check for sys/times.h for tests/examples/adapter/
-AC_CHECK_HEADERS([sys/times.h], HAVE_SYS_TIMES_H=yes)
-AC_CHECK_HEADERS([unistd.h], HAVE_UNISTD_H=yes)
+AC_CHECK_HEADERS([sys/times.h], [HAVE_SYS_TIMES_H=yes], [HAVE_SYS_TIME_H=no], [AC_INCLUDES_DEFAULT])
+AC_CHECK_HEADERS([unistd.h], [HAVE_UNISTD_H=yes], [HAVE_UNISTD_H=no], [AC_INCLUDES_DEFAULT])
 AM_CONDITIONAL(HAVE_SYS_TIMES_H_AND_UNISTD_H, test "x$HAVE_SYS_TIMES_H" = "xyes" -a "x$HAVE_UNISTD_H" = "xyes")
 
 dnl Check for process.h for getpid() on win32
-AC_CHECK_HEADERS([process.h])
+AC_CHECK_HEADERS([process.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl Check for sys/utsname.h for uname
-AC_CHECK_HEADERS([sys/utsname.h])
+AC_CHECK_HEADERS([sys/utsname.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl Check for stdio_ext.f for __fbufsize
-AC_CHECK_HEADERS([stdio_ext.h])
+AC_CHECK_HEADERS([stdio_ext.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl check for pthreads
-AC_CHECK_HEADERS([pthread.h], HAVE_PTHREAD_H=yes)
+AC_CHECK_HEADERS([pthread.h], [HAVE_PTHREAD_H=yes], [HAVE_PTHREAD_H=no], [AC_INCLUDES_DEFAULT])
 AM_CONDITIONAL(HAVE_PTHREAD_H, test "x$HAVE_PTHREAD_H" = "xyes")
 
 dnl check for sys/prctl for setting thread name on Linux
-AC_CHECK_HEADERS([sys/prctl.h], HAVE_SYS_PRCTL_H=yes)
+AC_CHECK_HEADERS([sys/prctl.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl Check for valgrind.h
 dnl separate from HAVE_VALGRIND because you can have the program, but not
 dnl the dev package
-AC_CHECK_HEADERS([valgrind/valgrind.h], HAVE_VALGRIND_H=yes)
+AC_CHECK_HEADERS([valgrind/valgrind.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl used in gst/gstpoll.c
-AC_CHECK_HEADERS([winsock2.h], HAVE_WINSOCK2_H=yes)
+AC_CHECK_HEADERS([winsock2.h], [HAVE_WINSOCK2_H=yes], [HAVE_WINSOCK2_H=no], [AC_INCLUDES_DEFAULT])
 AM_CONDITIONAL(HAVE_WINSOCK2_H, test "x$HAVE_WINSOCK2_H" = "xyes")
 if test "x$HAVE_WINSOCK2_H" = "xyes"; then
   WIN32_LIBS="-lws2_32"
@@ -382,11 +408,11 @@ AC_CHECK_FUNCS([fgetpos])
 AC_CHECK_FUNCS([fsetpos])
 
 dnl check for poll(), ppoll() and pselect()
+AC_CHECK_HEADERS([sys/poll.h], [], [], [AC_INCLUDES_DEFAULT])
+AC_CHECK_HEADERS([poll.h], [], [], [AC_INCLUDES_DEFAULT])
 AC_CHECK_FUNCS([poll])
 AC_CHECK_FUNCS([ppoll])
 AC_CHECK_FUNCS([pselect])
-
-AC_CHECK_HEADERS([sys/poll.h])
 
 dnl ****************************************
 dnl *** GLib POLL* compatibility defines ***
@@ -396,9 +422,11 @@ AC_MSG_CHECKING([for broken poll])
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
 	#include <stdlib.h>
 	#include <fcntl.h>
-	#include <poll.h>
 	#ifdef HAVE_SYS_POLL_H
 	#include <sys/poll.h>
+	#endif
+	#ifdef HAVE_POLL_H
+	#include <poll.h>
 	#endif
 	int main(void) {
 	  struct pollfd fds[1];
@@ -519,7 +547,7 @@ CFLAGS="$save_cflags"
 dnl *** checks for dependency libraries ***
 
 dnl GLib
-GLIB_REQ=2.31.14
+GLIB_REQ=2.32.0
 AG_GST_GLIB_CHECK([$GLIB_REQ])
 
 dnl Check for documentation xrefs
@@ -735,6 +763,7 @@ tests/examples/stepping/Makefile
 tests/examples/helloworld/Makefile
 tests/examples/launch/Makefile
 tests/examples/manual/Makefile
+tests/examples/memory/Makefile
 tests/examples/metadata/Makefile
 tests/examples/queue/Makefile
 tests/examples/streams/Makefile
@@ -844,7 +873,9 @@ Configuration
 	Debug                      : ${USE_DEBUG}
 	Profiling                  : ${USE_PROFILING}
 
+	Building benchmarks        : ${BUILD_BENCHMARKS}
 	Building examples          : ${BUILD_EXAMPLES}
 	Building test apps         : ${BUILD_TESTS}
 	Building tests that fail   : ${BUILD_FAILING_TESTS}
+	Building tools             : ${BUILD_TOOLS}
 "

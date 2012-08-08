@@ -110,12 +110,6 @@
 #define             <a class="link" href="gstreamer-GstUtils.html#GFLOAT-TO-LE:CAPS" title="GFLOAT_TO_LE()">GFLOAT_TO_LE</a>                        (val)
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstUtils.html#gst-flow-get-name" title="gst_flow_get_name ()">gst_flow_get_name</a>                   (<em class="parameter"><code><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> ret</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>              <a class="link" href="gstreamer-GstUtils.html#gst-flow-to-quark" title="gst_flow_to_quark ()">gst_flow_to_quark</a>                   (<em class="parameter"><code><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> ret</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstUtils.html#gst-print-element-args" title="gst_print_element_args ()">gst_print_element_args</a>              (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Strings.html#GString"><span class="type">GString</span></a> *buf</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> indent</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstUtils.html#gst-print-pad-caps" title="gst_print_pad_caps ()">gst_print_pad_caps</a>                  (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Strings.html#GString"><span class="type">GString</span></a> *buf</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> indent</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 #define             <a class="link" href="gstreamer-GstUtils.html#gst-guint64-to-gdouble" title="gst_guint64_to_gdouble()">gst_guint64_to_gdouble</a>              (value)
 #define             <a class="link" href="gstreamer-GstUtils.html#gst-gdouble-to-guint64" title="gst_gdouble_to_guint64()">gst_gdouble_to_guint64</a>              (value)
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstUtils.html#gst-util-dump-mem" title="gst_util_dump_mem ()">gst_util_dump_mem</a>                   (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *mem</code></em>,
@@ -265,7 +259,8 @@ Read an 8 bit unsigned integer value from the memory buffer.
 <hr>
 <div class="refsect2">
 <a name="GST-READ-UINT16-LE:CAPS"></a><h3>GST_READ_UINT16_LE()</h3>
-<pre class="programlisting">#define             GST_READ_UINT16_LE(data)</pre>
+<pre class="programlisting">#  define GST_READ_UINT16_LE(data)      _GST_FAST_READ_SWAP (16, data)
+</pre>
 <p>
 Read a 16 bit unsigned integer value in little endian format from the memory buffer.
 </p>
@@ -280,7 +275,8 @@ Read a 16 bit unsigned integer value in little endian format from the memory buf
 <hr>
 <div class="refsect2">
 <a name="GST-READ-UINT16-BE:CAPS"></a><h3>GST_READ_UINT16_BE()</h3>
-<pre class="programlisting">#define             GST_READ_UINT16_BE(data)</pre>
+<pre class="programlisting">#  define GST_READ_UINT16_BE(data)      _GST_FAST_READ (16, data)
+</pre>
 <p>
 Read a 16 bit unsigned integer value in big endian format from the memory buffer.
 </p>
@@ -306,7 +302,6 @@ Read a 24 bit unsigned integer value in little endian format from the memory buf
 <td>memory location</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -322,12 +317,12 @@ Read a 24 bit unsigned integer value in big endian format from the memory buffer
 <td>memory location</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-READ-UINT32-LE:CAPS"></a><h3>GST_READ_UINT32_LE()</h3>
-<pre class="programlisting">#define             GST_READ_UINT32_LE(data)</pre>
+<pre class="programlisting">#  define GST_READ_UINT32_LE(data)      _GST_FAST_READ_SWAP (32, data)
+</pre>
 <p>
 Read a 32 bit unsigned integer value in little endian format from the memory buffer.
 </p>
@@ -342,7 +337,8 @@ Read a 32 bit unsigned integer value in little endian format from the memory buf
 <hr>
 <div class="refsect2">
 <a name="GST-READ-UINT32-BE:CAPS"></a><h3>GST_READ_UINT32_BE()</h3>
-<pre class="programlisting">#define             GST_READ_UINT32_BE(data)</pre>
+<pre class="programlisting">#  define GST_READ_UINT32_BE(data)      _GST_FAST_READ (32, data)
+</pre>
 <p>
 Read a 32 bit unsigned integer value in big endian format from the memory buffer.
 </p>
@@ -357,7 +353,8 @@ Read a 32 bit unsigned integer value in big endian format from the memory buffer
 <hr>
 <div class="refsect2">
 <a name="GST-READ-UINT64-LE:CAPS"></a><h3>GST_READ_UINT64_LE()</h3>
-<pre class="programlisting">#define             GST_READ_UINT64_LE(data)</pre>
+<pre class="programlisting">#  define GST_READ_UINT64_LE(data)      _GST_FAST_READ_SWAP (64, data)
+</pre>
 <p>
 Read a 64 bit unsigned integer value in little endian format from the memory buffer.
 </p>
@@ -372,7 +369,8 @@ Read a 64 bit unsigned integer value in little endian format from the memory buf
 <hr>
 <div class="refsect2">
 <a name="GST-READ-UINT64-BE:CAPS"></a><h3>GST_READ_UINT64_BE()</h3>
-<pre class="programlisting">#define             GST_READ_UINT64_BE(data)</pre>
+<pre class="programlisting">#  define GST_READ_UINT64_BE(data)      _GST_FAST_READ (64, data)
+</pre>
 <p>
 Read a 64 bit unsigned integer value in big endian format from the memory buffer.
 </p>
@@ -405,7 +403,6 @@ Read a 32 bit float value in little endian format from the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -428,7 +425,6 @@ Read a 32 bit float value in big endian format from the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -451,7 +447,6 @@ Read a 64 bit double value in little endian format from the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -474,7 +469,6 @@ Read a 64 bit double value in big endian format from the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -559,7 +553,6 @@ Store a 24 bit unsigned integer value in little endian format into the memory bu
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -581,7 +574,6 @@ Store a 24 bit unsigned integer value in big endian format into the memory buffe
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -688,7 +680,6 @@ Store a 32 bit float value in little endian format into the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -711,7 +702,6 @@ Store a 32 bit float value in big endian format into the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -734,7 +724,6 @@ Store a 64 bit double value in little endian format into the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -757,7 +746,6 @@ Store a 64 bit double value in big endian format into the memory buffer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -870,7 +858,6 @@ Rounds an integer value down to the next multiple of 2.
 <td>integer value to round down</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -887,7 +874,6 @@ Rounds an integer value down to the next multiple of 4.
 <td>integer value to round down</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -904,7 +890,6 @@ Rounds an integer value down to the next multiple of 8.
 <td>integer value to round down</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -921,7 +906,6 @@ Rounds an integer value down to the next multiple of 16.
 <td>integer value to round down</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -938,7 +922,6 @@ Rounds an integer value down to the next multiple of 32.
 <td>integer value to round down</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -955,7 +938,6 @@ Rounds an integer value down to the next multiple of 64.
 <td>integer value to round down</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -973,7 +955,6 @@ into native byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -991,7 +972,6 @@ into native byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1014,7 +994,6 @@ Swap byte order of a 64-bit floating point value (double).
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1032,7 +1011,6 @@ big endian byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1050,7 +1028,6 @@ little endian byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1068,7 +1045,6 @@ into native byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1086,7 +1062,6 @@ into native byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1109,7 +1084,6 @@ Swap byte order of a 32-bit floating point value (float).
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1127,7 +1101,6 @@ big endian byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1145,7 +1118,6 @@ little endian byte order.
 <td>value</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1186,64 +1158,6 @@ Get the unique quark for the given GstFlowReturn.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the quark associated with the flow return or 0 if an
 invalid return was specified.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-print-element-args"></a><h3>gst_print_element_args ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_print_element_args              (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Strings.html#GString"><span class="type">GString</span></a> *buf</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> indent</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
-<p>
-Print the element argument in a human readable format in the given
-GString.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
-<td>the buffer to print the args in</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>indent</code></em> :</span></p></td>
-<td>initial indentation</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
-<td>the element to print the args of. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-print-pad-caps"></a><h3>gst_print_pad_caps ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_print_pad_caps                  (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Strings.html#GString"><span class="type">GString</span></a> *buf</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> indent</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
-<p>
-Write the pad capabilities in a human readable format into
-the given GString.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
-<td>the buffer to print the caps in</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>indent</code></em> :</span></p></td>
-<td>initial indentation</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>the pad to print the caps from. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
 </tr>
 </tbody>
 </table></div>
@@ -1588,7 +1502,6 @@ and <em class="parameter"><code>b</code></em>.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1620,7 +1533,6 @@ and <em class="parameter"><code>b</code></em>.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.11.0</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1651,7 +1563,6 @@ Transforms a fraction to a <a href="http://library.gnome.org/devel/glib/unstable
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1683,7 +1594,6 @@ the result.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1734,7 +1644,6 @@ the result in <em class="parameter"><code>res_n</code></em> and <em class="param
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1785,7 +1694,6 @@ the result in <em class="parameter"><code>res_n</code></em> and <em class="param
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1823,7 +1731,6 @@ Compares the fractions <em class="parameter"><code>a_n</code></em>/<em class="pa
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1847,7 +1754,6 @@ overflow back to 0 at some point. Use <a class="link" href="gstreamer-GstUtils.h
 you handle wraparound correctly.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1878,7 +1784,6 @@ positive number if <em class="parameter"><code>s1</code></em> is after <em class
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1955,7 +1860,6 @@ The timestamp should not be interpreted in any other way.
 <td>the timestamp</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.16</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1989,7 +1893,6 @@ The different search modes.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2052,7 +1955,6 @@ The complexity of this search function is O(log (num_elements)).
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 </div>
 </div>

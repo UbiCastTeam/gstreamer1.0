@@ -30,12 +30,12 @@ G_BEGIN_DECLS
 
 /**
  * GstTaskFunction:
- * @data: user data passed to the function
+ * @user_data: user data passed to the function
  *
  * A function that will repeatedly be called in the thread created by
  * a #GstTask.
  */
-typedef void         (*GstTaskFunction)          (void *data);
+typedef void         (*GstTaskFunction)          (gpointer user_data);
 
 /* --- standard type macros --- */
 #define GST_TYPE_TASK                   (gst_task_get_type ())
@@ -110,23 +110,14 @@ typedef enum {
 #define GST_TASK_GET_LOCK(task)         (GST_TASK_CAST(task)->lock)
 
 /**
- * GstTaskThreadCallbacks:
- * @enter_thread: a thread is entered, this callback is called when the new
- *   thread enters its function.
- * @leave_thread: a thread is exiting, this is called when the thread is about
- *   to leave its function
+ * GstTaskThreadFunc:
+ * @task: The #GstTask
+ * @thread: The #GThread
+ * @user_data: user data
  *
  * Custom GstTask thread callback functions that can be installed.
- *
- * Since: 0.10.24
  */
-typedef struct {
-  /* manage the lifetime of the thread */
-  void      (*enter_thread)     (GstTask *task, GThread *thread, gpointer user_data);
-  void      (*leave_thread)     (GstTask *task, GThread *thread, gpointer user_data);
-  /*< private >*/
-  gpointer     _gst_reserved[GST_PADDING];
-} GstTaskThreadCallbacks;
+typedef void (*GstTaskThreadFunc) (GstTask *task, GThread *thread, gpointer user_data);
 
 /**
  * GstTask:
@@ -134,7 +125,8 @@ typedef struct {
  * @cond: used to pause/resume the task
  * @lock: The lock taken when iterating the task function
  * @func: the function executed by this task
- * @data: data passed to the task function
+ * @user_data: user_data passed to the task function
+ * @notify: GDestroyNotify for @user_data
  * @running: a flag indicating that the task is running
  *
  * The #GstTask object.
@@ -149,7 +141,8 @@ struct _GstTask {
   GRecMutex       *lock;
 
   GstTaskFunction  func;
-  gpointer         data;
+  gpointer         user_data;
+  GDestroyNotify   notify;
 
   gboolean         running;
 
@@ -175,16 +168,22 @@ void            gst_task_cleanup_all    (void);
 
 GType           gst_task_get_type       (void);
 
-GstTask*        gst_task_new            (GstTaskFunction func, gpointer data);
+GstTask*        gst_task_new            (GstTaskFunction func,
+                                         gpointer user_data, GDestroyNotify notify);
+
 void            gst_task_set_lock       (GstTask *task, GRecMutex *mutex);
 
 GstTaskPool *   gst_task_get_pool       (GstTask *task);
 void            gst_task_set_pool       (GstTask *task, GstTaskPool *pool);
 
-void            gst_task_set_thread_callbacks  (GstTask *task,
-                                                GstTaskThreadCallbacks *callbacks,
-                                                gpointer user_data,
-                                                GDestroyNotify notify);
+void            gst_task_set_enter_callback  (GstTask *task,
+                                              GstTaskThreadFunc enter_func,
+                                              gpointer user_data,
+                                              GDestroyNotify notify);
+void            gst_task_set_leave_callback  (GstTask *task,
+                                              GstTaskThreadFunc leave_func,
+                                              gpointer user_data,
+                                              GDestroyNotify notify);
 
 GstTaskState    gst_task_get_state      (GstTask *task);
 gboolean        gst_task_set_state      (GstTask *task, GstTaskState state);

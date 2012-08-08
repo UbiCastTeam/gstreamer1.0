@@ -194,8 +194,6 @@ gst_plugin_error_quark (void)
  * via gst_init_get_option_group()) before calling this function.
  *
  * Returns: TRUE if the plugin was registered correctly, otherwise FALSE.
- *
- * Since: 0.10.16
  */
 gboolean
 gst_plugin_register_static (gint major_version, gint minor_version,
@@ -261,9 +259,6 @@ gst_plugin_register_static (gint major_version, gint minor_version,
  * via gst_init_get_option_group()) before calling this function.
  *
  * Returns: TRUE if the plugin was registered correctly, otherwise FALSE.
- *
- * Since: 0.10.24
- *
  */
 gboolean
 gst_plugin_register_static_full (gint major_version, gint minor_version,
@@ -791,6 +786,11 @@ gst_plugin_load_file (const gchar * filename, GError ** error)
     CHECK_PLUGIN_DESC_FIELD (plugin->orig_desc, package, filename);
     CHECK_PLUGIN_DESC_FIELD (plugin->orig_desc, origin, filename);
 
+    if (plugin->orig_desc->name != NULL && plugin->orig_desc->name[0] == '"') {
+      g_warning ("Invalid plugin name '%s' - fix your GST_PLUGIN_DEFINE "
+          "(remove quotes around plugin name)", plugin->orig_desc->name);
+    }
+
     if (plugin->orig_desc->release_datetime != NULL &&
         !check_release_datetime (plugin->orig_desc->release_datetime)) {
       GST_ERROR ("GstPluginDesc for '%s' has invalid datetime '%s'",
@@ -1035,8 +1035,6 @@ gst_plugin_is_loaded (GstPlugin * plugin)
  * stored. This is the case when the registry is getting rebuilt.
  *
  * Returns: (transfer none): The cached data as a #GstStructure or %NULL.
- *
- * Since: 0.10.24
  */
 const GstStructure *
 gst_plugin_get_cache_data (GstPlugin * plugin)
@@ -1055,8 +1053,6 @@ gst_plugin_get_cache_data (GstPlugin * plugin)
  * the @plugin.
  *
  * The cache is flushed every time the registry is rebuilt.
- *
- * Since: 0.10.24
  */
 void
 gst_plugin_set_cache_data (GstPlugin * plugin, GstStructure * cache_data)
@@ -1733,8 +1729,6 @@ gst_plugin_ext_dep_equals (GstPluginDep * dep, const gchar ** env_vars,
  * library and makes visualisations available as GStreamer elements, or a
  * codec loader which exposes elements and/or caps dependent on what external
  * codec libraries are currently installed.
- *
- * Since: 0.10.22
  */
 void
 gst_plugin_add_dependency (GstPlugin * plugin, const gchar ** env_vars,
@@ -1806,8 +1800,6 @@ gst_plugin_add_dependency (GstPlugin * plugin, const gchar ** env_vars,
  * Convenience wrapper function for gst_plugin_add_dependency() which
  * takes simple strings as arguments instead of string arrays, with multiple
  * arguments separated by predefined delimiters (see above).
- *
- * Since: 0.10.22
  */
 void
 gst_plugin_add_dependency_simple (GstPlugin * plugin,

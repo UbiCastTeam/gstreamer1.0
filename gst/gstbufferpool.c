@@ -199,7 +199,7 @@ gst_buffer_pool_finalize (GObject * object)
   gst_structure_free (priv->config);
   g_rec_mutex_clear (&priv->rec_lock);
   if (priv->allocator)
-    gst_allocator_unref (priv->allocator);
+    gst_object_unref (priv->allocator);
 
   G_OBJECT_CLASS (gst_buffer_pool_parent_class)->finalize (object);
 }
@@ -493,9 +493,9 @@ default_set_config (GstBufferPool * pool, GstStructure * config)
   priv->max_buffers = max_buffers;
 
   if (priv->allocator)
-    gst_allocator_unref (priv->allocator);
+    gst_object_unref (priv->allocator);
   if ((priv->allocator = allocator))
-    gst_allocator_ref (allocator);
+    gst_object_ref (allocator);
   priv->params = params;
 
   return TRUE;
@@ -519,6 +519,10 @@ wrong_config:
  * @config is a #GstStructure that contains the configuration parameters for
  * the pool. A default and mandatory set of parameters can be configured with
  * gst_buffer_pool_config_set(). This function takes ownership of @config.
+ *
+ * If the parameters in @config can not be set exactly, this function returns
+ * FALSE and will try to update as much state as possible. The new state can
+ * then be retrieved and refined with gst_buffer_pool_config_get().
  *
  * Returns: TRUE when the configuration could be set.
  */
@@ -685,6 +689,7 @@ gst_buffer_pool_config_set_params (GstStructure * config, GstCaps * caps,
 {
   g_return_if_fail (config != NULL);
   g_return_if_fail (max_buffers == 0 || min_buffers <= max_buffers);
+  g_return_if_fail (caps == NULL || gst_caps_is_fixed (caps));
 
   gst_structure_id_set (config,
       GST_QUARK (CAPS), GST_TYPE_CAPS, caps,
@@ -891,7 +896,7 @@ gst_buffer_pool_config_get_allocator (GstStructure * config,
   g_return_val_if_fail (config != NULL, FALSE);
 
   if (allocator)
-    *allocator = g_value_get_boxed (gst_structure_id_get_value (config,
+    *allocator = g_value_get_object (gst_structure_id_get_value (config,
             GST_QUARK (ALLOCATOR)));
   if (params) {
     GstAllocationParams *p;

@@ -74,15 +74,15 @@ _gst_sample_free (GstSample * sample)
   if (sample->caps)
     gst_caps_unref (sample->caps);
 
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (sample), sample);
+  g_slice_free1 (sizeof (GstSample), sample);
 }
 
 /**
  * gst_sample_new:
- * @buffer: a #GstBuffer
- * @caps: a #GstCaps
- * @segment: a #GstSegment
- * @info: a #GstStructure
+ * @buffer: (transfer none) (allow-none): a #GstBuffer, or NULL
+ * @caps: (transfer none) (allow-none): a #GstCaps, or NULL
+ * @segment: transfer none) (allow-none): a #GstSegment, or NULL
+ * @info: (transfer full) (allow-none): a #GstStructure, or NULL
  *
  * Create a new #GstSample with the provided details.
  *
@@ -90,8 +90,6 @@ _gst_sample_free (GstSample * sample)
  *
  * Returns: (transfer full): the new #GstSample. gst_sample_unref()
  *     after usage.
- *
- * Since: 0.10.24
  */
 GstSample *
 gst_sample_new (GstBuffer * buffer, GstCaps * caps, const GstSegment * segment,
@@ -103,11 +101,9 @@ gst_sample_new (GstBuffer * buffer, GstCaps * caps, const GstSegment * segment,
 
   GST_LOG ("new %p", sample);
 
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (sample), _gst_sample_type,
-      sizeof (GstSample));
-
-  sample->mini_object.copy = (GstMiniObjectCopyFunction) _gst_sample_copy;
-  sample->mini_object.free = (GstMiniObjectFreeFunction) _gst_sample_free;
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (sample), 0, _gst_sample_type,
+      (GstMiniObjectCopyFunction) _gst_sample_copy, NULL,
+      (GstMiniObjectFreeFunction) _gst_sample_free);
 
   sample->buffer = buffer ? gst_buffer_ref (buffer) : NULL;
   sample->caps = caps ? gst_caps_ref (caps) : NULL;

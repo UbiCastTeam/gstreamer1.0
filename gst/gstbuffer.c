@@ -138,6 +138,7 @@ struct _GstMetaItem
 
 #define GST_BUFFER_MEM_MAX         16
 
+#define GST_BUFFER_SLICE_SIZE(b)   (((GstBufferImpl *)(b))->slice_size)
 #define GST_BUFFER_MEM_LEN(b)      (((GstBufferImpl *)(b))->len)
 #define GST_BUFFER_MEM_ARRAY(b)    (((GstBufferImpl *)(b))->mem)
 #define GST_BUFFER_MEM_PTR(b,i)    (((GstBufferImpl *)(b))->mem[i])
@@ -147,6 +148,8 @@ struct _GstMetaItem
 typedef struct
 {
   GstBuffer buffer;
+
+  gsize slice_size;
 
   /* the memory blocks */
   guint len;
@@ -200,6 +203,9 @@ _get_merged_memory (GstBuffer * buffer, guint idx, guint length)
 {
   GstMemory **mem, *result;
 
+  GST_CAT_LOG (GST_CAT_BUFFER, "buffer %p, idx %u, length %u", buffer, idx,
+      length);
+
   mem = GST_BUFFER_MEM_ARRAY (buffer);
 
   if (G_UNLIKELY (length == 0)) {
@@ -213,8 +219,7 @@ _get_merged_memory (GstBuffer * buffer, guint idx, guint length)
     size = gst_buffer_get_size (buffer);
 
     if (G_UNLIKELY (_is_span (mem + idx, length, &poffset, &parent))) {
-
-      if (parent->flags & GST_MEMORY_FLAG_NO_SHARE) {
+      if (GST_MEMORY_IS_NO_SHARE (parent)) {
         GST_CAT_DEBUG (GST_CAT_PERFORMANCE, "copy for merge %p", parent);
         result = gst_memory_copy (parent, poffset, size);
       } else {
@@ -255,15 +260,22 @@ _replace_memory (GstBuffer * buffer, guint len, guint idx, guint length,
   gsize end, i;
 
   end = idx + length;
-  GST_LOG ("buffer %p replace %u-%" G_GSIZE_FORMAT " with memory %p", buffer,
-      idx, end, mem);
+
+  GST_CAT_LOG (GST_CAT_BUFFER,
+      "buffer %p replace %u-%" G_GSIZE_FORMAT " with memory %p", buffer, idx,
+      end, mem);
 
   /* unref old memory */
-  for (i = idx; i < end; i++)
-    gst_memory_unref (GST_BUFFER_MEM_PTR (buffer, i));
+  for (i = idx; i < end; i++) {
+    GstMemory *old = GST_BUFFER_MEM_PTR (buffer, i);
+
+    gst_memory_unlock (old, GST_LOCK_FLAG_EXCLUSIVE);
+    gst_memory_unref (old);
+  }
 
   if (mem != NULL) {
     /* replace with single memory */
+    gst_memory_lock (mem, GST_LOCK_FLAG_EXCLUSIVE);
     GST_BUFFER_MEM_PTR (buffer, idx) = mem;
     idx++;
     length--;
@@ -277,9 +289,12 @@ _replace_memory (GstBuffer * buffer, guint len, guint idx, guint length,
 }
 
 static inline void
-_memory_add (GstBuffer * buffer, guint idx, GstMemory * mem)
+_memory_add (GstBuffer * buffer, gint idx, GstMemory * mem, gboolean lock)
 {
   guint i, len = GST_BUFFER_MEM_LEN (buffer);
+
+  GST_CAT_LOG (GST_CAT_BUFFER, "buffer %p, idx %d, mem %p, lock %d", buffer,
+      idx, mem, lock);
 
   if (G_UNLIKELY (len >= GST_BUFFER_MEM_MAX)) {
     /* too many buffer, span them. */
@@ -301,6 +316,8 @@ _memory_add (GstBuffer * buffer, guint idx, GstMemory * mem)
     GST_BUFFER_MEM_PTR (buffer, i) = GST_BUFFER_MEM_PTR (buffer, i - 1);
   }
   /* and insert the new buffer */
+  if (lock)
+    gst_memory_lock (mem, GST_LOCK_FLAG_EXCLUSIVE);
   GST_BUFFER_MEM_PTR (buffer, idx) = mem;
   GST_BUFFER_MEM_LEN (buffer) = len + 1;
 }
@@ -402,7 +419,7 @@ gst_buffer_copy_into (GstBuffer * dest, GstBuffer * src,
         gsize tocopy;
 
         tocopy = MIN (bsize - skip, left);
-        if (mem->flags & GST_MEMORY_FLAG_NO_SHARE) {
+        if (GST_MEMORY_IS_NO_SHARE (mem)) {
           /* no share, always copy then */
           mem = gst_memory_copy (mem, skip, tocopy);
           skip = 0;
@@ -413,7 +430,7 @@ gst_buffer_copy_into (GstBuffer * dest, GstBuffer * src,
         } else {
           mem = gst_memory_ref (mem);
         }
-        _memory_add (dest, -1, mem);
+        _memory_add (dest, -1, mem, TRUE);
         left -= tocopy;
       }
     }
@@ -505,31 +522,35 @@ _gst_buffer_free (GstBuffer * buffer)
 
   /* get the size, when unreffing the memory, we could also unref the buffer
    * itself */
-  msize = GST_MINI_OBJECT_SIZE (buffer);
+  msize = GST_BUFFER_SLICE_SIZE (buffer);
 
   /* free our memory */
   len = GST_BUFFER_MEM_LEN (buffer);
-  for (i = 0; i < len; i++)
+  for (i = 0; i < len; i++) {
+    gst_memory_unlock (GST_BUFFER_MEM_PTR (buffer, i), GST_LOCK_FLAG_EXCLUSIVE);
     gst_memory_unref (GST_BUFFER_MEM_PTR (buffer, i));
+  }
 
   /* we set msize to 0 when the buffer is part of the memory block */
-  if (msize)
+  if (msize) {
+#ifdef USE_POISONING
+    memset (buffer, 0xff, msize);
+#endif
     g_slice_free1 (msize, buffer);
-  else
+  } else {
     gst_memory_unref (GST_BUFFER_BUFMEM (buffer));
+  }
 }
 
 static void
 gst_buffer_init (GstBufferImpl * buffer, gsize size)
 {
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (buffer), _gst_buffer_type, size);
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (buffer), 0, _gst_buffer_type,
+      (GstMiniObjectCopyFunction) _gst_buffer_copy,
+      (GstMiniObjectDisposeFunction) _gst_buffer_dispose,
+      (GstMiniObjectFreeFunction) _gst_buffer_free);
 
-  buffer->buffer.mini_object.copy =
-      (GstMiniObjectCopyFunction) _gst_buffer_copy;
-  buffer->buffer.mini_object.dispose =
-      (GstMiniObjectDisposeFunction) _gst_buffer_dispose;
-  buffer->buffer.mini_object.free =
-      (GstMiniObjectFreeFunction) _gst_buffer_free;
+  GST_BUFFER_SLICE_SIZE (buffer) = size;
 
   GST_BUFFER (buffer)->pool = NULL;
   GST_BUFFER_PTS (buffer) = GST_CLOCK_TIME_NONE;
@@ -607,7 +628,7 @@ gst_buffer_new_allocate (GstAllocator * allocator, gsize size,
   newbuf = gst_buffer_new ();
 
   if (mem != NULL)
-    _memory_add (newbuf, -1, mem);
+    _memory_add (newbuf, -1, mem, TRUE);
 
   GST_CAT_LOG (GST_CAT_BUFFER,
       "new buffer %p of size %" G_GSIZE_FORMAT " from allocator %p", newbuf,
@@ -626,7 +647,7 @@ gst_buffer_new_allocate (GstAllocator * allocator, gsize size,
   if (size > 0) {
     mem = gst_memory_new_wrapped (0, data + sizeof (GstBufferImpl), NULL,
         size, 0, size);
-    _memory_add (newbuf, -1, mem);
+    _memory_add (newbuf, -1, mem, TRUE);
   }
 #endif
 
@@ -653,7 +674,7 @@ gst_buffer_new_allocate (GstAllocator * allocator, gsize size,
   GST_BUFFER_BUFMEM (newbuf) = mem;
 
   if (size > 0)
-    _memory_add (newbuf, -1, gst_memory_ref (mem));
+    _memory_add (newbuf, -1, gst_memory_ref (mem), TRUE);
 #endif
 
   return newbuf;
@@ -738,6 +759,22 @@ gst_buffer_n_memory (GstBuffer * buffer)
 }
 
 /**
+ * gst_buffer_prepend_memory:
+ * @b: a #GstBuffer.
+ * @m: (transfer full): a #GstMemory.
+ *
+ * Prepend the memory block @m to @b. This function takes ownership
+ * of @m and thus doesn't increase its refcount.
+ */
+/**
+ * gst_buffer_append_memory:
+ * @b: a #GstBuffer.
+ * @m: (transfer full): a #GstMemory.
+ *
+ * Append the memory block @m to @b. This function takes ownership
+ * of @m and thus doesn't increase its refcount.
+ */
+/**
  * gst_buffer_insert_memory:
  * @buffer: a #GstBuffer.
  * @idx: the index to add the memory at, or -1 to append it to the end
@@ -755,7 +792,7 @@ gst_buffer_insert_memory (GstBuffer * buffer, gint idx, GstMemory * mem)
   g_return_if_fail (idx == -1 ||
       (idx >= 0 && idx <= GST_BUFFER_MEM_LEN (buffer)));
 
-  _memory_add (buffer, idx, mem);
+  _memory_add (buffer, idx, mem, TRUE);
 }
 
 static GstMemory *
@@ -764,18 +801,20 @@ _get_mapped (GstBuffer * buffer, guint idx, GstMapInfo * info,
 {
   GstMemory *mem, *mapped;
 
-  mem = GST_BUFFER_MEM_PTR (buffer, idx);
+  mem = gst_memory_ref (GST_BUFFER_MEM_PTR (buffer, idx));
 
   mapped = gst_memory_make_mapped (mem, info, flags);
-  if (!mapped)
-    return NULL;
 
   if (mapped != mem) {
+    /* memory changed, lock new memory */
+    gst_memory_lock (mapped, GST_LOCK_FLAG_EXCLUSIVE);
     GST_BUFFER_MEM_PTR (buffer, idx) = mapped;
-    gst_memory_unref (mem);
-    mem = mapped;
+    /* unlock old memory */
+    gst_memory_unlock (mem, GST_LOCK_FLAG_EXCLUSIVE);
   }
-  return mem;
+  gst_memory_unref (mem);
+
+  return mapped;
 }
 
 /**
@@ -788,7 +827,7 @@ _get_mapped (GstBuffer * buffer, guint idx, GstMapInfo * info,
  * any call that modifies the memory in @buffer.
  *
  * Since this call does not influence the refcount of the memory,
- * gst_memory_is_exclusive() can be used to check if @buffer is the sole owner
+ * gst_memory_is_writable() can be used to check if @buffer is the sole owner
  * of the returned memory.
  *
  * Returns: (transfer none): the #GstMemory at @idx.
@@ -805,6 +844,26 @@ gst_buffer_peek_memory (GstBuffer * buffer, guint idx)
   return GST_BUFFER_MEM_PTR (buffer, idx);
 }
 
+/**
+ * gst_buffer_get_memory:
+ * @b: a #GstBuffer.
+ * @i: an index
+ *
+ * Get the memory block at index @i in @buffer.
+ *
+ * Returns: (transfer full): a #GstMemory that contains the data of the
+ * memory block at @idx. Use gst_memory_unref () after usage.
+ */
+/**
+ * gst_buffer_get_all_memory:
+ * @b: a #GstBuffer.
+ *
+ * Get all the memory block in @buffer. The memory blocks will be merged
+ * into one large #GstMemory.
+ *
+ * Returns: (transfer full): a #GstMemory that contains the merged memory.
+ * Use gst_memory_unref () after usage.
+ */
 /**
  * gst_buffer_get_memory_range:
  * @buffer: a #GstBuffer.
@@ -824,7 +883,7 @@ gst_buffer_get_memory_range (GstBuffer * buffer, guint idx, gint length)
 {
   guint len;
 
-  GST_DEBUG ("idx %u, length %d", idx, length);
+  GST_CAT_DEBUG (GST_CAT_BUFFER, "idx %u, length %d", idx, length);
 
   g_return_val_if_fail (GST_IS_BUFFER (buffer), NULL);
   len = GST_BUFFER_MEM_LEN (buffer);
@@ -837,6 +896,21 @@ gst_buffer_get_memory_range (GstBuffer * buffer, guint idx, gint length)
   return _get_merged_memory (buffer, idx, length);
 }
 
+/**
+ * gst_buffer_replace_memory:
+ * @b: a #GstBuffer.
+ * @i: an index
+ * @m: (transfer full): a #GstMemory
+ *
+ * Replaces the memory block at index @i in @b with @m.
+ */
+/**
+ * gst_buffer_replace_all_memory:
+ * @b: a #GstBuffer.
+ * @m: (transfer full): a #GstMemory
+ *
+ * Replaces all memory in @b with @m.
+ */
 /**
  * gst_buffer_replace_memory_range:
  * @buffer: a #GstBuffer.
@@ -859,6 +933,9 @@ gst_buffer_replace_memory_range (GstBuffer * buffer, guint idx, gint length,
 
   g_return_if_fail (GST_IS_BUFFER (buffer));
   g_return_if_fail (gst_buffer_is_writable (buffer));
+
+  GST_CAT_DEBUG (GST_CAT_BUFFER, "idx %u, length %d, %p", idx, length, mem);
+
   len = GST_BUFFER_MEM_LEN (buffer);
   g_return_if_fail ((len == 0 && idx == 0 && length == -1) ||
       (length == -1 && idx < len) || (length > 0 && length + idx <= len));
@@ -869,6 +946,19 @@ gst_buffer_replace_memory_range (GstBuffer * buffer, guint idx, gint length,
   _replace_memory (buffer, len, idx, length, mem);
 }
 
+/**
+ * gst_buffer_remove_memory:
+ * @b: a #GstBuffer.
+ * @i: an index
+ *
+ * Remove the memory block in @b at index @i.
+ */
+/**
+ * gst_buffer_remove_all_memory:
+ * @b: a #GstBuffer.
+ *
+ * Remove all the memory blocks in @b.
+ */
 /**
  * gst_buffer_remove_memory_range:
  * @buffer: a #GstBuffer.
@@ -886,6 +976,8 @@ gst_buffer_remove_memory_range (GstBuffer * buffer, guint idx, gint length)
 
   g_return_if_fail (GST_IS_BUFFER (buffer));
   g_return_if_fail (gst_buffer_is_writable (buffer));
+
+  GST_CAT_DEBUG (GST_CAT_BUFFER, "idx %u, length %d", idx, length);
 
   len = GST_BUFFER_MEM_LEN (buffer);
   g_return_if_fail ((len == 0 && idx == 0 && length == -1) ||
@@ -971,12 +1063,36 @@ gst_buffer_find_memory (GstBuffer * buffer, gsize offset, gsize size,
 }
 
 /**
+ * gst_buffer_get_sizes:
+ * @b: a #GstBuffer.
+ * @of: (out): a pointer to the offset
+ * @ms: (out): a pointer to the maxsize
+ *
+ * Get the total size of the memory blocks in @b.
+ *
+ * When not %NULL, @of will contain the offset of the data in the first
+ * memory block in @buffer and @maxsize will contain the sum of the size
+ * and @of and the amount of extra padding on the last memory block.
+ * @of and @ms can be used to resize the buffer memory blocks with
+ * gst_buffer_resize().
+ *
+ * Returns: total size of the memory blocks in @b.
+ */
+/**
+ * gst_buffer_get_size:
+ * @b: a #GstBuffer.
+ *
+ * Get the total size of the memory blocks in @b.
+ *
+ * Returns: total size of the memory blocks in @b.
+ */
+/**
  * gst_buffer_get_sizes_range:
  * @buffer: a #GstBuffer.
  * @idx: an index
  * @length: a length
- * @offset: a pointer to the offset
- * @maxsize: a pointer to the maxsize
+ * @offset: (out): a pointer to the offset
+ * @maxsize: (out): a pointer to the maxsize
  *
  * Get the total size of @length memory blocks stating from @idx in @buffer.
  *
@@ -987,7 +1103,7 @@ gst_buffer_find_memory (GstBuffer * buffer, gsize offset, gsize size,
  * @offset and @maxsize can be used to resize the buffer memory blocks with
  * gst_buffer_resize_range().
  *
- * Returns: total size @length memory blocks starting at @idx in @buffer.
+ * Returns: total size of @length memory blocks starting at @idx in @buffer.
  */
 gsize
 gst_buffer_get_sizes_range (GstBuffer * buffer, guint idx, gint length,
@@ -1043,6 +1159,21 @@ gst_buffer_get_sizes_range (GstBuffer * buffer, guint idx, gint length,
 }
 
 /**
+ * gst_buffer_resize:
+ * @b: a #GstBuffer.
+ * @of: the offset adjustement
+ * @s: the new size or -1 to just adjust the offset
+ *
+ * Set the offset and total size of the memory blocks in @b.
+ */
+/**
+ * gst_buffer_set_size:
+ * @b: a #GstBuffer.
+ * @s: the new size
+ *
+ * Set the total size of the memory blocks in @b.
+ */
+/**
  * gst_buffer_resize_range:
  * @buffer: a #GstBuffer.
  * @idx: an index
@@ -1059,7 +1190,6 @@ gst_buffer_resize_range (GstBuffer * buffer, guint idx, gint length,
 {
   guint i, len, end;
   gsize bsize, bufsize, bufoffs, bufmax;
-  GstMemory *mem;
 
   g_return_if_fail (gst_buffer_is_writable (buffer));
   g_return_if_fail (size >= -1);
@@ -1093,6 +1223,7 @@ gst_buffer_resize_range (GstBuffer * buffer, guint idx, gint length,
   end = idx + length;
   /* copy and trim */
   for (i = idx; i < end; i++) {
+    GstMemory *mem;
     gsize left, noffs;
 
     mem = GST_BUFFER_MEM_PTR (buffer, i);
@@ -1113,27 +1244,49 @@ gst_buffer_resize_range (GstBuffer * buffer, guint idx, gint length,
       left = MIN (bsize - offset, size);
 
     if (offset != 0 || left != bsize) {
-      if (gst_memory_is_exclusive (mem)) {
+      if (gst_memory_is_writable (mem)) {
         gst_memory_resize (mem, offset, left);
       } else {
-        GstMemory *tmp;
+        GstMemory *newmem;
 
-        if (mem->flags & GST_MEMORY_FLAG_NO_SHARE)
-          tmp = gst_memory_copy (mem, offset, left);
+        if (GST_MEMORY_IS_NO_SHARE (mem))
+          newmem = gst_memory_copy (mem, offset, left);
         else
-          tmp = gst_memory_share (mem, offset, left);
+          newmem = gst_memory_share (mem, offset, left);
 
+        gst_memory_lock (newmem, GST_LOCK_FLAG_EXCLUSIVE);
+        GST_BUFFER_MEM_PTR (buffer, i) = newmem;
+        gst_memory_unlock (mem, GST_LOCK_FLAG_EXCLUSIVE);
         gst_memory_unref (mem);
-        mem = tmp;
       }
     }
+
     offset = noffs;
     size -= left;
-
-    GST_BUFFER_MEM_PTR (buffer, i) = mem;
   }
 }
 
+/**
+ * gst_buffer_map:
+ * @b: a #GstBuffer.
+ * @i: (out): info about the mapping
+ * @f: flags for the mapping
+ *
+ * This function fills @i with the #GstMapInfo of all merged memory blocks
+ * in @buffer.
+ *
+ * @flags describe the desired access of the memory. When @flags is
+ * #GST_MAP_WRITE, @buffer should be writable (as returned from
+ * gst_buffer_is_writable()).
+ *
+ * When @buffer is writable but the memory isn't, a writable copy will
+ * automatically be created and returned. The readonly copy of the buffer memory
+ * will then also be replaced with this writable copy.
+ *
+ * The memory in @i should be unmapped with gst_buffer_unmap() after usage.
+ *
+ * Returns: %TRUE if the map succeeded and @i contains valid data.
+ */
 /**
  * gst_buffer_map_range:
  * @buffer: a #GstBuffer.
@@ -1145,6 +1298,7 @@ gst_buffer_resize_range (GstBuffer * buffer, guint idx, gint length,
  * This function fills @info with the #GstMapInfo of @length merged memory blocks
  * starting at @idx in @buffer. When @length is -1, all memory blocks starting
  * from @idx are merged and mapped.
+ *
  * @flags describe the desired access of the memory. When @flags is
  * #GST_MAP_WRITE, @buffer should be writable (as returned from
  * gst_buffer_is_writable()).
@@ -1155,7 +1309,7 @@ gst_buffer_resize_range (GstBuffer * buffer, guint idx, gint length,
  *
  * The memory in @info should be unmapped with gst_buffer_unmap() after usage.
  *
- * Returns: (transfer full): %TRUE if the map succeeded and @info contains valid
+ * Returns: %TRUE if the map succeeded and @info contains valid
  * data.
  */
 gboolean
@@ -1172,6 +1326,9 @@ gst_buffer_map_range (GstBuffer * buffer, guint idx, gint length,
   g_return_val_if_fail ((len == 0 && idx == 0 && length == -1) ||
       (length == -1 && idx < len) || (length > 0
           && length + idx <= len), FALSE);
+
+  GST_CAT_LOG (GST_CAT_BUFFER, "buffer %p, idx %u, length %d, flags %04x",
+      buffer, idx, length, flags);
 
   write = (flags & GST_MAP_WRITE) != 0;
   writable = gst_buffer_is_writable (buffer);
@@ -1275,6 +1432,10 @@ gst_buffer_fill (GstBuffer * buffer, gsize offset, gconstpointer src,
   g_return_val_if_fail (gst_buffer_is_writable (buffer), 0);
   g_return_val_if_fail (src != NULL, 0);
 
+  GST_CAT_LOG (GST_CAT_BUFFER,
+      "buffer %p, offset %" G_GSIZE_FORMAT ", size %" G_GSIZE_FORMAT, buffer,
+      offset, size);
+
   len = GST_BUFFER_MEM_LEN (buffer);
   left = size;
 
@@ -1320,6 +1481,10 @@ gst_buffer_extract (GstBuffer * buffer, gsize offset, gpointer dest, gsize size)
 
   g_return_val_if_fail (GST_IS_BUFFER (buffer), 0);
   g_return_val_if_fail (dest != NULL, 0);
+
+  GST_CAT_LOG (GST_CAT_BUFFER,
+      "buffer %p, offset %" G_GSIZE_FORMAT ", size %" G_GSIZE_FORMAT, buffer,
+      offset, size);
 
   len = GST_BUFFER_MEM_LEN (buffer);
   left = size;
@@ -1368,6 +1533,10 @@ gst_buffer_memcmp (GstBuffer * buffer, gsize offset, gconstpointer mem,
   g_return_val_if_fail (GST_IS_BUFFER (buffer), 0);
   g_return_val_if_fail (mem != NULL, 0);
 
+  GST_CAT_LOG (GST_CAT_BUFFER,
+      "buffer %p, offset %" G_GSIZE_FORMAT ", size %" G_GSIZE_FORMAT, buffer,
+      offset, size);
+
   len = GST_BUFFER_MEM_LEN (buffer);
 
   for (i = 0; i < len && size > 0 && res == 0; i++) {
@@ -1411,6 +1580,10 @@ gst_buffer_memset (GstBuffer * buffer, gsize offset, guint8 val, gsize size)
 
   g_return_val_if_fail (GST_IS_BUFFER (buffer), 0);
   g_return_val_if_fail (gst_buffer_is_writable (buffer), 0);
+
+  GST_CAT_LOG (GST_CAT_BUFFER,
+      "buffer %p, offset %" G_GSIZE_FORMAT ", val %02x, size %" G_GSIZE_FORMAT,
+      buffer, offset, val, size);
 
   len = GST_BUFFER_MEM_LEN (buffer);
   left = size;
@@ -1488,8 +1661,23 @@ gst_buffer_copy_region (GstBuffer * buffer, GstBufferCopyFlags flags,
  * Returns: (transfer full): the new #GstBuffer that contains the memory
  *     of the two source buffers.
  */
+/**
+ * gst_buffer_append_region:
+ * @buf1: (transfer full): the first source #GstBuffer to append.
+ * @buf2: (transfer full): the second source #GstBuffer to append.
+ * @offset: the offset in @buf2
+ * @size: the size or -1 of @buf2
+ *
+ * Append @size bytes at @offset from @buf2 to @buf1. The result buffer will
+ * contain a concatenation of the memory of @buf1 and the requested region of
+ * @buf2.
+ *
+ * Returns: (transfer full): the new #GstBuffer that contains the memory
+ *     of the two source buffers.
+ */
 GstBuffer *
-gst_buffer_append (GstBuffer * buf1, GstBuffer * buf2)
+gst_buffer_append_region (GstBuffer * buf1, GstBuffer * buf2, gssize offset,
+    gssize size)
 {
   gsize i, len;
 
@@ -1499,25 +1687,15 @@ gst_buffer_append (GstBuffer * buf1, GstBuffer * buf2)
   buf1 = gst_buffer_make_writable (buf1);
   buf2 = gst_buffer_make_writable (buf2);
 
+  gst_buffer_resize (buf2, offset, size);
+
   len = GST_BUFFER_MEM_LEN (buf2);
   for (i = 0; i < len; i++) {
     GstMemory *mem;
 
     mem = GST_BUFFER_MEM_PTR (buf2, i);
     GST_BUFFER_MEM_PTR (buf2, i) = NULL;
-    _memory_add (buf1, -1, mem);
-  }
-
-  /* we can calculate the duration too. Also make sure we're not messing
-   * with invalid DURATIONS */
-  if (GST_BUFFER_DURATION_IS_VALID (buf1) &&
-      GST_BUFFER_DURATION_IS_VALID (buf2)) {
-    /* add duration */
-    GST_BUFFER_DURATION (buf1) += GST_BUFFER_DURATION (buf2);
-  }
-  if (GST_BUFFER_OFFSET_END_IS_VALID (buf2)) {
-    /* set offset_end */
-    GST_BUFFER_OFFSET_END (buf1) = GST_BUFFER_OFFSET_END (buf2);
+    _memory_add (buf1, -1, mem, FALSE);
   }
 
   GST_BUFFER_MEM_LEN (buf2) = 0;
@@ -1534,7 +1712,7 @@ gst_buffer_append (GstBuffer * buf1, GstBuffer * buf2)
  * Get the metadata for @api on buffer. When there is no such
  * metadata, NULL is returned.
  *
- * Returns: the metadata for @api on @buffer.
+ * Returns: (transfer none): the metadata for @api on @buffer.
  */
 GstMeta *
 gst_buffer_get_meta (GstBuffer * buffer, GType api)
@@ -1663,7 +1841,8 @@ gst_buffer_remove_meta (GstBuffer * buffer, GstMeta * meta)
  *
  * @state will be updated with an opage state pointer 
  *
- * Returns: The next #GstMeta or %NULL when there are no more items.
+ * Returns: (transfer none): The next #GstMeta or %NULL when there are
+ * no more items.
  */
 GstMeta *
 gst_buffer_iterate_meta (GstBuffer * buffer, gpointer * state)
@@ -1698,21 +1877,23 @@ gst_buffer_iterate_meta (GstBuffer * buffer, gpointer * state)
  * @func can modify the passed meta pointer or its contents. The return value
  * of @func define if this function returns or if the remaining metadata items
  * in the buffer should be skipped.
+ *
+ * Returns: %FALSE when @func returned %FALSE for one of the metadata.
  */
-void
+gboolean
 gst_buffer_foreach_meta (GstBuffer * buffer, GstBufferForeachMetaFunc func,
     gpointer user_data)
 {
   GstMetaItem *walk, *prev, *next;
+  gboolean res = TRUE;
 
-  g_return_if_fail (buffer != NULL);
-  g_return_if_fail (func != NULL);
+  g_return_val_if_fail (buffer != NULL, FALSE);
+  g_return_val_if_fail (func != NULL, FALSE);
 
   /* find the metadata and delete */
   prev = GST_BUFFER_META (buffer);
   for (walk = prev; walk; walk = next) {
     GstMeta *m, *new;
-    gboolean res;
 
     m = new = &walk->meta;
     next = walk->next;
@@ -1725,8 +1906,9 @@ gst_buffer_foreach_meta (GstBuffer * buffer, GstBufferForeachMetaFunc func,
       GST_CAT_DEBUG (GST_CAT_BUFFER, "remove metadata %p (%s)", m,
           g_type_name (info->type));
 
-      g_return_if_fail (gst_buffer_is_writable (buffer));
-      g_return_if_fail (!GST_META_FLAG_IS_SET (m, GST_META_FLAG_LOCKED));
+      g_return_val_if_fail (gst_buffer_is_writable (buffer), FALSE);
+      g_return_val_if_fail (!GST_META_FLAG_IS_SET (m, GST_META_FLAG_LOCKED),
+          FALSE);
 
       /* remove from list */
       if (GST_BUFFER_META (buffer) == walk)
@@ -1744,4 +1926,5 @@ gst_buffer_foreach_meta (GstBuffer * buffer, GstBufferForeachMetaFunc func,
     if (!res)
       break;
   }
+  return res;
 }

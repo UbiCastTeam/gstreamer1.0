@@ -22,7 +22,7 @@
 /**
  * SECTION:gsttoc
  * @short_description: Generic table of contents support
- * @see_also: #GstStructure, #GstEvent, #GstMessage, #GstQuery, #GstPad
+ * @see_also: #GstStructure, #GstEvent, #GstMessage, #GstQuery
  *
  * #GstToc functions are used to create/free #GstToc and #GstTocEntry structures.
  * Also they are used to convert #GstToc into #GstStructure and vice versa.
@@ -72,30 +72,197 @@
 #include "gstpad.h"
 #include "gstquark.h"
 
-G_DEFINE_BOXED_TYPE (GstToc, gst_toc,
-    (GBoxedCopyFunc) gst_toc_copy, (GBoxedFreeFunc) gst_toc_free);
-G_DEFINE_BOXED_TYPE (GstTocEntry, gst_toc_entry,
-    (GBoxedCopyFunc) gst_toc_entry_copy, (GBoxedFreeFunc) gst_toc_entry_free);
+struct _GstTocEntry
+{
+  GstMiniObject mini_object;
+
+  GstToc *toc;
+  GstTocEntry *parent;
+
+  gchar *uid;
+  GstTocEntryType type;
+  GstClockTime start, stop;
+  GList *subentries;
+  GstTagList *tags;
+};
+
+struct _GstToc
+{
+  GstMiniObject mini_object;
+
+  GstTocScope scope;
+  GList *entries;
+  GstTagList *tags;
+};
+
+#undef gst_toc_copy
+static GstToc *gst_toc_copy (const GstToc * toc);
+static void gst_toc_free (GstToc * toc);
+#undef gst_toc_entry_copy
+static GstTocEntry *gst_toc_entry_copy (const GstTocEntry * toc);
+static void gst_toc_entry_free (GstTocEntry * toc);
+
+GST_DEFINE_MINI_OBJECT_TYPE (GstToc, gst_toc);
+GST_DEFINE_MINI_OBJECT_TYPE (GstTocEntry, gst_toc_entry);
 
 /**
  * gst_toc_new:
+ * @scope: scope of this TOC
  *
- * Create new #GstToc structure.
+ * Create a new #GstToc structure.
  *
- * Returns: newly allocated #GstToc structure, free it with gst_toc_free().
- *
- * Since: 0.10.37
+ * Returns: (transfer full): newly allocated #GstToc structure, free it
+ *     with gst_toc_unref().
  */
 GstToc *
-gst_toc_new (void)
+gst_toc_new (GstTocScope scope)
 {
   GstToc *toc;
 
+  g_return_val_if_fail (scope == GST_TOC_SCOPE_GLOBAL ||
+      scope == GST_TOC_SCOPE_CURRENT, NULL);
+
   toc = g_slice_new0 (GstToc);
+
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (toc), 0, GST_TYPE_TOC,
+      (GstMiniObjectCopyFunction) gst_toc_copy, NULL,
+      (GstMiniObjectFreeFunction) gst_toc_free);
+
+  toc->scope = scope;
   toc->tags = gst_tag_list_new_empty ();
-  toc->info = gst_structure_new_id_empty (GST_QUARK (INFO_STRUCTURE));
 
   return toc;
+}
+
+/**
+ * gst_toc_get_scope:
+ * @toc: a #GstToc instance
+ *
+ * Returns: scope of @toc
+ */
+GstTocScope
+gst_toc_get_scope (const GstToc * toc)
+{
+  g_return_val_if_fail (toc != NULL, GST_TOC_SCOPE_GLOBAL);
+
+  return toc->scope;
+}
+
+/**
+ * gst_toc_set_tags:
+ * @toc: A #GstToc instance
+ * @tags: (allow-none) (transfer full): A #GstTagList or %NULL
+ *
+ * Set a #GstTagList with tags for the complete @toc.
+ */
+void
+gst_toc_set_tags (GstToc * toc, GstTagList * tags)
+{
+  g_return_if_fail (toc != NULL);
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (toc)));
+
+  if (toc->tags)
+    gst_tag_list_unref (toc->tags);
+  toc->tags = tags;
+}
+
+/**
+ * gst_toc_merge_tags:
+ * @toc: A #GstToc instance
+ * @tags: (allow-none): A #GstTagList or %NULL
+ * @mode: A #GstTagMergeMode
+ *
+ * Merge @tags into the existing tags of @toc using @mode.
+ */
+void
+gst_toc_merge_tags (GstToc * toc, GstTagList * tags, GstTagMergeMode mode)
+{
+  g_return_if_fail (toc != NULL);
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (toc)));
+
+  if (!toc->tags) {
+    toc->tags = gst_tag_list_ref (tags);
+  } else {
+    GstTagList *tmp = gst_tag_list_merge (toc->tags, tags, mode);
+    gst_tag_list_unref (toc->tags);
+    toc->tags = tmp;
+  }
+}
+
+/**
+ * gst_toc_get_tags:
+ * @toc: A #GstToc instance
+ *
+ * Gets the tags for @toc.
+ *
+ * Returns: (transfer none): A #GstTagList for @entry
+ */
+GstTagList *
+gst_toc_get_tags (const GstToc * toc)
+{
+  g_return_val_if_fail (toc != NULL, NULL);
+
+  return toc->tags;
+}
+
+/**
+ * gst_toc_append_entry:
+ * @toc: A #GstToc instance
+ * @entry: (transfer full): A #GstTocEntry
+ *
+ * Appends the #GstTocEntry @entry to @toc.
+ */
+void
+gst_toc_append_entry (GstToc * toc, GstTocEntry * entry)
+{
+  g_return_if_fail (toc != NULL);
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (toc)));
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (entry)));
+  g_return_if_fail (entry->toc == NULL);
+  g_return_if_fail (entry->parent == NULL);
+
+  toc->entries = g_list_append (toc->entries, entry);
+  entry->toc = toc;
+
+  GST_LOG ("appended %s entry with uid %s to toc %p",
+      gst_toc_entry_type_get_nick (entry->type), entry->uid, toc);
+
+  gst_toc_dump (toc);
+}
+
+/**
+ * gst_toc_get_entries:
+ * @toc: A #GstToc instance
+ *
+ * Gets the list of #GstTocEntry of @toc.
+ *
+ * Returns: (transfer none) (element-type Gst.TocEntry): A #GList of #GstTocEntry for @entry
+ */
+GList *
+gst_toc_get_entries (const GstToc * toc)
+{
+  g_return_val_if_fail (toc != NULL, NULL);
+
+  return toc->entries;
+}
+
+static GstTocEntry *
+gst_toc_entry_new_internal (GstTocEntryType type, const gchar * uid)
+{
+  GstTocEntry *entry;
+
+  entry = g_slice_new0 (GstTocEntry);
+
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (entry), 0, GST_TYPE_TOC_ENTRY,
+      (GstMiniObjectCopyFunction) gst_toc_entry_copy, NULL,
+      (GstMiniObjectFreeFunction) gst_toc_entry_free);
+
+  entry->uid = g_strdup (uid);
+  entry->type = type;
+  entry->tags = NULL;
+  entry->start = entry->stop = GST_CLOCK_TIME_NONE;
+
+  return entry;
 }
 
 /**
@@ -105,102 +272,34 @@ gst_toc_new (void)
  *
  * Create new #GstTocEntry structure.
  *
- * Returns: newly allocated #GstTocEntry structure, free it with gst_toc_entry_free().
- *
- * Since: 0.10.37
+ * Returns: newly allocated #GstTocEntry structure, free it with gst_toc_entry_unref().
  */
 GstTocEntry *
 gst_toc_entry_new (GstTocEntryType type, const gchar * uid)
 {
-  GstTocEntry *entry;
-
   g_return_val_if_fail (uid != NULL, NULL);
 
-  entry = g_slice_new0 (GstTocEntry);
-  entry->uid = g_strdup (uid);
-  entry->type = type;
-  entry->tags = gst_tag_list_new_empty ();
-  entry->info = gst_structure_new_id_empty (GST_QUARK (INFO_STRUCTURE));
-
-  return entry;
+  return gst_toc_entry_new_internal (type, uid);
 }
 
-/**
- * gst_toc_entry_new_with_pad:
- * @type: entry type.
- * @uid: unique ID (UID) in the whole TOC.
- * @pad: #GstPad related to this entry.
- *
- * Create new #GstTocEntry structure with #GstPad related.
- *
- * Returns: newly allocated #GstTocEntry structure, free it with gst_toc_entry_free()
- * when done.
- *
- * Since: 0.10.37
- */
-GstTocEntry *
-gst_toc_entry_new_with_pad (GstTocEntryType type, const gchar * uid,
-    GstPad * pad)
-{
-  GstTocEntry *entry;
-
-  g_return_val_if_fail (uid != NULL, NULL);
-
-  entry = g_slice_new0 (GstTocEntry);
-  entry->uid = g_strdup (uid);
-  entry->type = type;
-  entry->tags = gst_tag_list_new_empty ();
-  entry->info = gst_structure_new_id_empty (GST_QUARK (INFO_STRUCTURE));
-
-  if (pad != NULL && GST_IS_PAD (pad))
-    entry->pads = g_list_append (entry->pads, gst_object_ref (pad));
-
-  return entry;
-}
-
-/**
- * gst_toc_free:
- * @toc: #GstToc structure to free.
- *
- * Free unused #GstToc structure.
- *
- * Since: 0.10.37
- */
-void
+static void
 gst_toc_free (GstToc * toc)
 {
-  g_return_if_fail (toc != NULL);
-
-  g_list_foreach (toc->entries, (GFunc) gst_toc_entry_free, NULL);
+  g_list_foreach (toc->entries, (GFunc) gst_mini_object_unref, NULL);
   g_list_free (toc->entries);
 
   if (toc->tags != NULL)
     gst_tag_list_unref (toc->tags);
 
-  if (toc->info != NULL)
-    gst_structure_free (toc->info);
-
   g_slice_free (GstToc, toc);
 }
 
-/**
- * gst_toc_entry_free:
- * @entry: #GstTocEntry structure to free.
- *
- * Free unused #GstTocEntry structure. Note that #GstTocEntry.uid will
- * be freed with g_free() and all #GstPad objects in the #GstTocEntry.pads
- * list will be unrefed with gst_object_unref().
- *
- * Since: 0.10.37
- */
-void
+static void
 gst_toc_entry_free (GstTocEntry * entry)
 {
-  GList *cur;
-
   g_return_if_fail (entry != NULL);
 
-  g_list_foreach (entry->subentries, (GFunc) gst_toc_entry_free, NULL);
+  g_list_foreach (entry->subentries, (GFunc) gst_mini_object_unref, NULL);
   g_list_free (entry->subentries);
 
   g_free (entry->uid);
@@ -208,448 +307,33 @@ gst_toc_entry_free (GstTocEntry * entry)
   if (entry->tags != NULL)
     gst_tag_list_unref (entry->tags);
 
-  if (entry->info != NULL)
-    gst_structure_free (entry->info);
-
-  cur = entry->pads;
-  while (cur != NULL) {
-    if (GST_IS_PAD (cur->data))
-      gst_object_unref (cur->data);
-    cur = cur->next;
-  }
-
-  g_list_free (entry->pads);
-
   g_slice_free (GstTocEntry, entry);
 }
 
-static GstStructure *
-gst_toc_structure_new (GstTagList * tags, GstStructure * info)
-{
-  GstStructure *ret;
-
-  ret = gst_structure_new_id_empty (GST_QUARK (TOC));
-
-  if (tags != NULL) {
-    gst_structure_id_set (ret, GST_QUARK (TAGS), GST_TYPE_TAG_LIST, tags, NULL);
-  }
-
-  if (info != NULL) {
-    gst_structure_id_set (ret, GST_QUARK (INFO), GST_TYPE_STRUCTURE, info,
-        NULL);
-  }
-
-  return ret;
-}
-
-static GstStructure *
-gst_toc_entry_structure_new (GstTocEntryType type, const gchar * uid,
-    GstTagList * tags, GstStructure * info)
-{
-  GstStructure *ret;
-
-  ret = gst_structure_new_id_empty (GST_QUARK (TOC_ENTRY));
-
-  gst_structure_id_set (ret, GST_QUARK (TYPE), GST_TYPE_TOC_ENTRY_TYPE, type,
-      NULL);
-  gst_structure_id_set (ret, GST_QUARK (UID), G_TYPE_STRING, uid, NULL);
-
-  if (tags != NULL) {
-    gst_structure_id_set (ret, GST_QUARK (TAGS), GST_TYPE_TAG_LIST, tags, NULL);
-  }
-
-  if (info != NULL) {
-    gst_structure_id_set (ret, GST_QUARK (INFO), GST_TYPE_STRUCTURE, info,
-        NULL);
-  }
-
-  return ret;
-}
-
-static guint
-gst_toc_entry_structure_n_subentries (const GstStructure * entry)
-{
-  if (G_UNLIKELY (!gst_structure_id_has_field_typed (entry,
-              GST_QUARK (SUB_ENTRIES), GST_TYPE_ARRAY)))
-    return 0;
-  else
-    return gst_value_array_get_size ((gst_structure_id_get_value (entry,
-                GST_QUARK (SUB_ENTRIES))));
-}
-
-static const GstStructure *
-gst_toc_entry_structure_nth_subentry (const GstStructure * entry, guint nth)
-{
-  guint count;
-  const GValue *array;
-
-  count = gst_toc_entry_structure_n_subentries (entry);
-
-  if (count < nth)
-    return NULL;
-
-  if (G_UNLIKELY (!gst_structure_id_has_field_typed (entry,
-              GST_QUARK (SUB_ENTRIES), GST_TYPE_ARRAY)))
-    return NULL;
-  else {
-    array =
-        gst_value_array_get_value (gst_structure_id_get_value (entry,
-            GST_QUARK (SUB_ENTRIES)), nth);
-    return gst_value_get_structure (array);
-  }
-}
-
 static GstTocEntry *
-gst_toc_entry_from_structure (const GstStructure * entry, guint level)
+gst_toc_entry_find_sub_entry (const GstTocEntry * entry, const gchar * uid)
 {
-  GstTocEntry *ret, *subentry;
-  const GValue *val;
-  const GstStructure *subentry_struct;
-  GstTagList *list;
-  GstStructure *st;
-  gint count, i;
-  const gchar *uid;
-  guint chapters_count = 0, editions_count = 0;
-
-  g_return_val_if_fail (entry != NULL, NULL);
-  g_return_val_if_fail (gst_structure_id_has_field_typed (entry,
-          GST_QUARK (UID), G_TYPE_STRING), NULL);
-  g_return_val_if_fail (gst_structure_id_has_field_typed (entry,
-          GST_QUARK (TYPE), GST_TYPE_TOC_ENTRY_TYPE), NULL);
-
-  val = gst_structure_id_get_value (entry, GST_QUARK (UID));
-  uid = g_value_get_string (val);
-
-  ret = gst_toc_entry_new (GST_TOC_ENTRY_TYPE_CHAPTER, uid);
-
-  gst_structure_get_enum (entry, g_quark_to_string (GST_QUARK (TYPE)),
-      GST_TYPE_TOC_ENTRY_TYPE, (gint *) & (ret->type));
-
-  if (gst_structure_id_has_field_typed (entry,
-          GST_QUARK (SUB_ENTRIES), GST_TYPE_ARRAY)) {
-    count = gst_toc_entry_structure_n_subentries (entry);
-
-    for (i = 0; i < count; ++i) {
-      subentry_struct = gst_toc_entry_structure_nth_subentry (entry, i);
-      subentry = gst_toc_entry_from_structure (subentry_struct, level + 1);
-
-      /* skip empty editions */
-      if (G_UNLIKELY (subentry->type == GST_TOC_ENTRY_TYPE_EDITION
-              && subentry->subentries == NULL)) {
-        g_warning
-            ("Empty edition found while deserializing TOC from GstStructure, skipping");
-        continue;
-      }
-
-      if (subentry->type == GST_TOC_ENTRY_TYPE_EDITION)
-        ++editions_count;
-      else
-        ++chapters_count;
-
-      /* check for mixed content */
-      if (G_UNLIKELY (chapters_count > 0 && editions_count > 0)) {
-        g_critical
-            ("Mixed editions and chapters in the TOC contents, the TOC is broken");
-        gst_toc_entry_free (subentry);
-        gst_toc_entry_free (ret);
-        return NULL;
-      }
-
-      if (G_UNLIKELY (subentry == NULL)) {
-        gst_toc_entry_free (ret);
-        return NULL;
-      }
-
-      ret->subentries = g_list_prepend (ret->subentries, subentry);
-    }
-
-    ret->subentries = g_list_reverse (ret->subentries);
-  }
-
-  if (gst_structure_id_has_field_typed (entry, GST_QUARK (TAGS),
-          GST_TYPE_TAG_LIST)) {
-    val = gst_structure_id_get_value (entry, GST_QUARK (TAGS));
-
-    if (G_LIKELY (GST_IS_TAG_LIST (g_value_get_boxed (val)))) {
-      list = gst_tag_list_copy (GST_TAG_LIST (g_value_get_boxed (val)));
-      gst_tag_list_unref (ret->tags);
-      ret->tags = list;
-    }
-  }
-
-  if (gst_structure_id_has_field_typed (entry,
-          GST_QUARK (INFO), GST_TYPE_STRUCTURE)) {
-    val = gst_structure_id_get_value (entry, GST_QUARK (INFO));
-
-    if (G_LIKELY (GST_IS_STRUCTURE (gst_value_get_structure (val)))) {
-      st = gst_structure_copy (gst_value_get_structure (val));
-      gst_structure_free (ret->info);
-      ret->info = st;
-    }
-  }
-
-  return ret;
-}
-
-GstToc *
-__gst_toc_from_structure (const GstStructure * toc)
-{
-  GstToc *ret;
-  GstTocEntry *subentry;
-  const GstStructure *subentry_struct;
-  const GValue *val;
-  GstTagList *list;
-  GstStructure *st;
-  guint count, i;
-  guint editions_count = 0, chapters_count = 0;
-
-  g_return_val_if_fail (toc != NULL, NULL);
-
-  ret = gst_toc_new ();
-
-  if (gst_structure_id_has_field_typed (toc,
-          GST_QUARK (SUB_ENTRIES), GST_TYPE_ARRAY)) {
-    count = gst_toc_entry_structure_n_subentries (toc);
-
-    for (i = 0; i < count; ++i) {
-      subentry_struct = gst_toc_entry_structure_nth_subentry (toc, i);
-      subentry = gst_toc_entry_from_structure (subentry_struct, 0);
-
-      /* skip empty editions */
-      if (G_UNLIKELY (subentry->type == GST_TOC_ENTRY_TYPE_EDITION
-              && subentry->subentries == NULL)) {
-        g_warning
-            ("Empty edition found while deserializing TOC from GstStructure, skipping");
-        continue;
-      }
-
-      /* check for success */
-      if (G_UNLIKELY (subentry == NULL)) {
-        g_critical ("Couldn't serialize deserializing TOC from GstStructure");
-        gst_toc_free (ret);
-        return NULL;
-      }
-
-      if (subentry->type == GST_TOC_ENTRY_TYPE_EDITION)
-        ++editions_count;
-      else
-        ++chapters_count;
-
-      /* check for mixed content */
-      if (G_UNLIKELY (chapters_count > 0 && editions_count > 0)) {
-        g_critical
-            ("Mixed editions and chapters in the TOC contents, the TOC is broken");
-        gst_toc_entry_free (subentry);
-        gst_toc_free (ret);
-        return NULL;
-      }
-
-      ret->entries = g_list_prepend (ret->entries, subentry);
-    }
-
-    ret->entries = g_list_reverse (ret->entries);
-  }
-
-  if (gst_structure_id_has_field_typed (toc, GST_QUARK (TAGS),
-          GST_TYPE_TAG_LIST)) {
-    val = gst_structure_id_get_value (toc, GST_QUARK (TAGS));
-
-    if (G_LIKELY (GST_IS_TAG_LIST (g_value_get_boxed (val)))) {
-      list = gst_tag_list_copy (GST_TAG_LIST (g_value_get_boxed (val)));
-      gst_tag_list_unref (ret->tags);
-      ret->tags = list;
-    }
-  }
-
-  if (gst_structure_id_has_field_typed (toc,
-          GST_QUARK (INFO), GST_TYPE_STRUCTURE)) {
-    val = gst_structure_id_get_value (toc, GST_QUARK (INFO));
-
-    if (G_LIKELY (GST_IS_STRUCTURE (gst_value_get_structure (val)))) {
-      st = gst_structure_copy (gst_value_get_structure (val));
-      gst_structure_free (ret->info);
-      ret->info = st;
-    }
-  }
-
-  if (G_UNLIKELY (ret->entries == NULL)) {
-    gst_toc_free (ret);
-    return NULL;
-  }
-
-  return ret;
-}
-
-static GstStructure *
-gst_toc_entry_to_structure (const GstTocEntry * entry, guint level)
-{
-  GstStructure *ret, *subentry_struct;
-  GstTocEntry *subentry;
   GList *cur;
-  GValue subentries_val = { 0 };
-  GValue entry_val = { 0 };
-  guint chapters_count = 0, editions_count = 0;
+  GstTocEntry *subentry, *subsubentry;
 
   g_return_val_if_fail (entry != NULL, NULL);
-
-  ret =
-      gst_toc_entry_structure_new (entry->type, entry->uid, entry->tags,
-      entry->info);
-
-  g_value_init (&subentries_val, GST_TYPE_ARRAY);
-  g_value_init (&entry_val, GST_TYPE_STRUCTURE);
+  g_return_val_if_fail (uid != NULL, NULL);
 
   cur = entry->subentries;
   while (cur != NULL) {
     subentry = cur->data;
 
-    if (subentry->type == GST_TOC_ENTRY_TYPE_EDITION)
-      ++editions_count;
-    else
-      ++chapters_count;
+    if (g_strcmp0 (subentry->uid, uid) == 0)
+      return subentry;
 
-    /* check for mixed content */
-    if (G_UNLIKELY (chapters_count > 0 && editions_count > 0)) {
-      g_critical
-          ("Mixed editions and chapters in the TOC contents, the TOC is broken");
-      gst_structure_free (ret);
-      g_value_unset (&entry_val);
-      g_value_unset (&subentries_val);
-      return NULL;
-    }
-
-    /* skip empty editions */
-    if (G_UNLIKELY (subentry->type == GST_TOC_ENTRY_TYPE_EDITION
-            && subentry->subentries == NULL)) {
-      g_warning
-          ("Empty edition found while serializing TOC to GstStructure, skipping");
-      cur = cur->next;
-      continue;
-    }
-
-    subentry_struct = gst_toc_entry_to_structure (subentry, level + 1);
-
-    /* check for success */
-    if (G_UNLIKELY (subentry_struct == NULL)) {
-      gst_structure_free (ret);
-      g_value_unset (&subentries_val);
-      g_value_unset (&entry_val);
-      return NULL;
-    }
-
-    /* skip empty editions */
-    if (G_UNLIKELY (subentry->type == GST_TOC_ENTRY_TYPE_EDITION
-            && subentry->subentries == NULL)) {
-      g_warning
-          ("Empty edition found while serializing TOC to GstStructure, skipping");
-      cur = cur->next;
-      continue;
-    }
-
-    gst_value_set_structure (&entry_val, subentry_struct);
-    gst_value_array_append_value (&subentries_val, &entry_val);
-    gst_structure_free (subentry_struct);
+    subsubentry = gst_toc_entry_find_sub_entry (subentry, uid);
+    if (subsubentry != NULL)
+      return subsubentry;
 
     cur = cur->next;
   }
 
-  gst_structure_id_set_value (ret, GST_QUARK (SUB_ENTRIES), &subentries_val);
-
-  g_value_unset (&subentries_val);
-  g_value_unset (&entry_val);
-  return ret;
-}
-
-GstStructure *
-__gst_toc_to_structure (const GstToc * toc)
-{
-  GValue val = { 0 };
-  GValue subentries_val = { 0 };
-  GstStructure *ret, *subentry_struct;
-  GstTocEntry *subentry;
-  GList *cur;
-  guint editions_count = 0, chapters_count = 0;
-
-  g_return_val_if_fail (toc != NULL, NULL);
-  g_return_val_if_fail (toc->entries != NULL, NULL);
-
-  ret = gst_toc_structure_new (toc->tags, toc->info);
-
-  g_value_init (&val, GST_TYPE_STRUCTURE);
-  g_value_init (&subentries_val, GST_TYPE_ARRAY);
-  cur = toc->entries;
-
-  while (cur != NULL) {
-    subentry = cur->data;
-
-    if (subentry->type == GST_TOC_ENTRY_TYPE_EDITION)
-      ++editions_count;
-    else
-      ++chapters_count;
-
-    /* check for mixed content */
-    if (G_UNLIKELY (chapters_count > 0 && editions_count > 0)) {
-      g_critical
-          ("Mixed editions and chapters in the TOC contents, the TOC is broken");
-      gst_structure_free (ret);
-      g_value_unset (&val);
-      g_value_unset (&subentries_val);
-      return NULL;
-    }
-
-    /* skip empty editions */
-    if (G_UNLIKELY (subentry->type == GST_TOC_ENTRY_TYPE_EDITION
-            && subentry->subentries == NULL)) {
-      g_warning
-          ("Empty edition found while serializing TOC to GstStructure, skipping");
-      cur = cur->next;
-      continue;
-    }
-
-    subentry_struct = gst_toc_entry_to_structure (subentry, 0);
-
-    /* check for success */
-    if (G_UNLIKELY (subentry_struct == NULL)) {
-      g_critical ("Couldn't serialize TOC to GstStructure");
-      gst_structure_free (ret);
-      g_value_unset (&val);
-      g_value_unset (&subentries_val);
-      return NULL;
-    }
-
-    gst_value_set_structure (&val, subentry_struct);
-    gst_value_array_append_value (&subentries_val, &val);
-    gst_structure_free (subentry_struct);
-
-    cur = cur->next;
-  }
-
-  gst_structure_id_set_value (ret, GST_QUARK (SUB_ENTRIES), &subentries_val);
-
-  g_value_unset (&val);
-  g_value_unset (&subentries_val);
-  return ret;
-}
-
-static gboolean
-gst_toc_check_entry_for_uid (const GstTocEntry * entry, const gchar * uid)
-{
-  GList *cur;
-
-  g_return_val_if_fail (entry != NULL, FALSE);
-  g_return_val_if_fail (uid != NULL, FALSE);
-
-  if (g_strcmp0 (entry->uid, uid) == 0)
-    return TRUE;
-
-  cur = entry->subentries;
-  while (cur != NULL) {
-    if (gst_toc_check_entry_for_uid (cur->data, uid))
-      return TRUE;
-    cur = cur->next;
-  }
-
-  return FALSE;
+  return NULL;
 }
 
 /**
@@ -659,22 +343,27 @@ gst_toc_check_entry_for_uid (const GstTocEntry * entry, const gchar * uid)
  *
  * Find #GstTocEntry with given @uid in the @toc.
  *
- * Returns: #GstTocEntry with specified @uid from the @toc, or NULL if not found.
- *
- * Since: 0.10.37
+ * Returns: (transfer none): #GstTocEntry with specified @uid from the @toc, or NULL if not found.
  */
 GstTocEntry *
 gst_toc_find_entry (const GstToc * toc, const gchar * uid)
 {
   GList *cur;
+  GstTocEntry *entry, *subentry;
 
   g_return_val_if_fail (toc != NULL, NULL);
   g_return_val_if_fail (uid != NULL, NULL);
 
   cur = toc->entries;
   while (cur != NULL) {
-    if (gst_toc_check_entry_for_uid (cur->data, uid))
-      return cur->data;
+    entry = cur->data;
+
+    if (g_strcmp0 (entry->uid, uid) == 0)
+      return entry;
+
+    subentry = gst_toc_entry_find_sub_entry (entry, uid);
+    if (subentry != NULL)
+      return subentry;
     cur = cur->next;
   }
 
@@ -688,41 +377,28 @@ gst_toc_find_entry (const GstToc * toc, const gchar * uid)
  * Copy #GstTocEntry with all subentries (deep copy).
  *
  * Returns: newly allocated #GstTocEntry in case of success, NULL otherwise;
- * free it when done with gst_toc_entry_free().
- *
- * Since: 0.10.37
+ * free it when done with gst_toc_entry_unref().
  */
-GstTocEntry *
+static GstTocEntry *
 gst_toc_entry_copy (const GstTocEntry * entry)
 {
   GstTocEntry *ret, *sub;
-  GList *cur;
   GstTagList *list;
-  GstStructure *st;
+  GList *cur;
 
   g_return_val_if_fail (entry != NULL, NULL);
 
   ret = gst_toc_entry_new (entry->type, entry->uid);
 
-  if (GST_IS_STRUCTURE (entry->info)) {
-    st = gst_structure_copy (entry->info);
-    gst_structure_free (ret->info);
-    ret->info = st;
-  }
+  ret->start = entry->start;
+  ret->stop = entry->stop;
 
   if (GST_IS_TAG_LIST (entry->tags)) {
     list = gst_tag_list_copy (entry->tags);
-    gst_tag_list_unref (ret->tags);
+    if (ret->tags)
+      gst_tag_list_unref (ret->tags);
     ret->tags = list;
   }
-
-  cur = entry->pads;
-  while (cur != NULL) {
-    if (GST_IS_PAD (cur->data))
-      ret->pads = g_list_prepend (ret->pads, gst_object_ref (cur->data));
-    cur = cur->next;
-  }
-  ret->pads = g_list_reverse (ret->pads);
 
   cur = entry->subentries;
   while (cur != NULL) {
@@ -746,27 +422,18 @@ gst_toc_entry_copy (const GstTocEntry * entry)
  *
  * Returns: newly allocated #GstToc in case of success, NULL otherwise;
  * free it when done with gst_toc_free().
- *
- * Since: 0.10.37
  */
-GstToc *
+static GstToc *
 gst_toc_copy (const GstToc * toc)
 {
   GstToc *ret;
   GstTocEntry *entry;
   GList *cur;
   GstTagList *list;
-  GstStructure *st;
 
   g_return_val_if_fail (toc != NULL, NULL);
 
-  ret = gst_toc_new ();
-
-  if (GST_IS_STRUCTURE (toc->info)) {
-    st = gst_structure_copy (toc->info);
-    gst_structure_free (ret->info);
-    ret->info = st;
-  }
+  ret = gst_toc_new (toc->scope);
 
   if (GST_IS_TAG_LIST (toc->tags)) {
     list = gst_tag_list_copy (toc->tags);
@@ -784,49 +451,29 @@ gst_toc_copy (const GstToc * toc)
     cur = cur->next;
   }
   ret->entries = g_list_reverse (ret->entries);
-
   return ret;
 }
 
 /**
- * gst_toc_entry_set_start_stop:
+ * gst_toc_entry_set_start_stop_times:
  * @entry: #GstTocEntry to set values.
  * @start: start value to set.
  * @stop: stop value to set.
  *
  * Set @start and @stop values for the @entry.
- *
- * Since: 0.10.37
  */
 void
-gst_toc_entry_set_start_stop (GstTocEntry * entry, gint64 start, gint64 stop)
+gst_toc_entry_set_start_stop_times (GstTocEntry * entry, gint64 start,
+    gint64 stop)
 {
-  const GValue *val;
-  GstStructure *structure = NULL;
-
   g_return_if_fail (entry != NULL);
-  g_return_if_fail (GST_IS_STRUCTURE (entry->info));
 
-  if (gst_structure_id_has_field_typed (entry->info, GST_QUARK (TIME),
-          GST_TYPE_STRUCTURE)) {
-    val = gst_structure_id_get_value (entry->info, GST_QUARK (TIME));
-    structure = gst_structure_copy (gst_value_get_structure (val));
-  }
-
-  if (structure == NULL)
-    structure = gst_structure_new_id_empty (GST_QUARK (TIME_STRUCTURE));
-
-  gst_structure_id_set (structure, GST_QUARK (START),
-      G_TYPE_INT64, start, GST_QUARK (STOP), G_TYPE_INT64, stop, NULL);
-
-  gst_structure_id_set (entry->info, GST_QUARK (TIME),
-      GST_TYPE_STRUCTURE, structure, NULL);
-
-  gst_structure_free (structure);
+  entry->start = start;
+  entry->stop = stop;
 }
 
 /**
- * gst_toc_entry_get_start_stop:
+ * gst_toc_entry_get_start_stop_times:
  * @entry: #GstTocEntry to get values from.
  * @start: (out): the storage for the start value, leave #NULL if not need.
  * @stop: (out): the storage for the stop value, leave #NULL if not need.
@@ -835,46 +482,19 @@ gst_toc_entry_set_start_stop (GstTocEntry * entry, gint64 start, gint64 stop)
  *
  * Returns: TRUE if all non-NULL storage pointers were filled with appropriate values,
  * FALSE otherwise.
- *
- * Since: 0.10.37
  */
 gboolean
-gst_toc_entry_get_start_stop (const GstTocEntry * entry, gint64 * start,
+gst_toc_entry_get_start_stop_times (const GstTocEntry * entry, gint64 * start,
     gint64 * stop)
 {
   gboolean ret = TRUE;
-  const GValue *val;
-  const GstStructure *structure;
 
   g_return_val_if_fail (entry != NULL, FALSE);
-  g_return_val_if_fail (GST_IS_STRUCTURE (entry->info), FALSE);
 
-  if (!gst_structure_id_has_field_typed (entry->info,
-          GST_QUARK (TIME), GST_TYPE_STRUCTURE))
-    return FALSE;
-
-  val = gst_structure_id_get_value (entry->info, GST_QUARK (TIME));
-  structure = gst_value_get_structure (val);
-
-  if (start != NULL) {
-    if (gst_structure_id_has_field_typed (structure,
-            GST_QUARK (START), G_TYPE_INT64))
-      *start =
-          g_value_get_int64 (gst_structure_id_get_value (structure,
-              GST_QUARK (START)));
-    else
-      ret = FALSE;
-  }
-
-  if (stop != NULL) {
-    if (gst_structure_id_has_field_typed (structure,
-            GST_QUARK (STOP), G_TYPE_INT64))
-      *stop =
-          g_value_get_int64 (gst_structure_id_get_value (structure,
-              GST_QUARK (STOP)));
-    else
-      ret = FALSE;
-  }
+  if (start != NULL)
+    *start = entry->start;
+  if (stop != NULL)
+    *stop = entry->stop;
 
   return ret;
 }
@@ -885,67 +505,252 @@ gst_toc_entry_get_start_stop (const GstTocEntry * entry, gint64 * start,
  *
  * Converts @type to a string representation.
  *
- * Returns: Returns the human-readable @type. Can be NULL if an error occurred.
- * Since: 0.11.92
+ * Returns: Returns a human-readable string for @type. This string is
+ *    only for debugging purpose and should not be displayed in a user
+ *    interface.
  */
 const gchar *
 gst_toc_entry_type_get_nick (GstTocEntryType type)
 {
-  const gchar *entry_types[] = { "chapter", "edition" };
-
-  g_return_val_if_fail ((gint) type >= 0
-      && (gint) type < G_N_ELEMENTS (entry_types), NULL);
-  return entry_types[type];
+  switch (type) {
+    case GST_TOC_ENTRY_TYPE_ANGLE:
+      return "angle";
+    case GST_TOC_ENTRY_TYPE_VERSION:
+      return "version";
+    case GST_TOC_ENTRY_TYPE_EDITION:
+      return "edition";
+    case GST_TOC_ENTRY_TYPE_TITLE:
+      return "title";
+    case GST_TOC_ENTRY_TYPE_TRACK:
+      return "track";
+    case GST_TOC_ENTRY_TYPE_CHAPTER:
+      return "chapter";
+    default:
+      break;
+  }
+  return "invalid";
 }
 
+/**
+ * gst_toc_entry_get_entry_type:
+ * @entry: a #GstTocEntry
+ *
+ * Returns: @entry's entry type
+ */
+GstTocEntryType
+gst_toc_entry_get_entry_type (const GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, GST_TOC_ENTRY_TYPE_INVALID);
+
+  return entry->type;
+}
+
+/**
+ * gst_toc_entry_is_alternative:
+ * @entry: a #GstTocEntry
+ *
+ * Returns: %TRUE if @entry's type is an alternative type, otherwise %FALSE
+ */
 gboolean
-__gst_toc_structure_get_updated (const GstStructure * toc)
+gst_toc_entry_is_alternative (const GstTocEntry * entry)
 {
-  const GValue *val;
+  g_return_val_if_fail (entry != NULL, FALSE);
 
-  g_return_val_if_fail (GST_IS_STRUCTURE (toc), FALSE);
-
-  if (G_LIKELY (gst_structure_id_has_field_typed (toc,
-              GST_QUARK (UPDATED), G_TYPE_BOOLEAN))) {
-    val = gst_structure_id_get_value (toc, GST_QUARK (UPDATED));
-    return g_value_get_boolean (val);
-  }
-
-  return FALSE;
+  return GST_TOC_ENTRY_TYPE_IS_ALTERNATIVE (entry->type);
 }
+
+/**
+ * gst_toc_entry_is_sequence:
+ * @entry: a #GstTocEntry
+ *
+ * Returns: %TRUE if @entry's type is a sequence type, otherwise %FALSE
+ */
+gboolean
+gst_toc_entry_is_sequence (const GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, FALSE);
+
+  return GST_TOC_ENTRY_TYPE_IS_SEQUENCE (entry->type);
+}
+
+/**
+ * gst_toc_entry_get_uid:
+ * @entry: A #GstTocEntry instance
+ *
+ * Gets the UID of @entry.
+ *
+ * Returns: (transfer none): The UID of @entry
+ */
+const gchar *
+gst_toc_entry_get_uid (const GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->uid;
+}
+
+/**
+ * gst_toc_entry_append_sub_entry:
+ * @entry: A #GstTocEntry instance
+ * @subentry: (transfer full): A #GstTocEntry
+ *
+ * Appends the #GstTocEntry @subentry to @entry.
+ */
+void
+gst_toc_entry_append_sub_entry (GstTocEntry * entry, GstTocEntry * subentry)
+{
+  g_return_if_fail (entry != NULL);
+  g_return_if_fail (subentry != NULL);
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (entry)));
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST
+          (subentry)));
+  g_return_if_fail (subentry->toc == NULL);
+  g_return_if_fail (subentry->parent == NULL);
+
+  entry->subentries = g_list_append (entry->subentries, subentry);
+  subentry->toc = entry->toc;
+  subentry->parent = entry;
+
+  GST_LOG ("appended %s subentry with uid %s to entry %s",
+      gst_toc_entry_type_get_nick (subentry->type), subentry->uid, entry->uid);
+}
+
+/**
+ * gst_toc_entry_get_uid:
+ * @entry: A #GstTocEntry instance
+ *
+ * Gets the sub-entries of @entry.
+ *
+ * Returns: (transfer none) (element-type Gst.TocEntry): A #GList of #GstTocEntry of @entry
+ */
+GList *
+gst_toc_entry_get_sub_entries (const GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->subentries;
+}
+
+/**
+ * gst_toc_entry_set_tags:
+ * @entry: A #GstTocEntry instance
+ * @tags: (allow-none) (transfer full): A #GstTagList or %NULL
+ *
+ * Set a #GstTagList with tags for the complete @entry.
+ */
+void
+gst_toc_entry_set_tags (GstTocEntry * entry, GstTagList * tags)
+{
+  g_return_if_fail (entry != NULL);
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (entry)));
+
+  if (entry->tags)
+    gst_tag_list_unref (entry->tags);
+  entry->tags = tags;
+}
+
+/**
+ * gst_toc_entry_merge_tags:
+ * @entry: A #GstTocEntry instance
+ * @tags: (allow-none): A #GstTagList or %NULL
+ * @mode: A #GstTagMergeMode
+ *
+ * Merge @tags into the existing tags of @entry using @mode.
+ */
+void
+gst_toc_entry_merge_tags (GstTocEntry * entry, GstTagList * tags,
+    GstTagMergeMode mode)
+{
+  g_return_if_fail (entry != NULL);
+  g_return_if_fail (gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (entry)));
+
+  if (!entry->tags) {
+    entry->tags = gst_tag_list_ref (tags);
+  } else {
+    GstTagList *tmp = gst_tag_list_merge (entry->tags, tags, mode);
+    gst_tag_list_unref (entry->tags);
+    entry->tags = tmp;
+  }
+}
+
+/**
+ * gst_toc_entry_get_tags:
+ * @entry: A #GstTocEntry instance
+ *
+ * Gets the tags for @entry.
+ *
+ * Returns: (transfer none): A #GstTagList for @entry
+ */
+GstTagList *
+gst_toc_entry_get_tags (const GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->tags;
+}
+
+/**
+ * gst_toc_entry_get_toc:
+ * @entry: A #GstTocEntry instance
+ *
+ * Gets the parent #GstToc of @entry.
+ *
+ * Returns: (transfer none): The parent #GstToc of @entry
+ */
+GstToc *
+gst_toc_entry_get_toc (GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->toc;
+}
+
+/**
+ * gst_toc_entry_get_parent:
+ * @entry: A #GstTocEntry instance
+ *
+ * Gets the parent #GstTocEntry of @entry.
+ *
+ * Returns: (transfer none): The parent #GstTocEntry of @entry
+ */
+GstTocEntry *
+gst_toc_entry_get_parent (GstTocEntry * entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->parent;
+}
+
+#ifndef GST_DISABLE_GST_DEBUG
+static void
+gst_toc_dump_entries (GList * entries, guint depth)
+{
+  GList *e;
+  gchar *indent;
+
+  indent = g_malloc0 (depth + 1);
+  memset (indent, ' ', depth);
+  for (e = entries; e != NULL; e = e->next) {
+    GstTocEntry *entry = e->data;
+
+    GST_TRACE ("%s+ %s (%s), %" GST_TIME_FORMAT " - %" GST_TIME_FORMAT ", "
+        "tags: %" GST_PTR_FORMAT, indent, entry->uid,
+        gst_toc_entry_type_get_nick (entry->type),
+        GST_TIME_ARGS (entry->start), GST_TIME_ARGS (entry->stop), entry->tags);
+
+    if (entry->subentries != NULL)
+      gst_toc_dump_entries (entry->subentries, depth + 2);
+  }
+  g_free (indent);
+}
+#endif
 
 void
-__gst_toc_structure_set_updated (GstStructure * toc, gboolean updated)
+gst_toc_dump (GstToc * toc)
 {
-  g_return_if_fail (toc != NULL);
-
-  gst_structure_id_set (toc, GST_QUARK (UPDATED), G_TYPE_BOOLEAN, updated,
-      NULL);
-}
-
-gchar *
-__gst_toc_structure_get_extend_uid (const GstStructure * toc)
-{
-  const GValue *val;
-
-  g_return_val_if_fail (GST_IS_STRUCTURE (toc), NULL);
-
-  if (G_LIKELY (gst_structure_id_has_field_typed (toc,
-              GST_QUARK (EXTEND_UID), G_TYPE_STRING))) {
-    val = gst_structure_id_get_value (toc, GST_QUARK (EXTEND_UID));
-    return g_strdup (g_value_get_string (val));
-  }
-
-  return NULL;
-}
-
-void
-__gst_toc_structure_set_extend_uid (GstStructure * toc,
-    const gchar * extend_uid)
-{
-  g_return_if_fail (toc != NULL);
-  g_return_if_fail (extend_uid != NULL);
-
-  gst_structure_id_set (toc, GST_QUARK (EXTEND_UID), G_TYPE_STRING, extend_uid,
-      NULL);
+#ifndef GST_DISABLE_GST_DEBUG
+  GST_TRACE ("        Toc %p, scope: %s, tags: %" GST_PTR_FORMAT, toc,
+      (toc->scope == GST_TOC_SCOPE_GLOBAL) ? "global" : "current", toc->tags);
+  gst_toc_dump_entries (toc->entries, 2);
+#endif
 }

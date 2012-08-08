@@ -136,14 +136,15 @@ fault_spin (void)
   int spinning = TRUE;
 
   glib_on_error_halt = FALSE;
-  g_on_error_stack_trace ("gst-launch");
+  g_on_error_stack_trace ("gst-launch-" GST_API_VERSION);
 
   wait (NULL);
 
   /* FIXME how do we know if we were run by libtool? */
   fprintf (stderr,
-      "Spinning.  Please run 'gdb gst-launch %d' to continue debugging, "
-      "Ctrl-C to quit, or Ctrl-\\ to dump core.\n", (gint) getpid ());
+      "Spinning.  Please run 'gdb gst-launch- " GST_API_VERSION " %d' to "
+      "continue debugging, Ctrl-C to quit, or Ctrl-\\ to dump core.\n",
+      (gint) getpid ());
   while (spinning)
     g_usleep (1000000);
 }
@@ -384,27 +385,35 @@ print_tag (const GstTagList * list, const gchar * tag, gpointer unused)
     if (gst_tag_get_type (tag) == G_TYPE_STRING) {
       if (!gst_tag_list_get_string_index (list, tag, i, &str))
         g_assert_not_reached ();
-    } else if (gst_tag_get_type (tag) == GST_TYPE_BUFFER) {
-      GstBuffer *img;
+    } else if (gst_tag_get_type (tag) == GST_TYPE_SAMPLE) {
+      GstSample *sample = NULL;
 
-      img = gst_value_get_buffer (gst_tag_list_get_value_index (list, tag, i));
-      if (img) {
-        gchar *caps_str;
+      if (gst_tag_list_get_sample_index (list, tag, i, &sample)) {
+        GstBuffer *img = gst_sample_get_buffer (sample);
+        GstCaps *caps = gst_sample_get_caps (sample);
 
-        caps_str = g_strdup ("unknown");
-        str = g_strdup_printf ("buffer of %" G_GSIZE_FORMAT " bytes, type: %s",
-            gst_buffer_get_size (img), caps_str);
-        g_free (caps_str);
-      } else {
-        str = g_strdup ("NULL buffer");
+        if (img) {
+          if (caps) {
+            gchar *caps_str;
+
+            caps_str = gst_caps_to_string (caps);
+            str = g_strdup_printf ("buffer of %" G_GSIZE_FORMAT " bytes, "
+                "type: %s", gst_buffer_get_size (img), caps_str);
+            g_free (caps_str);
+          } else {
+            str = g_strdup_printf ("buffer of %" G_GSIZE_FORMAT " bytes",
+                gst_buffer_get_size (img));
+          }
+        } else {
+          str = g_strdup ("NULL buffer");
+        }
       }
     } else if (gst_tag_get_type (tag) == GST_TYPE_DATE_TIME) {
       GstDateTime *dt = NULL;
 
       gst_tag_list_get_date_time_index (list, tag, i, &dt);
-      if (gst_date_time_get_hour (dt) < 0) {
-        str = g_strdup_printf ("%02u-%02u-%04u", gst_date_time_get_day (dt),
-            gst_date_time_get_month (dt), gst_date_time_get_year (dt));
+      if (!gst_date_time_has_time (dt)) {
+        str = gst_date_time_to_iso8601_string (dt);
       } else {
         gdouble tz_offset = gst_date_time_get_time_zone_offset (dt);
         gchar tz_str[32];
@@ -467,12 +476,14 @@ print_toc_entry (gpointer data, gpointer user_data)
   GstTocEntry *entry = (GstTocEntry *) data;
   const gchar spc[MAX_INDENT + 1] = "                                        ";
   guint indent = MIN (GPOINTER_TO_UINT (user_data), MAX_INDENT);
+  const GstTagList *tags;
+  GList *subentries;
   gint64 start, stop;
 
-  gst_toc_entry_get_start_stop (entry, &start, &stop);
+  gst_toc_entry_get_start_stop_times (entry, &start, &stop);
 
   PRINT ("%s%s:", &spc[MAX_INDENT - indent],
-      gst_toc_entry_type_get_nick (entry->type));
+      gst_toc_entry_type_get_nick (gst_toc_entry_get_entry_type (entry)));
   if (GST_CLOCK_TIME_IS_VALID (start)) {
     PRINT (" start: %" GST_TIME_FORMAT, GST_TIME_ARGS (start));
   }
@@ -483,12 +494,13 @@ print_toc_entry (gpointer data, gpointer user_data)
   indent += 2;
 
   /* print tags */
-  gst_tag_list_foreach (entry->tags, print_tag_foreach,
-      GUINT_TO_POINTER (indent));
+  tags = gst_toc_entry_get_tags (entry);
+  if (tags)
+    gst_tag_list_foreach (tags, print_tag_foreach, GUINT_TO_POINTER (indent));
 
   /* loop over sub-toc entries */
-  g_list_foreach (entry->subentries, print_toc_entry,
-      GUINT_TO_POINTER (indent));
+  subentries = gst_toc_entry_get_sub_entries (entry);
+  g_list_foreach (subentries, print_toc_entry, GUINT_TO_POINTER (indent));
 }
 
 #ifndef DISABLE_FAULT_HANDLER
@@ -668,7 +680,8 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
         break;
       case GST_MESSAGE_TOC:
         if (toc) {
-          GstToc *toc_msg;
+          GstToc *toc;
+          GList *entries;
           gboolean updated;
 
           if (GST_IS_ELEMENT (GST_MESSAGE_SRC (message))) {
@@ -681,11 +694,11 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
             PRINT (_("FOUND TOC\n"));
           }
 
-          gst_message_parse_toc (message, &toc_msg, &updated);
+          gst_message_parse_toc (message, &toc, &updated);
           /* recursively loop over toc entries */
-          g_list_foreach (toc_msg->entries, print_toc_entry,
-              GUINT_TO_POINTER (0));
-          gst_toc_free (toc_msg);
+          entries = gst_toc_get_entries (toc);
+          g_list_foreach (entries, print_toc_entry, GUINT_TO_POINTER (0));
+          gst_toc_unref (toc);
         }
         break;
       case GST_MESSAGE_INFO:{
@@ -948,7 +961,7 @@ main (int argc, char *argv[])
   textdomain (GETTEXT_PACKAGE);
 #endif
 
-  gst_tools_set_prgname ("gst-launch");
+  g_set_prgname ("gst-launch-" GST_API_VERSION);
 
 #ifndef GST_DISABLE_OPTION_PARSING
   ctx = g_option_context_new ("PIPELINE-DESCRIPTION");
@@ -966,7 +979,7 @@ main (int argc, char *argv[])
   gst_init (&argc, &argv);
 #endif
 
-  gst_tools_print_version ("gst-launch");
+  gst_tools_print_version ();
 
 #ifndef DISABLE_FAULT_HANDLER
   if (!no_fault)
@@ -1041,7 +1054,7 @@ main (int argc, char *argv[])
 #endif
 
     bus = gst_element_get_bus (pipeline);
-    gst_bus_set_sync_handler (bus, bus_sync_handler, (gpointer) pipeline);
+    gst_bus_set_sync_handler (bus, bus_sync_handler, (gpointer) pipeline, NULL);
     gst_object_unref (bus);
 
     PRINT (_("Setting pipeline to PAUSED ...\n"));
@@ -1161,7 +1174,6 @@ main (int argc, char *argv[])
   end:
     PRINT (_("Setting pipeline to NULL ...\n"));
     gst_element_set_state (pipeline, GST_STATE_NULL);
-    gst_element_get_state (pipeline, &state, &pending, GST_CLOCK_TIME_NONE);
   }
 
   PRINT (_("Freeing pipeline ...\n"));

@@ -66,6 +66,9 @@ typedef gpointer GstClockID;
  * GST_CLOCK_TIME_NONE:
  *
  * Constant to define an undefined clock time.
+ *
+ * Value: 18446744073709551615
+ * Type: GstClockTime
  */
 #define GST_CLOCK_TIME_NONE             ((GstClockTime) -1)
 /**
@@ -83,7 +86,7 @@ typedef gpointer GstClockID;
  * Constant that defines one GStreamer second.
  *
  * Value: 1000000000
- *
+ * Type: GstClockTime
  */
 #define GST_SECOND  (G_USEC_PER_SEC * G_GINT64_CONSTANT (1000))
 /**
@@ -92,7 +95,7 @@ typedef gpointer GstClockID;
  * Constant that defines one GStreamer millisecond.
  *
  * Value: 1000000
- *
+ * Type: GstClockTime
  */
 #define GST_MSECOND (GST_SECOND / G_GINT64_CONSTANT (1000))
 /**
@@ -101,7 +104,7 @@ typedef gpointer GstClockID;
  * Constant that defines one GStreamer microsecond.
  *
  * Value: 1000
- *
+ * Type: GstClockTime
  */
 #define GST_USECOND (GST_SECOND / G_GINT64_CONSTANT (1000000))
 /**
@@ -110,7 +113,7 @@ typedef gpointer GstClockID;
  * Constant that defines one GStreamer nanosecond
  *
  * Value: 1
- *
+ * Type: GstClockTime
  */
 #define GST_NSECOND (GST_SECOND / G_GINT64_CONSTANT (1000000000))
 
@@ -120,8 +123,6 @@ typedef gpointer GstClockID;
  * @time: the time
  *
  * Convert a #GstClockTime to seconds.
- *
- * Since: 0.10.16
  */
 #define GST_TIME_AS_SECONDS(time)  ((time) / GST_SECOND)
 /**
@@ -129,8 +130,6 @@ typedef gpointer GstClockID;
  * @time: the time
  *
  * Convert a #GstClockTime to milliseconds (1/1000 of a second).
- *
- * Since: 0.10.16
  */
 #define GST_TIME_AS_MSECONDS(time) ((time) / G_GINT64_CONSTANT (1000000))
 /**
@@ -138,8 +137,6 @@ typedef gpointer GstClockID;
  * @time: the time
  *
  * Convert a #GstClockTime to microseconds (1/1000000 of a second).
- *
- * Since: 0.10.16
  */
 #define GST_TIME_AS_USECONDS(time) ((time) / G_GINT64_CONSTANT (1000))
 /**
@@ -147,8 +144,6 @@ typedef gpointer GstClockID;
  * @time: the time
  *
  * Convert a #GstClockTime to nanoseconds (1/1000000000 of a second).
- *
- * Since: 0.10.16
  */
 #define GST_TIME_AS_NSECONDS(time) (time)
 
@@ -183,10 +178,12 @@ typedef gpointer GstClockID;
  */
 #define GST_TIME_TO_TIMEVAL(t,tv)                               \
 G_STMT_START {                                                  \
-  (tv).tv_sec  = ((GstClockTime) (t)) / GST_SECOND;             \
-  (tv).tv_usec = (((GstClockTime) (t)) -                        \
+  g_assert ("Value of time " #t " is out of timeval's range" && \
+      ((t) / GST_SECOND) < G_MAXLONG);                          \
+  (tv).tv_sec  = (glong) (((GstClockTime) (t)) / GST_SECOND);   \
+  (tv).tv_usec = (glong) ((((GstClockTime) (t)) -               \
                   ((GstClockTime) (tv).tv_sec) * GST_SECOND)    \
-                 / GST_USECOND;                                 \
+                 / GST_USECOND);                                \
 } G_STMT_END
 
 /**
@@ -203,10 +200,12 @@ G_STMT_START {                                                  \
  *
  * Convert a #GstClockTime to a struct timespec (see man pselect)
  */
-#define GST_TIME_TO_TIMESPEC(t,ts)                      \
-G_STMT_START {                                          \
-  (ts).tv_sec  =  (t) / GST_SECOND;                     \
-  (ts).tv_nsec = ((t) - (ts).tv_sec * GST_SECOND) / GST_NSECOND;        \
+#define GST_TIME_TO_TIMESPEC(t,ts)                                \
+G_STMT_START {                                                    \
+  g_assert ("Value of time " #t " is out of timespec's range" &&  \
+      ((t) / GST_SECOND) < G_MAXLONG);                            \
+  (ts).tv_sec  =  (glong) ((t) / GST_SECOND);                     \
+  (ts).tv_nsec = (glong) (((t) - (ts).tv_sec * GST_SECOND) / GST_NSECOND);        \
 } G_STMT_END
 
 /* timestamp debugging macros */
@@ -268,7 +267,7 @@ typedef gboolean        (*GstClockCallback)     (GstClock *clock, GstClockTime t
  * @GST_CLOCK_BADTIME: A bad time was provided to a function.
  * @GST_CLOCK_ERROR: An error occurred
  * @GST_CLOCK_UNSUPPORTED: Operation is not supported
- * @GST_CLOCK_DONE: The ClockID is done waiting (Since: 0.10.32)
+ * @GST_CLOCK_DONE: The ClockID is done waiting
  *
  * The return value of a clock operation.
  */
@@ -362,6 +361,7 @@ struct _GstClockEntry {
   gboolean               unscheduled;
   gboolean               woken_up;
 
+  /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
 };
 
@@ -503,9 +503,6 @@ GstClockTime            gst_clock_id_get_time           (GstClockID id);
 GstClockReturn          gst_clock_id_wait               (GstClockID id,
                                                          GstClockTimeDiff *jitter);
 GstClockReturn          gst_clock_id_wait_async         (GstClockID id,
-                                                         GstClockCallback func,
-                                                         gpointer user_data);
-GstClockReturn          gst_clock_id_wait_async_full    (GstClockID id,
                                                          GstClockCallback func,
                                                          gpointer user_data,
                                                          GDestroyNotify destroy_data);

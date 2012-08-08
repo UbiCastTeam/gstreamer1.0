@@ -507,8 +507,6 @@ gst_value_list_concat (GValue * dest, const GValue * value1,
  * The result will be put into @dest and will either be a list that will not
  * contain any duplicates, or a non-list type (if @value1 and @value2
  * were equal).
- *
- * Since: 0.10.32
  */
 void
 gst_value_list_merge (GValue * dest, const GValue * value1,
@@ -1189,8 +1187,6 @@ gst_value_lcopy_int64_range (const GValue * value, guint n_collect_values,
  * @step: the step of the range
  *
  * Sets @value to the range specified by @start, @end and @step.
- *
- * Since: 0.11.0
  */
 void
 gst_value_set_int64_range_step (GValue * value, gint64 start, gint64 end,
@@ -1214,8 +1210,6 @@ gst_value_set_int64_range_step (GValue * value, gint64 start, gint64 end,
  * @end: the end of the range
  *
  * Sets @value to the range specified by @start and @end.
- *
- * Since: 0.10.31
  */
 void
 gst_value_set_int64_range (GValue * value, gint64 start, gint64 end)
@@ -1230,8 +1224,6 @@ gst_value_set_int64_range (GValue * value, gint64 start, gint64 end)
  * Gets the minimum of the range specified by @value.
  *
  * Returns: the minimum of the range
- *
- * Since: 0.10.31
  */
 gint64
 gst_value_get_int64_range_min (const GValue * value)
@@ -1248,8 +1240,6 @@ gst_value_get_int64_range_min (const GValue * value)
  * Gets the maximum of the range specified by @value.
  *
  * Returns: the maxumum of the range
- *
- * Since: 0.10.31
  */
 gint64
 gst_value_get_int64_range_max (const GValue * value)
@@ -1266,8 +1256,6 @@ gst_value_get_int64_range_max (const GValue * value)
  * Gets the step of the range specified by @value.
  *
  * Returns: the step of the range
- *
- * Since: 0.11.0
  */
 gint64
 gst_value_get_int64_range_step (const GValue * value)
@@ -1910,8 +1898,6 @@ gst_value_deserialize_segment (GValue * dest, const gchar * s)
  * @structure: the structure to set the value to
  *
  * Sets the contents of @value to @structure.  The actual
- *
- * Since: 0.10.15
  */
 void
 gst_value_set_structure (GValue * value, const GstStructure * structure)
@@ -1930,8 +1916,6 @@ gst_value_set_structure (GValue * value, const GstStructure * structure)
  * Gets the contents of @value.
  *
  * Returns: (transfer none): the contents of @value
- *
- * Since: 0.10.15
  */
 const GstStructure *
 gst_value_get_structure (const GValue * value)
@@ -1974,18 +1958,56 @@ gst_value_deserialize_structure (GValue * dest, const gchar * s)
   return FALSE;
 }
 
+/**************
+ * GstTagList *
+ **************/
+
+static gboolean
+gst_value_deserialize_tag_list (GValue * dest, const gchar * s)
+{
+  GstTagList *taglist;
+
+  if (*s != '"') {
+    taglist = gst_tag_list_new_from_string (s);
+  } else {
+    gchar *str = gst_string_unwrap (s);
+
+    if (G_UNLIKELY (!str))
+      return FALSE;
+
+    taglist = gst_tag_list_new_from_string (str);
+    g_free (str);
+  }
+
+  if (G_LIKELY (taglist != NULL)) {
+    g_value_take_boxed (dest, taglist);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+static gchar *
+gst_value_serialize_tag_list (const GValue * value)
+{
+  GstTagList *taglist = g_value_get_boxed (value);
+
+  return gst_string_take_and_wrap (gst_tag_list_to_string (taglist));
+}
+
+
 /*************
  * GstBuffer *
  *************/
 
 static gint
-gst_value_compare_buffer (const GValue * value1, const GValue * value2)
+compare_buffer (GstBuffer * buf1, GstBuffer * buf2)
 {
-  GstBuffer *buf1 = gst_value_get_buffer (value1);
-  GstBuffer *buf2 = gst_value_get_buffer (value2);
   gsize size1, size2;
   GstMapInfo info1, info2;
-  gint result = GST_VALUE_UNORDERED;
+  gint result, mret;
+
+  if (buf1 == buf2)
+    return GST_VALUE_EQUAL;
 
   size1 = gst_buffer_get_size (buf1);
   size2 = gst_buffer_get_size (buf2);
@@ -2000,17 +2022,31 @@ gst_value_compare_buffer (const GValue * value1, const GValue * value2)
     return GST_VALUE_UNORDERED;
 
   if (!gst_buffer_map (buf2, &info2, GST_MAP_READ)) {
-    gst_buffer_unmap (buf1, &info2);
+    gst_buffer_unmap (buf1, &info1);
     return GST_VALUE_UNORDERED;
   }
 
-  if (memcmp (info1.data, info2.data, info1.size) == 0)
+  mret = memcmp (info1.data, info2.data, info1.size);
+  if (mret == 0)
     result = GST_VALUE_EQUAL;
+  else if (mret < 0)
+    result = GST_VALUE_LESS_THAN;
+  else
+    result = GST_VALUE_GREATER_THAN;
 
-  gst_buffer_unmap (buf2, &info1);
-  gst_buffer_unmap (buf1, &info2);
+  gst_buffer_unmap (buf1, &info1);
+  gst_buffer_unmap (buf2, &info2);
 
   return result;
+}
+
+static gint
+gst_value_compare_buffer (const GValue * value1, const GValue * value2)
+{
+  GstBuffer *buf1 = gst_value_get_buffer (value1);
+  GstBuffer *buf2 = gst_value_get_buffer (value2);
+
+  return compare_buffer (buf1, buf2);
 }
 
 static gchar *
@@ -2094,6 +2130,20 @@ wrong_char:
   }
 }
 
+/*************
+ * GstSample *
+ *************/
+
+/* This function is mostly used for comparing image/buffer tags in taglists */
+static gint
+gst_value_compare_sample (const GValue * value1, const GValue * value2)
+{
+  GstBuffer *buf1 = gst_sample_get_buffer (gst_value_get_sample (value1));
+  GstBuffer *buf2 = gst_sample_get_buffer (gst_value_get_sample (value2));
+
+  /* FIXME: should we take into account anything else such as caps? */
+  return compare_buffer (buf1, buf2);
+}
 
 /***********
  * boolean *
@@ -3149,13 +3199,16 @@ gst_value_intersect_int_range_int_range (GValue * dest, const GValue * src1,
   return FALSE;
 }
 
+#define INT64_RANGE_MIN_VAL(v) (INT64_RANGE_MIN (v) * INT64_RANGE_STEP (v))
+#define INT64_RANGE_MAX_VAL(v) (INT64_RANGE_MAX (v) * INT64_RANGE_STEP (v))
+
 static gboolean
 gst_value_intersect_int64_int64_range (GValue * dest, const GValue * src1,
     const GValue * src2)
 {
-  if (INT64_RANGE_MIN (src2) * INT64_RANGE_STEP (src2) <= src1->data[0].v_int &&
-      INT64_RANGE_MAX (src2) * INT64_RANGE_STEP (src2) >= src1->data[0].v_int &&
-      src1->data[0].v_int % INT64_RANGE_STEP (src2) == 0) {
+  if (INT64_RANGE_MIN_VAL (src2) <= src1->data[0].v_int64 &&
+      INT64_RANGE_MAX_VAL (src2) >= src1->data[0].v_int64 &&
+      src1->data[0].v_int64 % INT64_RANGE_STEP (src2) == 0) {
     if (dest)
       gst_value_init_and_copy (dest, src1);
     return TRUE;
@@ -5208,7 +5261,6 @@ gst_value_compare_date_time (const GValue * value1, const GValue * value2)
 {
   const GstDateTime *date1 = (const GstDateTime *) g_value_get_boxed (value1);
   const GstDateTime *date2 = (const GstDateTime *) g_value_get_boxed (value2);
-  gint ret;
 
   if (date1 == date2)
     return GST_VALUE_EQUAL;
@@ -5220,64 +5272,37 @@ gst_value_compare_date_time (const GValue * value1, const GValue * value2)
     return GST_VALUE_LESS_THAN;
   }
 
-  ret = priv_gst_date_time_compare (date1, date2);
-
-  if (ret == 0)
-    return GST_VALUE_EQUAL;
-  else if (ret < 0)
-    return GST_VALUE_LESS_THAN;
-  else
-    return GST_VALUE_GREATER_THAN;
+  /* returns GST_VALUE_* */
+  return __gst_date_time_compare (date1, date2);
 }
 
 static gchar *
 gst_value_serialize_date_time (const GValue * val)
 {
   GstDateTime *date = (GstDateTime *) g_value_get_boxed (val);
-  gfloat offset;
-  gint tzhour, tzminute;
 
   if (date == NULL)
     return g_strdup ("null");
 
-  offset = gst_date_time_get_time_zone_offset (date);
-
-  tzhour = (gint) ABS (offset);
-  tzminute = (gint) ((ABS (offset) - tzhour) * 60);
-
-  return g_strdup_printf ("\"%04d-%02d-%02dT%02d:%02d:%02d.%06d"
-      "%c%02d%02d\"", gst_date_time_get_year (date),
-      gst_date_time_get_month (date), gst_date_time_get_day (date),
-      gst_date_time_get_hour (date), gst_date_time_get_minute (date),
-      gst_date_time_get_second (date), gst_date_time_get_microsecond (date),
-      offset >= 0 ? '+' : '-', tzhour, tzminute);
+  return __gst_date_time_serialize (date, TRUE);
 }
 
 static gboolean
 gst_value_deserialize_date_time (GValue * dest, const gchar * s)
 {
-  gint year, month, day, hour, minute, second, usecond;
-  gchar signal;
-  gint offset = 0;
-  gfloat tzoffset = 0;
-  gint ret;
+  GstDateTime *datetime;
 
   if (!s || strcmp (s, "null") == 0) {
     return FALSE;
   }
 
-  ret = sscanf (s, "%04d-%02d-%02dT%02d:%02d:%02d.%06d%c%04d",
-      &year, &month, &day, &hour, &minute, &second, &usecond, &signal, &offset);
-  if (ret >= 9) {
-    tzoffset = (offset / 100) + ((offset % 100) / 60.0);
-    if (signal == '-')
-      tzoffset = -tzoffset;
-  } else
-    return FALSE;
-
-  g_value_take_boxed (dest, gst_date_time_new (tzoffset, year, month, day, hour,
-          minute, second + (usecond / 1000000.0)));
-  return TRUE;
+  datetime = gst_date_time_new_from_iso8601_string (s);
+  if (datetime != NULL) {
+    g_value_take_boxed (dest, datetime);
+    return TRUE;
+  }
+  GST_WARNING ("Failed to deserialize date time string '%s'", s);
+  return FALSE;
 }
 
 static void
@@ -5766,6 +5791,17 @@ _priv_gst_value_initialize (void)
   {
     static GstValueTable gst_value = {
       0,
+      gst_value_compare_sample,
+      NULL,
+      NULL,
+    };
+
+    gst_value.type = GST_TYPE_SAMPLE;
+    gst_value_register (&gst_value);
+  }
+  {
+    static GstValueTable gst_value = {
+      0,
       gst_value_compare_fraction,
       gst_value_serialize_fraction,
       gst_value_deserialize_fraction,
@@ -5805,6 +5841,17 @@ _priv_gst_value_initialize (void)
     };
 
     gst_value.type = GST_TYPE_STRUCTURE;
+    gst_value_register (&gst_value);
+  }
+  {
+    static GstValueTable gst_value = {
+      0,
+      NULL,
+      gst_value_serialize_tag_list,
+      gst_value_deserialize_tag_list,
+    };
+
+    gst_value.type = GST_TYPE_TAG_LIST;
     gst_value_register (&gst_value);
   }
   {

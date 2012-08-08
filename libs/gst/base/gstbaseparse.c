@@ -337,6 +337,9 @@ struct _GstBaseParsePrivate
   gboolean detecting;
   GList *detect_buffers;
   guint detect_buffers_size;
+
+  /* if TRUE, a STREAM_START event needs to be pushed */
+  gboolean push_stream_start;
 };
 
 typedef struct _GstBaseParseSeek
@@ -635,8 +638,6 @@ G_DEFINE_BOXED_TYPE (GstBaseParseFrame, gst_base_parse_frame,
  * sure gst_base_parse_frame_free() only frees the contents but not
  * the actual frame. Use this function to initialise a #GstBaseParseFrame
  * allocated on the stack.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_frame_init (GstBaseParseFrame * frame)
@@ -660,8 +661,6 @@ gst_base_parse_frame_init (GstBaseParseFrame * frame)
  *
  * Returns: a newly-allocated #GstBaseParseFrame. Free with
  *     gst_base_parse_frame_free() when no longer needed.
- *
- * Since: 0.10.33
  */
 GstBaseParseFrame *
 gst_base_parse_frame_new (GstBuffer * buffer, GstBaseParseFrameFlags flags,
@@ -1242,8 +1241,6 @@ gst_base_parse_src_eventfunc (GstBaseParse * parse, GstEvent * event)
  * Default implementation of "convert" vmethod in #GstBaseParse class.
  *
  * Returns: TRUE if conversion was successful.
- *
- * Since: 0.10.33
  */
 gboolean
 gst_base_parse_convert_default (GstBaseParse * parse,
@@ -1407,8 +1404,7 @@ gst_base_parse_post_bitrates (GstBaseParse * parse, gboolean post_min,
       parse->priv->max_bitrate);
 
   if (taglist != NULL) {
-    gst_pad_push_event (parse->srcpad, gst_event_new_tag ("GstParser",
-            taglist));
+    gst_pad_push_event (parse->srcpad, gst_event_new_tag (taglist));
   }
 }
 
@@ -1512,8 +1508,6 @@ exit:
  * to the new entry, etc.
  *
  * Returns: #gboolean indicating whether entry was added
- *
- * Since: 0.10.33
  */
 gboolean
 gst_base_parse_add_index_entry (GstBaseParse * parse, guint64 offset,
@@ -1843,12 +1837,6 @@ gst_base_parse_handle_and_push_frame (GstBaseParse * parse,
 
   g_return_val_if_fail (frame != NULL, GST_FLOW_ERROR);
 
-  /* some one-time start-up */
-  if (G_UNLIKELY (!parse->priv->framecount)) {
-    gst_base_parse_check_seekability (parse);
-    gst_base_parse_check_upstream (parse);
-  }
-
   buffer = frame->buffer;
   offset = frame->offset;
 
@@ -1922,8 +1910,6 @@ gst_base_parse_handle_and_push_frame (GstBaseParse * parse,
  * This must be called with sinkpad STREAM_LOCK held.
  *
  * Returns: #GstFlowReturn
- *
- * Since: 0.10.33
  */
 GstFlowReturn
 gst_base_parse_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
@@ -2139,8 +2125,6 @@ no_caps:
  * caller retains ownership of @frame.
  *
  * Returns: a #GstFlowReturn that should be escalated to caller (of caller)
- *
- * Since: 0.11.1
  */
 GstFlowReturn
 gst_base_parse_finish_frame (GstBaseParse * parse, GstBaseParseFrame * frame,
@@ -2157,14 +2141,20 @@ gst_base_parse_finish_frame (GstBaseParse * parse, GstBaseParseFrame * frame,
   GST_LOG_OBJECT (parse, "finished frame at offset %" G_GUINT64_FORMAT ", "
       "flushing size %d", frame->offset, size);
 
+  /* some one-time start-up */
+  if (G_UNLIKELY (parse->priv->framecount == 0)) {
+    gst_base_parse_check_seekability (parse);
+    gst_base_parse_check_upstream (parse);
+  }
+
+  parse->priv->flushed += size;
+
   if (parse->priv->scanning && frame->buffer) {
     if (!parse->priv->scanned_frame) {
       parse->priv->scanned_frame = gst_base_parse_frame_copy (frame);
     }
     goto exit;
   }
-
-  parse->priv->flushed += size;
 
   /* either PUSH or PULL mode arranges for adapter data */
   /* ensure output buffer */
@@ -2758,8 +2748,7 @@ exit:
  * pull and scan for next frame starting from current offset
  * ajusts sync, drain and offset going along */
 static GstFlowReturn
-gst_base_parse_scan_frame (GstBaseParse * parse, GstBaseParseClass * klass,
-    gboolean full)
+gst_base_parse_scan_frame (GstBaseParse * parse, GstBaseParseClass * klass)
 {
   GstBuffer *buffer;
   GstFlowReturn ret = GST_FLOW_OK;
@@ -2858,6 +2847,21 @@ gst_base_parse_loop (GstPad * pad)
   parse = GST_BASE_PARSE (gst_pad_get_parent (pad));
   klass = GST_BASE_PARSE_GET_CLASS (parse);
 
+  GST_DEBUG_OBJECT (parse, "hello");
+
+  if (G_UNLIKELY (parse->priv->push_stream_start)) {
+    gchar *stream_id;
+
+    stream_id =
+        gst_pad_create_stream_id (parse->srcpad, GST_ELEMENT_CAST (parse),
+        NULL);
+
+    GST_DEBUG_OBJECT (parse, "Pushing STREAM_START");
+    gst_pad_push_event (parse->srcpad, gst_event_new_stream_start (stream_id));
+    parse->priv->push_stream_start = FALSE;
+    g_free (stream_id);
+  }
+
   /* reverse playback:
    * first fragment (closest to stop time) is handled normally below,
    * then we pull in fragments going backwards */
@@ -2870,7 +2874,7 @@ gst_base_parse_loop (GstPad * pad)
     }
   }
 
-  ret = gst_base_parse_scan_frame (parse, klass, TRUE);
+  ret = gst_base_parse_scan_frame (parse, klass);
   if (ret != GST_FLOW_OK)
     goto done;
 
@@ -2911,7 +2915,7 @@ pause:
 
     if (ret == GST_FLOW_EOS) {
       /* handle end-of-stream/segment */
-      if (parse->segment.flags & GST_SEEK_FLAG_SEGMENT) {
+      if (parse->segment.flags & GST_SEGMENT_FLAG_SEGMENT) {
         gint64 stop;
 
         if ((stop = parse->segment.stop) == -1)
@@ -2923,6 +2927,8 @@ pause:
             (GST_ELEMENT_CAST (parse),
             gst_message_new_segment_done (GST_OBJECT_CAST (parse),
                 GST_FORMAT_TIME, stop));
+        gst_pad_push_event (parse->srcpad,
+            gst_event_new_segment_done (GST_FORMAT_TIME, stop));
       } else {
         /* If we STILL have zero frames processed, fire an error */
         if (parse->priv->framecount == 0) {
@@ -2985,8 +2991,10 @@ gst_base_parse_sink_activate (GstPad * sinkpad, GstObject * parent)
   if (!gst_pad_activate_mode (sinkpad, GST_PAD_MODE_PULL, TRUE))
     goto baseparse_push;
 
+  parse->priv->push_stream_start = TRUE;
+
   return gst_pad_start_task (sinkpad, (GstTaskFunction) gst_base_parse_loop,
-      sinkpad);
+      sinkpad, NULL);
   /* fallback */
 baseparse_push:
   {
@@ -3084,8 +3092,6 @@ activate_failed:
  * duration.  Alternatively, if @interval is non-zero (default), then stream
  * duration is determined based on estimated bitrate, and updated every @interval
  * frames.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_duration (GstBaseParse * parse,
@@ -3133,8 +3139,6 @@ exit:
  * is used to estimate the total duration of the stream and to estimate
  * a seek position, if there's no index and the format is syncable
  * (see gst_base_parse_set_syncable()).
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_average_bitrate (GstBaseParse * parse, guint bitrate)
@@ -3151,8 +3155,6 @@ gst_base_parse_set_average_bitrate (GstBaseParse * parse, guint bitrate)
  *
  * Subclass can use this function to tell the base class that it needs to
  * give at least #min_size buffers.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_min_frame_size (GstBaseParse * parse, guint min_size)
@@ -3176,8 +3178,6 @@ gst_base_parse_set_min_frame_size (GstBaseParse * parse, guint min_size)
  * location, a corresponding decoder might need an initial @lead_in and a
  * following @lead_out number of frames to ensure the desired segment is
  * entirely filled upon decoding.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_frame_rate (GstBaseParse * parse, guint fps_num,
@@ -3226,8 +3226,6 @@ gst_base_parse_set_frame_rate (GstBaseParse * parse, guint fps_num,
  * Set if frames carry timing information which the subclass can (generally)
  * parse and provide.  In particular, intrinsic (rather than estimated) time
  * can be obtained following a seek.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_has_timing_info (GstBaseParse * parse, gboolean has_timing)
@@ -3244,8 +3242,6 @@ gst_base_parse_set_has_timing_info (GstBaseParse * parse, gboolean has_timing)
  * Set if frame starts can be identified. This is set by default and
  * determines whether seeking based on bitrate averages
  * is possible for a format/stream.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_syncable (GstBaseParse * parse, gboolean syncable)
@@ -3266,8 +3262,6 @@ gst_base_parse_set_syncable (GstBaseParse * parse, gboolean syncable)
  * callbacks will be invoked, but @pre_push_frame will still be invoked,
  * so subclass can perform as much or as little is appropriate for
  * passthrough semantics in @pre_push_frame.
- *
- * Since: 0.10.33
  */
 void
 gst_base_parse_set_passthrough (GstBaseParse * parse, gboolean passthrough)
@@ -3285,8 +3279,6 @@ gst_base_parse_set_passthrough (GstBaseParse * parse, gboolean passthrough)
  * Sets the minimum and maximum (which may likely be equal) latency introduced
  * by the parsing process.  If there is such a latency, which depends on the
  * particular parsing of the format, it typically corresponds to 1 frame duration.
- *
- * Since: 0.10.36
  */
 void
 gst_base_parse_set_latency (GstBaseParse * parse, GstClockTime min_latency,
@@ -3514,7 +3506,7 @@ gst_base_parse_find_frame (GstBaseParse * parse, gint64 * pos,
   parse->priv->offset = *pos;
   /* mark as scanning so frames don't get processed all the way */
   parse->priv->scanning = TRUE;
-  ret = gst_base_parse_scan_frame (parse, klass, FALSE);
+  ret = gst_base_parse_scan_frame (parse, klass);
   parse->priv->scanning = FALSE;
   /* retrieve frame found during scan */
   sframe = parse->priv->scanned_frame;
@@ -3749,27 +3741,23 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
   gdouble rate;
   GstFormat format;
   GstSeekFlags flags;
-  GstSeekType cur_type = GST_SEEK_TYPE_NONE, stop_type;
+  GstSeekType start_type = GST_SEEK_TYPE_NONE, stop_type;
   gboolean flush, update, res = TRUE, accurate;
-  gint64 cur, stop, seekpos, seekstop;
+  gint64 start, stop, seekpos, seekstop;
   GstSegment seeksegment = { 0, };
   GstClockTime start_ts;
 
   gst_event_parse_seek (event, &rate, &format, &flags,
-      &cur_type, &cur, &stop_type, &stop);
+      &start_type, &start, &stop_type, &stop);
 
   GST_DEBUG_OBJECT (parse, "seek to format %s, rate %f, "
       "start type %d at %" GST_TIME_FORMAT ", end type %d at %"
       GST_TIME_FORMAT, gst_format_get_name (format), rate,
-      cur_type, GST_TIME_ARGS (cur), stop_type, GST_TIME_ARGS (stop));
+      start_type, GST_TIME_ARGS (start), stop_type, GST_TIME_ARGS (stop));
 
   /* no negative rates in push mode */
   if (rate < 0.0 && parse->priv->pad_mode == GST_PAD_MODE_PUSH)
     goto negative_rate;
-
-  if (cur_type != GST_SEEK_TYPE_SET ||
-      (stop_type != GST_SEEK_TYPE_SET && stop_type != GST_SEEK_TYPE_NONE))
-    goto wrong_type;
 
   /* For any format other than TIME, see if upstream handles
    * it directly or fail. For TIME, try upstream, but do it ourselves if
@@ -3777,6 +3765,10 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
   res = gst_pad_push_event (parse->sinkpad, event);
   if (format != GST_FORMAT_TIME || res)
     goto done;
+
+  if (start_type != GST_SEEK_TYPE_SET ||
+      (stop_type != GST_SEEK_TYPE_SET && stop_type != GST_SEEK_TYPE_NONE))
+    goto wrong_type;
 
   /* get flush flag */
   flush = flags & GST_SEEK_FLAG_FLUSH;
@@ -3787,7 +3779,7 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
 
   GST_DEBUG_OBJECT (parse, "configuring seek");
   gst_segment_do_seek (&seeksegment, rate, format, flags,
-      cur_type, cur, stop_type, stop, &update);
+      start_type, start, stop_type, stop, &update);
 
   /* accurate seeking implies seek tables are used to obtain position,
    * and the requested segment is maintained exactly, not adjusted any way */
@@ -3916,7 +3908,7 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
 
     /* Start streaming thread if paused */
     gst_pad_start_task (parse->sinkpad,
-        (GstTaskFunction) gst_base_parse_loop, parse->sinkpad);
+        (GstTaskFunction) gst_base_parse_loop, parse->sinkpad, NULL);
 
     GST_PAD_STREAM_UNLOCK (parse->sinkpad);
 
@@ -3996,6 +3988,10 @@ gst_base_parse_handle_tag (GstBaseParse * parse, GstEvent * event)
   guint tmp;
 
   gst_event_parse_tag (event, &taglist);
+
+  /* We only care about stream tags here */
+  if (gst_tag_list_get_scope (taglist) != GST_TAG_SCOPE_STREAM)
+    return;
 
   if (gst_tag_list_get_uint (taglist, GST_TAG_MINIMUM_BITRATE, &tmp)) {
     GST_DEBUG_OBJECT (parse, "upstream min bitrate %d", tmp);

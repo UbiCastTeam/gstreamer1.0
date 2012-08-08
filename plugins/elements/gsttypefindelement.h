@@ -51,7 +51,6 @@ struct _GstTypeFindElement {
   GstPad *		src;
 
   guint			min_probability;
-  guint			max_probability;
   GstCaps *		caps;
 
   guint			mode;
@@ -75,7 +74,7 @@ struct _GstTypeFindElementClass {
 					 GstCaps            *caps);
 };
 
-GType gst_type_find_element_get_type (void);
+G_GNUC_INTERNAL GType gst_type_find_element_get_type (void);
 
 G_END_DECLS
 

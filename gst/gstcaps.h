@@ -71,8 +71,6 @@ typedef enum {
  * another element's caps priority order when intersecting with its own caps.
  * Example: If caps1 is [A, B, C] and caps2 is [E, B, D, A], the result
  * would be [A, B], maintaining the first caps priority on the intersection.
- *
- * Since: 0.10.33
  */
 typedef enum {
   GST_CAPS_INTERSECT_ZIG_ZAG            =  0,
@@ -262,7 +260,7 @@ gst_caps_copy (const GstCaps * caps)
  * @caps: a #GstCaps
  *
  * Tests if you can safely modify @caps. It is only safe to modify caps when
- * there is only one owner of the caps - ie, the refcount is 1.
+ * there is only one owner of the caps - ie, the object is writable.
  */
 #define         gst_caps_is_writable(caps)     gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (caps))
 

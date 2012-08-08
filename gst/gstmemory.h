@@ -32,24 +32,8 @@ G_BEGIN_DECLS
 #define GST_TYPE_MEMORY (gst_memory_get_type())
 GType gst_memory_get_type(void);
 
-#define GST_TYPE_ALLOCATOR (gst_allocator_get_type())
-GType gst_allocator_get_type(void);
-
-#define GST_TYPE_ALLOCATION_PARAMS (gst_allocation_params_get_type())
-GType gst_allocation_params_get_type(void);
-
 typedef struct _GstMemory GstMemory;
-typedef struct _GstMemoryInfo GstMemoryInfo;
 typedef struct _GstAllocator GstAllocator;
-typedef struct _GstAllocationParams GstAllocationParams;
-
-/**
- * gst_memory_alignment:
- *
- * The default memory alignment in bytes - 1
- * an alignment of 7 would be the same as what malloc() guarantees.
- */
-GST_EXPORT gsize gst_memory_alignment;
 
 #define GST_MEMORY_CAST(mem)   ((GstMemory *)(mem))
 
@@ -66,12 +50,12 @@ GST_EXPORT gsize gst_memory_alignment;
  * Flags for wrapped memory.
  */
 typedef enum {
-  GST_MEMORY_FLAG_READONLY      = (1 << 0),
-  GST_MEMORY_FLAG_NO_SHARE      = (1 << 1),
-  GST_MEMORY_FLAG_ZERO_PREFIXED = (1 << 2),
-  GST_MEMORY_FLAG_ZERO_PADDED   = (1 << 3),
+  GST_MEMORY_FLAG_READONLY      = GST_MINI_OBJECT_FLAG_LOCK_READONLY,
+  GST_MEMORY_FLAG_NO_SHARE      = (GST_MINI_OBJECT_FLAG_LAST << 0),
+  GST_MEMORY_FLAG_ZERO_PREFIXED = (GST_MINI_OBJECT_FLAG_LAST << 1),
+  GST_MEMORY_FLAG_ZERO_PADDED   = (GST_MINI_OBJECT_FLAG_LAST << 2),
 
-  GST_MEMORY_FLAG_LAST          = (1 << 16)
+  GST_MEMORY_FLAG_LAST          = (GST_MINI_OBJECT_FLAG_LAST << 16)
 } GstMemoryFlags;
 
 /**
@@ -80,7 +64,7 @@ typedef enum {
  *
  * A flags word containing #GstMemoryFlags flags set on @mem
  */
-#define GST_MEMORY_FLAGS(mem)  (GST_MEMORY_CAST (mem)->flags)
+#define GST_MEMORY_FLAGS(mem)  GST_MINI_OBJECT_FLAGS (mem)
 /**
  * GST_MEMORY_FLAG_IS_SET:
  * @mem: a #GstMemory.
@@ -88,7 +72,7 @@ typedef enum {
  *
  * Gives the status of a specific flag on a @mem.
  */
-#define GST_MEMORY_FLAG_IS_SET(mem,flag)   !!(GST_MEMORY_FLAGS (mem) & (flag))
+#define GST_MEMORY_FLAG_IS_SET(mem,flag)   GST_MINI_OBJECT_FLAG_IS_SET (mem,flag)
 /**
  * GST_MEMORY_FLAG_UNSET:
  * @mem: a #GstMemory.
@@ -96,7 +80,7 @@ typedef enum {
  *
  * Clear a specific flag on a @mem.
  */
-#define GST_MEMORY_FLAG_UNSET(mem,flag)   (GST_MEMORY_FLAGS (mem) &= ~(flag))
+#define GST_MEMORY_FLAG_UNSET(mem,flag)   GST_MINI_OBJECT_FLAG_UNSET (mem, flag)
 
 /**
  * GST_MEMORY_IS_READONLY:
@@ -105,6 +89,13 @@ typedef enum {
  * Check if @mem is readonly.
  */
 #define GST_MEMORY_IS_READONLY(mem)        GST_MEMORY_FLAG_IS_SET(mem,GST_MEMORY_FLAG_READONLY)
+/**
+ * GST_MEMORY_IS_NO_SHARE:
+ * @mem: a #GstMemory.
+ *
+ * Check if @mem cannot be shared between buffers
+ */
+#define GST_MEMORY_IS_NO_SHARE(mem)        GST_MEMORY_FLAG_IS_SET(mem,GST_MEMORY_FLAG_NO_SHARE)
 /**
  * GST_MEMORY_IS_ZERO_PREFIXED:
  * @mem: a #GstMemory.
@@ -123,11 +114,9 @@ typedef enum {
 
 /**
  * GstMemory:
+ * @mini_object: parent structure
  * @allocator: pointer to the #GstAllocator
- * @flags: memory flags
- * @refcount: refcount
  * @parent: parent memory block
- * @state: private state
  * @maxsize: the maximum size allocated
  * @align: the alignment of the memory
  * @offset: the offset where valid data starts
@@ -137,12 +126,11 @@ typedef enum {
  * as the first member of their structure.
  */
 struct _GstMemory {
+  GstMiniObject   mini_object;
+
   GstAllocator   *allocator;
 
-  GstMemoryFlags  flags;
-  gint            refcount;
   GstMemory      *parent;
-  volatile gint   state;
   gsize           maxsize;
   gsize           align;
   gsize           offset;
@@ -158,17 +146,25 @@ struct _GstMemory {
  * Flags used when mapping memory
  */
 typedef enum {
-  GST_MAP_READ      = (1 << 0),
-  GST_MAP_WRITE     = (1 << 1),
+  GST_MAP_READ      = GST_LOCK_FLAG_READ,
+  GST_MAP_WRITE     = GST_LOCK_FLAG_WRITE,
 
   GST_MAP_FLAG_LAST = (1 << 16)
 } GstMapFlags;
 
 /**
+ * GST_MAP_READWRITE:
+ *
+ * GstMapFlags value alias for GST_MAP_READ | GST_MAP_WRITE
+ */
+#define GST_MAP_READWRITE      (GST_MAP_READ | GST_MAP_WRITE)
+
+
+/**
  * GstMapInfo:
  * @memory: a pointer to the mapped memory
  * @flags: flags used when mapping the memory
- * @data: a pointer to the mapped data
+ * @data: (array length=size): a pointer to the mapped data
  * @size: the valid size in @data
  * @maxsize: the maximum bytes in @data
  * @user_data: extra private user_data that the implementation of the memory
@@ -195,61 +191,6 @@ typedef struct {
 #define GST_MAP_INFO_INIT { NULL, 0, NULL, 0, 0, }
 
 /**
- * GST_MAP_READWRITE:
- *
- * Map for readwrite access
- */
-#define GST_MAP_READWRITE      (GST_MAP_READ | GST_MAP_WRITE)
-
-/**
- * GST_ALLOCATOR_SYSMEM:
- *
- * The allocator name for the default system memory allocator
- */
-#define GST_ALLOCATOR_SYSMEM   "SystemMemory"
-
-/**
- * GstAllocationParams:
- * @flags: flags to control allocation
- * @align: the desired alignment of the memory
- * @prefix: the disired prefix
- * @padding: the desired padding
- *
- * Parameters to control the allocation of memory
- */
-struct _GstAllocationParams {
-  GstMemoryFlags flags;
-  gsize          align;
-  gsize          prefix;
-  gsize          padding;
-
-  /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
-};
-
-/**
- * GstAllocatorAllocFunction:
- * @allocator: a #GstAllocator
- * @size: the size
- * @params: allocator params
- * @user_data: user data
- *
- * Allocate a new #GstMemory from @allocator that can hold at least @size
- * bytes (+ padding) and is aligned to (@align + 1) bytes.
- *
- * The offset and size of the memory should be set and the prefix/padding must
- * be filled with 0 if @params flags contains #GST_MEMORY_FLAG_ZERO_PREFIXED and
- * #GST_MEMORY_FLAG_ZERO_PADDED respectively.
- *
- * @user_data is the data that was used when creating @allocator.
- *
- * Returns: a newly allocated #GstMemory. Free with gst_memory_unref()
- */
-typedef GstMemory *  (*GstAllocatorAllocFunction)  (GstAllocator *allocator,
-                                                    gsize size, GstAllocationParams *params,
-                                                    gpointer user_data);
-
-/**
  * GstMemoryMapFunction:
  * @mem: a #GstMemory
  * @maxsize: size to map
@@ -273,15 +214,6 @@ typedef gpointer    (*GstMemoryMapFunction)       (GstMemory *mem, gsize maxsize
  * Returns: %TRUE on success.
  */
 typedef void        (*GstMemoryUnmapFunction)     (GstMemory *mem);
-
-/**
- * GstMemoryFreeFunction:
- * @mem: a #GstMemory
- *
- * Free the memory used by @mem. This function is usually called when the
- * refcount of the @mem has reached 0.
- */
-typedef void        (*GstMemoryFreeFunction)      (GstMemory *mem);
 
 /**
  * GstMemoryCopyFunction:
@@ -325,79 +257,52 @@ typedef GstMemory * (*GstMemoryShareFunction)     (GstMemory *mem, gssize offset
  */
 typedef gboolean    (*GstMemoryIsSpanFunction)    (GstMemory *mem1, GstMemory *mem2, gsize *offset);
 
-/**
- * GstMemoryInfo:
- * @mem_type: the memory type this allocator provides
- * @alloc: the implementation of the GstAllocatorAllocFunction
- * @mem_map: the implementation of the GstMemoryMapFunction
- * @mem_unmap: the implementation of the GstMemoryUnmapFunction
- * @mem_free: the implementation of the GstMemoryFreeFunction
- * @mem_copy: the implementation of the GstMemoryCopyFunction
- * @mem_share: the implementation of the GstMemoryShareFunction
- * @mem_is_span: the implementation of the GstMemoryIsSpanFunction
- *
- * The #GstMemoryInfo is used to register new memory allocators and contain
- * the implementations for various memory operations.
- */
-struct _GstMemoryInfo {
-  const gchar              *mem_type;
-
-  GstAllocatorAllocFunction alloc;
-
-  GstMemoryMapFunction      mem_map;
-  GstMemoryUnmapFunction    mem_unmap;
-  GstMemoryFreeFunction     mem_free;
-
-  GstMemoryCopyFunction     mem_copy;
-  GstMemoryShareFunction    mem_share;
-  GstMemoryIsSpanFunction   mem_is_span;
-
-  /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
-};
-
-/**
- * GstAllocator:
- *
- * An opaque type returned from gst_allocator_new() or gst_allocator_find()
- * that can be used to allocator memory.
- */
-
-/* allocators */
-GstAllocator * gst_allocator_new             (const GstMemoryInfo * info,
-                                              gpointer user_data, GDestroyNotify notify);
-const gchar *  gst_allocator_get_memory_type (GstAllocator * allocator);
-
-GstAllocator * gst_allocator_ref             (GstAllocator * allocator);
-void           gst_allocator_unref           (GstAllocator * allocator);
-
-void           gst_allocator_register        (const gchar *name, GstAllocator *allocator);
-GstAllocator * gst_allocator_find            (const gchar *name);
-
-void           gst_allocator_set_default     (GstAllocator * allocator);
-
-/* allocating memory blocks */
-void           gst_allocation_params_init     (GstAllocationParams *params);
-GstAllocationParams *
-               gst_allocation_params_copy     (const GstAllocationParams *params) G_GNUC_MALLOC;
-void           gst_allocation_params_free     (GstAllocationParams *params);
-
-GstMemory *    gst_allocator_alloc           (GstAllocator * allocator, gsize size,
-                                              GstAllocationParams *params);
-
-GstMemory *    gst_memory_new_wrapped  (GstMemoryFlags flags, gpointer data, gsize maxsize,
-                                        gsize offset, gsize size, gpointer user_data,
-                                        GDestroyNotify notify);
-
+void           gst_memory_init         (GstMemory *mem, GstMemoryFlags flags,
+                                        GstAllocator *allocator, GstMemory *parent,
+                                        gsize maxsize, gsize align,
+                                        gsize offset, gsize size);
 /* refcounting */
-GstMemory *    gst_memory_ref          (GstMemory *mem);
-void           gst_memory_unref        (GstMemory *mem);
+/**
+ * gst_memory_ref:
+ * @memory: The memory to refcount
+ *
+ * Increase the refcount of this memory.
+ *
+ * Returns: (transfer full): @memory (for convenience when doing assignments)
+ */
+#ifdef _FOOL_GTK_DOC_
+G_INLINE_FUNC GstMemory * gst_memory_ref (GstMemory * memory);
+#endif
 
-gboolean       gst_memory_is_exclusive (GstMemory *mem);
+static inline GstMemory *
+gst_memory_ref (GstMemory * memory)
+{
+  return (GstMemory *) gst_mini_object_ref (GST_MINI_OBJECT_CAST (memory));
+}
+
+/**
+ * gst_memory_unref:
+ * @memory: (transfer full): the memory to refcount
+ *
+ * Decrease the refcount of an memory, freeing it if the refcount reaches 0.
+ */
+#ifdef _FOOL_GTK_DOC_
+G_INLINE_FUNC void gst_memory_unref (GstMemory * memory);
+#endif
+
+static inline void
+gst_memory_unref (GstMemory * memory)
+{
+  gst_mini_object_unref (GST_MINI_OBJECT_CAST (memory));
+}
 
 /* getting/setting memory properties */
 gsize          gst_memory_get_sizes    (GstMemory *mem, gsize *offset, gsize *maxsize);
 void           gst_memory_resize       (GstMemory *mem, gssize offset, gsize size);
+
+#define        gst_memory_lock(m,f)        gst_mini_object_lock (GST_MINI_OBJECT_CAST (m), (f))
+#define        gst_memory_unlock(m,f)      gst_mini_object_unlock (GST_MINI_OBJECT_CAST (m), (f))
+#define        gst_memory_is_writable(m)   gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (m))
 
 /* retrieving data */
 GstMemory *    gst_memory_make_mapped  (GstMemory *mem, GstMapInfo *info, GstMapFlags flags);

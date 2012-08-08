@@ -60,6 +60,8 @@ typedef enum {
   GST_BUFFER_POOL_ACQUIRE_FLAG_LAST     = (1 << 16),
 } GstBufferPoolAcquireFlags;
 
+typedef struct _GstBufferPoolAcquireParams GstBufferPoolAcquireParams;
+
 /**
  * GstBufferPoolAcquireParams:
  * @format: the format of @start and @stop
@@ -74,7 +76,7 @@ typedef enum {
  * implementations can use this extra information to decide what buffer to
  * return.
  */
-typedef struct _GstBufferPoolAcquireParams {
+struct _GstBufferPoolAcquireParams {
   GstFormat                 format;
   gint64                    start;
   gint64                    stop;
@@ -82,7 +84,7 @@ typedef struct _GstBufferPoolAcquireParams {
 
   /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
-} GstBufferPoolAcquireParams;
+};
 
 /**
  * GST_BUFFER_POOL_IS_FLUSHING:
@@ -178,7 +180,6 @@ GstStructure *   gst_buffer_pool_get_config      (GstBufferPool *pool);
 
 const gchar **   gst_buffer_pool_get_options     (GstBufferPool *pool);
 gboolean         gst_buffer_pool_has_option      (GstBufferPool *pool, const gchar *option);
-
 
 /* helpers for configuring the config structure */
 void             gst_buffer_pool_config_set_params    (GstStructure *config, GstCaps *caps,

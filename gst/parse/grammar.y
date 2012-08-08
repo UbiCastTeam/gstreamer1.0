@@ -287,7 +287,7 @@ gst_parse_free_delayed_set (DelayedSet *set)
 }
 
 static void gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
-                                gpointer data);
+    const gchar * name, gpointer data);
 
 static void
 gst_parse_add_delayed_set (GstElement *element, gchar *name, gchar *value_str)
@@ -326,8 +326,9 @@ gst_parse_add_delayed_set (GstElement *element, gchar *name, gchar *value_str)
   }
 }
 
-static void gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
-                                gpointer data)
+static void
+gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
+    const gchar * name, gpointer data)
 {
   DelayedSet *set = (DelayedSet *) data;
   GParamSpec *pspec;
@@ -336,7 +337,7 @@ static void gst_parse_new_child(GstChildProxy *child_proxy, GObject *object,
   GType value_type;
 
   GST_CAT_LOG_OBJECT (GST_CAT_PIPELINE, child_proxy, "new child %s, checking property %s",
-      GST_OBJECT_NAME(object), set->name);
+      name, set->name);
 
   if (gst_child_proxy_lookup (G_OBJECT (child_proxy), set->name, &target, &pspec)) {
     gboolean got_value = FALSE;
@@ -397,7 +398,7 @@ gst_parse_element_set (gchar *value, GstElement *element, graph_t *graph)
   if (element == NULL)
     goto out;
 
-  /* parse the string, so the property name is null-terminated an pos points
+  /* parse the string, so the property name is null-terminated and pos points
      to the beginning of the value */
   while (!g_ascii_isspace (*pos) && (*pos != '=')) pos++;
   if (*pos == '=') {
@@ -811,7 +812,8 @@ chain:   	element			      { $$ = gst_parse_chain_new ();
 	|	PARSE_URL chain		      { $$ = $2;
 						if ($$->front) {
 						  GstElement *element =
-							  gst_element_make_from_uri (GST_URI_SRC, $1, NULL);
+							  gst_element_make_from_uri (GST_URI_SRC, $1, NULL, NULL);
+						  /* FIXME: get and parse error properly */
 						  if (!element) {
 						    SET_ERROR (graph->error, GST_PARSE_ERROR_NO_SUCH_ELEMENT,
 							    _("no source element for URI \"%s\""), $1);
@@ -829,7 +831,8 @@ chain:   	element			      { $$ = gst_parse_chain_new ();
 						g_free ($1);
 					      }
 	|	link PARSE_URL		      { GstElement *element =
-							  gst_element_make_from_uri (GST_URI_SINK, $2, NULL);
+							  gst_element_make_from_uri (GST_URI_SINK, $2, NULL, NULL);
+						/* FIXME: get and parse error properly */
 						if (!element) {
 						  SET_ERROR (graph->error, GST_PARSE_ERROR_NO_SUCH_ELEMENT,
 							  _("no sink element for URI \"%s\""), $2);

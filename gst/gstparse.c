@@ -96,8 +96,6 @@ gst_parse_error_quark (void)
  *
  * Returns: (transfer full): a newly-allocated parse context. Free with
  *     gst_parse_context_free() when no longer needed.
- *
- * Since: 0.10.20
  */
 GstParseContext *
 gst_parse_context_new (void)
@@ -119,8 +117,6 @@ gst_parse_context_new (void)
  * @context: (transfer full): a #GstParseContext
  *
  * Frees a parse context previously allocated with gst_parse_context_new().
- *
- * Since: 0.10.20
  */
 void
 gst_parse_context_free (GstParseContext * context)
@@ -145,8 +141,6 @@ gst_parse_context_free (GstParseContext * context)
  * Returns: (transfer full) (array zero-terminated=1) (element-type gchar*): a
  *     NULL-terminated array of element factory name strings of missing
  *     elements. Free with g_strfreev() when no longer needed.
- *
- * Since: 0.10.20
  */
 gchar **
 gst_parse_context_get_missing_elements (GstParseContext * context)
@@ -181,14 +175,21 @@ static gchar *
 _gst_parse_escape (const gchar * str)
 {
   GString *gstr = NULL;
+  gboolean in_quotes;
 
   g_return_val_if_fail (str != NULL, NULL);
 
   gstr = g_string_sized_new (strlen (str));
 
+  in_quotes = FALSE;
+
   while (*str) {
-    if (*str == ' ')
+    if (*str == '"' && (!in_quotes || (in_quotes && *(str - 1) != '\\')))
+      in_quotes = !in_quotes;
+
+    if (*str == ' ' && !in_quotes)
       g_string_append_c (gstr, '\\');
+
     g_string_append_c (gstr, *str);
     str++;
   }
@@ -230,8 +231,6 @@ gst_parse_launchv (const gchar ** argv, GError ** error)
  *   or a partially-constructed bin or element will be returned and @error will
  *   be set (unless you passed #GST_PARSE_FLAG_FATAL_ERRORS in @flags, then
  *   %NULL will always be returned on failure)
- *
- * Since: 0.10.20
  */
 GstElement *
 gst_parse_launchv_full (const gchar ** argv, GstParseContext * context,
@@ -252,6 +251,7 @@ gst_parse_launchv_full (const gchar ** argv, GstParseContext * context,
   argvp = argv;
   while (*argvp) {
     arg = *argvp;
+    GST_DEBUG ("escaping argument %s", arg);
     tmp = _gst_parse_escape (arg);
     g_string_append (str, tmp);
     g_free (tmp);
@@ -307,8 +307,6 @@ gst_parse_launch (const gchar * pipeline_description, GError ** error)
  * Returns: (transfer full): a new element on success, %NULL on failure. If
  *    more than one toplevel element is specified by the @pipeline_description,
  *    all elements are put into a #GstPipeline, which then is returned.
- *
- * Since: 0.10.20
  */
 GstElement *
 gst_parse_launch_full (const gchar * pipeline_description,

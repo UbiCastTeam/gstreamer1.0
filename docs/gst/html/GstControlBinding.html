@@ -46,10 +46,10 @@
 
 struct              <a class="link" href="GstControlBinding.html#GstControlBinding-struct" title="struct GstControlBinding">GstControlBinding</a>;
 struct              <a class="link" href="GstControlBinding.html#GstControlBindingClass" title="struct GstControlBindingClass">GstControlBindingClass</a>;
-<span class="returnvalue">void</span>                (<a class="link" href="GstControlBinding.html#GstControlBindingConvert" title="GstControlBindingConvert ()">*GstControlBindingConvert</a>)         (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>,
+<span class="returnvalue">void</span>                (<a class="link" href="GstControlBinding.html#GstControlBindingConvert" title="GstControlBindingConvert ()">*GstControlBindingConvert</a>)         (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> src_value</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest_value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstControlBinding.html#gst-control-binding-sync-values" title="gst_control_binding_sync_values ()">gst_control_binding_sync_values</a>     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstControlBinding.html#gst-control-binding-sync-values" title="gst_control_binding_sync_values ()">gst_control_binding_sync_values</a>     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> last_sync</code></em>);
@@ -66,9 +66,9 @@ struct              <a class="link" href="GstControlBinding.html#GstControlBindi
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> interval</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_values</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="GstControlBinding.html#gst-control-binding-set-disabled" title="gst_control_binding_set_disabled ()">gst_control_binding_set_disabled</a>    (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>,
+<span class="returnvalue">void</span>                <a class="link" href="GstControlBinding.html#gst-control-binding-set-disabled" title="gst_control_binding_set_disabled ()">gst_control_binding_set_disabled</a>    (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> disabled</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstControlBinding.html#gst-control-binding-is-disabled" title="gst_control_binding_is_disabled ()">gst_control_binding_is_disabled</a>     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstControlBinding.html#gst-control-binding-is-disabled" title="gst_control_binding_is_disabled ()">gst_control_binding_is_disabled</a>     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -126,10 +126,10 @@ The instance structure of <a class="link" href="GstControlBinding.html" title="G
   GstObjectClass parent_class;
 
   /* virtual methods */
-  gboolean (* sync_values) (GstControlBinding *self, GstObject *object, GstClockTime timestamp, GstClockTime last_sync);
-  GValue * (* get_value) (GstControlBinding *self, GstClockTime timestamp);
-  gboolean (* get_value_array) (GstControlBinding *self, GstClockTime timestamp,GstClockTime interval, guint n_values, gpointer values);
-  gboolean (* get_g_value_array) (GstControlBinding *self, GstClockTime timestamp,GstClockTime interval, guint n_values, GValue *values);
+  gboolean (* sync_values) (GstControlBinding *binding, GstObject *object, GstClockTime timestamp, GstClockTime last_sync);
+  GValue * (* get_value) (GstControlBinding *binding, GstClockTime timestamp);
+  gboolean (* get_value_array) (GstControlBinding *binding, GstClockTime timestamp,GstClockTime interval, guint n_values, gpointer values);
+  gboolean (* get_g_value_array) (GstControlBinding *binding, GstClockTime timestamp,GstClockTime interval, guint n_values, GValue *values);
 };
 </pre>
 <p>
@@ -164,7 +164,7 @@ The class structure of <a class="link" href="GstControlBinding.html" title="GstC
 <hr>
 <div class="refsect2">
 <a name="GstControlBindingConvert"></a><h3>GstControlBindingConvert ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                (*GstControlBindingConvert)         (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>,
+<pre class="programlisting"><span class="returnvalue">void</span>                (*GstControlBindingConvert)         (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> src_value</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest_value</code></em>);</pre>
 <p>
@@ -174,7 +174,7 @@ Function to map a control-value to the target GValue.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> instance</td>
 </tr>
 <tr>
@@ -191,12 +191,12 @@ Function to map a control-value to the target GValue.
 <hr>
 <div class="refsect2">
 <a name="gst-control-binding-sync-values"></a><h3>gst_control_binding_sync_values ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_control_binding_sync_values     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>,
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_control_binding_sync_values     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> last_sync</code></em>);</pre>
 <p>
-Sets the property of the <em class="parameter"><code>object</code></em>, according to the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html"><span class="type">GstControlSources</span></a> that
+Sets the property of the <em class="parameter"><code>object</code></em>, according to the <a href="../gstreamer-1.0/GstControlSource.html"><span class="type">GstControlSources</span></a> that
 handle them and for the given timestamp.
 </p>
 <p>
@@ -207,7 +207,7 @@ Most probably the control sources are not setup correctly.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the control binding</td>
 </tr>
 <tr>
@@ -243,7 +243,7 @@ Gets the value for the given controlled property at the requested time.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the control binding</td>
 </tr>
 <tr>
@@ -284,7 +284,7 @@ better suites for bindings.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the control binding</td>
 </tr>
 <tr>
@@ -333,7 +333,7 @@ curve or apply a control curve sample by sample.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the control binding</td>
 </tr>
 <tr>
@@ -363,7 +363,7 @@ curve or apply a control curve sample by sample.
 <hr>
 <div class="refsect2">
 <a name="gst-control-binding-set-disabled"></a><h3>gst_control_binding_set_disabled ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_control_binding_set_disabled    (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>,
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_control_binding_set_disabled    (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> disabled</code></em>);</pre>
 <p>
 This function is used to disable a control binding for some time, i.e.
@@ -373,7 +373,7 @@ This function is used to disable a control binding for some time, i.e.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the control binding</td>
 </tr>
 <tr>
@@ -387,7 +387,7 @@ or not.</td>
 <hr>
 <div class="refsect2">
 <a name="gst-control-binding-is-disabled"></a><h3>gst_control_binding_is_disabled ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_control_binding_is_disabled     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *self</code></em>);</pre>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_control_binding_is_disabled     (<em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>);</pre>
 <p>
 Check if the control binding is disabled.
 </p>
@@ -395,7 +395,7 @@ Check if the control binding is disabled.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
 <td>the control binding</td>
 </tr>
 <tr>

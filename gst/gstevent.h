@@ -83,7 +83,7 @@ typedef enum {
  *                 other serialized event and only sent at the start of a new stream,
  *                 not after flushing seeks.
  * @GST_EVENT_CAPS: #GstCaps event. Notify the pad of a new media type.
- * @GST_EVENT_STREAM_CONFIG: contains configuration information for the stream,
+ * @GST_EVENT_STREAM_CONFIG: (unimplemented) contains configuration information for the stream,
  *                 for example stream-headers and codec-data.
  * @GST_EVENT_SEGMENT: A new media segment follows in the dataflow. The
  *                 segment events contains information for clipping buffers and
@@ -95,13 +95,12 @@ typedef enum {
  * @GST_EVENT_SINK_MESSAGE: An event that sinks turn into a message. Used to
  *                          send messages that should be emitted in sync with
  *                          rendering.
- *                          Since: 0.10.26
  * @GST_EVENT_EOS: End-Of-Stream. No more data is to be expected to follow
  *                 without a SEGMENT event.
- * @GST_EVENT_SEGMENT_DONE: (unimplemented) Marks the end of a segment playback.
- * @GST_EVENT_GAP: (unimplemented) Marks a gap in the datastream.
+ * @GST_EVENT_SEGMENT_DONE: Marks the end of a segment playback.
+ * @GST_EVENT_GAP: Marks a gap in the datastream.
  * @GST_EVENT_TOC: An event which indicates that a new table of contents (TOC)
- *                 was found or updated. Since: 0.10.37
+ *                 was found or updated.
  * @GST_EVENT_QOS: A quality message. Used to indicate to upstream elements
  *                 that the downstream elements should adjust their processing
  *                 rate.
@@ -111,13 +110,11 @@ typedef enum {
  *                        to upstream elements.
  * @GST_EVENT_LATENCY: Notification of new latency adjustment. Sinks will use
  *                     the latency information to adjust their synchronisation.
- *                     Since: 0.10.12
  * @GST_EVENT_STEP: A request for stepping through the media. Sinks will usually
- *                  execute the step operation. Since: 0.10.24
+ *                  execute the step operation.
  * @GST_EVENT_RECONFIGURE: A request for upstream renegotiating caps and reconfiguring.
- *                         Since: 0.11.0
  * @GST_EVENT_TOC_SELECT: A request for a new playback position based on TOC
- *                        entry's UID. Since 0.10.37
+ *                        entry's UID.
  * @GST_EVENT_CUSTOM_UPSTREAM: Upstream custom event
  * @GST_EVENT_CUSTOM_DOWNSTREAM: Downstream custom event that travels in the
  *                        data flow.
@@ -152,7 +149,7 @@ typedef enum {
   GST_EVENT_BUFFERSIZE            = GST_EVENT_MAKE_TYPE (90, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_SINK_MESSAGE          = GST_EVENT_MAKE_TYPE (100, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
   GST_EVENT_EOS                   = GST_EVENT_MAKE_TYPE (110, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
-  GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
+  GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
 
   /* non-sticky downstream serialized */
   GST_EVENT_SEGMENT_DONE          = GST_EVENT_MAKE_TYPE (150, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
@@ -363,8 +360,6 @@ gst_event_take (GstEvent **old_event, GstEvent *new_event)
  *
  * The different types of QoS events that can be given to the
  * gst_event_new_qos() method.
- *
- * Since: 0.10.33
  */
 typedef enum {
   GST_QOS_TYPE_OVERFLOW        = 0,
@@ -477,7 +472,8 @@ guint32         gst_event_get_seqnum            (GstEvent *event);
 void            gst_event_set_seqnum            (GstEvent *event, guint32 seqnum);
 
 /* Stream start event */
-GstEvent *      gst_event_new_stream_start      (void) G_GNUC_MALLOC;
+GstEvent *      gst_event_new_stream_start      (const gchar *stream_id) G_GNUC_MALLOC;
+void            gst_event_parse_stream_start    (GstEvent *event, const gchar **stream_id);
 
 /* flush events */
 GstEvent *      gst_event_new_flush_start       (void) G_GNUC_MALLOC;
@@ -523,7 +519,7 @@ void            gst_event_parse_segment         (GstEvent *event, const GstSegme
 void            gst_event_copy_segment          (GstEvent *event, GstSegment *segment);
 
 /* tag event */
-GstEvent*       gst_event_new_tag               (const gchar *name, GstTagList *taglist) G_GNUC_MALLOC;
+GstEvent*       gst_event_new_tag               (GstTagList *taglist) G_GNUC_MALLOC;
 void            gst_event_parse_tag             (GstEvent *event, GstTagList **taglist);
 
 /* TOC event */
@@ -575,6 +571,10 @@ GstEvent*       gst_event_new_reconfigure       (void) G_GNUC_MALLOC;
 /* TOC select event */
 GstEvent*       gst_event_new_toc_select        (const gchar *uid) G_GNUC_MALLOC;
 void            gst_event_parse_toc_select      (GstEvent *event, gchar **uid);
+
+/* segment-done event */
+GstEvent*       gst_event_new_segment_done      (GstFormat format, gint64 position) G_GNUC_MALLOC;
+void            gst_event_parse_segment_done    (GstEvent *event, GstFormat *format, gint64 *position);
 
 G_END_DECLS
 

@@ -41,7 +41,7 @@ static const gchar *_quark_strings[] = {
   "latency", "uri", "object", "taglist", "GstEventSegment",
   "GstEventBufferSize", "GstEventQOS", "GstEventSeek", "GstEventLatency",
   "GstMessageError", "GstMessageWarning", "GstMessageInfo",
-  "GstMessageBuffering", "GstMessageState", "GstMessageClockProvide",
+  "GstMessageBuffering", "GstMessageStateChanged", "GstMessageClockProvide",
   "GstMessageClockLost", "GstMessageNewClock", "GstMessageStructureChange",
   "GstMessageSegmentStart", "GstMessageSegmentDone", "GstMessageDuration",
   "GstMessageAsyncDone", "GstMessageRequestState", "GstMessageStreamStatus",
@@ -61,8 +61,11 @@ static const gchar *_quark_strings[] = {
   "GstEventTocSelect", "uid", "GstQueryToc", GST_ELEMENT_METADATA_LONGNAME,
   GST_ELEMENT_METADATA_KLASS, GST_ELEMENT_METADATA_DESCRIPTION,
   GST_ELEMENT_METADATA_AUTHOR, "toc", "toc-entry", "updated", "extend-uid",
-  "uid", "tags", "sub-entries", "info", "info-structure",
-  "time-structure", "GstMessageTag", "GstEventTag"
+  "uid", "tags", "sub-entries", "info", "GstMessageTag", "GstEventTag",
+  "GstMessageResetTime",
+  "GstMessageToc", "GstEventTocGlobal", "GstEventTocCurrent",
+  "GstEventSegmentDone",
+  "GstEventStreamStart", "stream-id"
 };
 
 GQuark _priv_gst_quark_table[GST_QUARK_MAX];

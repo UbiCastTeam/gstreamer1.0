@@ -62,7 +62,6 @@ struct _GstIdentity {
   gboolean 	 silent;
   gboolean 	 dump;
   gboolean 	 sync;
-  gboolean 	 check_perfect;
   gboolean 	 check_imperfect_timestamp;
   gboolean 	 check_imperfect_offset;
   gboolean	 single_segment;
@@ -82,7 +81,7 @@ struct _GstIdentityClass {
   void (*handoff) (GstElement *element, GstBuffer *buf);
 };
 
-GType gst_identity_get_type(void);
+G_GNUC_INTERNAL GType gst_identity_get_type (void);
 
 G_END_DECLS
 

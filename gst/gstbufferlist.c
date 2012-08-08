@@ -47,8 +47,6 @@
  * GstBufferList:
  *
  * Opaque list of grouped buffers.
- *
- * Since: 0.10.24
  */
 struct _GstBufferList
 {
@@ -97,17 +95,15 @@ _gst_buffer_list_free (GstBufferList * list)
     gst_buffer_unref (g_array_index (list->array, GstBuffer *, i));
   g_array_free (list->array, TRUE);
 
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (list), list);
+  g_slice_free1 (sizeof (GstBufferList), list);
 }
 
 static void
-gst_buffer_list_init (GstBufferList * list, gsize size, guint asize)
+gst_buffer_list_init (GstBufferList * list, guint asize)
 {
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (list), _gst_buffer_list_type,
-      size);
-
-  list->mini_object.copy = (GstMiniObjectCopyFunction) _gst_buffer_list_copy;
-  list->mini_object.free = (GstMiniObjectFreeFunction) _gst_buffer_list_free;
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (list), 0, _gst_buffer_list_type,
+      (GstMiniObjectCopyFunction) _gst_buffer_list_copy, NULL,
+      (GstMiniObjectFreeFunction) _gst_buffer_list_free);
 
   list->array = g_array_sized_new (FALSE, FALSE, sizeof (GstBuffer *), asize);
 
@@ -126,8 +122,6 @@ gst_buffer_list_init (GstBufferList * list, gsize size, guint asize)
  *
  * Returns: (transfer full): the new #GstBufferList. gst_buffer_list_unref()
  *     after usage.
- *
- * Since: 0.10.24
  */
 GstBufferList *
 gst_buffer_list_new_sized (guint size)
@@ -138,7 +132,7 @@ gst_buffer_list_new_sized (guint size)
 
   GST_LOG ("new %p", list);
 
-  gst_buffer_list_init (list, sizeof (GstBufferList), size);
+  gst_buffer_list_init (list, size);
 
   return list;
 }
@@ -153,8 +147,6 @@ gst_buffer_list_new_sized (guint size)
  *
  * Returns: (transfer full): the new #GstBufferList. gst_buffer_list_unref()
  *     after usage.
- *
- * Since: 0.10.24
  */
 GstBufferList *
 gst_buffer_list_new (void)
@@ -169,8 +161,6 @@ gst_buffer_list_new (void)
  * Returns the number of buffers in @list.
  *
  * Returns: the number of buffers in the buffer list
- *
- * Since: 0.10.24
  */
 guint
 gst_buffer_list_length (GstBufferList * list)
@@ -192,21 +182,22 @@ gst_buffer_list_length (GstBufferList * list)
  * of @func define if this function returns or if the remaining buffers in
  * the list should be skipped.
  *
- * Since: 0.10.24
+ * Returns: %TRUE when @func returned %TRUE for each buffer in @list or when
+ * @list is empty.
  */
-void
+gboolean
 gst_buffer_list_foreach (GstBufferList * list, GstBufferListFunc func,
     gpointer user_data)
 {
   guint i, len;
+  gboolean ret = TRUE;
 
-  g_return_if_fail (GST_IS_BUFFER_LIST (list));
-  g_return_if_fail (func != NULL);
+  g_return_val_if_fail (GST_IS_BUFFER_LIST (list), FALSE);
+  g_return_val_if_fail (func != NULL, FALSE);
 
   len = list->array->len;
   for (i = 0; i < len;) {
     GstBuffer *buf, *buf_ret;
-    gboolean ret;
 
     buf = buf_ret = g_array_index (list->array, GstBuffer *, i);
     ret = func (&buf_ret, i, user_data);
@@ -228,6 +219,7 @@ gst_buffer_list_foreach (GstBufferList * list, GstBufferListFunc func,
     if (buf_ret != NULL)
       i++;
   }
+  return ret;
 }
 
 /**
@@ -239,8 +231,6 @@ gst_buffer_list_foreach (GstBufferList * list, GstBufferListFunc func,
  *
  * Returns: (transfer none): the buffer at @idx in @group or NULL when there
  *     is no buffer. The buffer remains valid as long as @list is valid.
- *
- * Since: 0.10.24
  */
 GstBuffer *
 gst_buffer_list_get (GstBufferList * list, guint idx)
@@ -256,10 +246,17 @@ gst_buffer_list_get (GstBufferList * list, guint idx)
 }
 
 /**
+ * gst_buffer_list_add:
+ * @l: a #GstBufferList
+ * @b: a #GstBuffer
+ *
+ * Append @b at the end of @l.
+ */
+/**
  * gst_buffer_list_insert:
  * @list: a #GstBufferList
  * @idx: the index
- * @buffer: a #GstBuffer
+ * @buffer: (transfer full): a #GstBuffer
  *
  * Insert @buffer at @idx in @list. Other buffers are moved to make room for
  * this new buffer.
@@ -267,7 +264,7 @@ gst_buffer_list_get (GstBufferList * list, guint idx)
  * A -1 value for @idx will append the buffer at the end.
  */
 void
-gst_buffer_list_insert (GstBufferList * list, guint idx, GstBuffer * buffer)
+gst_buffer_list_insert (GstBufferList * list, gint idx, GstBuffer * buffer)
 {
   g_return_if_fail (GST_IS_BUFFER_LIST (list));
   g_return_if_fail (buffer != NULL);

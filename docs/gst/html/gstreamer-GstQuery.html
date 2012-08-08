@@ -143,9 +143,6 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-caps-result" title="gst_query_parse_caps_result ()">gst_query_parse_caps_result</a>         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> **caps</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-intersect-caps-result" title="gst_query_intersect_caps_result ()">gst_query_intersect_caps_result</a>     (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCapsIntersectMode" title="enum GstCapsIntersectMode"><span class="type">GstCapsIntersectMode</span></a> mode</code></em>);
 <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          <a class="link" href="gstreamer-GstQuery.html#gst-query-new-accept-caps" title="gst_query_new_accept_caps ()">gst_query_new_accept_caps</a>           (<em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-accept-caps" title="gst_query_parse_accept_caps ()">gst_query_parse_accept_caps</a>         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> **caps</code></em>);
@@ -218,28 +215,31 @@ enum                <a class="link" href="gstreamer-GstQuery.html#GstBufferingMo
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> min_buffers</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> max_buffers</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-add-allocation-param" title="gst_query_add_allocation_param ()">gst_query_add_allocation_param</a>      (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstQuery.html#gst-query-get-n-allocation-params" title="gst_query_get_n_allocation_params ()">gst_query_get_n_allocation_params</a>   (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-nth-allocation-param" title="gst_query_parse_nth_allocation_param ()">gst_query_parse_nth_allocation_param</a>
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> **allocator</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> **allocator</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstAllocationParams</span> *params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-set-nth-allocation-param" title="gst_query_set_nth_allocation_param ()">gst_query_set_nth_allocation_param</a>  (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-add-allocation-meta" title="gst_query_add_allocation_meta ()">gst_query_add_allocation_meta</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *params</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstQuery.html#gst-query-get-n-allocation-metas" title="gst_query_get_n_allocation_metas ()">gst_query_get_n_allocation_metas</a>    (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-nth-allocation-meta" title="gst_query_parse_nth_allocation_meta ()">gst_query_parse_nth_allocation_meta</a> (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> **params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-remove-nth-allocation-meta" title="gst_query_remove_nth_allocation_meta ()">gst_query_remove_nth_allocation_meta</a>
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-has-allocation-meta" title="gst_query_has_allocation_meta ()">gst_query_has_allocation_meta</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-find-allocation-meta" title="gst_query_find_allocation_meta ()">gst_query_find_allocation_meta</a>      (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *index</code></em>);
 enum                <a class="link" href="gstreamer-GstQuery.html#GstSchedulingFlags" title="enum GstSchedulingFlags">GstSchedulingFlags</a>;
 <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          <a class="link" href="gstreamer-GstQuery.html#gst-query-new-scheduling" title="gst_query_new_scheduling ()">gst_query_new_scheduling</a>            (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-scheduling" title="gst_query_parse_scheduling ()">gst_query_parse_scheduling</a>          (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
@@ -260,13 +260,6 @@ enum                <a class="link" href="gstreamer-GstQuery.html#GstSchedulingF
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-has-scheduling-mode" title="gst_query_has_scheduling_mode ()">gst_query_has_scheduling_mode</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>);
 <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          <a class="link" href="gstreamer-GstQuery.html#gst-query-new-drain" title="gst_query_new_drain ()">gst_query_new_drain</a>                 (<em class="parameter"><code><span class="type">void</span></code></em>);
-<a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          <a class="link" href="gstreamer-GstQuery.html#gst-query-new-toc" title="gst_query_new_toc ()">gst_query_new_toc</a>                   (<em class="parameter"><code><span class="type">void</span></code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-toc" title="gst_query_parse_toc ()">gst_query_parse_toc</a>                 (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **extend_uid</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-set-toc" title="gst_query_set_toc ()">gst_query_set_toc</a>                   (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extend_uid</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -287,7 +280,7 @@ The following example shows how to query the duration of a pipeline:
 <p>
 </p>
 <div class="example">
-<a name="idp39385888"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
+<a name="idp40045456"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -307,17 +300,17 @@ The following example shows how to query the duration of a pipeline:
 13</pre></td>
         <td class="listing_code"><pre class="programlisting">GstQuery <span class="gtkdoc opt">*</span>query<span class="gtkdoc opt">;</span>
 gboolean res<span class="gtkdoc opt">;</span>
-query <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstQuery.html#gst-query-new-duration">gst_query_new_duration</a></span> <span class="gtkdoc opt">(</span>GST_FORMAT_TIME<span class="gtkdoc opt">);</span>
-res <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-query">gst_element_query</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> query<span class="gtkdoc opt">);</span>
+query <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstQuery.html#gst-query-new-duration">gst_query_new_duration</a></span> <span class="gtkdoc opt">(</span>GST_FORMAT_TIME<span class="gtkdoc opt">);</span>
+res <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstElement.html#gst-element-query">gst_element_query</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> query<span class="gtkdoc opt">);</span>
 <span class="keyword">if</span> <span class="gtkdoc opt">(</span>res<span class="gtkdoc opt">) {</span>
   gint64 duration<span class="gtkdoc opt">;</span>
-  <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstQuery.html#gst-query-parse-duration">gst_query_parse_duration</a></span> <span class="gtkdoc opt">(</span>query<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">, &amp;</span>duration<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;duration = %&quot;</span>GST_TIME_FORMAT<span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span> <span class="gtkdoc opt">(</span>duration<span class="gtkdoc opt">));</span>
+  <span class="function"><a href="../gstreamer-1.0/gstreamer-GstQuery.html#gst-query-parse-duration">gst_query_parse_duration</a></span> <span class="gtkdoc opt">(</span>query<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">, &amp;</span>duration<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;duration = %&quot;</span>GST_TIME_FORMAT<span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span> <span class="gtkdoc opt">(</span>duration<span class="gtkdoc opt">));</span>
 <span class="gtkdoc opt">}</span>
 <span class="keyword">else</span> <span class="gtkdoc opt">{</span>
   <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;duration query failed...&quot;</span><span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">}</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstQuery.html#gst-query-unref">gst_query_unref</a></span> <span class="gtkdoc opt">(</span>query<span class="gtkdoc opt">);</span></pre></td>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstQuery.html#gst-query-unref">gst_query_unref</a></span> <span class="gtkdoc opt">(</span>query<span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -445,8 +438,7 @@ the given flags
   GST_QUERY_SCHEDULING   = GST_QUERY_MAKE_TYPE (150, FLAG(UPSTREAM)),
   GST_QUERY_ACCEPT_CAPS  = GST_QUERY_MAKE_TYPE (160, FLAG(BOTH)),
   GST_QUERY_CAPS         = GST_QUERY_MAKE_TYPE (170, FLAG(BOTH)),
-  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
-  GST_QUERY_TOC          = GST_QUERY_MAKE_TYPE (190, FLAG(BOTH))
+  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED))
 } GstQueryType;
 </pre>
 <p>
@@ -507,19 +499,17 @@ Standard predefined Query types
 </tr>
 <tr>
 <td><p><a name="GST-QUERY-BUFFERING:CAPS"></a><span class="term"><code class="literal">GST_QUERY_BUFFERING</code></span></p></td>
-<td>query available media for efficient seeking. Since
-0.10.20.
+<td>query available media for efficient seeking.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-QUERY-CUSTOM:CAPS"></a><span class="term"><code class="literal">GST_QUERY_CUSTOM</code></span></p></td>
-<td>a custom application or element defined query. Since
-0.10.22.
+<td>a custom application or element defined query.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-QUERY-URI:CAPS"></a><span class="term"><code class="literal">GST_QUERY_URI</code></span></p></td>
-<td>query the URI of the source or sink. Since 0.10.22.
+<td>query the URI of the source or sink.
 </td>
 </tr>
 <tr>
@@ -545,12 +535,6 @@ Standard predefined Query types
 <tr>
 <td><p><a name="GST-QUERY-DRAIN:CAPS"></a><span class="term"><code class="literal">GST_QUERY_DRAIN</code></span></p></td>
 <td>wait till all serialized data is consumed downstream
-</td>
-</tr>
-<tr>
-<td><p><a name="GST-QUERY-TOC:CAPS"></a><span class="term"><code class="literal">GST_QUERY_TOC</code></span></p></td>
-<td>query the full table of contents (TOC) with the marker
-for an entry which can be used to extend received TOC. Since 0.10.37.
 </td>
 </tr>
 </tbody>
@@ -587,7 +571,6 @@ Get a constant string representation of the <a class="link" href="gstreamer-GstQ
 <td>the query to query</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1242,7 +1225,6 @@ Free-function: gst_query_unref
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1279,7 +1261,6 @@ Parse a latency query answer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1313,7 +1294,6 @@ Answer a latency query by setting the requested values in the given format.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1443,7 +1423,6 @@ Free-function: gst_query_unref
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1504,7 +1483,6 @@ in the <em class="parameter"><code>formats</code></em> array must be equal to <e
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1529,7 +1507,6 @@ Parse the number of formats in the formats <em class="parameter"><code>query</co
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1804,13 +1781,6 @@ Get the caps result from <em class="parameter"><code>query</code></em>. The caps
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-query-intersect-caps-result"></a><h3>gst_query_intersect_caps_result ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_query_intersect_caps_result     (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCapsIntersectMode" title="enum GstCapsIntersectMode"><span class="type">GstCapsIntersectMode</span></a> mode</code></em>);</pre>
-</div>
-<hr>
-<div class="refsect2">
 <a name="gst-query-new-accept-caps"></a><h3>gst_query_new_accept_caps ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          gst_query_new_accept_caps           (<em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>
@@ -1864,12 +1834,46 @@ valid.
 <a name="gst-query-set-accept-caps-result"></a><h3>gst_query_set_accept_caps_result ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_set_accept_caps_result    (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> result</code></em>);</pre>
+<p>
+Set <em class="parameter"><code>result</code></em> as the result for the <em class="parameter"><code>query</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>a GST_QUERY_ACCEPT_CAPS type query <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>result</code></em> :</span></p></td>
+<td>the result to set</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-query-parse-accept-caps-result"></a><h3>gst_query_parse_accept_caps_result ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_parse_accept_caps_result  (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *result</code></em>);</pre>
+<p>
+Parse the result from <em class="parameter"><code>query</code></em> and store in <em class="parameter"><code>result</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>a GST_QUERY_ACCEPT_CAPS type query <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>result</code></em> :</span></p></td>
+<td>location for the result</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -1935,7 +1939,6 @@ Free-function: gst_query_unref
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1964,7 +1967,6 @@ The <em class="parameter"><code>busy</code></em> indicator is <a href="http://li
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1995,7 +1997,6 @@ The <em class="parameter"><code>busy</code></em> indicator is <a href="http://li
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2033,7 +2034,6 @@ Configures the buffering stats values in <em class="parameter"><code>query</code
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2075,7 +2075,6 @@ Extracts the buffering stats values from <em class="parameter"><code>query</code
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2114,7 +2113,6 @@ Set the available query result fields in <em class="parameter"><code>query</code
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2161,7 +2159,6 @@ time, or NULL. <span class="annotation">[<acronym title="Parameter for returning
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2195,7 +2192,6 @@ start position of the array should be inferior to <em class="parameter"><code>st
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2219,7 +2215,6 @@ buffered-ranges array of the query's structure.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2260,7 +2255,6 @@ at the <em class="parameter"><code>index</code></em> of the buffered ranges arra
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2282,7 +2276,6 @@ Free-function: gst_query_unref
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2310,7 +2303,6 @@ Free the string with <a href="http://library.gnome.org/devel/glib/unstable/glib-
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2333,7 +2325,6 @@ Answer a URI query by setting the requested URI.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2470,6 +2461,9 @@ pool array of the query's structure.
 <p>
 Get the pool parameters in <em class="parameter"><code>query</code></em>.
 </p>
+<p>
+Unref <em class="parameter"><code>pool</code></em> with <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> when it's not needed any more.
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -2483,7 +2477,7 @@ Get the pool parameters in <em class="parameter"><code>query</code></em>.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pool</code></em> :</span></p></td>
-<td>the <a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+<td>the <a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2551,8 +2545,8 @@ Set the pool parameters in <em class="parameter"><code>query</code></em>.
 <div class="refsect2">
 <a name="gst-query-add-allocation-param"></a><h3>gst_query_add_allocation_param ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_add_allocation_param      (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);</pre>
 <p>
 Add <em class="parameter"><code>allocator</code></em> and its <em class="parameter"><code>params</code></em> as a supported memory allocator.
 </p>
@@ -2566,11 +2560,12 @@ Add <em class="parameter"><code>allocator</code></em> and its <em class="paramet
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
-<td>the memory allocator</td>
+<td>the memory allocator. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a>
+<td>a <span class="type">GstAllocationParams</span>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -2609,8 +2604,8 @@ the default memory allocator.
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_parse_nth_allocation_param
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> **allocator</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> **allocator</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstAllocationParams</span> *params</code></em>);</pre>
 <p>
 Parse an available query and get the alloctor and its params
 at <em class="parameter"><code>index</code></em> of the allocator array.
@@ -2629,12 +2624,13 @@ at <em class="parameter"><code>index</code></em> of the allocator array.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
-<td>variable to hold the result. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+<td>variable to hold the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
-<td>parameters for the allocator</td>
+<td>parameters for the allocator. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -2644,8 +2640,8 @@ at <em class="parameter"><code>index</code></em> of the allocator array.
 <a name="gst-query-set-nth-allocation-param"></a><h3>gst_query_set_nth_allocation_param ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_set_nth_allocation_param  (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);</pre>
 <p>
 Parse an available query and get the alloctor and its params
 at <em class="parameter"><code>index</code></em> of the allocator array.
@@ -2664,12 +2660,13 @@ at <em class="parameter"><code>index</code></em> of the allocator array.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
-<td>new allocator to set. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+<td>new allocator to set. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
-<td>parameters for the allocator</td>
+<td>parameters for the allocator. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -2678,9 +2675,10 @@ at <em class="parameter"><code>index</code></em> of the allocator array.
 <div class="refsect2">
 <a name="gst-query-add-allocation-meta"></a><h3>gst_query_add_allocation_meta ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_add_allocation_meta       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *params</code></em>);</pre>
 <p>
-Add <em class="parameter"><code>api</code></em> as aone of the supported metadata API to <em class="parameter"><code>query</code></em>.
+Add <em class="parameter"><code>api</code></em> with <em class="parameter"><code>params</code></em> as one of the supported metadata API to <em class="parameter"><code>query</code></em>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2693,6 +2691,11 @@ Add <em class="parameter"><code>api</code></em> as aone of the supported metadat
 <tr>
 <td><p><span class="term"><em class="parameter"><code>api</code></em> :</span></p></td>
 <td>the metadata API</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
+<td>API specific parameters. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -2724,7 +2727,8 @@ meta API array of the query's structure.
 <div class="refsect2">
 <a name="gst-query-parse-nth-allocation-meta"></a><h3>gst_query_parse_nth_allocation_meta ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               gst_query_parse_nth_allocation_meta (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> **params</code></em>);</pre>
 <p>
 Parse an available query and get the metadata API
 at <em class="parameter"><code>index</code></em> of the metadata API array.
@@ -2740,6 +2744,11 @@ at <em class="parameter"><code>index</code></em> of the metadata API array.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
 <td>position in the metadata API array to read</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
+<td>API specific flags. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2774,11 +2783,14 @@ Remove the metadata API at <em class="parameter"><code>index</code></em> of the 
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-query-has-allocation-meta"></a><h3>gst_query_has_allocation_meta ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_query_has_allocation_meta       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>);</pre>
+<a name="gst-query-find-allocation-meta"></a><h3>gst_query_find_allocation_meta ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_query_find_allocation_meta      (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *index</code></em>);</pre>
 <p>
-Check if <em class="parameter"><code>query</code></em> has metadata <em class="parameter"><code>api</code></em> set.
+Check if <em class="parameter"><code>query</code></em> has metadata <em class="parameter"><code>api</code></em> set. When this function returns TRUE,
+<em class="parameter"><code>index</code></em> will contain the index where the requested API and the flags can be
+found.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2791,6 +2803,11 @@ Check if <em class="parameter"><code>query</code></em> has metadata <em class="p
 <tr>
 <td><p><span class="term"><em class="parameter"><code>api</code></em> :</span></p></td>
 <td>the metadata API</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -3043,85 +3060,6 @@ Free-function: gst_query_unref
 <td>a new <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-query-new-toc"></a><h3>gst_query_new_toc ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          gst_query_new_toc                   (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>
-Constructs a new query TOC query object. Use <a class="link" href="gstreamer-GstQuery.html#gst-query-unref" title="gst_query_unref ()"><code class="function">gst_query_unref()</code></a>
-when done with it. A TOC query is used to query the full TOC with
-the UID marker for TOC extending (to insert some new entries).
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>.</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-query-parse-toc"></a><h3>gst_query_parse_toc ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_query_parse_toc                 (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **extend_uid</code></em>);</pre>
-<p>
-Parse a TOC query, writing the TOC into <em class="parameter"><code>toc</code></em> as a newly
-allocated <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> and extend UID into <em class="parameter"><code>extend_uid</code></em>, if the respective parameters
-are non-NULL. Use <em class="parameter"><code>extend_uid</code></em> value to insert new entries into the TOC (<em class="parameter"><code>extend_uid</code></em> will
-act as root entry for newly inserted entries).
-Free <em class="parameter"><code>toc</code></em> with <a class="link" href="gstreamer-GstToc.html#gst-toc-free" title="gst_toc_free ()"><code class="function">gst_toc_free()</code></a> and <em class="parameter"><code>extend_uid</code></em> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
-<td>the storage for the received TOC (may be NULL). <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>extend_uid</code></em> :</span></p></td>
-<td>the storage for the received extend UID marker (may be NULL),
-0 means root TOC level. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-query-set-toc"></a><h3>gst_query_set_toc ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_query_set_toc                   (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extend_uid</code></em>);</pre>
-<p>
-Answer a TOC query by setting appropriate <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> structure.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> with query type GST_QUERY_TOC.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
-<td>the GstToc to set.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>extend_uid</code></em> :</span></p></td>
-<td>UID which can be used for TOC extending (may be NULL),
-0 means root TOC level.</td>
-</tr>
-</tbody>
 </table></div>
 </div>
 </div>

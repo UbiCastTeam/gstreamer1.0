@@ -1121,10 +1121,9 @@ gst_registry_scan_plugin_file (GstRegistryScanContext * context,
             filename, file_size, file_mtime)) {
       g_warning ("External plugin loader failed. This most likely means that "
           "the plugin loader helper binary was not found or could not be run. "
-          "%s", (g_getenv ("GST_PLUGIN_PATH") != NULL) ?
-          "If you are running an uninstalled GStreamer setup, you might need "
-          "to update your gst-uninstalled script so that the "
-          "GST_PLUGIN_SCANNER environment variable gets set." : "");
+          "You might need to set the GST_PLUGIN_SCANNER environment variable "
+          "if your setup is unusual. This should normally not be required "
+          "though.");
       context->helper_state = REGISTRY_SCAN_HELPER_DISABLED;
     }
   }
@@ -1553,7 +1552,9 @@ scan_and_update_registry (GstRegistry * default_registry,
 
   /* GST_PLUGIN_PATH specifies a list of directories to scan for
    * additional plugins.  These take precedence over the system plugins */
-  plugin_path = g_getenv ("GST_PLUGIN_PATH");
+  plugin_path = g_getenv ("GST_PLUGIN_PATH_1_0");
+  if (plugin_path == NULL)
+    plugin_path = g_getenv ("GST_PLUGIN_PATH");
   if (plugin_path) {
     char **list;
     int i;
@@ -1571,7 +1572,9 @@ scan_and_update_registry (GstRegistry * default_registry,
   /* GST_PLUGIN_SYSTEM_PATH specifies a list of plugins that are always
    * loaded by default.  If not set, this defaults to the system-installed
    * path, and the plugins installed in the user's home directory */
-  plugin_path = g_getenv ("GST_PLUGIN_SYSTEM_PATH");
+  plugin_path = g_getenv ("GST_PLUGIN_SYSTEM_PATH_1_0");
+  if (plugin_path == NULL)
+    plugin_path = g_getenv ("GST_PLUGIN_SYSTEM_PATH");
   if (plugin_path == NULL) {
     char *home_plugins;
 
@@ -1661,7 +1664,10 @@ ensure_current_registry (GError ** error)
   gboolean have_cache = TRUE;
 
   default_registry = gst_registry_get ();
-  registry_file = g_strdup (g_getenv ("GST_REGISTRY"));
+
+  registry_file = g_strdup (g_getenv ("GST_REGISTRY_1_0"));
+  if (registry_file == NULL)
+    registry_file = g_strdup (g_getenv ("GST_REGISTRY"));
   if (registry_file == NULL) {
     registry_file = g_build_filename (g_get_user_cache_dir (),
         "gstreamer-" GST_API_VERSION, "registry." TARGET_CPU ".bin", NULL);
@@ -1721,8 +1727,6 @@ ensure_current_registry (GError ** error)
  *
  * Returns: %TRUE if GStreamer will use the child helper process when
  * rebuilding the registry.
- *
- * Since: 0.10.10
  */
 gboolean
 gst_registry_fork_is_enabled (void)
@@ -1737,8 +1741,6 @@ gst_registry_fork_is_enabled (void)
  * Applications might want to disable/enable spawning of a child helper process
  * when rebuilding the registry. See gst_registry_fork_is_enabled() for more
  * information.
- *
- * Since: 0.10.10
  */
 void
 gst_registry_fork_set_enabled (gboolean enabled)
@@ -1768,8 +1770,6 @@ gst_registry_fork_set_enabled (gboolean enabled)
  *
  * Returns: %TRUE if the registry has been updated successfully (does not
  *          imply that there were changes), otherwise %FALSE.
- *
- * Since: 0.10.12
  */
 gboolean
 gst_update_registry (void)
@@ -1808,8 +1808,6 @@ gst_update_registry (void)
  * every time a feature is added or removed from the registry.
  *
  * Returns: the feature list cookie.
- *
- * Since: 0.10.26
  */
 guint32
 gst_registry_get_feature_list_cookie (GstRegistry * registry)

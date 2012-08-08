@@ -56,12 +56,12 @@ struct              <a class="link" href="gstreamer-GstBufferPool.html#GstBuffer
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> max_buffers</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-config-get-allocator" title="gst_buffer_pool_config_get_allocator ()">gst_buffer_pool_config_get_allocator</a>
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *config</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> **allocator</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> **allocator</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstAllocationParams</span> *params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-config-set-allocator" title="gst_buffer_pool_config_set_allocator ()">gst_buffer_pool_config_set_allocator</a>
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *config</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-config-n-options" title="gst_buffer_pool_config_n_options ()">gst_buffer_pool_config_n_options</a>    (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *config</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-config-add-option" title="gst_buffer_pool_config_add_option ()">gst_buffer_pool_config_add_option</a>   (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *config</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *option</code></em>);
@@ -79,10 +79,10 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-is-active" title="gst_buffer_pool_is_active ()">gst_buffer_pool_is_active</a>           (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a> *pool</code></em>);
 enum                <a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireFlags" title="enum GstBufferPoolAcquireFlags">GstBufferPoolAcquireFlags</a>;
-                    <a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireParams" title="GstBufferPoolAcquireParams">GstBufferPoolAcquireParams</a>;
+struct              <a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireParams" title="struct GstBufferPoolAcquireParams">GstBufferPoolAcquireParams</a>;
 <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-acquire-buffer" title="gst_buffer_pool_acquire_buffer ()">gst_buffer_pool_acquire_buffer</a>      (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a> *pool</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buffer</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireParams" title="GstBufferPoolAcquireParams"><span class="type">GstBufferPoolAcquireParams</span></a> *params</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireParams" title="struct GstBufferPoolAcquireParams"><span class="type">GstBufferPoolAcquireParams</span></a> *params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-release-buffer" title="gst_buffer_pool_release_buffer ()">gst_buffer_pool_release_buffer</a>      (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a> *pool</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);
 </pre>
@@ -369,8 +369,8 @@ Configure <em class="parameter"><code>config</code></em> with the given paramete
 <a name="gst-buffer-pool-config-get-allocator"></a><h3>gst_buffer_pool_config_get_allocator ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_buffer_pool_config_get_allocator
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *config</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> **allocator</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> **allocator</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstAllocationParams</span> *params</code></em>);</pre>
 <p>
 Get the allocator and params from <em class="parameter"><code>config</code></em>.
 </p>
@@ -384,12 +384,12 @@ Get the allocator and params from <em class="parameter"><code>config</code></em>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+<td>a <span class="type">GstAllocator</span>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
-<td><a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a></td>
+<td><span class="type">GstAllocationParams</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -399,8 +399,8 @@ Get the allocator and params from <em class="parameter"><code>config</code></em>
 <a name="gst-buffer-pool-config-set-allocator"></a><h3>gst_buffer_pool_config_set_allocator ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_buffer_pool_config_set_allocator
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *config</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);</pre>
 <p>
 Set the <em class="parameter"><code>allocator</code></em> and <em class="parameter"><code>params</code></em> on <em class="parameter"><code>config</code></em>.
 </p>
@@ -408,7 +408,7 @@ Set the <em class="parameter"><code>allocator</code></em> and <em class="paramet
 One of <em class="parameter"><code>allocator</code></em> and <em class="parameter"><code>params</code></em> can be NULL, but not both. When <em class="parameter"><code>allocator</code></em>
 is NULL, the default allocator of the pool will use the values in <em class="parameter"><code>param</code></em>
 to perform its allocation. When <em class="parameter"><code>param</code></em> is NULL, the pool will use the
-provided allocator with its default <a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a>.
+provided allocator with its default <span class="type">GstAllocationParams</span>.
 </p>
 <p>
 A call to <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-set-config" title="gst_buffer_pool_set_config ()"><code class="function">gst_buffer_pool_set_config()</code></a> can update the allocator and params
@@ -426,12 +426,12 @@ used values.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstMemory.html#GstAllocator" title="GstAllocator"><span class="type">GstAllocator</span></a>
+<td>a <span class="type">GstAllocator</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
-<td><a class="link" href="gstreamer-GstMemory.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a></td>
+<td><span class="type">GstAllocationParams</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -630,6 +630,11 @@ nothing and return FALSE.
 the pool. A default and mandatory set of parameters can be configured with
 <code class="function">gst_buffer_pool_config_set()</code>. This function takes ownership of <em class="parameter"><code>config</code></em>.
 </p>
+<p>
+If the parameters in <em class="parameter"><code>config</code></em> can not be set exactly, this function returns
+FALSE and will try to update as much state as possible. The new state can
+then be retrieved and refined with <code class="function">gst_buffer_pool_config_get()</code>.
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -762,13 +767,13 @@ acquire_buffer method return GST_FLOW_EOS.
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstBufferPoolAcquireParams"></a><h3>GstBufferPoolAcquireParams</h3>
-<pre class="programlisting">typedef struct {
+<a name="GstBufferPoolAcquireParams"></a><h3>struct GstBufferPoolAcquireParams</h3>
+<pre class="programlisting">struct GstBufferPoolAcquireParams {
   GstFormat                 format;
   gint64                    start;
   gint64                    stop;
   GstBufferPoolAcquireFlags flags;
-} GstBufferPoolAcquireParams;
+};
 </pre>
 <p>
 Parameters passed to the <a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-acquire-buffer" title="gst_buffer_pool_acquire_buffer ()"><code class="function">gst_buffer_pool_acquire_buffer()</code></a> function to control the
@@ -807,7 +812,7 @@ return.
 <a name="gst-buffer-pool-acquire-buffer"></a><h3>gst_buffer_pool_acquire_buffer ()</h3>
 <pre class="programlisting"><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>       gst_buffer_pool_acquire_buffer      (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a> *pool</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buffer</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireParams" title="GstBufferPoolAcquireParams"><span class="type">GstBufferPoolAcquireParams</span></a> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPoolAcquireParams" title="struct GstBufferPoolAcquireParams"><span class="type">GstBufferPoolAcquireParams</span></a> *params</code></em>);</pre>
 <p>
 Acquire a buffer from <em class="parameter"><code>pool</code></em>. <em class="parameter"><code>buffer</code></em> should point to a memory location that
 can hold a pointer to the new buffer.

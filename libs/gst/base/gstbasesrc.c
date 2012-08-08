@@ -90,7 +90,7 @@
  * distributed and running.
  *
  * Live sources that synchronize and block on the clock (an audio source, for
- * example) can since 0.10.12 use gst_base_src_wait_playing() when the
+ * example) can use gst_base_src_wait_playing() when the
  * #GstBaseSrcClass.create() function was interrupted by a state change to
  * PAUSED.
  *
@@ -138,8 +138,8 @@
  * EOS message posted on the pipeline's bus to know when all data has
  * been processed and the pipeline can safely be stopped.
  *
- * Since GStreamer 0.10.16 an application may send an EOS event to a source
- * element to make it perform the EOS logic (send EOS event downstream or post a
+ * An application may send an EOS event to a source element to make it
+ * perform the EOS logic (send EOS event downstream or post a
  * #GST_MESSAGE_SEGMENT_DONE on the bus). This can typically be done
  * with the gst_element_send_event() function on the element or its parent bin.
  *
@@ -484,8 +484,6 @@ gst_base_src_finalize (GObject * object)
  * to a state change to READY or a FLUSH event (in which case this function
  * returns #GST_FLOW_FLUSHING).
  *
- * Since: 0.10.12
- *
  * Returns: #GST_FLOW_OK if @src is PLAYING and processing can
  * continue. Any other return value should be returned from the create vmethod.
  */
@@ -571,8 +569,6 @@ gst_base_src_is_live (GstBaseSrc * src)
  * operate in pull mode if the #GstBaseSrcClass.is_seekable() returns TRUE.
  *
  * This function must only be called in states < %GST_STATE_PAUSED.
- *
- * Since: 0.10.1
  */
 void
 gst_base_src_set_format (GstBaseSrc * src, GstFormat format)
@@ -593,8 +589,6 @@ gst_base_src_set_format (GstBaseSrc * src, GstFormat format)
  * If not @dynamic, size is only updated when needed, such as when trying to
  * read past current tracked size.  Otherwise, size is checked for upon each
  * read.
- *
- * Since: 0.10.36
  */
 void
 gst_base_src_set_dynamic_size (GstBaseSrc * src, gboolean dynamic)
@@ -662,8 +656,6 @@ gst_base_src_is_async (GstBaseSrc * src)
  * This function is mostly used by subclasses.
  *
  * Returns: TRUE if the query succeeded.
- *
- * Since: 0.10.13
  */
 gboolean
 gst_base_src_query_latency (GstBaseSrc * src, gboolean * live,
@@ -705,8 +697,6 @@ gst_base_src_query_latency (GstBaseSrc * src, gboolean * live,
  *
  * Set the number of bytes that @src will push out with each buffer. When
  * @blocksize is set to -1, a default length will be used.
- *
- * Since: 0.10.22
  */
 void
 gst_base_src_set_blocksize (GstBaseSrc * src, guint blocksize)
@@ -725,8 +715,6 @@ gst_base_src_set_blocksize (GstBaseSrc * src, guint blocksize)
  * Get the number of bytes that @src will push out with each buffer.
  *
  * Returns: the number of bytes pushed with each buffer.
- *
- * Since: 0.10.22
  */
 guint
 gst_base_src_get_blocksize (GstBaseSrc * src)
@@ -751,8 +739,6 @@ gst_base_src_get_blocksize (GstBaseSrc * src)
  * Configure @src to automatically timestamp outgoing buffers based on the
  * current running_time of the pipeline. This property is mostly useful for live
  * sources.
- *
- * Since: 0.10.15
  */
 void
 gst_base_src_set_do_timestamp (GstBaseSrc * src, gboolean timestamp)
@@ -771,8 +757,6 @@ gst_base_src_set_do_timestamp (GstBaseSrc * src, gboolean timestamp)
  * Query if @src timestamps outgoing buffers based on the current running_time.
  *
  * Returns: %TRUE if the base class will automatically timestamp outgoing buffers.
- *
- * Since: 0.10.15
  */
 gboolean
 gst_base_src_get_do_timestamp (GstBaseSrc * src)
@@ -803,8 +787,6 @@ gst_base_src_get_do_timestamp (GstBaseSrc * src)
  * configured with gst_base_src_set_format()
  *
  * Returns: %TRUE if preparation of the seamless segment succeeded.
- *
- * Since: 0.10.26
  */
 gboolean
 gst_base_src_new_seamless_segment (GstBaseSrc * src, gint64 start, gint64 stop,
@@ -841,8 +823,17 @@ gst_base_src_send_stream_start (GstBaseSrc * src)
   gboolean ret = TRUE;
 
   if (src->priv->stream_start_pending) {
-    ret = gst_pad_push_event (src->srcpad, gst_event_new_stream_start ());
+    gchar *stream_id;
+
+    stream_id =
+        gst_pad_create_stream_id (src->srcpad, GST_ELEMENT_CAST (src), NULL);
+
+    GST_DEBUG_OBJECT (src, "Pushing STREAM_START");
+    ret =
+        gst_pad_push_event (src->srcpad,
+        gst_event_new_stream_start (stream_id));
     src->priv->stream_start_pending = FALSE;
+    g_free (stream_id);
   }
 
   return ret;
@@ -866,10 +857,11 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
   gst_base_src_send_stream_start (src);
-  gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
 
   if (bclass->set_caps)
     res = bclass->set_caps (src, caps);
+  if (res)
+    res = gst_pad_set_caps (src->srcpad, caps);
 
   return res;
 }
@@ -1210,6 +1202,22 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
         res = FALSE;
       break;
     }
+    case GST_QUERY_URI:{
+      if (GST_IS_URI_HANDLER (src)) {
+        gchar *uri = gst_uri_handler_get_uri (GST_URI_HANDLER (src));
+
+        if (uri != NULL) {
+          gst_query_set_uri (query, uri);
+          g_free (uri);
+          res = TRUE;
+        } else {
+          res = FALSE;
+        }
+      } else {
+        res = FALSE;
+      }
+      break;
+    }
     default:
       res = FALSE;
       break;
@@ -1282,8 +1290,8 @@ gst_base_src_default_prepare_seek_segment (GstBaseSrc * src, GstEvent * event,
    *     seek format, adjust by the relative seek offset and then convert back to
    *     the processing format
    */
-  GstSeekType cur_type, stop_type;
-  gint64 cur, stop;
+  GstSeekType start_type, stop_type;
+  gint64 start, stop;
   GstSeekFlags flags;
   GstFormat seek_format, dest_format;
   gdouble rate;
@@ -1291,25 +1299,25 @@ gst_base_src_default_prepare_seek_segment (GstBaseSrc * src, GstEvent * event,
   gboolean res = TRUE;
 
   gst_event_parse_seek (event, &rate, &seek_format, &flags,
-      &cur_type, &cur, &stop_type, &stop);
+      &start_type, &start, &stop_type, &stop);
   dest_format = segment->format;
 
   if (seek_format == dest_format) {
     gst_segment_do_seek (segment, rate, seek_format, flags,
-        cur_type, cur, stop_type, stop, &update);
+        start_type, start, stop_type, stop, &update);
     return TRUE;
   }
 
-  if (cur_type != GST_SEEK_TYPE_NONE) {
-    /* FIXME: Handle seek_cur & seek_end by converting the input segment vals */
+  if (start_type != GST_SEEK_TYPE_NONE) {
+    /* FIXME: Handle seek_end by converting the input segment vals */
     res =
-        gst_pad_query_convert (src->srcpad, seek_format, cur, dest_format,
-        &cur);
-    cur_type = GST_SEEK_TYPE_SET;
+        gst_pad_query_convert (src->srcpad, seek_format, start, dest_format,
+        &start);
+    start_type = GST_SEEK_TYPE_SET;
   }
 
   if (res && stop_type != GST_SEEK_TYPE_NONE) {
-    /* FIXME: Handle seek_cur & seek_end by converting the input segment vals */
+    /* FIXME: Handle seek_end by converting the input segment vals */
     res =
         gst_pad_query_convert (src->srcpad, seek_format, stop, dest_format,
         &stop);
@@ -1317,7 +1325,7 @@ gst_base_src_default_prepare_seek_segment (GstBaseSrc * src, GstEvent * event,
   }
 
   /* And finally, configure our output segment in the desired format */
-  gst_segment_do_seek (segment, rate, dest_format, flags, cur_type, cur,
+  gst_segment_do_seek (segment, rate, dest_format, flags, start_type, start,
       stop_type, stop, &update);
 
   if (!res)
@@ -1482,14 +1490,14 @@ not_ok:
  * instead of EOS when doing a segment seek.
  */
 static gboolean
-gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
+gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
 {
   gboolean res = TRUE, tres;
   gdouble rate;
   GstFormat seek_format, dest_format;
   GstSeekFlags flags;
-  GstSeekType cur_type, stop_type;
-  gint64 cur, stop;
+  GstSeekType start_type, stop_type;
+  gint64 start, stop;
   gboolean flush, playing;
   gboolean update;
   gboolean relative_seek = FALSE;
@@ -1506,9 +1514,9 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
 
   if (event) {
     gst_event_parse_seek (event, &rate, &seek_format, &flags,
-        &cur_type, &cur, &stop_type, &stop);
+        &start_type, &start, &stop_type, &stop);
 
-    relative_seek = SEEK_TYPE_IS_RELATIVE (cur_type) ||
+    relative_seek = SEEK_TYPE_IS_RELATIVE (start_type) ||
         SEEK_TYPE_IS_RELATIVE (stop_type);
 
     if (dest_format != seek_format && !relative_seek) {
@@ -1541,7 +1549,8 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
     gst_pad_pause_task (src->srcpad);
 
   /* unblock streaming thread. */
-  gst_base_src_set_flushing (src, TRUE, FALSE, &playing);
+  if (unlock)
+    gst_base_src_set_flushing (src, TRUE, FALSE, &playing);
 
   /* grab streaming lock, this should eventually be possible, either
    * because the task is paused, our streaming thread stopped
@@ -1556,7 +1565,8 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
     GST_DEBUG_OBJECT (src, "seek with seqnum %" G_GUINT32_FORMAT, seqnum);
   }
 
-  gst_base_src_set_flushing (src, FALSE, playing, NULL);
+  if (unlock)
+    gst_base_src_set_flushing (src, FALSE, playing, NULL);
 
   /* If we configured the seeksegment above, don't overwrite it now. Otherwise
    * copy the current segment info into the temp segment that we can actually
@@ -1579,7 +1589,7 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
         /* The seek format matches our processing format, no need to ask the
          * the subclass to configure the segment. */
         gst_segment_do_seek (&seeksegment, rate, seek_format, flags,
-            cur_type, cur, stop_type, stop, &update);
+            start_type, start, stop_type, stop, &update);
       }
     }
     /* Else, no seek event passed, so we're just (re)starting the
@@ -1619,7 +1629,7 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
     memcpy (&src->segment, &seeksegment, sizeof (GstSegment));
     GST_OBJECT_UNLOCK (src);
 
-    if (seeksegment.flags & GST_SEEK_FLAG_SEGMENT) {
+    if (seeksegment.flags & GST_SEGMENT_FLAG_SEGMENT) {
       GstMessage *message;
 
       message = gst_message_new_segment_start (GST_OBJECT (src),
@@ -1642,7 +1652,7 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event)
   /* and restart the task in case it got paused explicitly or by
    * the FLUSH_START event we pushed out. */
   tres = gst_pad_start_task (src->srcpad, (GstTaskFunction) gst_base_src_loop,
-      src->srcpad);
+      src->srcpad, NULL);
   if (res && !tres)
     res = FALSE;
 
@@ -1674,9 +1684,19 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
   switch (GST_EVENT_TYPE (event)) {
       /* bidirectional events */
     case GST_EVENT_FLUSH_START:
+      GST_DEBUG_OBJECT (src, "pushing flush-start event downstream");
+      result = gst_pad_push_event (src->srcpad, event);
+      event = NULL;
+      break;
     case GST_EVENT_FLUSH_STOP:
+      GST_LIVE_LOCK (src->srcpad);
+      src->priv->segment_pending = TRUE;
       /* sending random flushes downstream can break stuff,
        * especially sync since all segment info will get flushed */
+      GST_DEBUG_OBJECT (src, "pushing flush-stop event downstream");
+      result = gst_pad_push_event (src->srcpad, event);
+      GST_LIVE_UNLOCK (src->srcpad);
+      event = NULL;
       break;
 
       /* downstream serialized events */
@@ -1761,7 +1781,7 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
         GST_DEBUG_OBJECT (src, "performing seek");
         /* when we are running in push mode, we can execute the
          * seek right now. */
-        result = gst_base_src_perform_seek (src, event);
+        result = gst_base_src_perform_seek (src, event, TRUE);
       } else {
         GstEvent **event_p;
 
@@ -1856,7 +1876,7 @@ gst_base_src_default_event (GstBaseSrc * src, GstEvent * event)
       if (!gst_base_src_seekable (src))
         goto not_seekable;
 
-      result = gst_base_src_perform_seek (src, event);
+      result = gst_base_src_perform_seek (src, event, TRUE);
       break;
     case GST_EVENT_FLUSH_START:
       /* cancel any blocking getrange, is normally called
@@ -2012,7 +2032,7 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
   GstBaseSrcClass *bclass;
   GstClockTime base_time;
   GstClock *clock;
-  GstClockTime now = GST_CLOCK_TIME_NONE, timestamp;
+  GstClockTime now = GST_CLOCK_TIME_NONE, pts, dts, timestamp;
   gboolean do_timestamp, first, pseudo_live, is_live;
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
@@ -2022,7 +2042,13 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
     bclass->get_times (basesrc, buffer, &start, &end);
 
   /* get buffer timestamp */
-  timestamp = GST_BUFFER_TIMESTAMP (buffer);
+  dts = GST_BUFFER_DTS (buffer);
+  pts = GST_BUFFER_PTS (buffer);
+
+  if (GST_CLOCK_TIME_IS_VALID (dts))
+    timestamp = dts;
+  else
+    timestamp = pts;
 
   /* grab the lock to prepare for clocking and calculate the startup
    * latency. */
@@ -2081,9 +2107,9 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
     running_time = now - base_time;
 
     GST_LOG_OBJECT (basesrc,
-        "startup timestamp: %" GST_TIME_FORMAT ", running_time %"
-        GST_TIME_FORMAT, GST_TIME_ARGS (timestamp),
-        GST_TIME_ARGS (running_time));
+        "startup PTS: %" GST_TIME_FORMAT ", DTS %" GST_TIME_FORMAT
+        ", running_time %" GST_TIME_FORMAT, GST_TIME_ARGS (pts),
+        GST_TIME_ARGS (dts), GST_TIME_ARGS (running_time));
 
     if (pseudo_live && timestamp != -1) {
       /* live source and we need to sync, add startup latency to all timestamps
@@ -2098,40 +2124,50 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
       GST_LOG_OBJECT (basesrc, "no timestamp offset needed");
     }
 
-    if (!GST_CLOCK_TIME_IS_VALID (timestamp)) {
-      if (do_timestamp)
-        timestamp = running_time;
-      else
-        timestamp = 0;
+    if (!GST_CLOCK_TIME_IS_VALID (dts)) {
+      if (do_timestamp) {
+        dts = running_time;
+      } else {
+        dts = 0;
+      }
+      GST_BUFFER_DTS (buffer) = dts;
 
-      GST_BUFFER_TIMESTAMP (buffer) = timestamp;
-
-      GST_LOG_OBJECT (basesrc, "created timestamp: %" GST_TIME_FORMAT,
-          GST_TIME_ARGS (timestamp));
+      GST_LOG_OBJECT (basesrc, "created DTS %" GST_TIME_FORMAT,
+          GST_TIME_ARGS (dts));
     }
-
-    /* add the timestamp offset we need for sync */
-    timestamp += basesrc->priv->ts_offset;
   } else {
     /* not the first buffer, the timestamp is the diff between the clock and
      * base_time */
-    if (do_timestamp && !GST_CLOCK_TIME_IS_VALID (timestamp)) {
+    if (do_timestamp && !GST_CLOCK_TIME_IS_VALID (dts)) {
       now = gst_clock_get_time (clock);
 
-      GST_BUFFER_TIMESTAMP (buffer) = now - base_time;
+      dts = now - base_time;
+      GST_BUFFER_DTS (buffer) = dts;
 
-      GST_LOG_OBJECT (basesrc, "created timestamp: %" GST_TIME_FORMAT,
-          GST_TIME_ARGS (now - base_time));
+      GST_LOG_OBJECT (basesrc, "created DTS %" GST_TIME_FORMAT,
+          GST_TIME_ARGS (dts));
     }
+  }
+  if (!GST_CLOCK_TIME_IS_VALID (pts)) {
+    if (!GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DELTA_UNIT))
+      pts = dts;
+
+    GST_BUFFER_PTS (buffer) = dts;
+
+    GST_LOG_OBJECT (basesrc, "created PTS %" GST_TIME_FORMAT,
+        GST_TIME_ARGS (pts));
   }
 
   /* if we don't have a buffer timestamp, we don't sync */
   if (!GST_CLOCK_TIME_IS_VALID (start))
     goto no_sync;
 
-  if (is_live && GST_CLOCK_TIME_IS_VALID (timestamp)) {
+  if (is_live) {
     /* for pseudo live sources, add our ts_offset to the timestamp */
-    GST_BUFFER_TIMESTAMP (buffer) += basesrc->priv->ts_offset;
+    if (GST_CLOCK_TIME_IS_VALID (pts))
+      GST_BUFFER_PTS (buffer) += basesrc->priv->ts_offset;
+    if (GST_CLOCK_TIME_IS_VALID (dts))
+      GST_BUFFER_DTS (buffer) += basesrc->priv->ts_offset;
     start += basesrc->priv->ts_offset;
   }
 
@@ -2251,6 +2287,7 @@ gst_base_src_get_range (GstBaseSrc * src, guint64 offset, guint length,
   GstBaseSrcClass *bclass;
   GstClockReturn status;
   GstBuffer *res_buf;
+  GstBuffer *in_buf;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
@@ -2296,7 +2333,7 @@ again:
       "calling create offset %" G_GUINT64_FORMAT " length %u, time %"
       G_GINT64_FORMAT, offset, length, src->segment.time);
 
-  res_buf = *buf;
+  res_buf = in_buf = *buf;
 
   ret = bclass->create (src, offset, length, &res_buf);
 
@@ -2314,12 +2351,31 @@ again:
   if (G_UNLIKELY (ret != GST_FLOW_OK))
     goto not_ok;
 
+  /* fallback in case the create function didn't fill a provided buffer */
+  if (in_buf != NULL && res_buf != in_buf) {
+    GstMapInfo info;
+    gsize copied_size;
+
+    GST_CAT_DEBUG_OBJECT (GST_CAT_PERFORMANCE, src, "create function didn't "
+        "fill the provided buffer, copying");
+
+    gst_buffer_map (in_buf, &info, GST_MAP_WRITE);
+    copied_size = gst_buffer_extract (res_buf, 0, info.data, info.size);
+    gst_buffer_unmap (in_buf, &info);
+    gst_buffer_set_size (in_buf, copied_size);
+
+    gst_buffer_copy_into (in_buf, res_buf, GST_BUFFER_COPY_METADATA, 0, -1);
+
+    gst_buffer_unref (res_buf);
+    res_buf = in_buf;
+  }
+
   /* no timestamp set and we are at offset 0, we can timestamp with 0 */
   if (offset == 0 && src->segment.time == 0
-      && GST_BUFFER_TIMESTAMP (res_buf) == -1 && !src->is_live) {
+      && GST_BUFFER_DTS (res_buf) == -1 && !src->is_live) {
     GST_DEBUG_OBJECT (src, "setting first timestamp to 0");
     res_buf = gst_buffer_make_writable (res_buf);
-    GST_BUFFER_TIMESTAMP (res_buf) = 0;
+    GST_BUFFER_DTS (res_buf) = 0;
   }
 
   /* now sync before pushing the buffer */
@@ -2678,7 +2734,7 @@ pause:
       gint64 position;
 
       /* perform EOS logic */
-      flag_segment = (src->segment.flags & GST_SEEK_FLAG_SEGMENT) != 0;
+      flag_segment = (src->segment.flags & GST_SEGMENT_FLAG_SEGMENT) != 0;
       format = src->segment.format;
       position = src->segment.position;
 
@@ -2689,6 +2745,9 @@ pause:
             format, position);
         gst_message_set_seqnum (message, src->priv->seqnum);
         gst_element_post_message (GST_ELEMENT_CAST (src), message);
+        event = gst_event_new_segment_done (format, position);
+        gst_event_set_seqnum (event, src->priv->seqnum);
+        gst_pad_push_event (pad, event);
       } else {
         event = gst_event_new_eos ();
         gst_event_set_seqnum (event, src->priv->seqnum);
@@ -2755,7 +2814,7 @@ gst_base_src_set_allocation (GstBaseSrc * basesrc, GstBufferPool * pool,
     gst_object_unref (oldpool);
   }
   if (oldalloc) {
-    gst_allocator_unref (oldalloc);
+    gst_object_unref (oldalloc);
   }
   return TRUE;
 
@@ -2838,7 +2897,7 @@ gst_base_src_decide_allocation_default (GstBaseSrc * basesrc, GstQuery * query)
   else
     gst_query_add_allocation_param (query, allocator, &params);
   if (allocator)
-    gst_allocator_unref (allocator);
+    gst_object_unref (allocator);
 
   if (pool) {
     gst_query_set_nth_allocation_pool (query, 0, pool, size, min, max);
@@ -3071,7 +3130,7 @@ could_not_start:
 
 /**
  * gst_base_src_start_complete:
- * @src: base source instance
+ * @basesrc: base source instance
  * @ret: a #GstFlowReturn
  *
  * Complete an asynchronous start operation. When the subclass overrides the
@@ -3146,8 +3205,9 @@ gst_base_src_start_complete (GstBaseSrc * basesrc, GstFlowReturn ret)
     basesrc->pending_seek = NULL;
     GST_OBJECT_UNLOCK (basesrc);
 
-    /* The perform seek code will start the task when finished. */
-    if (G_UNLIKELY (!gst_base_src_perform_seek (basesrc, event)))
+    /* The perform seek code will start the task when finished. We don't have to
+     * unlock the streaming thread because it is not running yet */
+    if (G_UNLIKELY (!gst_base_src_perform_seek (basesrc, event, FALSE)))
       goto seek_failed;
 
     if (event)
@@ -3200,8 +3260,7 @@ error:
 
 /**
  * gst_base_src_start_wait:
- * @src: base source instance
- * @ret: a #GstFlowReturn
+ * @basesrc: base source instance
  *
  * Wait until the start operation completes.
  *
@@ -3283,6 +3342,8 @@ gst_base_src_set_flushing (GstBaseSrc * basesrc,
   GstBaseSrcClass *bclass;
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
+
+  GST_DEBUG_OBJECT (basesrc, "flushing %d, live_play %d", flushing, live_play);
 
   if (flushing) {
     gst_base_src_activate_pool (basesrc, FALSE);
@@ -3383,7 +3444,7 @@ gst_base_src_set_playing (GstBaseSrc * basesrc, gboolean live_play)
     GST_OBJECT_UNLOCK (basesrc->srcpad);
     if (start)
       gst_pad_start_task (basesrc->srcpad, (GstTaskFunction) gst_base_src_loop,
-          basesrc->srcpad);
+          basesrc->srcpad, NULL);
     GST_DEBUG_OBJECT (basesrc, "signal");
     GST_LIVE_SIGNAL (basesrc);
   }
@@ -3471,12 +3532,16 @@ gst_base_src_activate_mode (GstPad * pad, GstObject * parent,
     GstPadMode mode, gboolean active)
 {
   gboolean res;
+  GstBaseSrc *src = GST_BASE_SRC (parent);
+
+  src->priv->stream_start_pending = FALSE;
 
   switch (mode) {
     case GST_PAD_MODE_PULL:
       res = gst_base_src_activate_pull (pad, parent, active);
       break;
     case GST_PAD_MODE_PUSH:
+      src->priv->stream_start_pending = active;
       res = gst_base_src_activate_push (pad, parent, active);
       break;
     default:
@@ -3501,7 +3566,6 @@ gst_base_src_change_state (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_NULL_TO_READY:
       break;
     case GST_STATE_CHANGE_READY_TO_PAUSED:
-      basesrc->priv->stream_start_pending = TRUE;
       no_preroll = gst_base_src_is_live (basesrc);
       break;
     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
@@ -3535,7 +3599,6 @@ gst_base_src_change_state (GstElement * element, GstStateChange transition)
        * already did this */
       g_atomic_int_set (&basesrc->priv->pending_eos, FALSE);
       gst_event_replace (&basesrc->pending_seek, NULL);
-      basesrc->priv->stream_start_pending = FALSE;
       break;
     }
     case GST_STATE_CHANGE_READY_TO_NULL:

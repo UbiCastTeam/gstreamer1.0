@@ -179,17 +179,15 @@ _gst_caps_free (GstCaps * caps)
 #ifdef DEBUG_REFCOUNT
   GST_CAT_TRACE (GST_CAT_CAPS, "freeing caps %p", caps);
 #endif
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (caps), caps);
+  g_slice_free1 (sizeof (GstCapsImpl), caps);
 }
 
 static void
-gst_caps_init (GstCaps * caps, gsize size)
+gst_caps_init (GstCaps * caps)
 {
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (caps), _gst_caps_type, size);
-
-  caps->mini_object.copy = (GstMiniObjectCopyFunction) _gst_caps_copy;
-  caps->mini_object.dispose = NULL;
-  caps->mini_object.free = (GstMiniObjectFreeFunction) _gst_caps_free;
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (caps), 0, _gst_caps_type,
+      (GstMiniObjectCopyFunction) _gst_caps_copy, NULL,
+      (GstMiniObjectFreeFunction) _gst_caps_free);
 
   /* the 32 has been determined by logging caps sizes in _gst_caps_free
    * but g_ptr_array uses 16 anyway if it expands once, so this does not help
@@ -216,7 +214,7 @@ gst_caps_new_empty (void)
 
   caps = (GstCaps *) g_slice_new (GstCapsImpl);
 
-  gst_caps_init (caps, sizeof (GstCapsImpl));
+  gst_caps_init (caps);
 
 #ifdef DEBUG_REFCOUNT
   GST_CAT_TRACE (GST_CAT_CAPS, "created caps %p", caps);
@@ -448,8 +446,6 @@ gst_caps_remove_and_get_structure (GstCaps * caps, guint idx)
  *
  * Returns: (transfer full): a pointer to the #GstStructure corresponding
  *     to @index.
- *
- * Since: 0.10.30
  */
 GstStructure *
 gst_caps_steal_structure (GstCaps * caps, guint index)
@@ -507,8 +503,6 @@ gst_caps_append (GstCaps * caps1, GstCaps * caps2)
  * If either caps is ANY, the resulting caps will be ANY.
  *
  * Returns: (transfer full): the merged caps.
- *
- * Since: 0.10.10
  */
 GstCaps *
 gst_caps_merge (GstCaps * caps1, GstCaps * caps2)
@@ -743,8 +737,6 @@ gst_caps_truncate (GstCaps * caps)
  * Sets the given @field on all structures of @caps to the given @value.
  * This is a convenience function for calling gst_structure_set_value() on
  * all structures of @caps.
- *
- * Since: 0.10.26
  **/
 void
 gst_caps_set_value (GstCaps * caps, const char *field, const GValue * value)
@@ -771,10 +763,6 @@ gst_caps_set_value (GstCaps * caps, const char *field, const GValue * value)
  *
  * Sets fields in a #GstCaps.  The arguments must be passed in the same
  * manner as gst_structure_set(), and be NULL-terminated.
- * <note>Prior to GStreamer version 0.10.26, this function failed when
- * @caps was not simple. If your code needs to work with those versions
- * of GStreamer, you may only call this function when GST_CAPS_IS_SIMPLE()
- * is %TRUE for @caps.</note>
  */
 void
 gst_caps_set_simple_valist (GstCaps * caps, const char *field, va_list varargs)
@@ -812,10 +800,6 @@ gst_caps_set_simple_valist (GstCaps * caps, const char *field, va_list varargs)
  *
  * Sets fields in a #GstCaps.  The arguments must be passed in the same
  * manner as gst_structure_set(), and be NULL-terminated.
- * <note>Prior to GStreamer version 0.10.26, this function failed when
- * @caps was not simple. If your code needs to work with those versions
- * of GStreamer, you may only call this function when GST_CAPS_IS_SIMPLE()
- * is %TRUE for @caps.</note>
  */
 void
 gst_caps_set_simple (GstCaps * caps, const char *field, ...)
@@ -999,8 +983,6 @@ gst_caps_is_subset (const GstCaps * subset, const GstCaps * superset)
  * for more information.
  *
  * Returns: %TRUE if @structure is a subset of @caps
- *
- * Since: 0.10.36
  */
 gboolean
 gst_caps_is_subset_structure (const GstCaps * caps,
@@ -1061,11 +1043,7 @@ gst_caps_is_equal (const GstCaps * caps1, const GstCaps * caps2)
  *
  * Checks if the given caps are exactly the same set of caps.
  *
- * This function deals correctly with passing NULL for any of the caps.
- *
  * Returns: TRUE if both caps are strictly equal.
- *
- * Since: 0.10.36
  */
 gboolean
 gst_caps_is_strictly_equal (const GstCaps * caps1, const GstCaps * caps2)
@@ -1101,8 +1079,6 @@ gst_caps_is_strictly_equal (const GstCaps * caps1, const GstCaps * caps2)
  * be empty
  *
  * Returns: %TRUE if intersection would be not empty
- *
- * Since: 0.10.25
  */
 gboolean
 gst_caps_can_intersect (const GstCaps * caps1, const GstCaps * caps2)
@@ -1309,7 +1285,6 @@ gst_caps_intersect_first (GstCaps * caps1, GstCaps * caps2)
  * used.
  *
  * Returns: the new #GstCaps
- * Since: 0.10.33
  */
 GstCaps *
 gst_caps_intersect_full (GstCaps * caps1, GstCaps * caps2,

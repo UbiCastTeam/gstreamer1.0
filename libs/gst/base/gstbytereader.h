@@ -30,7 +30,8 @@ G_BEGIN_DECLS
 
 /**
  * GstByteReader:
- * @data: Data from which the bit reader will read
+ * @data: (array length=size): Data from which the bit reader will
+ *   read
  * @size: Size of @data in bytes
  * @byte: Current byte position
  *
@@ -150,8 +151,6 @@ guint           gst_byte_reader_masked_scan_uint32 (const GstByteReader * reader
  * used. This macro can used be to initialize a variable, but it cannot
  * be assigned to a variable. In that case you have to use
  * gst_byte_reader_init().
- *
- * Since: 0.10.22
  */
 #define GST_BYTE_READER_INIT(data, size) {data, size, 0}
 

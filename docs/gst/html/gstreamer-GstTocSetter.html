@@ -42,19 +42,11 @@
 #include &lt;gst/gst.h&gt;
 
                     <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter">GstTocSetter</a>;
-struct              <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetterIFace" title="struct GstTocSetterIFace">GstTocSetterIFace</a>;
-const <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="returnvalue">GstToc</span></a> *      <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc" title="gst_toc_setter_get_toc ()">gst_toc_setter_get_toc</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);
-<a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="returnvalue">GstToc</span></a> *            <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc-copy" title="gst_toc_setter_get_toc_copy ()">gst_toc_setter_get_toc_copy</a>         (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-reset-toc" title="gst_toc_setter_reset_toc ()">gst_toc_setter_reset_toc</a>            (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);
+struct              <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetterInterface" title="struct GstTocSetterInterface">GstTocSetterInterface</a>;
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-set-toc" title="gst_toc_setter_set_toc ()">gst_toc_setter_set_toc</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>);
-const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="returnvalue">GstTocEntry</span></a> * <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc-entry" title="gst_toc_setter_get_toc_entry ()">gst_toc_setter_get_toc_entry</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>);
-<a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="returnvalue">GstTocEntry</span></a> *       <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc-entry-copy" title="gst_toc_setter_get_toc_entry_copy ()">gst_toc_setter_get_toc_entry_copy</a>   (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-add-toc-entry" title="gst_toc_setter_add_toc_entry ()">gst_toc_setter_add_toc_entry</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *parent_uid</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> *toc</code></em>);
+<a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="returnvalue">GstToc</span></a> *            <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc" title="gst_toc_setter_get_toc ()">gst_toc_setter_get_toc</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-reset" title="gst_toc_setter_reset ()">gst_toc_setter_reset</a>                (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -90,8 +82,8 @@ Opaque <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="Gs
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstTocSetterIFace"></a><h3>struct GstTocSetterIFace</h3>
-<pre class="programlisting">struct GstTocSetterIFace {
+<a name="GstTocSetterInterface"></a><h3>struct GstTocSetterInterface</h3>
+<pre class="programlisting">struct GstTocSetterInterface {
   GTypeInterface g_iface;
 
   /* signals */
@@ -100,26 +92,47 @@ Opaque <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="Gs
 };
 </pre>
 <p>
-<a class="link" href="gstreamer-GstTocSetter.html#GstTocSetterIFace" title="struct GstTocSetterIFace"><span class="type">GstTocSetterIFace</span></a> interface.
+<a class="link" href="gstreamer-GstTocSetter.html#GstTocSetterInterface" title="struct GstTocSetterInterface"><span class="type">GstTocSetterInterface</span></a> interface.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
-<td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstTocSetterIFace.g-iface"></a>g_iface</code></em>;</span></p></td>
+<td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstTocSetterInterface.g-iface"></a>g_iface</code></em>;</span></p></td>
 <td>parent interface type.</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-toc-setter-set-toc"></a><h3>gst_toc_setter_set_toc ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_toc_setter_set_toc              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> *toc</code></em>);</pre>
+<p>
+Set the given TOC on the setter. Previously setted TOC will be
+unrefed before setting a new one.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> to set. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-toc-setter-get-toc"></a><h3>gst_toc_setter_get_toc ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="returnvalue">GstToc</span></a> *      gst_toc_setter_get_toc              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="returnvalue">GstToc</span></a> *            gst_toc_setter_get_toc              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);</pre>
 <p>
 Return current TOC the setter uses. The TOC should not be
-modified or freed.
-</p>
-<p>
-This function is not thread-safe. Use <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc-copy" title="gst_toc_setter_get_toc_copy ()"><code class="function">gst_toc_setter_get_toc_copy()</code></a> instead.
+modified without making it writable first.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -130,43 +143,17 @@ This function is not thread-safe. Use <a class="link" href="gstreamer-GstTocSett
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a current snapshot of the TOC used in the setter
-or NULL if none is used.</td>
+<td>TOC set, or NULL. Unref with <a class="link" href="gstreamer-GstToc.html#gst-toc-unref" title="gst_toc_unref()"><code class="function">gst_toc_unref()</code></a>
+when no longer needed. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.37</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-toc-setter-get-toc-copy"></a><h3>gst_toc_setter_get_toc_copy ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="returnvalue">GstToc</span></a> *            gst_toc_setter_get_toc_copy         (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);</pre>
-<p>
-Return current TOC the setter uses. The difference between this
-function and <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc" title="gst_toc_setter_get_toc ()"><code class="function">gst_toc_setter_get_toc()</code></a> is that this function returns deep
-copy of the TOC, so you can modify it in any way. This function is thread-safe.
-Free it when done with <a class="link" href="gstreamer-GstToc.html#gst-toc-free" title="gst_toc_free ()"><code class="function">gst_toc_free()</code></a>.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a copy of the current snapshot of the TOC used in the setter
-or NULL if none is used.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.37</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-toc-setter-reset-toc"></a><h3>gst_toc_setter_reset_toc ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_toc_setter_reset_toc            (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);</pre>
+<a name="gst-toc-setter-reset"></a><h3>gst_toc_setter_reset ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_toc_setter_reset                (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>);</pre>
 <p>
 Reset the internal TOC. Elements should call this from within the
 state-change handler.
@@ -178,126 +165,6 @@ state-change handler.
 <td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.37</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-toc-setter-set-toc"></a><h3>gst_toc_setter_set_toc ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_toc_setter_set_toc              (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>);</pre>
-<p>
-Set the given TOC on the setter. Previously setted TOC will be
-freed before setting a new one.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> to set.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.37</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-toc-setter-get-toc-entry"></a><h3>gst_toc_setter_get_toc_entry ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="returnvalue">GstTocEntry</span></a> * gst_toc_setter_get_toc_entry        (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>);</pre>
-<p>
-Return <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> (if any) with given <em class="parameter"><code>uid</code></em>. Returned entry should
-not be modified or freed.
-</p>
-<p>
-This function is not thread-safe. Use <a class="link" href="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc-entry-copy" title="gst_toc_setter_get_toc_entry_copy ()"><code class="function">gst_toc_setter_get_toc_entry_copy()</code></a> instead.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uid</code></em> :</span></p></td>
-<td>UID to find entry with.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a TOC entry with given <em class="parameter"><code>uid</code></em> from the TOC in the setter
-or NULL if none entry with such <em class="parameter"><code>uid</code></em> was found.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.37</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-toc-setter-get-toc-entry-copy"></a><h3>gst_toc_setter_get_toc_entry_copy ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="returnvalue">GstTocEntry</span></a> *       gst_toc_setter_get_toc_entry_copy   (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uid</code></em>);</pre>
-<p>
-Return <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> (if any) with given <em class="parameter"><code>uid</code></em>. It perform a deep copying,
-so you can modify returned value. Free it when done with <a class="link" href="gstreamer-GstToc.html#gst-toc-entry-free" title="gst_toc_entry_free ()"><code class="function">gst_toc_entry_free()</code></a>.
-This function is thread-safe.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uid</code></em> :</span></p></td>
-<td>UID to find entry with.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a TOC entry with given <em class="parameter"><code>uid</code></em> from the TOC in the setter
-or NULL if none entry with such <em class="parameter"><code>uid</code></em> was found.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.37</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-toc-setter-add-toc-entry"></a><h3>gst_toc_setter_add_toc_entry ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_toc_setter_add_toc_entry        (<em class="parameter"><code><a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a> *setter</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *parent_uid</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);</pre>
-<p>
-Try to find entry with given <em class="parameter"><code>parent_uid</code></em> and append an <em class="parameter"><code>entry</code></em> to that <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a>.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstTocSetter.html#GstTocSetter" title="GstTocSetter"><span class="type">GstTocSetter</span></a>.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>parent_uid</code></em> :</span></p></td>
-<td>UID of the parent entry to append given <em class="parameter"><code>entry</code></em>. Use 0 for the TOC root level.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
-<td>
-<a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="struct GstTocEntry"><span class="type">GstTocEntry</span></a> to append.</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE if entry with <em class="parameter"><code>parent_uid</code></em> was found, FALSE otherwise.</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 0.10.37</p>
 </div>
 </div>
 </div>

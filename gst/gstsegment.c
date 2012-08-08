@@ -52,11 +52,10 @@
  * with a start value of 0 and a stop/duration of -1, which is undefined. The default
  * rate and applied_rate is 1.0.
  *
- * If the segment is used for managing seeks, the segment duration should be set with
- * gst_segment_set_duration(). The public duration field contains the duration of the
- * segment. When using the segment for seeking, the start and time members should
- * normally be left to their default 0 value. The stop position is left to -1 unless
- * explicitly configured to a different value after a seek event.
+ * The public duration field contains the duration of the segment. When using
+ * the segment for seeking, the start and time members should normally be left
+ * to their default 0 value. The stop position is left to -1 unless explicitly
+ * configured to a different value after a seek event.
  *
  * The current position in the segment should be set by changing the position
  * member in the structure.
@@ -64,7 +63,7 @@
  * For elements that perform seeks, the current segment should be updated with the
  * gst_segment_do_seek() and the values from the seek event. This method will update
  * all the segment fields. The position field will contain the new playback position.
- * If the cur_type was different from GST_SEEK_TYPE_NONE, playback continues from
+ * If the start_type was different from GST_SEEK_TYPE_NONE, playback continues from
  * the position position, possibly with updated flags or rate.
  *
  * For elements that want to use #GstSegment to track the playback region,
@@ -93,8 +92,6 @@
  * Free-function: gst_segment_free
  *
  * Returns: (transfer full): a new #GstSegment, free with gst_segment_free().
- *
- * Since: 0.10.20
  */
 GstSegment *
 gst_segment_copy (const GstSegment * segment)
@@ -177,6 +174,7 @@ gst_segment_init (GstSegment * segment, GstFormat format)
   segment->applied_rate = 1.0;
   segment->format = format;
   segment->base = 0;
+  segment->offset = 0;
   segment->start = 0;
   segment->stop = -1;
   segment->time = 0;
@@ -243,13 +241,6 @@ gst_segment_do_seek (GstSegment * segment, gdouble rate,
 
   position = segment->position;
 
-  if (flags & GST_SEEK_FLAG_FLUSH) {
-    /* flush resets the running_time */
-    base = 0;
-  } else {
-    base = gst_segment_to_running_time (segment, format, position);
-  }
-
   /* segment->start is never invalid */
   switch (start_type) {
     case GST_SEEK_TYPE_NONE:
@@ -314,13 +305,13 @@ gst_segment_do_seek (GstSegment * segment, gdouble rate,
     }
   }
 
-  segment->rate = rate;
-  segment->applied_rate = 1.0;
-  segment->base = base;
-  segment->flags = (GstSegmentFlags) flags;
-  segment->start = start;
-  segment->stop = stop;
-  segment->time = start;
+  if (flags & GST_SEEK_FLAG_FLUSH) {
+    /* flush resets the running_time */
+    base = 0;
+  } else {
+    /* remember the elapsed time */
+    base = gst_segment_to_running_time (segment, format, position);
+  }
 
   if (update_start && rate > 0.0) {
     position = start;
@@ -335,11 +326,39 @@ gst_segment_do_seek (GstSegment * segment, gdouble rate,
         position = 0;
     }
   }
+
   /* set update arg to reflect update of position */
   if (update)
     *update = position != segment->position;
 
-  /* update new position */
+  /* update new values */
+  /* be explicit about our GstSeekFlag -> GstSegmentFlag conversion */
+  segment->flags = GST_SEGMENT_FLAG_NONE;
+  if ((flags & GST_SEEK_FLAG_FLUSH) != 0)
+    segment->flags |= GST_SEGMENT_FLAG_RESET;
+  if ((flags & GST_SEEK_FLAG_SKIP) != 0)
+    segment->flags |= GST_SEGMENT_FLAG_SKIP;
+  if ((flags & GST_SEEK_FLAG_SEGMENT) != 0)
+    segment->flags |= GST_SEGMENT_FLAG_SEGMENT;
+
+  segment->rate = rate;
+  segment->applied_rate = 1.0;
+
+  segment->base = base;
+  if (rate > 0.0)
+    segment->offset = position - start;
+  else {
+    if (stop != -1)
+      segment->offset = stop - position;
+    else if (segment->duration != -1)
+      segment->offset = segment->duration - position;
+    else
+      segment->offset = 0;
+  }
+
+  segment->start = start;
+  segment->stop = stop;
+  segment->time = start;
   segment->position = position;
 
   return TRUE;
@@ -379,25 +398,19 @@ gst_segment_to_stream_time (const GstSegment * segment, GstFormat format,
   g_return_val_if_fail (segment != NULL, -1);
   g_return_val_if_fail (segment->format == format, -1);
 
-  /* if we have the position for the same format as the segment, we can compare
-   * the start and stop values, otherwise we assume 0 and -1 */
-  if (G_LIKELY (segment->format == format)) {
-    start = segment->start;
-    stop = segment->stop;
-    time = segment->time;
-  } else {
-    start = 0;
-    stop = -1;
-    time = 0;
-  }
+  stop = segment->stop;
 
   /* outside of the segment boundary stop */
   if (G_UNLIKELY (stop != -1 && position > stop))
     return -1;
 
+  start = segment->start;
+
   /* before the segment boundary */
   if (G_UNLIKELY (position < start))
     return -1;
+
+  time = segment->time;
 
   /* time must be known */
   if (G_UNLIKELY (time == -1))
@@ -436,8 +449,7 @@ gst_segment_to_stream_time (const GstSegment * segment, GstFormat format,
  * @position: the position in the segment
  *
  * Translate @position to the total running time using the currently configured
- * and previously accumulated segments. Position is a value between @segment
- * start and stop time.
+ * segment. Position is a value between @segment start and stop time.
  *
  * This function is typically used by elements that need to synchronize to the
  * global clock in a pipeline. The runnning time is a constantly increasing value
@@ -454,7 +466,7 @@ gst_segment_to_running_time (const GstSegment * segment, GstFormat format,
     guint64 position)
 {
   guint64 result;
-  guint64 start, stop, base;
+  guint64 start, stop;
   gdouble abs_rate;
 
   if (G_UNLIKELY (position == -1))
@@ -463,21 +475,16 @@ gst_segment_to_running_time (const GstSegment * segment, GstFormat format,
   g_return_val_if_fail (segment != NULL, -1);
   g_return_val_if_fail (segment->format == format, -1);
 
-  /* if we have the position for the same format as the segment, we can compare
-   * the start and stop values, otherwise we assume 0 and -1 */
-  if (G_LIKELY (segment->format == format)) {
-    start = segment->start;
-    stop = segment->stop;
-    base = segment->base;
-  } else {
-    start = 0;
-    stop = -1;
-    base = 0;
-  }
+  start = segment->start;
+
+  if (segment->rate > 0.0)
+    start += segment->offset;
 
   /* before the segment boundary */
   if (G_UNLIKELY (position < start))
     return -1;
+
+  stop = segment->stop;
 
   if (G_LIKELY (segment->rate > 0.0)) {
     /* outside of the segment boundary stop */
@@ -489,7 +496,11 @@ gst_segment_to_running_time (const GstSegment * segment, GstFormat format,
   } else {
     /* cannot continue if no stop position set or outside of
      * the segment. */
-    if (G_UNLIKELY (stop == -1 || position > stop))
+    if (G_UNLIKELY (stop == -1))
+      return -1;
+
+    stop -= segment->offset;
+    if (G_UNLIKELY (position > stop))
       return -1;
 
     /* bring to uncorrected position in segment */
@@ -503,7 +514,7 @@ gst_segment_to_running_time (const GstSegment * segment, GstFormat format,
     result /= abs_rate;
 
   /* correct for base of the segment */
-  result += base;
+  result += segment->base;
 
   return result;
 }
@@ -585,8 +596,6 @@ gst_segment_clip (const GstSegment * segment, GstFormat format, guint64 start,
  *
  * Returns: the position in the segment for @running_time. This function returns
  * -1 when @running_time is -1 or when it is not inside @segment.
- *
- * Since: 0.10.24
  */
 guint64
 gst_segment_to_position (const GstSegment * segment, GstFormat format,
@@ -602,17 +611,7 @@ gst_segment_to_position (const GstSegment * segment, GstFormat format,
   g_return_val_if_fail (segment != NULL, -1);
   g_return_val_if_fail (segment->format == format, FALSE);
 
-  /* if we have the position for the same format as the segment, we can compare
-   * the start and stop values, otherwise we assume 0 and -1 */
-  if (G_LIKELY (segment->format == format)) {
-    start = segment->start;
-    stop = segment->stop;
-    base = segment->base;
-  } else {
-    start = 0;
-    stop = -1;
-    base = 0;
-  }
+  base = segment->base;
 
   /* this running_time was for a previous segment */
   if (running_time < base)
@@ -625,6 +624,9 @@ gst_segment_to_position (const GstSegment * segment, GstFormat format,
   abs_rate = ABS (segment->rate);
   if (G_UNLIKELY (abs_rate != 1.0))
     result = ceil (result * abs_rate);
+
+  start = segment->start;
+  stop = segment->stop;
 
   if (G_LIKELY (segment->rate > 0.0)) {
     /* bring to corrected position in segment */
@@ -657,8 +659,6 @@ gst_segment_to_position (const GstSegment * segment, GstFormat format,
  *
  * Returns: %TRUE if the segment could be updated successfully. If %FALSE is
  * returned, @running_time is -1 or not in @segment.
- *
- * Since: 0.10.24
  */
 gboolean
 gst_segment_set_running_time (GstSegment * segment, GstFormat format,

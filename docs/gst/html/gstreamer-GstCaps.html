@@ -160,7 +160,7 @@ A <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><
 <p>
 </p>
 <div class="example">
-<a name="idp16595824"></a><p class="title"><b>Example 4. Creating caps</b></p>
+<a name="idp16949152"></a><p class="title"><b>Example 4. Creating caps</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -174,7 +174,7 @@ A <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><
 7
 8</pre></td>
         <td class="listing_code"><pre class="programlisting">GstCaps <span class="gtkdoc opt">*</span>caps<span class="gtkdoc opt">;</span>
-caps <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstCaps.html#gst-caps-new-simple">gst_caps_new_simple</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;video/x-raw&quot;</span><span class="gtkdoc opt">,</span>
+caps <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstCaps.html#gst-caps-new-simple">gst_caps_new_simple</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;video/x-raw&quot;</span><span class="gtkdoc opt">,</span>
      <span class="string">&quot;format&quot;</span><span class="gtkdoc opt">,</span> G_TYPE_STRING<span class="gtkdoc opt">,</span> <span class="string">&quot;I420&quot;</span><span class="gtkdoc opt">,</span>
      <span class="string">&quot;framerate&quot;</span><span class="gtkdoc opt">,</span> GST_TYPE_FRACTION<span class="gtkdoc opt">,</span> <span class="number">25</span><span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">,</span>
      <span class="string">&quot;pixel-aspect-ratio&quot;</span><span class="gtkdoc opt">,</span> GST_TYPE_FRACTION<span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">,</span>
@@ -309,7 +309,6 @@ would be [A, B], maintaining the first caps priority on the intersection.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -682,7 +681,7 @@ are not copied; the returned <a class="link" href="gstreamer-GstCaps.html#GstCap
 </pre>
 <p>
 Tests if you can safely modify <em class="parameter"><code>caps</code></em>. It is only safe to modify caps when
-there is only one owner of the caps - ie, the refcount is 1.
+there is only one owner of the caps - ie, the object is writable.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -847,7 +846,6 @@ If either caps is ANY, the resulting caps will be ANY.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -924,7 +922,6 @@ to <em class="parameter"><code>index</code></em>. <span class="annotation">[<acr
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1049,7 +1046,6 @@ all structures of <em class="parameter"><code>caps</code></em>.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1060,13 +1056,6 @@ all structures of <em class="parameter"><code>caps</code></em>.
 <p>
 Sets fields in a <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a>.  The arguments must be passed in the same
 manner as <a class="link" href="gstreamer-GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>, and be NULL-terminated.
-</p>
-<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
-<h3 class="title">Note</h3>Prior to GStreamer version 0.10.26, this function failed when
-<em class="parameter"><code>caps</code></em> was not simple. If your code needs to work with those versions
-of GStreamer, you may only call this function when <a class="link" href="gstreamer-GstCaps.html#GST-CAPS-IS-SIMPLE:CAPS" title="GST_CAPS_IS_SIMPLE()"><code class="function">GST_CAPS_IS_SIMPLE()</code></a>
-is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for <em class="parameter"><code>caps</code></em>.</div>
-<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1095,13 +1084,6 @@ is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <p>
 Sets fields in a <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a>.  The arguments must be passed in the same
 manner as <a class="link" href="gstreamer-GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>, and be NULL-terminated.
-</p>
-<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
-<h3 class="title">Note</h3>Prior to GStreamer version 0.10.26, this function failed when
-<em class="parameter"><code>caps</code></em> was not simple. If your code needs to work with those versions
-of GStreamer, you may only call this function when <a class="link" href="gstreamer-GstCaps.html#GST-CAPS-IS-SIMPLE:CAPS" title="GST_CAPS_IS_SIMPLE()"><code class="function">GST_CAPS_IS_SIMPLE()</code></a>
-is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for <em class="parameter"><code>caps</code></em>.</div>
-<p>
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1254,9 +1236,6 @@ Tests if two <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct
 <p>
 Checks if the given caps are exactly the same set of caps.
 </p>
-<p>
-This function deals correctly with passing NULL for any of the caps.
-</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -1276,7 +1255,6 @@ This function deals correctly with passing NULL for any of the caps.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1371,7 +1349,6 @@ for more information.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1400,7 +1377,6 @@ be empty
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.25</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1463,7 +1439,6 @@ used.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1607,7 +1582,7 @@ For debugging purposes its easier to do something like this:
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-LOG:CAPS">GST_LOG</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;caps are %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> caps<span class="gtkdoc opt">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-LOG:CAPS">GST_LOG</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;caps are %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> caps<span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
   </table>

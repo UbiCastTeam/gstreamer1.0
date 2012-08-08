@@ -74,7 +74,6 @@ struct _GstTee {
   guint           pad_counter;
 
   gboolean        has_chain;
-  gboolean        has_sink_loop;
   gboolean        silent;
   gchar          *last_message;
 
@@ -87,7 +86,7 @@ struct _GstTeeClass {
   GstElementClass parent_class;
 };
 
-GType	gst_tee_get_type	(void);
+G_GNUC_INTERNAL GType	gst_tee_get_type	(void);
 
 G_END_DECLS
 

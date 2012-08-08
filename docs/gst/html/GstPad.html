@@ -76,8 +76,6 @@ enum                <a class="link" href="GstPad.html#GstPadMode" title="enum Gs
 <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *           <a class="link" href="GstPad.html#gst-pad-get-allowed-caps" title="gst_pad_get_allowed_caps ()">gst_pad_get_allowed_caps</a>            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *           <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()">gst_pad_get_current_caps</a>            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *           <a class="link" href="GstPad.html#gst-pad-get-pad-template-caps" title="gst_pad_get_pad_template_caps ()">gst_pad_get_pad_template_caps</a>       (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-set-caps" title="gst_pad_set_caps ()">gst_pad_set_caps</a>                    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
 <a class="link" href="GstPad.html" title="GstPad"><span class="returnvalue">GstPad</span></a> *            <a class="link" href="GstPad.html#gst-pad-get-peer" title="gst_pad_get_peer ()">gst_pad_get_peer</a>                    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstPad.html#gst-pad-use-fixed-caps" title="gst_pad_use_fixed_caps ()">gst_pad_use_fixed_caps</a>              (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-has-current-caps" title="gst_pad_has_current_caps ()">gst_pad_has_current_caps</a>            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
@@ -301,6 +299,9 @@ struct              <a class="link" href="GstPad.html#GstPadProbeInfo" title="st
 <span class="returnvalue">void</span>                <a class="link" href="GstPad.html#gst-pad-set-element-private" title="gst_pad_set_element_private ()">gst_pad_set_element_private</a>         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> priv</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>            <a class="link" href="GstPad.html#gst-pad-get-element-private" title="gst_pad_get_element_private ()">gst_pad_get_element_private</a>         (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="GstPad.html#gst-pad-create-stream-id" title="gst_pad_create_stream_id ()">gst_pad_create_stream_id</a>            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            (<a class="link" href="GstPad.html#GstPadForwardFunction" title="GstPadForwardFunction ()">*GstPadForwardFunction</a>)            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-forward" title="gst_pad_forward ()">gst_pad_forward</a>                     (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
@@ -313,7 +314,8 @@ struct              <a class="link" href="GstPad.html#GstPadProbeInfo" title="st
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-start-task" title="gst_pad_start_task ()">gst_pad_start_task</a>                  (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstTask.html#GstTaskFunction" title="GstTaskFunction ()"><span class="type">GstTaskFunction</span></a> func</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-pause-task" title="gst_pad_pause_task ()">gst_pad_pause_task</a>                  (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-stop-task" title="gst_pad_stop_task ()">gst_pad_stop_task</a>                   (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-set-active" title="gst_pad_set_active ()">gst_pad_set_active</a>                  (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
@@ -510,6 +512,7 @@ The direction of a pad.
   GST_PAD_FLAG_FIXED_CAPS       = (GST_OBJECT_FLAG_LAST &lt;&lt; 7),
   GST_PAD_FLAG_PROXY_CAPS       = (GST_OBJECT_FLAG_LAST &lt;&lt; 8),
   GST_PAD_FLAG_PROXY_ALLOCATION = (GST_OBJECT_FLAG_LAST &lt;&lt; 9),
+  GST_PAD_FLAG_PROXY_SCHEDULING = (GST_OBJECT_FLAG_LAST &lt;&lt; 10),
   /* padding */
   GST_PAD_FLAG_LAST        = (GST_OBJECT_FLAG_LAST &lt;&lt; 16)
 } GstPadFlags;
@@ -576,6 +579,13 @@ Pad state flags
 <td><p><a name="GST-PAD-FLAG-PROXY-ALLOCATION:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_ALLOCATION</code></span></p></td>
 <td>the default query handler will forward
                      allocation queries to the internally linked pads
+                     instead of discarding them.
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-PAD-FLAG-PROXY-SCHEDULING:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_SCHEDULING</code></span></p></td>
+<td>the default query handler will forward
+                     scheduling queries to the internally linked pads
                      instead of discarding them.
 </td>
 </tr>
@@ -736,7 +746,6 @@ for linking the pads.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -747,7 +756,6 @@ for linking the pads.
 The default checks done when linking pads (i.e. the ones used by
 <a class="link" href="GstPad.html#gst-pad-link" title="gst_pad_link ()"><code class="function">gst_pad_link()</code></a>).
 </p>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -780,28 +788,28 @@ The result of passing data to a pad.
 </p>
 <p>
 Note that the custom return values should not be exposed outside of the
-element scope and are available since 0.10.7.
+element scope.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><a name="GST-FLOW-CUSTOM-SUCCESS-2:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_SUCCESS_2</code></span></p></td>
-<td>Pre-defined custom success code. Since 0.10.29.
+<td>Pre-defined custom success code.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-FLOW-CUSTOM-SUCCESS-1:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_SUCCESS_1</code></span></p></td>
 <td>Pre-defined custom success code (define your
                               custom success code to this to avoid compiler
-                              warnings). Since 0.10.29.
+                              warnings).
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-FLOW-CUSTOM-SUCCESS:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_SUCCESS</code></span></p></td>
 <td>Elements can use values starting from
                               this (and higher) to define custom success
-                              codes. Since 0.10.7.
+                              codes.
 </td>
 </tr>
 <tr>
@@ -845,19 +853,18 @@ element scope and are available since 0.10.7.
 <td><p><a name="GST-FLOW-CUSTOM-ERROR:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_ERROR</code></span></p></td>
 <td>Elements can use values starting from
                               this (and lower) to define custom error codes.
-                              Since 0.10.7.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-FLOW-CUSTOM-ERROR-1:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_ERROR_1</code></span></p></td>
 <td>Pre-defined custom error code (define your
                               custom error code to this to avoid compiler
-                              warnings). Since 0.10.29.
+                              warnings).
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-FLOW-CUSTOM-ERROR-2:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_ERROR_2</code></span></p></td>
-<td>Pre-defined custom error code. Since 0.10.29.
+<td>Pre-defined custom error code.
 </td>
 </tr>
 </tbody>
@@ -1080,7 +1087,6 @@ what went wrong.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1238,39 +1244,6 @@ Unref after usage. <span class="annotation">[<acronym title="Free data after the
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-pad-set-caps"></a><h3>gst_pad_set_caps ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_pad_set_caps                    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
-<p>
-Sets the capabilities of this pad. The caps must be fixed. Any previous
-caps on the pad will be unreffed. This function refs the caps so you should
-unref if as soon as you don't need it anymore.
-It is possible to set NULL caps, which will make the pad unnegotiated
-again.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
-<td>a  <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to set the capabilities of.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> to set. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE if the caps could be set. FALSE if the caps were not fixed
-or bad parameters were provided to this function.
-MT safe.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="gst-pad-get-peer"></a><h3>gst_pad_get_peer ()</h3>
 <pre class="programlisting"><a class="link" href="GstPad.html" title="GstPad"><span class="returnvalue">GstPad</span></a> *            gst_pad_get_peer                    (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
 <p>
@@ -1299,12 +1272,13 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_pad_use_fixed_caps              (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
 <p>
 A helper function you can use that sets the FIXED_CAPS flag
-This way the default getcaps function will always return the negotiated caps
+This way the default CAPS query will always return the negotiated caps
 or in case the pad is not negotiated, the padtemplate caps.
 </p>
 <p>
-Use this function on a pad that, once <a class="link" href="GstPad.html#gst-pad-set-caps" title="gst_pad_set_caps ()"><code class="function">gst_pad_set_caps()</code></a> has been called
-on it, cannot be renegotiated to something else.
+The negotiated caps are the caps of the last CAPS event that passed on the
+pad. Use this function on a pad that, once it negotiated to a CAPS, cannot
+be renegotiated to something else.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1907,7 +1881,6 @@ MT safe.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.11</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2051,6 +2024,23 @@ This function makes a copy of the name so you can safely free the name.
 <a name="gst-pad-set-chain-function"></a><h3>gst_pad_set_chain_function()</h3>
 <pre class="programlisting">#define gst_pad_set_chain_function(p,f)         gst_pad_set_chain_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-chain-function-full" title="gst_pad_set_chain_function_full ()"><code class="function">gst_pad_set_chain_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a sink <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadChainFunction" title="GstPadChainFunction ()"><span class="type">GstPadChainFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2135,6 +2125,23 @@ execution of this function.</td>
 <a name="gst-pad-set-chain-list-function"></a><h3>gst_pad_set_chain_list_function()</h3>
 <pre class="programlisting">#define gst_pad_set_chain_list_function(p,f)    gst_pad_set_chain_list_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-chain-list-function-full" title="gst_pad_set_chain_list_function_full ()"><code class="function">gst_pad_set_chain_list_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a sink <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadChainListFunction" title="GstPadChainListFunction ()"><span class="type">GstPadChainListFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2171,7 +2178,6 @@ called to process a <a class="link" href="gstreamer-GstBufferList.html#GstBuffer
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2292,6 +2298,23 @@ MT safe.</td>
 <a name="gst-pad-set-getrange-function"></a><h3>gst_pad_set_getrange_function()</h3>
 <pre class="programlisting">#define gst_pad_set_getrange_function(p,f)      gst_pad_set_getrange_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-getrange-function-full" title="gst_pad_set_getrange_function_full ()"><code class="function">gst_pad_set_getrange_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadGetRangeFunction" title="GstPadGetRangeFunction ()"><span class="type">GstPadGetRangeFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2416,6 +2439,23 @@ return value leaves <em class="parameter"><code>buffer</code></em> undefined.</t
 <a name="gst-pad-set-event-function"></a><h3>gst_pad_set_event_function()</h3>
 <pre class="programlisting">#define gst_pad_set_event_function(p,f)         gst_pad_set_event_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-event-function-full" title="gst_pad_set_event_function_full ()"><code class="function">gst_pad_set_event_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> of either direction.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadEventFunction" title="GstPadEventFunction ()"><span class="type">GstPadEventFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2488,6 +2528,23 @@ execution of this function.</td>
 <a name="gst-pad-set-link-function"></a><h3>gst_pad_set_link_function()</h3>
 <pre class="programlisting">#define gst_pad_set_link_function(p,f)          gst_pad_set_link_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-link-function-full" title="gst_pad_set_link_function_full ()"><code class="function">gst_pad_set_link_function_full()</code></a> with NULL
+for the user_data and notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadLinkFunction" title="GstPadLinkFunction ()"><span class="type">GstPadLinkFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2566,6 +2623,23 @@ Function signature to handle a new link on the pad.
 <a name="gst-pad-set-unlink-function"></a><h3>gst_pad_set_unlink_function()</h3>
 <pre class="programlisting">#define gst_pad_set_unlink_function(p,f)        gst_pad_set_unlink_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-unlink-function-full" title="gst_pad_set_unlink_function_full ()"><code class="function">gst_pad_set_unlink_function_full()</code></a> with NULL
+for the user_data and notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadUnlinkFunction" title="GstPadUnlinkFunction ()"><span class="type">GstPadUnlinkFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2685,6 +2759,23 @@ all oposite pads.
 <a name="gst-pad-set-activate-function"></a><h3>gst_pad_set_activate_function()</h3>
 <pre class="programlisting">#define gst_pad_set_activate_function(p,f)      gst_pad_set_activate_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-activate-function-full" title="gst_pad_set_activate_function_full ()"><code class="function">gst_pad_set_activate_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadActivateFunction" title="GstPadActivateFunction ()"><span class="type">GstPadActivateFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2760,6 +2851,23 @@ override this function to activate the pad in pull mode if they wish.
 <a name="gst-pad-set-activatemode-function"></a><h3>gst_pad_set_activatemode_function()</h3>
 <pre class="programlisting">#define gst_pad_set_activatemode_function(p,f)  gst_pad_set_activatemode_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-activatemode-function-full" title="gst_pad_set_activatemode_function_full ()"><code class="function">gst_pad_set_activatemode_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadActivateModeFunction" title="GstPadActivateModeFunction ()"><span class="type">GstPadActivateModeFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2993,7 +3101,6 @@ MT safe.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3257,7 +3364,6 @@ if <em class="parameter"><code>pad</code></em> has no peer.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3436,7 +3542,7 @@ Check if the given pad accepts the caps.
 <p>
 Gets the capabilities this pad can produce or consume.
 Note that this method doesn't necessarily return the caps set by
-<a class="link" href="GstPad.html#gst-pad-set-caps" title="gst_pad_set_caps ()"><code class="function">gst_pad_set_caps()</code></a> - use <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()"><code class="function">gst_pad_get_current_caps()</code></a> for that instead.
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-set-caps"><code class="function">gst_pad_set_caps()</code></a> - use <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()"><code class="function">gst_pad_get_current_caps()</code></a> for that instead.
 gst_pad_query_caps returns all possible caps a pad can operate with, using
 the pad's CAPS query function, If the query fails, this function will return
 <em class="parameter"><code>filter</code></em>, if not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, otherwise ANY.
@@ -3641,8 +3747,9 @@ if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the caps of the peer pad with incremented ref-count. This function
-returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there is no peer pad.</td>
+<td>the caps of the peer pad with incremented ref-count. When there is
+no peer pad, this function returns <em class="parameter"><code>filter</code></em> or, when <em class="parameter"><code>filter</code></em> is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, ANY
+caps.</td>
 </tr>
 </tbody>
 </table></div>
@@ -3652,6 +3759,23 @@ returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macr
 <a name="gst-pad-set-query-function"></a><h3>gst_pad_set_query_function()</h3>
 <pre class="programlisting">#define gst_pad_set_query_function(p,f)   gst_pad_set_query_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-query-function-full" title="gst_pad_set_query_function_full ()"><code class="function">gst_pad_set_query_function_full()</code></a> with NULL for the user_data and
+notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> of either direction.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadQueryFunction" title="GstPadQueryFunction ()"><span class="type">GstPadQueryFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -3724,6 +3848,23 @@ execution of this function.</td>
 <a name="gst-pad-set-iterate-internal-links-function"></a><h3>gst_pad_set_iterate_internal_links_function()</h3>
 <pre class="programlisting">#define gst_pad_set_iterate_internal_links_function(p,f) gst_pad_set_iterate_internal_links_function_full((p),(f),NULL,NULL)
 </pre>
+<p>
+Calls <a class="link" href="GstPad.html#gst-pad-set-iterate-internal-links-function-full" title="gst_pad_set_iterate_internal_links_function_full ()"><code class="function">gst_pad_set_iterate_internal_links_function_full()</code></a> with NULL
+for the user_data and notify.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> of either direction.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f</code></em> :</span></p></td>
+<td>the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstPadIterIntLinkFunction ()"><span class="type">GstPadIterIntLinkFunction</span></a> to set.</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -3758,7 +3899,6 @@ Sets the given internal link iterator function for the pad.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3785,8 +3925,7 @@ execution of this function.</td>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> that will iterate over all pads that are
 linked to the given pad on the inside of the parent element.
-the caller must call <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a> after usage.
-Since 0.10.21</td>
+the caller must call <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a> after usage.</td>
 </tr>
 </tbody>
 </table></div>
@@ -3822,7 +3961,6 @@ pad does not have an iterator function configured. Use
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3857,7 +3995,6 @@ returned pad with <a class="link" href="GstObject.html#gst-object-unref" title="
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3905,6 +4042,13 @@ No locking is performed in this function.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-create-stream-id"></a><h3>gst_pad_create_stream_id ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             gst_pad_create_stream_id            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *parent</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>);</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -3957,7 +4101,7 @@ When <em class="parameter"><code>forward</code></em> returns TRUE, no further pa
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>forward</code></em> :</span></p></td>
-<td>a <a class="link" href="GstPad.html#GstPadForwardFunction" title="GstPadForwardFunction ()"><span class="type">GstPadForwardFunction</span></a>
+<td>a <a class="link" href="GstPad.html#GstPadForwardFunction" title="GstPadForwardFunction ()"><span class="type">GstPadForwardFunction</span></a>. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -4066,16 +4210,16 @@ if not. <span class="annotation">[<acronym title="Free data after the code is do
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-pad-start-task"></a><h3>gst_pad_start_task ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_pad_start_task                  (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstTask.html#GstTaskFunction" title="GstTaskFunction ()"><span class="type">GstTaskFunction</span></a> func</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>
-Starts a task that repeatedly calls <em class="parameter"><code>func</code></em> with <em class="parameter"><code>data</code></em>. This function
+Starts a task that repeatedly calls <em class="parameter"><code>func</code></em> with <em class="parameter"><code>user_data</code></em>. This function
 is mostly used in pad activation functions to start the dataflow.
 The <a class="link" href="GstPad.html#GST-PAD-STREAM-LOCK:CAPS" title="GST_PAD_STREAM_LOCK()"><span class="type">GST_PAD_STREAM_LOCK</span></a> of <em class="parameter"><code>pad</code></em> will automatically be acquired
 before <em class="parameter"><code>func</code></em> is called.
@@ -4092,8 +4236,12 @@ before <em class="parameter"><code>func</code></em> is called.
 <td>the task function to call</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>data passed to the task function</td>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data passed to the task function</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
+<td>called when <em class="parameter"><code>user_data</code></em> is no longer referenced</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
