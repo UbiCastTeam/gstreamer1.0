@@ -48,8 +48,6 @@ typedef struct _GstValveClass GstValveClass;
  * GstValve:
  *
  * The private valve structure
- *
- * Since: 0.10.32
  */
 struct _GstValve
 {
@@ -72,7 +70,7 @@ struct _GstValveClass
   GstElementClass parent_class;
 };
 
-GType gst_valve_get_type (void);
+G_GNUC_INTERNAL GType gst_valve_get_type (void);
 
 G_END_DECLS
 

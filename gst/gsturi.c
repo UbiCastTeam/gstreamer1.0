@@ -42,6 +42,7 @@
 #endif
 
 #include "gst_private.h"
+#include "gst.h"
 #include "gsturi.h"
 #include "gstinfo.h"
 #include "gstregistry.h"
@@ -313,7 +314,7 @@ gst_uri_protocol_is_valid (const gchar * protocol)
 
   gst_uri_protocol_check_internal (protocol, &endptr);
 
-  return *endptr == '\0' && ((gsize) (endptr - protocol)) >= 3;
+  return *endptr == '\0' && ((gsize) (endptr - protocol)) >= 2;
 }
 
 /**
@@ -334,7 +335,7 @@ gst_uri_is_valid (const gchar * uri)
 
   gst_uri_protocol_check_internal (uri, &endptr);
 
-  return *endptr == ':' && ((gsize) (endptr - uri)) >= 3;
+  return *endptr == ':' && ((gsize) (endptr - uri)) >= 2;
 }
 
 /**
@@ -367,8 +368,6 @@ gst_uri_get_protocol (const gchar * uri)
  * Checks if the protocol of a given valid URI matches @protocol.
  *
  * Returns: %TRUE if the protocol matches.
- *
- * Since: 0.10.4
  */
 gboolean
 gst_uri_has_protocol (const gchar * uri, const gchar * protocol)
@@ -398,9 +397,9 @@ gst_uri_has_protocol (const gchar * uri, const gchar * protocol)
  *
  * Free-function: g_free
  *
- * Returns: (transfer full) (array zero-terminated=1): the location for this
- *     URI. Returns NULL if the URI isn't valid. If the URI does not contain
- *     a location, an empty string is returned.
+ * Returns: (transfer full): the location for this URI. Returns NULL if the
+ *     URI isn't valid. If the URI does not contain a location, an empty
+ *     string is returned.
  */
 gchar *
 gst_uri_get_location (const gchar * uri)
@@ -439,15 +438,14 @@ gst_uri_get_location (const gchar * uri)
 /**
  * gst_uri_construct:
  * @protocol: Protocol for URI
- * @location: (array zero-terminated=1) (transfer none): Location for URI
+ * @location: (transfer none): Location for URI
  *
  * Constructs a URI for a given valid protocol and location.
  *
  * Free-function: g_free
  *
- * Returns: (transfer full) (array zero-terminated=1): a new string for this
- *     URI. Returns NULL if the given URI protocol is not valid, or the given
- *     location is NULL.
+ * Returns: (transfer full): a new string for this URI. Returns NULL if the
+ *     given URI protocol is not valid, or the given location is NULL.
  */
 gchar *
 gst_uri_construct (const gchar * protocol, const gchar * location)
@@ -538,8 +536,6 @@ get_element_factories_from_uri_protocol (const GstURIType type,
  * gst_element_make_from_uri() is guaranteed to work.
  *
  * Returns: TRUE
- *
- * Since: 0.10.13
 */
 gboolean
 gst_uri_protocol_is_supported (const GstURIType type, const gchar * protocol)
@@ -562,6 +558,7 @@ gst_uri_protocol_is_supported (const GstURIType type, const gchar * protocol)
  * @type: Whether to create a source or a sink
  * @uri: URI to create an element for
  * @elementname: (allow-none): Name of created element, can be NULL.
+ * @error: (allow-none): address where to store error information, or NULL.
  *
  * Creates an element for handling the given URI.
  *
@@ -569,38 +566,55 @@ gst_uri_protocol_is_supported (const GstURIType type, const gchar * protocol)
  */
 GstElement *
 gst_element_make_from_uri (const GstURIType type, const gchar * uri,
-    const gchar * elementname)
+    const gchar * elementname, GError ** error)
 {
   GList *possibilities, *walk;
   gchar *protocol;
   GstElement *ret = NULL;
 
+  g_return_val_if_fail (gst_is_initialized (), NULL);
   g_return_val_if_fail (GST_URI_TYPE_IS_VALID (type), NULL);
   g_return_val_if_fail (gst_uri_is_valid (uri), NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
   GST_DEBUG ("type:%d, uri:%s, elementname:%s", type, uri, elementname);
 
   protocol = gst_uri_get_protocol (uri);
   possibilities = get_element_factories_from_uri_protocol (type, protocol);
-  g_free (protocol);
 
   if (!possibilities) {
     GST_DEBUG ("No %s for URI '%s'", type == GST_URI_SINK ? "sink" : "source",
         uri);
+    /* The error message isn't great, but we don't expect applications to
+     * show that error to users, but call the missing plugins functions */
+    g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_UNSUPPORTED_PROTOCOL,
+        _("No URI handler for the %s protocol found"), protocol);
+    g_free (protocol);
     return NULL;
   }
+  g_free (protocol);
 
   possibilities = g_list_sort (possibilities, (GCompareFunc) sort_by_rank);
   walk = possibilities;
   while (walk) {
-    if ((ret =
-            gst_element_factory_create (GST_ELEMENT_FACTORY_CAST (walk->data),
-                elementname)) != NULL) {
+    GstElementFactory *factory = walk->data;
+    GError *uri_err = NULL;
+
+    ret = gst_element_factory_create (factory, elementname);
+    if (ret != NULL) {
       GstURIHandler *handler = GST_URI_HANDLER (ret);
 
-      if (gst_uri_handler_set_uri (handler, uri, NULL))
+      if (gst_uri_handler_set_uri (handler, uri, &uri_err))
         break;
-      GST_WARNING ("element %s didn't accept the URI", GST_ELEMENT_NAME (ret));
+
+      GST_WARNING ("%s didn't accept URI '%s': %s", GST_OBJECT_NAME (ret), uri,
+          uri_err->message);
+
+      if (error != NULL && *error == NULL)
+        g_propagate_error (error, uri_err);
+      else
+        g_error_free (uri_err);
+
       gst_object_unref (ret);
       ret = NULL;
     }
@@ -610,6 +624,11 @@ gst_element_make_from_uri (const GstURIType type, const gchar * uri,
 
   GST_LOG_OBJECT (ret, "created %s for URL '%s'",
       type == GST_URI_SINK ? "sink" : "source", uri);
+
+  /* if the first handler didn't work, but we found another one that works */
+  if (ret != NULL)
+    g_clear_error (error);
+
   return ret;
 }
 
@@ -647,9 +666,9 @@ gst_uri_handler_get_uri_type (GstURIHandler * handler)
  * Gets the list of protocols supported by @handler. This list may not be
  * modified.
  *
- * Returns: (transfer none) (array zero-terminated=1) (element-type utf8): the
- *     supported protocols. Returns NULL if the @handler isn't implemented
- *     properly, or the @handler doesn't support any protocols.
+ * Returns: (transfer none) (element-type utf8): the supported protocols.
+ *     Returns NULL if the @handler isn't implemented properly, or the @handler
+ *     doesn't support any protocols.
  */
 const gchar *const *
 gst_uri_handler_get_protocols (GstURIHandler * handler)
@@ -741,7 +760,7 @@ gst_uri_handler_set_uri (GstURIHandler * handler, const gchar * uri,
       }
 
       if (!found_protocol) {
-        g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_BAD_PROTOCOL,
+        g_set_error (error, GST_URI_ERROR, GST_URI_ERROR_UNSUPPORTED_PROTOCOL,
             _("URI scheme '%s' not supported"), protocol);
         g_free (protocol);
         return FALSE;
@@ -830,8 +849,6 @@ file_path_contains_relatives (const gchar * path)
  * will be canonicalised so that it doesn't contain any './' or '../' segments.
  *
  * On Windows #filename should be in UTF-8 encoding.
- *
- * Since: 0.10.33
  */
 gchar *
 gst_filename_to_uri (const gchar * filename, GError ** error)

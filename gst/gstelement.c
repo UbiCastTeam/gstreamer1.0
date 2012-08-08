@@ -502,8 +502,6 @@ gst_element_get_base_time (GstElement * element)
  * pipelines, and you can also ensure that the pipelines have the same clock.
  *
  * MT safe.
- *
- * Since: 0.10.24
  */
 void
 gst_element_set_start_time (GstElement * element, GstClockTime time)
@@ -535,8 +533,6 @@ gst_element_set_start_time (GstElement * element, GstClockTime time)
  * MT safe.
  *
  * Returns: the start time of the element.
- *
- * Since: 0.10.24
  */
 GstClockTime
 gst_element_get_start_time (GstElement * element)
@@ -672,17 +668,17 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
   /* add it to the list */
   switch (gst_pad_get_direction (pad)) {
     case GST_PAD_SRC:
-      element->srcpads = g_list_prepend (element->srcpads, pad);
+      element->srcpads = g_list_append (element->srcpads, pad);
       element->numsrcpads++;
       break;
     case GST_PAD_SINK:
-      element->sinkpads = g_list_prepend (element->sinkpads, pad);
+      element->sinkpads = g_list_append (element->sinkpads, pad);
       element->numsinkpads++;
       break;
     default:
       goto no_direction;
   }
-  element->pads = g_list_prepend (element->pads, pad);
+  element->pads = g_list_append (element->pads, pad);
   element->numpads++;
   element->pads_cookie++;
   GST_OBJECT_UNLOCK (element);
@@ -725,7 +721,7 @@ no_direction:
 /**
  * gst_element_remove_pad:
  * @element: a #GstElement to remove pad from.
- * @pad: (transfer none): the #GstPad to remove from the element.
+ * @pad: (transfer full): the #GstPad to remove from the element.
  *
  * Removes @pad from @element. @pad will be destroyed if it has not been
  * referenced elsewhere using gst_object_unparent().
@@ -1084,8 +1080,6 @@ gst_element_get_request_pad (GstElement * element, const gchar * name)
  *
  * Returns: (transfer full): requested #GstPad if found, otherwise %NULL.
  *     Release after usage.
- *
- * Since: 0.10.32
  */
 GstPad *
 gst_element_request_pad (GstElement * element,
@@ -1120,6 +1114,9 @@ gst_element_iterate_pad_list (GstElement * element, GList ** padlist)
  * be freed after usage. Also more specialized iterators exists such as
  * gst_element_iterate_src_pads() or gst_element_iterate_sink_pads().
  *
+ * The order of pads returned by the iterator will be the order in which
+ * the pads were added to the element.
+ *
  * Returns: (transfer full): the #GstIterator of #GstPad. Unref each pad
  *     after use.
  *
@@ -1139,6 +1136,9 @@ gst_element_iterate_pads (GstElement * element)
  *
  * Retrieves an iterator of @element's source pads.
  *
+ * The order of pads returned by the iterator will be the order in which
+ * the pads were added to the element.
+ *
  * Returns: (transfer full): the #GstIterator of #GstPad. Unref each pad
  *     after use.
  *
@@ -1157,6 +1157,9 @@ gst_element_iterate_src_pads (GstElement * element)
  * @element: a #GstElement.
  *
  * Retrieves an iterator of @element's sink pads.
+ *
+ * The order of pads returned by the iterator will be the order in which
+ * the pads were added to the element.
  *
  * Returns: (transfer full): the #GstIterator of #GstPad. Unref each pad
  *     after use.
@@ -1556,8 +1559,8 @@ gst_element_send_event (GstElement * element, GstEvent * event)
  * @rate: The new playback rate
  * @format: The format of the seek values
  * @flags: The optional seek flags.
- * @cur_type: The type and flags for the new current position
- * @cur: The value of the new current position
+ * @start_type: The type and flags for the new start position
+ * @start: The value of the new start position
  * @stop_type: The type and flags for the new stop position
  * @stop: The value of the new stop position
  *
@@ -1572,7 +1575,7 @@ gst_element_send_event (GstElement * element, GstEvent * event)
  */
 gboolean
 gst_element_seek (GstElement * element, gdouble rate, GstFormat format,
-    GstSeekFlags flags, GstSeekType cur_type, gint64 cur,
+    GstSeekFlags flags, GstSeekType start_type, gint64 start,
     GstSeekType stop_type, gint64 stop)
 {
   GstEvent *event;
@@ -1581,7 +1584,8 @@ gst_element_seek (GstElement * element, gdouble rate, GstFormat format,
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
 
   event =
-      gst_event_new_seek (rate, format, flags, cur_type, cur, stop_type, stop);
+      gst_event_new_seek (rate, format, flags, start_type, start, stop_type,
+      stop);
   result = gst_element_send_event (element, event);
 
   return result;
@@ -2699,7 +2703,7 @@ gst_element_pads_activate (GstElement * element, gboolean active)
   gboolean res;
 
   GST_CAT_DEBUG_OBJECT (GST_CAT_ELEMENT_PADS, element,
-      "pads_activate with active %d", active);
+      "%s pads", active ? "activate" : "deactivate");
 
   iter = gst_element_iterate_src_pads (element);
   res =
@@ -2718,7 +2722,7 @@ gst_element_pads_activate (GstElement * element, gboolean active)
     goto sink_failed;
 
   GST_CAT_DEBUG_OBJECT (GST_CAT_ELEMENT_PADS, element,
-      "pads_activate successful");
+      "pad %sactivation successful", active ? "" : "de");
 
   return TRUE;
 
@@ -2726,7 +2730,7 @@ gst_element_pads_activate (GstElement * element, gboolean active)
 src_failed:
   {
     GST_CAT_DEBUG_OBJECT (GST_CAT_ELEMENT_PADS, element,
-        "source pads_activate failed");
+        "pad %sactivation failed", active ? "" : "de");
     return FALSE;
   }
 sink_failed:
@@ -2851,6 +2855,10 @@ gst_element_dispose (GObject * object)
       GST_CAT_DEBUG_OBJECT (GST_CAT_ELEMENT_PADS, element,
           "removing request pad %s:%s", GST_DEBUG_PAD_NAME (pad));
       oclass->release_pad (element, pad);
+
+      /* in case the release_pad function removed the next pad too */
+      if (walk && g_list_position (element->pads, walk) == -1)
+        walk = element->pads;
     }
   }
   /* remove the remaining pads */

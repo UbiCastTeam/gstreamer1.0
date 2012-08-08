@@ -44,7 +44,7 @@
 
 struct              <a class="link" href="GstTaskPool.html#GstTaskPool-struct" title="struct GstTaskPool">GstTaskPool</a>;
 struct              <a class="link" href="GstTaskPool.html#GstTaskPoolClass" title="struct GstTaskPoolClass">GstTaskPoolClass</a>;
-<span class="returnvalue">void</span>                (<a class="link" href="GstTaskPool.html#GstTaskPoolFunction" title="GstTaskPoolFunction ()">*GstTaskPoolFunction</a>)              (<em class="parameter"><code><span class="type">void</span> *data</code></em>);
+<span class="returnvalue">void</span>                (<a class="link" href="GstTaskPool.html#GstTaskPoolFunction" title="GstTaskPoolFunction ()">*GstTaskPoolFunction</a>)              (<em class="parameter"><code><span class="type">void</span> *user_data</code></em>);
 <a class="link" href="GstTaskPool.html" title="GstTaskPool"><span class="returnvalue">GstTaskPool</span></a> *       <a class="link" href="GstTaskPool.html#gst-task-pool-new" title="gst_task_pool_new ()">gst_task_pool_new</a>                   (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstTaskPool.html#gst-task-pool-prepare" title="gst_task_pool_prepare ()">gst_task_pool_prepare</a>               (<em class="parameter"><code><a class="link" href="GstTaskPool.html" title="GstTaskPool"><span class="type">GstTaskPool</span></a> *pool</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
@@ -134,18 +134,17 @@ The <a class="link" href="GstTaskPool.html#GstTaskPoolClass" title="struct GstTa
 <hr>
 <div class="refsect2">
 <a name="GstTaskPoolFunction"></a><h3>GstTaskPoolFunction ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                (*GstTaskPoolFunction)              (<em class="parameter"><code><span class="type">void</span> *data</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                (*GstTaskPoolFunction)              (<em class="parameter"><code><span class="type">void</span> *user_data</code></em>);</pre>
 <p>
 Task function, see <a class="link" href="GstTaskPool.html#gst-task-pool-push" title="gst_task_pool_push ()"><code class="function">gst_task_pool_push()</code></a>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
 <td>user data for the task function</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -163,7 +162,6 @@ GThreadPool for threads.
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -190,7 +188,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -212,7 +209,8 @@ Start the execution of a new thread from <em class="parameter"><code>pool</code>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td>the function to call</td>
+<td>the function to call. <span class="annotation">[<acronym title="The callback is valid until first called."><span class="acronym">scope async</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -225,13 +223,13 @@ Start the execution of a new thread from <em class="parameter"><code>pool</code>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a pointer that should be used for the gst_task_pool_join
-function. This pointer can be NULL, you must check <em class="parameter"><code>error</code></em> to detect
-errors.</td>
+<td>a pointer that should be used for the
+gst_task_pool_join function. This pointer can be NULL, you must
+check <em class="parameter"><code>error</code></em> to detect errors. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -256,7 +254,6 @@ Join a task and/or return it to the pool. <em class="parameter"><code>id</code><
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -277,7 +274,6 @@ MT safe.
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 </div>
 <div class="refsect1">

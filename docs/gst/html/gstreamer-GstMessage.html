@@ -168,9 +168,9 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-latency" title="gst_message_new_latency ()">gst_message_new_latency</a>             (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-async-start" title="gst_message_new_async_start ()">gst_message_new_async_start</a>         (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-async-done" title="gst_message_new_async_done ()">gst_message_new_async_done</a>          (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset_time</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> running_time</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-async-done" title="gst_message_parse_async_done ()">gst_message_parse_async_done</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *reset_time</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> *running_time</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-step-start" title="gst_message_new_step_start ()">gst_message_new_step_start</a>          (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
@@ -214,11 +214,15 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
                                                          <em class="parameter"><code><span class="type">guint64</span> *processed</code></em>,
                                                          <em class="parameter"><code><span class="type">guint64</span> *dropped</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-toc" title="gst_message_new_toc ()">gst_message_new_toc</a>                 (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> updated</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-toc" title="gst_message_parse_toc ()">gst_message_parse_toc</a>               (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *updated</code></em>);
+<a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-reset-time" title="gst_message_new_reset_time ()">gst_message_new_reset_time</a>          (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> running_time</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-reset-time" title="gst_message_parse_reset_time ()">gst_message_parse_reset_time</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> *running_time</code></em>);
 enum                <a class="link" href="gstreamer-GstMessage.html#GstStructureChangeType" title="enum GstStructureChangeType">GstStructureChangeType</a>;
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-structure-change" title="gst_message_new_structure_change ()">gst_message_new_structure_change</a>    (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstStructureChangeType" title="enum GstStructureChangeType"><span class="type">GstStructureChangeType</span></a> type</code></em>,
@@ -273,13 +277,13 @@ The basic use pattern of posting a message on a <a class="link" href="GstBus.htm
 <p>
 </p>
 <div class="example">
-<a name="idp30136752"></a><p class="title"><b>Example 10. Posting a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></b></p>
+<a name="idp30377120"></a><p class="title"><b>Example 10. Posting a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html#gst-bus-post">gst_bus_post</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#gst-message-new-eos">gst_message_new_eos</a></span><span class="gtkdoc opt">());</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/GstBus.html#gst-bus-post">gst_bus_post</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#gst-message-new-eos">gst_message_new_eos</a></span><span class="gtkdoc opt">());</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -370,6 +374,8 @@ A <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstM
   GST_MESSAGE_QOS               = (1 &lt;&lt; 24),
   GST_MESSAGE_PROGRESS          = (1 &lt;&lt; 25),
   GST_MESSAGE_TOC               = (1 &lt;&lt; 26),
+  GST_MESSAGE_RESET_TIME        = (1 &lt;&lt; 27),
+  GST_MESSAGE_STREAM_START      = (1 &lt;&lt; 28),
   GST_MESSAGE_ANY               = ~0
 } GstMessageType;
 </pre>
@@ -507,51 +513,59 @@ can get the new duration with a duration query.
 <tr>
 <td><p><a name="GST-MESSAGE-LATENCY:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_LATENCY</code></span></p></td>
 <td>Posted by elements when their latency changes. The
-application should recalculate and distribute a new latency. Since: 0.10.12
+application should recalculate and distribute a new latency.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-ASYNC-START:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_ASYNC_START</code></span></p></td>
 <td>Posted by elements when they start an ASYNC
 <a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a>. This message is not forwarded to the application but is used
-internally. Since: 0.10.13.
+internally.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-ASYNC-DONE:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></span></p></td>
 <td>Posted by elements when they complete an ASYNC
 <a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a>. The application will only receive this message from the toplevel
-pipeline. Since: 0.10.13
+pipeline.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-REQUEST-STATE:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_REQUEST_STATE</code></span></p></td>
 <td>Posted by elements when they want the pipeline to
 change state. This message is a suggestion to the application which can
-decide to perform the state change on (part of) the pipeline. Since: 0.10.23.
+decide to perform the state change on (part of) the pipeline.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-STEP-START:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_STEP_START</code></span></p></td>
-<td>A stepping operation was started. Since: 0.10.24
+<td>A stepping operation was started.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-QOS:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_QOS</code></span></p></td>
 <td>A buffer was dropped or an element changed its processing
-strategy for Quality of Service reasons. Since: 0.10.29
+strategy for Quality of Service reasons.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-PROGRESS:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_PROGRESS</code></span></p></td>
-<td>A progress message. Since: 0.10.33
+<td>A progress message.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-TOC:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_TOC</code></span></p></td>
 <td>A new table of contents (TOC) was found or previously found TOC
-was updated. Since: 0.10.37
+was updated. Since:
 </td>
+</tr>
+<tr>
+<td><p><a name="GST-MESSAGE-RESET-TIME:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_RESET_TIME</code></span></p></td>
+<td></td>
+</tr>
+<tr>
+<td><p><a name="GST-MESSAGE-STREAM-START:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_STREAM_START</code></span></p></td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-ANY:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_ANY</code></span></p></td>
@@ -594,7 +608,6 @@ the message has no source object set.
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -664,7 +677,6 @@ Get a constant string representation of the <a class="link" href="gstreamer-GstM
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -854,7 +866,6 @@ MT safe.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -885,7 +896,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -914,7 +924,6 @@ check the name of a custom message.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1070,14 +1079,14 @@ Typical usage of this function might be:
 16
 17</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="gtkdoc opt">...</span>
-<span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
+<span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
   <span class="keyword">case</span> GST_MESSAGE_ERROR<span class="gtkdoc opt">: {</span>
     GError <span class="gtkdoc opt">*</span>err <span class="gtkdoc opt">=</span> NULL<span class="gtkdoc opt">;</span>
     gchar <span class="gtkdoc opt">*</span>dbg_info <span class="gtkdoc opt">=</span> NULL<span class="gtkdoc opt">;</span>
     
-    <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#gst-message-parse-error">gst_message_parse_error</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>err<span class="gtkdoc opt">, &amp;</span>dbg_info<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-error">gst_message_parse_error</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>err<span class="gtkdoc opt">, &amp;</span>dbg_info<span class="gtkdoc opt">);</span>
     <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-printerr">g_printerr</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;ERROR from element %s: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span>
-        <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">),</span> err<span class="gtkdoc opt">-&gt;</span>message<span class="gtkdoc opt">);</span>
+        <span class="function"><a href="../gstreamer-1.0/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">),</span> err<span class="gtkdoc opt">-&gt;</span>message<span class="gtkdoc opt">);</span>
     <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-printerr">g_printerr</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Debugging info: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">, (</span>dbg_info<span class="gtkdoc opt">)</span> ? dbg_info <span class="gtkdoc opt">:</span> <span class="string">&quot;none&quot;</span><span class="gtkdoc opt">);</span>
     <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#g-error-free">g_error_free</a></span> <span class="gtkdoc opt">(</span>err<span class="gtkdoc opt">);</span>
     <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>dbg_info<span class="gtkdoc opt">);</span>
@@ -1224,7 +1233,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1259,7 +1267,6 @@ or NULL. <span class="annotation">[<acronym title="Parameter for returning resul
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1323,14 +1330,14 @@ Typical usage of this function might be:
 13
 14</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="gtkdoc opt">...</span>
-<span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
+<span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
   <span class="keyword">case</span> GST_MESSAGE_TAG<span class="gtkdoc opt">: {</span>
     GstTagList <span class="gtkdoc opt">*</span>tags <span class="gtkdoc opt">=</span> NULL<span class="gtkdoc opt">;</span>
     
-    <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#gst-message-parse-tag">gst_message_parse_tag</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>tags<span class="gtkdoc opt">);</span>
-    <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Got tags from element %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">));</span>
+    <span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-tag">gst_message_parse_tag</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>tags<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Got tags from element %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">));</span>
     <span class="function">handle_tags</span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
-    <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTagList.html#gst-tag-list-unref">gst_tag_list_unref</a></span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="../gstreamer-1.0/gstreamer-GstTagList.html#gst-tag-list-unref">gst_tag_list_unref</a></span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
     <span class="keyword">break</span><span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
   <span class="gtkdoc opt">...</span>
@@ -1377,7 +1384,7 @@ When <em class="parameter"><code>percent</code></em> is &lt; 100 the application
 The application must be prepared to receive BUFFERING messages in the
 PREROLLING state and may only set the pipeline to PLAYING after receiving a
 message with <em class="parameter"><code>percent</code></em> set to 100, which can happen after the pipeline
-completed prerolling. 
+completed prerolling.
 </p>
 <p>
 MT safe.
@@ -1401,7 +1408,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.11</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1429,7 +1435,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.11</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1467,7 +1472,6 @@ Configures the buffering stats values in <em class="parameter"><code>message</co
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1510,7 +1514,6 @@ milliseconds, or NULL. <span class="annotation">[<acronym title="Parameter for r
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1585,15 +1588,15 @@ Typical usage of this function might be:
 14
 15</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="gtkdoc opt">...</span>
-<span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
+<span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
   <span class="keyword">case</span> GST_MESSAGE_STATE_CHANGED<span class="gtkdoc opt">: {</span>
     GstState old_state<span class="gtkdoc opt">,</span> new_state<span class="gtkdoc opt">;</span>
     
-    <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#gst-message-parse-state-changed">gst_message_parse_state_changed</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>old_state<span class="gtkdoc opt">, &amp;</span>new_state<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="../gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-state-changed">gst_message_parse_state_changed</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>old_state<span class="gtkdoc opt">, &amp;</span>new_state<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
     <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Element %s changed state from %s to %s.</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span>
-        <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">),</span>
-        <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-state-get-name">gst_element_state_get_name</a></span> <span class="gtkdoc opt">(</span>old_state<span class="gtkdoc opt">),</span>
-        <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-state-get-name">gst_element_state_get_name</a></span> <span class="gtkdoc opt">(</span>new_state<span class="gtkdoc opt">));</span>
+        <span class="function"><a href="../gstreamer-1.0/GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">),</span>
+        <span class="function"><a href="../gstreamer-1.0/GstElement.html#gst-element-state-get-name">gst_element_state_get_name</a></span> <span class="gtkdoc opt">(</span>old_state<span class="gtkdoc opt">),</span>
+        <span class="function"><a href="../gstreamer-1.0/GstElement.html#gst-element-state-get-name">gst_element_state_get_name</a></span> <span class="gtkdoc opt">(</span>new_state<span class="gtkdoc opt">));</span>
     <span class="keyword">break</span><span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
   <span class="gtkdoc opt">...</span>
@@ -1723,7 +1726,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1786,7 +1788,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2325,7 +2326,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2355,11 +2355,13 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <div class="refsect2">
 <a name="gst-message-new-async-done"></a><h3>gst_message_new_async_done ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_async_done          (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset_time</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> running_time</code></em>);</pre>
 <p>
 The message is posted when elements completed an ASYNC state change.
-<em class="parameter"><code>reset_time</code></em> is set to TRUE when the element requests a new running_time
-before going to PLAYING.
+<em class="parameter"><code>running_time</code></em> contains the time of the desired running_time when this
+elements goes to PLAYING. A value of <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><span class="type">GST_CLOCK_TIME_NONE</span></a> for <em class="parameter"><code>running_time</code></em>
+means that the element has no clock interaction and thus doesn't care about
+the running_time of the pipeline.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2370,8 +2372,8 @@ before going to PLAYING.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>reset_time</code></em> :</span></p></td>
-<td>if the running_time should be reset</td>
+<td><p><span class="term"><em class="parameter"><code>running_time</code></em> :</span></p></td>
+<td>the desired running_time</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -2386,9 +2388,9 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <div class="refsect2">
 <a name="gst-message-parse-async-done"></a><h3>gst_message_parse_async_done ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_message_parse_async_done        (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *reset_time</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> *running_time</code></em>);</pre>
 <p>
-Extract the reset_time from the async_done message.
+Extract the running_time from the async_done message.
 </p>
 <p>
 MT safe.
@@ -2401,8 +2403,8 @@ MT safe.
 <td>A valid <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> of type GST_MESSAGE_ASYNC_DONE.</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>reset_time</code></em> :</span></p></td>
-<td>Result location for the reset_time or NULL. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+<td><p><span class="term"><em class="parameter"><code>running_time</code></em> :</span></p></td>
+<td>Result location for the running_time or NULL. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -2472,7 +2474,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2529,7 +2530,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2592,7 +2592,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2630,7 +2629,6 @@ quality level of the element. The default maximum quality is 1000000.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2675,7 +2673,6 @@ or a flushing operation.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2735,7 +2732,6 @@ generated the message. <span class="annotation">[<acronym title="Parameter for r
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2778,7 +2774,6 @@ maximum quality is 1000000. <span class="annotation">[<acronym title="Parameter 
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2827,13 +2822,12 @@ state change to READY or a flushing operation. <span class="annotation">[<acrony
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-message-new-toc"></a><h3>gst_message_new_toc ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_toc                 (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> updated</code></em>);</pre>
 <p>
 Create a new TOC message. The message is posted by elements
@@ -2849,7 +2843,8 @@ that discovered or updated a TOC.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
 <td>
-<a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> structure for the message.</td>
+<a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> structure for the message. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>updated</code></em> :</span></p></td>
@@ -2858,22 +2853,22 @@ that discovered or updated a TOC.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new TOC message.
-MT safe.</td>
+MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.37</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-message-parse-toc"></a><h3>gst_message_parse_toc ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_message_parse_toc               (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="struct GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> **toc</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *updated</code></em>);</pre>
 <p>
 Extract thef TOC from the <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>. The TOC returned in the
 output argument is a copy; the caller must free it with
-<a class="link" href="gstreamer-GstToc.html#gst-toc-free" title="gst_toc_free ()"><code class="function">gst_toc_free()</code></a> when done.
+<a class="link" href="gstreamer-GstToc.html#gst-toc-unref" title="gst_toc_unref()"><code class="function">gst_toc_unref()</code></a> when done.
 </p>
 <p>
 MT safe.
@@ -2887,7 +2882,7 @@ MT safe.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
-<td>return location for the TOC. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+<td>return location for the TOC. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2897,7 +2892,62 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.37</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-message-new-reset-time"></a><h3>gst_message_new_reset_time ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_reset_time          (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> running_time</code></em>);</pre>
+<p>
+This message is posted when the pipeline running-time should be reset to
+<em class="parameter"><code>running_time</code></em>, like after a flushing seek.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
+<td>The object originating the message. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>running_time</code></em> :</span></p></td>
+<td>the requested running-time</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The new reset_time message.
+MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-message-parse-reset-time"></a><h3>gst_message_parse_reset_time ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_message_parse_reset_time        (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> *running_time</code></em>);</pre>
+<p>
+Extract the running-time from the RESET_TIME message.
+</p>
+<p>
+MT safe.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
+<td>A valid <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> of type GST_MESSAGE_RESET_TIME.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>running_time</code></em> :</span></p></td>
+<td>Result location for the running_time or NULL. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -2925,7 +2975,6 @@ The type of a <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-STRUCT
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2971,7 +3020,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3012,7 +3060,6 @@ progress or has been completed. <span class="annotation">[<acronym title="Parame
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3044,7 +3091,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3071,7 +3117,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3131,7 +3176,6 @@ application of new streaming threads and their status.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3167,7 +3211,6 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3202,7 +3245,6 @@ MT safe.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3227,7 +3269,6 @@ GstTask object but other objects might be added in the future.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3252,7 +3293,6 @@ future. The object remains valid as long as <em class="parameter"><code>message<
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3300,7 +3340,6 @@ application of the status of assynchronous tasks.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3344,7 +3383,6 @@ to perform actions triggered by a state change.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3380,7 +3418,6 @@ Parses the progress <em class="parameter"><code>type</code></em>, <em class="par
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 </div>
 <div class="refsect1">

@@ -229,7 +229,7 @@ gst_object_init (GstObject * object)
 
 /**
  * gst_object_ref:
- * @object: a #GstObject to reference
+ * @object: (type Gst.Object): a #GstObject to reference
  *
  * Increments the reference count on @object. This function
  * does not take the lock on @object because it relies on
@@ -239,7 +239,7 @@ gst_object_init (GstObject * object)
  * constructs like :
  *  result = gst_object_ref (object->parent);
  *
- * Returns: (transfer full): A pointer to @object
+ * Returns: (transfer full) (type Gst.Object): A pointer to @object
  */
 gpointer
 gst_object_ref (gpointer object)
@@ -257,7 +257,7 @@ gst_object_ref (gpointer object)
 
 /**
  * gst_object_unref:
- * @object: a #GstObject to unreference
+ * @object: (type Gst.Object): a #GstObject to unreference
  *
  * Decrements the reference count on @object.  If reference count hits
  * zero, destroy @object. This function does not take the lock
@@ -478,7 +478,7 @@ gst_object_dispatch_properties_changed (GObject * object,
  * @orig: a #GstObject that initiated the notify.
  * @pspec: a #GParamSpec of the property.
  * @excluded_props: (array zero-terminated=1) (element-type gchar*)
- *     (allow-none):a set of user-specified properties to exclude or
+ *     (allow-none): a set of user-specified properties to exclude or
  *     NULL to show all changes.
  *
  * A default deep_notify signal callback for an object. The user data
@@ -507,19 +507,7 @@ gst_object_default_deep_notify (GObject * object, GstObject * orig,
     g_value_init (&value, pspec->value_type);
     g_object_get_property (G_OBJECT (orig), pspec->name, &value);
 
-    /* FIXME: handle flags */
-    if (G_IS_PARAM_SPEC_ENUM (pspec)) {
-      GEnumValue *enum_value;
-      GEnumClass *klass = G_ENUM_CLASS (g_type_class_ref (pspec->value_type));
-
-      enum_value = g_enum_get_value (klass, g_value_get_enum (&value));
-
-      str = g_strdup_printf ("%s (%d)", enum_value->value_nick,
-          enum_value->value);
-      g_type_class_unref (klass);
-    } else {
-      str = g_strdup_value_contents (&value);
-    }
+    str = gst_value_serialize (&value);
     name = gst_object_get_path_string (orig);
     g_print ("%s: %s = %s\n", name, pspec->name, str);
     g_free (name);

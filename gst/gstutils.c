@@ -697,8 +697,6 @@ gst_util_uint64_scale_int_ceil (guint64 val, gint num, gint denom)
  * Returns: A constantly incrementing 32-bit unsigned integer, which might
  * overflow back to 0 at some point. Use gst_util_seqnum_compare() to make sure
  * you handle wraparound correctly.
- *
- * Since: 0.10.22
  */
 guint32
 gst_util_seqnum_next (void)
@@ -718,8 +716,6 @@ gst_util_seqnum_next (void)
  *
  * Returns: A negative number if @s1 is before @s2, 0 if they are equal, or a
  * positive number if @s1 is after @s2.
- *
- * Since: 0.10.22
  */
 gint32
 gst_util_seqnum_compare (guint32 s1, guint32 s2)
@@ -734,96 +730,6 @@ gst_util_seqnum_compare (guint32 s1, guint32 s2)
  */
 
 #include "gstpad.h"
-
-static void
-string_append_indent (GString * str, gint count)
-{
-  gint xx;
-
-  for (xx = 0; xx < count; xx++)
-    g_string_append_c (str, ' ');
-}
-
-/**
- * gst_print_pad_caps:
- * @buf: the buffer to print the caps in
- * @indent: initial indentation
- * @pad: (transfer none): the pad to print the caps from
- *
- * Write the pad capabilities in a human readable format into
- * the given GString.
- */
-void
-gst_print_pad_caps (GString * buf, gint indent, GstPad * pad)
-{
-  GstCaps *caps;
-
-  caps = gst_pad_get_current_caps (pad);
-
-  if (!caps) {
-    string_append_indent (buf, indent);
-    g_string_printf (buf, "%s:%s has no capabilities",
-        GST_DEBUG_PAD_NAME (pad));
-  } else {
-    char *s;
-
-    s = gst_caps_to_string (caps);
-    g_string_append (buf, s);
-    g_free (s);
-
-    gst_caps_unref (caps);
-  }
-}
-
-/**
- * gst_print_element_args:
- * @buf: the buffer to print the args in
- * @indent: initial indentation
- * @element: (transfer none): the element to print the args of
- *
- * Print the element argument in a human readable format in the given
- * GString.
- */
-void
-gst_print_element_args (GString * buf, gint indent, GstElement * element)
-{
-  guint width;
-  GValue value = { 0, };        /* the important thing is that value.type = 0 */
-  gchar *str = NULL;
-  GParamSpec *spec, **specs, **walk;
-
-  specs = g_object_class_list_properties (G_OBJECT_GET_CLASS (element), NULL);
-
-  width = 0;
-  for (walk = specs; *walk; walk++) {
-    spec = *walk;
-    if (width < strlen (spec->name))
-      width = strlen (spec->name);
-  }
-
-  for (walk = specs; *walk; walk++) {
-    spec = *walk;
-
-    if (spec->flags & G_PARAM_READABLE) {
-      g_value_init (&value, spec->value_type);
-      g_object_get_property (G_OBJECT (element), spec->name, &value);
-      str = g_strdup_value_contents (&value);
-      g_value_unset (&value);
-    } else {
-      str = g_strdup ("Parameter not readable.");
-    }
-
-    string_append_indent (buf, indent);
-    g_string_append (buf, spec->name);
-    string_append_indent (buf, 2 + width - strlen (spec->name));
-    g_string_append (buf, str);
-    g_string_append_c (buf, '\n');
-
-    g_free (str);
-  }
-
-  g_free (specs);
-}
 
 /**
  * gst_element_create_all_pads:
@@ -1068,7 +974,7 @@ gst_pad_check_link (GstPad * srcpad, GstPad * sinkpad)
  * gst_element_get_compatible_pad:
  * @element: (transfer none): a #GstElement in which the pad should be found.
  * @pad: (transfer none): the #GstPad to find a compatible one for.
- * @caps: the #GstCaps to use as a filter.
+ * @caps: (allow-none): the #GstCaps to use as a filter.
  *
  * Looks for an unlinked pad to which the given pad can link. It is not
  * guaranteed that linking the pads will work, though it should work in most
@@ -1254,8 +1160,6 @@ gst_element_state_get_name (GstState state)
  *
  * Returns: (transfer none): a string with the name of the state
  *    result.
- *
- * Since: 0.10.11
  */
 const gchar *
 gst_element_state_change_return_get_name (GstStateChangeReturn state_ret)
@@ -1342,8 +1246,6 @@ gst_element_factory_can_accept_any_caps_in_direction (GstElementFactory *
  * Checks if the factory can sink all possible capabilities.
  *
  * Returns: %TRUE if the caps are fully compatible.
- *
- * Since: 0.10.33
  */
 gboolean
 gst_element_factory_can_sink_all_caps (GstElementFactory * factory,
@@ -1361,8 +1263,6 @@ gst_element_factory_can_sink_all_caps (GstElementFactory * factory,
  * Checks if the factory can src all possible capabilities.
  *
  * Returns: %TRUE if the caps are fully compatible.
- *
- * Since: 0.10.33
  */
 gboolean
 gst_element_factory_can_src_all_caps (GstElementFactory * factory,
@@ -1380,8 +1280,6 @@ gst_element_factory_can_src_all_caps (GstElementFactory * factory,
  * Checks if the factory can sink any possible capability.
  *
  * Returns: %TRUE if the caps have a common subset.
- *
- * Since: 0.10.33
  */
 gboolean
 gst_element_factory_can_sink_any_caps (GstElementFactory * factory,
@@ -1399,8 +1297,6 @@ gst_element_factory_can_sink_any_caps (GstElementFactory * factory,
  * Checks if the factory can src any possible capability.
  *
  * Returns: %TRUE if the caps have a common subset.
- *
- * Since: 0.10.33
  */
 gboolean
 gst_element_factory_can_src_any_caps (GstElementFactory * factory,
@@ -1627,8 +1523,6 @@ pad_link_maybe_ghosting (GstPad * src, GstPad * sink, GstPadLinkCheck flags)
  * This is a convenience function for gst_pad_link_full().
  *
  * Returns: TRUE if the pads could be linked, FALSE otherwise.
- *
- * Since: 0.10.30
  */
 gboolean
 gst_element_link_pads_full (GstElement * src, const gchar * srcpadname,
@@ -2339,7 +2233,7 @@ gst_element_query_convert (GstElement * element, GstFormat src_format,
 }
 
 /**
- * gst_element_seek_simple
+ * gst_element_seek_simple:
  * @element: a #GstElement to seek on
  * @format: a #GstFormat to execute the seek in, such as #GST_FORMAT_TIME
  * @seek_flags: seek options; playback applications will usually want to use
@@ -2366,8 +2260,6 @@ gst_element_query_convert (GstElement * element, GstFormat src_format,
  *
  * Returns: %TRUE if the seek operation succeeded. Flushing seeks will trigger a
  * preroll, which will emit %GST_MESSAGE_ASYNC_DONE.
- *
- * Since: 0.10.7
  */
 gboolean
 gst_element_seek_simple (GstElement * element, GstFormat format,
@@ -2385,11 +2277,12 @@ gst_element_seek_simple (GstElement * element, GstFormat format,
  * @pad: the pad to use
  *
  * A helper function you can use that sets the FIXED_CAPS flag
- * This way the default getcaps function will always return the negotiated caps
+ * This way the default CAPS query will always return the negotiated caps
  * or in case the pad is not negotiated, the padtemplate caps.
  *
- * Use this function on a pad that, once gst_pad_set_caps() has been called
- * on it, cannot be renegotiated to something else.
+ * The negotiated caps are the caps of the last CAPS event that passed on the
+ * pad. Use this function on a pad that, once it negotiated to a CAPS, cannot
+ * be renegotiated to something else.
  */
 void
 gst_pad_use_fixed_caps (GstPad * pad)
@@ -2605,7 +2498,7 @@ query_caps_func (GstPad * pad, QueryCapsData * data)
 gboolean
 gst_pad_proxy_query_caps (GstPad * pad, GstQuery * query)
 {
-  GstCaps *templ, *intersected;
+  GstCaps *filter, *templ, *result;
   QueryCapsData data;
 
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
@@ -2616,18 +2509,20 @@ gst_pad_proxy_query_caps (GstPad * pad, GstQuery * query)
       GST_DEBUG_PAD_NAME (pad));
 
   data.query = query;
-  /* value to hold the return, by default it holds ANY */
-  data.ret = gst_caps_new_any ();
+
+  /* value to hold the return, by default it holds the filter or ANY */
+  gst_query_parse_caps (query, &filter);
+  data.ret = filter ? gst_caps_ref (filter) : gst_caps_new_any ();
 
   gst_pad_forward (pad, (GstPadForwardFunction) query_caps_func, &data);
 
   templ = gst_pad_get_pad_template_caps (pad);
-  intersected = gst_caps_intersect (data.ret, templ);
+  result = gst_caps_intersect (data.ret, templ);
   gst_caps_unref (data.ret);
   gst_caps_unref (templ);
 
-  gst_query_set_caps_result (query, intersected);
-  gst_caps_unref (intersected);
+  gst_query_set_caps_result (query, result);
+  gst_caps_unref (result);
 
   return TRUE;
 }
@@ -2882,8 +2777,9 @@ gst_pad_query_caps (GstPad * pad, GstCaps * filter)
  * downstream in the preffered order. @filter might be %NULL but
  * if it is not %NULL the returned caps will be a subset of @filter.
  *
- * Returns: the caps of the peer pad with incremented ref-count. This function
- * returns %NULL when there is no peer pad.
+ * Returns: the caps of the peer pad with incremented ref-count. When there is
+ * no peer pad, this function returns @filter or, when @filter is %NULL, ANY
+ * caps.
  */
 GstCaps *
 gst_pad_peer_query_caps (GstPad * pad, GstCaps * filter)
@@ -3044,8 +2940,6 @@ element_find_unlinked_pad (GstElement * element, GstPadDirection direction)
  * pad when it is not needed any longer.
  *
  * Returns: (transfer full): unlinked pad of the given direction, or NULL.
- *
- * Since: 0.10.20
  */
 GstPad *
 gst_bin_find_unlinked_pad (GstBin * bin, GstPadDirection direction)
@@ -3105,9 +2999,8 @@ gst_bin_find_unlinked_pad (GstBin * bin, GstPadDirection direction)
  * and want them all ghosted, you will have to create the ghost pads
  * yourself).
  *
- * Returns: (transfer floating): a newly-created bin, or NULL if an error occurred.
- *
- * Since: 0.10.3
+ * Returns: (transfer floating) (type Gst.Bin): a newly-created bin,
+ *   or %NULL if an error occurred.
  */
 GstElement *
 gst_parse_bin_from_description (const gchar * bin_description,
@@ -3137,9 +3030,8 @@ gst_parse_bin_from_description (const gchar * bin_description,
  * and want them all ghosted, you will have to create the ghost pads
  * yourself).
  *
- * Returns: (transfer full): a newly-created bin, or NULL if an error occurred.
- *
- * Since: 0.10.20
+ * Returns: (transfer full) (type Gst.Bin): a newly-created bin, or
+ *   %NULL if an error occurred.
  */
 GstElement *
 gst_parse_bin_from_description_full (const gchar * bin_description,
@@ -3200,8 +3092,6 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
  * The timestamp should not be interpreted in any other way.
  *
  * Returns: the timestamp
- *
- * Since: 0.10.16
  */
 GstClockTime
 gst_util_get_timestamp (void)
@@ -3238,8 +3128,6 @@ gst_util_get_timestamp (void)
  * The complexity of this search function is O(log (num_elements)).
  *
  * Returns: (transfer none): The address of the found element or %NULL if nothing was found
- *
- * Since: 0.10.23
  */
 gpointer
 gst_util_array_binary_search (gpointer array, guint num_elements,
@@ -3320,8 +3208,6 @@ gst_util_array_binary_search (gpointer array, guint num_elements,
  * and @b.
  *
  * Returns: Greatest common divisor of @a and @b
- *
- * Since: 0.10.26
  */
 gint
 gst_util_greatest_common_divisor (gint a, gint b)
@@ -3345,8 +3231,6 @@ gst_util_greatest_common_divisor (gint a, gint b)
  * and @b.
  *
  * Returns: Greatest common divisor of @a and @b
- *
- * Since: 0.11.0
  */
 gint64
 gst_util_greatest_common_divisor_int64 (gint64 a, gint64 b)
@@ -3369,8 +3253,6 @@ gst_util_greatest_common_divisor_int64 (gint64 a, gint64 b)
  * @dest: (out): pointer to a #gdouble for the result
  *
  * Transforms a fraction to a #gdouble.
- *
- * Since: 0.10.26
  */
 void
 gst_util_fraction_to_double (gint src_n, gint src_d, gdouble * dest)
@@ -3398,8 +3280,6 @@ gst_util_fraction_to_double (gint src_n, gint src_d, gdouble * dest)
  *
  * Transforms a #gdouble to a fraction and simplifies
  * the result.
- *
- * Since: 0.10.26
  */
 void
 gst_util_double_to_fraction (gdouble src, gint * dest_n, gint * dest_d)
@@ -3499,8 +3379,6 @@ gst_util_double_to_fraction (gdouble src, gint * dest_n, gint * dest_d)
  * the result in @res_n and @res_d.
  *
  * Returns: %FALSE on overflow, %TRUE otherwise.
- *
- * Since: 0.10.26
  */
 gboolean
 gst_util_fraction_multiply (gint a_n, gint a_d, gint b_n, gint b_d,
@@ -3558,8 +3436,6 @@ gst_util_fraction_multiply (gint a_n, gint a_d, gint b_n, gint b_d,
  * the result in @res_n and @res_d.
  *
  * Returns: %FALSE on overflow, %TRUE otherwise.
- *
- * Since: 0.10.26
  */
 gboolean
 gst_util_fraction_add (gint a_n, gint a_d, gint b_n, gint b_d, gint * res_n,
@@ -3625,8 +3501,6 @@ gst_util_fraction_add (gint a_n, gint a_d, gint b_n, gint b_d, gint * res_n,
  * -1 if a < b, 0 if a = b and 1 if a > b.
  *
  * Returns: -1 if a < b; 0 if a = b; 1 if a > b.
- *
- * Since: 0.10.31
  */
 gint
 gst_util_fraction_compare (gint a_n, gint a_d, gint b_n, gint b_d)
@@ -3660,4 +3534,173 @@ gst_util_fraction_compare (gint a_n, gint a_d, gint b_n, gint b_d)
 
   /* Should not happen because a_d and b_d are not 0 */
   g_return_val_if_reached (0);
+}
+
+/** gst_pad_create_stream_id:
+ * @pad: A source #GstPad
+ * @parent: Parent #GstElement of @pad
+ * @stream_id: (allow-none): The stream-id
+ * @var_args: parameters for the @stream_id format string
+ *
+ * Creates a stream-id for the source #GstPad @pad by combining the
+ * upstream information with the optional @stream_id of the stream
+ * of @pad. @pad must have a parent #GstElement and which must have zero
+ * or one sinkpad. @stream_id can only be %NULL if the parent element
+ * of @pad has only a single source pad.
+ *
+ * This function generates an unique stream-id by getting the upstream
+ * stream-start event stream ID and appending @stream_id to it. If the
+ * element has no sinkpad it will generate an upstream stream-id by
+ * doing an URI query on the element and in the worst case just uses
+ * a random number. Source elements that don't implement the URI
+ * handler interface should ideally generate a unique, deterministic
+ * stream-id manually instead.
+ *
+ * Returns: A stream-id for @pad. g_free() after usage.
+ */
+gchar *
+gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent,
+    const gchar * stream_id, va_list var_args)
+{
+  GstEvent *upstream_event;
+  gchar *upstream_stream_id = NULL, *new_stream_id;
+  GstPad *sinkpad;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+  g_return_val_if_fail (GST_PAD_IS_SRC (pad), NULL);
+  g_return_val_if_fail (GST_IS_ELEMENT (parent), NULL);
+
+  g_return_val_if_fail (parent->numsinkpads <= 1, NULL);
+
+  /* If the element has multiple source pads it must
+   * provide a stream-id for every source pad, otherwise
+   * all source pads will have the same and are not
+   * distinguishable */
+  g_return_val_if_fail (parent->numsrcpads == 1 || stream_id, NULL);
+
+  /* First try to get the upstream stream-start stream-id from the sinkpad.
+   * This will only work for non-source elements */
+  sinkpad = gst_element_get_static_pad (parent, "sink");
+  if (sinkpad) {
+    upstream_event =
+        gst_pad_get_sticky_event (sinkpad, GST_EVENT_STREAM_START, 0);
+    if (upstream_event) {
+      const gchar *tmp;
+
+      gst_event_parse_stream_start (upstream_event, &tmp);
+      if (tmp)
+        upstream_stream_id = g_strdup (tmp);
+      gst_event_unref (upstream_event);
+    }
+    gst_object_unref (sinkpad);
+  }
+
+  /* The only case where we don't have an upstream start-start event
+   * here is for source elements */
+  if (!upstream_stream_id) {
+    GstQuery *query;
+
+    /* Try to generate one from the URI query and
+     * if it fails take a random number instead */
+    query = gst_query_new_uri ();
+    if (gst_element_query (parent, query)) {
+      GChecksum *cs;
+      gchar *uri;
+
+      gst_query_parse_uri (query, &uri);
+
+      /* And then generate an SHA256 sum of the URI */
+      cs = g_checksum_new (G_CHECKSUM_SHA256);
+      g_checksum_update (cs, (const guchar *) uri, strlen (uri));
+      g_free (uri);
+      upstream_stream_id = g_strdup (g_checksum_get_string (cs));
+      g_checksum_free (cs);
+    } else {
+      /* Just get some random number if the URI query fails */
+      GST_WARNING_OBJECT (pad, "Creating random stream-id, consider "
+          "implementing a deterministic way of creating a stream-id");
+      upstream_stream_id =
+          g_strdup_printf ("%08x%08x%08x%08x", g_random_int (), g_random_int (),
+          g_random_int (), g_random_int ());
+    }
+
+    gst_query_unref (query);
+  }
+
+  if (stream_id) {
+    gchar *expanded = g_strdup_vprintf (stream_id, var_args);
+    new_stream_id = g_strconcat (upstream_stream_id, "/", expanded, NULL);
+    g_free (expanded);
+  } else {
+    new_stream_id = g_strdup (upstream_stream_id);
+  }
+
+  g_free (upstream_stream_id);
+
+  return new_stream_id;
+}
+
+/** gst_pad_create_stream_id:
+ * @pad: A source #GstPad
+ * @parent: Parent #GstElement of @pad
+ * @stream_id: (allow-none): The stream-id
+ * @...: parameters for the @stream_id format string
+ *
+ * Creates a stream-id for the source #GstPad @pad by combining the
+ * upstream information with the optional @stream_id of the stream
+ * of @pad. @pad must have a parent #GstElement and which must have zero
+ * or one sinkpad. @stream_id can only be %NULL if the parent element
+ * of @pad has only a single source pad.
+ *
+ * This function generates an unique stream-id by getting the upstream
+ * stream-start event stream ID and appending @stream_id to it. If the
+ * element has no sinkpad it will generate an upstream stream-id by
+ * doing an URI query on the element and in the worst case just uses
+ * a random number. Source elements that don't implement the URI
+ * handler interface should ideally generate a unique, deterministic
+ * stream-id manually instead.
+ *
+ * Returns: A stream-id for @pad. g_free() after usage.
+ */
+gchar *
+gst_pad_create_stream_id_printf (GstPad * pad, GstElement * parent,
+    const gchar * stream_id, ...)
+{
+  va_list var_args;
+  gchar *new_stream_id;
+
+  va_start (var_args, stream_id);
+  new_stream_id =
+      gst_pad_create_stream_id_printf_valist (pad, parent, stream_id, var_args);
+  va_end (var_args);
+
+  return new_stream_id;
+}
+
+/** gst_pad_create_stream_id:
+ * @pad: A source #GstPad
+ * @parent: Parent #GstElement of @pad
+ * @stream_id: (allow-none): The stream-id
+ *
+ * Creates a stream-id for the source #GstPad @pad by combining the
+ * upstream information with the optional @stream_id of the stream
+ * of @pad. @pad must have a parent #GstElement and which must have zero
+ * or one sinkpad. @stream_id can only be %NULL if the parent element
+ * of @pad has only a single source pad.
+ *
+ * This function generates an unique stream-id by getting the upstream
+ * stream-start event stream ID and appending @stream_id to it. If the
+ * element has no sinkpad it will generate an upstream stream-id by
+ * doing an URI query on the element and in the worst case just uses
+ * a random number. Source elements that don't implement the URI
+ * handler interface should ideally generate a unique, deterministic
+ * stream-id manually instead.
+ *
+ * Returns: A stream-id for @pad. g_free() after usage.
+ */
+gchar *
+gst_pad_create_stream_id (GstPad * pad, GstElement * parent,
+    const gchar * stream_id)
+{
+  return gst_pad_create_stream_id_printf (pad, parent, stream_id, NULL);
 }

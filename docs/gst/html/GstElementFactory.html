@@ -141,7 +141,7 @@ The following code example shows you how to create a GstFileSrc element.
 <p>
 </p>
 <div class="example">
-<a name="idp17385776"></a><p class="title"><b>Example 6. Using an element factory</b></p>
+<a name="idp17551616"></a><p class="title"><b>Example 6. Using an element factory</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -163,11 +163,11 @@ The following code example shows you how to create a GstFileSrc element.
 GstElement <span class="gtkdoc opt">*</span>src<span class="gtkdoc opt">;</span>
 GstElementFactory <span class="gtkdoc opt">*</span>srcfactory<span class="gtkdoc opt">;</span>
 
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-Gst.html#gst-init">gst_init</a></span> <span class="gtkdoc opt">(&amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">);</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-Gst.html#gst-init">gst_init</a></span> <span class="gtkdoc opt">(&amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">);</span>
 
-srcfactory <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElementFactory.html#gst-element-factory-find">gst_element_factory_find</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;filesrc&quot;</span><span class="gtkdoc opt">);</span>
+srcfactory <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstElementFactory.html#gst-element-factory-find">gst_element_factory_find</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;filesrc&quot;</span><span class="gtkdoc opt">);</span>
 <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span> <span class="gtkdoc opt">(</span>srcfactory <span class="gtkdoc opt">!=</span> NULL<span class="gtkdoc opt">);</span>
-src <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElementFactory.html#gst-element-factory-create">gst_element_factory_create</a></span> <span class="gtkdoc opt">(</span>srcfactory<span class="gtkdoc opt">,</span> <span class="string">&quot;src&quot;</span><span class="gtkdoc opt">);</span>
+src <span class="gtkdoc opt">=</span> <span class="function"><a href="../gstreamer-1.0/GstElementFactory.html#gst-element-factory-create">gst_element_factory_create</a></span> <span class="gtkdoc opt">(</span>srcfactory<span class="gtkdoc opt">,</span> <span class="string">&quot;src&quot;</span><span class="gtkdoc opt">);</span>
 <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span> <span class="gtkdoc opt">(</span>src <span class="gtkdoc opt">!=</span> NULL<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span></pre></td>
       </tr>
@@ -209,8 +209,7 @@ Create a new elementfactory capable of instantiating objects of the
 <td><p><span class="term"><em class="parameter"><code>plugin</code></em> :</span></p></td>
 <td>
 <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> to register the element with, or NULL for
-a static element (note that passing NULL only works in GStreamer 0.10.13
-and later). <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+a static element. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -293,7 +292,7 @@ Get the metadata on <em class="parameter"><code>factory</code></em> with <em cla
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>factory,</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>factory</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a>
 </td>
 </tr>
@@ -321,14 +320,15 @@ Get the available keys for the metadata on <em class="parameter"><code>factory</
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>factory,</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>factory</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated array of key strings, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
-there is no metadata. Free with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a> when no longer needd.</td>
+<td>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated array of key strings, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there is no
+metadata. Free with <a href="http://library.gnome.org/devel/glib/unstable/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a> when no longer needed. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -433,7 +433,6 @@ Check if <em class="parameter"><code>factory</code></em> implements the interfac
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -526,7 +525,6 @@ Checks if the factory can sink all possible capabilities.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -555,7 +553,6 @@ Checks if the factory can src all possible capabilities.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -584,7 +581,6 @@ Checks if the factory can sink any possible capability.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -613,7 +609,6 @@ Checks if the factory can src any possible capability.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -654,7 +649,10 @@ static pad templates. <span class="annotation">[<acronym title="Don't free data 
 <p>
 Elements of any of the defined GST_ELEMENT_FACTORY_LIST types
 </p>
-<p class="since">Since 0.10.31</p>
+<p>
+Value: 562949953421311
+Type: GstElementFactoryListType
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -664,7 +662,10 @@ Elements of any of the defined GST_ELEMENT_FACTORY_LIST types
 <p>
 All sinks handling audio, video or image media types
 </p>
-<p class="since">Since 0.10.31</p>
+<p>
+Value: 3940649673949188
+Type: GstElementFactoryListType
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -674,7 +675,10 @@ All sinks handling audio, video or image media types
 <p>
 All encoders handling audio media types
 </p>
-<p class="since">Since 0.10.31</p>
+<p>
+Value: 1125899906842626
+Type: GstElementFactoryListType
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -683,7 +687,10 @@ All encoders handling audio media types
 <p>
 All elements used to 'decode' streams (decoders, demuxers, parsers, depayloaders)
 </p>
-<p class="since">Since 0.10.31</p>
+<p>
+Value: 353
+Type: GstElementFactoryListType
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -764,7 +771,10 @@ Note: Do not use this if you wish to not filter against any of the defined
 media types. If you wish to do this, simply don't specify any
 GST_ELEMENT_FACTORY_TYPE_MEDIA flag.
 </p>
-<p class="since">Since 0.10.31</p>
+<p>
+Value: 18446462598732840960
+Type: GstElementFactoryListType
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -804,7 +814,10 @@ GST_ELEMENT_FACTORY_TYPE_MEDIA flag.
 <p>
 All encoders handling video or image media types
 </p>
-<p class="since">Since 0.10.31</p>
+<p>
+Value: 2814749767106562
+Type: GstElementFactoryListType
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -853,7 +866,6 @@ Use <a class="link" href="GstPluginFeature.html#gst-plugin-feature-list-free" ti
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -887,7 +899,6 @@ usage. <span class="annotation">[<acronym title="Free data after the code is don
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -917,7 +928,6 @@ Check if <em class="parameter"><code>factory</code></em> is of the given types.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 </div>
 <div class="refsect1">

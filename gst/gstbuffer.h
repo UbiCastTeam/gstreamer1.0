@@ -26,7 +26,7 @@
 
 #include <gst/gstminiobject.h>
 #include <gst/gstclock.h>
-#include <gst/gstmemory.h>
+#include <gst/gstallocator.h>
 
 G_BEGIN_DECLS
 
@@ -163,8 +163,6 @@ typedef struct _GstBufferPool GstBufferPool;
  * @buffer: a #GstBuffer
  *
  * Tests if the buffer marks a discontinuity in the stream.
- *
- * Since: 0.10.9
  */
 #define GST_BUFFER_IS_DISCONT(buffer)   (GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DISCONT))
 
@@ -276,16 +274,9 @@ void        gst_buffer_remove_memory_range  (GstBuffer *buffer, guint idx, gint 
 #define     gst_buffer_prepend_memory(b,m)     gst_buffer_insert_memory ((b), 0, (m))
 #define     gst_buffer_append_memory(b,m)      gst_buffer_insert_memory ((b), -1, (m))
 #define     gst_buffer_replace_memory(b,i,m)   gst_buffer_replace_memory_range ((b), (i), 1, (m))
-#define     gst_buffer_replace_all_memory(b,m) gst_buffer_replace_memory ((b), 0, -1, (m))
+#define     gst_buffer_replace_all_memory(b,m) gst_buffer_replace_memory_range ((b), 0, -1, (m))
 #define     gst_buffer_get_memory(b,i)         gst_buffer_get_memory_range ((b), (i), 1)
 #define     gst_buffer_get_all_memory(b)       gst_buffer_get_memory_range ((b), 0, -1)
-/**
- * gst_buffer_remove_memory:
- * @b: a #GstBuffer.
- * @i: an index
- *
- * Remove the memory block in @b at @i.
- */
 #define     gst_buffer_remove_memory(b,i)      gst_buffer_remove_memory_range ((b), (i), 1)
 #define     gst_buffer_remove_all_memory(b)    gst_buffer_remove_memory_range ((b), 0, -1)
 
@@ -307,22 +298,8 @@ void        gst_buffer_resize_range        (GstBuffer *buffer, guint idx, gint l
                                             gssize offset, gssize size);
 
 #define     gst_buffer_get_sizes(b,of,ms)  gst_buffer_get_sizes_range ((b), 0, -1, (of), (ms))
-/**
- * gst_buffer_get_size:
- * @b: a #GstBuffer.
- *
- * Get the size of @b.
- */
 #define     gst_buffer_get_size(b)         gst_buffer_get_sizes_range ((b), 0, -1, NULL, NULL)
 #define     gst_buffer_resize(b,of,s)      gst_buffer_resize_range ((b), 0, -1, (of), (s))
-/**
- * gst_buffer_set_size:
- * @b: a #GstBuffer.
- * @s: a new size
- *
- * Set the size of @b to @s. This will remove or trim the memory blocks
- * in the buffer.
- */
 #define     gst_buffer_set_size(b,s)       gst_buffer_resize_range ((b), 0, -1, 0, (s))
 
 gboolean    gst_buffer_map_range           (GstBuffer *buffer, guint idx, gint length,
@@ -340,9 +317,8 @@ void        gst_buffer_unmap               (GstBuffer *buffer, GstMapInfo *info)
  * Increases the refcount of the given buffer by one.
  *
  * Note that the refcount affects the writeability
- * of @buf and its metadata, see gst_buffer_is_writable() and
- * gst_buffer_is_metadata_writable(). It is
- * important to note that keeping additional references to
+ * of @buf and its metadata, see gst_buffer_is_writable().
+ * It is important to note that keeping additional references to
  * GstBuffer instances can potentially increase the number
  * of memcpy operations in a pipeline.
  *
@@ -447,10 +423,9 @@ void            gst_buffer_copy_into            (GstBuffer *dest, GstBuffer *src
  * gst_buffer_is_writable:
  * @buf: a #GstBuffer
  *
- * Tests if you can safely write data into a buffer's data array or validly
- * modify the caps and timestamp metadata. Metadata in a GstBuffer is always
- * writable, but it is only safe to change it when there is only one owner
- * of the buffer - ie, the refcount is 1.
+ * Tests if you can safely write to a buffer's metadata or its memory array.
+ * It is only safe to change buffer metadata when the current reference is
+ * writable, i.e. nobody can see the modifications you will make.
  */
 #define         gst_buffer_is_writable(buf)     gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (buf))
 /**
@@ -497,7 +472,9 @@ GstBuffer*      gst_buffer_copy_region          (GstBuffer *parent, GstBufferCop
                                                  gsize offset, gsize size);
 
 /* append two buffers */
-GstBuffer*      gst_buffer_append               (GstBuffer *buf1, GstBuffer *buf2);
+GstBuffer*      gst_buffer_append_region        (GstBuffer *buf1, GstBuffer *buf2,
+                                                 gssize offset, gssize size);
+#define         gst_buffer_append(b1,b2)        gst_buffer_append_region ((b1), (b2), 0, -1)
 
 /* metadata */
 #include <gst/gstmeta.h>
@@ -530,7 +507,7 @@ gboolean        gst_buffer_remove_meta          (GstBuffer *buffer, GstMeta *met
 
 GstMeta *       gst_buffer_iterate_meta         (GstBuffer *buffer, gpointer *state);
 
-void            gst_buffer_foreach_meta         (GstBuffer *buffer,
+gboolean        gst_buffer_foreach_meta         (GstBuffer *buffer,
                                                  GstBufferForeachMetaFunc func,
                                                  gpointer user_data);
 

@@ -155,13 +155,11 @@ gst_pipeline_class_init (GstPipelineClass * klass)
   gobject_class->get_property = gst_pipeline_get_property;
 
   /**
-   * GstPipeline:delay
+   * GstPipeline:delay:
    *
    * The expected delay needed for elements to spin up to the
    * PLAYING state expressed in nanoseconds.
    * see gst_pipeline_set_delay() for more information on this option.
-   *
-   * Since: 0.10.5
    **/
   g_object_class_install_property (gobject_class, PROP_DELAY,
       g_param_spec_uint64 ("delay", "Delay",
@@ -175,8 +173,6 @@ gst_pipeline_class_init (GstPipelineClass * klass)
    * Whether or not to automatically flush all messages on the
    * pipeline's bus when going from READY to NULL state. Please see
    * gst_pipeline_set_auto_flush_bus() for more information on this option.
-   *
-   * Since: 0.10.4
    **/
   g_object_class_install_property (gobject_class, PROP_AUTO_FLUSH_BUS,
       g_param_spec_boolean ("auto-flush-bus", "Auto Flush Bus",
@@ -279,12 +275,12 @@ gst_pipeline_get_property (GObject * object, guint prop_id,
 /* set the start_time to 0, this will cause us to select a new base_time and
  * make the running_time start from 0 again. */
 static void
-reset_start_time (GstPipeline * pipeline)
+reset_start_time (GstPipeline * pipeline, GstClockTime start_time)
 {
   GST_OBJECT_LOCK (pipeline);
   if (GST_ELEMENT_START_TIME (pipeline) != GST_CLOCK_TIME_NONE) {
     GST_DEBUG_OBJECT (pipeline, "reset start_time to 0");
-    GST_ELEMENT_START_TIME (pipeline) = 0;
+    GST_ELEMENT_START_TIME (pipeline) = start_time;
     pipeline->priv->last_start_time = -1;
   } else {
     GST_DEBUG_OBJECT (pipeline, "application asked to not reset stream_time");
@@ -476,7 +472,8 @@ gst_pipeline_change_state (GstElement * element, GstStateChange transition)
       break;
     case GST_STATE_CHANGE_READY_TO_PAUSED:
     {
-      reset_start_time (pipeline);
+      /* READY to PAUSED starts running_time from 0 */
+      reset_start_time (pipeline, 0);
       break;
     }
     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
@@ -544,17 +541,15 @@ gst_pipeline_handle_message (GstBin * bin, GstMessage * message)
   GstPipeline *pipeline = GST_PIPELINE_CAST (bin);
 
   switch (GST_MESSAGE_TYPE (message)) {
-    case GST_MESSAGE_ASYNC_DONE:
+    case GST_MESSAGE_RESET_TIME:
     {
-      gboolean reset_time;
+      GstClockTime running_time;
 
-      gst_message_parse_async_done (message, &reset_time);
+      gst_message_parse_reset_time (message, &running_time);
 
       /* reset our running time if we need to distribute a new base_time to the
        * children. */
-      if (reset_time)
-        reset_start_time (pipeline);
-
+      reset_start_time (pipeline, running_time);
       break;
     }
     case GST_MESSAGE_CLOCK_LOST:
@@ -749,8 +744,6 @@ gst_pipeline_auto_clock (GstPipeline * pipeline)
  * used.
  *
  * MT safe.
- *
- * Since: 0.10.5
  */
 void
 gst_pipeline_set_delay (GstPipeline * pipeline, GstClockTime delay)
@@ -772,8 +765,6 @@ gst_pipeline_set_delay (GstPipeline * pipeline, GstClockTime delay)
  * Returns: The configured delay.
  *
  * MT safe.
- *
- * Since: 0.10.5
  */
 GstClockTime
 gst_pipeline_get_delay (GstPipeline * pipeline)
@@ -809,8 +800,6 @@ gst_pipeline_get_delay (GstPipeline * pipeline)
  * automatic flushing is disabled else memory leaks will be introduced.
  *
  * MT safe.
- *
- * Since: 0.10.4
  */
 void
 gst_pipeline_set_auto_flush_bus (GstPipeline * pipeline, gboolean auto_flush)
@@ -833,8 +822,6 @@ gst_pipeline_set_auto_flush_bus (GstPipeline * pipeline, gboolean auto_flush)
  * going from READY to NULL state or not.
  *
  * MT safe.
- *
- * Since: 0.10.4
  */
 gboolean
 gst_pipeline_get_auto_flush_bus (GstPipeline * pipeline)

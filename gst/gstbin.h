@@ -81,10 +81,10 @@ typedef struct _GstBinPrivate GstBinPrivate;
 /**
  * GstBin:
  * @numchildren: the number of children in this bin
- * @children: the list of children in this bin
+ * @children: (element-type Gst.Element): the list of children in this bin
  * @children_cookie: updated whenever @children changes
  * @child_bus: internal bus for handling child messages
- * @messages: queued and cached messages
+ * @messages: (element-type Gst.Message): queued and cached messages
  * @polling: the bin is currently calculating its state
  * @state_dirty: the bin needs to recalculate its state (deprecated)
  * @clock_dirty: the bin needs to select a new clock
@@ -152,7 +152,7 @@ struct _GstBinClass {
   void		(*handle_message)	(GstBin *bin, GstMessage *message);
 
   /*< private >*/
-  /* signal added 0.10.22 */
+  /* signal */
   gboolean	(*do_latency)           (GstBin *bin);
 
   /*< private >*/

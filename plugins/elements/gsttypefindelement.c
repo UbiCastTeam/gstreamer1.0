@@ -39,7 +39,7 @@
  * 1) get a list of all typefind functions sorted best to worst
  * 2) if all elements have been called with all requested data goto 8
  * 3) call all functions once with all available data
- * 4) if a function returns a value >= PROP_MAXIMUM goto 8
+ * 4) if a function returns a value >= PROP_MAXIMUM goto 8 (never implemented))
  * 5) all functions with a result > PROP_MINIMUM or functions that did not get
  *    all requested data (where peek returned NULL) stay in list
  * 6) seek to requested offset of best function that still has open data
@@ -111,7 +111,6 @@ enum
   PROP_0,
   PROP_CAPS,
   PROP_MINIMUM,
-  PROP_MAXIMUM,
   PROP_FORCE_CAPS,
   PROP_LAST
 };
@@ -188,7 +187,7 @@ gst_type_find_element_have_type (GstTypeFindElement * typefind,
   typefind->caps = gst_caps_ref (caps);
   GST_OBJECT_UNLOCK (typefind);
 
-  gst_pad_push_event (typefind->src, gst_event_new_caps (caps));
+  gst_pad_set_caps (typefind->src, caps);
 }
 
 static void
@@ -209,11 +208,6 @@ gst_type_find_element_class_init (GstTypeFindElementClass * typefind_class)
       g_param_spec_uint ("minimum", _("minimum"),
           "minimum probability required to accept caps", GST_TYPE_FIND_MINIMUM,
           GST_TYPE_FIND_MAXIMUM, GST_TYPE_FIND_MINIMUM,
-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-  g_object_class_install_property (gobject_class, PROP_MAXIMUM,
-      g_param_spec_uint ("maximum", _("maximum"),
-          "probability to stop typefinding (deprecated; non-functional)",
-          GST_TYPE_FIND_MINIMUM, GST_TYPE_FIND_MAXIMUM, GST_TYPE_FIND_MAXIMUM,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_FORCE_CAPS,
       g_param_spec_boxed ("force-caps", _("force caps"),
@@ -288,7 +282,6 @@ gst_type_find_element_init (GstTypeFindElement * typefind)
   typefind->mode = MODE_TYPEFIND;
   typefind->caps = NULL;
   typefind->min_probability = 1;
-  typefind->max_probability = GST_TYPE_FIND_MAXIMUM;
 
   typefind->adapter = gst_adapter_new ();
 }
@@ -323,9 +316,6 @@ gst_type_find_element_set_property (GObject * object, guint prop_id,
     case PROP_MINIMUM:
       typefind->min_probability = g_value_get_uint (value);
       break;
-    case PROP_MAXIMUM:
-      typefind->max_probability = g_value_get_uint (value);
-      break;
     case PROP_FORCE_CAPS:
       GST_OBJECT_LOCK (typefind);
       if (typefind->force_caps)
@@ -355,9 +345,6 @@ gst_type_find_element_get_property (GObject * object, guint prop_id,
       break;
     case PROP_MINIMUM:
       g_value_set_uint (value, typefind->min_probability);
-      break;
-    case PROP_MAXIMUM:
-      g_value_set_uint (value, typefind->max_probability);
       break;
     case PROP_FORCE_CAPS:
       GST_OBJECT_LOCK (typefind);
@@ -436,14 +423,14 @@ static gboolean
 gst_type_find_element_seek (GstTypeFindElement * typefind, GstEvent * event)
 {
   GstSeekFlags flags;
-  GstSeekType cur_type, stop_type;
+  GstSeekType start_type, stop_type;
   GstFormat format;
   gboolean flush;
   gdouble rate;
-  gint64 cur, stop;
+  gint64 start, stop;
   GstSegment seeksegment = { 0, };
 
-  gst_event_parse_seek (event, &rate, &format, &flags, &cur_type, &cur,
+  gst_event_parse_seek (event, &rate, &format, &flags, &start_type, &start,
       &stop_type, &stop);
 
   /* we can only seek on bytes */
@@ -458,7 +445,7 @@ gst_type_find_element_seek (GstTypeFindElement * typefind, GstEvent * event)
 
   GST_DEBUG_OBJECT (typefind, "configuring seek");
   gst_segment_do_seek (&seeksegment, rate, format, flags,
-      cur_type, cur, stop_type, stop, NULL);
+      start_type, start, stop_type, stop, NULL);
 
   flush = ! !(flags & GST_SEEK_FLAG_FLUSH);
 
@@ -491,7 +478,7 @@ gst_type_find_element_seek (GstTypeFindElement * typefind, GstEvent * event)
   typefind->offset = typefind->segment.start;
 
   /* notify start of new segment */
-  if (typefind->segment.flags & GST_SEEK_FLAG_SEGMENT) {
+  if (typefind->segment.flags & GST_SEGMENT_FLAG_SEGMENT) {
     GstMessage *msg;
 
     msg = gst_message_new_segment_start (GST_OBJECT (typefind),
@@ -504,7 +491,7 @@ gst_type_find_element_seek (GstTypeFindElement * typefind, GstEvent * event)
   /* restart our task since it might have been stopped when we did the
    * flush. */
   gst_pad_start_task (typefind->sink,
-      (GstTaskFunction) gst_type_find_element_loop, typefind->sink);
+      (GstTaskFunction) gst_type_find_element_loop, typefind->sink, NULL);
 
   /* streaming can continue now */
   GST_PAD_STREAM_UNLOCK (typefind->sink);
@@ -877,7 +864,7 @@ gst_type_find_element_chain_do_typefinding (GstTypeFindElement * typefind,
     have_min = avail >= TYPE_FIND_MIN_SIZE;
     have_max = avail >= TYPE_FIND_MAX_SIZE;
   } else {
-    have_min = TRUE;
+    have_min = avail > 0;
     have_max = TRUE;
   }
 
@@ -979,12 +966,12 @@ gst_type_find_element_activate_src_mode (GstPad * pad, GstObject * parent,
        * activation might happen from the streaming thread. */
       gst_pad_pause_task (typefind->sink);
       res = gst_pad_activate_mode (typefind->sink, mode, active);
-      if (typefind->caps) {
+      if (active && res && typefind->caps) {
         GstCaps *caps;
         GST_OBJECT_LOCK (typefind);
         caps = gst_caps_ref (typefind->caps);
         GST_OBJECT_UNLOCK (typefind);
-        gst_pad_push_event (typefind->src, gst_event_new_caps (caps));
+        res = gst_pad_set_caps (typefind->src, caps);
         gst_caps_unref (caps);
       }
       break;
@@ -1103,7 +1090,7 @@ pause:
     if (ret == GST_FLOW_EOS) {
       /* perform EOS logic */
 
-      if (typefind->segment.flags & GST_SEEK_FLAG_SEGMENT) {
+      if (typefind->segment.flags & GST_SEGMENT_FLAG_SEGMENT) {
         gint64 stop;
 
         /* for segment playback we need to post when (in stream time)
@@ -1115,6 +1102,8 @@ pause:
         gst_element_post_message (GST_ELEMENT (typefind),
             gst_message_new_segment_done (GST_OBJECT (typefind),
                 GST_FORMAT_BYTES, stop));
+        gst_pad_push_event (typefind->src,
+            gst_event_new_segment_done (GST_FORMAT_BYTES, stop));
       } else {
         push_eos = TRUE;
       }
@@ -1218,7 +1207,7 @@ gst_type_find_element_activate_sink (GstPad * pad, GstObject * parent)
 
   /* only start our task if we ourselves decide to start in pull mode */
   return gst_pad_start_task (pad, (GstTaskFunction) gst_type_find_element_loop,
-      pad);
+      pad, NULL);
 
 typefind_push:
   {

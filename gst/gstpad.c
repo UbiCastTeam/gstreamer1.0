@@ -808,6 +808,24 @@ gst_pad_activate_default (GstPad * pad, GstObject * parent)
   return gst_pad_activate_mode (pad, GST_PAD_MODE_PUSH, TRUE);
 }
 
+#ifndef GST_DISABLE_GST_DEBUG
+static const gchar *
+gst_pad_mode_get_name (GstPadMode mode)
+{
+  switch (mode) {
+    case GST_PAD_MODE_NONE:
+      return "none";
+    case GST_PAD_MODE_PUSH:
+      return "push";
+    case GST_PAD_MODE_PULL:
+      return "pull";
+    default:
+      break;
+  }
+  return "unknown";
+}
+#endif
+
 static void
 pre_activate (GstPad * pad, GstPadMode new_mode)
 {
@@ -824,7 +842,8 @@ pre_activate (GstPad * pad, GstPadMode new_mode)
     case GST_PAD_MODE_PUSH:
     case GST_PAD_MODE_PULL:
       GST_OBJECT_LOCK (pad);
-      GST_DEBUG_OBJECT (pad, "setting PAD_MODE %d, unset flushing", new_mode);
+      GST_DEBUG_OBJECT (pad, "setting pad into %s mode, unset flushing",
+          gst_pad_mode_get_name (new_mode));
       GST_PAD_UNSET_FLUSHING (pad);
       GST_PAD_MODE (pad) = new_mode;
       if (GST_PAD_IS_SINK (pad)) {
@@ -911,7 +930,8 @@ gst_pad_set_active (GstPad * pad, gboolean active)
       GST_DEBUG_OBJECT (pad, "activating pad from none");
       ret = (GST_PAD_ACTIVATEFUNC (pad)) (pad, parent);
     } else {
-      GST_DEBUG_OBJECT (pad, "pad was active in mode %d", old);
+      GST_DEBUG_OBJECT (pad, "pad was active in %s mode",
+          gst_pad_mode_get_name (old));
       ret = TRUE;
     }
   } else {
@@ -919,7 +939,8 @@ gst_pad_set_active (GstPad * pad, gboolean active)
       GST_DEBUG_OBJECT (pad, "pad was inactive");
       ret = TRUE;
     } else {
-      GST_DEBUG_OBJECT (pad, "deactivating pad from mode %d", old);
+      GST_DEBUG_OBJECT (pad, "deactivating pad from %s mode",
+          gst_pad_mode_get_name (old));
       ret = gst_pad_activate_mode (pad, old, FALSE);
     }
   }
@@ -929,11 +950,6 @@ gst_pad_set_active (GstPad * pad, gboolean active)
   if (G_UNLIKELY (!ret))
     goto failed;
 
-  if (!active) {
-    GST_OBJECT_LOCK (pad);
-    GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_NEED_RECONFIGURE);
-    GST_OBJECT_UNLOCK (pad);
-  }
   return ret;
 
   /* ERRORS */
@@ -994,10 +1010,12 @@ gst_pad_activate_mode (GstPad * pad, GstPadMode mode, gboolean active)
   if (old == new)
     goto was_ok;
 
-  if (active && old != mode) {
+  if (active && old != mode && old != GST_PAD_MODE_NONE) {
     /* pad was activate in the wrong direction, deactivate it
      * and reactivate it in the requested mode */
-    GST_DEBUG_OBJECT (pad, "deactivating pad from mode %d", old);
+    GST_DEBUG_OBJECT (pad, "deactivating pad from %s mode",
+        gst_pad_mode_get_name (old));
+
     if (G_UNLIKELY (!gst_pad_activate_mode (pad, old, FALSE)))
       goto deactivate_failed;
   }
@@ -1043,11 +1061,20 @@ gst_pad_activate_mode (GstPad * pad, GstPadMode mode, gboolean active)
 
   post_activate (pad, new);
 
-  GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "%s in mode %d",
-      active ? "activated" : "deactivated", mode);
+  GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "%s in %s mode",
+      active ? "activated" : "deactivated", gst_pad_mode_get_name (mode));
 
 exit_success:
   res = TRUE;
+
+  /* Clear sticky flags on deactivation */
+  if (!active) {
+    GST_OBJECT_LOCK (pad);
+    GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_NEED_RECONFIGURE);
+    GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_EOS);
+    GST_OBJECT_UNLOCK (pad);
+  }
+
 exit:
   RELEASE_PARENT (parent);
 
@@ -1061,15 +1088,16 @@ no_parent:
   }
 was_ok:
   {
-    GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "already %s in mode %d",
-        active ? "activated" : "deactivated", mode);
+    GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "already %s in %s mode",
+        active ? "activated" : "deactivated", gst_pad_mode_get_name (mode));
     goto exit_success;
   }
 deactivate_failed:
   {
     GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad,
-        "failed to %s in switch to mode %d from mode %d",
-        (active ? "activate" : "deactivate"), mode, old);
+        "failed to %s in switch to %s mode from %s mode",
+        (active ? "activate" : "deactivate"), gst_pad_mode_get_name (mode),
+        gst_pad_mode_get_name (old));
     goto exit;
   }
 peer_failed:
@@ -1090,8 +1118,8 @@ not_linked:
 failure:
   {
     GST_OBJECT_LOCK (pad);
-    GST_CAT_INFO_OBJECT (GST_CAT_PADS, pad, "failed to %s in mode %d",
-        active ? "activate" : "deactivate", mode);
+    GST_CAT_INFO_OBJECT (GST_CAT_PADS, pad, "failed to %s in %s mode",
+        active ? "activate" : "deactivate", gst_pad_mode_get_name (mode));
     GST_PAD_SET_FLUSHING (pad);
     GST_PAD_MODE (pad) = old;
     GST_OBJECT_UNLOCK (pad);
@@ -1313,8 +1341,6 @@ gst_pad_is_blocked (GstPad * pad)
  * Returns: TRUE if the pad is blocking.
  *
  * MT safe.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_pad_is_blocking (GstPad * pad)
@@ -1375,6 +1401,14 @@ gst_pad_mark_reconfigure (GstPad * pad)
 }
 
 /**
+ * gst_pad_set_activate_function:
+ * @p: a #GstPad.
+ * @f: the #GstPadActivateFunction to set.
+ *
+ * Calls gst_pad_set_activate_function_full() with NULL for the user_data and
+ * notify.
+ */
+/**
  * gst_pad_set_activate_function_full:
  * @pad: a #GstPad.
  * @activate: the #GstPadActivateFunction to set.
@@ -1404,6 +1438,14 @@ gst_pad_set_activate_function_full (GstPad * pad,
 }
 
 /**
+ * gst_pad_set_activatemode_function:
+ * @p: a #GstPad.
+ * @f: the #GstPadActivateModeFunction to set.
+ *
+ * Calls gst_pad_set_activatemode_function_full() with NULL for the user_data and
+ * notify.
+ */
+/**
  * gst_pad_set_activatemode_function_full:
  * @pad: a #GstPad.
  * @activatemode: the #GstPadActivateModeFunction to set.
@@ -1430,6 +1472,14 @@ gst_pad_set_activatemode_function_full (GstPad * pad,
       GST_DEBUG_FUNCPTR_NAME (activatemode));
 }
 
+/**
+ * gst_pad_set_chain_function:
+ * @p: a sink #GstPad.
+ * @f: the #GstPadChainFunction to set.
+ *
+ * Calls gst_pad_set_chain_function_full() with NULL for the user_data and
+ * notify.
+ */
 /**
  * gst_pad_set_chain_function_full:
  * @pad: a sink #GstPad.
@@ -1458,6 +1508,14 @@ gst_pad_set_chain_function_full (GstPad * pad, GstPadChainFunction chain,
 }
 
 /**
+ * gst_pad_set_chain_list_function:
+ * @p: a sink #GstPad.
+ * @f: the #GstPadChainListFunction to set.
+ *
+ * Calls gst_pad_set_chain_list_function_full() with NULL for the user_data and
+ * notify.
+ */
+/**
  * gst_pad_set_chain_list_function_full:
  * @pad: a sink #GstPad.
  * @chainlist: the #GstPadChainListFunction to set.
@@ -1467,8 +1525,6 @@ gst_pad_set_chain_function_full (GstPad * pad, GstPadChainFunction chain,
  * Sets the given chain list function for the pad. The chainlist function is
  * called to process a #GstBufferList input buffer list. See
  * #GstPadChainListFunction for more details.
- *
- * Since: 0.10.24
  */
 void
 gst_pad_set_chain_list_function_full (GstPad * pad,
@@ -1488,6 +1544,14 @@ gst_pad_set_chain_list_function_full (GstPad * pad,
       GST_DEBUG_FUNCPTR_NAME (chainlist));
 }
 
+/**
+ * gst_pad_set_getrange_function:
+ * @p: a source #GstPad.
+ * @f: the #GstPadGetRangeFunction to set.
+ *
+ * Calls gst_pad_set_getrange_function_full() with NULL for the user_data and
+ * notify.
+ */
 /**
  * gst_pad_set_getrange_function_full:
  * @pad: a source #GstPad.
@@ -1517,6 +1581,14 @@ gst_pad_set_getrange_function_full (GstPad * pad, GstPadGetRangeFunction get,
 }
 
 /**
+ * gst_pad_set_event_function:
+ * @p: a #GstPad of either direction.
+ * @f: the #GstPadEventFunction to set.
+ *
+ * Calls gst_pad_set_event_function_full() with NULL for the user_data and
+ * notify.
+ */
+/**
  * gst_pad_set_event_function_full:
  * @pad: a #GstPad of either direction.
  * @event: the #GstPadEventFunction to set.
@@ -1541,6 +1613,14 @@ gst_pad_set_event_function_full (GstPad * pad, GstPadEventFunction event,
       GST_DEBUG_FUNCPTR_NAME (event));
 }
 
+/**
+ * gst_pad_set_query_function:
+ * @p: a #GstPad of either direction.
+ * @f: the #GstPadQueryFunction to set.
+ *
+ * Calls gst_pad_set_query_function_full() with NULL for the user_data and
+ * notify.
+ */
 /**
  * gst_pad_set_query_function_full:
  * @pad: a #GstPad of either direction.
@@ -1567,6 +1647,14 @@ gst_pad_set_query_function_full (GstPad * pad, GstPadQueryFunction query,
 }
 
 /**
+ * gst_pad_set_iterate_internal_links_function:
+ * @p: a #GstPad of either direction.
+ * @f: the #GstPadIterIntLinkFunction to set.
+ *
+ * Calls gst_pad_set_iterate_internal_links_function_full() with NULL
+ * for the user_data and notify.
+ */
+/**
  * gst_pad_set_iterate_internal_links_function_full:
  * @pad: a #GstPad of either direction.
  * @iterintlink: the #GstPadIterIntLinkFunction to set.
@@ -1574,8 +1662,6 @@ gst_pad_set_query_function_full (GstPad * pad, GstPadQueryFunction query,
  * @notify: notify called when @iterintlink will not be used anymore.
  *
  * Sets the given internal link iterator function for the pad.
- *
- * Since: 0.10.21
  */
 void
 gst_pad_set_iterate_internal_links_function_full (GstPad * pad,
@@ -1594,6 +1680,14 @@ gst_pad_set_iterate_internal_links_function_full (GstPad * pad,
       GST_DEBUG_FUNCPTR_NAME (iterintlink));
 }
 
+/**
+ * gst_pad_set_link_function:
+ * @p: a #GstPad.
+ * @f: the #GstPadLinkFunction to set.
+ *
+ * Calls gst_pad_set_link_function_full() with NULL
+ * for the user_data and notify.
+ */
 /**
  * gst_pad_set_link_function_full:
  * @pad: a #GstPad.
@@ -1629,6 +1723,14 @@ gst_pad_set_link_function_full (GstPad * pad, GstPadLinkFunction link,
       GST_DEBUG_FUNCPTR_NAME (link));
 }
 
+/**
+ * gst_pad_set_unlink_function:
+ * @p: a #GstPad.
+ * @f: the #GstPadUnlinkFunction to set.
+ *
+ * Calls gst_pad_set_unlink_function_full() with NULL
+ * for the user_data and notify.
+ */
 /**
  * gst_pad_set_unlink_function_full:
  * @pad: a #GstPad.
@@ -2029,8 +2131,6 @@ done:
  *
  * Returns: A result code indicating if the connection worked or
  *          what went wrong.
- *
- * Since: 0.10.30
  */
 GstPadLinkReturn
 gst_pad_link_full (GstPad * srcpad, GstPad * sinkpad, GstPadLinkCheck flags)
@@ -2257,41 +2357,6 @@ gst_pad_get_current_caps (GstPad * pad)
 }
 
 /**
- * gst_pad_set_caps:
- * @pad: a  #GstPad to set the capabilities of.
- * @caps: (transfer none): a #GstCaps to set.
- *
- * Sets the capabilities of this pad. The caps must be fixed. Any previous
- * caps on the pad will be unreffed. This function refs the caps so you should
- * unref if as soon as you don't need it anymore.
- * It is possible to set NULL caps, which will make the pad unnegotiated
- * again.
- *
- * Returns: TRUE if the caps could be set. FALSE if the caps were not fixed
- * or bad parameters were provided to this function.
- *
- * MT safe.
- */
-gboolean
-gst_pad_set_caps (GstPad * pad, GstCaps * caps)
-{
-  GstEvent *event;
-  gboolean res = TRUE;
-
-  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
-  g_return_val_if_fail (caps != NULL && gst_caps_is_fixed (caps), FALSE);
-
-  event = gst_event_new_caps (caps);
-
-  if (GST_PAD_IS_SRC (pad))
-    res = gst_pad_push_event (pad, event);
-  else
-    res = gst_pad_send_event (pad, event);
-
-  return res;
-}
-
-/**
  * gst_pad_get_pad_template_caps:
  * @pad: a #GstPad to get the template capabilities from.
  *
@@ -2411,8 +2476,6 @@ no_peer:
  *
  * Returns: a #GstIterator of #GstPad, or NULL if @pad has no parent. Unref each
  * returned pad with gst_object_unref().
- *
- * Since: 0.10.21
  */
 GstIterator *
 gst_pad_iterate_internal_links_default (GstPad * pad, GstObject * parent)
@@ -2480,8 +2543,6 @@ no_parent:
  * Returns: (transfer full): a new #GstIterator of #GstPad or %NULL when the
  *     pad does not have an iterator function configured. Use
  *     gst_iterator_free() after usage.
- *
- * Since: 0.10.21
  */
 GstIterator *
 gst_pad_iterate_internal_links (GstPad * pad)
@@ -2514,7 +2575,7 @@ no_parent:
 /**
  * gst_pad_forward:
  * @pad: a #GstPad
- * @forward: a #GstPadForwardFunction
+ * @forward: (scope call): a #GstPadForwardFunction
  * @user_data: user data passed to @forward
  *
  * Calls @forward for all internally linked pads of @pad. This function deals with
@@ -2714,17 +2775,17 @@ gst_pad_query_caps_default (GstPad * pad, GstQuery * query)
   GstPadTemplate *templ;
   gboolean fixed_caps;
 
-  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad, "get pad caps");
-
-  gst_query_parse_caps (query, &filter);
+  GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad, "query caps %" GST_PTR_FORMAT,
+      query);
 
   /* first try to proxy if we must */
   if (GST_PAD_IS_PROXY_CAPS (pad)) {
     if ((gst_pad_proxy_query_caps (pad, query))) {
-      gst_query_parse_caps_result (query, &result);
-      goto filter_done;
+      goto done;
     }
   }
+
+  gst_query_parse_caps (query, &filter);
 
   /* no proxy or it failed, do default handling */
   fixed_caps = GST_PAD_IS_FIXED_CAPS (pad);
@@ -2758,7 +2819,6 @@ gst_pad_query_caps_default (GstPad * pad, GstQuery * query)
 filter_done_unlock:
   GST_OBJECT_UNLOCK (pad);
 
-filter_done:
   /* run the filter on the result */
   if (filter) {
     GST_CAT_DEBUG_OBJECT (GST_CAT_CAPS, pad,
@@ -2772,10 +2832,10 @@ filter_done:
         "using caps %p %" GST_PTR_FORMAT, result, result);
     result = gst_caps_ref (result);
   }
-
   gst_query_set_caps_result (query, result);
   gst_caps_unref (result);
 
+done:
   return TRUE;
 }
 
@@ -2790,7 +2850,7 @@ static gboolean
 query_forward_func (GstPad * pad, QueryData * data)
 {
   GST_LOG_OBJECT (pad, "query peer %p (%s) of %s:%s",
-      data->query, GST_EVENT_TYPE_NAME (data->query), GST_DEBUG_PAD_NAME (pad));
+      data->query, GST_QUERY_TYPE_NAME (data->query), GST_DEBUG_PAD_NAME (pad));
 
   data->result |= gst_pad_peer_query (pad, data->query);
 
@@ -2821,7 +2881,7 @@ gst_pad_query_default (GstPad * pad, GstObject * parent, GstQuery * query)
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_SCHEDULING:
-      forward = FALSE;
+      forward = GST_PAD_IS_PROXY_SCHEDULING (pad);
       break;
     case GST_QUERY_ALLOCATION:
       forward = GST_PAD_IS_PROXY_ALLOCATION (pad);
@@ -3372,8 +3432,6 @@ probe_stopped:
  *
  * Returns: TRUE if the query could be performed. This function returns %FALSE
  * if @pad has no peer.
- *
- * Since: 0.10.15
  */
 gboolean
 gst_pad_peer_query (GstPad * pad, GstQuery * query)
@@ -3694,8 +3752,6 @@ gst_pad_chain_list_default (GstPad * pad, GstObject * parent,
  * MT safe.
  *
  * Returns: a #GstFlowReturn from the pad.
- *
- * Since: 0.10.24
  */
 GstFlowReturn
 gst_pad_chain_list (GstPad * pad, GstBufferList * list)
@@ -3871,8 +3927,6 @@ gst_pad_push (GstPad * pad, GstBuffer * buffer)
  * Returns: a #GstFlowReturn from the peer pad.
  *
  * MT safe.
- *
- * Since: 0.10.24
  */
 GstFlowReturn
 gst_pad_push_list (GstPad * pad, GstBufferList * list)
@@ -5025,18 +5079,14 @@ pad_leave_thread (GstTask * task, GThread * thread, gpointer user_data)
       thread, task);
 }
 
-static GstTaskThreadCallbacks thr_callbacks = {
-  pad_enter_thread,
-  pad_leave_thread,
-};
-
 /**
  * gst_pad_start_task:
  * @pad: the #GstPad to start the task of
  * @func: the task function to call
- * @data: data passed to the task function
+ * @user_data: user data passed to the task function
+ * @notify: called when @user_data is no longer referenced
  *
- * Starts a task that repeatedly calls @func with @data. This function
+ * Starts a task that repeatedly calls @func with @user_data. This function
  * is mostly used in pad activation functions to start the dataflow.
  * The #GST_PAD_STREAM_LOCK of @pad will automatically be acquired
  * before @func is called.
@@ -5044,7 +5094,8 @@ static GstTaskThreadCallbacks thr_callbacks = {
  * Returns: a %TRUE if the task could be started.
  */
 gboolean
-gst_pad_start_task (GstPad * pad, GstTaskFunction func, gpointer data)
+gst_pad_start_task (GstPad * pad, GstTaskFunction func, gpointer user_data,
+    GDestroyNotify notify)
 {
   GstTask *task;
   gboolean res;
@@ -5057,9 +5108,10 @@ gst_pad_start_task (GstPad * pad, GstTaskFunction func, gpointer data)
   GST_OBJECT_LOCK (pad);
   task = GST_PAD_TASK (pad);
   if (task == NULL) {
-    task = gst_task_new (func, data);
+    task = gst_task_new (func, user_data, notify);
     gst_task_set_lock (task, GST_PAD_GET_STREAM_LOCK (pad));
-    gst_task_set_thread_callbacks (task, &thr_callbacks, pad, NULL);
+    gst_task_set_enter_callback (task, pad_enter_thread, pad, NULL);
+    gst_task_set_leave_callback (task, pad_leave_thread, pad, NULL);
     GST_INFO_OBJECT (pad, "created task %p", task);
     GST_PAD_TASK (pad) = task;
     gst_object_ref (task);

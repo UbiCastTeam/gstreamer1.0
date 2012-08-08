@@ -157,7 +157,7 @@ element is removed from the bin.
 <p>
 </p>
 <div class="refsect2">
-<a name="idp10089840"></a><h3>Notes</h3>
+<a name="idp6749552"></a><h3>Notes</h3>
 <p>
 A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> posted by its children and
 implements the following default behaviour for each of them:
@@ -308,7 +308,8 @@ the LOCK is taken.
 </tr>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstBin-struct.children"></a>children</code></em>;</span></p></td>
-<td>the list of children in this bin</td>
+<td>the list of children in this bin. <span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Element]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="type">guint32</span> <em class="structfield"><code><a name="GstBin-struct.children-cookie"></a>children_cookie</code></em>;</span></p></td>
@@ -320,7 +321,8 @@ the LOCK is taken.
 </tr>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstBin-struct.messages"></a>messages</code></em>;</span></p></td>
-<td>queued and cached messages</td>
+<td>queued and cached messages. <span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Message]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GstBin-struct.polling"></a>polling</code></em>;</span></p></td>
@@ -839,7 +841,6 @@ calculations will be performed.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -934,7 +935,6 @@ pad when it is not needed any longer.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1022,7 +1022,6 @@ This should be used only if the bin subclass is modifying the state
 of its children on its own.
 </p>
 <p>Default value: FALSE</p>
-<p class="since">Since 0.10.13</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1040,7 +1039,6 @@ a field named 'message' of type GST_TYPE_MESSAGE that contains the original
 forwarded message.
 </p>
 <p>Default value: FALSE</p>
-<p class="since">Since 0.10.31</p>
 </div>
 </div>
 <div class="refsect1">
@@ -1078,7 +1076,6 @@ the same pipeline.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.22</p>
 </div>
 <hr>
 <div class="refsect2">

@@ -83,7 +83,7 @@ options, as shown in the following example.
 <p>
 </p>
 <div class="example">
-<a name="idp7414080"></a><p class="title"><b>Example 1. Initializing the gstreamer library</b></p>
+<a name="idp9241488"></a><p class="title"><b>Example 1. Initializing the gstreamer library</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -99,7 +99,7 @@ options, as shown in the following example.
 <span class="function">main</span> <span class="gtkdoc opt">(</span><span class="gtkdoc kwb">int</span> argc<span class="gtkdoc opt">,</span> <span class="gtkdoc kwb">char</span> <span class="gtkdoc opt">*</span>argv<span class="gtkdoc opt">[])</span>
 <span class="gtkdoc opt">{</span>
   <span class="gtkdoc slc">// initialize the GStreamer library</span>
-  <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-Gst.html#gst-init">gst_init</a></span> <span class="gtkdoc opt">(&amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="../gstreamer-1.0/gstreamer-Gst.html#gst-init">gst_init</a></span> <span class="gtkdoc opt">(&amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
 <span class="gtkdoc opt">}</span></pre></td>
       </tr>
@@ -119,7 +119,7 @@ You can also use GOption to initialize your own parameters as shown in
 the next code fragment:
 </p>
 <div class="example">
-<a name="idp12345008"></a><p class="title"><b>Example 2. Initializing own parameters when initializing gstreamer</b></p>
+<a name="idp10664336"></a><p class="title"><b>Example 2. Initializing own parameters when initializing gstreamer</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -162,9 +162,9 @@ the next code fragment:
    <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Deprecated-Thread-APIs.html#g-thread-init">g_thread_init</a></span> <span class="gtkdoc opt">(</span>NULL<span class="gtkdoc opt">);</span>
  ctx <span class="gtkdoc opt">=</span> <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-new">g_option_context_new</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;[ADDITIONAL ARGUMENTS]&quot;</span><span class="gtkdoc opt">);</span>
  <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-main-entries">g_option_context_add_main_entries</a></span> <span class="gtkdoc opt">(</span>ctx<span class="gtkdoc opt">,</span> options<span class="gtkdoc opt">,</span> GETTEXT_PACKAGE<span class="gtkdoc opt">);</span>
- <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group">g_option_context_add_group</a></span> <span class="gtkdoc opt">(</span>ctx<span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-Gst.html#gst-init-get-option-group">gst_init_get_option_group</a></span> <span class="gtkdoc opt">());</span>
+ <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group">g_option_context_add_group</a></span> <span class="gtkdoc opt">(</span>ctx<span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-Gst.html#gst-init-get-option-group">gst_init_get_option_group</a></span> <span class="gtkdoc opt">());</span>
  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-parse">g_option_context_parse</a></span> <span class="gtkdoc opt">(</span>ctx<span class="gtkdoc opt">, &amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">, &amp;</span>err<span class="gtkdoc opt">)) {</span>
-   <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Error initializing: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-STR-NULL:CAPS">GST_STR_NULL</a></span> <span class="gtkdoc opt">(</span>err<span class="gtkdoc opt">-&gt;</span>message<span class="gtkdoc opt">));</span>
+   <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Error initializing: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-STR-NULL:CAPS">GST_STR_NULL</a></span> <span class="gtkdoc opt">(</span>err<span class="gtkdoc opt">-&gt;</span>message<span class="gtkdoc opt">));</span>
    <span class="function">exit</span> <span class="gtkdoc opt">(</span><span class="number">1</span><span class="gtkdoc opt">);</span>
  <span class="gtkdoc opt">}</span>
  <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-free">g_option_context_free</a></span> <span class="gtkdoc opt">(</span>ctx<span class="gtkdoc opt">);</span>
@@ -337,7 +337,6 @@ or <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_chec
 <td>TRUE if initialization has been done, FALSE otherwise.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -432,7 +431,6 @@ wants to install its own handler without GStreamer interfering.
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if GStreamer is allowed to install a custom SIGSEGV handler.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -449,7 +447,6 @@ the GStreamer core. See <a class="link" href="gstreamer-Gst.html#gst-segtrap-is-
 <td>whether a custom SIGSEGV handler should be installed.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -473,7 +470,6 @@ are scanned (and loaded) into the application process.
 rebuilding the registry.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -491,7 +487,6 @@ information.
 <td>whether rebuilding the registry can use a temporary child helper process.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -527,7 +522,6 @@ Note that this function may block for a significant amount of time.
 imply that there were changes), otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.12</p>
 </div>
 </div>
 </div>

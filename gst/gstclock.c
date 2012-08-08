@@ -261,8 +261,6 @@ gst_clock_entry_reinit (GstClock * clock, GstClockEntry * entry,
  *
  * Returns: %TRUE if the GstClockID could be reinitialized to the provided
  * @time, else %FALSE.
- *
- * Since: 0.10.32
  */
 gboolean
 gst_clock_single_shot_id_reinit (GstClock * clock, GstClockID id,
@@ -284,9 +282,6 @@ gst_clock_single_shot_id_reinit (GstClock * clock, GstClockID id,
  *
  * Returns: %TRUE if the GstClockID could be reinitialized to the provided
  * @time, else %FALSE.
- *
- * Since: 0.10.33
- *
  */
 gboolean
 gst_clock_periodic_id_reinit (GstClock * clock, GstClockID id,
@@ -413,7 +408,7 @@ gst_clock_new_periodic_id (GstClock * clock, GstClockTime start_time,
 }
 
 /**
- * gst_clock_id_compare_func
+ * gst_clock_id_compare_func:
  * @id1: A #GstClockID
  * @id2: A #GstClockID to compare with
  *
@@ -442,7 +437,7 @@ gst_clock_id_compare_func (gconstpointer id1, gconstpointer id2)
 }
 
 /**
- * gst_clock_id_get_time
+ * gst_clock_id_get_time:
  * @id: The #GstClockID to query
  *
  * Get the time of the clock ID
@@ -460,7 +455,7 @@ gst_clock_id_get_time (GstClockID id)
 }
 
 /**
- * gst_clock_id_wait
+ * gst_clock_id_wait:
  * @id: The #GstClockID to wait on
  * @jitter: (out) (allow-none): a pointer that will contain the jitter,
  *     can be %NULL.
@@ -539,7 +534,7 @@ not_supported:
 }
 
 /**
- * gst_clock_id_wait_async_full:
+ * gst_clock_id_wait_async:
  * @id: a #GstClockID to wait on
  * @func: The callback function
  * @user_data: User data passed in the callback
@@ -557,11 +552,9 @@ not_supported:
  * Returns: the result of the non blocking wait.
  *
  * MT safe.
- *
- * Since: 0.10.30
  */
 GstClockReturn
-gst_clock_id_wait_async_full (GstClockID id,
+gst_clock_id_wait_async (GstClockID id,
     GstClockCallback func, gpointer user_data, GDestroyNotify destroy_data)
 {
   GstClockEntry *entry;
@@ -610,32 +603,6 @@ not_supported:
 }
 
 /**
- * gst_clock_id_wait_async:
- * @id: a #GstClockID to wait on
- * @func: The callback function
- * @user_data: User data passed in the callback
- *
- * Register a callback on the given #GstClockID @id with the given
- * function and user_data. When passing a #GstClockID with an invalid
- * time to this function, the callback will be called immediately
- * with  a time set to GST_CLOCK_TIME_NONE. The callback will
- * be called when the time of @id has been reached.
- *
- * The callback @func can be invoked from any thread, either provided by the
- * core or from a streaming thread. The application should be prepared for this.
- *
- * Returns: the result of the non blocking wait.
- *
- * MT safe.
- */
-GstClockReturn
-gst_clock_id_wait_async (GstClockID id,
-    GstClockCallback func, gpointer user_data)
-{
-  return gst_clock_id_wait_async_full (id, func, user_data, NULL);
-}
-
-/**
  * gst_clock_id_unschedule:
  * @id: The id to unschedule
  *
@@ -669,7 +636,7 @@ gst_clock_id_unschedule (GstClockID id)
  * GstClock abstract base class implementation
  */
 #define gst_clock_parent_class parent_class
-G_DEFINE_TYPE (GstClock, gst_clock, GST_TYPE_OBJECT);
+G_DEFINE_ABSTRACT_TYPE (GstClock, gst_clock, GST_TYPE_OBJECT);
 
 static void
 gst_clock_class_init (GstClockClass * klass)
@@ -725,6 +692,9 @@ gst_clock_init (GstClock * clock)
   priv->time_index = 0;
   priv->timeout = DEFAULT_TIMEOUT;
   priv->times = g_new0 (GstClockTime, 4 * priv->window_size);
+
+  /* clear floating flag */
+  gst_object_ref_sink (clock);
 }
 
 static void
@@ -762,7 +732,7 @@ gst_clock_finalize (GObject * object)
 }
 
 /**
- * gst_clock_set_resolution
+ * gst_clock_set_resolution:
  * @clock: a #GstClock
  * @resolution: The resolution to set
  *
@@ -794,7 +764,7 @@ gst_clock_set_resolution (GstClock * clock, GstClockTime resolution)
 }
 
 /**
- * gst_clock_get_resolution
+ * gst_clock_get_resolution:
  * @clock: a #GstClock
  *
  * Get the accuracy of the clock. The accuracy of the clock is the granularity
@@ -820,7 +790,7 @@ gst_clock_get_resolution (GstClock * clock)
 }
 
 /**
- * gst_clock_adjust_unlocked
+ * gst_clock_adjust_unlocked:
  * @clock: a #GstClock to use
  * @internal: a clock time
  *
@@ -876,7 +846,7 @@ gst_clock_adjust_unlocked (GstClock * clock, GstClockTime internal)
 }
 
 /**
- * gst_clock_unadjust_unlocked
+ * gst_clock_unadjust_unlocked:
  * @clock: a #GstClock to use
  * @external: an external clock time
  *
@@ -888,8 +858,6 @@ gst_clock_adjust_unlocked (GstClock * clock, GstClockTime internal)
  * This function is the reverse of gst_clock_adjust_unlocked().
  *
  * Returns: the internal time of the clock corresponding to @external.
- *
- * Since: 0.10.13
  */
 GstClockTime
 gst_clock_unadjust_unlocked (GstClock * clock, GstClockTime external)
@@ -924,7 +892,7 @@ gst_clock_unadjust_unlocked (GstClock * clock, GstClockTime external)
 }
 
 /**
- * gst_clock_get_internal_time
+ * gst_clock_get_internal_time:
  * @clock: a #GstClock to query
  *
  * Gets the current internal time of the given clock. The time is returned
@@ -965,7 +933,7 @@ not_supported:
 }
 
 /**
- * gst_clock_get_time
+ * gst_clock_get_time:
  * @clock: a #GstClock to query
  *
  * Gets the current time of the given clock. The time is always
@@ -1002,7 +970,7 @@ gst_clock_get_time (GstClock * clock)
 }
 
 /**
- * gst_clock_set_calibration
+ * gst_clock_set_calibration:
  * @clock: a #GstClock to calibrate
  * @internal: a reference internal time
  * @external: a reference external time
@@ -1061,7 +1029,7 @@ gst_clock_set_calibration (GstClock * clock, GstClockTime internal, GstClockTime
 }
 
 /**
- * gst_clock_get_calibration
+ * gst_clock_get_calibration:
  * @clock: a #GstClock 
  * @internal: (out) (allow-none): a location to store the internal time
  * @external: (out) (allow-none): a location to store the external time
@@ -1125,7 +1093,7 @@ gst_clock_slave_callback (GstClock * master, GstClockTime time,
 }
 
 /**
- * gst_clock_set_master
+ * gst_clock_set_master:
  * @clock: a #GstClock 
  * @master: (allow-none): a master #GstClock 
  *
@@ -1178,7 +1146,7 @@ gst_clock_set_master (GstClock * clock, GstClock * master)
      * clock calibration. */
     priv->clockid = gst_clock_new_periodic_id (master,
         gst_clock_get_time (master), priv->timeout);
-    gst_clock_id_wait_async_full (priv->clockid,
+    gst_clock_id_wait_async (priv->clockid,
         (GstClockCallback) gst_clock_slave_callback,
         gst_object_ref (clock), (GDestroyNotify) gst_object_unref);
   }
@@ -1358,7 +1326,7 @@ invalid:
 }
 
 /**
- * gst_clock_add_observation
+ * gst_clock_add_observation:
  * @clock: a #GstClock 
  * @slave: a time on the slave
  * @master: a time on the master

@@ -62,7 +62,8 @@ enum                <a class="link" href="gstreamer-GstUriHandler.html#GstURIErr
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
 <a class="link" href="GstElement.html" title="GstElement"><span class="returnvalue">GstElement</span></a> *        <a class="link" href="gstreamer-GstUriHandler.html#gst-element-make-from-uri" title="gst_element_make_from_uri ()">gst_element_make_from_uri</a>           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="type">GstURIType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *elementname</code></em>);
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *elementname</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
 <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="returnvalue">GstURIType</span></a>          <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-uri-type" title="gst_uri_handler_get_uri_type ()">gst_uri_handler_get_uri_type</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> * const * <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-protocols" title="gst_uri_handler_get_protocols ()">gst_uri_handler_get_protocols</a>     (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="gstreamer-GstUriHandler.html#gst-uri-handler-get-uri" title="gst_uri_handler_get_uri ()">gst_uri_handler_get_uri</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);
@@ -189,7 +190,7 @@ The different types of URI direction.
 <div class="refsect2">
 <a name="GstURIError"></a><h3>enum GstURIError</h3>
 <pre class="programlisting">typedef enum {
-  GST_URI_ERROR_BAD_PROTOCOL,
+  GST_URI_ERROR_UNSUPPORTED_PROTOCOL,
   GST_URI_ERROR_BAD_URI,
   GST_URI_ERROR_BAD_STATE,
   GST_URI_ERROR_BAD_REFERENCE
@@ -202,7 +203,7 @@ Different URI-related errors that can occur.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><a name="GST-URI-ERROR-BAD-PROTOCOL:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_BAD_PROTOCOL</code></span></p></td>
+<td><p><a name="GST-URI-ERROR-UNSUPPORTED-PROTOCOL:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_UNSUPPORTED_PROTOCOL</code></span></p></td>
 <td>The protocol is not supported
 </td>
 </tr>
@@ -298,7 +299,6 @@ that a positive return value does not imply that a subsequent call to
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.13</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -348,7 +348,6 @@ Checks if the protocol of a given valid URI matches <em class="parameter"><code>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -394,9 +393,9 @@ Free-function: g_free
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the location for this
-URI. Returns NULL if the URI isn't valid. If the URI does not contain
-a location, an empty string is returned. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span>
+<td>the location for this URI. Returns NULL if the
+URI isn't valid. If the URI does not contain a location, an empty
+string is returned. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -422,14 +421,13 @@ Free-function: g_free
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>location</code></em> :</span></p></td>
-<td>Location for URI. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+<td>Location for URI. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new string for this
-URI. Returns NULL if the given URI protocol is not valid, or the given
-location is NULL. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span>
+<td>a new string for this URI. Returns NULL if the
+given URI protocol is not valid, or the given location is NULL. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -462,14 +460,14 @@ On Windows <span class="type">filename</span> should be in UTF-8 encoding.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-element-make-from-uri"></a><h3>gst_element_make_from_uri ()</h3>
 <pre class="programlisting"><a class="link" href="GstElement.html" title="GstElement"><span class="returnvalue">GstElement</span></a> *        gst_element_make_from_uri           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="type">GstURIType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *elementname</code></em>);</pre>
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *elementname</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>
 Creates an element for handling the given URI.
 </p>
@@ -487,6 +485,11 @@ Creates an element for handling the given URI.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>elementname</code></em> :</span></p></td>
 <td>Name of created element, can be NULL. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
+<td>address where to store error information, or NULL. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -536,9 +539,9 @@ modified.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the
-supported protocols. Returns NULL if the <em class="parameter"><code>handler</code></em> isn't implemented
-properly, or the <em class="parameter"><code>handler</code></em> doesn't support any protocols. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8]</span>
+<td>the supported protocols.
+Returns NULL if the <em class="parameter"><code>handler</code></em> isn't implemented properly, or the <em class="parameter"><code>handler</code></em>
+doesn't support any protocols. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8]</span>
 </td>
 </tr>
 </tbody>

@@ -155,6 +155,7 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-empty" title="gst_tag_list_new_empty ()">gst_tag_list_new_empty</a>              (<em class="parameter"><code><span class="type">void</span></code></em>);
 <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-valist" title="gst_tag_list_new_valist ()">gst_tag_list_new_valist</a>             (<em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);
 <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="returnvalue">GstTagList</span></a> *        <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new-from-string" title="gst_tag_list_new_from_string ()">gst_tag_list_new_from_string</a>        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>);
+#define             <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-free" title="gst_tag_list_free()">gst_tag_list_free</a>                   (taglist)
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-to-string" title="gst_tag_list_to_string ()">gst_tag_list_to_string</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-is-empty" title="gst_tag_list_is_empty ()">gst_tag_list_is_empty</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-is-equal" title="gst_tag_list_is_equal ()">gst_tag_list_is_equal</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list1</code></em>,
@@ -287,13 +288,13 @@ const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-v
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> **value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-buffer" title="gst_tag_list_get_buffer ()">gst_tag_list_get_buffer</a>             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-sample" title="gst_tag_list_get_sample ()">gst_tag_list_get_sample</a>             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **value</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-buffer-index" title="gst_tag_list_get_buffer_index ()">gst_tag_list_get_buffer_index</a>       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> **sample</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-get-sample-index" title="gst_tag_list_get_sample_index ()">gst_tag_list_get_sample_index</a>       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **value</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> **sample</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -354,7 +355,7 @@ In the table below this is shown for the cases that a tag exists in the list
 <p>
 </p>
 <div class="table">
-<a name="idp44575472"></a><p class="title"><b>Table 1. merge mode</b></p>
+<a name="idp44799952"></a><p class="title"><b>Table 1. merge mode</b></p>
 <div class="table-contents"><table summary="merge mode" border="1">
 <colgroup>
 <col>
@@ -587,7 +588,6 @@ commonly used title, as used for sorting (string)
 <p>
 The title as it should be sorted, e.g. 'Doll House, The'
 </p>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -614,7 +614,6 @@ person(s) responsible for the recording, as used for sorting (string)
 The artist name as it should be sorted, e.g. 'Hendrix, Jimi' or
 'Guitar Heroes, The'
 </p>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -639,7 +638,6 @@ album containing this data, as used for sorting (string)
 <p>
 The album name as it should be sorted, e.g. 'Jazz Guitar, The'
 </p>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -649,7 +647,6 @@ The album name as it should be sorted, e.g. 'Jazz Guitar, The'
 <p>
 The artist of the entire album, as it should be displayed.
 </p>
-<p class="since">Since 0.10.25</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -659,7 +656,6 @@ The artist of the entire album, as it should be displayed.
 <p>
 The artist of the entire album, as it should be sorted.
 </p>
-<p class="since">Since 0.10.25</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -678,7 +674,6 @@ date the data was created (<a href="http://library.gnome.org/devel/glib/unstable
 <p>
 date and time the data was created (<a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> structure)
 </p>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -715,7 +710,6 @@ language code.
 This tag is used for unknown Vorbis comment tags,
 unknown APE tags and certain ID3v2 comment fields.
 </p>
-<p class="since">Since 0.10.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -771,7 +765,6 @@ is hosted) (string)
 <p>
 Homepage for this media (i.e. artist or movie homepage) (string)
 </p>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -826,7 +819,6 @@ copyright notice of the data (string)
 <p>
 URI to location where copyright details can be found (string)
 </p>
-<p class="since">Since 0.10.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -842,7 +834,6 @@ copyright message if the person or organisation also holds the copyright
 Note: do not use this field to describe the encoding application. Use
 <a class="link" href="gstreamer-GstTagList.html#GST-TAG-APPLICATION-NAME:CAPS" title="GST_TAG_APPLICATION_NAME"><span class="type">GST_TAG_APPLICATION_NAME</span></a> or <a class="link" href="gstreamer-GstTagList.html#GST-TAG-COMMENT:CAPS" title="GST_TAG_COMMENT"><span class="type">GST_TAG_COMMENT</span></a> for that.
 </p>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -852,7 +843,6 @@ Note: do not use this field to describe the encoding application. Use
 <p>
 person(s) who composed the recording (string)
 </p>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -880,7 +870,6 @@ license of data (string)
 <p>
 URI to location where license details can be found (string)
 </p>
-<p class="since">Since 0.10.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -935,7 +924,6 @@ codec the audio data is stored in (string)
 <p>
 codec/format the subtitle data is stored in (string)
 </p>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -945,7 +933,6 @@ codec/format the subtitle data is stored in (string)
 <p>
 container format the data is stored in (string)
 </p>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1055,7 +1042,6 @@ peak of the album (double)
 <p>
 reference level of track and album gain values (double)
 </p>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1083,7 +1069,6 @@ Free-form name of the language the content is in, if a language code
 is not available. This tag should not be set in addition to a language
 code. It is undefined what language or locale the language name is in.
 </p>
-<p class="since">Since 0.10.37</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1094,7 +1079,6 @@ code. It is undefined what language or locale the language name is in.
 image (sample) (sample taglist should specify the content type and preferably
 also set "image-type" field as <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gsttag.html#GstTagImageType"><span class="type">GstTagImageType</span></a>)
 </p>
-<p class="since">Since 0.10.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1105,7 +1089,6 @@ also set "image-type" field as <a href="http://gstreamer.freedesktop.org/data/do
 image that is meant for preview purposes, e.g. small icon-sized version
 (sample) (sample taglist should specify the content type)
 </p>
-<p class="since">Since 0.10.7</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1117,7 +1100,6 @@ generic file attachment (sample) (sample taglist should specify the content
 type and if possible set "filename" to the file name of the
 attachment)
 </p>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1127,7 +1109,6 @@ attachment)
 <p>
 number of beats per minute in audio (double)
 </p>
-<p class="since">Since 0.10.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1137,7 +1118,6 @@ number of beats per minute in audio (double)
 <p>
 comma separated keywords describing the content (string).
 </p>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1148,7 +1128,6 @@ comma separated keywords describing the content (string).
 human readable descriptive location of where the media has been recorded or
 produced. (string).
 </p>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1160,7 +1139,6 @@ geo latitude location of where the media has been recorded or produced in
 degrees according to WGS84 (zero at the equator, negative values for southern
 latitudes) (double).
 </p>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1172,7 +1150,6 @@ geo longitude location of where the media has been recorded or produced in
 degrees according to WGS84 (zero at the prime meridian in Greenwich/UK,
 negative values for western longitudes). (double).
 </p>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1183,7 +1160,6 @@ negative values for western longitudes). (double).
 geo elevation of where the media has been recorded or produced in meters
 according to WGS84 (zero is average sea level) (double).
 </p>
-<p class="since">Since 0.10.21</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1193,7 +1169,6 @@ according to WGS84 (zero is average sea level) (double).
 <p>
 The city (english name) where the media has been produced (string).
 </p>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1203,7 +1178,6 @@ The city (english name) where the media has been produced (string).
 <p>
 The country (english name) where the media has been produced (string).
 </p>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1218,7 +1192,6 @@ where the media has been produced. (e.g. the neighborhood) (string).
 This tag has been added as this is how it is handled/named in XMP's
 Iptc4xmpcore schema.
 </p>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1229,7 +1202,6 @@ Iptc4xmpcore schema.
 Represents the expected error on the horizontal positioning in
 meters (double).
 </p>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1244,7 +1216,6 @@ of a media. It is represented as degrees in floating point representation,
 <p>
 See also <a class="link" href="gstreamer-GstTagList.html#GST-TAG-GEO-LOCATION-CAPTURE-DIRECTION:CAPS" title="GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION"><span class="type">GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION</span></a>
 </p>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1257,9 +1228,6 @@ Represented in m/s. (double)
 </p>
 <p>
 See also <a class="link" href="gstreamer-GstTagList.html#GST-TAG-GEO-LOCATION-MOVEMENT-DIRECTION:CAPS" title="GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION"><span class="type">GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION</span></a>
-</p>
-<p>
-Since 0.10.30
 </p>
 </div>
 <hr>
@@ -1275,7 +1243,6 @@ a media. It is represented as degrees in floating point representation,
 <p>
 See also <a class="link" href="gstreamer-GstTagList.html#GST-TAG-GEO-LOCATION-MOVEMENT-DIRECTION:CAPS" title="GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION"><span class="type">GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION</span></a>
 </p>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1285,7 +1252,6 @@ See also <a class="link" href="gstreamer-GstTagList.html#GST-TAG-GEO-LOCATION-MO
 <p>
 Name of the show, used for displaying (string)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1295,7 +1261,6 @@ Name of the show, used for displaying (string)
 <p>
 Name of the show, used for sorting (string)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1305,7 +1270,6 @@ Name of the show, used for sorting (string)
 <p>
 Number of the episode within a season/show (unsigned integer)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1315,7 +1279,6 @@ Number of the episode within a season/show (unsigned integer)
 <p>
 Number of the season of a show/series (unsigned integer)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1325,7 +1288,6 @@ Number of the season of a show/series (unsigned integer)
 <p>
 The lyrics of the media (string)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1335,7 +1297,6 @@ The lyrics of the media (string)
 <p>
 The composer's name, used for sorting (string)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1346,7 +1307,6 @@ The composer's name, used for sorting (string)
 Groups together media that are related and spans multiple tracks. An
 example are multiple pieces of a concerto. (string)
 </p>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1358,7 +1318,6 @@ Rating attributed by a person (likely the application user).
 The higher the value, the more the user likes this media
 (unsigned int from 0 to 100)
 </p>
-<p class="since">Since 0.10.29</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1368,7 +1327,6 @@ The higher the value, the more the user likes this media
 <p>
 Manufacturer of the device used to create the media (string)
 </p>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1378,7 +1336,6 @@ Manufacturer of the device used to create the media (string)
 <p>
 Model of the device used to create the media (string)
 </p>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1388,7 +1345,6 @@ Model of the device used to create the media (string)
 <p>
 Name of the application used to create the media (string)
 </p>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1396,13 +1352,12 @@ Name of the application used to create the media (string)
 <pre class="programlisting">#define GST_TAG_APPLICATION_DATA          "application-data"
 </pre>
 <p>
-Arbitrary application data (buffer)
+Arbitrary application data (sample)
 </p>
 <p>
-Some formats allow application's to add their own arbitrary data
-into files. This data is application's dependent.
+Some formats allow applications to add their own arbitrary data
+into files. This data is application dependent.
 </p>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1433,7 +1388,6 @@ yield the same result.
 Rotations indicated by the values are in clockwise direction and
 'flip' means an horizontal mirroring.
 </p>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1762,7 +1716,6 @@ when no longer needed. <span class="annotation">[<acronym title="Free data after
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1809,7 +1762,6 @@ when no longer needed. <span class="annotation">[<acronym title="Free data after
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1832,7 +1784,12 @@ Deserializes a tag list.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.36</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-tag-list-free"></a><h3>gst_tag_list_free()</h3>
+<pre class="programlisting">#define gst_tag_list_free(taglist)    gst_tag_list_unref(taglist)
+</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -1856,7 +1813,6 @@ string must be freed with <a href="http://library.gnome.org/devel/glib/unstable/
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1878,7 +1834,6 @@ Checks if the given taglist is empty.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.11</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1905,7 +1860,6 @@ Checks if the two given taglists are equal.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.36</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2237,7 +2191,6 @@ Sets the GValue for a given tag using the specified mode.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2958,7 +2911,7 @@ to retrieve the first string associated with this tag unmodified.
 </p>
 <p>
 The resulting string in <em class="parameter"><code>value</code></em> will be in UTF-8 encoding and should be
-freed by the caller using g_free when no longer needed. Since 0.10.24 the
+freed by the caller using g_free when no longer needed. The
 returned string is also guaranteed to be non-NULL and non-empty.
 </p>
 <p>
@@ -3001,7 +2954,7 @@ list.
 </p>
 <p>
 The resulting string in <em class="parameter"><code>value</code></em> will be in UTF-8 encoding and should be
-freed by the caller using g_free when no longer needed. Since 0.10.24 the
+freed by the caller using g_free when no longer needed. The
 returned string is also guaranteed to be non-NULL and non-empty.
 </p>
 <p>
@@ -3272,7 +3225,6 @@ thegiven list or if it was <a href="http://library.gnome.org/devel/glib/unstable
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3316,21 +3268,22 @@ given list or if it was <a href="http://library.gnome.org/devel/glib/unstable/gl
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.31</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-tag-list-get-buffer"></a><h3>gst_tag_list_get_buffer ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_buffer             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+<a name="gst-tag-list-get-sample"></a><h3>gst_tag_list_get_sample ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_sample             (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **value</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> **sample</code></em>);</pre>
 <p>
-Copies the first buffer for the given tag in the taglist into the variable
-pointed to by <em class="parameter"><code>value</code></em>. Free the buffer with <a class="link" href="gstreamer-GstBuffer.html#gst-buffer-unref" title="gst_buffer_unref ()"><code class="function">gst_buffer_unref()</code></a> when it is
-no longer needed.
+Copies the first sample for the given tag in the taglist into the variable
+pointed to by <em class="parameter"><code>sample</code></em>. Free the sample with <a class="link" href="gstreamer-GstSample.html#gst-sample-unref" title="gst_sample_unref ()"><code class="function">gst_sample_unref()</code></a> when it is
+no longer needed. You can retrieve the buffer from the sample using
+<a class="link" href="gstreamer-GstSample.html#gst-sample-get-buffer" title="gst_sample_get_buffer ()"><code class="function">gst_sample_get_buffer()</code></a> and the associated caps (if any) with
+<a class="link" href="gstreamer-GstSample.html#gst-sample-get-caps" title="gst_sample_get_caps ()"><code class="function">gst_sample_get_caps()</code></a>.
 </p>
 <p>
-Free-function: gst_buffer_unref
+Free-function: gst_sample_unref
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -3344,34 +3297,35 @@ Free-function: gst_buffer_unref
 <td>tag to read out</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>address of a GstBuffer
+<td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
+<td>address of a GstSample
 pointer variable to store the result into. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a buffer was copied, FALSE if the tag didn't exist in the
-given list or if it was <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>.</td>
+<td>TRUE, if a sample was returned, FALSE if the tag didn't exist in
+the given list or if it was <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-tag-list-get-buffer-index"></a><h3>gst_tag_list_get_buffer_index ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_buffer_index       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+<a name="gst-tag-list-get-sample-index"></a><h3>gst_tag_list_get_sample_index ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_tag_list_get_sample_index       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **value</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> **sample</code></em>);</pre>
 <p>
-Gets the buffer that is at the given index for the given tag in the given
-list and copies it into the variable pointed to by <em class="parameter"><code>value</code></em>. Free the buffer
-with <a class="link" href="gstreamer-GstBuffer.html#gst-buffer-unref" title="gst_buffer_unref ()"><code class="function">gst_buffer_unref()</code></a> when it is no longer needed.
+Gets the sample that is at the given index for the given tag in the given
+list and copies it into the variable pointed to by <em class="parameter"><code>smple</code></em>. Free the sample
+with <a class="link" href="gstreamer-GstSample.html#gst-sample-unref" title="gst_sample_unref ()"><code class="function">gst_sample_unref()</code></a> when it is no longer needed. You can retrieve the
+buffer from the sample using <a class="link" href="gstreamer-GstSample.html#gst-sample-get-buffer" title="gst_sample_get_buffer ()"><code class="function">gst_sample_get_buffer()</code></a> and the associated
+caps (if any) with <a class="link" href="gstreamer-GstSample.html#gst-sample-get-caps" title="gst_sample_get_caps ()"><code class="function">gst_sample_get_caps()</code></a>.
 </p>
 <p>
-Free-function: gst_buffer_unref
+Free-function: gst_sample_unref
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -3389,19 +3343,18 @@ Free-function: gst_buffer_unref
 <td>number of entry to read out</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>address of a GstBuffer
+<td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
+<td>address of a GstSample
 pointer variable to store the result into. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE, if a buffer was copied, FALSE if the tag didn't exist in the
+<td>TRUE, if a sample was copied, FALSE if the tag didn't exist in the
 given list or if it was <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 </div>
 </div>

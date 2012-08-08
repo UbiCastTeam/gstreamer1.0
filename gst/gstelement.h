@@ -127,8 +127,6 @@ typedef enum {
  * @elem: a #GstElement to return the target state for.
  *
  * This macro returns the target #GstState of the element.
- *
- * Since: 0.10.13
  */
 #define GST_STATE_TARGET(elem)          (GST_ELEMENT_CAST(elem)->target_state)
 
@@ -313,11 +311,9 @@ typedef enum /*< flags=0 >*/
 
 /**
  * GstElementFlags:
- * @GST_ELEMENT_FLAG_UNPARENTING: Child is being removed from the parent bin.
- *  gst_bin_remove() on a child already being removed immediately returns FALSE
  * @GST_ELEMENT_FLAG_LOCKED_STATE: ignore state changes from parent
  * @GST_ELEMENT_FLAG_SINK: the element is a sink
- * @GST_ELEMENT_FLAG_SOURCE: the element is a source. Since 0.10.31
+ * @GST_ELEMENT_FLAG_SOURCE: the element is a source.
  * @GST_ELEMENT_FLAG_PROVIDE_CLOCK: the element can provide a clock
  * @GST_ELEMENT_FLAG_REQUIRE_CLOCK: the element requires a clock
  * @GST_ELEMENT_FLAG_INDEXABLE: the element can use an index
@@ -327,13 +323,12 @@ typedef enum /*< flags=0 >*/
  */
 typedef enum
 {
-  GST_ELEMENT_FLAG_UNPARENTING    = (GST_OBJECT_FLAG_LAST << 0),
-  GST_ELEMENT_FLAG_LOCKED_STATE   = (GST_OBJECT_FLAG_LAST << 1),
-  GST_ELEMENT_FLAG_SINK           = (GST_OBJECT_FLAG_LAST << 2),
-  GST_ELEMENT_FLAG_SOURCE         = (GST_OBJECT_FLAG_LAST << 3),
-  GST_ELEMENT_FLAG_PROVIDE_CLOCK  = (GST_OBJECT_FLAG_LAST << 4),
-  GST_ELEMENT_FLAG_REQUIRE_CLOCK  = (GST_OBJECT_FLAG_LAST << 5),
-  GST_ELEMENT_FLAG_INDEXABLE      = (GST_OBJECT_FLAG_LAST << 6),
+  GST_ELEMENT_FLAG_LOCKED_STATE   = (GST_OBJECT_FLAG_LAST << 0),
+  GST_ELEMENT_FLAG_SINK           = (GST_OBJECT_FLAG_LAST << 1),
+  GST_ELEMENT_FLAG_SOURCE         = (GST_OBJECT_FLAG_LAST << 2),
+  GST_ELEMENT_FLAG_PROVIDE_CLOCK  = (GST_OBJECT_FLAG_LAST << 3),
+  GST_ELEMENT_FLAG_REQUIRE_CLOCK  = (GST_OBJECT_FLAG_LAST << 4),
+  GST_ELEMENT_FLAG_INDEXABLE      = (GST_OBJECT_FLAG_LAST << 5),
   /* padding */
   GST_ELEMENT_FLAG_LAST           = (GST_OBJECT_FLAG_LAST << 10)
 } GstElementFlags;
@@ -394,8 +389,6 @@ typedef enum
  *
  * This macro returns the start_time of the @elem. The start_time is the
  * running_time of the pipeline when the element went to PAUSED.
- *
- * Since: 0.10.24
  */
 #define GST_ELEMENT_START_TIME(elem)            (GST_ELEMENT_CAST(elem)->start_time)
 
@@ -467,8 +460,6 @@ G_STMT_START {                                                          \
  * the application of something noteworthy that is not an error.
  * The pipeline will post a info message and the
  * application will be informed.
- *
- * Since: 0.10.12
  */
 #define GST_ELEMENT_INFO(el, domain, code, text, debug)                 \
 G_STMT_START {                                                          \
@@ -535,11 +526,11 @@ G_STMT_START {                                                          \
  * state will yield the running_time against the clock.
  * @start_time: the running_time of the last PAUSED state
  * @numpads: number of pads of the element, includes both source and sink pads.
- * @pads: list of pads
+ * @pads: (element-type Gst.Pad): list of pads
  * @numsrcpads: number of source pads of the element.
- * @srcpads: list of source pads
+ * @srcpads: (element-type Gst.Pad): list of source pads
  * @numsinkpads: number of sink pads of the element.
- * @sinkpads: list of sink pads
+ * @sinkpads: (element-type Gst.Pad): list of sink pads
  * @pads_cookie: updated whenever the a pad is added or removed
  *
  * GStreamer element abstract base class.
@@ -761,7 +752,7 @@ GstIterator *           gst_element_iterate_sink_pads   (GstElement * element);
 gboolean                gst_element_send_event          (GstElement *element, GstEvent *event);
 gboolean                gst_element_seek                (GstElement *element, gdouble rate,
                                                          GstFormat format, GstSeekFlags flags,
-                                                         GstSeekType cur_type, gint64 cur,
+                                                         GstSeekType start_type, gint64 start,
                                                          GstSeekType stop_type, gint64 stop);
 gboolean                gst_element_query               (GstElement *element, GstQuery *query);
 

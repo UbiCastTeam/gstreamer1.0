@@ -46,10 +46,8 @@
  * By using this, it will buffer the entire stream data on the file independently
  * of the queue size limits, they will only be used for buffering statistics.
  *
- * Since 0.10.24, setting the temp-location property with a filename is deprecated
- * because it's impossible to securely open a temporary file in this way. The
- * property will still be used to notify the application of the allocated
- * filename, though.
+ * The temp-location property will be used to notify the application of the
+ * allocated filename.
  *
  * Last reviewed on 2009-07-10 (0.10.24)
  */
@@ -98,7 +96,7 @@ enum
 
 /* other defines */
 #define DEFAULT_BUFFER_SIZE 4096
-#define QUEUE_IS_USING_TEMP_FILE(queue) ((queue)->temp_location_set || (queue)->temp_template != NULL)
+#define QUEUE_IS_USING_TEMP_FILE(queue) ((queue)->temp_template != NULL)
 #define QUEUE_IS_USING_RING_BUFFER(queue) ((queue)->ring_buffer_max_size != 0)  /* for consistency with the above macro */
 #define QUEUE_IS_USING_QUEUE(queue) (!QUEUE_IS_USING_TEMP_FILE(queue) && !QUEUE_IS_USING_RING_BUFFER (queue))
 
@@ -334,16 +332,14 @@ gst_queue2_class_init (GstQueue2Class * klass)
 
   g_object_class_install_property (gobject_class, PROP_TEMP_LOCATION,
       g_param_spec_string ("temp-location", "Temporary File Location",
-          "Location to store temporary files in (Deprecated: Only read this "
-          "property, use temp-template to configure the name template)",
-          NULL, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          "Location to store temporary files in (Only read this property, "
+          "use temp-template to configure the name template)",
+          NULL, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
    * GstQueue2:temp-remove
    *
    * When temp-template is set, remove the temporary file when going to READY.
-   *
-   * Since: 0.10.26
    */
   g_object_class_install_property (gobject_class, PROP_TEMP_REMOVE,
       g_param_spec_boolean ("temp-remove", "Remove the Temporary File",
@@ -355,8 +351,6 @@ gst_queue2_class_init (GstQueue2Class * klass)
    *
    * The maximum size of the ring buffer in bytes. If set to 0, the ring
    * buffer is disabled. Default 0.
-   *
-   * Since: 0.10.31
    */
   g_object_class_install_property (gobject_class, PROP_RING_BUFFER_MAX_SIZE,
       g_param_spec_uint64 ("ring-buffer-max-size",
@@ -451,7 +445,6 @@ gst_queue2_init (GstQueue2 * queue)
   /* tempfile related */
   queue->temp_template = NULL;
   queue->temp_location = NULL;
-  queue->temp_location_set = FALSE;
   queue->temp_remove = DEFAULT_TEMP_REMOVE;
 
   queue->ring_buffer = NULL;
@@ -786,7 +779,6 @@ update_buffering (GstQueue2 * queue)
     GST_LOG_OBJECT (queue, "we are EOS");
   } else {
     /* figure out the percent we are filled, we take the max of all formats. */
-
     if (!QUEUE_IS_USING_RING_BUFFER (queue)) {
       percent = GET_PERCENT (bytes, 0);
     } else {
@@ -817,8 +809,6 @@ update_buffering (GstQueue2 * queue)
   }
   if (post) {
     GstMessage *message;
-    GstBufferingMode mode;
-    gint64 buffering_left = -1;
 
     /* scale to high percent so that it becomes the 100% mark */
     percent = percent * 100 / queue->high_percent;
@@ -826,29 +816,32 @@ update_buffering (GstQueue2 * queue)
     if (percent > 100)
       percent = 100;
 
+
     if (percent != queue->buffering_percent) {
+      GstBufferingMode mode;
+      gint64 buffering_left;
+
+      buffering_left = (percent == 100 ? 0 : -1);
+
       queue->buffering_percent = percent;
 
       if (!QUEUE_IS_USING_QUEUE (queue)) {
-        gint64 duration;
-
         if (QUEUE_IS_USING_RING_BUFFER (queue))
           mode = GST_BUFFERING_TIMESHIFT;
         else
           mode = GST_BUFFERING_DOWNLOAD;
-
-        if (queue->byte_in_rate > 0) {
-          if (gst_pad_peer_query_duration (queue->sinkpad, GST_FORMAT_BYTES,
-                  &duration)) {
-            buffering_left =
-                (gdouble) ((duration -
-                    queue->current->writing_pos) * 1000) / queue->byte_in_rate;
-          }
-        } else {
-          buffering_left = G_MAXINT64;
-        }
       } else {
         mode = GST_BUFFERING_STREAM;
+      }
+
+      if (queue->use_rate_estimate) {
+        guint64 max, cur;
+
+        max = queue->max_level.rate_time;
+        cur = queue->cur_level.rate_time;
+
+        if (percent != 100 && max > cur)
+          buffering_left = (max - cur) / 1000000;
       }
 
       GST_DEBUG_OBJECT (queue, "buffering %d percent", (gint) percent);
@@ -1374,45 +1367,34 @@ gst_queue2_open_temp_location_file (GstQueue2 * queue)
 
   GST_DEBUG_OBJECT (queue, "opening temp file %s", queue->temp_template);
 
-  /* we have two cases:
-   * - temp_location was set to something !NULL (Deprecated). in this case we
-   *   open the specified filename.
-   * - temp_template was set, allocate a filename and open that filename
-   */
-  if (!queue->temp_location_set) {
-    /* nothing to do */
-    if (queue->temp_template == NULL)
-      goto no_directory;
+  /* If temp_template was set, allocate a filename and open that filen */
 
-    /* make copy of the template, we don't want to change this */
-    name = g_strdup (queue->temp_template);
-    fd = g_mkstemp (name);
-    if (fd == -1)
-      goto mkstemp_failed;
+  /* nothing to do */
+  if (queue->temp_template == NULL)
+    goto no_directory;
 
-    /* open the file for update/writing */
-    queue->temp_file = fdopen (fd, "wb+");
-    /* error creating file */
-    if (queue->temp_file == NULL)
-      goto open_failed;
+  /* make copy of the template, we don't want to change this */
+  name = g_strdup (queue->temp_template);
+  fd = g_mkstemp (name);
+  if (fd == -1)
+    goto mkstemp_failed;
 
-    g_free (queue->temp_location);
-    queue->temp_location = name;
+  /* open the file for update/writing */
+  queue->temp_file = fdopen (fd, "wb+");
+  /* error creating file */
+  if (queue->temp_file == NULL)
+    goto open_failed;
 
-    GST_QUEUE2_MUTEX_UNLOCK (queue);
+  g_free (queue->temp_location);
+  queue->temp_location = name;
 
-    /* we can't emit the notify with the lock */
-    g_object_notify (G_OBJECT (queue), "temp-location");
+  GST_QUEUE2_MUTEX_UNLOCK (queue);
 
-    GST_QUEUE2_MUTEX_LOCK (queue);
-  } else {
-    /* open the file for update/writing, this is deprecated but we still need to
-     * support it for API/ABI compatibility */
-    queue->temp_file = g_fopen (queue->temp_location, "wb+");
-    /* error creating file */
-    if (queue->temp_file == NULL)
-      goto open_failed;
-  }
+  /* we can't emit the notify with the lock */
+  g_object_notify (G_OBJECT (queue), "temp-location");
+
+  GST_QUEUE2_MUTEX_LOCK (queue);
+
   GST_DEBUG_OBJECT (queue, "opened temp file %s", queue->temp_template);
 
   return TRUE;
@@ -1941,6 +1923,19 @@ gst_queue2_locked_enqueue (GstQueue2 * queue, gpointer item,
           item = NULL;
         }
         break;
+      case GST_EVENT_CAPS:{
+        GstCaps *caps;
+
+        gst_event_parse_caps (event, &caps);
+        GST_INFO ("got caps: %" GST_PTR_FORMAT, caps);
+
+        if (!QUEUE_IS_USING_QUEUE (queue)) {
+          GST_LOG ("Dropping caps event, not using queue");
+          gst_event_unref (event);
+          item = NULL;
+        }
+        break;
+      }
       default:
         if (!QUEUE_IS_USING_QUEUE (queue))
           goto unexpected_event;
@@ -2139,7 +2134,7 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
         /* reset rate counters */
         reset_rate_timer (queue);
         gst_pad_start_task (queue->srcpad, (GstTaskFunction) gst_queue2_loop,
-            queue->srcpad);
+            queue->srcpad, NULL);
         GST_QUEUE2_MUTEX_UNLOCK (queue);
       } else {
         GST_QUEUE2_MUTEX_LOCK (queue);
@@ -2697,16 +2692,31 @@ gst_queue2_handle_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
               GST_FORMAT_BYTES, &duration);
         }
 
+        GST_DEBUG_OBJECT (queue, "percent %d, duration %" G_GINT64_FORMAT
+            ", writing %" G_GINT64_FORMAT, percent, duration, writing_pos);
+
         /* calculate remaining and total download time */
-        if (peer_res && byte_in_rate > 0.0) {
-          estimated_total = (duration * 1000) / byte_in_rate;
-          buffering_left = ((duration - writing_pos) * 1000) / byte_in_rate;
-        } else {
+        if (peer_res && byte_in_rate > 0.0)
+          estimated_total = ((duration - writing_pos) * 1000) / byte_in_rate;
+        else
           estimated_total = -1;
-          buffering_left = -1;
+
+        /* calculate estimated remaining buffer time */
+        buffering_left = (percent == 100 ? 0 : -1);
+
+        if (queue->use_rate_estimate) {
+          guint64 max, cur;
+
+          max = queue->max_level.rate_time;
+          cur = queue->cur_level.rate_time;
+
+          if (percent != 100 && max > cur)
+            buffering_left = (max - cur) / 1000000;
         }
-        GST_DEBUG_OBJECT (queue, "estimated %" G_GINT64_FORMAT ", left %"
-            G_GINT64_FORMAT, estimated_total, buffering_left);
+
+        GST_DEBUG_OBJECT (queue, "estimated-total %" G_GINT64_FORMAT
+            ", buffering-left %" G_GINT64_FORMAT, estimated_total,
+            buffering_left);
 
         gst_query_parse_buffering_range (query, &format, NULL, NULL, NULL);
 
@@ -2716,14 +2726,12 @@ gst_queue2_handle_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
             if (!peer_res)
               goto peer_failed;
 
-            GST_DEBUG_OBJECT (queue,
-                "duration %" G_GINT64_FORMAT ", writing %" G_GINT64_FORMAT,
-                duration, writing_pos);
-
             start = 0;
             /* get our available data relative to the duration */
             if (duration != -1)
-              stop = GST_FORMAT_PERCENT_MAX * writing_pos / duration;
+              stop =
+                  gst_util_uint64_scale (GST_FORMAT_PERCENT_MAX, writing_pos,
+                  duration);
             else
               stop = -1;
             break;
@@ -2747,8 +2755,12 @@ gst_queue2_handle_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
                 range_stop = 0;
                 break;
               }
-              range_start = 100 * queued_ranges->offset / duration;
-              range_stop = 100 * queued_ranges->writing_pos / duration;
+              range_start =
+                  gst_util_uint64_scale (GST_FORMAT_PERCENT_MAX,
+                  queued_ranges->offset, duration);
+              range_stop =
+                  gst_util_uint64_scale (GST_FORMAT_PERCENT_MAX,
+                  queued_ranges->writing_pos, duration);
               break;
             case GST_FORMAT_BYTES:
               range_start = queued_ranges->offset;
@@ -2768,10 +2780,10 @@ gst_queue2_handle_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
         }
 
         gst_query_set_buffering_percent (query, is_buffering, percent);
-        gst_query_set_buffering_range (query, format, start, stop,
-            estimated_total);
         gst_query_set_buffering_stats (query, GST_BUFFERING_DOWNLOAD,
             byte_in_rate, byte_out_rate, buffering_left);
+        gst_query_set_buffering_range (query, format, start, stop,
+            estimated_total);
       }
       break;
     }
@@ -2944,7 +2956,8 @@ gst_queue2_src_activate_push (GstPad * pad, GstObject * parent, gboolean active)
     queue->sinkresult = GST_FLOW_OK;
     queue->is_eos = FALSE;
     queue->unexpected = FALSE;
-    result = gst_pad_start_task (pad, (GstTaskFunction) gst_queue2_loop, pad);
+    result =
+        gst_pad_start_task (pad, (GstTaskFunction) gst_queue2_loop, pad, NULL);
     GST_QUEUE2_MUTEX_UNLOCK (queue);
   } else {
     /* unblock loop function */
@@ -3191,13 +3204,6 @@ gst_queue2_set_property (GObject * object,
       break;
     case PROP_TEMP_TEMPLATE:
       gst_queue2_set_temp_template (queue, g_value_get_string (value));
-      break;
-    case PROP_TEMP_LOCATION:
-      g_free (queue->temp_location);
-      queue->temp_location = g_value_dup_string (value);
-      /* you can set the property back to NULL to make it use the temp-template
-       * property. */
-      queue->temp_location_set = queue->temp_location != NULL;
       break;
     case PROP_TEMP_REMOVE:
       queue->temp_remove = g_value_get_boolean (value);

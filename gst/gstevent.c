@@ -229,11 +229,10 @@ _gst_event_free (GstEvent * event)
     gst_structure_free (s);
   }
 
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (event), event);
+  g_slice_free1 (sizeof (GstEventImpl), event);
 }
 
-static void gst_event_init (GstEventImpl * event, gsize size,
-    GstEventType type);
+static void gst_event_init (GstEventImpl * event, GstEventType type);
 
 static GstEvent *
 _gst_event_copy (GstEvent * event)
@@ -243,7 +242,7 @@ _gst_event_copy (GstEvent * event)
 
   copy = g_slice_new0 (GstEventImpl);
 
-  gst_event_init (copy, sizeof (GstEventImpl), GST_EVENT_TYPE (event));
+  gst_event_init (copy, GST_EVENT_TYPE (event));
 
   GST_EVENT_TIMESTAMP (copy) = GST_EVENT_TIMESTAMP (event);
   GST_EVENT_SEQNUM (copy) = GST_EVENT_SEQNUM (event);
@@ -260,12 +259,11 @@ _gst_event_copy (GstEvent * event)
 }
 
 static void
-gst_event_init (GstEventImpl * event, gsize size, GstEventType type)
+gst_event_init (GstEventImpl * event, GstEventType type)
 {
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (event), _gst_event_type, size);
-
-  event->event.mini_object.copy = (GstMiniObjectCopyFunction) _gst_event_copy;
-  event->event.mini_object.free = (GstMiniObjectFreeFunction) _gst_event_free;
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (event), 0, _gst_event_type,
+      (GstMiniObjectCopyFunction) _gst_event_copy, NULL,
+      (GstMiniObjectFreeFunction) _gst_event_free);
 
   GST_EVENT_TYPE (event) = type;
   GST_EVENT_TIMESTAMP (event) = GST_CLOCK_TIME_NONE;
@@ -309,7 +307,7 @@ gst_event_new_custom (GstEventType type, GstStructure * structure)
       goto had_parent;
 
   }
-  gst_event_init (event, sizeof (GstEventImpl), type);
+  gst_event_init (event, type);
 
   GST_EVENT_STRUCTURE (event) = structure;
 
@@ -318,7 +316,7 @@ gst_event_new_custom (GstEventType type, GstStructure * structure)
   /* ERRORS */
 had_parent:
   {
-    g_slice_free1 (GST_MINI_OBJECT_SIZE (event), event);
+    g_slice_free1 (sizeof (GstEventImpl), event);
     g_warning ("structure is already owned by another object");
     return NULL;
   }
@@ -386,8 +384,6 @@ gst_event_writable_structure (GstEvent * event)
  * check the name of a custom event.
  *
  * Returns: %TRUE if @name matches the name of the event structure.
- *
- * Since: 0.10.20
  */
 gboolean
 gst_event_has_name (GstEvent * event, const gchar * name)
@@ -420,8 +416,6 @@ gst_event_has_name (GstEvent * event, const gchar * name)
  * Returns: The event's sequence number.
  *
  * MT safe.
- *
- * Since: 0.10.22
  */
 guint32
 gst_event_get_seqnum (GstEvent * event)
@@ -443,8 +437,6 @@ gst_event_get_seqnum (GstEvent * event)
  * more information.
  *
  * MT safe.
- *
- * Since: 0.10.22
  */
 void
 gst_event_set_seqnum (GstEvent * event, guint32 seqnum)
@@ -647,7 +639,7 @@ gst_event_new_caps (GstCaps * caps)
 /**
  * gst_event_parse_caps:
  * @event: The event to parse
- * @caps: (out): A pointer to the caps
+ * @caps: (out) (transfer none): A pointer to the caps
  *
  * Get the caps from @event. The caps remains valid as long as @event remains
  * valid.
@@ -992,26 +984,29 @@ gst_event_copy_segment (GstEvent * event, GstSegment * segment)
 
 /**
  * gst_event_new_tag:
- * @name: (transfer none): the name of the event
  * @taglist: (transfer full): metadata list. The event will take ownership
  *     of the taglist.
  *
  * Generates a metadata tag event from the given @taglist.
  *
- * Since the TAG event has the %GST_EVENT_TYPE_STICKY_MULTI flag set, the
- * @name will be used to keep track of multiple tag events.
+ * The scope of the taglist specifies if the taglist applies to the
+ * complete medium or only to this specific stream. As the tag event
+ * is a sticky event, elements should merge tags received from
+ * upstream with a given scope with their own tags with the same
+ * scope and create a new tag event from it.
  *
  * Returns: (transfer full): a new #GstEvent
  */
 GstEvent *
-gst_event_new_tag (const gchar * name, GstTagList * taglist)
+gst_event_new_tag (GstTagList * taglist)
 {
   GstStructure *s;
   GValue val = G_VALUE_INIT;
+  const gchar *names[] = { "GstTagList-stream", "GstTagList-global" };
 
   g_return_val_if_fail (taglist != NULL, NULL);
 
-  s = gst_structure_new_empty (name);
+  s = gst_structure_new_empty (names[gst_tag_list_get_scope (taglist)]);
   g_value_init (&val, GST_TYPE_TAG_LIST);
   g_value_take_boxed (&val, taglist);
   gst_structure_id_take_value (s, GST_QUARK (TAGLIST), &val);
@@ -1399,8 +1394,6 @@ gst_event_new_navigation (GstStructure * structure)
  * the time format.
  *
  * Returns: (transfer full): a new #GstEvent
- *
- * Since: 0.10.12
  */
 GstEvent *
 gst_event_new_latency (GstClockTime latency)
@@ -1424,8 +1417,6 @@ gst_event_new_latency (GstClockTime latency)
  * @latency: (out): A pointer to store the latency in.
  *
  * Get the latency in the latency event.
- *
- * Since: 0.10.12
  */
 void
 gst_event_parse_latency (GstEvent * event, GstClockTime * latency)
@@ -1462,8 +1453,6 @@ gst_event_parse_latency (GstEvent * event, GstClockTime * latency)
  * part of a larger step operation.
  *
  * Returns: (transfer full): a new #GstEvent
- *
- * Since: 0.10.24
  */
 GstEvent *
 gst_event_new_step (GstFormat format, guint64 amount, gdouble rate,
@@ -1498,8 +1487,6 @@ gst_event_new_step (GstFormat format, guint64 amount, gdouble rate,
  *     boolean in
  *
  * Parse the step event.
- *
- * Since: 0.10.24
  */
 void
 gst_event_parse_step (GstEvent * event, GstFormat * format, guint64 * amount,
@@ -1538,8 +1525,6 @@ gst_event_parse_step (GstEvent * event, GstFormat * format, guint64 * amount,
  * or changing the topology of the pipeline.
  *
  * Returns: (transfer full): a new #GstEvent
- *
- * Since: 0.11.0
  */
 GstEvent *
 gst_event_new_reconfigure (void)
@@ -1565,8 +1550,6 @@ gst_event_new_reconfigure (void)
  * @name is used to store multiple sticky events on one pad.
  *
  * Returns: (transfer full): a new #GstEvent
- *
- * Since: 0.10.26
  */
 /* FIXME 0.11: take ownership of msg for consistency? */
 GstEvent *
@@ -1592,8 +1575,6 @@ gst_event_new_sink_message (const gchar * name, GstMessage * msg)
  * @msg: (out) (transfer full): a pointer to store the #GstMessage in.
  *
  * Parse the sink-message event. Unref @msg after usage.
- *
- * Since: 0.10.26
  */
 void
 gst_event_parse_sink_message (GstEvent * event, GstMessage ** msg)
@@ -1611,7 +1592,8 @@ gst_event_parse_sink_message (GstEvent * event, GstMessage ** msg)
 }
 
 /**
- * gst_event_new_stream_start
+ * gst_event_new_stream_start:
+ * @stream_id: Identifier for this stream
  *
  * Create a new STREAM_START event. The stream start event can only
  * travel downstream synchronized with the buffer flow. It is expected
@@ -1624,54 +1606,91 @@ gst_event_parse_sink_message (GstEvent * event, GstMessage ** msg)
  * combining multiple streams must ensure that this event is only forwarded
  * downstream once and not for every single input stream.
  *
+ * The @stream_id should be a unique string that consists of the upstream
+ * stream-id, / as separator and a unique stream-id for this specific
+ * stream. A new stream-id should only be created for a stream if the upstream
+ * stream is split into (potentially) multiple new streams, e.g. in a demuxer,
+ * but not for every single element in the pipeline.
+ * gst_util_create_stream_id() can be used to create a stream-id.
+ *
  * Returns: (transfer full): the new STREAM_START event.
  */
 GstEvent *
-gst_event_new_stream_start (void)
+gst_event_new_stream_start (const gchar * stream_id)
 {
-  return gst_event_new_custom (GST_EVENT_STREAM_START, NULL);
+  GstStructure *s;
+
+  g_return_val_if_fail (stream_id != NULL, NULL);
+
+  s = gst_structure_new_id (GST_QUARK (EVENT_STREAM_START),
+      GST_QUARK (STREAM_ID), G_TYPE_STRING, stream_id, NULL);
+
+  return gst_event_new_custom (GST_EVENT_STREAM_START, s);
+}
+
+/**
+ * gst_event_parse_stream_start:
+ * @event: a stream-start event.
+ * @stream_id: (out): pointer to store the stream-id
+ *
+ * Parse a stream-id @event and store the result in the given @stream_id location.
+ */
+void
+gst_event_parse_stream_start (GstEvent * event, const gchar ** stream_id)
+{
+  const GstStructure *structure;
+
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START);
+
+  structure = gst_event_get_structure (event);
+
+  if (stream_id)
+    gst_structure_id_get (structure,
+        GST_QUARK (STREAM_ID), G_TYPE_STRING, stream_id, NULL);
 }
 
 /**
  * gst_event_new_toc:
- * @name: a name for the event
- * @toc: #GstToc structure.
+ * @toc: (transfer none): #GstToc structure.
  * @updated: whether @toc was updated or not.
  *
  * Generate a TOC event from the given @toc. The purpose of the TOC event is to
  * inform elements that some kind of the TOC was found.
  *
- * Returns: a new #GstEvent.
- *
- * Since: 0.10.37
+ * Returns: (transfer full): a new #GstEvent.
  */
 GstEvent *
 gst_event_new_toc (GstToc * toc, gboolean updated)
 {
   GstStructure *toc_struct;
+  GQuark id;
 
   g_return_val_if_fail (toc != NULL, NULL);
 
   GST_CAT_INFO (GST_CAT_EVENT, "creating toc event");
 
-  toc_struct = __gst_toc_to_structure (toc);
+  /* need different structure names so sticky_multi event stuff on pads
+   * works, i.e. both TOC events are kept around */
+  if (gst_toc_get_scope (toc) == GST_TOC_SCOPE_GLOBAL)
+    id = GST_QUARK (EVENT_TOC_GLOBAL);
+  else
+    id = GST_QUARK (EVENT_TOC_CURRENT);
 
-  if (G_LIKELY (toc_struct != NULL)) {
-    __gst_toc_structure_set_updated (toc_struct, updated);
-    return gst_event_new_custom (GST_EVENT_TOC, toc_struct);
-  } else
-    return NULL;
+  toc_struct = gst_structure_new_id (id,
+      GST_QUARK (TOC), GST_TYPE_TOC, toc,
+      GST_QUARK (UPDATED), G_TYPE_BOOLEAN, updated, NULL);
+
+  return gst_event_new_custom (GST_EVENT_TOC, toc_struct);
 }
 
 /**
  * gst_event_parse_toc:
  * @event: a TOC event.
- * @toc: (out): pointer to #GstToc structure.
+ * @toc: (out) (transfer full): pointer to #GstToc structure.
  * @updated: (out): pointer to store TOC updated flag.
  *
  * Parse a TOC @event and store the results in the given @toc and @updated locations.
- *
- * Since: 0.10.37
  */
 void
 gst_event_parse_toc (GstEvent * event, GstToc ** toc, gboolean * updated)
@@ -1683,10 +1702,10 @@ gst_event_parse_toc (GstEvent * event, GstToc ** toc, gboolean * updated)
   g_return_if_fail (toc != NULL);
 
   structure = gst_event_get_structure (event);
-  *toc = __gst_toc_from_structure (structure);
 
-  if (updated != NULL)
-    *updated = __gst_toc_structure_get_updated (structure);
+  gst_structure_id_get (structure,
+      GST_QUARK (TOC), GST_TYPE_TOC, toc,
+      GST_QUARK (UPDATED), G_TYPE_BOOLEAN, updated, NULL);
 }
 
 /**
@@ -1698,8 +1717,6 @@ gst_event_parse_toc (GstEvent * event, GstToc ** toc, gboolean * updated)
  * given @uid.
  *
  * Returns: a new #GstEvent.
- *
- * Since: 0.10.37
  */
 GstEvent *
 gst_event_new_toc_select (const gchar * uid)
@@ -1722,8 +1739,6 @@ gst_event_new_toc_select (const gchar * uid)
  * @uid: (out): storage for the selection UID.
  *
  * Parse a TOC select @event and store the results in the given @uid location.
- *
- * Since: 0.10.37
  */
 void
 gst_event_parse_toc_select (GstEvent * event, gchar ** uid)
@@ -1740,4 +1755,61 @@ gst_event_parse_toc_select (GstEvent * event, gchar ** uid)
   if (uid != NULL)
     *uid = g_strdup (g_value_get_string (val));
 
+}
+
+/**
+ * gst_event_new_segment_done:
+ * @format: The format of the position being done
+ * @position: The position of the segment being done
+ *
+ * Create a new segment-done event. This event is sent by elements that
+ * finish playback of a segment as a result of a segment seek.
+ *
+ * Returns: (transfer full): a new #GstEvent
+ */
+GstEvent *
+gst_event_new_segment_done (GstFormat format, gint64 position)
+{
+  GstEvent *event;
+  GstStructure *structure;
+
+  GST_CAT_INFO (GST_CAT_EVENT, "creating segment-done event");
+
+  structure = gst_structure_new_id (GST_QUARK (EVENT_SEGMENT_DONE),
+      GST_QUARK (FORMAT), GST_TYPE_FORMAT, format,
+      GST_QUARK (POSITION), G_TYPE_INT64, position, NULL);
+
+  event = gst_event_new_custom (GST_EVENT_SEGMENT_DONE, structure);
+
+  return event;
+}
+
+/**
+ * gst_event_parse_segment_done:
+ * @event: A valid #GstEvent of type GST_EVENT_SEGMENT_DONE.
+ * @format: (out): Result location for the format, or NULL
+ * @position: (out): Result location for the position, or NULL
+ *
+ * Extracts the position and format from the segment done message.
+ *
+ */
+void
+gst_event_parse_segment_done (GstEvent * event, GstFormat * format,
+    gint64 * position)
+{
+  const GstStructure *structure;
+  const GValue *val;
+
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_SEGMENT_DONE);
+
+  structure = gst_event_get_structure (event);
+
+  val = gst_structure_id_get_value (structure, GST_QUARK (FORMAT));
+  if (format != NULL)
+    *format = g_value_get_enum (val);
+
+  val = gst_structure_id_get_value (structure, GST_QUARK (POSITION));
+  if (position != NULL)
+    *position = g_value_get_int64 (val);
 }

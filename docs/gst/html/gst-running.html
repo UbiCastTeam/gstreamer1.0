@@ -31,9 +31,9 @@ How to run and debug your GStreamer application
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
-<a name="idp7869392"></a><h2>Running and debugging GStreamer Applications</h2>
+<a name="idp11705424"></a><h2>Running and debugging GStreamer Applications</h2>
 <div class="refsect2">
-<a name="idp11982640"></a><h3>Environment variables</h3>
+<a name="idp11902880"></a><h3>Environment variables</h3>
 <p> 
 GStreamer inspects a few of environment variables in addition to standard
 variables like <code class="envar">LANG</code>, <code class="envar">PATH</code> or <code class="envar">HOME</code>. 
@@ -163,7 +163,12 @@ For example, setting <code class="envar">GST_DEBUG</code> to
   
 To get all possible debug output, set
 <code class="envar">GST_DEBUG</code>
-to <code class="option">*:9</code>
+to <code class="option">*:9</code>. For debugging purposes a <code class="option">*:6</code> debug
+log is usually the most useful, as it contains all important information, but
+hides a lot of noise such as refs/unrefs. For bug reporting purposes, a
+<code class="option">*:6</code> log is also what will be requested usually. It's often
+also worth running with <code class="option">*:3</code> to see if there are any
+non-fatal errors or warnings that might be related to the problem at hand.
   </p>
 <p><a name="GST_DEBUG_NO_COLOR"></a><b><code class="envar">GST_DEBUG_NO_COLOR</code>. </b>
 Set this environment variable to any value ("1" typically) to switch off
@@ -221,7 +226,8 @@ The variable takes a comma-separated list of tracing options to enable.
   Keep track of the unfreed memory pointers and dump an overview of all unfreed
   memory at program exit. Together with a level 9 debug log this can be used to
   follow the lifecycle of leaked objects in order to track down where they are
-  leaked.
+  leaked. This can be useful for debugging memory leaks in situations where
+  tools such as valgrind are not available, or not an option.
 </p></td>
 </tr>
 </tbody>

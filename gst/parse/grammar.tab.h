@@ -54,7 +54,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 623 "./grammar.y"
+#line 624 "./grammar.y"
 
     gchar *s;
     chain_t *c;

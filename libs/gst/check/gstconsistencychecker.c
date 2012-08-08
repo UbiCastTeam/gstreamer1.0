@@ -27,8 +27,6 @@
  *
  * These macros and functions are for internal use of the unit tests found
  * inside the 'check' directories of various GStreamer packages.
- *
- * Since: 0.10.24
  */
 
 #include "gstconsistencychecker.h"
@@ -40,6 +38,8 @@ struct _GstStreamConsistency
   volatile gboolean segment;
   volatile gboolean eos;
   volatile gboolean expect_flush;
+  volatile gboolean saw_serialized_event;
+  volatile gboolean saw_stream_start;
   GstObject *parent;
   GList *pads;
 };
@@ -71,7 +71,7 @@ source_pad_data_cb (GstPad * pad, GstPadProbeInfo * info,
   } else if (GST_IS_EVENT (data)) {
     GstEvent *event = (GstEvent *) data;
 
-    GST_DEBUG_OBJECT (pad, "%s", GST_EVENT_TYPE_NAME (event));
+    GST_DEBUG_OBJECT (pad, "Event : %s", GST_EVENT_TYPE_NAME (event));
     switch (GST_EVENT_TYPE (event)) {
       case GST_EVENT_FLUSH_START:
         /* getting two flush_start in a row seems to be okay
@@ -87,6 +87,10 @@ source_pad_data_cb (GstPad * pad, GstPadProbeInfo * info,
         consist->flushing = consist->expect_flush = FALSE;
         break;
       case GST_EVENT_STREAM_START:
+        fail_if (consist->saw_serialized_event && !consist->saw_stream_start,
+            "Got a STREAM_START event after a serialized event");
+        consist->saw_stream_start = TRUE;
+        break;
       case GST_EVENT_STREAM_CONFIG:
       case GST_EVENT_CAPS:
         /* ok to have these before segment event */
@@ -115,6 +119,13 @@ source_pad_data_cb (GstPad * pad, GstPadProbeInfo * info,
         }
         /* FIXME : Figure out what to do for other events */
         break;
+    }
+    if (GST_EVENT_IS_SERIALIZED (event)) {
+      fail_if (!consist->saw_stream_start
+          && GST_EVENT_TYPE (event) != GST_EVENT_STREAM_START,
+          "Got a serialized event (%s) before a STREAM_START",
+          GST_EVENT_TYPE_NAME (event));
+      consist->saw_serialized_event = TRUE;
     }
   }
 
@@ -198,8 +209,6 @@ add_pad (GstStreamConsistency * consist, GstPad * pad)
  * data flow is inconsistent.
  *
  * Returns: A #GstStreamConsistency structure used to track data flow.
- *
- * Since: 0.10.24
  */
 GstStreamConsistency *
 gst_consistency_checker_new (GstPad * pad)
@@ -226,8 +235,6 @@ gst_consistency_checker_new (GstPad * pad)
  * data flow is inconsistent.
  *
  * Returns: %TRUE if the pad was added
- *
- * Since: 0.10.37
  */
 gboolean
 gst_consistency_checker_add_pad (GstStreamConsistency * consist, GstPad * pad)
@@ -245,16 +252,17 @@ gst_consistency_checker_add_pad (GstStreamConsistency * consist, GstPad * pad)
  * @consist: The #GstStreamConsistency to reset.
  *
  * Reset the stream checker's internal variables.
- *
- * Since: 0.10.24
  */
 
 void
 gst_consistency_checker_reset (GstStreamConsistency * consist)
 {
-  consist->eos = FALSE;
   consist->flushing = FALSE;
   consist->segment = FALSE;
+  consist->eos = FALSE;
+  consist->expect_flush = FALSE;
+  consist->saw_serialized_event = FALSE;
+  consist->saw_stream_start = FALSE;
 }
 
 /**
@@ -262,8 +270,6 @@ gst_consistency_checker_reset (GstStreamConsistency * consist)
  * @consist: The #GstStreamConsistency to free.
  *
  * Frees the allocated data and probes associated with @consist.
- *
- * Since: 0.10.24
  */
 
 void

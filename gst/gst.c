@@ -483,8 +483,6 @@ gst_init (int *argc, char **argv[])
  * or gst_init_check().
  *
  * Returns: TRUE if initialization has been done, FALSE otherwise.
- *
- * Since: 0.10.31
  */
 gboolean
 gst_is_initialized (void)
@@ -713,6 +711,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_structure_change_type_get_type ());
   g_type_class_ref (gst_tag_merge_mode_get_type ());
   g_type_class_ref (gst_tag_flag_get_type ());
+  g_type_class_ref (gst_tag_scope_get_type ());
   g_type_class_ref (gst_task_pool_get_type ());
   g_type_class_ref (gst_task_state_get_type ());
   g_type_class_ref (gst_toc_entry_type_get_type ());
@@ -733,9 +732,11 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_scheduling_flags_get_type ());
   g_type_class_ref (gst_meta_flags_get_type ());
   g_type_class_ref (gst_toc_entry_type_get_type ());
-
+  g_type_class_ref (gst_toc_scope_get_type ());
   g_type_class_ref (gst_control_binding_get_type ());
   g_type_class_ref (gst_control_source_get_type ());
+  g_type_class_ref (gst_lock_flags_get_type ());
+  g_type_class_ref (gst_allocator_flags_get_type ());
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
@@ -1082,8 +1083,10 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_buffering_mode_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_tag_merge_mode_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_tag_flag_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_tag_scope_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_task_state_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_toc_entry_type_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_toc_scope_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_type_find_probability_get_type
           ()));
   g_type_class_unref (g_type_class_peek (gst_uri_type_get_type ()));
@@ -1104,6 +1107,9 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_control_binding_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_control_source_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_toc_entry_type_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_lock_flags_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_allocator_flags_get_type ()));
+
 
   gst_deinitialized = TRUE;
   GST_INFO ("deinitialized GStreamer");
@@ -1169,8 +1175,6 @@ gst_version_string (void)
  * wants to install its own handler without GStreamer interfering.
  *
  * Returns: %TRUE if GStreamer is allowed to install a custom SIGSEGV handler.
- *
- * Since: 0.10.10
  */
 gboolean
 gst_segtrap_is_enabled (void)
@@ -1185,8 +1189,6 @@ gst_segtrap_is_enabled (void)
  *
  * Applications might want to disable/enable the SIGSEGV handling of
  * the GStreamer core. See gst_segtrap_is_enabled() for more information.
- *
- * Since: 0.10.10
  */
 void
 gst_segtrap_set_enabled (gboolean enabled)

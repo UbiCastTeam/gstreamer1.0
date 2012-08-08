@@ -52,21 +52,16 @@
 
 #define GST_TAG_IS_VALID(tag)           (gst_tag_get_info (tag) != NULL)
 
-/* FIXME 0.11: make taglists refcounted maybe? */
-/* a tag list is basically a structure, but we don't make this fact public */
 typedef struct _GstTagListImpl
 {
   GstTagList taglist;
 
   GstStructure *structure;
+  GstTagScope scope;
 } GstTagListImpl;
 
-#define GST_TAG_LIST_STRUCTURE(taglist) ((GstTagListImpl*)(taglist))->structure
-
-
-/* FIXME 0.11: use GParamSpecs or something similar for tag registrations,
- * possibly even gst_tag_register(). Especially value ranges might be
- * useful for some tags. */
+#define GST_TAG_LIST_STRUCTURE(taglist)  ((GstTagListImpl*)(taglist))->structure
+#define GST_TAG_LIST_SCOPE(taglist)  ((GstTagListImpl*)(taglist))->scope
 
 typedef struct
 {
@@ -387,7 +382,7 @@ _priv_gst_tag_initialize (void)
       G_TYPE_STRING, _("application name"),
       _("Application used to create the media"), NULL);
   gst_tag_register_static (GST_TAG_APPLICATION_DATA, GST_TAG_FLAG_META,
-      GST_TYPE_BUFFER, _("application data"),
+      GST_TYPE_SAMPLE, _("application data"),
       _("Arbitrary application data to be serialized into the media"), NULL);
   gst_tag_register_static (GST_TAG_IMAGE_ORIENTATION, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("image orientation"),
@@ -580,7 +575,7 @@ gst_tag_get_type (const gchar * tag)
 }
 
 /**
- * gst_tag_get_nick
+ * gst_tag_get_nick:
  * @tag: the tag
  *
  * Returns the human-readable name of this tag, You must not change or free
@@ -662,17 +657,6 @@ gst_tag_is_fixed (const gchar * tag)
   return info->merge_func == NULL;
 }
 
-static void
-gst_tag_list_init (GstTagList * taglist, gsize size)
-{
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (taglist),
-      gst_tag_list_get_type (), size);
-
-  taglist->mini_object.copy = (GstMiniObjectCopyFunction) __gst_tag_list_copy;
-  taglist->mini_object.dispose = NULL;
-  taglist->mini_object.free = (GstMiniObjectFreeFunction) __gst_tag_list_free;
-}
-
 /* takes ownership of the structure */
 static GstTagList *
 gst_tag_list_new_internal (GstStructure * s)
@@ -683,9 +667,12 @@ gst_tag_list_new_internal (GstStructure * s)
 
   tag_list = (GstTagList *) g_slice_new (GstTagListImpl);
 
-  gst_tag_list_init (tag_list, sizeof (GstTagListImpl));
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (tag_list), 0, GST_TYPE_TAG_LIST,
+      (GstMiniObjectCopyFunction) __gst_tag_list_copy, NULL,
+      (GstMiniObjectFreeFunction) __gst_tag_list_free);
 
   GST_TAG_LIST_STRUCTURE (tag_list) = s;
+  GST_TAG_LIST_SCOPE (tag_list) = GST_TAG_SCOPE_STREAM;
 
 #ifdef DEBUG_REFCOUNT
   GST_CAT_TRACE (GST_CAT_TAGS, "created taglist %p", tag_list);
@@ -700,13 +687,12 @@ __gst_tag_list_free (GstTagList * list)
   g_return_if_fail (GST_IS_TAG_LIST (list));
 
 #ifdef DEBUG_REFCOUNT
-  GST_CAT_TRACE (GST_CAT_TAGS, "freeing caps %p", list);
+  GST_CAT_TRACE (GST_CAT_TAGS, "freeing taglist %p", list);
 #endif
 
   gst_structure_free (GST_TAG_LIST_STRUCTURE (list));
 
-  /* why not just pass sizeof (GstTagListImpl) here? */
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (list), list);
+  g_slice_free1 (sizeof (GstTagListImpl), list);
 }
 
 static GstTagList *
@@ -757,8 +743,6 @@ gst_tag_list_new_empty (void)
  *
  * Returns: (transfer full): a new #GstTagList. Free with gst_tag_list_unref()
  *     when no longer needed.
- *
- * Since: 0.10.24
  */
 GstTagList *
 gst_tag_list_new (const gchar * tag, ...)
@@ -787,8 +771,6 @@ gst_tag_list_new (const gchar * tag, ...)
  *
  * Returns: (transfer full): a new #GstTagList. Free with gst_tag_list_unref()
  *     when no longer needed.
- *
- * Since: 0.10.24
  */
 GstTagList *
 gst_tag_list_new_valist (va_list var_args)
@@ -805,6 +787,40 @@ gst_tag_list_new_valist (va_list var_args)
 }
 
 /**
+ * gst_tag_list_set_scope:
+ * @list: a #GstTagList
+ * @scope: new scope for @list
+ *
+ * Sets the scope of @list to @scope. By default the scope
+ * of a taglist is #GST_TAG_SCOPE_STREAM.
+ *
+ */
+void
+gst_tag_list_set_scope (GstTagList * list, GstTagScope scope)
+{
+  g_return_if_fail (GST_IS_TAG_LIST (list));
+  g_return_if_fail (gst_tag_list_is_writable (list));
+
+  GST_TAG_LIST_SCOPE (list) = scope;
+}
+
+/**
+ * gst_tag_list_get_scope:
+ * @list: a #GstTagList
+ *
+ * Gets the scope of @list.
+ *
+ * Returns: The scope of @list
+ */
+GstTagScope
+gst_tag_list_get_scope (const GstTagList * list)
+{
+  g_return_val_if_fail (GST_IS_TAG_LIST (list), GST_TAG_SCOPE_STREAM);
+
+  return GST_TAG_LIST_SCOPE (list);
+}
+
+/**
  * gst_tag_list_to_string:
  * @list: a #GstTagList
  *
@@ -812,8 +828,6 @@ gst_tag_list_new_valist (va_list var_args)
  *
  * Returns: a newly-allocated string, or NULL in case of an error. The
  *    string must be freed with g_free() when no longer needed.
- *
- * Since: 0.10.36
  */
 gchar *
 gst_tag_list_to_string (const GstTagList * list)
@@ -830,8 +844,6 @@ gst_tag_list_to_string (const GstTagList * list)
  * Deserializes a tag list.
  *
  * Returns: a new #GstTagList, or NULL in case of an error.
- *
- * Since: 0.10.36
  */
 GstTagList *
 gst_tag_list_new_from_string (const gchar * str)
@@ -887,8 +899,6 @@ gst_tag_list_nth_tag_name (const GstTagList * list, guint index)
  * Checks if the given taglist is empty.
  *
  * Returns: TRUE if the taglist is empty, otherwise FALSE.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_tag_list_is_empty (const GstTagList * list)
@@ -928,8 +938,6 @@ gst_tag_list_fields_equal (const GValue * value1, const GValue * value2)
  * Checks if the two given taglists are equal.
  *
  * Returns: TRUE if the taglists are equal, otherwise FALSE
- *
- * Since: 0.10.36
  */
 gboolean
 gst_tag_list_is_equal (const GstTagList * list1, const GstTagList * list2)
@@ -991,6 +999,14 @@ gst_tag_list_add_value_internal (GstTagList * tag_list, GstTagMergeMode mode,
       g_warning ("unknown tag '%s'", tag);
       return;
     }
+  }
+
+  if (G_UNLIKELY (!G_VALUE_HOLDS (value, info->type) &&
+          !GST_VALUE_HOLDS_LIST (value))) {
+    g_warning ("tag '%s' should hold value of type '%s', but value of "
+        "type '%s' passed", info->nick, g_type_name (info->type),
+        g_type_name (G_VALUE_TYPE (value)));
+    return;
   }
 
   tag_quark = info->name_quark;
@@ -1291,8 +1307,6 @@ gst_tag_list_add_valist_values (GstTagList * list, GstTagMergeMode mode,
  * @value: GValue for this tag
  *
  * Sets the GValue for a given tag using the specified mode.
- *
- * Since: 0.10.24
  */
 void
 gst_tag_list_add_value (GstTagList * list, GstTagMergeMode mode,
@@ -1715,7 +1729,7 @@ _gst_strdup0 (const gchar * s)
  * to retrieve the first string associated with this tag unmodified.
  *
  * The resulting string in @value will be in UTF-8 encoding and should be
- * freed by the caller using g_free when no longer needed. Since 0.10.24 the
+ * freed by the caller using g_free when no longer needed. The
  * returned string is also guaranteed to be non-NULL and non-empty.
  *
  * Free-function: g_free
@@ -1734,7 +1748,7 @@ _gst_strdup0 (const gchar * s)
  * list.
  *
  * The resulting string in @value will be in UTF-8 encoding and should be
- * freed by the caller using g_free when no longer needed. Since 0.10.24 the
+ * freed by the caller using g_free when no longer needed. The
  * returned string is also guaranteed to be non-NULL and non-empty.
  *
  * Free-function: g_free
@@ -1862,8 +1876,6 @@ gst_tag_list_get_date_index (const GstTagList * list,
  *
  * Returns: TRUE, if a datetime was copied, FALSE if the tag didn't exist in
  *              thegiven list or if it was #NULL.
- *
- * Since: 0.10.31
  */
 gboolean
 gst_tag_list_get_date_time (const GstTagList * list, const gchar * tag,
@@ -1900,8 +1912,6 @@ gst_tag_list_get_date_time (const GstTagList * list, const gchar * tag,
  *
  * Returns: TRUE, if a value was copied, FALSE if the tag didn't exist in the
  *              given list or if it was #NULL.
- *
- * Since: 0.10.31
  */
 gboolean
 gst_tag_list_get_date_time_index (const GstTagList * list,
@@ -1920,71 +1930,71 @@ gst_tag_list_get_date_time_index (const GstTagList * list,
 }
 
 /**
- * gst_tag_list_get_buffer:
+ * gst_tag_list_get_sample:
  * @list: a #GstTagList to get the tag from
  * @tag: tag to read out
- * @value: (out callee-allocates) (transfer full): address of a GstBuffer
+ * @sample: (out callee-allocates) (transfer full): address of a GstSample
  *     pointer variable to store the result into
  *
- * Copies the first buffer for the given tag in the taglist into the variable
- * pointed to by @value. Free the buffer with gst_buffer_unref() when it is
- * no longer needed.
+ * Copies the first sample for the given tag in the taglist into the variable
+ * pointed to by @sample. Free the sample with gst_sample_unref() when it is
+ * no longer needed. You can retrieve the buffer from the sample using
+ * gst_sample_get_buffer() and the associated caps (if any) with
+ * gst_sample_get_caps().
  *
- * Free-function: gst_buffer_unref
+ * Free-function: gst_sample_unref
  *
- * Returns: TRUE, if a buffer was copied, FALSE if the tag didn't exist in the
- *              given list or if it was #NULL.
- *
- * Since: 0.10.23
+ * Returns: TRUE, if a sample was returned, FALSE if the tag didn't exist in
+ *              the given list or if it was #NULL.
  */
 gboolean
-gst_tag_list_get_buffer (const GstTagList * list, const gchar * tag,
-    GstBuffer ** value)
+gst_tag_list_get_sample (const GstTagList * list, const gchar * tag,
+    GstSample ** sample)
 {
   GValue v = { 0, };
 
   g_return_val_if_fail (GST_IS_TAG_LIST (list), FALSE);
   g_return_val_if_fail (tag != NULL, FALSE);
-  g_return_val_if_fail (value != NULL, FALSE);
+  g_return_val_if_fail (sample != NULL, FALSE);
 
   if (!gst_tag_list_copy_value (&v, list, tag))
     return FALSE;
-  *value = g_value_dup_boxed (&v);
+  *sample = g_value_dup_boxed (&v);
   g_value_unset (&v);
-  return (*value != NULL);
+  return (*sample != NULL);
 }
 
 /**
- * gst_tag_list_get_buffer_index:
+ * gst_tag_list_get_sample_index:
  * @list: a #GstTagList to get the tag from
  * @tag: tag to read out
  * @index: number of entry to read out
- * @value: (out callee-allocates) (transfer full): address of a GstBuffer
+ * @sample: (out callee-allocates) (transfer full): address of a GstSample
  *     pointer variable to store the result into
  *
- * Gets the buffer that is at the given index for the given tag in the given
- * list and copies it into the variable pointed to by @value. Free the buffer
- * with gst_buffer_unref() when it is no longer needed.
+ * Gets the sample that is at the given index for the given tag in the given
+ * list and copies it into the variable pointed to by @smple. Free the sample
+ * with gst_sample_unref() when it is no longer needed. You can retrieve the
+ * buffer from the sample using gst_sample_get_buffer() and the associated
+ * caps (if any) with gst_sample_get_caps().
  *
- * Free-function: gst_buffer_unref
+ * Free-function: gst_sample_unref
  *
- * Returns: TRUE, if a buffer was copied, FALSE if the tag didn't exist in the
+ * Returns: TRUE, if a sample was copied, FALSE if the tag didn't exist in the
  *              given list or if it was #NULL.
- *
- * Since: 0.10.23
  */
 gboolean
-gst_tag_list_get_buffer_index (const GstTagList * list,
-    const gchar * tag, guint index, GstBuffer ** value)
+gst_tag_list_get_sample_index (const GstTagList * list,
+    const gchar * tag, guint index, GstSample ** sample)
 {
   const GValue *v;
 
   g_return_val_if_fail (GST_IS_TAG_LIST (list), FALSE);
   g_return_val_if_fail (tag != NULL, FALSE);
-  g_return_val_if_fail (value != NULL, FALSE);
+  g_return_val_if_fail (sample != NULL, FALSE);
 
   if ((v = gst_tag_list_get_value_index (list, tag, index)) == NULL)
     return FALSE;
-  *value = g_value_dup_boxed (v);
-  return (*value != NULL);
+  *sample = g_value_dup_boxed (v);
+  return (*sample != NULL);
 }

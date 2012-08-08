@@ -36,15 +36,15 @@ typedef struct _GstTypeFind GstTypeFind;
 /**
  * GstTypeFindFunction:
  * @find: A #GstTypeFind structure
- * @data: optionnal data to pass to the function
+ * @user_data: optionnal data to pass to the function
  *
  * A function that will be called by typefinding.
  */
-typedef void (* GstTypeFindFunction) (GstTypeFind *find, gpointer data);
+typedef void (* GstTypeFindFunction) (GstTypeFind *find, gpointer user_data);
 
 /**
  * GstTypeFindProbability:
- * @GST_TYPE_FIND_NONE: type undetected. Since 0.10.36.
+ * @GST_TYPE_FIND_NONE: type undetected.
  * @GST_TYPE_FIND_MINIMUM: unlikely typefind.
  * @GST_TYPE_FIND_POSSIBLE: possible type detected.
  * @GST_TYPE_FIND_LIKELY: likely a type was detected.

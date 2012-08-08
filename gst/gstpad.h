@@ -137,23 +137,22 @@ typedef enum {
  * @GST_FLOW_NOT_SUPPORTED:	 This operation is not supported.
  * @GST_FLOW_CUSTOM_SUCCESS:	 Elements can use values starting from
  *                               this (and higher) to define custom success
- *                               codes. Since 0.10.7.
+ *                               codes.
  * @GST_FLOW_CUSTOM_SUCCESS_1:	 Pre-defined custom success code (define your
  *                               custom success code to this to avoid compiler
- *                               warnings). Since 0.10.29.
- * @GST_FLOW_CUSTOM_SUCCESS_2:	 Pre-defined custom success code. Since 0.10.29.
+ *                               warnings).
+ * @GST_FLOW_CUSTOM_SUCCESS_2:	 Pre-defined custom success code.
  * @GST_FLOW_CUSTOM_ERROR:	 Elements can use values starting from
  *                               this (and lower) to define custom error codes.
- *                               Since 0.10.7.
  * @GST_FLOW_CUSTOM_ERROR_1:	 Pre-defined custom error code (define your
  *                               custom error code to this to avoid compiler
- *                               warnings). Since 0.10.29.
- * @GST_FLOW_CUSTOM_ERROR_2:	 Pre-defined custom error code. Since 0.10.29.
+ *                               warnings).
+ * @GST_FLOW_CUSTOM_ERROR_2:	 Pre-defined custom error code.
  *
  * The result of passing data to a pad.
  *
  * Note that the custom return values should not be exposed outside of the
- * element scope and are available since 0.10.7.
+ * element scope.
  */
 /* FIXME 0.11: remove custom flow returns */
 typedef enum {
@@ -204,8 +203,6 @@ GQuark			gst_flow_to_quark	(GstFlowReturn ret);
  * use the default checks (%GST_PAD_LINK_CHECK_DEFAULT) or the regular methods
  * for linking the pads.
  * </para></warning>
- *
- * Since: 0.10.30
  */
 
 typedef enum {
@@ -220,8 +217,6 @@ typedef enum {
  *
  * The default checks done when linking pads (i.e. the ones used by
  * gst_pad_link()).
- *
- * Since: 0.10.30
  */
 #define GST_PAD_LINK_CHECK_DEFAULT ((GstPadLinkCheck) (GST_PAD_LINK_CHECK_HIERARCHY | GST_PAD_LINK_CHECK_CAPS))
 
@@ -381,8 +376,6 @@ typedef gboolean		(*GstPadEventFunction)		(GstPad *pad, GstObject *parent,
  * linked to the given pad on the inside of the parent element.
  *
  * the caller must call gst_iterator_free() after usage.
- *
- * Since 0.10.21
  */
 typedef GstIterator*           (*GstPadIterIntLinkFunction)    (GstPad *pad, GstObject *parent);
 
@@ -405,7 +398,7 @@ typedef gboolean		(*GstPadQueryFunction)		(GstPad *pad, GstObject *parent,
 
 /* linking */
 /**
- * GstPadLinkFunction
+ * GstPadLinkFunction:
  * @pad: the #GstPad that is linked.
  * @peer: the peer #GstPad of the link
  *
@@ -415,7 +408,7 @@ typedef gboolean		(*GstPadQueryFunction)		(GstPad *pad, GstObject *parent,
  */
 typedef GstPadLinkReturn	(*GstPadLinkFunction)		(GstPad *pad, GstPad *peer);
 /**
- * GstPadUnlinkFunction
+ * GstPadUnlinkFunction:
  * @pad: the #GstPad that is linked.
  *
  * Function signature to handle a unlinking the pad prom its peer.
@@ -553,7 +546,7 @@ struct _GstPadProbeInfo
 #define GST_PAD_PROBE_INFO_SIZE(d)         ((d)->size)
 
 /**
- * GstPadProbeCallback
+ * GstPadProbeCallback:
  * @pad: the #GstPad that is blocked
  * @info: #GstPadProbeInfo
  * @user_data: the gpointer to optional user data.
@@ -608,6 +601,9 @@ typedef gboolean  (*GstPadStickyEventsForeachFunction) (GstPad *pad, GstEvent **
  * @GST_PAD_FLAG_PROXY_ALLOCATION: the default query handler will forward
  *                      allocation queries to the internally linked pads
  *                      instead of discarding them.
+ * @GST_PAD_FLAG_PROXY_SCHEDULING: the default query handler will forward
+ *                      scheduling queries to the internally linked pads
+ *                      instead of discarding them.
  * @GST_PAD_FLAG_LAST: offset to define more flags
  *
  * Pad state flags
@@ -623,6 +619,7 @@ typedef enum {
   GST_PAD_FLAG_FIXED_CAPS       = (GST_OBJECT_FLAG_LAST << 7),
   GST_PAD_FLAG_PROXY_CAPS       = (GST_OBJECT_FLAG_LAST << 8),
   GST_PAD_FLAG_PROXY_ALLOCATION = (GST_OBJECT_FLAG_LAST << 9),
+  GST_PAD_FLAG_PROXY_SCHEDULING = (GST_OBJECT_FLAG_LAST << 10),
   /* padding */
   GST_PAD_FLAG_LAST        = (GST_OBJECT_FLAG_LAST << 16)
 } GstPadFlags;
@@ -771,6 +768,10 @@ struct _GstPadClass {
 #define GST_PAD_IS_PROXY_ALLOCATION(pad)    (GST_OBJECT_FLAG_IS_SET (pad, GST_PAD_FLAG_PROXY_ALLOCATION))
 #define GST_PAD_SET_PROXY_ALLOCATION(pad)   (GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_PROXY_ALLOCATION))
 #define GST_PAD_UNSET_PROXY_ALLOCATION(pad) (GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_PROXY_ALLOCATION))
+
+#define GST_PAD_IS_PROXY_SCHEDULING(pad)    (GST_OBJECT_FLAG_IS_SET (pad, GST_PAD_FLAG_PROXY_SCHEDULING))
+#define GST_PAD_SET_PROXY_SCHEDULING(pad)   (GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_PROXY_SCHEDULING))
+#define GST_PAD_UNSET_PROXY_SCHEDULING(pad) (GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_PROXY_SCHEDULING))
 
 /**
  * GST_PAD_GET_STREAM_LOCK:
@@ -926,7 +927,6 @@ GstCaps*                gst_pad_get_pad_template_caps		(GstPad *pad);
 /* capsnego function for linked/unlinked pads */
 GstCaps *		gst_pad_get_current_caps                (GstPad * pad);
 gboolean		gst_pad_has_current_caps                (GstPad * pad);
-gboolean		gst_pad_set_caps			(GstPad * pad, GstCaps *caps);
 
 /* capsnego for linked pads */
 GstCaps *		gst_pad_get_allowed_caps		(GstPad * pad);
@@ -953,7 +953,7 @@ gboolean		gst_pad_send_event			(GstPad *pad, GstEvent *event);
 
 /* pad tasks */
 gboolean		gst_pad_start_task			(GstPad *pad, GstTaskFunction func,
-								 gpointer data);
+								 gpointer user_data, GDestroyNotify notify);
 gboolean		gst_pad_pause_task			(GstPad *pad);
 gboolean		gst_pad_stop_task			(GstPad *pad);
 

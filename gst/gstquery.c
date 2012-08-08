@@ -110,7 +110,6 @@ static GstQueryQuarks query_quarks[] = {
   {GST_QUERY_ACCEPT_CAPS, "accept-caps", 0},
   {GST_QUERY_CAPS, "caps", 0},
   {GST_QUERY_DRAIN, "drain", 0},
-  {GST_QUERY_TOC, "toc", 0},
 
   {0, NULL, 0}
 };
@@ -202,7 +201,7 @@ _gst_query_free (GstQuery * query)
     gst_structure_free (s);
   }
 
-  g_slice_free1 (GST_MINI_OBJECT_SIZE (query), query);
+  g_slice_free1 (sizeof (GstQueryImpl), query);
 }
 
 static GstQuery *
@@ -218,17 +217,6 @@ _gst_query_copy (GstQuery * query)
   copy = gst_query_new_custom (query->type, s);
 
   return copy;
-}
-
-static void
-gst_query_init (GstQueryImpl * query, gsize size, GstQueryType type)
-{
-  gst_mini_object_init (GST_MINI_OBJECT_CAST (query), _gst_query_type, size);
-
-  query->query.mini_object.copy = (GstMiniObjectCopyFunction) _gst_query_copy;
-  query->query.mini_object.free = (GstMiniObjectFreeFunction) _gst_query_free;
-
-  GST_QUERY_TYPE (query) = type;
 }
 
 /**
@@ -398,8 +386,6 @@ gst_query_parse_duration (GstQuery * query, GstFormat * format,
  * Free-function: gst_query_unref
  *
  * Returns: (transfer full): a #GstQuery
- *
- * Since: 0.10.12
  */
 GstQuery *
 gst_query_new_latency (void)
@@ -425,8 +411,6 @@ gst_query_new_latency (void)
  * @max_latency: the maximal latency of the upstream elements
  *
  * Answer a latency query by setting the requested values in the given format.
- *
- * Since: 0.10.12
  */
 void
 gst_query_set_latency (GstQuery * query, gboolean live,
@@ -451,8 +435,6 @@ gst_query_set_latency (GstQuery * query, gboolean live,
  * @max_latency: (out) (allow-none): the storage for the max latency or NULL
  *
  * Parse a latency query answer.
- *
- * Since: 0.10.12
  */
 void
 gst_query_parse_latency (GstQuery * query, gboolean * live,
@@ -702,8 +684,12 @@ gst_query_new_custom (GstQueryType type, GstStructure * structure)
             &query->query.mini_object.refcount))
       goto had_parent;
   }
-  gst_query_init (query, sizeof (GstQueryImpl), type);
 
+  gst_mini_object_init (GST_MINI_OBJECT_CAST (query), 0, _gst_query_type,
+      (GstMiniObjectCopyFunction) _gst_query_copy, NULL,
+      (GstMiniObjectFreeFunction) _gst_query_free);
+
+  GST_QUERY_TYPE (query) = type;
   GST_QUERY_STRUCTURE (query) = structure;
 
   return GST_QUERY_CAST (query);
@@ -711,7 +697,7 @@ gst_query_new_custom (GstQueryType type, GstStructure * structure)
   /* ERRORS */
 had_parent:
   {
-    g_slice_free1 (GST_MINI_OBJECT_SIZE (query), query);
+    g_slice_free1 (sizeof (GstQueryImpl), query);
     g_warning ("structure is already owned by another object");
     return NULL;
   }
@@ -881,8 +867,6 @@ ensure_array (GstStructure * s, GQuark quark, gsize element_size,
  * Free-function: gst_query_unref
  *
  * Returns: (transfer full): a new #GstQuery
- *
- * Since: 0.10.4
  */
 GstQuery *
 gst_query_new_formats (void)
@@ -951,8 +935,6 @@ gst_query_set_formats (GstQuery * query, gint n_formats, ...)
  *
  * Set the formats query result fields in @query. The number of formats passed
  * in the @formats array must be equal to @n_formats.
- *
- * Since: 0.10.4
  */
 void
 gst_query_set_formatsv (GstQuery * query, gint n_formats,
@@ -981,8 +963,6 @@ gst_query_set_formatsv (GstQuery * query, gint n_formats,
  * @n_formats: (out) (allow-none): the number of formats in this query.
  *
  * Parse the number of formats in the formats @query.
- *
- * Since: 0.10.4
  */
 void
 gst_query_parse_n_formats (GstQuery * query, guint * n_formats)
@@ -1047,8 +1027,6 @@ gst_query_parse_nth_format (GstQuery * query, guint nth, GstFormat * format)
  * Free-function: gst_query_unref
  *
  * Returns: (transfer full): a new #GstQuery
- *
- * Since: 0.10.20
  */
 GstQuery *
 gst_query_new_buffering (GstFormat format)
@@ -1083,8 +1061,6 @@ gst_query_new_buffering (GstFormat format)
  *
  * Set the percentage of buffered data. This is a value between 0 and 100.
  * The @busy indicator is %TRUE when the buffering is in progress.
- *
- * Since: 0.10.20
  */
 void
 gst_query_set_buffering_percent (GstQuery * query, gboolean busy, gint percent)
@@ -1109,8 +1085,6 @@ gst_query_set_buffering_percent (GstQuery * query, gboolean busy, gint percent)
  *
  * Get the percentage of buffered data. This is a value between 0 and 100.
  * The @busy indicator is %TRUE when the buffering is in progress.
- *
- * Since: 0.10.20
  */
 void
 gst_query_parse_buffering_percent (GstQuery * query, gboolean * busy,
@@ -1138,8 +1112,6 @@ gst_query_parse_buffering_percent (GstQuery * query, gboolean * busy,
  * @buffering_left: amount of buffering time left
  *
  * Configures the buffering stats values in @query.
- *
- * Since: 0.10.20
  */
 void
 gst_query_set_buffering_stats (GstQuery * query, GstBufferingMode mode,
@@ -1167,8 +1139,6 @@ gst_query_set_buffering_stats (GstQuery * query, GstBufferingMode mode,
  * @buffering_left: (out) (allow-none): amount of buffering time left, or NULL
  *
  * Extracts the buffering stats values from @query.
- *
- * Since: 0.10.20
  */
 void
 gst_query_parse_buffering_stats (GstQuery * query,
@@ -1205,8 +1175,6 @@ gst_query_parse_buffering_stats (GstQuery * query,
  * @estimated_total: estimated total amount of download time
  *
  * Set the available query result fields in @query.
- *
- * Since: 0.10.20
  */
 void
 gst_query_set_buffering_range (GstQuery * query, GstFormat format,
@@ -1238,8 +1206,6 @@ gst_query_set_buffering_range (GstQuery * query, GstFormat format,
  * Parse an available query, writing the format into @format, and
  * other results into the passed parameters, if the respective parameters
  * are non-NULL
- *
- * Since: 0.10.20
  */
 void
 gst_query_parse_buffering_range (GstQuery * query, GstFormat * format,
@@ -1283,8 +1249,6 @@ typedef struct
  * start position of the array should be inferior to @start.
  *
  * Returns: a #gboolean indicating if the range was added or not.
- *
- * Since: 0.10.31
  */
 gboolean
 gst_query_add_buffering_range (GstQuery * query, gint64 start, gint64 stop)
@@ -1327,8 +1291,6 @@ gst_query_add_buffering_range (GstQuery * query, gint64 start, gint64 stop)
  * buffered-ranges array of the query's structure.
  *
  * Returns: the range array size as a #guint.
- *
- * Since: 0.10.31
  */
 guint
 gst_query_get_n_buffering_ranges (GstQuery * query)
@@ -1357,8 +1319,6 @@ gst_query_get_n_buffering_ranges (GstQuery * query)
  * at the @index of the buffered ranges array.
  *
  * Returns: a #gboolean indicating if the parsing succeeded.
- *
- * Since: 0.10.31
  */
 gboolean
 gst_query_parse_nth_buffering_range (GstQuery * query, guint index,
@@ -1397,8 +1357,6 @@ gst_query_parse_nth_buffering_range (GstQuery * query, guint index,
  * Free-function: gst_query_unref
  *
  * Returns: (transfer full): a new #GstQuery
- *
- * Since: 0.10.22
  */
 GstQuery *
 gst_query_new_uri (void)
@@ -1420,8 +1378,6 @@ gst_query_new_uri (void)
  * @uri: the URI to set
  *
  * Answer a URI query by setting the requested URI.
- *
- * Since: 0.10.22
  */
 void
 gst_query_set_uri (GstQuery * query, const gchar * uri)
@@ -1445,8 +1401,6 @@ gst_query_set_uri (GstQuery * query, const gchar * uri)
  * Parse an URI query, writing the URI into @uri as a newly
  * allocated string, if the respective parameters are non-NULL.
  * Free the string with g_free() after usage.
- *
- * Since: 0.10.22
  */
 void
 gst_query_parse_uri (GstQuery * query, gchar ** uri)
@@ -1593,12 +1547,14 @@ gst_query_get_n_allocation_pools (GstQuery * query)
  * gst_query_parse_nth_allocation_pool:
  * @query: A valid #GstQuery of type GST_QUERY_ALLOCATION.
  * @index: index to parse
- * @pool: (out) (allow-none) (transfer none): the #GstBufferPool
+ * @pool: (out) (allow-none) (transfer full): the #GstBufferPool
  * @size: (out) (allow-none): the size
  * @min_buffers: (out) (allow-none): the min buffers
  * @max_buffers: (out) (allow-none): the max buffers
  *
  * Get the pool parameters in @query.
+ *
+ * Unref @pool with gst_object_unref() when it's not needed any more.
  */
 void
 gst_query_parse_nth_allocation_pool (GstQuery * query, guint index,
@@ -1666,27 +1622,48 @@ gst_query_set_nth_allocation_pool (GstQuery * query, guint index,
   g_array_index (array, AllocationPool, index) = ap;
 }
 
+typedef struct
+{
+  GType api;
+  GstStructure *params;
+} AllocationMeta;
+
+static void
+allocation_meta_free (AllocationMeta * am)
+{
+  if (am->params)
+    gst_structure_free (am->params);
+}
+
 /**
  * gst_query_add_allocation_meta:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @api: the metadata API
+ * @params: (transfer none) (allow-none): API specific parameters
  *
- * Add @api as aone of the supported metadata API to @query.
+ * Add @api with @params as one of the supported metadata API to @query.
  */
 void
-gst_query_add_allocation_meta (GstQuery * query, GType api)
+gst_query_add_allocation_meta (GstQuery * query, GType api,
+    const GstStructure * params)
 {
   GArray *array;
   GstStructure *structure;
+  AllocationMeta am;
 
   g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_ALLOCATION);
   g_return_if_fail (api != 0);
   g_return_if_fail (gst_query_is_writable (query));
 
   structure = GST_QUERY_STRUCTURE (query);
-  array = ensure_array (structure, GST_QUARK (META), sizeof (GType), NULL);
+  array =
+      ensure_array (structure, GST_QUARK (META), sizeof (AllocationMeta),
+      (GDestroyNotify) allocation_meta_free);
 
-  g_array_append_val (array, api);
+  am.api = api;
+  am.params = (params ? gst_structure_copy (params) : NULL);
+
+  g_array_append_val (array, am);
 }
 
 /**
@@ -1707,7 +1684,9 @@ gst_query_get_n_allocation_metas (GstQuery * query)
   g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_ALLOCATION, 0);
 
   structure = GST_QUERY_STRUCTURE (query);
-  array = ensure_array (structure, GST_QUARK (META), sizeof (GType), NULL);
+  array =
+      ensure_array (structure, GST_QUARK (META), sizeof (AllocationMeta),
+      (GDestroyNotify) allocation_meta_free);
 
   return array->len;
 }
@@ -1716,6 +1695,7 @@ gst_query_get_n_allocation_metas (GstQuery * query)
  * gst_query_parse_nth_allocation_meta:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @index: position in the metadata API array to read
+ * @params: (out) (allow-none): API specific flags
  *
  * Parse an available query and get the metadata API
  * at @index of the metadata API array.
@@ -1723,19 +1703,28 @@ gst_query_get_n_allocation_metas (GstQuery * query)
  * Returns: a #GType of the metadata API at @index.
  */
 GType
-gst_query_parse_nth_allocation_meta (GstQuery * query, guint index)
+gst_query_parse_nth_allocation_meta (GstQuery * query, guint index,
+    const GstStructure ** params)
 {
   GArray *array;
   GstStructure *structure;
+  AllocationMeta *am;
 
   g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_ALLOCATION, 0);
 
   structure = GST_QUERY_STRUCTURE (query);
-  array = ensure_array (structure, GST_QUARK (META), sizeof (GType), NULL);
+  array =
+      ensure_array (structure, GST_QUARK (META), sizeof (AllocationMeta),
+      (GDestroyNotify) allocation_meta_free);
 
   g_return_val_if_fail (index < array->len, 0);
 
-  return g_array_index (array, GType, index);
+  am = &g_array_index (array, AllocationMeta, index);
+
+  if (params)
+    *params = am->params;
+
+  return am->api;
 }
 
 /**
@@ -1755,23 +1744,28 @@ gst_query_remove_nth_allocation_meta (GstQuery * query, guint index)
   g_return_if_fail (gst_query_is_writable (query));
 
   structure = GST_QUERY_STRUCTURE (query);
-  array = ensure_array (structure, GST_QUARK (META), sizeof (GType), NULL);
+  array =
+      ensure_array (structure, GST_QUARK (META), sizeof (AllocationMeta),
+      (GDestroyNotify) allocation_meta_free);
   g_return_if_fail (index < array->len);
 
   g_array_remove_index (array, index);
 }
 
 /**
- * gst_query_has_allocation_meta:
+ * gst_query_find_allocation_meta:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @api: the metadata API
+ * @index: (out) (allow-none): the index
  *
- * Check if @query has metadata @api set.
+ * Check if @query has metadata @api set. When this function returns TRUE,
+ * @index will contain the index where the requested API and the flags can be
+ * found.
  *
  * Returns: TRUE when @api is in the list of metadata.
  */
 gboolean
-gst_query_has_allocation_meta (GstQuery * query, GType api)
+gst_query_find_allocation_meta (GstQuery * query, GType api, guint * index)
 {
   GArray *array;
   GstStructure *structure;
@@ -1781,12 +1775,18 @@ gst_query_has_allocation_meta (GstQuery * query, GType api)
   g_return_val_if_fail (api != 0, FALSE);
 
   structure = GST_QUERY_STRUCTURE (query);
-  array = ensure_array (structure, GST_QUARK (META), sizeof (GType), NULL);
+  array =
+      ensure_array (structure, GST_QUARK (META), sizeof (AllocationMeta),
+      (GDestroyNotify) allocation_meta_free);
 
   len = array->len;
   for (i = 0; i < len; i++) {
-    if (g_array_index (array, GType, i) == api)
+    AllocationMeta *am = &g_array_index (array, AllocationMeta, i);
+    if (am->api == api) {
+      if (index)
+        *index = i;
       return TRUE;
+    }
   }
   return FALSE;
 }
@@ -1801,14 +1801,14 @@ static void
 allocation_param_free (AllocationParam * ap)
 {
   if (ap->allocator)
-    gst_allocator_unref (ap->allocator);
+    gst_object_unref (ap->allocator);
 }
 
 /**
  * gst_query_add_allocation_param:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
- * @allocator: the memory allocator
- * @params: a #GstAllocationParams
+ * @allocator: (transfer none) (allow-none): the memory allocator
+ * @params: (transfer none) (allow-none): a #GstAllocationParams
  *
  * Add @allocator and its @params as a supported memory allocator.
  */
@@ -1829,7 +1829,7 @@ gst_query_add_allocation_param (GstQuery * query, GstAllocator * allocator,
       sizeof (AllocationParam), (GDestroyNotify) allocation_param_free);
 
   if ((ap.allocator = allocator))
-    gst_allocator_ref (allocator);
+    gst_object_ref (allocator);
   if (params)
     ap.params = *params;
   else
@@ -1869,8 +1869,8 @@ gst_query_get_n_allocation_params (GstQuery * query)
  * gst_query_parse_nth_allocation_param:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @index: position in the allocator array to read
- * @allocator: (transfer none): variable to hold the result
- * @params: parameters for the allocator
+ * @allocator: (out) (transfer none) (allow-none): variable to hold the result
+ * @params: (out) (allow-none): parameters for the allocator
  *
  * Parse an available query and get the alloctor and its params
  * at @index of the allocator array.
@@ -1894,7 +1894,7 @@ gst_query_parse_nth_allocation_param (GstQuery * query, guint index,
 
   if (allocator)
     if ((*allocator = ap->allocator))
-      gst_allocator_ref (*allocator);
+      gst_object_ref (*allocator);
   if (params)
     *params = ap->params;
 }
@@ -1903,8 +1903,8 @@ gst_query_parse_nth_allocation_param (GstQuery * query, guint index,
  * gst_query_set_nth_allocation_param:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @index: position in the allocator array to set
- * @allocator: (transfer full): new allocator to set
- * @params: parameters for the allocator
+ * @allocator: (transfer none) (allow-none): new allocator to set
+ * @params: (transfer none) (allow-none): parameters for the allocator
  *
  * Parse an available query and get the alloctor and its params
  * at @index of the allocator array.
@@ -1928,7 +1928,7 @@ gst_query_set_nth_allocation_param (GstQuery * query, guint index,
   allocation_param_free (old);
 
   if ((ap.allocator = allocator))
-    gst_allocator_ref (allocator);
+    gst_object_ref (allocator);
   if (params)
     ap.params = *params;
   else
@@ -2166,6 +2166,13 @@ gst_query_parse_accept_caps (GstQuery * query, GstCaps ** caps)
           GST_QUARK (CAPS)));
 }
 
+/**
+ * gst_query_set_accept_caps_result:
+ * @query: a GST_QUERY_ACCEPT_CAPS type query #GstQuery
+ * @result: the result to set
+ *
+ * Set @result as the result for the @query.
+ */
 void
 gst_query_set_accept_caps_result (GstQuery * query, gboolean result)
 {
@@ -2179,6 +2186,13 @@ gst_query_set_accept_caps_result (GstQuery * query, gboolean result)
       GST_QUARK (RESULT), G_TYPE_BOOLEAN, result, NULL);
 }
 
+/**
+ * gst_query_parse_accept_caps_result:
+ * @query: a GST_QUERY_ACCEPT_CAPS type query #GstQuery
+ * @result: location for the result
+ *
+ * Parse the result from @query and store in @result.
+ */
 void
 gst_query_parse_accept_caps_result (GstQuery * query, gboolean * result)
 {
@@ -2293,6 +2307,7 @@ gst_query_parse_caps_result (GstQuery * query, GstCaps ** caps)
           GST_QUARK (CAPS)));
 }
 
+#if 0
 void
 gst_query_intersect_caps_result (GstQuery * query, GstCaps * filter,
     GstCapsIntersectMode mode)
@@ -2304,6 +2319,7 @@ gst_query_intersect_caps_result (GstQuery * query, GstCaps * filter,
   gst_query_set_caps_result (query, res);
   gst_caps_unref (res);
 }
+#endif
 
 /**
  * gst_query_new_drain:
@@ -2324,94 +2340,4 @@ gst_query_new_drain (void)
   query = gst_query_new_custom (GST_QUERY_DRAIN, structure);
 
   return query;
-}
-
-/**
- * gst_query_new_toc:
- *
- * Constructs a new query TOC query object. Use gst_query_unref()
- * when done with it. A TOC query is used to query the full TOC with
- * the UID marker for TOC extending (to insert some new entries).
- *
- * Returns: A #GstQuery.
- */
-GstQuery *
-gst_query_new_toc (void)
-{
-  GstQuery *query;
-  GstStructure *structure;
-
-  structure = gst_structure_new_id_empty (GST_QUARK (QUERY_TOC));
-  query = gst_query_new_custom (GST_QUERY_TOC, structure);
-
-  return query;
-}
-
-/**
- * gst_query_set_toc:
- * @query: a #GstQuery with query type GST_QUERY_TOC.
- * @toc: the GstToc to set.
- * @extend_uid: UID which can be used for TOC extending (may be NULL),
- * 0 means root TOC level.
- *
- * Answer a TOC query by setting appropriate #GstToc structure.
- */
-void
-gst_query_set_toc (GstQuery * query, GstToc * toc, const gchar * extend_uid)
-{
-  GstStructure *structure;
-  GstStructure *old_structure;
-
-  g_return_if_fail (query != NULL);
-  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_TOC);
-  g_return_if_fail (toc != NULL);
-
-  structure = __gst_toc_to_structure (toc);
-
-  g_return_if_fail (structure != NULL);
-
-  /* that shouldn't be happen in normal usage */
-  old_structure = GST_QUERY_STRUCTURE (query);
-  if (old_structure) {
-    gst_structure_set_parent_refcount (old_structure, NULL);
-    gst_structure_free (old_structure);
-  }
-
-  if (extend_uid != NULL)
-    __gst_toc_structure_set_extend_uid (structure, extend_uid);
-
-  gst_structure_set_parent_refcount (structure, &(query->mini_object.refcount));
-  GST_QUERY_STRUCTURE (query) = structure;
-}
-
-/**
- * gst_query_parse_toc:
- * @query: a #GstQuery.
- * @toc: (out): the storage for the received TOC (may be NULL).
- * @extend_uid: (out): the storage for the received extend UID marker (may be NULL),
- * 0 means root TOC level.
- *
- * Parse a TOC query, writing the TOC into @toc as a newly
- * allocated #GstToc and extend UID into @extend_uid, if the respective parameters
- * are non-NULL. Use @extend_uid value to insert new entries into the TOC (@extend_uid will
- * act as root entry for newly inserted entries).
- * Free @toc with gst_toc_free() and @extend_uid with g_free() after usage.
- */
-void
-gst_query_parse_toc (GstQuery * query, GstToc ** toc, gchar ** extend_uid)
-{
-  const GstStructure *structure;
-
-  g_return_if_fail (query != NULL);
-  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_TOC);
-
-  structure = gst_query_get_structure (query);
-
-  g_return_if_fail (structure != NULL);
-
-  if (toc != NULL)
-    *toc = __gst_toc_from_structure (structure);
-
-  if (extend_uid != NULL)
-    *extend_uid = __gst_toc_structure_get_extend_uid (structure);
 }

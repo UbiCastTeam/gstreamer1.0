@@ -58,18 +58,17 @@ typedef enum {
  * @GST_SEEK_FLAG_SEGMENT: perform a segment seek.
  * @GST_SEEK_FLAG_SKIP: when doing fast foward or fast reverse playback, allow
  *                     elements to skip frames instead of generating all
- *                     frames. Since 0.10.22.
+ *                     frames.
  * @GST_SEEK_FLAG_SNAP_BEFORE: go to a location before the requested position,
  *                     if KEY_UNIT this means the keyframe at or before the
  *                     requested position the one at or before the seek target.
- *                     Since 0.10.37.
  * @GST_SEEK_FLAG_SNAP_AFTER: go to a location after the requested position,
  *                     if KEY_UNIT this means the keyframe at of after the
- *                     requested position. Since 0.10.37.
+ *                     requested position.
  * @GST_SEEK_FLAG_SNAP_NEAREST: go to a position near the requested position,
  *                     if KEY_UNIT this means the keyframe closest to the
  *                     requested position, if both keyframes are at an equal
- *                     distance, behaves like SNAP_BEFORE. Since 0.10.37.
+ *                     distance, behaves like SNAP_BEFORE.
  *
  * Flags to be used with gst_element_seek() or gst_event_new_seek(). All flags
  * can be used together.
@@ -126,14 +125,17 @@ typedef enum {
  * @GST_SEGMENT_FLAG_RESET: reset the pipeline running_time to the segment
  *                          running_time
  * @GST_SEGMENT_FLAG_SKIP: perform skip playback
+ * @GST_SEGMENT_FLAG_SEGMENT: send SEGMENT_DONE instead of EOS
  *
  * Flags for the GstSegment structure. Currently mapped to the corresponding
  * values of the seek flags.
  */
+/* Note: update gst_segment_do_seek() when adding new flags here */
 typedef enum {
   GST_SEGMENT_FLAG_NONE            = GST_SEEK_FLAG_NONE,
   GST_SEGMENT_FLAG_RESET           = GST_SEEK_FLAG_FLUSH,
-  GST_SEGMENT_FLAG_SKIP            = GST_SEEK_FLAG_SKIP
+  GST_SEGMENT_FLAG_SKIP            = GST_SEEK_FLAG_SKIP,
+  GST_SEGMENT_FLAG_SEGMENT         = GST_SEEK_FLAG_SEGMENT
 } GstSegmentFlags;
 
 /**
@@ -142,7 +144,8 @@ typedef enum {
  * @rate: the rate of the segment
  * @applied_rate: the already applied rate to the segment
  * @format: the format of the segment values
- * @base: the base time of the segment
+ * @base: the base of the segment
+ * @offset: the offset to apply to @start or @stop
  * @start: the start of the segment
  * @stop: the stop of the segment
  * @time: the stream time of the segment
@@ -161,6 +164,7 @@ struct _GstSegment {
 
   GstFormat       format;
   guint64         base;
+  guint64         offset;
   guint64         start;
   guint64         stop;
   guint64         time;

@@ -100,6 +100,7 @@ enum
 };
 
 static void gst_bus_dispose (GObject * object);
+static void gst_bus_finalize (GObject * object);
 
 static guint gst_bus_signals[LAST_SIGNAL] = { 0 };
 
@@ -110,6 +111,7 @@ struct _GstBusPrivate
 
   GstBusSyncHandler sync_handler;
   gpointer sync_handler_data;
+  GDestroyNotify sync_handler_notify;
 
   guint signal_watch_id;
   guint num_signal_watchers;
@@ -158,10 +160,12 @@ gst_bus_class_init (GstBusClass * klass)
   GObjectClass *gobject_class = (GObjectClass *) klass;
 
   gobject_class->dispose = gst_bus_dispose;
+  gobject_class->finalize = gst_bus_finalize;
   gobject_class->set_property = gst_bus_set_property;
   gobject_class->constructed = gst_bus_constructed;
 
-  /* GstBus:enable-async:
+  /**
+   * GstBus::enable-async:
    *
    * Enable async message delivery support for bus watches,
    * gst_bus_pop() and similar API. Without this only the
@@ -169,8 +173,6 @@ gst_bus_class_init (GstBusClass * klass)
    *
    * This property is used to create the child element buses
    * in #GstBin.
-   *
-   * Since: 0.10.33
    */
   g_object_class_install_property (gobject_class, PROP_ENABLE_ASYNC,
       g_param_spec_boolean ("enable-async", "Enable Async",
@@ -225,6 +227,9 @@ gst_bus_init (GstBus * bus)
   g_mutex_init (&bus->priv->queue_lock);
   bus->priv->queue = gst_atomic_queue_new (32);
 
+  /* clear floating flag */
+  gst_object_ref_sink (bus);
+
   GST_DEBUG_OBJECT (bus, "created");
 }
 
@@ -253,6 +258,17 @@ gst_bus_dispose (GObject * object)
   }
 
   G_OBJECT_CLASS (parent_class)->dispose (object);
+}
+
+static void
+gst_bus_finalize (GObject * object)
+{
+  GstBus *bus = GST_BUS (object);
+
+  if (bus->priv->sync_handler_notify)
+    bus->priv->sync_handler_notify (bus->priv->sync_handler_data);
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 /**
@@ -463,8 +479,6 @@ gst_bus_set_flushing (GstBus * bus, gboolean flushing)
  *     with gst_message_unref() after usage.
  *
  * MT safe.
- *
- * Since: 0.10.15
  */
 GstMessage *
 gst_bus_timed_pop_filtered (GstBus * bus, GstClockTime timeout,
@@ -561,8 +575,6 @@ beach:
  * gst_message_unref() after usage.
  *
  * MT safe.
- *
- * Since: 0.10.12
  */
 GstMessage *
 gst_bus_timed_pop (GstBus * bus, GstClockTime timeout)
@@ -588,8 +600,6 @@ gst_bus_timed_pop (GstBus * bus, GstClockTime timeout)
  *     gst_message_unref() after usage.
  *
  * MT safe.
- *
- * Since: 0.10.15
  */
 GstMessage *
 gst_bus_pop_filtered (GstBus * bus, GstMessageType types)
@@ -654,8 +664,9 @@ gst_bus_peek (GstBus * bus)
 /**
  * gst_bus_set_sync_handler:
  * @bus: a #GstBus to install the handler on
- * @func: The handler function to install
- * @data: User data that will be sent to the handler function.
+ * @func: (allow-none): The handler function to install
+ * @user_data: User data that will be sent to the handler function.
+ * @notify: called when @user_data becomes unused
  *
  * Sets the synchronous handler on the bus. The function will be called
  * every time a new message is posted on the bus. Note that the function
@@ -668,19 +679,33 @@ gst_bus_peek (GstBus * bus)
  * function, which will clear the existing handler.
  */
 void
-gst_bus_set_sync_handler (GstBus * bus, GstBusSyncHandler func, gpointer data)
+gst_bus_set_sync_handler (GstBus * bus, GstBusSyncHandler func,
+    gpointer user_data, GDestroyNotify notify)
 {
+  GDestroyNotify old_notify;
+
   g_return_if_fail (GST_IS_BUS (bus));
 
   GST_OBJECT_LOCK (bus);
-
   /* Assert if the user attempts to replace an existing sync_handler,
    * other than to clear it */
   if (func != NULL && bus->priv->sync_handler != NULL)
     goto no_replace;
 
+  if ((old_notify = bus->priv->sync_handler_notify)) {
+    gpointer old_data = bus->priv->sync_handler_data;
+
+    bus->priv->sync_handler_data = NULL;
+    bus->priv->sync_handler_notify = NULL;
+    GST_OBJECT_UNLOCK (bus);
+
+    old_notify (old_data);
+
+    GST_OBJECT_LOCK (bus);
+  }
   bus->priv->sync_handler = func;
-  bus->priv->sync_handler_data = data;
+  bus->priv->sync_handler_data = user_data;
+  bus->priv->sync_handler_notify = notify;
   GST_OBJECT_UNLOCK (bus);
 
   return;
@@ -859,8 +884,8 @@ gst_bus_add_watch_full_unlocked (GstBus * bus, gint priority,
  * @notify: the function to call when the source is removed.
  *
  * Adds a bus watch to the default main context with the given @priority (e.g.
- * %G_PRIORITY_DEFAULT). Since 0.10.33 it is also possible to use a non-default
- * main context set up using g_main_context_push_thread_default() (before
+ * %G_PRIORITY_DEFAULT). It is also possible to use a non-default  main
+ * context set up using g_main_context_push_thread_default() (before
  * one had to create a bus watch source and attach it to the desired main
  * context 'manually').
  *
@@ -874,9 +899,10 @@ gst_bus_add_watch_full_unlocked (GstBus * bus, gint priority,
  * The watch can be removed using g_source_remove() or by returning FALSE
  * from @func.
  *
+ * MT safe.
+ *
  * Returns: The event source id.
  * Rename to: gst_bus_add_watch
- * MT safe.
  */
 guint
 gst_bus_add_watch_full (GstBus * bus, gint priority,
@@ -900,8 +926,8 @@ gst_bus_add_watch_full (GstBus * bus, gint priority,
  * @user_data: user data passed to @func.
  *
  * Adds a bus watch to the default main context with the default priority
- * (%G_PRIORITY_DEFAULT). Since 0.10.33 it is also possible to use a non-default
- * main context set up using g_main_context_push_thread_default() (before
+ * (%G_PRIORITY_DEFAULT). It is also possible to use a non-default main
+ * context set up using g_main_context_push_thread_default() (before
  * one had to create a bus watch source and attach it to the desired main
  * context 'manually').
  *
@@ -1195,8 +1221,8 @@ gst_bus_disable_sync_message_emission (GstBus * bus)
  * @priority: The priority of the watch.
  *
  * Adds a bus signal watch to the default main context with the given @priority
- * (e.g. %G_PRIORITY_DEFAULT). Since 0.10.33 it is also possible to use a
- * non-default main context set up using g_main_context_push_thread_default()
+ * (e.g. %G_PRIORITY_DEFAULT). It is also possible to use a non-default main
+ * context set up using g_main_context_push_thread_default()
  * (before one had to create a bus watch source and attach it to the desired
  * main context 'manually').
  *
@@ -1254,7 +1280,7 @@ add_failed:
  * @bus: a #GstBus on which you want to receive the "message" signal
  *
  * Adds a bus signal watch to the default main context with the default priority
- * (%G_PRIORITY_DEFAULT). Since 0.10.33 it is also possible to use a non-default
+ * (%G_PRIORITY_DEFAULT). It is also possible to use a non-default
  * main context set up using g_main_context_push_thread_default() (before
  * one had to create a bus watch source and attach it to the desired main
  * context 'manually').

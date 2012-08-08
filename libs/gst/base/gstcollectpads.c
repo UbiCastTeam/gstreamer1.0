@@ -78,8 +78,6 @@
  * </itemizedlist>
  *
  * Last reviewed on 2011-10-28 (0.10.36)
- *
- * Since: 0.10.36
  */
 
 #ifdef HAVE_CONFIG_H
@@ -109,6 +107,7 @@ struct _GstCollectPadsPrivate
 {
   /* with LOCK and/or STREAM_LOCK */
   gboolean started;
+  gboolean stream_started;
 
   /* with STREAM_LOCK */
   guint32 cookie;               /* @data list cookie */
@@ -235,6 +234,7 @@ gst_collect_pads_init (GstCollectPads * pads)
   pads->priv->queuedpads = 0;
   pads->priv->eospads = 0;
   pads->priv->started = FALSE;
+  pads->priv->stream_started = FALSE;
 
   g_rec_mutex_init (&pads->stream_lock);
 
@@ -293,8 +293,6 @@ gst_collect_pads_finalize (GObject * object)
  * MT safe.
  *
  * Returns: (transfer full): a new #GstCollectPads, or NULL in case of an error.
- *
- * Since: 0.10.36
  */
 GstCollectPads *
 gst_collect_pads_new (void)
@@ -325,8 +323,6 @@ gst_collect_pads_set_buffer_function_locked (GstCollectPads * pads,
  * the oldest buffer when all pads have been collected.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_buffer_function (GstCollectPads * pads,
@@ -349,8 +345,6 @@ gst_collect_pads_set_buffer_function (GstCollectPads * pads,
  * Set the timestamp comparison function.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 /* NOTE allowing to change comparison seems not advisable;
 no known use-case, and collaboration with default algorithm is unpredictable.
@@ -386,8 +380,6 @@ gst_collect_pads_set_compare_function (GstCollectPads * pads,
  * If this callback is set, the former will be unset.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_function (GstCollectPads * pads,
@@ -445,8 +437,6 @@ unref_data (GstCollectData * data)
  * if so (unusually) needed.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_event_function (GstCollectPads * pads,
@@ -475,8 +465,6 @@ gst_collect_pads_set_event_function (GstCollectPads * pads,
  * if so (unusually) needed.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_query_function (GstCollectPads * pads,
@@ -501,8 +489,6 @@ gst_collect_pads_set_query_function (GstCollectPads * pads,
 *
 * Convenience clipping function that converts incoming buffer's timestamp
 * to running time, or clips the buffer if outside configured segment.
-*
-* Since: 0.10.37
 */
 GstFlowReturn
 gst_collect_pads_clip_running_time (GstCollectPads * pads,
@@ -541,8 +527,6 @@ gst_collect_pads_clip_running_time (GstCollectPads * pads,
  *
  * Install a clipping function that is called right after a buffer is received
  * on a pad managed by @pads. See #GstCollectPad2ClipFunction for more info.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_clip_function (GstCollectPads * pads,
@@ -579,8 +563,6 @@ gst_collect_pads_set_clip_function (GstCollectPads * pads,
  *
  * Returns: a new #GstCollectData to identify the new pad. Or NULL
  *   if wrong parameters are supplied.
- *
- * Since: 0.10.36
  */
 GstCollectData *
 gst_collect_pads_add_pad (GstCollectPads * pads, GstPad * pad, guint size)
@@ -622,8 +604,6 @@ gst_collect_pads_add_pad (GstCollectPads * pads, GstPad * pad, guint size)
  * started.
  *
  * MT safe.
- *
- * Since: 0.10.36
  *
  * Returns: a new #GstCollectData to identify the new pad. Or NULL
  *   if wrong parameters are supplied.
@@ -701,8 +681,6 @@ find_pad (GstCollectData * data, GstPad * pad)
  * MT safe.
  *
  * Returns: %TRUE if the pad could be removed.
- *
- * Since: 0.10.36
  */
 gboolean
 gst_collect_pads_remove_pad (GstCollectPads * pads, GstPad * pad)
@@ -776,89 +754,6 @@ unknown_pad:
   }
 }
 
-/**
- * gst_collect_pads_is_active:
- * @pads: the collectspads to use
- * @pad: the pad to check
- *
- * Check if a pad is active.
- *
- * This function is currently not implemented.
- *
- * MT safe.
- *
- * Returns: %TRUE if the pad is active.
- *
- * Since: 0.10.36
- */
-gboolean
-gst_collect_pads_is_active (GstCollectPads * pads, GstPad * pad)
-{
-  g_return_val_if_fail (pads != NULL, FALSE);
-  g_return_val_if_fail (GST_IS_COLLECT_PADS (pads), FALSE);
-  g_return_val_if_fail (pad != NULL, FALSE);
-  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
-
-  g_warning ("gst_collect_pads_is_active() is not implemented");
-
-  return FALSE;
-}
-
-/**
- * gst_collect_pads_collect:
- * @pads: the collectspads to use
- *
- * Collect data on all pads. This function is usually called
- * from a #GstTask function in an element. 
- *
- * This function is currently not implemented.
- *
- * MT safe.
- *
- * Returns: #GstFlowReturn of the operation.
- *
- * Since: 0.10.36
- */
-GstFlowReturn
-gst_collect_pads_collect (GstCollectPads * pads)
-{
-  g_return_val_if_fail (pads != NULL, GST_FLOW_ERROR);
-  g_return_val_if_fail (GST_IS_COLLECT_PADS (pads), GST_FLOW_ERROR);
-
-  g_warning ("gst_collect_pads_collect() is not implemented");
-
-  return GST_FLOW_NOT_SUPPORTED;
-}
-
-/**
- * gst_collect_pads_collect_range:
- * @pads: the collectspads to use
- * @offset: the offset to collect
- * @length: the length to collect
- *
- * Collect data with @offset and @length on all pads. This function
- * is typically called in the getrange function of an element. 
- *
- * This function is currently not implemented.
- *
- * MT safe.
- *
- * Returns: #GstFlowReturn of the operation.
- *
- * Since: 0.10.36
- */
-GstFlowReturn
-gst_collect_pads_collect_range (GstCollectPads * pads, guint64 offset,
-    guint length)
-{
-  g_return_val_if_fail (pads != NULL, GST_FLOW_ERROR);
-  g_return_val_if_fail (GST_IS_COLLECT_PADS (pads), GST_FLOW_ERROR);
-
-  g_warning ("gst_collect_pads_collect_range() is not implemented");
-
-  return GST_FLOW_NOT_SUPPORTED;
-}
-
 /*
  * Must be called with STREAM_LOCK.
  */
@@ -903,8 +798,6 @@ gst_collect_pads_set_flushing_unlocked (GstCollectPads * pads,
  * e.g. by sending a FLUSH_START downstream.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_flushing (GstCollectPads * pads, gboolean flushing)
@@ -925,8 +818,6 @@ gst_collect_pads_set_flushing (GstCollectPads * pads, gboolean flushing)
  * Starts the processing of data in the collect_pads.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_start (GstCollectPads * pads)
@@ -969,8 +860,6 @@ gst_collect_pads_start (GstCollectPads * pads)
  * will also unblock any blocking operations.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_stop (GstCollectPads * pads)
@@ -1013,6 +902,7 @@ gst_collect_pads_stop (GstCollectPads * pads)
     unref_data (pads->priv->earliest_data);
   pads->priv->earliest_data = NULL;
   pads->priv->earliest_time = GST_CLOCK_TIME_NONE;
+  pads->priv->stream_started = FALSE;
 
   GST_OBJECT_UNLOCK (pads);
   /* Wake them up so they can end the chain functions. */
@@ -1034,8 +924,6 @@ gst_collect_pads_stop (GstCollectPads * pads)
  *
  * Returns: The buffer in @data or NULL if no buffer is queued.
  *  should unref the buffer after usage.
- *
- * Since: 0.10.36
  */
 GstBuffer *
 gst_collect_pads_peek (GstCollectPads * pads, GstCollectData * data)
@@ -1068,8 +956,6 @@ gst_collect_pads_peek (GstCollectPads * pads, GstCollectData * data)
  *
  * Returns: (transfer full): The buffer in @data or NULL if no buffer was
  *   queued. You should unref the buffer after usage.
- *
- * Since: 0.10.36
  */
 GstBuffer *
 gst_collect_pads_pop (GstCollectPads * pads, GstCollectData * data)
@@ -1122,8 +1008,6 @@ gst_collect_pads_clear (GstCollectPads * pads, GstCollectData * data)
  *
  * Returns: The maximum number of bytes queued on all pads. This function
  * returns 0 if a pad has no queued buffer.
- *
- * Since: 0.10.36
  */
 /* we might pre-calculate this in some struct field,
  * but would then have to maintain this in _chain and particularly _pop, etc,
@@ -1193,8 +1077,6 @@ not_filled:
  *
  * Returns: The number of bytes flushed This can be less than @size and
  * is 0 if the pad was end-of-stream.
- *
- * Since: 0.10.36
  */
 guint
 gst_collect_pads_flush (GstCollectPads * pads, GstCollectData * data,
@@ -1239,8 +1121,6 @@ gst_collect_pads_flush (GstCollectPads * pads, GstCollectData * data,
  *
  * MT safe.
  *
- * Since: 0.10.36
- *
  * Returns: (transfer full): A sub buffer. The size of the buffer can be less that requested.
  * A return of NULL signals that the pad is end-of-stream.
  * Unref the buffer after use.
@@ -1280,8 +1160,6 @@ gst_collect_pads_read_buffer (GstCollectPads * pads, GstCollectData * data,
  *
  * MT safe.
  *
- * Since: 0.10.36
- *
  * Returns: A sub buffer. The size of the buffer can be less that requested.
  * A return of NULL signals that the pad is end-of-stream.
  * Unref the buffer after use.
@@ -1313,8 +1191,6 @@ gst_collect_pads_take_buffer (GstCollectPads * pads, GstCollectData * data,
  * in the callback.
  *
  * MT safe.
- *
- * Since: 0.10.36
  */
 void
 gst_collect_pads_set_waiting (GstCollectPads * pads, GstCollectData * data,
@@ -1539,8 +1415,6 @@ gst_collect_pads_recalculate_waiting (GstCollectPads * pads)
  *
  * This function should be called with STREAM_LOCK held,
  * such as in the callback.
- *
- * Since: 0.10.36
  */
 static void
 gst_collect_pads_find_best_pad (GstCollectPads * pads,
@@ -1697,8 +1571,6 @@ gst_collect_pads_default_compare_func (GstCollectPads * pads,
  * Default GstCollectPads event handling that elements should always
  * chain up to to ensure proper operation.  Element might however indicate
  * event should not be forwarded downstream.
- *
- * Since: 0.11.x
  */
 gboolean
 gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
@@ -1837,8 +1709,16 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
        * accumulated and this is certainly not what we want. */
       goto eat;
     }
-    case GST_EVENT_CAPS:
     case GST_EVENT_STREAM_START:
+      /* let the only the first one go through */
+      if (!pads->priv->stream_started) {
+        pads->priv->stream_started = TRUE;
+        goto forward;
+      } else {
+        goto eat;
+      }
+      break;
+    case GST_EVENT_CAPS:
     case GST_EVENT_STREAM_CONFIG:
       goto eat;
     default:
@@ -1928,8 +1808,6 @@ pad_removed:
  * Default GstCollectPads query handling that elements should always
  * chain up to to ensure proper operation.  Element might however indicate
  * query should not be forwarded downstream.
- *
- * Since: 0.11.x
  */
 gboolean
 gst_collect_pads_query_default (GstCollectPads * pads, GstCollectData * data,

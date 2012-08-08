@@ -240,8 +240,6 @@ G_STMT_START {                                                      \
  * This macro checks that @a and @b are (almost) equal and aborts if this
  * is not the case, printing both expressions and the values they evaluated
  * to. This macro is for use in unit tests.
- *
- * Since: 0.10.14
  */
 #define fail_unless_equals_float(a, b)                            \
 G_STMT_START {                                                    \
@@ -261,8 +259,6 @@ G_STMT_START {                                                    \
  * This macro checks that @a and @b are (almost) equal and aborts if this
  * is not the case, printing both expressions and the values they evaluated
  * to. This macro is for use in unit tests.
- *
- * Since: 0.10.14
  */
 #define assert_equals_float(a, b) fail_unless_equals_float(a, b)
 
@@ -490,14 +486,6 @@ G_STMT_START {                                                          \
 #define ASSERT_BUFFER_REFCOUNT(buffer, name, value)             \
         ASSERT_MINI_OBJECT_REFCOUNT(buffer, name, value)
 
-#define ASSERT_MEMORY_REFCOUNT(memory, name, value)             \
-G_STMT_START {                                                  \
-  int rc;                                                       \
-  rc = memory->refcount;                                        \
-  fail_unless (rc == value,                                     \
-               name " (%p) refcount is %d instead of %d", memory, rc, value); \
-} G_STMT_END
-
 #define ASSERT_MINI_OBJECT_REFCOUNT(miniobj, name, value)       \
 G_STMT_START {                                                  \
   int rc;                                                       \
@@ -535,6 +523,12 @@ __gst_tcase_add_test (TCase * tc, TFun tf, const char * fname, int signal,
 }
 
 #define _tcase_add_test __gst_tcase_add_test
+
+/* add define to skip broken tests */
+#define tcase_skip_broken_test(chain,test_func) \
+  if (0) { tcase_add_test(chain,test_func); } else { \
+    GST_ERROR ("FIXME: skipping test %s because it's broken.", G_STRINGIFY (test_func)); \
+  }
 
 G_END_DECLS
 

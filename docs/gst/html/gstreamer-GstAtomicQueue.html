@@ -69,7 +69,6 @@ Opaque atomic data queue.
 <p>
 Use the acessor functions to get the stored values.
 </p>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -93,7 +92,6 @@ nearest power of 2 and used as the initial size of the queue.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -110,7 +108,6 @@ Increase the refcount of <em class="parameter"><code>queue</code></em>.
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -127,7 +124,6 @@ Unref <em class="parameter"><code>queue</code></em> and free the memory when the
 </td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -151,7 +147,6 @@ Append <em class="parameter"><code>data</code></em> to the tail of the queue.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -170,11 +165,12 @@ Peek the head element of the queue without removing it from the queue.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the head element of <em class="parameter"><code>queue</code></em> or NULL when the queue is empty.</td>
+<td>the head element of <em class="parameter"><code>queue</code></em> or NULL when
+the queue is empty. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -193,11 +189,12 @@ Get the head element of the queue.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the head element of <em class="parameter"><code>queue</code></em> or NULL when the queue is empty.</td>
+<td>the head element of <em class="parameter"><code>queue</code></em> or NULL when
+the queue is empty. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -220,7 +217,6 @@ Get the amount of items in the queue.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 </div>
 </div>

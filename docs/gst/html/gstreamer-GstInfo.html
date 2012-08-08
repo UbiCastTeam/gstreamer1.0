@@ -55,7 +55,7 @@ enum                <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDe
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
                                                          <em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-log" title="gst_debug_log ()">gst_debug_log</a>                       (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
@@ -83,7 +83,8 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> unused</code></em>);
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstInfo.html#gst-debug-level-get-name" title="gst_debug_level_get_name ()">gst_debug_level_get_name</a>            (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()">gst_debug_add_log_function</a>          (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstLogFunction" title="GstLogFunction ()"><span class="type">GstLogFunction</span></a> func</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-log-function" title="gst_debug_remove_log_function ()">gst_debug_remove_log_function</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstLogFunction" title="GstLogFunction ()"><span class="type">GstLogFunction</span></a> func</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-log-function-by-data" title="gst_debug_remove_log_function_by_data ()">gst_debug_remove_log_function_by_data</a>
                                                         (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
@@ -249,7 +250,7 @@ the variables and set the default category.
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">);</span>     <span class="gtkdoc slc">// define category (statically)</span>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">);</span>     <span class="gtkdoc slc">// define category (statically)</span>
 <span class="gtkdoc ppc">#define GST_CAT_DEFAULT my_category</span>     <span class="gtkdoc slc">// set as default</span><span class="gtkdoc ppc"></span></pre></td>
       </tr>
     </tbody>
@@ -265,7 +266,7 @@ After that you only need to initialize the category.
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">,</span> <span class="string">&quot;my category&quot;</span><span class="gtkdoc opt">,</span>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">,</span> <span class="string">&quot;my category&quot;</span><span class="gtkdoc opt">,</span>
                          <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;This is my very own&quot;</span><span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
@@ -352,7 +353,7 @@ message is, the greater the probability that the debugging system outputs it.
  in the executed code path is not fully implemented or handled yet. Note
  that this does not replace proper error handling in any way, the purpose
  of this message is to make it easier to spot incomplete/unfinished pieces
- of code when reading the debug log. (Since: 0.10.23)
+ of code when reading the debug log.
 </td>
 </tr>
 <tr>
@@ -385,7 +386,7 @@ message is, the greater the probability that the debugging system outputs it.
 </tr>
 <tr>
 <td><p><a name="GST-LEVEL-TRACE:CAPS"></a><span class="term"><code class="literal">GST_LEVEL_TRACE</code></span></p></td>
-<td>Tracing-related messages (Since: 0.10.30)
+<td>Tracing-related messages.
  Examples for this are referencing/dereferencing of objects.
 </td>
 </tr>
@@ -393,7 +394,7 @@ message is, the greater the probability that the debugging system outputs it.
 <td><p><a name="GST-LEVEL-MEMDUMP:CAPS"></a><span class="term"><code class="literal">GST_LEVEL_MEMDUMP</code></span></p></td>
 <td>memory dump messages are used to log (small) chunks of
  data as memory dumps in the log. They will be displayed as hexdump with
- ASCII characters. (Since: 0.10.23)
+ ASCII characters.
 </td>
 </tr>
 <tr>
@@ -601,7 +602,6 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -665,7 +665,7 @@ function signature in C++ code.
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
                                                          <em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>
 Function prototype for a logging function that can be registered with
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
@@ -706,7 +706,7 @@ Use G_GNUC_NO_INSTRUMENT on that function.
 <td>the message</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
 <td>user data for the log function</td>
 </tr>
 </tbody>
@@ -929,7 +929,8 @@ Get the string representation of a debugging level
 <div class="refsect2">
 <a name="gst-debug-add-log-function"></a><h3>gst_debug_add_log_function ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_add_log_function          (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstLogFunction" title="GstLogFunction ()"><span class="type">GstLogFunction</span></a> func</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>
 Adds the logging function to the list of logging functions.
 Be sure to use <a href="http://library.gnome.org/devel/glib/unstable/glib-Miscellaneous-Macros.html#G-GNUC-NO-INSTRUMENT:CAPS"><span class="type">G_GNUC_NO_INSTRUMENT</span></a> on that function, it is needed.
@@ -942,9 +943,12 @@ Be sure to use <a href="http://library.gnome.org/devel/glib/unstable/glib-Miscel
 <td>the function to use</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>user data. <span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span>
-</td>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
+<td>called when <em class="parameter"><code>user_data</code></em> is not used anymore</td>
 </tr>
 </tbody>
 </table></div>
@@ -961,7 +965,8 @@ Removes all registered instances of the given logging functions.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td>the log function to remove</td>
+<td>the log function to remove. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1267,12 +1272,12 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 4
 5
 6</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">);</span>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">);</span>
 <span class="gtkdoc ppc">#define GST_CAT_DEFAULT gst_myplugin_debug</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">);</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">,</span> <span class="string">&quot;myplugin&quot;</span><span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;nice element&quot;</span><span class="gtkdoc opt">);</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-GET:CAPS">GST_DEBUG_CATEGORY_GET</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">,</span> <span class="string">&quot;GST_PERFORMANCE&quot;</span><span class="gtkdoc opt">);</span></pre></td>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">,</span> <span class="string">&quot;myplugin&quot;</span><span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;nice element&quot;</span><span class="gtkdoc opt">);</span>
+<span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-GET:CAPS">GST_DEBUG_CATEGORY_GET</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">,</span> <span class="string">&quot;GST_PERFORMANCE&quot;</span><span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -1293,7 +1298,6 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1518,7 +1522,6 @@ This function returns 0 on non-windows machines.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1707,7 +1710,6 @@ Output a fixme message belonging to the given object in the given category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1735,7 +1737,6 @@ category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1770,7 +1771,6 @@ category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1903,7 +1903,6 @@ Output an fixme message in the given category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1926,7 +1925,6 @@ Output a tracing message in the given category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1956,7 +1954,6 @@ Output a hexdump of <em class="parameter"><code>data</code></em> in the given ca
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2091,7 +2088,6 @@ Output a fixme message belonging to the given object in the default category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2114,7 +2110,6 @@ Output a tracing message belonging to the given object in the default category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2144,7 +2139,6 @@ Output a logging message belonging to the given object in the default category.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2241,7 +2235,6 @@ Output a fixme message in the default category.
 <td>printf-style message to output</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2258,7 +2251,6 @@ Output a tracing message in the default category.
 <td>printf-style message to output</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2284,7 +2276,6 @@ Output a hexdump of <em class="parameter"><code>data</code></em>.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.23</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2304,7 +2295,6 @@ Use this variant of <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCP
 <td>pointer to the function to register</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.26</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2394,7 +2384,6 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2423,7 +2412,6 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.15</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2452,7 +2440,7 @@ Example:
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_TIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_TIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="../gstreamer-1.0/gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
       </tr>
     </tbody>
   </table>

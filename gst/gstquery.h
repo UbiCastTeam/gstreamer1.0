@@ -33,6 +33,7 @@
 #include <gst/gststructure.h>
 #include <gst/gstformat.h>
 #include <gst/gstpad.h>
+#include <gst/gstallocator.h>
 #include <gst/gsttoc.h>
 
 G_BEGIN_DECLS
@@ -92,18 +93,14 @@ typedef enum {
  * @GST_QUERY_SEGMENT: segment start/stop positions
  * @GST_QUERY_CONVERT: convert values between formats
  * @GST_QUERY_FORMATS: query supported formats for convert
- * @GST_QUERY_BUFFERING: query available media for efficient seeking. Since
- * 0.10.20.
- * @GST_QUERY_CUSTOM: a custom application or element defined query. Since
- * 0.10.22.
- * @GST_QUERY_URI: query the URI of the source or sink. Since 0.10.22.
+ * @GST_QUERY_BUFFERING: query available media for efficient seeking.
+ * @GST_QUERY_CUSTOM: a custom application or element defined query.
+ * @GST_QUERY_URI: query the URI of the source or sink.
  * @GST_QUERY_ALLOCATION: the buffer allocation properties
  * @GST_QUERY_SCHEDULING: the scheduling properties
  * @GST_QUERY_ACCEPT_CAPS: the accept caps query
  * @GST_QUERY_CAPS: the caps query
  * @GST_QUERY_DRAIN: wait till all serialized data is consumed downstream
- * @GST_QUERY_TOC: query the full table of contents (TOC) with the marker
- * for an entry which can be used to extend received TOC. Since 0.10.37.
  *
  * Standard predefined Query types
  */
@@ -127,8 +124,7 @@ typedef enum {
   GST_QUERY_SCHEDULING   = GST_QUERY_MAKE_TYPE (150, FLAG(UPSTREAM)),
   GST_QUERY_ACCEPT_CAPS  = GST_QUERY_MAKE_TYPE (160, FLAG(BOTH)),
   GST_QUERY_CAPS         = GST_QUERY_MAKE_TYPE (170, FLAG(BOTH)),
-  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
-  GST_QUERY_TOC          = GST_QUERY_MAKE_TYPE (190, FLAG(BOTH))
+  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED))
 } GstQueryType;
 #undef FLAG
 
@@ -150,8 +146,6 @@ typedef enum {
  * @query: the query to query
  *
  * Get a constant string representation of the #GstQueryType of the query.
- *
- * Since: 0.10.4
  */
 #define GST_QUERY_TYPE_NAME(query) (gst_query_type_get_name(GST_QUERY_TYPE(query)))
 
@@ -430,11 +424,12 @@ void            gst_query_set_nth_allocation_param   (GstQuery *query, guint ind
                                                       const GstAllocationParams *params);
 
 /* metadata */
-void            gst_query_add_allocation_meta        (GstQuery *query, GType api);
+void            gst_query_add_allocation_meta        (GstQuery *query, GType api, const GstStructure *params);
 guint           gst_query_get_n_allocation_metas     (GstQuery *query);
-GType           gst_query_parse_nth_allocation_meta  (GstQuery *query, guint index);
+GType           gst_query_parse_nth_allocation_meta  (GstQuery *query, guint index,
+                                                      const GstStructure **params);
 void            gst_query_remove_nth_allocation_meta (GstQuery *query, guint index);
-gboolean        gst_query_has_allocation_meta        (GstQuery *query, GType api);
+gboolean        gst_query_find_allocation_meta       (GstQuery *query, GType api, guint *index);
 
 
 /* scheduling query */
@@ -475,15 +470,8 @@ void            gst_query_parse_caps               (GstQuery *query, GstCaps **f
 void            gst_query_set_caps_result          (GstQuery *query, GstCaps *caps);
 void            gst_query_parse_caps_result        (GstQuery *query, GstCaps **caps);
 
-void            gst_query_intersect_caps_result    (GstQuery *query, GstCaps *filter,
-                                                    GstCapsIntersectMode mode);
 /* drain query */
 GstQuery *      gst_query_new_drain                (void) G_GNUC_MALLOC;
-
-/* TOC query */
-GstQuery *      gst_query_new_toc                 (void);
-void            gst_query_set_toc                 (GstQuery *query, GstToc *toc, const gchar *extend_uid);
-void            gst_query_parse_toc               (GstQuery *query, GstToc **toc, gchar **extend_uid);
 
 G_END_DECLS
 

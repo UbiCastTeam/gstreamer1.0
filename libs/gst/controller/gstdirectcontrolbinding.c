@@ -32,7 +32,7 @@
 
 #include "gstdirectcontrolbinding.h"
 
-#include <math.h>
+#include <gst/math-compat.h>
 
 #define GST_CAT_DEFAULT control_binding_debug
 GST_DEBUG_CATEGORY_STATIC (GST_CAT_DEFAULT);
@@ -478,7 +478,7 @@ gst_direct_control_binding_get_g_value_array (GstControlBinding * _self,
  * gst_direct_control_binding_new:
  * @object: the object of the property
  * @property_name: the property-name to attach the control source
- * @csource: the control source
+ * @cs: the control source
  *
  * Create a new control-binding that attaches the #GstControlSource to the
  * #GObject property.

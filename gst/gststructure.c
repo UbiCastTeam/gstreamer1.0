@@ -543,8 +543,6 @@ gst_structure_id_take_value_internal (GstStructure * structure, GQuark field,
  * Sets the field with the given GQuark @field to @value.  If the field
  * does not exist, it is created.  If the field exists, the previous
  * value is replaced and freed.
- *
- * Since: 0.10.31
  */
 void
 gst_structure_id_take_value (GstStructure * structure, GQuark field,
@@ -566,8 +564,6 @@ gst_structure_id_take_value (GstStructure * structure, GQuark field,
  * Sets the field with the given name @field to @value.  If the field
  * does not exist, it is created.  If the field exists, the previous
  * value is replaced and freed. The function will take ownership of @value.
- *
- * Since: 0.10.31
  */
 void
 gst_structure_take_value (GstStructure * structure, const gchar * fieldname,
@@ -689,8 +685,6 @@ gst_structure_id_set_valist_internal (GstStructure * structure,
  * setting of the structure if the caller already knows the associated
  * quark values.
  * The last variable argument must be NULL.
- *
- * Since: 0.10.10
  */
 void
 gst_structure_id_set (GstStructure * structure, GQuark field, ...)
@@ -711,8 +705,6 @@ gst_structure_id_set (GstStructure * structure, GQuark field, ...)
  * @varargs: variable arguments
  *
  * va_list form of gst_structure_id_set().
- *
- * Since: 0.10.10
  */
 void
 gst_structure_id_set_valist (GstStructure * structure,
@@ -740,8 +732,6 @@ gst_structure_id_set_valist (GstStructure * structure,
  * Free-function: gst_structure_free
  *
  * Returns: (transfer full): a new #GstStructure
- *
- * Since: 0.10.24
  */
 GstStructure *
 gst_structure_new_id (GQuark name_quark, GQuark field_quark, ...)
@@ -1176,8 +1166,6 @@ gst_structure_map_in_place (GstStructure * structure,
  * Check if @structure contains a field named @field.
  *
  * Returns: TRUE if the structure contains a field with the given name
- *
- * Since: 0.10.26
  */
 gboolean
 gst_structure_id_has_field (const GstStructure * structure, GQuark field)
@@ -1221,8 +1209,6 @@ gst_structure_has_field (const GstStructure * structure,
  * Check if @structure contains a field named @field and with GType @type.
  *
  * Returns: TRUE if the structure contains a field with the given name and type
- *
- * Since: 0.10.26
  */
 gboolean
 gst_structure_id_has_field_typed (const GstStructure * structure,
@@ -1347,8 +1333,6 @@ gst_structure_get_int (const GstStructure * structure,
  * Returns: %TRUE if the value could be set correctly. If there was no field
  * with @fieldname or the existing field did not contain a uint, this function
  * returns %FALSE.
- *
- * Since: 0.10.15
  */
 gboolean
 gst_structure_get_uint (const GstStructure * structure,
@@ -1432,8 +1416,6 @@ gst_structure_get_date (const GstStructure * structure, const gchar * fieldname,
  * Returns: TRUE if the value could be set correctly. If there was no field
  * with @fieldname or the existing field did not contain a data, this function
  * returns FALSE.
- *
- * Since: 0.10.31
  */
 gboolean
 gst_structure_get_date_time (const GstStructure * structure,
@@ -1699,6 +1681,8 @@ gst_structure_get_abbrs (gint * n_abbrs)
       {"datetime", GST_TYPE_DATE_TIME}
       ,
       {"bitmask", GST_TYPE_BITMASK}
+      ,
+      {"taglist", GST_TYPE_TAG_LIST}
     };
     _num = G_N_ELEMENTS (dyn_abbrs);
     /* permanently allocate and copy the array now */
@@ -2552,8 +2536,6 @@ gst_structure_fixate_field_boolean (GstStructure * structure,
  * @target string if that field is not fixed yet.
  *
  * Returns: TRUE if the structure could be fixated
- *
- * Since: 0.10.30
  */
 gboolean
 gst_structure_fixate_field_string (GstStructure * structure,
@@ -2735,7 +2717,7 @@ G_STMT_START {                                                                \
   guint _flags = (flags);                                                     \
   GType _value_type = G_VALUE_TYPE (_value);                                  \
   GTypeValueTable *_vtable = g_type_value_table_peek (_value_type);           \
-  gchar *_lcopy_format = _vtable->lcopy_format;                               \
+  const gchar *_lcopy_format = _vtable->lcopy_format;                         \
   GTypeCValue _cvalues[G_VALUE_COLLECT_FORMAT_MAX_LENGTH] = { { 0, }, };      \
   guint _n_values = 0;                                                        \
                                                                               \
@@ -2763,8 +2745,6 @@ G_STMT_START {                                                                \
  * gst_structure_get() for more details.
  *
  * Returns: TRUE, or FALSE if there was a problem reading any of the fields
- *
- * Since: 0.10.24
  */
 gboolean
 gst_structure_get_valist (const GstStructure * structure,
@@ -2806,13 +2786,13 @@ gst_structure_get_valist (const GstStructure * structure,
 /* ERRORS */
 no_such_field:
   {
-    GST_WARNING ("Expected field '%s' in structure: %" GST_PTR_FORMAT,
+    GST_INFO ("Expected field '%s' in structure: %" GST_PTR_FORMAT,
         field_name, structure);
     return FALSE;
   }
 wrong_type:
   {
-    GST_WARNING ("Expected field '%s' in structure to be of type '%s', but "
+    GST_INFO ("Expected field '%s' in structure to be of type '%s', but "
         "field was of type '%s': %" GST_PTR_FORMAT, field_name,
         GST_STR_NULL (g_type_name (expected_type)),
         G_VALUE_TYPE_NAME (gst_structure_get_value (structure, field_name)),
@@ -2832,8 +2812,6 @@ wrong_type:
  * gst_structure_id_get() for more details.
  *
  * Returns: TRUE, or FALSE if there was a problem reading any of the fields
- *
- * Since: 0.10.24
  */
 gboolean
 gst_structure_id_get_valist (const GstStructure * structure,
@@ -2875,13 +2853,13 @@ gst_structure_id_get_valist (const GstStructure * structure,
 /* ERRORS */
 no_such_field:
   {
-    GST_WARNING ("Expected field '%s' in structure: %" GST_PTR_FORMAT,
+    GST_DEBUG ("Expected field '%s' in structure: %" GST_PTR_FORMAT,
         GST_STR_NULL (g_quark_to_string (field_id)), structure);
     return FALSE;
   }
 wrong_type:
   {
-    GST_WARNING ("Expected field '%s' in structure to be of type '%s', but "
+    GST_DEBUG ("Expected field '%s' in structure to be of type '%s', but "
         "field was of type '%s': %" GST_PTR_FORMAT,
         g_quark_to_string (field_id),
         GST_STR_NULL (g_type_name (expected_type)),
@@ -2910,8 +2888,6 @@ wrong_type:
  * Returns: FALSE if there was a problem reading any of the fields (e.g.
  *     because the field requested did not exist, or was of a type other
  *     than the type specified), otherwise TRUE.
- *
- * Since: 0.10.24
  */
 gboolean
 gst_structure_get (const GstStructure * structure, const char *first_fieldname,
@@ -2955,8 +2931,6 @@ gst_structure_get (const GstStructure * structure, const char *first_fieldname,
  * Returns: FALSE if there was a problem reading any of the fields (e.g.
  *     because the field requested did not exist, or was of a type other
  *     than the type specified), otherwise TRUE.
- *
- * Since: 0.10.24
  */
 gboolean
 gst_structure_id_get (const GstStructure * structure, GQuark first_field_id,
@@ -2999,8 +2973,6 @@ gst_structure_is_equal_foreach (GQuark field_id, const GValue * val2,
  * Tests if the two #GstStructure are equal.
  *
  * Returns: TRUE if the two structures have the same name and field.
- *
- * Since: 0.10.36
  **/
 gboolean
 gst_structure_is_equal (const GstStructure * structure1,
@@ -3072,8 +3044,6 @@ gst_structure_intersect_field2 (GQuark id, const GValue * val1, gpointer data)
  * Interesects @struct1 and @struct2 and returns the intersection.
  *
  * Returns: Intersection of @struct1 and @struct2
- *
- * Since: 0.10.36
  */
 GstStructure *
 gst_structure_intersect (const GstStructure * struct1,
@@ -3143,8 +3113,6 @@ gst_caps_structure_can_intersect_field (GQuark id, const GValue * val1,
  * would not be empty.
  *
  * Returns: %TRUE if intersection would not be empty
- *
- * Since: 0.10.36
  */
 gboolean
 gst_structure_can_intersect (const GstStructure * struct1,
@@ -3196,8 +3164,6 @@ gst_caps_structure_is_subset_field (GQuark field_id, const GValue * value,
  * @subset has a value that is a subset of the value in @superset.
  *
  * Returns: %TRUE if @subset is a subset of @superset
- *
- * Since: 0.10.36
  */
 gboolean
 gst_structure_is_subset (const GstStructure * subset,

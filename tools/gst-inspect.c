@@ -21,13 +21,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/* FIXME 0.11: suppress warnings for deprecated API such as GValueArray
- * with newer GLib versions (>= 2.31.0) */
-#define GLIB_DISABLE_DEPRECATION_WARNINGS
-
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
+
+/* FIXME 0.11: suppress warnings for deprecated API such as GValueArray
+ * with newer GLib versions (>= 2.31.0) */
+#define GLIB_DISABLE_DEPRECATION_WARNINGS
 
 #include "tools.h"
 
@@ -1535,7 +1535,7 @@ main (int argc, char *argv[])
   textdomain (GETTEXT_PACKAGE);
 #endif
 
-  gst_tools_set_prgname ("gst-inspect");
+  g_set_prgname ("gst-inspect-" GST_API_VERSION);
 
 #ifndef GST_DISABLE_OPTION_PARSING
   ctx = g_option_context_new ("[ELEMENT-NAME | PLUGIN-NAME]");
@@ -1550,7 +1550,7 @@ main (int argc, char *argv[])
   gst_init (&argc, &argv);
 #endif
 
-  gst_tools_print_version ("gst-inspect");
+  gst_tools_print_version ();
 
   if (print_all && argc > 1) {
     g_print ("-a requires no extra arguments\n");

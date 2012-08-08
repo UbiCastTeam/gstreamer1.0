@@ -120,6 +120,8 @@
 #include "gstutils.h"
 #include "gstquark.h"
 #include "gstsegment.h"
+#include "gstvalue.h"
+
 #ifdef HAVE_VALGRIND_VALGRIND_H
 #  include <valgrind/valgrind.h>
 #endif
@@ -169,6 +171,7 @@ GstDebugCategory *GST_CAT_REGISTRY = NULL;
 GstDebugCategory *GST_CAT_QOS = NULL;
 GstDebugCategory *_priv_GST_CAT_POLL = NULL;
 GstDebugCategory *GST_CAT_META = NULL;
+GstDebugCategory *GST_CAT_LOCKING = NULL;
 
 
 #endif /* !defined(GST_DISABLE_GST_DEBUG) || !defined(GST_REMOVE_DISABLED) */
@@ -256,6 +259,7 @@ typedef struct
 {
   GstLogFunction func;
   gpointer user_data;
+  GDestroyNotify notify;
 }
 LogFuncEntry;
 static GMutex __log_func_mutex;
@@ -347,7 +351,7 @@ _priv_gst_debug_init (void)
   _GST_CAT_DEBUG = _gst_debug_category_new ("GST_DEBUG",
       GST_DEBUG_BOLD | GST_DEBUG_FG_YELLOW, "debugging subsystem");
 
-  gst_debug_add_log_function (gst_debug_log_default, NULL);
+  gst_debug_add_log_function (gst_debug_log_default, NULL, NULL);
 
   /* FIXME: add descriptions here */
   GST_CAT_GST_INIT = _gst_debug_category_new ("GST_INIT",
@@ -406,6 +410,7 @@ _priv_gst_debug_init (void)
   GST_CAT_QOS = _gst_debug_category_new ("GST_QOS", 0, "QoS");
   _priv_GST_CAT_POLL = _gst_debug_category_new ("GST_POLL", 0, "poll");
   GST_CAT_META = _gst_debug_category_new ("GST_META", 0, "meta");
+  GST_CAT_LOCKING = _gst_debug_category_new ("GST_LOCKING", 0, "locking");
 
 
   /* print out the valgrind message if we're in valgrind */
@@ -620,6 +625,13 @@ gst_debug_print_object (gpointer ptr)
   if (*(GType *) ptr == GST_TYPE_STRUCTURE) {
     return gst_info_structure_to_string ((const GstStructure *) ptr);
   }
+  if (*(GType *) ptr == GST_TYPE_TAG_LIST) {
+    /* FIXME: want pretty tag list with long byte dumps removed.. */
+    return gst_tag_list_to_string ((GstTagList *) ptr);
+  }
+  if (*(GType *) ptr == GST_TYPE_DATE_TIME) {
+    return __gst_date_time_serialize ((GstDateTime *) ptr, TRUE);
+  }
   if (GST_IS_BUFFER (ptr)) {
     GstBuffer *buf = (GstBuffer *) ptr;
     gchar *ret;
@@ -800,8 +812,6 @@ gst_debug_construct_term_color (guint colorinfo)
  * This function returns 0 on non-windows machines.
  *
  * Returns: an integer containing the color definition
- *
- * Since: 0.10.23
  */
 gint
 gst_debug_construct_win_color (guint colorinfo)
@@ -1063,13 +1073,15 @@ gst_debug_level_get_name (GstDebugLevel level)
 /**
  * gst_debug_add_log_function:
  * @func: the function to use
- * @data: (closure): user data
+ * @user_data: user data
+ * @notify: called when @user_data is not used anymore
  *
  * Adds the logging function to the list of logging functions.
  * Be sure to use #G_GNUC_NO_INSTRUMENT on that function, it is needed.
  */
 void
-gst_debug_add_log_function (GstLogFunction func, gpointer data)
+gst_debug_add_log_function (GstLogFunction func, gpointer user_data,
+    GDestroyNotify notify)
 {
   LogFuncEntry *entry;
   GSList *list;
@@ -1079,7 +1091,8 @@ gst_debug_add_log_function (GstLogFunction func, gpointer data)
 
   entry = g_slice_new (LogFuncEntry);
   entry->func = func;
-  entry->user_data = data;
+  entry->user_data = user_data;
+  entry->notify = notify;
   /* FIXME: we leak the old list here - other threads might access it right now
    * in gst_debug_logv. Another solution is to lock the mutex in gst_debug_logv,
    * but that is waaay costly.
@@ -1092,7 +1105,7 @@ gst_debug_add_log_function (GstLogFunction func, gpointer data)
   g_mutex_unlock (&__log_func_mutex);
 
   GST_DEBUG ("prepended log function %p (user data %p) to log functions",
-      func, data);
+      func, user_data);
 }
 
 static gint
@@ -1115,11 +1128,12 @@ static guint
 gst_debug_remove_with_compare_func (GCompareFunc func, gpointer data)
 {
   GSList *found;
-  GSList *new;
+  GSList *new, *cleanup = NULL;
   guint removals = 0;
 
   g_mutex_lock (&__log_func_mutex);
   new = __log_functions;
+  cleanup = NULL;
   while ((found = g_slist_find_custom (new, data, func))) {
     if (new == __log_functions) {
       /* make a copy when we have the first hit, so that we modify the copy and
@@ -1127,7 +1141,7 @@ gst_debug_remove_with_compare_func (GCompareFunc func, gpointer data)
       new = g_slist_copy (new);
       continue;
     }
-    g_slice_free (LogFuncEntry, found->data);
+    cleanup = g_slist_prepend (cleanup, found->data);
     new = g_slist_delete_link (new, found);
     removals++;
   }
@@ -1135,12 +1149,21 @@ gst_debug_remove_with_compare_func (GCompareFunc func, gpointer data)
   __log_functions = new;
   g_mutex_unlock (&__log_func_mutex);
 
+  while (cleanup) {
+    LogFuncEntry *entry = cleanup->data;
+
+    if (entry->notify)
+      entry->notify (entry->user_data);
+
+    g_slice_free (LogFuncEntry, entry);
+    cleanup = g_slist_delete_link (cleanup, cleanup);
+  }
   return removals;
 }
 
 /**
  * gst_debug_remove_log_function:
- * @func: the log function to remove
+ * @func: (scope call): the log function to remove
  *
  * Removes all registered instances of the given logging functions.
  *
@@ -1803,7 +1826,8 @@ gst_debug_level_get_name (GstDebugLevel level)
 }
 
 void
-gst_debug_add_log_function (GstLogFunction func, gpointer data)
+gst_debug_add_log_function (GstLogFunction func, gpointer user_data,
+    GDestroyNotify notify)
 {
 }
 

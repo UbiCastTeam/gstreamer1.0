@@ -1,17 +1,17 @@
 %define		gstreamer	gstreamer011
 %define		majorminor	1.0
 
-%define 	_glib2		2.31.14
+%define 	_glib2		2.32.0
 
 Name: 		%{gstreamer}
-Version: 	0.11.92
+Version: 	0.11.93
 Release: 	1
 Summary: 	GStreamer streaming media framework runtime
 
 Group: 		Applications/Multimedia
 License: 	LGPL
 URL:		http://gstreamer.freedesktop.org/
-Source: 	http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-%{version}.tar.bz2
+Source: 	http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: 	glib2-devel >= %{_glib2}

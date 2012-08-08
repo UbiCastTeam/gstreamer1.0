@@ -60,8 +60,8 @@ struct _GstChildProxyInterface
   guint     (*get_children_count) (GstChildProxy * parent);
   /*< private >*/
   /* signals */
-  void      (*child_added)        (GstChildProxy * parent, GObject * child);
-  void      (*child_removed)      (GstChildProxy * parent, GObject * child);
+  void      (*child_added)        (GstChildProxy * parent, GObject * child, const gchar * name);
+  void      (*child_removed)      (GstChildProxy * parent, GObject * child, const gchar * name);
 
   /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
@@ -77,27 +77,27 @@ GObject * gst_child_proxy_get_child_by_index (GstChildProxy * parent, guint inde
 gboolean  gst_child_proxy_lookup             (GObject *object, const gchar *name,
                                               GObject **target, GParamSpec **pspec);
 
-void      gst_child_proxy_get_property       (GObject * object, const gchar *name,
+void      gst_child_proxy_get_property       (GstChildProxy * object, const gchar *name,
                                               GValue *value);
-void      gst_child_proxy_get_valist         (GObject * object,
+void      gst_child_proxy_get_valist         (GstChildProxy * object,
                                               const gchar * first_property_name,
                                               va_list var_args);
-void      gst_child_proxy_get                (GObject * object,
+void      gst_child_proxy_get                (GstChildProxy * object,
                                               const gchar * first_property_name,
                                               ...) G_GNUC_NULL_TERMINATED;
 
-void      gst_child_proxy_set_property       (GObject * object, const gchar *name,
+void      gst_child_proxy_set_property       (GstChildProxy * object, const gchar *name,
                                               const GValue *value);
-void      gst_child_proxy_set_valist         (GObject* object,
+void      gst_child_proxy_set_valist         (GstChildProxy* object,
                                               const gchar * first_property_name,
                                               va_list var_args);
-void      gst_child_proxy_set                (GObject * object,
+void      gst_child_proxy_set                (GstChildProxy * object,
                                               const gchar * first_property_name,
                                               ...) G_GNUC_NULL_TERMINATED;
 
-void      gst_child_proxy_child_added        (GObject * object, GObject * child,
+void      gst_child_proxy_child_added        (GstChildProxy * parent, GObject * child,
                                               const gchar *name);
-void      gst_child_proxy_child_removed      (GObject * object, GObject * child,
+void      gst_child_proxy_child_removed      (GstChildProxy * parent, GObject * child,
                                               const gchar *name);
 
 G_END_DECLS

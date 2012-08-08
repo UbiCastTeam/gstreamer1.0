@@ -57,6 +57,8 @@ extern const char             g_log_domain_gstreamer[];
 /* for GstToc */
 #include "gsttoc.h"
 
+#include "gstdatetime.h"
+
 G_BEGIN_DECLS
 
 /* used by gstparse.c and grammar.y */
@@ -83,67 +85,69 @@ struct _GstPluginPrivate {
 };
 
 /* FIXME: could rename all priv_gst_* functions to __gst_* now */
-gboolean priv_gst_plugin_loading_have_whitelist (void);
+G_GNUC_INTERNAL  gboolean priv_gst_plugin_loading_have_whitelist (void);
 
-guint32  priv_gst_plugin_loading_get_whitelist_hash (void);
+G_GNUC_INTERNAL  guint32  priv_gst_plugin_loading_get_whitelist_hash (void);
 
-gboolean priv_gst_plugin_desc_is_whitelisted (GstPluginDesc * desc,
-                                              const gchar   * filename);
+G_GNUC_INTERNAL  gboolean priv_gst_plugin_desc_is_whitelisted (GstPluginDesc * desc,
+                                                               const gchar   * filename);
 
-gboolean _priv_plugin_deps_env_vars_changed (GstPlugin * plugin);
-gboolean _priv_plugin_deps_files_changed (GstPlugin * plugin);
+G_GNUC_INTERNAL  gboolean _priv_plugin_deps_env_vars_changed (GstPlugin * plugin);
 
-gboolean _priv_gst_in_valgrind (void);
+G_GNUC_INTERNAL  gboolean _priv_plugin_deps_files_changed (GstPlugin * plugin);
+
+G_GNUC_INTERNAL  gboolean _priv_gst_in_valgrind (void);
 
 /* init functions called from gst_init(). */
-void  _priv_gst_quarks_initialize (void);
-void  _priv_gst_mini_object_initialize (void);
-void  _priv_gst_buffer_initialize (void);
-void  _priv_gst_buffer_list_initialize (void);
-void  _priv_gst_structure_initialize (void);
-void  _priv_gst_caps_initialize (void);
-void  _priv_gst_event_initialize (void);
-void  _priv_gst_format_initialize (void);
-void  _priv_gst_message_initialize (void);
-void  _priv_gst_memory_initialize (void);
-void  _priv_gst_meta_initialize (void);
-void  _priv_gst_plugin_initialize (void);
-void  _priv_gst_query_initialize (void);
-void  _priv_gst_sample_initialize (void);
-void  _priv_gst_tag_initialize (void);
-void  _priv_gst_value_initialize (void);
-void  _priv_gst_debug_init (void);
-
-/* TOC functions */
-/* These functions are used to parse TOC messages, events and queries */
-GstToc*        __gst_toc_from_structure (const GstStructure *toc);
-GstStructure*  __gst_toc_to_structure (const GstToc *toc);
-gboolean       __gst_toc_structure_get_updated (const GstStructure * toc);
-void           __gst_toc_structure_set_updated (GstStructure * toc, gboolean updated);
-gchar*         __gst_toc_structure_get_extend_uid (const GstStructure * toc);
-void           __gst_toc_structure_set_extend_uid (GstStructure * toc, const gchar * extend_uid);
+G_GNUC_INTERNAL  void  _priv_gst_quarks_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_mini_object_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_buffer_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_buffer_list_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_structure_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_caps_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_event_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_format_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_message_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_memory_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_meta_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_plugin_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_query_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_sample_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_tag_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_value_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_debug_init (void);
 
 /* Private registry functions */
+G_GNUC_INTERNAL
 gboolean _priv_gst_registry_remove_cache_plugins (GstRegistry *registry);
-void _priv_gst_registry_cleanup (void);
+
+G_GNUC_INTERNAL  void _priv_gst_registry_cleanup (void);
+
 gboolean _gst_plugin_loader_client_run (void);
 
 /* Used in GstBin for manual state handling */
-void _priv_gst_element_state_changed (GstElement *element, GstState oldstate,
-    GstState newstate, GstState pending);
+G_GNUC_INTERNAL  void _priv_gst_element_state_changed (GstElement *element,
+                      GstState oldstate, GstState newstate, GstState pending);
 
 /* used in both gststructure.c and gstcaps.c; numbers are completely made up */
 #define STRUCTURE_ESTIMATED_STRING_LEN(s) (16 + gst_structure_n_fields(s) * 22)
 
+G_GNUC_INTERNAL
 gboolean  priv_gst_structure_append_to_gstring (const GstStructure * structure,
                                                 GString            * s);
 /* registry cache backends */
+G_GNUC_INTERNAL
 gboolean		priv_gst_registry_binary_read_cache	(GstRegistry * registry, const char *location);
+
+G_GNUC_INTERNAL
 gboolean		priv_gst_registry_binary_write_cache	(GstRegistry * registry, GList * plugins, const char *location);
 
+
+G_GNUC_INTERNAL
 void      __gst_element_factory_add_static_pad_template (GstElementFactory    * elementfactory,
                                                          GstStaticPadTemplate * templ);
 
+G_GNUC_INTERNAL
 void      __gst_element_factory_add_interface           (GstElementFactory    * elementfactory,
                                                          const gchar          * interfacename);
 
@@ -153,7 +157,11 @@ void      __gst_element_factory_add_interface           (GstElementFactory    * 
     ((c) == '.'))
 
 /* This is only meant for internal uses */
-gint priv_gst_date_time_compare (gconstpointer dt1, gconstpointer dt2);
+G_GNUC_INTERNAL
+gint __gst_date_time_compare (const GstDateTime * dt1, const GstDateTime * dt2);
+
+G_GNUC_INTERNAL
+gchar * __gst_date_time_serialize (GstDateTime * datetime, gboolean with_usecs);
 
 #ifndef GST_DISABLE_REGISTRY
 /* Secret variable to initialise gst without registry cache */
@@ -211,6 +219,7 @@ GST_EXPORT GstDebugCategory *GST_CAT_PROBE;
 GST_EXPORT GstDebugCategory *GST_CAT_REGISTRY;
 GST_EXPORT GstDebugCategory *GST_CAT_QOS;
 GST_EXPORT GstDebugCategory *GST_CAT_META;
+GST_EXPORT GstDebugCategory *GST_CAT_LOCKING;
 
 /* Categories that should be completely private to
  * libgstreamer should be done like this: */
@@ -252,6 +261,7 @@ extern GstDebugCategory *_priv_GST_CAT_POLL;
 #define GST_CAT_TYPES            NULL
 #define GST_CAT_POLL             NULL
 #define GST_CAT_META             NULL
+#define GST_CAT_LOCKING          NULL
 
 #endif
 

@@ -109,11 +109,10 @@ with a start value of 0 and a stop/duration of -1, which is undefined. The defau
 rate and applied_rate is 1.0.
 </p>
 <p>
-If the segment is used for managing seeks, the segment duration should be set with
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstSegment.html#gst-segment-set-duration"><code class="function">gst_segment_set_duration()</code></a>. The public duration field contains the duration of the
-segment. When using the segment for seeking, the start and time members should
-normally be left to their default 0 value. The stop position is left to -1 unless
-explicitly configured to a different value after a seek event.
+The public duration field contains the duration of the segment. When using
+the segment for seeking, the start and time members should normally be left
+to their default 0 value. The stop position is left to -1 unless explicitly
+configured to a different value after a seek event.
 </p>
 <p>
 The current position in the segment should be set by changing the position
@@ -123,7 +122,7 @@ member in the structure.
 For elements that perform seeks, the current segment should be updated with the
 <a class="link" href="gstreamer-GstSegment.html#gst-segment-do-seek" title="gst_segment_do_seek ()"><code class="function">gst_segment_do_seek()</code></a> and the values from the seek event. This method will update
 all the segment fields. The position field will contain the new playback position.
-If the cur_type was different from GST_SEEK_TYPE_NONE, playback continues from
+If the start_type was different from GST_SEEK_TYPE_NONE, playback continues from
 the position position, possibly with updated flags or rate.
 </p>
 <p>
@@ -159,6 +158,7 @@ Last reviewed on 2012-03-29 (0.11.3)
 
   GstFormat       format;
   guint64         base;
+  guint64         offset;
   guint64         start;
   guint64         stop;
   guint64         time;
@@ -192,7 +192,12 @@ interest in a media file.
 </tr>
 <tr>
 <td><p><span class="term"><span class="type">guint64</span> <em class="structfield"><code><a name="GstSegment.base"></a>base</code></em>;</span></p></td>
-<td>the base time of the segment</td>
+<td>the base of the segment</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="type">guint64</span> <em class="structfield"><code><a name="GstSegment.offset"></a>offset</code></em>;</span></p></td>
+<td>the offset to apply to <em class="parameter"><code>start</code></em> or <em class="parameter"><code>stop</code></em>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="type">guint64</span> <em class="structfield"><code><a name="GstSegment.start"></a>start</code></em>;</span></p></td>
@@ -223,7 +228,8 @@ interest in a media file.
 <pre class="programlisting">typedef enum {
   GST_SEGMENT_FLAG_NONE            = GST_SEEK_FLAG_NONE,
   GST_SEGMENT_FLAG_RESET           = GST_SEEK_FLAG_FLUSH,
-  GST_SEGMENT_FLAG_SKIP            = GST_SEEK_FLAG_SKIP
+  GST_SEGMENT_FLAG_SKIP            = GST_SEEK_FLAG_SKIP,
+  GST_SEGMENT_FLAG_SEGMENT         = GST_SEEK_FLAG_SEGMENT
 } GstSegmentFlags;
 </pre>
 <p>
@@ -247,6 +253,11 @@ values of the seek flags.
 <tr>
 <td><p><a name="GST-SEGMENT-FLAG-SKIP:CAPS"></a><span class="term"><code class="literal">GST_SEGMENT_FLAG_SKIP</code></span></p></td>
 <td>perform skip playback
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-SEGMENT-FLAG-SEGMENT:CAPS"></a><span class="term"><code class="literal">GST_SEGMENT_FLAG_SEGMENT</code></span></p></td>
+<td>send SEGMENT_DONE instead of EOS
 </td>
 </tr>
 </tbody>
@@ -389,7 +400,6 @@ Free-function: gst_segment_free
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.20</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -508,8 +518,7 @@ has been changed but not the playback position.
                                                          <em class="parameter"><code><span class="type">guint64</span> position</code></em>);</pre>
 <p>
 Translate <em class="parameter"><code>position</code></em> to the total running time using the currently configured
-and previously accumulated segments. Position is a value between <em class="parameter"><code>segment</code></em>
-start and stop time.
+segment. Position is a value between <em class="parameter"><code>segment</code></em> start and stop time.
 </p>
 <p>
 This function is typically used by elements that need to synchronize to the
@@ -617,7 +626,6 @@ Convert <em class="parameter"><code>running_time</code></em> into a position in 
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -652,7 +660,6 @@ returned, <em class="parameter"><code>running_time</code></em> is -1 or not in <
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.24</p>
 </div>
 <hr>
 <div class="refsect2">

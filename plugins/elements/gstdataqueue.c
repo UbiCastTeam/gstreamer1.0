@@ -26,8 +26,6 @@
  * #GstDataQueue is an object that handles threadsafe queueing of objects. It
  * also provides size-related functionality. This object should be used for
  * any #GstElement that wishes to provide some sort of queueing functionality.
- *
- * Since: 0.10.11
  */
 
 #include <gst/gst.h>
@@ -89,7 +87,7 @@ enum
                q->cur_level.visible,                                    \
                q->cur_level.bytes,                                      \
                q->cur_level.time,                                       \
-               q->queue->length)
+               q->queue.length)
 
 static void gst_data_queue_finalize (GObject * object);
 
@@ -181,7 +179,7 @@ gst_data_queue_init (GstDataQueue * queue)
   g_mutex_init (&queue->qlock);
   g_cond_init (&queue->item_add);
   g_cond_init (&queue->item_del);
-  queue->queue = g_queue_new ();
+  gst_queue_array_init (&queue->queue, 50);
 
   GST_DEBUG ("initialized queue's not_empty & not_full conditions");
 }
@@ -199,8 +197,6 @@ gst_data_queue_init (GstDataQueue * queue)
  * or @emptycallback.
  *
  * Returns: a new #GstDataQueue.
- *
- * Since: 0.10.26
  */
 
 GstDataQueue *
@@ -239,8 +235,8 @@ gst_data_queue_new (GstDataQueueCheckFullFunction checkfull, gpointer checkdata)
 static void
 gst_data_queue_cleanup (GstDataQueue * queue)
 {
-  while (!g_queue_is_empty (queue->queue)) {
-    GstDataQueueItem *item = g_queue_pop_head (queue->queue);
+  while (!gst_queue_array_is_empty (&queue->queue)) {
+    GstDataQueueItem *item = gst_queue_array_pop_head (&queue->queue);
 
     /* Just call the destroy notify on the item */
     item->destroy (item);
@@ -259,7 +255,7 @@ gst_data_queue_finalize (GObject * object)
   GST_DEBUG ("finalizing queue");
 
   gst_data_queue_cleanup (queue);
-  g_queue_free (queue->queue);
+  gst_queue_array_clear (&queue->queue);
 
   GST_DEBUG ("free mutex");
   g_mutex_clear (&queue->qlock);
@@ -285,7 +281,7 @@ gst_data_queue_locked_flush (GstDataQueue * queue)
 static inline gboolean
 gst_data_queue_locked_is_empty (GstDataQueue * queue)
 {
-  return (queue->queue->length == 0);
+  return (queue->queue.length == 0);
 }
 
 static inline gboolean
@@ -302,8 +298,6 @@ gst_data_queue_locked_is_full (GstDataQueue * queue)
  * Flushes all the contents of the @queue. Any call to #gst_data_queue_push and
  * #gst_data_queue_pop will be released.
  * MT safe.
- *
- * Since: 0.10.11
  */
 void
 gst_data_queue_flush (GstDataQueue * queue)
@@ -322,8 +316,6 @@ gst_data_queue_flush (GstDataQueue * queue)
  * MT safe.
  *
  * Returns: #TRUE if @queue is empty.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_data_queue_is_empty (GstDataQueue * queue)
@@ -346,8 +338,6 @@ gst_data_queue_is_empty (GstDataQueue * queue)
  * MT safe.
  *
  * Returns: #TRUE if @queue is full.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_data_queue_is_full (GstDataQueue * queue)
@@ -373,8 +363,6 @@ gst_data_queue_is_full (GstDataQueue * queue)
  * all calls to those two functions will return #FALSE.
  *
  * MT Safe.
- *
- * Since: 0.10.11
  */
 void
 gst_data_queue_set_flushing (GstDataQueue * queue, gboolean flushing)
@@ -409,8 +397,6 @@ gst_data_queue_set_flushing (GstDataQueue * queue, gboolean flushing)
  * is returned, the caller is responsible for freeing @item and its contents.
  *
  * Returns: #TRUE if the @item was successfully pushed on the @queue.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_data_queue_push (GstDataQueue * queue, GstDataQueueItem * item)
@@ -441,7 +427,7 @@ gst_data_queue_push (GstDataQueue * queue, GstDataQueueItem * item)
     }
   }
 
-  g_queue_push_tail (queue->queue, item);
+  gst_queue_array_push_tail (&queue->queue, item);
 
   if (item->visible)
     queue->cur_level.visible++;
@@ -476,8 +462,6 @@ flushing:
  * MT safe.
  *
  * Returns: #TRUE if an @item was successfully retrieved from the @queue.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_data_queue_pop (GstDataQueue * queue, GstDataQueueItem ** item)
@@ -507,7 +491,7 @@ gst_data_queue_pop (GstDataQueue * queue, GstDataQueueItem ** item)
   }
 
   /* Get the item from the GQueue */
-  *item = g_queue_pop_head (queue->queue);
+  *item = gst_queue_array_pop_head (&queue->queue);
 
   /* update current level counter */
   if ((*item)->visible)
@@ -532,6 +516,12 @@ flushing:
   }
 }
 
+static gint
+is_of_type (gconstpointer a, gconstpointer b)
+{
+  return !G_TYPE_CHECK_INSTANCE_TYPE (a, GPOINTER_TO_INT (b));
+}
+
 /**
  * gst_data_queue_drop_head:
  * @queue: The #GstDataQueue to drop an item from.
@@ -540,34 +530,27 @@ flushing:
  * Pop and unref the head-most #GstMiniObject with the given #GType.
  *
  * Returns: TRUE if an element was removed.
- *
- * Since: 0.10.11
  */
 gboolean
 gst_data_queue_drop_head (GstDataQueue * queue, GType type)
 {
   gboolean res = FALSE;
-  GList *item;
   GstDataQueueItem *leak = NULL;
+  guint idx;
 
   g_return_val_if_fail (GST_IS_DATA_QUEUE (queue), FALSE);
 
   GST_DEBUG ("queue:%p", queue);
 
   GST_DATA_QUEUE_MUTEX_LOCK (queue);
-  for (item = g_queue_peek_head_link (queue->queue); item; item = item->next) {
-    GstDataQueueItem *tmp = (GstDataQueueItem *) item->data;
+  idx =
+      gst_queue_array_find (&queue->queue, is_of_type, GINT_TO_POINTER (type));
 
-    if (G_TYPE_CHECK_INSTANCE_TYPE (tmp->object, type)) {
-      leak = tmp;
-      break;
-    }
-  }
-
-  if (!leak)
+  if (idx == -1)
     goto done;
 
-  g_queue_delete_link (queue->queue, item);
+  leak = queue->queue.array[idx];
+  gst_queue_array_drop_element (&queue->queue, idx);
 
   if (leak->visible)
     queue->cur_level.visible--;
@@ -592,8 +575,6 @@ done:
  *
  * Inform the queue that the limits for the fullness check have changed and that
  * any blocking gst_data_queue_push() should be unblocked to recheck the limts.
- *
- * Since: 0.10.11
  */
 void
 gst_data_queue_limits_changed (GstDataQueue * queue)
@@ -614,8 +595,6 @@ gst_data_queue_limits_changed (GstDataQueue * queue)
  * @level: the location to store the result
  *
  * Get the current level of the queue.
- *
- * Since: 0.10.11
  */
 void
 gst_data_queue_get_level (GstDataQueue * queue, GstDataQueueSize * level)

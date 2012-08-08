@@ -211,9 +211,26 @@ GstTagFlag             gst_tag_get_flag        (const gchar * tag);
 gboolean               gst_tag_is_fixed        (const gchar * tag);
 
 /* tag lists */
+
+/**
+ * GstTagEventScope:
+ * @GST_TAG_SCOPE_STREAM: tags specific to this single stream
+ * @GST_TAG_SCOPE_GLOBAL: global tags for the complete medium
+ *
+ * GstTagScope specifies if a taglist applies to the complete
+ * medium or only to one single stream.
+ */
+typedef enum {
+  GST_TAG_SCOPE_STREAM,
+  GST_TAG_SCOPE_GLOBAL
+} GstTagScope;
+
 GstTagList * gst_tag_list_new_empty         (void) G_GNUC_MALLOC;
 GstTagList * gst_tag_list_new               (const gchar * tag, ...) G_GNUC_MALLOC;
 GstTagList * gst_tag_list_new_valist        (va_list var_args) G_GNUC_MALLOC;
+
+void         gst_tag_list_set_scope         (GstTagList * list, GstTagScope scope);
+GstTagScope  gst_tag_list_get_scope         (const GstTagList * list);
 
 gchar      * gst_tag_list_to_string         (const GstTagList * list) G_GNUC_MALLOC;
 GstTagList * gst_tag_list_new_from_string   (const gchar      * str) G_GNUC_MALLOC;
@@ -347,13 +364,13 @@ gboolean     gst_tag_list_get_date_time_index (const GstTagList * list,
                                              const gchar      * tag,
                                              guint              index,
                                              GstDateTime     ** value);
-gboolean     gst_tag_list_get_buffer        (const GstTagList * list,
+gboolean     gst_tag_list_get_sample        (const GstTagList * list,
                                              const gchar      * tag,
-                                             GstBuffer       ** value);
-gboolean     gst_tag_list_get_buffer_index  (const GstTagList * list,
+                                             GstSample       ** sample);
+gboolean     gst_tag_list_get_sample_index  (const GstTagList * list,
                                              const gchar      * tag,
                                              guint              index,
-                                             GstBuffer       ** value);
+                                             GstSample       ** sample);
 
 /* refcounting */
 /**
@@ -468,8 +485,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * commonly used title, as used for sorting (string)
  *
  * The title as it should be sorted, e.g. 'Doll House, The'
- *
- * Since: 0.10.15
  */
 #define GST_TAG_TITLE_SORTNAME         "title-sortname"
 /**
@@ -488,8 +503,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * The artist name as it should be sorted, e.g. 'Hendrix, Jimi' or
  * 'Guitar Heroes, The'
- *
- * Since: 0.10.15
  */
 #define GST_TAG_ARTIST_SORTNAME        "artist-sortname"
 /**
@@ -506,32 +519,24 @@ gst_tag_list_copy (const GstTagList * taglist)
  * album containing this data, as used for sorting (string)
  *
  * The album name as it should be sorted, e.g. 'Jazz Guitar, The'
- *
- * Since: 0.10.15
  */
 #define GST_TAG_ALBUM_SORTNAME         "album-sortname"
 /**
  * GST_TAG_ALBUM_ARTIST:
  *
  * The artist of the entire album, as it should be displayed.
- *
- * Since: 0.10.25
  */
 #define GST_TAG_ALBUM_ARTIST           "album-artist"
 /**
  * GST_TAG_ALBUM_ARTIST_SORTNAME:
  *
  * The artist of the entire album, as it should be sorted.
- *
- * Since: 0.10.25
  */
 #define GST_TAG_ALBUM_ARTIST_SORTNAME  "album-artist-sortname"
 /**
  * GST_TAG_COMPOSER:
  *
  * person(s) who composed the recording (string)
- *
- * Since: 0.10.15
  */
 #define GST_TAG_COMPOSER               "composer"
 /**
@@ -544,8 +549,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_DATE_TIME:
  *
  * date and time the data was created (#GstDateTime structure)
- *
- * Since: 0.10.31
  */
 #define GST_TAG_DATE_TIME              "datetime"
 /**
@@ -571,8 +574,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * This tag is used for unknown Vorbis comment tags,
  * unknown APE tags and certain ID3v2 comment fields.
- *
- * Since: 0.10.10
  */
 #define GST_TAG_EXTENDED_COMMENT       "extended-comment"
 /**
@@ -610,8 +611,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_HOMEPAGE:
  *
  * Homepage for this media (i.e. artist or movie homepage) (string)
- *
- * Since: 0.10.23
  */
 #define GST_TAG_HOMEPAGE               "homepage"
 /**
@@ -648,8 +647,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_COPYRIGHT_URI:
  *
  * URI to location where copyright details can be found (string)
- *
- * Since: 0.10.14
  */
 #define GST_TAG_COPYRIGHT_URI          "copyright-uri"
 /**
@@ -661,8 +658,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * Note: do not use this field to describe the encoding application. Use
  * #GST_TAG_APPLICATION_NAME or #GST_TAG_COMMENT for that.
- *
- * Since: 0.10.33
  */
 #define GST_TAG_ENCODED_BY             "encoded-by"
 /**
@@ -681,8 +676,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_LICENSE_URI:
  *
  * URI to location where license details can be found (string)
- *
- * Since: 0.10.14
  */
 #define GST_TAG_LICENSE_URI            "license-uri"
 /**
@@ -719,16 +712,12 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_SUBTITLE_CODEC:
  *
  * codec/format the subtitle data is stored in (string)
- *
- * Since: 0.10.23
  */
 #define GST_TAG_SUBTITLE_CODEC         "subtitle-codec"
 /**
  * GST_TAG_CONTAINER_FORMAT:
  *
  * container format the data is stored in (string)
- *
- * Since: 0.10.24
  */
 #define GST_TAG_CONTAINER_FORMAT       "container-format"
 /**
@@ -802,8 +791,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_REFERENCE_LEVEL:
  *
  * reference level of track and album gain values (double)
- *
- * Since: 0.10.12
  */
 #define GST_TAG_REFERENCE_LEVEL        "replaygain-reference-level"
 /**
@@ -823,8 +810,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * Free-form name of the language the content is in, if a language code
  * is not available. This tag should not be set in addition to a language
  * code. It is undefined what language or locale the language name is in.
- *
- * Since: 0.10.37
  */
 #define GST_TAG_LANGUAGE_NAME          "language-name"
 /**
@@ -832,8 +817,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * image (sample) (sample taglist should specify the content type and preferably
  * also set "image-type" field as #GstTagImageType)
- *
- * Since: 0.10.6
  */
 #define GST_TAG_IMAGE                  "image"
 /**
@@ -841,8 +824,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * image that is meant for preview purposes, e.g. small icon-sized version
  * (sample) (sample taglist should specify the content type)
- *
- * Since: 0.10.7
  */
 #define GST_TAG_PREVIEW_IMAGE          "preview-image"
 
@@ -852,8 +833,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * generic file attachment (sample) (sample taglist should specify the content
  * type and if possible set "filename" to the file name of the
  * attachment)
- *
- * Since: 0.10.21
  */
 #define GST_TAG_ATTACHMENT             "attachment"
 
@@ -861,8 +840,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_BEATS_PER_MINUTE:
  *
  * number of beats per minute in audio (double)
- *
- * Since: 0.10.12
  */
 #define GST_TAG_BEATS_PER_MINUTE       "beats-per-minute"
 
@@ -870,8 +847,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * GST_TAG_KEYWORDS:
  *
  * comma separated keywords describing the content (string).
- *
- * Since: 0.10.21
  */
 #define GST_TAG_KEYWORDS               "keywords"
 
@@ -880,8 +855,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * human readable descriptive location of where the media has been recorded or
  * produced. (string).
- *
- * Since: 0.10.21
  */
 #define GST_TAG_GEO_LOCATION_NAME               "geo-location-name"
 
@@ -891,8 +864,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * geo latitude location of where the media has been recorded or produced in
  * degrees according to WGS84 (zero at the equator, negative values for southern
  * latitudes) (double).
- *
- * Since: 0.10.21
  */
 #define GST_TAG_GEO_LOCATION_LATITUDE               "geo-location-latitude"
 
@@ -902,8 +873,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * geo longitude location of where the media has been recorded or produced in
  * degrees according to WGS84 (zero at the prime meridian in Greenwich/UK,
  * negative values for western longitudes). (double).
- *
- * Since: 0.10.21
  */
 #define GST_TAG_GEO_LOCATION_LONGITUDE               "geo-location-longitude"
 
@@ -912,24 +881,18 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * geo elevation of where the media has been recorded or produced in meters
  * according to WGS84 (zero is average sea level) (double).
- *
- * Since: 0.10.21
  */
 #define GST_TAG_GEO_LOCATION_ELEVATION               "geo-location-elevation"
 /**
  * GST_TAG_GEO_LOCATION_COUNTRY:
  *
  * The country (english name) where the media has been produced (string).
- *
- * Since: 0.10.29
  */
 #define GST_TAG_GEO_LOCATION_COUNTRY                 "geo-location-country"
 /**
  * GST_TAG_GEO_LOCATION_CITY:
  *
  * The city (english name) where the media has been produced (string).
- *
- * Since: 0.10.29
  */
 #define GST_TAG_GEO_LOCATION_CITY                    "geo-location-city"
 /**
@@ -940,8 +903,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * This tag has been added as this is how it is handled/named in XMP's
  * Iptc4xmpcore schema.
- *
- * Since: 0.10.29
  */
 #define GST_TAG_GEO_LOCATION_SUBLOCATION             "geo-location-sublocation"
 /**
@@ -949,8 +910,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * Represents the expected error on the horizontal positioning in
  * meters (double).
- *
- * Since: 0.10.31
  */
 #define GST_TAG_GEO_LOCATION_HORIZONTAL_ERROR   "geo-location-horizontal-error"
 /**
@@ -960,8 +919,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * Represented in m/s. (double)
  *
  * See also #GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION
- *
- * Since 0.10.30
  */
 #define GST_TAG_GEO_LOCATION_MOVEMENT_SPEED       "geo-location-movement-speed"
 /**
@@ -972,8 +929,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  * 0 means the geographic north, and increases clockwise (double from 0 to 360)
  *
  * See also #GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION
- *
- * Since: 0.10.30
  */
 #define GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION "geo-location-movement-direction"
 /**
@@ -984,56 +939,42 @@ gst_tag_list_copy (const GstTagList * taglist)
  * 0 means the geographic north, and increases clockwise (double from 0 to 360)
  *
  * See also #GST_TAG_GEO_LOCATION_MOVEMENT_DIRECTION
- *
- * Since: 0.10.30
  */
 #define GST_TAG_GEO_LOCATION_CAPTURE_DIRECTION  "geo-location-capture-direction"
 /**
  * GST_TAG_SHOW_NAME:
  *
  * Name of the show, used for displaying (string)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_SHOW_NAME                         "show-name"
 /**
  * GST_TAG_SHOW_SORTNAME:
  *
  * Name of the show, used for sorting (string)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_SHOW_SORTNAME                     "show-sortname"
 /**
  * GST_TAG_SHOW_EPISODE_NUMBER:
  *
  * Number of the episode within a season/show (unsigned integer)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_SHOW_EPISODE_NUMBER               "show-episode-number"
 /**
  * GST_TAG_SHOW_SEASON_NUMBER:
  *
  * Number of the season of a show/series (unsigned integer)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_SHOW_SEASON_NUMBER                "show-season-number"
 /**
  * GST_TAG_LYRICS:
  *
  * The lyrics of the media (string)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_LYRICS                            "lyrics"
 /**
  * GST_TAG_COMPOSER_SORTNAME:
  *
  * The composer's name, used for sorting (string)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_COMPOSER_SORTNAME                 "composer-sortname"
 /**
@@ -1041,8 +982,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * Groups together media that are related and spans multiple tracks. An
  * example are multiple pieces of a concerto. (string)
- *
- * Since: 0.10.26
  */
 #define GST_TAG_GROUPING                          "grouping"
 /**
@@ -1051,43 +990,33 @@ gst_tag_list_copy (const GstTagList * taglist)
  * Rating attributed by a person (likely the application user).
  * The higher the value, the more the user likes this media
  * (unsigned int from 0 to 100)
- *
- * Since: 0.10.29
  */
 #define GST_TAG_USER_RATING                       "user-rating"
 /**
  * GST_TAG_DEVICE_MANUFACTURER:
  *
  * Manufacturer of the device used to create the media (string)
- *
- * Since: 0.10.30
  */
 #define GST_TAG_DEVICE_MANUFACTURER               "device-manufacturer"
 /**
  * GST_TAG_DEVICE_MODEL:
  *
  * Model of the device used to create the media (string)
- *
- * Since: 0.10.30
  */
 #define GST_TAG_DEVICE_MODEL                      "device-model"
 /**
  * GST_TAG_APPLICATION_NAME:
  *
  * Name of the application used to create the media (string)
- *
- * Since: 0.10.31
  */
 #define GST_TAG_APPLICATION_NAME                  "application-name"
 /**
  * GST_TAG_APPLICATION_DATA:
  *
- * Arbitrary application data (buffer)
+ * Arbitrary application data (sample)
  *
- * Some formats allow application's to add their own arbitrary data
- * into files. This data is application's dependent.
- *
- * Since: 0.10.31
+ * Some formats allow applications to add their own arbitrary data
+ * into files. This data is application dependent.
  */
 #define GST_TAG_APPLICATION_DATA          "application-data"
 /**
@@ -1112,8 +1041,6 @@ gst_tag_list_copy (const GstTagList * taglist)
  *
  * Rotations indicated by the values are in clockwise direction and
  * 'flip' means an horizontal mirroring.
- *
- * Since: 0.10.30
  */
 #define GST_TAG_IMAGE_ORIENTATION            "image-orientation"
 

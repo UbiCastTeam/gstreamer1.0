@@ -128,9 +128,6 @@ enum                <a class="link" href="GstClock.html#GstClockFlags" title="en
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> *jitter</code></em>);
 <a class="link" href="GstClock.html#GstClockReturn" title="enum GstClockReturn"><span class="returnvalue">GstClockReturn</span></a>      <a class="link" href="GstClock.html#gst-clock-id-wait-async" title="gst_clock_id_wait_async ()">gst_clock_id_wait_async</a>             (<em class="parameter"><code><a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> id</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockCallback" title="GstClockCallback ()"><span class="type">GstClockCallback</span></a> func</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);
-<a class="link" href="GstClock.html#GstClockReturn" title="enum GstClockReturn"><span class="returnvalue">GstClockReturn</span></a>      <a class="link" href="GstClock.html#gst-clock-id-wait-async-full" title="gst_clock_id_wait_async_full ()">gst_clock_id_wait_async_full</a>        (<em class="parameter"><code><a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> id</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockCallback" title="GstClockCallback ()"><span class="type">GstClockCallback</span></a> func</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy_data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstClock.html#gst-clock-id-unschedule" title="gst_clock_id_unschedule ()">gst_clock_id_unschedule</a>             (<em class="parameter"><code><a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> id</code></em>);
@@ -358,6 +355,10 @@ A datatype to hold the handle to an outstanding sync or async clock callback.
 <p>
 Constant to define an undefined clock time.
 </p>
+<p>
+Value: 18446744073709551615
+Type: GstClockTime
+</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -385,6 +386,7 @@ Constant that defines one GStreamer second.
 </p>
 <p>
 Value: 1000000000
+Type: GstClockTime
 </p>
 </div>
 <hr>
@@ -397,6 +399,7 @@ Constant that defines one GStreamer millisecond.
 </p>
 <p>
 Value: 1000000
+Type: GstClockTime
 </p>
 </div>
 <hr>
@@ -409,6 +412,7 @@ Constant that defines one GStreamer microsecond.
 </p>
 <p>
 Value: 1000
+Type: GstClockTime
 </p>
 </div>
 <hr>
@@ -421,6 +425,7 @@ Constant that defines one GStreamer nanosecond
 </p>
 <p>
 Value: 1
+Type: GstClockTime
 </p>
 </div>
 <hr>
@@ -438,7 +443,6 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <td>the time</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.16</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -455,7 +459,6 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <td>the time</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.16</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -472,7 +475,6 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <td>the time</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.16</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -489,7 +491,6 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <td>the time</td>
 </tr></tbody>
 </table></div>
-<p class="since">Since 0.10.16</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -834,7 +835,7 @@ The return value of a clock operation.
 </tr>
 <tr>
 <td><p><a name="GST-CLOCK-DONE:CAPS"></a><span class="term"><code class="literal">GST_CLOCK_DONE</code></span></p></td>
-<td>The ClockID is done waiting (Since: 0.10.32)
+<td>The ClockID is done waiting
 </td>
 </tr>
 </tbody>
@@ -1223,7 +1224,6 @@ modify the reference count.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.32</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1265,7 +1265,6 @@ interval. Does not modify the reference count.
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.33</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1354,7 +1353,6 @@ This function is the reverse of <a class="link" href="GstClock.html#gst-clock-ad
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.13</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1592,46 +1590,6 @@ MT safe.</td>
 <a name="gst-clock-id-wait-async"></a><h3>gst_clock_id_wait_async ()</h3>
 <pre class="programlisting"><a class="link" href="GstClock.html#GstClockReturn" title="enum GstClockReturn"><span class="returnvalue">GstClockReturn</span></a>      gst_clock_id_wait_async             (<em class="parameter"><code><a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> id</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockCallback" title="GstClockCallback ()"><span class="type">GstClockCallback</span></a> func</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
-<p>
-Register a callback on the given <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> <em class="parameter"><code>id</code></em> with the given
-function and user_data. When passing a <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> with an invalid
-time to this function, the callback will be called immediately
-with  a time set to GST_CLOCK_TIME_NONE. The callback will
-be called when the time of <em class="parameter"><code>id</code></em> has been reached.
-</p>
-<p>
-The callback <em class="parameter"><code>func</code></em> can be invoked from any thread, either provided by the
-core or from a streaming thread. The application should be prepared for this.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
-<td>a <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> to wait on</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td>The callback function</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>User data passed in the callback</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the result of the non blocking wait.
-MT safe.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-clock-id-wait-async-full"></a><h3>gst_clock_id_wait_async_full ()</h3>
-<pre class="programlisting"><a class="link" href="GstClock.html#GstClockReturn" title="enum GstClockReturn"><span class="returnvalue">GstClockReturn</span></a>      gst_clock_id_wait_async_full        (<em class="parameter"><code><a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> id</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="GstClock.html#GstClockCallback" title="GstClockCallback ()"><span class="type">GstClockCallback</span></a> func</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy_data</code></em>);</pre>
 <p>
@@ -1672,7 +1630,6 @@ MT safe.</td>
 </tr>
 </tbody>
 </table></div>
-<p class="since">Since 0.10.30</p>
 </div>
 <hr>
 <div class="refsect2">
