@@ -62,18 +62,19 @@ check_PROGRAMS = gst/gstatomicqueue$(EXEEXT) gst/gstbuffer$(EXEEXT) \
 	gst/gstinfo$(EXEEXT) gst/gstiterator$(EXEEXT) \
 	gst/gstmessage$(EXEEXT) gst/gstminiobject$(EXEEXT) \
 	gst/gstobject$(EXEEXT) gst/gstpad$(EXEEXT) \
-	gst/gstparamspecs$(EXEEXT) gst/gstpoll$(EXEEXT) \
-	gst/gstsegment$(EXEEXT) gst/gstsystemclock$(EXEEXT) \
-	gst/gstclock$(EXEEXT) gst/gststructure$(EXEEXT) \
-	gst/gsttag$(EXEEXT) gst/gsttagsetter$(EXEEXT) \
-	gst/gsttask$(EXEEXT) gst/gsttoc$(EXEEXT) \
-	gst/gsttocsetter$(EXEEXT) gst/gstvalue$(EXEEXT) \
-	generic/states$(EXEEXT) $(am__EXEEXT_2) $(am__EXEEXT_3) \
-	libs/adapter$(EXEEXT) libs/bitreader$(EXEEXT) \
+	gst/gstparamspecs$(EXEEXT) gst/gstpipeline$(EXEEXT) \
+	gst/gstpoll$(EXEEXT) gst/gstsegment$(EXEEXT) \
+	gst/gstsystemclock$(EXEEXT) gst/gstclock$(EXEEXT) \
+	gst/gststructure$(EXEEXT) gst/gsttag$(EXEEXT) \
+	gst/gsttagsetter$(EXEEXT) gst/gsttask$(EXEEXT) \
+	gst/gsttoc$(EXEEXT) gst/gsttocsetter$(EXEEXT) \
+	gst/gstvalue$(EXEEXT) generic/states$(EXEEXT) $(am__EXEEXT_2) \
+	$(am__EXEEXT_3) libs/adapter$(EXEEXT) libs/bitreader$(EXEEXT) \
 	libs/bytereader$(EXEEXT) libs/bytewriter$(EXEEXT) \
-	libs/gstnetclientclock$(EXEEXT) \
-	libs/gstnettimeprovider$(EXEEXT) libs/transform1$(EXEEXT)
-noinst_PROGRAMS = gst/gstpipeline$(EXEEXT) libs/collectpads$(EXEEXT)
+	libs/collectpads$(EXEEXT) libs/gstnetclientclock$(EXEEXT) \
+	libs/gstnettimeprovider$(EXEEXT) libs/transform1$(EXEEXT) \
+	tools/gstinspect$(EXEEXT)
+noinst_PROGRAMS =
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -647,6 +648,12 @@ pipelines_stress_LDADD = $(LDADD)
 pipelines_stress_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+tools_gstinspect_SOURCES = tools/gstinspect.c
+tools_gstinspect_OBJECTS = gstinspect.$(OBJEXT)
+tools_gstinspect_LDADD = $(LDADD)
+tools_gstinspect_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -715,7 +722,7 @@ SOURCES = elements/capsfilter.c elements/fakesink.c elements/fakesrc.c \
 	pipelines/cleanup.c pipelines/parse-disabled.c \
 	pipelines/parse-launch.c pipelines/queue-error.c \
 	pipelines/seek.c pipelines/simple-launch-lines.c \
-	pipelines/stress.c
+	pipelines/stress.c tools/gstinspect.c
 DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
 	elements/fakesrc.c elements/fdsrc.c elements/filesink.c \
 	elements/filesrc.c elements/funnel.c elements/identity.c \
@@ -743,7 +750,7 @@ DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
 	pipelines/cleanup.c pipelines/parse-disabled.c \
 	pipelines/parse-launch.c pipelines/queue-error.c \
 	pipelines/seek.c pipelines/simple-launch-lines.c \
-	pipelines/stress.c
+	pipelines/stress.c tools/gstinspect.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -1157,7 +1164,8 @@ libs_gstnettimeprovider_LDADD = \
 # these just need valgrind fixing, period
 VALGRIND_TO_FIX = \
 	gst/gstinfo \
-	pipelines/parse-launch
+	pipelines/parse-launch \
+	tools/gstinspect
 
 VALGRIND_IGNORE = \
 	pipelines/stress
@@ -1492,6 +1500,12 @@ pipelines/simple-launch-lines$(EXEEXT): $(pipelines_simple_launch_lines_OBJECTS)
 pipelines/stress$(EXEEXT): $(pipelines_stress_OBJECTS) $(pipelines_stress_DEPENDENCIES) $(EXTRA_pipelines_stress_DEPENDENCIES) pipelines/$(am__dirstamp)
 	@rm -f pipelines/stress$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(pipelines_stress_OBJECTS) $(pipelines_stress_LDADD) $(LIBS)
+tools/$(am__dirstamp):
+	@$(MKDIR_P) tools
+	@: > tools/$(am__dirstamp)
+tools/gstinspect$(EXEEXT): $(tools_gstinspect_OBJECTS) $(tools_gstinspect_DEPENDENCIES) $(EXTRA_tools_gstinspect_DEPENDENCIES) tools/$(am__dirstamp)
+	@rm -f tools/gstinspect$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tools_gstinspect_OBJECTS) $(tools_gstinspect_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -1532,6 +1546,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstevent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstghostpad.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstinfo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstinspect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstiterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstlibscpp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstmemory.Po@am__quote@
@@ -2678,6 +2693,20 @@ stress.obj: pipelines/stress.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o stress.obj `if test -f 'pipelines/stress.c'; then $(CYGPATH_W) 'pipelines/stress.c'; else $(CYGPATH_W) '$(srcdir)/pipelines/stress.c'; fi`
 
+gstinspect.o: tools/gstinspect.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gstinspect.o -MD -MP -MF $(DEPDIR)/gstinspect.Tpo -c -o gstinspect.o `test -f 'tools/gstinspect.c' || echo '$(srcdir)/'`tools/gstinspect.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gstinspect.Tpo $(DEPDIR)/gstinspect.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tools/gstinspect.c' object='gstinspect.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gstinspect.o `test -f 'tools/gstinspect.c' || echo '$(srcdir)/'`tools/gstinspect.c
+
+gstinspect.obj: tools/gstinspect.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gstinspect.obj -MD -MP -MF $(DEPDIR)/gstinspect.Tpo -c -o gstinspect.obj `if test -f 'tools/gstinspect.c'; then $(CYGPATH_W) 'tools/gstinspect.c'; else $(CYGPATH_W) '$(srcdir)/tools/gstinspect.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gstinspect.Tpo $(DEPDIR)/gstinspect.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tools/gstinspect.c' object='gstinspect.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gstinspect.obj `if test -f 'tools/gstinspect.c'; then $(CYGPATH_W) 'tools/gstinspect.c'; else $(CYGPATH_W) '$(srcdir)/tools/gstinspect.c'; fi`
+
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
@@ -2737,6 +2766,7 @@ clean-libtool:
 	-rm -rf gst/.libs gst/_libs
 	-rm -rf libs/.libs libs/_libs
 	-rm -rf pipelines/.libs pipelines/_libs
+	-rm -rf tools/.libs tools/_libs
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -2951,6 +2981,7 @@ distclean-generic:
 	-rm -f gst/$(am__dirstamp)
 	-rm -f libs/$(am__dirstamp)
 	-rm -f pipelines/$(am__dirstamp)
+	-rm -f tools/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

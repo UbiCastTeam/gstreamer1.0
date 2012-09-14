@@ -51,8 +51,8 @@ extern gboolean _gst_check_expecting_log;
 /* global variables used in test methods */
 extern GList * buffers;
 
-extern GMutex *check_mutex;
-extern GCond *check_cond;
+extern GMutex check_mutex;
+extern GCond check_cond;
 
 typedef struct
 {
@@ -267,99 +267,18 @@ G_STMT_START {                                                    \
  * thread test macros and variables
  */
 extern GList *thread_list;
-extern GMutex *mutex;
-extern GCond *start_cond;       /* used to notify main thread of thread startups */
-extern GCond *sync_cond;        /* used to synchronize all threads and main thread */
+extern GMutex mutex;
+extern GCond start_cond;       /* used to notify main thread of thread startups */
+extern GCond sync_cond;        /* used to synchronize all threads and main thread */
 
 #define MAIN_START_THREADS(count, function, data)               \
 MAIN_INIT();                                                    \
 MAIN_START_THREAD_FUNCTIONS(count, function, data);             \
 MAIN_SYNCHRONIZE();
 
-#if GLIB_CHECK_VERSION (2, 31, 0)
-#define g_thread_create gst_g_thread_create
-static inline GThread *
-gst_g_thread_create (GThreadFunc func, gpointer data, gboolean joinable,
-    GError **error)
-{
-  GThread *thread = g_thread_try_new ("gst-check", func, data, error);
-  if (!joinable)
-    g_thread_unref (thread);
-  return thread;
-}
-#define g_mutex_new gst_g_mutex_new
-static inline GMutex *
-gst_g_mutex_new (void)
-{
-  GMutex *mutex = g_slice_new (GMutex);
-  g_mutex_init (mutex);
-  return mutex;
-}
-#define g_mutex_free gst_g_mutex_free
-static inline void
-gst_g_mutex_free (GMutex *mutex)
-{
-  g_mutex_clear (mutex);
-  g_slice_free (GMutex, mutex);
-}
-#define g_static_rec_mutex_init gst_g_static_rec_mutex_init
-static inline void
-gst_g_static_rec_mutex_init (GStaticRecMutex *mutex)
-{
-  static const GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
-
-  *mutex = init_mutex;
-}
-#define g_cond_new gst_g_cond_new
-static inline GCond *
-gst_g_cond_new (void)
-{
-  GCond *cond = g_slice_new (GCond);
-  g_cond_init (cond);
-  return cond;
-}
-#define g_cond_free gst_g_cond_free
-static inline void
-gst_g_cond_free (GCond *cond)
-{
-  g_cond_clear (cond);
-  g_slice_free (GCond, cond);
-}
-#define g_cond_timed_wait gst_g_cond_timed_wait
-static inline gboolean
-gst_g_cond_timed_wait (GCond *cond, GMutex *mutex, GTimeVal *abs_time)
-{
-  gint64 end_time;
-
-  if (abs_time == NULL) {
-    g_cond_wait (cond, mutex);
-    return TRUE;
-  }
-
-  end_time = abs_time->tv_sec;
-  end_time *= 1000000;
-  end_time += abs_time->tv_usec;
-
-  /* would be nice if we had clock_rtoffset, but that didn't seem to
-   * make it into the kernel yet...
-   */
-  /* if CLOCK_MONOTONIC is not defined then g_get_montonic_time() and
-   * g_get_real_time() are returning the same clock and we'd add ~0
-   */
-  end_time += g_get_monotonic_time () - g_get_real_time ();
-  return g_cond_wait_until (cond, mutex, end_time);
-}
-#endif
-
 #define MAIN_INIT()                     \
 G_STMT_START {                          \
   _gst_check_threads_running = TRUE;    \
-                                        \
-  if (mutex == NULL) {                  \
-    mutex = g_mutex_new ();             \
-    start_cond = g_cond_new ();         \
-    sync_cond = g_cond_new ();          \
-  }                                     \
 } G_STMT_END;
 
 #define MAIN_START_THREAD_FUNCTIONS(count, function, data)      \
@@ -374,13 +293,13 @@ G_STMT_START {                                                  \
 G_STMT_START {                                                  \
     GThread *thread = NULL;                                     \
     GST_DEBUG ("MAIN: creating thread %d", i);                  \
-    g_mutex_lock (mutex);                                       \
-    thread = g_thread_create ((GThreadFunc) function, data,     \
-        TRUE, NULL);                                            \
+    g_mutex_lock (&mutex);                                      \
+    thread = g_thread_try_new ("gst-check",                     \
+        (GThreadFunc) function, data, NULL);                    \
     /* wait for thread to signal us that it's ready */          \
     GST_DEBUG ("MAIN: waiting for thread %d", i);               \
-    g_cond_wait (start_cond, mutex);                            \
-    g_mutex_unlock (mutex);                                     \
+    g_cond_wait (&start_cond, &mutex);                          \
+    g_mutex_unlock (&mutex);                                    \
                                                                 \
     thread_list = g_list_append (thread_list, thread);          \
 } G_STMT_END;
@@ -389,7 +308,7 @@ G_STMT_START {                                                  \
 #define MAIN_SYNCHRONIZE()              \
 G_STMT_START {                          \
   GST_DEBUG ("MAIN: synchronizing");    \
-  g_cond_broadcast (sync_cond);         \
+  g_cond_broadcast (&sync_cond);        \
   GST_DEBUG ("MAIN: synchronized");     \
 } G_STMT_END;
 
@@ -413,17 +332,17 @@ THREAD_SYNCHRONIZE();
 G_STMT_START {                                                  \
   /* signal main thread that we started */                      \
   GST_DEBUG ("THREAD %p: started", g_thread_self ());           \
-  g_mutex_lock (mutex);                                         \
-  g_cond_signal (start_cond);                                   \
+  g_mutex_lock (&mutex);                                        \
+  g_cond_signal (&start_cond);                                  \
 } G_STMT_END;
 
 #define THREAD_SYNCHRONIZE()                                    \
 G_STMT_START {                                                  \
   /* synchronize everyone */                                    \
   GST_DEBUG ("THREAD %p: syncing", g_thread_self ());           \
-  g_cond_wait (sync_cond, mutex);                               \
+  g_cond_wait (&sync_cond, &mutex);                             \
   GST_DEBUG ("THREAD %p: synced", g_thread_self ());            \
-  g_mutex_unlock (mutex);                                       \
+  g_mutex_unlock (&mutex);                                      \
 } G_STMT_END;
 
 #define THREAD_SWITCH()                                         \

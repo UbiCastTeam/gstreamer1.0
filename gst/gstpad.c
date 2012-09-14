@@ -808,8 +808,15 @@ gst_pad_activate_default (GstPad * pad, GstObject * parent)
   return gst_pad_activate_mode (pad, GST_PAD_MODE_PUSH, TRUE);
 }
 
-#ifndef GST_DISABLE_GST_DEBUG
-static const gchar *
+/**
+ * gst_pad_mode_get_name:
+ * @mode: the pad mode
+ *
+ * Return the name of a pad mode, for use in debug messages mostly.
+ *
+ * Returns: short mnemonic for pad mode @mode
+ */
+const gchar *
 gst_pad_mode_get_name (GstPadMode mode)
 {
   switch (mode) {
@@ -824,7 +831,6 @@ gst_pad_mode_get_name (GstPadMode mode)
   }
   return "unknown";
 }
-#endif
 
 static void
 pre_activate (GstPad * pad, GstPadMode new_mode)
@@ -1355,6 +1361,30 @@ gst_pad_is_blocking (GstPad * pad)
   GST_OBJECT_UNLOCK (pad);
 
   return result;
+}
+
+/**
+ * gst_pad_needs_reconfigure:
+ * @pad: the #GstPad to check
+ *
+ * Check the #GST_PAD_FLAG_NEED_RECONFIGURE flag on @pad and return %TRUE
+ * if the flag was set.
+ *
+ * Returns: %TRUE is the GST_PAD_FLAG_NEED_RECONFIGURE flag is set on @pad.
+ */
+gboolean
+gst_pad_needs_reconfigure (GstPad * pad)
+{
+  gboolean reconfigure;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
+
+  GST_OBJECT_LOCK (pad);
+  reconfigure = GST_PAD_NEEDS_RECONFIGURE (pad);
+  GST_DEBUG_OBJECT (pad, "peeking RECONFIGURE flag %d", reconfigure);
+  GST_OBJECT_UNLOCK (pad);
+
+  return reconfigure;
 }
 
 /**
@@ -2695,7 +2725,8 @@ gst_pad_event_default (GstPad * pad, GstObject * parent, GstEvent * event)
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
 
-  GST_LOG_OBJECT (pad, "default event handler");
+  GST_LOG_OBJECT (pad, "default event handler for event %" GST_PTR_FORMAT,
+      event);
 
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_CAPS:
@@ -3786,6 +3817,10 @@ gst_pad_push_data (GstPad * pad, GstPadProbeType type, void *data)
   /* do block probes */
   PROBE_PUSH (pad, type | GST_PAD_PROBE_TYPE_BLOCK, data, probe_stopped);
 
+  /* recheck sticky events because the probe might have cause a relink */
+  if (G_UNLIKELY ((ret = check_sticky (pad))) != GST_FLOW_OK)
+    goto events_error;
+
   /* do post-blocking probes */
   PROBE_PUSH (pad, type, data, probe_stopped);
 
@@ -3967,6 +4002,10 @@ gst_pad_get_range_unchecked (GstPad * pad, guint64 offset, guint size,
    * valid result buffer */
   PROBE_PULL (pad, GST_PAD_PROBE_TYPE_PULL | GST_PAD_PROBE_TYPE_BLOCK,
       res_buf, offset, size, probe_stopped);
+
+  /* recheck sticky events because the probe might have cause a relink */
+  if (G_UNLIKELY ((ret = check_sticky (pad))) != GST_FLOW_OK)
+    goto events_error;
 
   ACQUIRE_PARENT (pad, parent, no_parent);
   GST_OBJECT_UNLOCK (pad);
@@ -4441,9 +4480,8 @@ gst_pad_push_event_unchecked (GstPad * pad, GstEvent * event,
 
   /* Note: we gave away ownership of the event at this point but we can still
    * print the old pointer */
-  GST_LOG_OBJECT (pad,
-      "sent event %p to peerpad %" GST_PTR_FORMAT ", ret %s", event, peerpad,
-      gst_flow_get_name (ret));
+  GST_LOG_OBJECT (pad, "sent event %p to peerpad %" GST_PTR_FORMAT ", ret %s",
+      event, peerpad, gst_flow_get_name (ret));
 
   gst_object_unref (peerpad);
 

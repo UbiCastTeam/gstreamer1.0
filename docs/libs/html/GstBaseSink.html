@@ -171,8 +171,8 @@ The opaque <a class="link" href="GstBaseSink.html" title="GstBaseSink"><span cla
 
   /* notify subclass of event */
   gboolean      (*event)        (GstBaseSink *sink, GstEvent *event);
-  /* wait for eos, subclasses should chain up to parent first */
-  GstFlowReturn (*wait_eos)     (GstBaseSink *sink, GstEvent *event);
+  /* wait for eos or gap, subclasses should chain up to parent first */
+  GstFlowReturn (*wait_event)   (GstBaseSink *sink, GstEvent *event);
 
   /* notify subclass of buffer or list before doing sync */
   GstFlowReturn (*prepare)      (GstBaseSink *sink, GstBuffer *buffer);
@@ -254,9 +254,10 @@ any state they set during <code class="function">unlock()</code>, such as cleari
 <td>Override this to handle events arriving on the sink pad</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.wait-eos"></a>wait_eos</code></em> ()</span></p></td>
-<td>Override this to implement custom logic to wait for the EOS time.
-subclasses should always first chain up to the default implementation.</td>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.wait-event"></a>wait_event</code></em> ()</span></p></td>
+<td>Override this to implement custom logic to wait for the event
+time (for events like EOS and GAP). Subclasses should always first
+chain up to the default implementation.</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstBaseSinkClass.prepare"></a>prepare</code></em> ()</span></p></td>

@@ -132,7 +132,7 @@ enum                <a class="link" href="GstObject.html#GstObjectFlags" title="
   <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
          +----GstObject
-               +----GstAllocator
+               +----<a class="link" href="GstAllocator.html" title="GstAllocator">GstAllocator</a>
                +----<a class="link" href="GstPad.html" title="GstPad">GstPad</a>
                +----<a class="link" href="GstPadTemplate.html" title="GstPadTemplate">GstPadTemplate</a>
                +----<a class="link" href="GstPluginFeature.html" title="GstPluginFeature">GstPluginFeature</a>
@@ -186,7 +186,7 @@ of the object.
 <p>
 </p>
 <div class="refsect2">
-<a name="idp29641840"></a><h3>controlled properties</h3>
+<a name="idp31695632"></a><h3>controlled properties</h3>
 <p>
 Controlled properties offers a lightweight way to adjust gobject
 properties over stream-time. It works by using time-stamped value pairs that
@@ -732,9 +732,9 @@ MT safe. This function grabs and releases <em class="parameter"><code>object</co
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>excluded_props</code></em> :</span></p></td>
-<td>(array zero-terminated=1) (element-type gchar*)
-(allow-none): a set of user-specified properties to exclude or
-NULL to show all changes.</td>
+<td>a set of user-specified properties to exclude or NULL to show
+all changes. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar*][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>

@@ -24,10 +24,10 @@
 
 #include <gst/check/gstcheck.h>
 
-#define UNDERRUN_LOCK() (g_mutex_lock (underrun_mutex))
-#define UNDERRUN_UNLOCK() (g_mutex_unlock (underrun_mutex))
-#define UNDERRUN_SIGNAL() (g_cond_signal (underrun_cond))
-#define UNDERRUN_WAIT() (g_cond_wait (underrun_cond, underrun_mutex))
+#define UNDERRUN_LOCK() (g_mutex_lock (&underrun_mutex))
+#define UNDERRUN_UNLOCK() (g_mutex_unlock (&underrun_mutex))
+#define UNDERRUN_SIGNAL() (g_cond_signal (&underrun_cond))
+#define UNDERRUN_WAIT() (g_cond_wait (&underrun_cond, &underrun_mutex))
 
 static GstElement *queue;
 
@@ -41,8 +41,8 @@ static gulong probe_id;
 
 static gint overrun_count;
 
-static GMutex *underrun_mutex;
-static GCond *underrun_cond;
+static GMutex underrun_mutex;
+static GCond underrun_cond;
 static gint underrun_count;
 
 static GList *events;
@@ -121,8 +121,6 @@ setup (void)
 
   overrun_count = 0;
 
-  underrun_mutex = g_mutex_new ();
-  underrun_cond = g_cond_new ();
   underrun_count = 0;
 
   events = NULL;
@@ -136,11 +134,6 @@ cleanup (void)
   gst_check_drop_buffers ();
 
   drop_events ();
-
-  g_cond_free (underrun_cond);
-  underrun_cond = NULL;
-  g_mutex_free (underrun_mutex);
-  underrun_mutex = NULL;
 
   if (mysinkpad != NULL) {
     gst_pad_set_active (mysinkpad, FALSE);
@@ -277,12 +270,12 @@ GST_START_TEST (test_non_leaky_overrun)
   fail_unless (overrun_count == 1);
 
   /* lock the check_mutex to block the first buffer pushed to mysinkpad */
-  g_mutex_lock (check_mutex);
+  g_mutex_lock (&check_mutex);
   /* now let the queue push all buffers */
   while (g_list_length (buffers) < 3) {
-    g_cond_wait (check_cond, check_mutex);
+    g_cond_wait (&check_cond, &check_mutex);
   }
-  g_mutex_unlock (check_mutex);
+  g_mutex_unlock (&check_mutex);
 
   fail_unless (overrun_count == 1);
   /* make sure we get the underrun signal before we check underrun_count */

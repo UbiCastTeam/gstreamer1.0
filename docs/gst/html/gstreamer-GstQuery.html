@@ -215,18 +215,18 @@ enum                <a class="link" href="gstreamer-GstQuery.html#GstBufferingMo
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> min_buffers</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> max_buffers</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-add-allocation-param" title="gst_query_add_allocation_param ()">gst_query_add_allocation_param</a>      (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstQuery.html#gst-query-get-n-allocation-params" title="gst_query_get_n_allocation_params ()">gst_query_get_n_allocation_params</a>   (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-nth-allocation-param" title="gst_query_parse_nth_allocation_param ()">gst_query_parse_nth_allocation_param</a>
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> **allocator</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocationParams</span> *params</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> **allocator</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-set-nth-allocation-param" title="gst_query_set_nth_allocation_param ()">gst_query_set_nth_allocation_param</a>  (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstQuery.html#gst-query-add-allocation-meta" title="gst_query_add_allocation_meta ()">gst_query_add_allocation_meta</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *params</code></em>);
@@ -259,6 +259,10 @@ enum                <a class="link" href="gstreamer-GstQuery.html#GstSchedulingF
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-has-scheduling-mode" title="gst_query_has_scheduling_mode ()">gst_query_has_scheduling_mode</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-has-scheduling-mode-with-flags" title="gst_query_has_scheduling_mode_with_flags ()">gst_query_has_scheduling_mode_with_flags</a>
+                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstSchedulingFlags" title="enum GstSchedulingFlags"><span class="type">GstSchedulingFlags</span></a> flags</code></em>);
 <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          <a class="link" href="gstreamer-GstQuery.html#gst-query-new-drain" title="gst_query_new_drain ()">gst_query_new_drain</a>                 (<em class="parameter"><code><span class="type">void</span></code></em>);
 </pre>
 </div>
@@ -280,7 +284,7 @@ The following example shows how to query the duration of a pipeline:
 <p>
 </p>
 <div class="example">
-<a name="idp40045456"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
+<a name="idp39630736"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -2545,8 +2549,8 @@ Set the pool parameters in <em class="parameter"><code>query</code></em>.
 <div class="refsect2">
 <a name="gst-query-add-allocation-param"></a><h3>gst_query_add_allocation_param ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_add_allocation_param      (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
 <p>
 Add <em class="parameter"><code>allocator</code></em> and its <em class="parameter"><code>params</code></em> as a supported memory allocator.
 </p>
@@ -2565,7 +2569,7 @@ Add <em class="parameter"><code>allocator</code></em> and its <em class="paramet
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
-<td>a <span class="type">GstAllocationParams</span>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -2604,8 +2608,8 @@ the default memory allocator.
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_parse_nth_allocation_param
                                                         (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> **allocator</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocationParams</span> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> **allocator</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
 <p>
 Parse an available query and get the alloctor and its params
 at <em class="parameter"><code>index</code></em> of the allocator array.
@@ -2640,8 +2644,8 @@ at <em class="parameter"><code>index</code></em> of the allocator array.
 <a name="gst-query-set-nth-allocation-param"></a><h3>gst_query_set_nth_allocation_param ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_query_set_nth_allocation_param  (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
-                                                         <em class="parameter"><code>const <span class="type">GstAllocationParams</span> *params</code></em>);</pre>
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
 <p>
 Parse an available query and get the alloctor and its params
 at <em class="parameter"><code>index</code></em> of the allocator array.
@@ -3024,6 +3028,20 @@ at <em class="parameter"><code>index</code></em> of the scheduling modes array.
 <p>
 Check if <em class="parameter"><code>query</code></em> has scheduling mode set.
 </p>
+<p>
+</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Note</h3>
+<p>
+    When checking if upstream supports pull mode, it is usually not
+    enough to just check for GST_PAD_MODE_PULL with this function, you
+    also want to check whether the scheduling flags returned by
+    <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-scheduling" title="gst_query_parse_scheduling ()"><code class="function">gst_query_parse_scheduling()</code></a> have the seeking flag set (meaning
+    random access is supported, not only sequential pulls).
+  </p>
+</div>
+<p>
+</p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -3039,6 +3057,41 @@ Check if <em class="parameter"><code>query</code></em> has scheduling mode set.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>TRUE when <em class="parameter"><code>mode</code></em> is in the list of scheduling modes.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-query-has-scheduling-mode-with-flags"></a><h3>gst_query_has_scheduling_mode_with_flags ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_query_has_scheduling_mode_with_flags
+                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstSchedulingFlags" title="enum GstSchedulingFlags"><span class="type">GstSchedulingFlags</span></a> flags</code></em>);</pre>
+<p>
+Check if <em class="parameter"><code>query</code></em> has scheduling mode set and <em class="parameter"><code>flags</code></em> is set in
+query scheduling flags.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>a GST_QUERY_SCHEDULING type query <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the scheduling mode</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td><a class="link" href="gstreamer-GstQuery.html#GstSchedulingFlags" title="enum GstSchedulingFlags"><span class="type">GstSchedulingFlags</span></a></td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>TRUE when <em class="parameter"><code>mode</code></em> is in the list of scheduling modes
+and <em class="parameter"><code>flags</code></em> are compatible with query flags.</td>
 </tr>
 </tbody>
 </table></div>

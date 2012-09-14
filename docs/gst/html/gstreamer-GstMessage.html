@@ -159,12 +159,7 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-segment-done" title="gst_message_parse_segment_done ()">gst_message_parse_segment_done</a>      (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *format</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *position</code></em>);
-<a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-duration" title="gst_message_new_duration ()">gst_message_new_duration</a>            (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> duration</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-duration" title="gst_message_parse_duration ()">gst_message_parse_duration</a>          (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *format</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> *duration</code></em>);
+<a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-duration-changed" title="gst_message_new_duration_changed ()">gst_message_new_duration_changed</a>    (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-latency" title="gst_message_new_latency ()">gst_message_new_latency</a>             (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-async-start" title="gst_message_new_async_start ()">gst_message_new_async_start</a>         (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-async-done" title="gst_message_new_async_done ()">gst_message_new_async_done</a>          (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
@@ -223,6 +218,7 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> running_time</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMessage.html#gst-message-parse-reset-time" title="gst_message_parse_reset_time ()">gst_message_parse_reset_time</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> *running_time</code></em>);
+<a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-stream-start" title="gst_message_new_stream_start ()">gst_message_new_stream_start</a>        (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);
 enum                <a class="link" href="gstreamer-GstMessage.html#GstStructureChangeType" title="enum GstStructureChangeType">GstStructureChangeType</a>;
 <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        <a class="link" href="gstreamer-GstMessage.html#gst-message-new-structure-change" title="gst_message_new_structure_change ()">gst_message_new_structure_change</a>    (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstStructureChangeType" title="enum GstStructureChangeType"><span class="type">GstStructureChangeType</span></a> type</code></em>,
@@ -277,7 +273,7 @@ The basic use pattern of posting a message on a <a class="link" href="GstBus.htm
 <p>
 </p>
 <div class="example">
-<a name="idp30377120"></a><p class="title"><b>Example 10. Posting a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></b></p>
+<a name="idp29701328"></a><p class="title"><b>Example 10. Posting a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -365,7 +361,7 @@ A <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstM
   GST_MESSAGE_ELEMENT           = (1 &lt;&lt; 15),
   GST_MESSAGE_SEGMENT_START     = (1 &lt;&lt; 16),
   GST_MESSAGE_SEGMENT_DONE      = (1 &lt;&lt; 17),
-  GST_MESSAGE_DURATION          = (1 &lt;&lt; 18),
+  GST_MESSAGE_DURATION_CHANGED  = (1 &lt;&lt; 18),
   GST_MESSAGE_LATENCY           = (1 &lt;&lt; 19),
   GST_MESSAGE_ASYNC_START       = (1 &lt;&lt; 20),
   GST_MESSAGE_ASYNC_DONE        = (1 &lt;&lt; 21),
@@ -505,9 +501,9 @@ message is forwarded to the application after all elements that posted
 </td>
 </tr>
 <tr>
-<td><p><a name="GST-MESSAGE-DURATION:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_DURATION</code></span></p></td>
-<td>The duration of a pipeline changed. The application
-can get the new duration with a duration query.
+<td><p><a name="GST-MESSAGE-DURATION-CHANGED:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_DURATION_CHANGED</code></span></p></td>
+<td>The duration of a pipeline changed. The
+application can get the new duration with a duration query.
 </td>
 </tr>
 <tr>
@@ -556,16 +552,23 @@ strategy for Quality of Service reasons.
 <tr>
 <td><p><a name="GST-MESSAGE-TOC:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_TOC</code></span></p></td>
 <td>A new table of contents (TOC) was found or previously found TOC
-was updated. Since:
+was updated.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-RESET-TIME:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_RESET_TIME</code></span></p></td>
-<td></td>
+<td>Message to request resetting the pipeline's
+    running time from the pipeline. This is an internal message which
+    applications will likely never receive.
+</td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-STREAM-START:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_STREAM_START</code></span></p></td>
-<td></td>
+<td>Message indicating start of a new stream. Useful
+    e.g. when using playbin in gapless playback mode, to get notified when
+    the next title actually starts playing (which will be some time after
+    the URI for the next title has been set).
+</td>
 </tr>
 <tr>
 <td><p><a name="GST-MESSAGE-ANY:CAPS"></a><span class="term"><code class="literal">GST_MESSAGE_ANY</code></span></p></td>
@@ -2229,13 +2232,11 @@ MT safe.
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-message-new-duration"></a><h3>gst_message_new_duration ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_duration            (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> duration</code></em>);</pre>
+<a name="gst-message-new-duration-changed"></a><h3>gst_message_new_duration_changed ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_duration_changed    (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);</pre>
 <p>
-Create a new duration message. This message is posted by elements that
-know the duration of a stream in a specific format. This message
+Create a new duration changed message. This message is posted by elements
+that know the duration of a stream when the duration changes. This message
 is received by bins and is used to calculate the total duration of a
 pipeline. Elements may post a duration message with a duration of
 GST_CLOCK_TIME_NONE to indicate that the duration has changed and the 
@@ -2251,52 +2252,9 @@ retrieved via a query.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
-<td>The format of the duration</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>duration</code></em> :</span></p></td>
-<td>The new duration</td>
-</tr>
-<tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The new duration message.
+<td>The new duration-changed message.
 MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-message-parse-duration"></a><h3>gst_message_parse_duration ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_message_parse_duration          (<em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *format</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> *duration</code></em>);</pre>
-<p>
-Extracts the duration and format from the duration message. The duration
-might be GST_CLOCK_TIME_NONE, which indicates that the duration has
-changed. Applications should always use a query to retrieve the duration
-of a pipeline.
-</p>
-<p>
-MT safe.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
-<td>A valid <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> of type GST_MESSAGE_DURATION.</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
-<td>Result location for the format, or NULL. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>duration</code></em> :</span></p></td>
-<td>Result location for the duration, or NULL. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -2944,6 +2902,32 @@ MT safe.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>running_time</code></em> :</span></p></td>
 <td>Result location for the running_time or NULL. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-message-new-stream-start"></a><h3>gst_message_new_stream_start ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="returnvalue">GstMessage</span></a> *        gst_message_new_stream_start        (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>);</pre>
+<p>
+Create a new stream_start message. This message is generated and posted in
+the sink elements of a GstBin. The bin will only forward the STREAM_START
+message to the application if all sinks have posted an STREAM_START message.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
+<td>The object originating the message. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The new stream_start message.
+MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 </tbody>

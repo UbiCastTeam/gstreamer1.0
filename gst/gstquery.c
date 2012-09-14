@@ -2096,6 +2096,16 @@ gst_query_parse_nth_scheduling_mode (GstQuery * query, guint index)
  *
  * Check if @query has scheduling mode set.
  *
+ * <note>
+ *   <para>
+ *     When checking if upstream supports pull mode, it is usually not
+ *     enough to just check for GST_PAD_MODE_PULL with this function, you
+ *     also want to check whether the scheduling flags returned by
+ *     gst_query_parse_scheduling() have the seeking flag set (meaning
+ *     random access is supported, not only sequential pulls).
+ *   </para>
+ * </note>
+ *
  * Returns: TRUE when @mode is in the list of scheduling modes.
  */
 gboolean
@@ -2117,6 +2127,32 @@ gst_query_has_scheduling_mode (GstQuery * query, GstPadMode mode)
       return TRUE;
   }
   return FALSE;
+}
+
+/**
+ * gst_query_has_scheduling_mode_with_flags:
+ * @query: a GST_QUERY_SCHEDULING type query #GstQuery
+ * @mode: the scheduling mode
+ * @flags: #GstSchedulingFlags
+ *
+ * Check if @query has scheduling mode set and @flags is set in
+ * query scheduling flags.
+ *
+ * Returns: TRUE when @mode is in the list of scheduling modes
+ *    and @flags are compatible with query flags.
+ */
+gboolean
+gst_query_has_scheduling_mode_with_flags (GstQuery * query, GstPadMode mode,
+    GstSchedulingFlags flags)
+{
+  GstSchedulingFlags sched_flags;
+
+  g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_SCHEDULING, FALSE);
+
+  gst_query_parse_scheduling (query, &sched_flags, NULL, NULL, NULL);
+
+  return ((flags & sched_flags) == flags) &&
+      gst_query_has_scheduling_mode (query, mode);
 }
 
 /**

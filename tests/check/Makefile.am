@@ -119,6 +119,7 @@ check_PROGRAMS =				\
 	gst/gstobject				\
 	gst/gstpad				\
 	gst/gstparamspecs			\
+	gst/gstpipeline				\
 	gst/gstpoll     			\
 	gst/gstsegment				\
 	gst/gstsystemclock			\
@@ -138,14 +139,14 @@ check_PROGRAMS =				\
 	libs/bitreader				\
 	libs/bytereader				\
 	libs/bytewriter				\
+	libs/collectpads			\
 	libs/gstnetclientclock			\
 	libs/gstnettimeprovider			\
-	libs/transform1
+	libs/transform1				\
+	tools/gstinspect
 
 # failing tests
-noinst_PROGRAMS =				\
-	gst/gstpipeline				\
-	libs/collectpads
+noinst_PROGRAMS =
 
 # elements to ignore for the state tests
 # STATE_IGNORE_ELEMENTS =
@@ -203,7 +204,8 @@ libs_gstnettimeprovider_LDADD = \
 # these just need valgrind fixing, period
 VALGRIND_TO_FIX = \
 	gst/gstinfo \
-	pipelines/parse-launch
+	pipelines/parse-launch \
+	tools/gstinspect
 
 VALGRIND_IGNORE = \
 	pipelines/stress

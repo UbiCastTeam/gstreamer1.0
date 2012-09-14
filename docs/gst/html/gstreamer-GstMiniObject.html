@@ -264,7 +264,8 @@ mini-objects.
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> *obj</code></em>);</pre>
 <p>
 A <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObjectNotify" title="GstMiniObjectNotify ()"><span class="type">GstMiniObjectNotify</span></a> function can be added to a mini object as a
-callback that gets triggered with <code class="function">gst_mini_object_notify()</code>.
+callback that gets triggered when <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-unref" title="gst_mini_object_unref ()"><code class="function">gst_mini_object_unref()</code></a> drops the
+last ref and <em class="parameter"><code>obj</code></em> is about to be freed.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -555,6 +556,11 @@ functions.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td>initial <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObjectFlags" title="enum GstMiniObjectFlags"><span class="type">GstMiniObjectFlags</span></a>
 </td>
 </tr>
 <tr>

@@ -860,6 +860,7 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
 
   if (bclass->set_caps)
     res = bclass->set_caps (src, caps);
+
   if (res)
     res = gst_pad_set_caps (src->srcpad, caps);
 
@@ -2692,6 +2693,9 @@ gst_base_src_loop (GstPad * pad)
 
   ret = gst_pad_push (pad, buf);
   if (G_UNLIKELY (ret != GST_FLOW_OK)) {
+    if (ret == GST_FLOW_NOT_NEGOTIATED) {
+      goto not_negotiated;
+    }
     GST_INFO_OBJECT (src, "pausing after gst_pad_push() = %s",
         gst_flow_get_name (ret));
     goto pause;
@@ -2709,6 +2713,10 @@ done:
   /* special cases */
 not_negotiated:
   {
+    if (gst_pad_needs_reconfigure (pad)) {
+      GST_DEBUG_OBJECT (src, "Retrying to renegotiate");
+      return;
+    }
     GST_DEBUG_OBJECT (src, "Failed to renegotiate");
     ret = GST_FLOW_NOT_NEGOTIATED;
     goto pause;
@@ -3618,4 +3626,49 @@ failure:
     GST_DEBUG_OBJECT (basesrc, "parent failed state change");
     return result;
   }
+}
+
+/**
+ * gst_base_src_get_buffer_pool:
+ * @src: a #GstBaseSrc
+ *
+ * Returns: (transfer full): the instance of the #GstBufferPool used
+ * by the src; free it after use it
+ */
+GstBufferPool *
+gst_base_src_get_buffer_pool (GstBaseSrc * src)
+{
+  g_return_val_if_fail (GST_IS_BASE_SRC (src), NULL);
+
+  if (src->priv->pool)
+    return gst_object_ref (src->priv->pool);
+
+  return NULL;
+}
+
+/**
+ * gst_base_src_get_allocator:
+ * @src: a #GstBaseSrc
+ * @allocator: (out) (allow-none) (transfer full): the #GstAllocator
+ * used
+ * @params: (out) (allow-none) (transfer full): the
+ * #GstAllocatorParams of @allocator
+ *
+ * Lets #GstBaseSrc sub-classes to know the memory @allocator
+ * used by the base class and its @params.
+ *
+ * Unref the @allocator after use it.
+ */
+void
+gst_base_src_get_allocator (GstBaseSrc * src,
+    GstAllocator ** allocator, GstAllocationParams * params)
+{
+  g_return_if_fail (GST_IS_BASE_SRC (src));
+
+  if (allocator)
+    *allocator = src->priv->allocator ?
+        gst_object_ref (src->priv->allocator) : NULL;
+
+  if (params)
+    *params = src->priv->params;
 }

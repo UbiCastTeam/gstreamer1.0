@@ -55,7 +55,7 @@ struct              <a class="link" href="GstChildProxy.html#GstChildProxyInterf
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="GstChildProxy.html#gst-child-proxy-get-child-by-index" title="gst_child_proxy_get_child_by_index ()">gst_child_proxy_get_child_by_index</a>  (<em class="parameter"><code><a class="link" href="GstChildProxy.html" title="GstChildProxy"><span class="type">GstChildProxy</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstChildProxy.html#gst-child-proxy-lookup" title="gst_child_proxy_lookup ()">gst_child_proxy_lookup</a>              (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstChildProxy.html#gst-child-proxy-lookup" title="gst_child_proxy_lookup ()">gst_child_proxy_lookup</a>              (<em class="parameter"><code><a class="link" href="GstChildProxy.html" title="GstChildProxy"><span class="type">GstChildProxy</span></a> *object</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> **target</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> **pspec</code></em>);
@@ -265,7 +265,7 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <hr>
 <div class="refsect2">
 <a name="gst-child-proxy-lookup"></a><h3>gst_child_proxy_lookup ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_child_proxy_lookup              (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_child_proxy_lookup              (<em class="parameter"><code><a class="link" href="GstChildProxy.html" title="GstChildProxy"><span class="type">GstChildProxy</span></a> *object</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> **target</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> **pspec</code></em>);</pre>
@@ -279,8 +279,8 @@ MT safe.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
-<td>object to lookup the property in</td>
+<td><p><span class="term"><em class="parameter"><code>childproxy</code></em> :</span></p></td>
+<td>child proxy object to lookup the property in</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -295,7 +295,7 @@ takes the real object to set property on. <span class="annotation">[<acronym tit
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pspec</code></em> :</span></p></td>
 <td>pointer to take the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a>
-describing the property. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+describing the property. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 <tr>

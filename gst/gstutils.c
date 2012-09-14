@@ -3536,7 +3536,8 @@ gst_util_fraction_compare (gint a_n, gint a_d, gint b_n, gint b_d)
   g_return_val_if_reached (0);
 }
 
-/** gst_pad_create_stream_id:
+/**
+ * gst_pad_create_stream_id_printf_valist:
  * @pad: A source #GstPad
  * @parent: Parent #GstElement of @pad
  * @stream_id: (allow-none): The stream-id
@@ -3576,7 +3577,7 @@ gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent,
    * provide a stream-id for every source pad, otherwise
    * all source pads will have the same and are not
    * distinguishable */
-  g_return_val_if_fail (parent->numsrcpads == 1 || stream_id, NULL);
+  g_return_val_if_fail (parent->numsrcpads <= 1 || stream_id, NULL);
 
   /* First try to get the upstream stream-start stream-id from the sinkpad.
    * This will only work for non-source elements */
@@ -3640,7 +3641,8 @@ gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent,
   return new_stream_id;
 }
 
-/** gst_pad_create_stream_id:
+/**
+ * gst_pad_create_stream_id_printf:
  * @pad: A source #GstPad
  * @parent: Parent #GstElement of @pad
  * @stream_id: (allow-none): The stream-id
@@ -3677,7 +3679,8 @@ gst_pad_create_stream_id_printf (GstPad * pad, GstElement * parent,
   return new_stream_id;
 }
 
-/** gst_pad_create_stream_id:
+/**
+ * gst_pad_create_stream_id:
  * @pad: A source #GstPad
  * @parent: Parent #GstElement of @pad
  * @stream_id: (allow-none): The stream-id

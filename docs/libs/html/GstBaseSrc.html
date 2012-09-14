@@ -71,6 +71,10 @@ enum                <a class="link" href="GstBaseSrc.html#GstBaseSrcFlags" title
                                                          <em class="parameter"><code><span class="type">gint64</span> position</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstBaseSrc.html#gst-base-src-set-caps" title="gst_base_src_set_caps ()">gst_base_src_set_caps</a>               (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
                                                          <em class="parameter"><code><a href="../gstreamer-1.0/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="GstBaseSrc.html#gst-base-src-get-allocator" title="gst_base_src_get_allocator ()">gst_base_src_get_allocator</a>          (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstAllocator.html"><span class="type">GstAllocator</span></a> **allocator</code></em>,
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);
+<a href="../gstreamer-1.0/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *     <a class="link" href="GstBaseSrc.html#gst-base-src-get-buffer-pool" title="gst_base_src_get_buffer_pool ()">gst_base_src_get_buffer_pool</a>        (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>);
 #define             <a class="link" href="GstBaseSrc.html#GST-BASE-SRC-PAD:CAPS" title="GST_BASE_SRC_PAD()">GST_BASE_SRC_PAD</a>                    (obj)
 </pre>
 </div>
@@ -236,7 +240,7 @@ should install a pad template in its class_init function, like so:
 <p>
 </p>
 <div class="refsect2">
-<a name="idp6539136"></a><h3>Controlled shutdown of live sources in applications</h3>
+<a name="idp6662640"></a><h3>Controlled shutdown of live sources in applications</h3>
 <p>
 Applications that record from a live source may want to stop recording
 in a controlled way, so that the recording is stopped, but the data
@@ -829,6 +833,63 @@ Set new caps on the basesrc source pad.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the caps could be set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-src-get-allocator"></a><h3>gst_base_src_get_allocator ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_base_src_get_allocator          (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstAllocator.html"><span class="type">GstAllocator</span></a> **allocator</code></em>,
+                                                         <em class="parameter"><code><a href="../gstreamer-1.0/GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
+<p>
+Lets <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> sub-classes to know the memory <em class="parameter"><code>allocator</code></em>
+used by the base class and its <em class="parameter"><code>params</code></em>.
+</p>
+<p>
+Unref the <em class="parameter"><code>allocator</code></em> after use it.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
+<td>a <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
+<td>the <a href="../gstreamer-1.0/GstAllocator.html"><span class="type">GstAllocator</span></a>
+used. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
+<td>the
+<span class="type">GstAllocatorParams</span> of <em class="parameter"><code>allocator</code></em>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-src-get-buffer-pool"></a><h3>gst_base_src_get_buffer_pool ()</h3>
+<pre class="programlisting"><a href="../gstreamer-1.0/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *     gst_base_src_get_buffer_pool        (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
+<td>a <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the instance of the <a href="../gstreamer-1.0/gstreamer-GstBufferPool.html#GstBufferPool"><span class="type">GstBufferPool</span></a> used
+by the src; free it after use it. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
