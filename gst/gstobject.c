@@ -477,9 +477,9 @@ gst_object_dispatch_properties_changed (GObject * object,
  * @object: the #GObject that signalled the notify.
  * @orig: a #GstObject that initiated the notify.
  * @pspec: a #GParamSpec of the property.
- * @excluded_props: (array zero-terminated=1) (element-type gchar*)
- *     (allow-none): a set of user-specified properties to exclude or
- *     NULL to show all changes.
+ * @excluded_props: (array zero-terminated=1) (element-type gchar*) (allow-none):
+ *     a set of user-specified properties to exclude or NULL to show
+ *     all changes.
  *
  * A default deep_notify signal callback for an object. The user data
  * should contain a pointer to an array of strings that should be excluded
@@ -507,7 +507,10 @@ gst_object_default_deep_notify (GObject * object, GstObject * orig,
     g_value_init (&value, pspec->value_type);
     g_object_get_property (G_OBJECT (orig), pspec->name, &value);
 
-    str = gst_value_serialize (&value);
+    if (G_VALUE_HOLDS_STRING (&value))
+      str = g_value_dup_string (&value);
+    else
+      str = gst_value_serialize (&value);
     name = gst_object_get_path_string (orig);
     g_print ("%s: %s = %s\n", name, pspec->name, str);
     g_free (name);
@@ -1177,8 +1180,6 @@ gst_object_add_control_binding (GstObject * object, GstControlBinding * binding)
 
   g_return_val_if_fail (GST_IS_OBJECT (object), FALSE);
   g_return_val_if_fail (GST_IS_CONTROL_BINDING (binding), FALSE);
-  //g_return_val_if_fail (g_type_is_a (binding->pspec->owner_type,
-  //        G_OBJECT_TYPE (object)), FALSE);
 
   GST_OBJECT_LOCK (object);
   if ((old = gst_object_find_control_binding (object, binding->name))) {

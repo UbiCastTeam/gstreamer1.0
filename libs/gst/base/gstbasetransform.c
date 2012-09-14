@@ -70,7 +70,7 @@
  *   <itemizedlist>
  *   <title>Example elements</title>
  *     <listitem>Level</listitem>
- *     <listitem>Videoscale, audioconvert, ffmpegcolorspace, audioresample in
+ *     <listitem>Videoscale, audioconvert, videoconvert, audioresample in
  *     certain modes.</listitem>
  *   </itemizedlist>
  * </listitem>
@@ -102,7 +102,7 @@
  *     <listitem>Volume</listitem>
  *     <listitem>Audioconvert in certain modes (signed/unsigned
  *     conversion)</listitem>
- *     <listitem>ffmpegcolorspace in certain modes (endianness
+ *     <listitem>videoconvert in certain modes (endianness
  *     swapping)</listitem>
  *   </itemizedlist>
  *  </listitem>
@@ -141,7 +141,7 @@
  *   </itemizedlist>
  *   <itemizedlist>
  *   <title>Example elements</title>
- *     <listitem>Videoscale, ffmpegcolorspace, audioconvert when doing
+ *     <listitem>Videoscale, videoconvert, audioconvert when doing
  *     scaling/conversions</listitem>
  *   </itemizedlist>
  * </listitem>
@@ -2064,7 +2064,7 @@ not_negotiated:
   {
     gst_buffer_unref (inbuf);
     *outbuf = NULL;
-    GST_ELEMENT_ERROR (trans, STREAM, FORMAT,
+    GST_ELEMENT_WARNING (trans, STREAM, FORMAT,
         ("not negotiated"), ("not negotiated"));
     return GST_FLOW_NOT_NEGOTIATED;
   }
@@ -2618,4 +2618,49 @@ gst_base_transform_reconfigure_src (GstBaseTransform * trans)
   g_return_if_fail (GST_IS_BASE_TRANSFORM (trans));
 
   gst_pad_mark_reconfigure (trans->srcpad);
+}
+
+/**
+ * gst_base_transform_get_buffer_pool:
+ * @trans: a #GstBaseTransform
+ *
+ * Returns: (transfer full): the instance of the #GstBufferPool used
+ * by @trans; free it after use it
+ */
+GstBufferPool *
+gst_base_transform_get_buffer_pool (GstBaseTransform * trans)
+{
+  g_return_val_if_fail (GST_IS_BASE_TRANSFORM (trans), NULL);
+
+  if (trans->priv->pool)
+    return gst_object_ref (trans->priv->pool);
+
+  return NULL;
+}
+
+/**
+ * gst_base_transform_get_allocator:
+ * @trans: a #GstBaseTransform
+ * @allocator: (out) (allow-none) (transfer full): the #GstAllocator
+ * used
+ * @params: (out) (allow-none) (transfer full): the
+ * #GstAllocatorParams of @allocator
+ *
+ * Lets #GstBaseTransform sub-classes to know the memory @allocator
+ * used by the base class and its @params.
+ *
+ * Unref the @allocator after use it.
+ */
+void
+gst_base_transform_get_allocator (GstBaseTransform * trans,
+    GstAllocator ** allocator, GstAllocationParams * params)
+{
+  g_return_if_fail (GST_IS_BASE_TRANSFORM (trans));
+
+  if (allocator)
+    *allocator = trans->priv->allocator ?
+        gst_object_ref (trans->priv->allocator) : NULL;
+
+  if (params)
+    *params = trans->priv->params;
 }

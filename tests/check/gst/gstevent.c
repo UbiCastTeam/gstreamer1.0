@@ -109,77 +109,6 @@ GST_START_TEST (create_events)
     gst_event_unref (event);
   }
 
-  /* STREAM CONFIG */
-  {
-    GstStreamConfigFlags flags = 0x987654;
-    GstBuffer *buf, *cd, *sh1, *sh2;
-    gpointer dummy;
-
-    event = gst_event_new_stream_config (GST_STREAM_CONFIG_FLAG_NONE);
-
-    gst_event_parse_stream_config (event, &flags);
-    fail_unless_equals_int (flags, GST_STREAM_CONFIG_FLAG_NONE);
-
-    fail_unless_equals_int (gst_event_get_n_stream_config_headers (event), 0);
-
-    /* set buf to something random but guaranteed to be non-NULL */
-    buf = (GstBuffer *) & dummy;
-    gst_event_parse_stream_config_setup_data (event, &buf);
-    fail_unless (buf == NULL);
-
-    buf = (GstBuffer *) & dummy;
-    gst_event_parse_nth_stream_config_header (event, 0, &buf);
-    fail_unless (buf == NULL);
-
-    buf = (GstBuffer *) & dummy;
-    gst_event_parse_nth_stream_config_header (event, 98416, &buf);
-    fail_unless (buf == NULL);
-
-    ASSERT_CRITICAL (gst_event_set_stream_config_setup_data (event, NULL));
-    ASSERT_CRITICAL (gst_event_add_stream_config_header (event, NULL));
-
-    cd = gst_buffer_new_wrapped_full (0, (gpointer) "SetMeUpScottie", 14, 0, 14,
-        NULL, NULL);
-    gst_event_set_stream_config_setup_data (event, cd);
-    gst_buffer_unref (cd);
-
-    buf = (GstBuffer *) & dummy;
-    gst_event_parse_nth_stream_config_header (event, 0, &buf);
-    fail_unless (buf == NULL);
-    gst_event_parse_stream_config_setup_data (event, &buf);
-    fail_unless (buf == cd);
-    fail_unless (GST_IS_BUFFER (buf));
-
-    gst_event_unref (event);
-
-    event = gst_event_new_stream_config (GST_STREAM_CONFIG_FLAG_NONE);
-    fail_unless_equals_int (gst_event_get_n_stream_config_headers (event), 0);
-    sh1 =
-        gst_buffer_new_wrapped_full (0, (gpointer) "Strea", 5, 0, 5, NULL,
-        NULL);
-    gst_event_add_stream_config_header (event, sh1);
-    gst_buffer_unref (sh1);
-    fail_unless_equals_int (gst_event_get_n_stream_config_headers (event), 1);
-    sh2 =
-        gst_buffer_new_wrapped_full (0, (gpointer) "mHeader", 7, 0, 7, NULL,
-        NULL);
-    gst_event_add_stream_config_header (event, sh2);
-    gst_buffer_unref (sh2);
-    fail_unless_equals_int (gst_event_get_n_stream_config_headers (event), 2);
-
-    buf = (GstBuffer *) & dummy;
-    gst_event_parse_nth_stream_config_header (event, 1, &buf);
-    fail_unless (buf == sh2);
-    fail_unless (GST_IS_BUFFER (buf));
-
-    buf = (GstBuffer *) & dummy;
-    gst_event_parse_nth_stream_config_header (event, 0, &buf);
-    fail_unless (buf == sh1);
-    fail_unless (GST_IS_BUFFER (buf));
-
-    gst_event_unref (event);
-  }
-
   /* TAGS */
   {
     GstTagList *taglist = gst_tag_list_new_empty ();
@@ -405,8 +334,8 @@ event_probe (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 
 typedef struct
 {
-  GMutex *lock;
-  GCond *cond;
+  GMutex lock;
+  GCond cond;
   gboolean signaled;
 } SignalData;
 
@@ -414,8 +343,8 @@ static void
 signal_data_init (SignalData * data)
 {
   GST_DEBUG ("init %p", data);
-  data->lock = g_mutex_new ();
-  data->cond = g_cond_new ();
+  g_mutex_init (&data->lock);
+  g_cond_init (&data->cond);
   data->signaled = FALSE;
 }
 
@@ -423,29 +352,29 @@ static void
 signal_data_cleanup (SignalData * data)
 {
   GST_DEBUG ("free %p", data);
-  g_mutex_free (data->lock);
-  g_cond_free (data->cond);
+  g_mutex_clear (&data->lock);
+  g_cond_clear (&data->cond);
 }
 
 static void
 signal_data_signal (SignalData * data)
 {
-  g_mutex_lock (data->lock);
+  g_mutex_lock (&data->lock);
   data->signaled = TRUE;
-  g_cond_broadcast (data->cond);
+  g_cond_broadcast (&data->cond);
   GST_DEBUG ("signaling %p", data);
-  g_mutex_unlock (data->lock);
+  g_mutex_unlock (&data->lock);
 }
 
 static void
 signal_data_wait (SignalData * data)
 {
-  g_mutex_lock (data->lock);
+  g_mutex_lock (&data->lock);
   GST_DEBUG ("signal wait %p", data);
   while (!data->signaled)
-    g_cond_wait (data->cond, data->lock);
+    g_cond_wait (&data->cond, &data->lock);
   GST_DEBUG ("signal wait done %p", data);
-  g_mutex_unlock (data->lock);
+  g_mutex_unlock (&data->lock);
 }
 
 static GstPadProbeReturn

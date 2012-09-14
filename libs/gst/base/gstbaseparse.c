@@ -246,6 +246,7 @@ struct _GstBaseParsePrivate
 
   guint min_frame_size;
   gboolean passthrough;
+  gboolean pts_interpolate;
   gboolean syncable;
   gboolean has_timing_info;
   guint fps_num, fps_den;
@@ -261,8 +262,10 @@ struct _GstBaseParsePrivate
 
   gint64 offset;
   gint64 sync_offset;
-  GstClockTime next_ts;
-  GstClockTime prev_ts;
+  GstClockTime next_pts;
+  GstClockTime next_dts;
+  GstClockTime prev_pts;
+  GstClockTime prev_dts;
   GstClockTime frame_duration;
   gboolean seen_keyframe;
   gboolean is_video;
@@ -272,7 +275,8 @@ struct _GstBaseParsePrivate
   guint64 bytecount;
   guint64 data_bytecount;
   guint64 acc_duration;
-  GstClockTime first_frame_ts;
+  GstClockTime first_frame_pts;
+  GstClockTime first_frame_dts;
   gint64 first_frame_offset;
 
   gboolean post_min_bitrate;
@@ -315,7 +319,8 @@ struct _GstBaseParsePrivate
   GSList *buffers_head;
   GSList *buffers_queued;
   GSList *buffers_send;
-  GstClockTime last_ts;
+  GstClockTime last_pts;
+  GstClockTime last_dts;
   gint64 last_offset;
 
   /* Pending serialized events */
@@ -423,10 +428,10 @@ static void gst_base_parse_loop (GstPad * pad);
 static GstFlowReturn gst_base_parse_parse_frame (GstBaseParse * parse,
     GstBaseParseFrame * frame);
 
-static gboolean gst_base_parse_sink_eventfunc (GstBaseParse * parse,
+static gboolean gst_base_parse_sink_default (GstBaseParse * parse,
     GstEvent * event);
 
-static gboolean gst_base_parse_src_eventfunc (GstBaseParse * parse,
+static gboolean gst_base_parse_src_default (GstBaseParse * parse,
     GstEvent * event);
 
 static void gst_base_parse_drain (GstBaseParse * parse);
@@ -531,8 +536,8 @@ gst_base_parse_class_init (GstBaseParseClass * klass)
 #endif
 
   /* Default handlers */
-  klass->sink_event = gst_base_parse_sink_eventfunc;
-  klass->src_event = gst_base_parse_src_eventfunc;
+  klass->sink_event = gst_base_parse_sink_default;
+  klass->src_event = gst_base_parse_src_default;
   klass->convert = gst_base_parse_convert_default;
 
   GST_DEBUG_CATEGORY_INIT (gst_base_parse_debug, "baseparse", 0,
@@ -712,13 +717,16 @@ gst_base_parse_reset (GstBaseParse * parse)
   parse->priv->framecount = 0;
   parse->priv->bytecount = 0;
   parse->priv->acc_duration = 0;
-  parse->priv->first_frame_ts = GST_CLOCK_TIME_NONE;
+  parse->priv->first_frame_pts = GST_CLOCK_TIME_NONE;
+  parse->priv->first_frame_dts = GST_CLOCK_TIME_NONE;
   parse->priv->first_frame_offset = -1;
   parse->priv->estimated_duration = -1;
   parse->priv->estimated_drift = 0;
-  parse->priv->next_ts = 0;
+  parse->priv->next_pts = 0;
+  parse->priv->next_dts = 0;
   parse->priv->syncable = TRUE;
   parse->priv->passthrough = FALSE;
+  parse->priv->pts_interpolate = TRUE;
   parse->priv->has_timing_info = FALSE;
   parse->priv->post_min_bitrate = TRUE;
   parse->priv->post_avg_bitrate = TRUE;
@@ -738,7 +746,8 @@ gst_base_parse_reset (GstBaseParse * parse)
   parse->priv->exact_position = TRUE;
   parse->priv->seen_keyframe = FALSE;
 
-  parse->priv->last_ts = GST_CLOCK_TIME_NONE;
+  parse->priv->last_dts = GST_CLOCK_TIME_NONE;
+  parse->priv->last_pts = GST_CLOCK_TIME_NONE;
   parse->priv->last_offset = 0;
 
   g_list_foreach (parse->priv->pending_events, (GFunc) gst_mini_object_unref,
@@ -779,9 +788,13 @@ gst_base_parse_parse_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
 {
   GstBuffer *buffer = frame->buffer;
 
-  if (!GST_BUFFER_TIMESTAMP_IS_VALID (buffer) &&
-      GST_CLOCK_TIME_IS_VALID (parse->priv->next_ts)) {
-    GST_BUFFER_TIMESTAMP (buffer) = parse->priv->next_ts;
+  if (!GST_BUFFER_PTS_IS_VALID (buffer) &&
+      GST_CLOCK_TIME_IS_VALID (parse->priv->next_pts)) {
+    GST_BUFFER_PTS (buffer) = parse->priv->next_pts;
+  }
+  if (!GST_BUFFER_DTS_IS_VALID (buffer) &&
+      GST_CLOCK_TIME_IS_VALID (parse->priv->next_dts)) {
+    GST_BUFFER_DTS (buffer) = parse->priv->next_dts;
   }
   if (!GST_BUFFER_DURATION_IS_VALID (buffer) &&
       GST_CLOCK_TIME_IS_VALID (parse->priv->frame_duration)) {
@@ -855,53 +868,17 @@ gst_base_parse_convert (GstBaseParse * parse,
 static gboolean
 gst_base_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
-  GstBaseParse *parse;
-  GstBaseParseClass *bclass;
+  GstBaseParse *parse = GST_BASE_PARSE (parent);
+  GstBaseParseClass *bclass = GST_BASE_PARSE_GET_CLASS (parse);
   gboolean ret;
 
-  parse = GST_BASE_PARSE (parent);
-  bclass = GST_BASE_PARSE_GET_CLASS (parse);
-
-  GST_DEBUG_OBJECT (parse, "handling event %d, %s", GST_EVENT_TYPE (event),
-      GST_EVENT_TYPE_NAME (event));
-
-  /* Cache all serialized events except EOS, SEGMENT and FLUSH_STOP if we have a
-   * pending segment */
-  if (parse->priv->pending_segment && GST_EVENT_IS_SERIALIZED (event)
-      && GST_EVENT_TYPE (event) != GST_EVENT_EOS
-      && GST_EVENT_TYPE (event) != GST_EVENT_SEGMENT
-      && GST_EVENT_TYPE (event) != GST_EVENT_FLUSH_START
-      && GST_EVENT_TYPE (event) != GST_EVENT_FLUSH_STOP
-      && GST_EVENT_TYPE (event) != GST_EVENT_CAPS) {
-
-    if (GST_EVENT_TYPE (event) == GST_EVENT_TAG)
-      /* See if any bitrate tags were posted */
-      gst_base_parse_handle_tag (parse, event);
-
-    parse->priv->pending_events =
-        g_list_append (parse->priv->pending_events, event);
-    ret = TRUE;
-  } else {
-    if (GST_EVENT_TYPE (event) == GST_EVENT_EOS &&
-        parse->priv->framecount < MIN_FRAMES_TO_POST_BITRATE)
-      /* We've not posted bitrate tags yet - do so now */
-      gst_base_parse_post_bitrates (parse, TRUE, TRUE, TRUE);
-
-    if (bclass->sink_event)
-      ret = bclass->sink_event (parse, event);
-    else {
-      gst_event_unref (event);
-      ret = FALSE;
-    }
-  }
-
-  GST_DEBUG_OBJECT (parse, "event handled");
+  ret = bclass->sink_event (parse, event);
 
   return ret;
 }
 
 
-/* gst_base_parse_sink_eventfunc:
+/* gst_base_parse_sink_default:
  * @parse: #GstBaseParse.
  * @event: #GstEvent to be handled.
  *
@@ -913,17 +890,19 @@ gst_base_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
  * Returns: %TRUE if the event was handled and not need forwarding.
  */
 static gboolean
-gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
+gst_base_parse_sink_default (GstBaseParse * parse, GstEvent * event)
 {
-  gboolean ret;
+  GstBaseParseClass *klass = GST_BASE_PARSE_GET_CLASS (parse);
+  gboolean ret = FALSE;
+  gboolean forward_immediate = FALSE;
+
+  GST_DEBUG_OBJECT (parse, "handling event %d, %s", GST_EVENT_TYPE (event),
+      GST_EVENT_TYPE_NAME (event));
 
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_CAPS:
     {
       GstCaps *caps;
-      GstBaseParseClass *klass;
-
-      klass = GST_BASE_PARSE_GET_CLASS (parse);
 
       gst_event_parse_caps (event, &caps);
       GST_DEBUG_OBJECT (parse, "caps: %" GST_PTR_FORMAT, caps);
@@ -935,20 +914,14 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
 
       /* will send our own caps downstream */
       gst_event_unref (event);
+      event = NULL;
       break;
     }
     case GST_EVENT_SEGMENT:
     {
       const GstSegment *in_segment;
       GstSegment out_segment;
-      gint64 offset = 0, next_ts;
-
-#if 0
-      gdouble rate, applied_rate;
-      GstFormat format;
-      gint64 start, stop, pos, next_ts;
-      gboolean update;
-#endif
+      gint64 offset = 0, next_pts;
 
       gst_event_parse_segment (event, &in_segment);
       gst_segment_init (&out_segment, GST_FORMAT_TIME);
@@ -984,7 +957,7 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
           out_segment.stop = seek->segment.stop;
           out_segment.time = seek->segment.start;
 
-          next_ts = seek->start_ts;
+          next_pts = seek->start_ts;
           parse->priv->exact_position = seek->accurate;
           g_free (seek);
         } else {
@@ -992,11 +965,11 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
           /* as these are only estimates, stop is kept open-ended to avoid
            * premature cutting */
           gst_base_parse_convert (parse, GST_FORMAT_BYTES, in_segment->start,
-              GST_FORMAT_TIME, (gint64 *) & next_ts);
+              GST_FORMAT_TIME, (gint64 *) & next_pts);
 
-          out_segment.start = next_ts;
+          out_segment.start = next_pts;
           out_segment.stop = GST_CLOCK_TIME_NONE;
-          out_segment.time = next_ts;
+          out_segment.time = next_pts;
 
           parse->priv->exact_position = (in_segment->start == 0);
         }
@@ -1019,12 +992,12 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
 
         event = gst_event_new_segment (&out_segment);
 
-        next_ts = 0;
+        next_pts = 0;
       } else {
         /* not considered BYTE seekable if it is talking to us in TIME,
          * whatever else it might claim */
         parse->priv->upstream_seekable = FALSE;
-        next_ts = in_segment->start;
+        next_pts = in_segment->start;
       }
 
       memcpy (&parse->segment, &out_segment, sizeof (GstSegment));
@@ -1037,8 +1010,6 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
       /* save the segment for later, right before we push a new buffer so that
        * the caps are fixed and the next linked element can receive
        * the segment. */
-      parse->priv->pending_events =
-          g_list_append (parse->priv->pending_events, event);
       parse->priv->pending_segment = TRUE;
       ret = TRUE;
 
@@ -1052,29 +1023,30 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
 
       parse->priv->offset = offset;
       parse->priv->sync_offset = offset;
-      parse->priv->next_ts = next_ts;
-      parse->priv->last_ts = GST_CLOCK_TIME_NONE;
+      parse->priv->next_pts = next_pts;
+      parse->priv->last_pts = GST_CLOCK_TIME_NONE;
+      parse->priv->last_dts = GST_CLOCK_TIME_NONE;
       parse->priv->discont = TRUE;
       parse->priv->seen_keyframe = FALSE;
       break;
     }
 
     case GST_EVENT_FLUSH_START:
+      GST_OBJECT_LOCK (parse);
       parse->priv->flushing = TRUE;
-      ret = gst_pad_push_event (parse->srcpad, event);
-      /* Wait for _chain() to exit by taking the srcpad STREAM_LOCK */
-      GST_PAD_STREAM_LOCK (parse->srcpad);
-      GST_PAD_STREAM_UNLOCK (parse->srcpad);
+      GST_OBJECT_UNLOCK (parse);
       break;
 
     case GST_EVENT_FLUSH_STOP:
-      ret = gst_pad_push_event (parse->srcpad, event);
       gst_adapter_clear (parse->priv->adapter);
       gst_base_parse_clear_queues (parse);
       parse->priv->flushing = FALSE;
       parse->priv->discont = TRUE;
-      parse->priv->last_ts = GST_CLOCK_TIME_NONE;
+      parse->priv->last_pts = GST_CLOCK_TIME_NONE;
+      parse->priv->last_dts = GST_CLOCK_TIME_NONE;
       parse->priv->new_frame = TRUE;
+
+      forward_immediate = TRUE;
       break;
 
     case GST_EVENT_EOS:
@@ -1099,15 +1071,79 @@ gst_base_parse_sink_eventfunc (GstBaseParse * parse, GstEvent * event)
         parse->priv->pending_events = NULL;
         parse->priv->pending_segment = FALSE;
       }
-      ret = gst_pad_push_event (parse->srcpad, event);
+      if (parse->priv->framecount < MIN_FRAMES_TO_POST_BITRATE) {
+        /* We've not posted bitrate tags yet - do so now */
+        gst_base_parse_post_bitrates (parse, TRUE, TRUE, TRUE);
+      }
+      forward_immediate = TRUE;
       break;
+    case GST_EVENT_CUSTOM_DOWNSTREAM:{
+      /* FIXME: Code duplicated from libgstvideo because core can't depend on -base */
+#ifndef GST_VIDEO_EVENT_STILL_STATE_NAME
+#define GST_VIDEO_EVENT_STILL_STATE_NAME "GstEventStillFrame"
+#endif
 
+      const GstStructure *s;
+      gboolean ev_still_state;
+
+      s = gst_event_get_structure (event);
+      if (s != NULL &&
+          gst_structure_has_name (s, GST_VIDEO_EVENT_STILL_STATE_NAME) &&
+          gst_structure_get_boolean (s, "still-state", &ev_still_state)) {
+        if (ev_still_state) {
+          GST_DEBUG_OBJECT (parse, "draining current data for still-frame");
+          if (parse->segment.rate > 0.0)
+            gst_base_parse_drain (parse);
+          else
+            gst_base_parse_finish_fragment (parse, TRUE);
+        }
+        forward_immediate = TRUE;
+      }
+      break;
+    }
+    case GST_EVENT_GAP:
+    {
+      GST_DEBUG_OBJECT (parse, "draining current data due to gap event");
+      if (parse->segment.rate > 0.0)
+        gst_base_parse_drain (parse);
+      else
+        gst_base_parse_finish_fragment (parse, TRUE);
+      forward_immediate = TRUE;
+      break;
+    }
+    case GST_EVENT_TAG:
+      /* See if any bitrate tags were posted */
+      gst_base_parse_handle_tag (parse, event);
+      break;
     default:
-      ret =
-          gst_pad_event_default (parse->sinkpad, GST_OBJECT_CAST (parse),
-          event);
       break;
   }
+
+  /* Forward non-serialized events and EOS/FLUSH_STOP immediately.
+   * For EOS this is required because no buffer or serialized event
+   * will come after EOS and nothing could trigger another
+   * _finish_frame() call.   *
+   * If the subclass handles sending of EOS manually it can return
+   * _DROPPED from ::finish() and all other subclasses should have
+   * decoded/flushed all remaining data before this
+   *
+   * For FLUSH_STOP this is required because it is expected
+   * to be forwarded immediately and no buffers are queued anyway.
+   */
+  if (event) {
+    if (!GST_EVENT_IS_SERIALIZED (event) || forward_immediate) {
+      ret = gst_pad_push_event (parse->srcpad, event);
+    } else {
+      // GST_VIDEO_DECODER_STREAM_LOCK (decoder);
+      parse->priv->pending_events =
+          g_list_prepend (parse->priv->pending_events, event);
+      // GST_VIDEO_DECODER_STREAM_UNLOCK (decoder);
+      ret = TRUE;
+    }
+  }
+
+  GST_DEBUG_OBJECT (parse, "event handled");
+
   return ret;
 }
 
@@ -1203,7 +1239,7 @@ gst_base_parse_is_seekable (GstBaseParse * parse)
   return parse->priv->syncable;
 }
 
-/* gst_base_parse_src_eventfunc:
+/* gst_base_parse_src_default:
  * @parse: #GstBaseParse.
  * @event: #GstEvent that was received.
  *
@@ -1212,7 +1248,7 @@ gst_base_parse_is_seekable (GstBaseParse * parse)
  * Returns: TRUE if the event was handled and can be dropped.
  */
 static gboolean
-gst_base_parse_src_eventfunc (GstBaseParse * parse, GstEvent * event)
+gst_base_parse_src_default (GstBaseParse * parse, GstEvent * event)
 {
   gboolean res = FALSE;
 
@@ -1356,8 +1392,7 @@ gst_base_parse_update_duration (GstBaseParse * baseparse)
         if (parse->priv->estimated_drift > GST_SECOND ||
             parse->priv->estimated_drift < -GST_SECOND) {
           gst_element_post_message (GST_ELEMENT (parse),
-              gst_message_new_duration (GST_OBJECT (parse),
-                  GST_FORMAT_TIME, dest_value));
+              gst_message_new_duration_changed (GST_OBJECT (parse)));
           parse->priv->estimated_drift = 0;
         }
         parse->priv->estimated_duration = dest_value;
@@ -1778,7 +1813,7 @@ gst_base_parse_handle_buffer (GstBaseParse * parse, GstBuffer * buffer,
 
   /* track skipping */
   if (*skip > 0) {
-    GstClockTime timestamp;
+    GstClockTime pts, dts;
     GstBuffer *outbuf;
 
     GST_LOG_OBJECT (parse, "finding sync, skipping %d bytes", *skip);
@@ -1786,10 +1821,12 @@ gst_base_parse_handle_buffer (GstBaseParse * parse, GstBuffer * buffer,
       /* reverse playback, and no frames found yet, so we are skipping
        * the leading part of a fragment, which may form the tail of
        * fragment coming later, hopefully subclass skips efficiently ... */
-      timestamp = gst_adapter_prev_timestamp (parse->priv->adapter, NULL);
+      pts = gst_adapter_prev_pts (parse->priv->adapter, NULL);
+      dts = gst_adapter_prev_dts (parse->priv->adapter, NULL);
       outbuf = gst_adapter_take_buffer (parse->priv->adapter, *skip);
       outbuf = gst_buffer_make_writable (outbuf);
-      GST_BUFFER_TIMESTAMP (outbuf) = timestamp;
+      GST_BUFFER_PTS (outbuf) = pts;
+      GST_BUFFER_DTS (outbuf) = dts;
       parse->priv->buffers_head =
           g_slist_prepend (parse->priv->buffers_head, outbuf);
       outbuf = NULL;
@@ -1843,13 +1880,14 @@ gst_base_parse_handle_and_push_frame (GstBaseParse * parse,
   /* check if subclass/format can provide ts.
    * If so, that allows and enables extra seek and duration determining options */
   if (G_UNLIKELY (parse->priv->first_frame_offset < 0)) {
-    if (GST_BUFFER_TIMESTAMP_IS_VALID (buffer) && parse->priv->has_timing_info
+    if (GST_BUFFER_PTS_IS_VALID (buffer) && parse->priv->has_timing_info
         && parse->priv->pad_mode == GST_PAD_MODE_PULL) {
       parse->priv->first_frame_offset = offset;
-      parse->priv->first_frame_ts = GST_BUFFER_TIMESTAMP (buffer);
+      parse->priv->first_frame_pts = GST_BUFFER_PTS (buffer);
+      parse->priv->first_frame_dts = GST_BUFFER_DTS (buffer);
       GST_DEBUG_OBJECT (parse, "subclass provided ts %" GST_TIME_FORMAT
           " for first frame at offset %" G_GINT64_FORMAT,
-          GST_TIME_ARGS (parse->priv->first_frame_ts),
+          GST_TIME_ARGS (parse->priv->first_frame_pts),
           parse->priv->first_frame_offset);
       if (!GST_CLOCK_TIME_IS_VALID (parse->priv->duration)) {
         gint64 off;
@@ -1869,21 +1907,28 @@ gst_base_parse_handle_and_push_frame (GstBaseParse * parse,
   /* again use default handler to add missing metadata;
    * we may have new information on frame properties */
   gst_base_parse_parse_frame (parse, frame);
-  if (GST_BUFFER_TIMESTAMP_IS_VALID (buffer) &&
-      GST_BUFFER_DURATION_IS_VALID (buffer)) {
-    parse->priv->next_ts =
-        GST_BUFFER_TIMESTAMP (buffer) + GST_BUFFER_DURATION (buffer);
+
+  parse->priv->next_pts = GST_CLOCK_TIME_NONE;
+  if (GST_BUFFER_DTS_IS_VALID (buffer) && GST_BUFFER_DURATION_IS_VALID (buffer)) {
+    parse->priv->next_dts =
+        GST_BUFFER_DTS (buffer) + GST_BUFFER_DURATION (buffer);
+    if (parse->priv->pts_interpolate && GST_BUFFER_PTS_IS_VALID (buffer)) {
+      GstClockTime next_pts =
+          GST_BUFFER_PTS (buffer) + GST_BUFFER_DURATION (buffer);
+      if (next_pts >= parse->priv->next_dts)
+        parse->priv->next_pts = next_pts;
+    }
   } else {
     /* we lost track, do not produce bogus time next time around
      * (probably means parser subclass has given up on parsing as well) */
     GST_DEBUG_OBJECT (parse, "no next fallback timestamp");
-    parse->priv->next_ts = GST_CLOCK_TIME_NONE;
+    parse->priv->next_dts = GST_CLOCK_TIME_NONE;
   }
 
   if (parse->priv->upstream_seekable && parse->priv->exact_position &&
-      GST_BUFFER_TIMESTAMP_IS_VALID (buffer))
+      GST_BUFFER_PTS_IS_VALID (buffer))
     gst_base_parse_add_index_entry (parse, offset,
-        GST_BUFFER_TIMESTAMP (buffer),
+        GST_BUFFER_PTS (buffer),
         !GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DELTA_UNIT), FALSE);
 
   /* All OK, push queued frames if there are any */
@@ -1966,13 +2011,14 @@ gst_base_parse_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
 
   /* Push pending events, including NEWSEGMENT events */
   if (G_UNLIKELY (parse->priv->pending_events)) {
+    GList *r = g_list_reverse (parse->priv->pending_events);
     GList *l;
 
-    for (l = parse->priv->pending_events; l != NULL; l = l->next) {
+    parse->priv->pending_events = NULL;
+    for (l = r; l != NULL; l = l->next) {
       gst_pad_push_event (parse->srcpad, GST_EVENT (l->data));
     }
-    g_list_free (parse->priv->pending_events);
-    parse->priv->pending_events = NULL;
+    g_list_free (r);
     parse->priv->pending_segment = FALSE;
   }
 
@@ -2290,8 +2336,10 @@ gst_base_parse_start_fragment (GstBaseParse * parse)
 
   /* invalidate so no fall-back timestamping is performed;
    * ok if taken from subclass or upstream */
-  parse->priv->next_ts = GST_CLOCK_TIME_NONE;
-  parse->priv->prev_ts = GST_CLOCK_TIME_NONE;
+  parse->priv->next_pts = GST_CLOCK_TIME_NONE;
+  parse->priv->prev_pts = GST_CLOCK_TIME_NONE;
+  parse->priv->next_dts = GST_CLOCK_TIME_NONE;
+  parse->priv->prev_dts = GST_CLOCK_TIME_NONE;
   /* prevent it hanging around stop all the time */
   parse->segment.position = GST_CLOCK_TIME_NONE;
   /* mark next run */
@@ -2350,29 +2398,40 @@ gst_base_parse_finish_fragment (GstBaseParse * parse, gboolean prev_head)
 
   /* add metadata (if needed to queued buffers */
   GST_LOG_OBJECT (parse, "last timestamp: %" GST_TIME_FORMAT,
-      GST_TIME_ARGS (parse->priv->last_ts));
+      GST_TIME_ARGS (parse->priv->last_pts));
   while (parse->priv->buffers_queued) {
     buf = GST_BUFFER_CAST (parse->priv->buffers_queued->data);
 
     /* no touching if upstream or parsing provided time */
-    if (GST_BUFFER_TIMESTAMP_IS_VALID (buf)) {
+    if (GST_BUFFER_PTS_IS_VALID (buf)) {
       GST_LOG_OBJECT (parse, "buffer has time %" GST_TIME_FORMAT,
-          GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
-    } else if (GST_CLOCK_TIME_IS_VALID (parse->priv->last_ts) &&
-        GST_BUFFER_DURATION_IS_VALID (buf)) {
-      if (G_LIKELY (GST_BUFFER_DURATION (buf) <= parse->priv->last_ts))
-        parse->priv->last_ts -= GST_BUFFER_DURATION (buf);
-      else
-        parse->priv->last_ts = 0;
-      GST_BUFFER_TIMESTAMP (buf) = parse->priv->last_ts;
-      GST_LOG_OBJECT (parse, "applied time %" GST_TIME_FORMAT,
-          GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
+          GST_TIME_ARGS (GST_BUFFER_PTS (buf)));
+    } else if (GST_BUFFER_DURATION_IS_VALID (buf)) {
+      if (GST_CLOCK_TIME_IS_VALID (parse->priv->last_pts)) {
+        if (G_LIKELY (GST_BUFFER_DURATION (buf) <= parse->priv->last_pts))
+          parse->priv->last_pts -= GST_BUFFER_DURATION (buf);
+        else
+          parse->priv->last_pts = 0;
+        GST_BUFFER_PTS (buf) = parse->priv->last_pts;
+        GST_LOG_OBJECT (parse, "applied time %" GST_TIME_FORMAT,
+            GST_TIME_ARGS (GST_BUFFER_PTS (buf)));
+      }
+      if (GST_CLOCK_TIME_IS_VALID (parse->priv->last_dts)) {
+        if (G_LIKELY (GST_BUFFER_DURATION (buf) <= parse->priv->last_dts))
+          parse->priv->last_dts -= GST_BUFFER_DURATION (buf);
+        else
+          parse->priv->last_dts = 0;
+        GST_BUFFER_DTS (buf) = parse->priv->last_dts;
+        GST_LOG_OBJECT (parse, "applied dts %" GST_TIME_FORMAT,
+            GST_TIME_ARGS (GST_BUFFER_DTS (buf)));
+      }
     } else {
       /* no idea, very bad */
       GST_WARNING_OBJECT (parse, "could not determine time for buffer");
     }
 
-    parse->priv->last_ts = GST_BUFFER_TIMESTAMP (buf);
+    parse->priv->last_pts = GST_BUFFER_PTS (buf);
+    parse->priv->last_dts = GST_BUFFER_DTS (buf);
 
     /* reverse order for ascending sending */
     /* send downstream at keyframe not preceded by a keyframe
@@ -2440,7 +2499,7 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
   gint skip = -1;
   const guint8 *data;
   guint min_size, av;
-  GstClockTime timestamp;
+  GstClockTime pts, dts;
 
   parse = GST_BASE_PARSE (parent);
   bclass = GST_BASE_PARSE_GET_CLASS (parse);
@@ -2571,10 +2630,11 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 
     /* move along with upstream timestamp (if any),
      * but interpolate in between */
-    timestamp = gst_adapter_prev_timestamp (parse->priv->adapter, NULL);
-    if (GST_CLOCK_TIME_IS_VALID (timestamp) &&
-        (parse->priv->prev_ts != timestamp)) {
-      parse->priv->prev_ts = parse->priv->next_ts = timestamp;
+    pts = gst_adapter_prev_pts (parse->priv->adapter, NULL);
+    dts = gst_adapter_prev_dts (parse->priv->adapter, NULL);
+    if (GST_CLOCK_TIME_IS_VALID (pts) && (parse->priv->prev_pts != pts)) {
+      parse->priv->prev_pts = parse->priv->next_pts = pts;
+      parse->priv->prev_dts = parse->priv->next_dts = dts;
     }
 
     /* always pass all available data */
@@ -2692,10 +2752,11 @@ gst_base_parse_handle_previous_fragment (GstBaseParse * parse)
   GstFlowReturn ret;
 
   GST_DEBUG_OBJECT (parse, "fragment ended; last_ts = %" GST_TIME_FORMAT
-      ", last_offset = %" G_GINT64_FORMAT, GST_TIME_ARGS (parse->priv->last_ts),
-      parse->priv->last_offset);
+      ", last_offset = %" G_GINT64_FORMAT,
+      GST_TIME_ARGS (parse->priv->last_pts), parse->priv->last_offset);
 
-  if (!parse->priv->last_offset || parse->priv->last_ts <= parse->segment.start) {
+  if (!parse->priv->last_offset
+      || parse->priv->last_pts <= parse->segment.start) {
     GST_DEBUG_OBJECT (parse, "past start of segment %" GST_TIME_FORMAT,
         GST_TIME_ARGS (parse->segment.start));
     ret = GST_FLOW_EOS;
@@ -2704,8 +2765,8 @@ gst_base_parse_handle_previous_fragment (GstBaseParse * parse)
 
   /* last fragment started at last_offset / last_ts;
    * seek back 10s capped at 1MB */
-  if (parse->priv->last_ts >= 10 * GST_SECOND)
-    ts = parse->priv->last_ts - 10 * GST_SECOND;
+  if (parse->priv->last_pts >= 10 * GST_SECOND)
+    ts = parse->priv->last_pts - 10 * GST_SECOND;
   /* if we are exact now, we will be more so going backwards */
   if (parse->priv->exact_position) {
     offset = gst_base_parse_find_offset (parse, ts, TRUE, NULL);
@@ -2948,13 +3009,14 @@ pause:
     if (push_eos) {
       /* Push pending events, including NEWSEGMENT events */
       if (G_UNLIKELY (parse->priv->pending_events)) {
+        GList *r = g_list_reverse (parse->priv->pending_events);
         GList *l;
 
-        for (l = parse->priv->pending_events; l != NULL; l = l->next) {
+        parse->priv->pending_events = NULL;
+        for (l = r; l != NULL; l = l->next) {
           gst_pad_push_event (parse->srcpad, GST_EVENT (l->data));
         }
-        g_list_free (parse->priv->pending_events);
-        parse->priv->pending_events = NULL;
+        g_list_free (r);
         parse->priv->pending_segment = FALSE;
       }
 
@@ -2967,6 +3029,7 @@ pause:
 static gboolean
 gst_base_parse_sink_activate (GstPad * sinkpad, GstObject * parent)
 {
+  GstSchedulingFlags sched_flags;
   GstBaseParse *parse;
   GstQuery *query;
   gboolean pull_mode;
@@ -2981,7 +3044,11 @@ gst_base_parse_sink_activate (GstPad * sinkpad, GstObject * parent)
     goto baseparse_push;
   }
 
-  pull_mode = gst_query_has_scheduling_mode (query, GST_PAD_MODE_PULL);
+  gst_query_parse_scheduling (query, &sched_flags, NULL, NULL, NULL);
+
+  pull_mode = gst_query_has_scheduling_mode (query, GST_PAD_MODE_PULL)
+      && ((sched_flags & GST_SCHEDULING_FLAG_SEEKABLE) != 0);
+
   gst_query_unref (query);
 
   if (!pull_mode)
@@ -3044,7 +3111,8 @@ gst_base_parse_sink_activate_mode (GstPad * pad, GstObject * parent,
 
   parse = GST_BASE_PARSE (parent);
 
-  GST_DEBUG_OBJECT (parse, "sink activate mode %d, %d", mode, active);
+  GST_DEBUG_OBJECT (parse, "sink %sactivate in %s mode",
+      (active) ? "" : "de", gst_pad_mode_get_name (mode));
 
   if (!gst_base_parse_activate (parse, active))
     goto activate_failed;
@@ -3053,7 +3121,7 @@ gst_base_parse_sink_activate_mode (GstPad * pad, GstObject * parent,
     case GST_PAD_MODE_PULL:
       if (active) {
         parse->priv->pending_events =
-            g_list_append (parse->priv->pending_events,
+            g_list_prepend (parse->priv->pending_events,
             gst_event_new_segment (&parse->segment));
         parse->priv->pending_segment = TRUE;
         result = TRUE;
@@ -3107,7 +3175,7 @@ gst_base_parse_set_duration (GstBaseParse * parse,
   if (duration != parse->priv->duration) {
     GstMessage *m;
 
-    m = gst_message_new_duration (GST_OBJECT (parse), fmt, duration);
+    m = gst_message_new_duration_changed (GST_OBJECT (parse));
     gst_element_post_message (GST_ELEMENT (parse), m);
 
     /* TODO: what about duration tag? */
@@ -3268,6 +3336,25 @@ gst_base_parse_set_passthrough (GstBaseParse * parse, gboolean passthrough)
 {
   parse->priv->passthrough = passthrough;
   GST_INFO_OBJECT (parse, "passthrough: %s", (passthrough) ? "yes" : "no");
+}
+
+/**
+ * gst_base_parse_set_pts_interpolation:
+ * @parse: a #GstBaseParse
+ * @passthrough: %TRUE if parser should interpolate PTS timestamps
+ *
+ * By default, the base class will guess PTS timestamps using a simple
+ * interpolation (previous timestamp + duration), which is incorrect for
+ * data streams with reordering, where PTS can go backward. Sub-classes
+ * implementing such formats should disable PTS interpolation.
+ */
+void
+gst_base_parse_set_pts_interpolation (GstBaseParse * parse,
+    gboolean pts_interpolate)
+{
+  parse->priv->pts_interpolate = pts_interpolate;
+  GST_INFO_OBJECT (parse, "PTS interpolation: %s",
+      (pts_interpolate) ? "yes" : "no");
 }
 
 /**
@@ -3581,7 +3668,7 @@ gst_base_parse_locate_time (GstBaseParse * parse, GstClockTime * _time,
 
   /* need initial positions; start and end */
   lpos = parse->priv->first_frame_offset;
-  ltime = parse->priv->first_frame_ts;
+  ltime = parse->priv->first_frame_pts;
   if (!gst_base_parse_get_duration (parse, GST_FORMAT_TIME, &htime)) {
     GST_DEBUG_OBJECT (parse, "Unknown time duration, cannot bisect");
     return GST_FLOW_ERROR;
@@ -3747,6 +3834,13 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
   GstSegment seeksegment = { 0, };
   GstClockTime start_ts;
 
+  /* try upstream first, unless we're driving the streaming thread ourselves */
+  if (parse->priv->pad_mode != GST_PAD_MODE_PULL) {
+    res = gst_pad_push_event (parse->sinkpad, gst_event_ref (event));
+    if (res)
+      goto done;
+  }
+
   gst_event_parse_seek (event, &rate, &format, &flags,
       &start_type, &start, &stop_type, &stop);
 
@@ -3755,16 +3849,29 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
       GST_TIME_FORMAT, gst_format_get_name (format), rate,
       start_type, GST_TIME_ARGS (start), stop_type, GST_TIME_ARGS (stop));
 
-  /* no negative rates in push mode */
+  /* we can only handle TIME, so check if subclass can convert
+   * to TIME format if it's some other format (such as DEFAULT) */
+  if (format != GST_FORMAT_TIME) {
+    if (!gst_base_parse_convert (parse, format, start, GST_FORMAT_TIME, &start)
+        || !gst_base_parse_convert (parse, format, stop, GST_FORMAT_TIME,
+            &stop))
+      goto no_convert_to_time;
+
+    GST_INFO_OBJECT (parse, "converted %s format to start time "
+        "%" GST_TIME_FORMAT " and stop time %" GST_TIME_FORMAT,
+        gst_format_get_name (format), GST_TIME_ARGS (start),
+        GST_TIME_ARGS (stop));
+
+    format = GST_FORMAT_TIME;
+  }
+
+  /* no negative rates in push mode (unless upstream takes care of that, but
+   * we've already tried upstream and it didn't handle the seek request) */
   if (rate < 0.0 && parse->priv->pad_mode == GST_PAD_MODE_PUSH)
     goto negative_rate;
 
-  /* For any format other than TIME, see if upstream handles
-   * it directly or fail. For TIME, try upstream, but do it ourselves if
-   * it fails upstream */
-  res = gst_pad_push_event (parse->sinkpad, event);
-  if (format != GST_FORMAT_TIME || res)
-    goto done;
+  if (rate < 0.0 && parse->priv->pad_mode == GST_PAD_MODE_PULL)
+    goto negative_rate_pull_mode;
 
   if (start_type != GST_SEEK_TYPE_SET ||
       (stop_type != GST_SEEK_TYPE_SET && stop_type != GST_SEEK_TYPE_NONE))
@@ -3864,7 +3971,7 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
     /* This will be sent later in _loop() */
     parse->priv->pending_segment = TRUE;
     parse->priv->pending_events =
-        g_list_append (parse->priv->pending_events,
+        g_list_prepend (parse->priv->pending_events,
         gst_event_new_segment (&parse->segment));
 
     GST_DEBUG_OBJECT (parse, "Created newseg format %d, "
@@ -3900,8 +4007,10 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
       parse->priv->last_offset = seekpos;
       parse->priv->seen_keyframe = FALSE;
       parse->priv->discont = TRUE;
-      parse->priv->next_ts = start_ts;
-      parse->priv->last_ts = GST_CLOCK_TIME_NONE;
+      parse->priv->next_pts = start_ts;
+      parse->priv->next_dts = GST_CLOCK_TIME_NONE;
+      parse->priv->last_dts = GST_CLOCK_TIME_NONE;
+      parse->priv->last_pts = GST_CLOCK_TIME_NONE;
       parse->priv->sync_offset = seekpos;
       parse->priv->exact_position = accurate;
     }
@@ -3955,9 +4064,16 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
   }
 
 done:
+  gst_event_unref (event);
   return res;
 
   /* ERRORS */
+negative_rate_pull_mode:
+  {
+    GST_FIXME_OBJECT (parse, "negative playback in pull mode needs fixing");
+    res = FALSE;
+    goto done;
+  }
 negative_rate:
   {
     GST_DEBUG_OBJECT (parse, "negative playback rates delegated upstream.");
@@ -3967,6 +4083,13 @@ negative_rate:
 wrong_type:
   {
     GST_DEBUG_OBJECT (parse, "unsupported seek type.");
+    res = FALSE;
+    goto done;
+  }
+no_convert_to_time:
+  {
+    GST_DEBUG_OBJECT (parse, "seek in %s format was requested, but subclass "
+        "couldn't convert that into TIME format", gst_format_get_name (format));
     res = FALSE;
     goto done;
   }

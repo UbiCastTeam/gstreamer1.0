@@ -47,8 +47,6 @@ G_BEGIN_DECLS
 #define gst_pad_get_caps_reffed(p)             gst_pad_get_caps(p)
 #define gst_pad_peer_get_caps_reffed(p)        gst_pad_peer_get_caps(p)
 
-//#define gst_buffer_create_sub(b,o,s)           gst_buffer_copy_region(b,GST_BUFFER_COPY_ALL,o,s)
-
 #define gst_buffer_new_and_alloc(s)            gst_buffer_new_allocate(NULL, s, NULL)
 
 #define GST_BUFFER_TIMESTAMP          GST_BUFFER_PTS
@@ -79,6 +77,19 @@ gst_pad_set_caps (GstPad * pad, GstCaps * caps)
 
 
 #ifndef GST_DISABLE_DEPRECATED
+
+#define GST_MESSAGE_DURATION GST_MESSAGE_DURATION_CHANGED
+#define gst_message_new_duration(src,fmt,dur) \
+    gst_message_new_duration_changed(src)
+#define gst_message_parse_duration(msg,fmt,dur) \
+G_STMT_START { \
+  GstFormat *p_fmt = fmt; \
+  gint64 *p_dur = dur; \
+  if (p_fmt) \
+    *p_fmt = GST_FORMAT_TIME; \
+  if (p_dur) \
+    *p_dur = GST_CLOCK_TIME_NONE; \
+} G_STMT_END
 
 #endif /* not GST_DISABLE_DEPRECATED */
 

@@ -83,13 +83,13 @@ branch would stall the other branches.
 <p>
 </p>
 <div class="refsect2">
-<a name="idp8955360"></a><h3>Example launch line</h3>
+<a name="idp9279296"></a><h3>Example launch line</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin2 <span class="gtkdoc opt">!</span> tee name<span class="gtkdoc opt">=</span>t <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> autoaudiosink t<span class="gtkdoc opt">. !</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> goom <span class="gtkdoc opt">!</span> ffmpegcolorspace <span class="gtkdoc opt">!</span> autovideosink</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin2 <span class="gtkdoc opt">!</span> tee name<span class="gtkdoc opt">=</span>t <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> autoaudiosink t<span class="gtkdoc opt">. !</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> goom <span class="gtkdoc opt">!</span> videoconvert <span class="gtkdoc opt">!</span> autovideosink</pre></td>
       </tr>
     </tbody>
   </table>
@@ -102,7 +102,7 @@ element.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="idp8958080"></a><h3>Element Information</h3>
+<a name="idp9282016"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
@@ -125,7 +125,7 @@ element.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp5756432"></a><h3>Element Pads</h3>
+<a name="idp10008752"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>

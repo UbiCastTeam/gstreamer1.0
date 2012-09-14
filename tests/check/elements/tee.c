@@ -242,20 +242,20 @@ app_thread_func (gpointer data)
   BufferAllocHarness *h = data;
 
   /* Signal that we are about to call release_request_pad(). */
-  g_mutex_lock (check_mutex);
+  g_mutex_lock (&check_mutex);
   h->app_thread_prepped = TRUE;
-  g_cond_signal (check_cond);
-  g_mutex_unlock (check_mutex);
+  g_cond_signal (&check_cond);
+  g_mutex_unlock (&check_mutex);
 
   /* Simulate that the app releases the pad while the streaming thread is in
    * buffer_alloc below. */
   gst_element_release_request_pad (h->tee, h->tee_srcpad);
 
   /* Signal the bufferalloc function below if it's still waiting. */
-  g_mutex_lock (check_mutex);
+  g_mutex_lock (&check_mutex);
   h->bufferalloc_blocked = FALSE;
-  g_cond_signal (check_cond);
-  g_mutex_unlock (check_mutex);
+  g_cond_signal (&check_cond);
+  g_mutex_unlock (&check_mutex);
 
   return NULL;
 }
@@ -278,25 +278,25 @@ final_sinkpad_bufferalloc (GstPad * pad, guint64 offset, guint size,
     h->app_thread_prepped = FALSE;
     h->bufferalloc_blocked = TRUE;
 
-    h->app_thread = g_thread_create (app_thread_func, h, TRUE, NULL);
+    h->app_thread = g_thread_try_new ("gst-check", app_thread_func, h, NULL);
     fail_if (h->app_thread == NULL);
 
     /* Wait for the app thread to get ready to call release_request_pad(). */
-    g_mutex_lock (check_mutex);
+    g_mutex_lock (&check_mutex);
     while (!h->app_thread_prepped)
-      g_cond_wait (check_cond, check_mutex);
-    g_mutex_unlock (check_mutex);
+      g_cond_wait (&check_cond, &check_mutex);
+    g_mutex_unlock (&check_mutex);
 
     /* Now wait for it to do that within a second, to avoid deadlocking
      * in the event of future changes to the locking semantics. */
-    g_mutex_lock (check_mutex);
+    g_mutex_lock (&check_mutex);
     g_get_current_time (&deadline);
     deadline.tv_sec += 1;
     while (h->bufferalloc_blocked) {
-      if (!g_cond_timed_wait (check_cond, check_mutex, &deadline))
+      if (!g_cond_timed_wait (&check_cond, &check_mutex, &deadline))
         break;
     }
-    g_mutex_unlock (check_mutex);
+    g_mutex_unlock (&check_mutex);
   }
 
   *buf = gst_buffer_new_and_alloc (size);

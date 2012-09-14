@@ -57,8 +57,6 @@
 
 #include "gstinputselector.h"
 
-#include "gst/glib-compat-private.h"
-
 #define DEBUG_CACHED_BUFFERS 0
 
 GST_DEBUG_CATEGORY_STATIC (input_selector_debug);
@@ -649,6 +647,8 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
     active_selpad = GST_SELECTOR_PAD_CAST (active_sinkpad);
 
     if (seg->format != GST_FORMAT_TIME) {
+      GST_DEBUG_OBJECT (selpad,
+          "Not waiting because we don't have a TIME segment");
       GST_INPUT_SELECTOR_UNLOCK (sel);
       return FALSE;
     }
@@ -668,6 +668,8 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
         gst_segment_to_running_time (seg, GST_FORMAT_TIME, running_time);
     /* If this is outside the segment don't sync */
     if (running_time == -1) {
+      GST_DEBUG_OBJECT (selpad,
+          "Not waiting because buffer is outside segment");
       GST_INPUT_SELECTOR_UNLOCK (sel);
       return FALSE;
     }
@@ -694,6 +696,8 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
        * we can't do any syncing at all */
       if (active_seg->format != GST_FORMAT_TIME
           && active_seg->format != GST_FORMAT_UNDEFINED) {
+        GST_DEBUG_OBJECT (selpad,
+            "Not waiting because active segment isn't in TIME format");
         GST_INPUT_SELECTOR_UNLOCK (sel);
         return FALSE;
       }
@@ -705,7 +709,6 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
     }
 
     if (selpad != active_selpad && !sel->flushing && !selpad->flushing &&
-        (sel->cache_buffers || active_selpad->pushed) &&
         (sel->blocked || cur_running_time == -1
             || running_time >= cur_running_time)) {
       if (!sel->blocked) {
@@ -713,7 +716,8 @@ gst_input_selector_wait_running_time (GstInputSelector * sel,
             "Waiting for active streams to advance. %" GST_TIME_FORMAT " >= %"
             GST_TIME_FORMAT, GST_TIME_ARGS (running_time),
             GST_TIME_ARGS (cur_running_time));
-      }
+      } else
+        GST_DEBUG_OBJECT (selpad, "Waiting for selector to unblock");
 
       GST_INPUT_SELECTOR_WAIT (sel);
     } else {
@@ -739,7 +743,7 @@ forward_sticky_events (GstPad * sinkpad, GstEvent ** event, gpointer user_data)
     gst_event_set_seqnum (e, GST_SELECTOR_PAD_CAST (sinkpad)->segment_seqnum);
 
     gst_pad_push_event (sel->srcpad, e);
-  } else {
+  } else if (GST_EVENT_TYPE (*event) != GST_EVENT_STREAM_START) {
     gst_pad_push_event (sel->srcpad, gst_event_ref (*event));
   }
 
@@ -800,6 +804,8 @@ gst_input_selector_cleanup_old_cached_buffers (GstInputSelector * sel,
         cur_running_time -= base_time;
       else
         cur_running_time = 0;
+
+      gst_object_unref (clock);
     }
   } else {
     GstPad *active_sinkpad;

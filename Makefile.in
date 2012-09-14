@@ -66,8 +66,8 @@ target_triplet = @target@
 @BUILD_TOOLS_TRUE@am__append_1 = tools
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/gst-element-check.m4.in $(srcdir)/gstreamer.spec.in \
-	$(srcdir)/stamp.h.in $(top_srcdir)/common/coverage/lcov.mak \
+	$(srcdir)/gstreamer.spec.in $(srcdir)/stamp.h.in \
+	$(top_srcdir)/common/coverage/lcov.mak \
 	$(top_srcdir)/common/cruft.mak $(top_srcdir)/common/po.mak \
 	$(top_srcdir)/common/release.mak \
 	$(top_srcdir)/common/win32.mak $(top_srcdir)/configure \
@@ -117,7 +117,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = stamp.h gst-element-check.m4 gstreamer.spec
+CONFIG_CLEAN_FILES = stamp.h gstreamer.spec
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
@@ -521,7 +521,7 @@ win32crlf = $(shell find $(top_srcdir)/win32 -name '*.dsw' -o -name '*.dsp')
 # include before EXTRA_DIST for win32 assignment
 EXTRA_DIST = \
 	gstreamer.spec gstreamer.spec.in \
-	gst-element-check.m4.in \
+	gst-element-check.m4 \
 	configure.ac autogen.sh depcomp \
 	MAINTAINERS ABOUT-NLS RELEASE gstreamer.doap \
 	scripts/gst-uninstalled \
@@ -634,8 +634,6 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 distclean-hdr:
 	-rm -f config.h stamp-h1
 stamp.h: $(top_builddir)/config.status $(srcdir)/stamp.h.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-gst-element-check.m4: $(top_builddir)/config.status $(srcdir)/gst-element-check.m4.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 gstreamer.spec: $(top_builddir)/config.status $(srcdir)/gstreamer.spec.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -1337,7 +1335,7 @@ lcov:
 check: $(CHECK_EXPORTS) check-enum-gettypes
 
 gst-element-check-@GST_API_VERSION@.m4: gst-element-check.m4
-	$(AM_V_GEN)cp gst-element-check.m4 gst-element-check-@GST_API_VERSION@.m4
+	$(AM_V_GEN)cp $(srcdir)/gst-element-check.m4 gst-element-check-@GST_API_VERSION@.m4
 
 check-cruft:
 	@cruft_files=""; cruft_dirs=""; \

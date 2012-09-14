@@ -377,7 +377,7 @@ static gboolean gst_base_sink_pad_activate_mode (GstPad * pad,
     GstObject * parent, GstPadMode mode, gboolean active);
 static gboolean gst_base_sink_default_event (GstBaseSink * basesink,
     GstEvent * event);
-static GstFlowReturn gst_base_sink_default_wait_eos (GstBaseSink * basesink,
+static GstFlowReturn gst_base_sink_default_wait_event (GstBaseSink * basesink,
     GstEvent * event);
 static gboolean gst_base_sink_event (GstPad * pad, GstObject * parent,
     GstEvent * event);
@@ -523,7 +523,7 @@ gst_base_sink_class_init (GstBaseSinkClass * klass)
   klass->get_times = GST_DEBUG_FUNCPTR (gst_base_sink_default_get_times);
   klass->query = GST_DEBUG_FUNCPTR (gst_base_sink_default_query);
   klass->event = GST_DEBUG_FUNCPTR (gst_base_sink_default_event);
-  klass->wait_eos = GST_DEBUG_FUNCPTR (gst_base_sink_default_wait_eos);
+  klass->wait_event = GST_DEBUG_FUNCPTR (gst_base_sink_default_wait_event);
 
   /* Registering debug symbols for function pointers */
   GST_DEBUG_REGISTER_FUNCPTR (gst_base_sink_fixate);
@@ -1758,6 +1758,10 @@ again:
         GstClockTime timestamp, duration;
         gst_event_parse_gap (event, &timestamp, &duration);
 
+        GST_DEBUG_OBJECT (basesink, "Got Gap time %" GST_TIME_FORMAT
+            " duration %" GST_TIME_FORMAT,
+            GST_TIME_ARGS (timestamp), GST_TIME_ARGS (duration));
+
         if (GST_CLOCK_TIME_IS_VALID (timestamp)) {
           start = timestamp;
           if (GST_CLOCK_TIME_IS_VALID (duration))
@@ -2792,13 +2796,29 @@ gst_base_sink_flush_stop (GstBaseSink * basesink, GstPad * pad,
 }
 
 static GstFlowReturn
-gst_base_sink_default_wait_eos (GstBaseSink * basesink, GstEvent * event)
+gst_base_sink_default_wait_event (GstBaseSink * basesink, GstEvent * event)
 {
   GstFlowReturn ret;
   gboolean late, step_end;
 
   ret = gst_base_sink_do_sync (basesink, GST_MINI_OBJECT_CAST (event),
       &late, &step_end);
+
+  return ret;
+}
+
+static GstFlowReturn
+gst_base_sink_wait_event (GstBaseSink * basesink, GstEvent * event)
+{
+  GstFlowReturn ret;
+  GstBaseSinkClass *bclass;
+
+  bclass = GST_BASE_SINK_GET_CLASS (basesink);
+
+  if (G_LIKELY (bclass->wait_event))
+    ret = bclass->wait_event (basesink, event);
+  else
+    ret = GST_FLOW_NOT_SUPPORTED;
 
   return ret;
 }
@@ -2838,14 +2858,10 @@ gst_base_sink_default_event (GstBaseSink * basesink, GstEvent * event)
       basesink->priv->received_eos = TRUE;
 
       /* wait for EOS */
-      if (G_LIKELY (bclass->wait_eos)) {
-        GstFlowReturn ret;
-
-        ret = bclass->wait_eos (basesink, event);
-        if (G_UNLIKELY (ret != GST_FLOW_OK)) {
-          result = FALSE;
-          goto done;
-        }
+      if (G_UNLIKELY (gst_base_sink_wait_event (basesink,
+                  event) != GST_FLOW_OK)) {
+        result = FALSE;
+        goto done;
       }
 
       /* the EOS event is completely handled so we mark
@@ -2911,6 +2927,13 @@ gst_base_sink_default_event (GstBaseSink * basesink, GstEvent * event)
       basesink->have_newsegment = TRUE;
       GST_OBJECT_UNLOCK (basesink);
       break;
+    case GST_EVENT_GAP:
+    {
+      if (G_UNLIKELY (gst_base_sink_wait_event (basesink,
+                  event) != GST_FLOW_OK))
+        result = FALSE;
+      break;
+    }
     case GST_EVENT_TAG:
     {
       GstTagList *taglist;

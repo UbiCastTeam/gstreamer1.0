@@ -104,6 +104,7 @@ _priv_gst_mini_object_initialize (void)
 /**
  * gst_mini_object_init: (skip)
  * @mini_object: a #GstMiniObject
+ * @flags: initial #GstMiniObjectFlags
  * @type: the #GType of the mini-object to create
  * @copy_func: the copy function, or NULL
  * @dispose_func: the dispose function, or NULL
@@ -287,7 +288,7 @@ gst_mini_object_is_writable (const GstMiniObject * mini_object)
   g_return_val_if_fail (mini_object != NULL, FALSE);
 
   if (GST_MINI_OBJECT_IS_LOCKABLE (mini_object)) {
-    result = (g_atomic_int_get (&mini_object->lockstate) & SHARE_MASK) < 2;
+    result = !IS_SHARED (g_atomic_int_get (&mini_object->lockstate));
   } else {
     result = (GST_MINI_OBJECT_REFCOUNT_VALUE (mini_object) == 1);
   }

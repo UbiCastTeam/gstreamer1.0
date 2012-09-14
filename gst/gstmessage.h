@@ -71,8 +71,8 @@ typedef struct _GstMessage GstMessage;
  * @GST_MESSAGE_SEGMENT_DONE: pipeline completed playback of a segment. This
  * message is forwarded to the application after all elements that posted
  * @GST_MESSAGE_SEGMENT_START posted a GST_MESSAGE_SEGMENT_DONE message.
- * @GST_MESSAGE_DURATION: The duration of a pipeline changed. The application
- * can get the new duration with a duration query.
+ * @GST_MESSAGE_DURATION_CHANGED: The duration of a pipeline changed. The
+ * application can get the new duration with a duration query.
  * @GST_MESSAGE_ASYNC_START: Posted by elements when they start an ASYNC
  * #GstStateChange. This message is not forwarded to the application but is used
  * internally.
@@ -89,7 +89,14 @@ typedef struct _GstMessage GstMessage;
  * strategy for Quality of Service reasons.
  * @GST_MESSAGE_PROGRESS: A progress message.
  * @GST_MESSAGE_TOC: A new table of contents (TOC) was found or previously found TOC
- * was updated. Since:
+ * was updated.
+ * @GST_MESSAGE_RESET_TIME: Message to request resetting the pipeline's
+ *     running time from the pipeline. This is an internal message which
+ *     applications will likely never receive.
+ * @GST_MESSAGE_STREAM_START: Message indicating start of a new stream. Useful
+ *     e.g. when using playbin in gapless playback mode, to get notified when
+ *     the next title actually starts playing (which will be some time after
+ *     the URI for the next title has been set).
  * @GST_MESSAGE_ANY: mask for all of the above messages.
  *
  * The different message types that are available.
@@ -118,7 +125,7 @@ typedef enum
   GST_MESSAGE_ELEMENT           = (1 << 15),
   GST_MESSAGE_SEGMENT_START     = (1 << 16),
   GST_MESSAGE_SEGMENT_DONE      = (1 << 17),
-  GST_MESSAGE_DURATION          = (1 << 18),
+  GST_MESSAGE_DURATION_CHANGED  = (1 << 18),
   GST_MESSAGE_LATENCY           = (1 << 19),
   GST_MESSAGE_ASYNC_START       = (1 << 20),
   GST_MESSAGE_ASYNC_DONE        = (1 << 21),
@@ -481,10 +488,8 @@ GstMessage *    gst_message_new_segment_done    (GstObject * src, GstFormat form
 void            gst_message_parse_segment_done  (GstMessage *message, GstFormat *format,
                                                  gint64 *position);
 
-/* DURATION */
-GstMessage *    gst_message_new_duration        (GstObject * src, GstFormat format, gint64 duration) G_GNUC_MALLOC;
-void            gst_message_parse_duration      (GstMessage *message, GstFormat *format,
-                                                 gint64 *duration);
+/* DURATION_CHANGED */
+GstMessage *    gst_message_new_duration_changed (GstObject * src) G_GNUC_MALLOC;
 
 /* LATENCY */
 GstMessage *    gst_message_new_latency         (GstObject * src) G_GNUC_MALLOC;

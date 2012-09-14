@@ -110,10 +110,9 @@ playlist.
 <p>
 Using TOC is very easy. Firstly, create <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> structure which represents root
 contents of the source. You can also attach TOC-specific tags to it. Then fill
-it with <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> entries by appending them to <span class="type">GstToc.entries</span> <span class="type">GstTocEntry.subentries</span>
-lists. You should use GST_TOC_ENTRY_TYPE_CHAPTER for generic TOC entry and
-GST_TOC_ENTRY_TYPE_EDITION for the entries which are considered to be alternatives
-(like DVD angles, Matroska editions and so on).
+it with <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> entries by appending them to the <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> using
+<a class="link" href="gstreamer-GstToc.html#gst-toc-append-entry" title="gst_toc_append_entry ()"><code class="function">gst_toc_append_entry()</code></a>, and appending subentries to a <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> using
+<a class="link" href="gstreamer-GstToc.html#gst-toc-entry-append-sub-entry" title="gst_toc_entry_append_sub_entry ()"><code class="function">gst_toc_entry_append_sub_entry()</code></a>.
 </p>
 <p>
 Note that root level of the TOC can contain only either editions or chapters. You
@@ -122,19 +121,23 @@ should not mix them together at the same level. Otherwise you will get serializa
  stop values.
 </p>
 <p>
-Please, use <span class="type">GstToc.info</span> and <span class="type">GstTocEntry.info</span> fields in that way: create a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>,
-put all info related to your element there and put this structure into the info field under
-the name of your element. Some fields in the info structure can be used for internal purposes,
-so you should use it in the way described above to not to overwrite already existent fields.
-</p>
-<p>
 Use <a class="link" href="gstreamer-GstEvent.html#gst-event-new-toc" title="gst_event_new_toc ()"><code class="function">gst_event_new_toc()</code></a> to create a new TOC <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>, and <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-toc" title="gst_event_parse_toc ()"><code class="function">gst_event_parse_toc()</code></a> to
 parse received TOC event. Use <a class="link" href="gstreamer-GstEvent.html#gst-event-new-toc-select" title="gst_event_new_toc_select ()"><code class="function">gst_event_new_toc_select()</code></a> to create a new TOC select <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>,
 and <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-toc-select" title="gst_event_parse_toc_select ()"><code class="function">gst_event_parse_toc_select()</code></a> to parse received TOC select event. The same rule for
 the <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>: <a class="link" href="gstreamer-GstMessage.html#gst-message-new-toc" title="gst_message_new_toc ()"><code class="function">gst_message_new_toc()</code></a> to create new TOC <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>, and
-<a class="link" href="gstreamer-GstMessage.html#gst-message-parse-toc" title="gst_message_parse_toc ()"><code class="function">gst_message_parse_toc()</code></a> to parse received TOC message. Also you can create a new TOC query
-with <code class="function">gst_query_new_toc()</code>, set it with <code class="function">gst_query_set_toc()</code> and parse it with
-<code class="function">gst_query_parse_toc()</code>.
+<a class="link" href="gstreamer-GstMessage.html#gst-message-parse-toc" title="gst_message_parse_toc ()"><code class="function">gst_message_parse_toc()</code></a> to parse received TOC message.
+</p>
+<p>
+TOCs can have global scope or current scope. Global scope TOCs contain
+all entries that can possibly be selected using a toc select event, and
+are what an application is usually interested in. TOCs with current scope
+only contain the parts of the TOC relevant to the currently selected/playing
+stream; the current scope TOC is used by downstream elements such as muxers
+to write correct TOC entries when transcoding files, for example. When
+playing a DVD, the global TOC would contain a hierarchy of all titles,
+chapters and angles, for example, while the current TOC would only contain
+the chapters for the currently playing title if playback of a specific
+title was requested.
 </p>
 </div>
 <div class="refsect1">
@@ -295,7 +298,7 @@ Copy <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span cl
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>newly allocated <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> in case of success, NULL otherwise;
-free it when done with <code class="function">gst_toc_free()</code>.</td>
+free it when done with <a class="link" href="gstreamer-GstToc.html#gst-toc-unref" title="gst_toc_unref()"><code class="function">gst_toc_unref()</code></a>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -573,7 +576,7 @@ Gets the parent <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstTo
 <a name="gst-toc-entry-get-uid"></a><h3>gst_toc_entry_get_uid ()</h3>
 <pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       gst_toc_entry_get_uid               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);</pre>
 <p>
-Gets the sub-entries of <em class="parameter"><code>entry</code></em>.
+Gets the UID of <em class="parameter"><code>entry</code></em>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -584,7 +587,7 @@ Gets the sub-entries of <em class="parameter"><code>entry</code></em>.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> of <em class="parameter"><code>entry</code></em>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.TocEntry]</span>
+<td>The UID of <em class="parameter"><code>entry</code></em>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -616,6 +619,23 @@ Gets the parent <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="
 <div class="refsect2">
 <a name="gst-toc-entry-get-sub-entries"></a><h3>gst_toc_entry_get_sub_entries ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             gst_toc_entry_get_sub_entries       (<em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);</pre>
+<p>
+Gets the sub-entries of <em class="parameter"><code>entry</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
+<td>A <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>A <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> of <em class="parameter"><code>entry</code></em>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.TocEntry]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">

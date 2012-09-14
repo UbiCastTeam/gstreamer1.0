@@ -70,7 +70,7 @@ enum                <a class="link" href="gstreamer-GstMemory.html#GstMapFlags" 
                                                          <em class="parameter"><code><span class="type">gsize</span> *offset</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMemory.html#gst-memory-init" title="gst_memory_init ()">gst_memory_init</a>                     (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> align</code></em>,
@@ -121,18 +121,18 @@ also has an offset and size property that specifies the valid range of memory
 in the allocated region.
 </p>
 <p>
-Memory is usually created by allocators with a <code class="function">gst_allocator_alloc()</code>
+Memory is usually created by allocators with a <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>
 method call. When NULL is used as the allocator, the default allocator will
 be used.
 </p>
 <p>
-New allocators can be registered with <code class="function">gst_allocator_register()</code>.
+New allocators can be registered with <a class="link" href="GstAllocator.html#gst-allocator-register" title="gst_allocator_register ()"><code class="function">gst_allocator_register()</code></a>.
 Allocators are identified by name and can be retrieved with
-<code class="function">gst_allocator_find()</code>. <code class="function">gst_allocator_set_default()</code> can be used to change the
+<a class="link" href="GstAllocator.html#gst-allocator-find" title="gst_allocator_find ()"><code class="function">gst_allocator_find()</code></a>. <a class="link" href="GstAllocator.html#gst-allocator-set-default" title="gst_allocator_set_default ()"><code class="function">gst_allocator_set_default()</code></a> can be used to change the
 default allocator.
 </p>
 <p>
-New memory can be created with <code class="function">gst_memory_new_wrapped()</code> that wraps the memory
+New memory can be created with <a class="link" href="GstAllocator.html#gst-memory-new-wrapped" title="gst_memory_new_wrapped ()"><code class="function">gst_memory_new_wrapped()</code></a> that wraps the memory
 allocated elsewhere.
 </p>
 <p>
@@ -361,8 +361,8 @@ as the first member of their structure.
 <td>parent structure</td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">GstAllocator</span> *<em class="structfield"><code><a name="GstMemory.allocator"></a>allocator</code></em>;</span></p></td>
-<td>pointer to the <span class="type">GstAllocator</span>
+<td><p><span class="term"><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *<em class="structfield"><code><a name="GstMemory.allocator"></a>allocator</code></em>;</span></p></td>
+<td>pointer to the <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>
 </td>
 </tr>
 <tr>
@@ -651,7 +651,7 @@ Check if <em class="parameter"><code>mem1</code></em> and <em class="parameter">
 <a name="gst-memory-init"></a><h3>gst_memory_init ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_memory_init                     (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
-                                                         <em class="parameter"><code><span class="type">GstAllocator</span> *allocator</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *parent</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> align</code></em>,
@@ -675,7 +675,7 @@ will call <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-ini
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
-<td>the <span class="type">GstAllocator</span>
+<td>the <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>
 </td>
 </tr>
 <tr>

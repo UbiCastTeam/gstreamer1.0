@@ -157,24 +157,6 @@ enum                <a class="link" href="gstreamer-GstEvent.html#GstSeekFlags" 
 <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-caps" title="gst_event_new_caps ()">gst_event_new_caps</a>                  (<em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-caps" title="gst_event_parse_caps ()">gst_event_parse_caps</a>                (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> **caps</code></em>);
-enum                <a class="link" href="gstreamer-GstEvent.html#GstStreamConfigFlags" title="enum GstStreamConfigFlags">GstStreamConfigFlags</a>;
-<a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-stream-config" title="gst_event_new_stream_config ()">gst_event_new_stream_config</a>         (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstStreamConfigFlags" title="enum GstStreamConfigFlags"><span class="type">GstStreamConfigFlags</span></a> flags</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-stream-config" title="gst_event_parse_stream_config ()">gst_event_parse_stream_config</a>       (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstStreamConfigFlags" title="enum GstStreamConfigFlags"><span class="type">GstStreamConfigFlags</span></a> *flags</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-set-stream-config-setup-data" title="gst_event_set_stream_config_setup_data ()">gst_event_set_stream_config_setup_data</a>
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-stream-config-setup-data" title="gst_event_parse_stream_config_setup_data ()">gst_event_parse_stream_config_setup_data</a>
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buf</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-add-stream-config-header" title="gst_event_add_stream_config_header ()">gst_event_add_stream_config_header</a>  (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="gstreamer-GstEvent.html#gst-event-get-n-stream-config-headers" title="gst_event_get_n_stream_config_headers ()">gst_event_get_n_stream_config_headers</a>
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-nth-stream-config-header" title="gst_event_parse_nth_stream_config_header ()">gst_event_parse_nth_stream_config_header</a>
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buf</code></em>);
 <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-toc" title="gst_event_new_toc ()">gst_event_new_toc</a>                   (<em class="parameter"><code><a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> *toc</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> updated</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-toc" title="gst_event_parse_toc ()">gst_event_parse_toc</a>                 (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
@@ -224,7 +206,7 @@ To do that <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" tit
 the needed parameters to specify seeking time and mode.
 </p>
 <div class="example">
-<a name="idp22888576"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
+<a name="idp22480288"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -400,7 +382,6 @@ the given flags
   /* downstream serialized events */
   GST_EVENT_STREAM_START          = GST_EVENT_MAKE_TYPE (40, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_CAPS                  = GST_EVENT_MAKE_TYPE (50, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
-  GST_EVENT_STREAM_CONFIG         = GST_EVENT_MAKE_TYPE (60, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_SEGMENT               = GST_EVENT_MAKE_TYPE (70, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_TAG                   = GST_EVENT_MAKE_TYPE (80, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
   GST_EVENT_BUFFERSIZE            = GST_EVENT_MAKE_TYPE (90, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
@@ -471,12 +452,6 @@ Specific custom events are distinguished by the name of the structure.
 <td><p><a name="GST-EVENT-CAPS"></a><span class="term"><code class="literal">GST_EVENT_CAPS</code></span></p></td>
 <td>
 <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> event. Notify the pad of a new media type.
-</td>
-</tr>
-<tr>
-<td><p><a name="GST-EVENT-STREAM-CONFIG:CAPS"></a><span class="term"><code class="literal">GST_EVENT_STREAM_CONFIG</code></span></p></td>
-<td>(unimplemented) contains configuration information for the stream,
-                for example stream-headers and codec-data.
 </td>
 </tr>
 <tr>
@@ -1388,7 +1363,8 @@ stream-id, / as separator and a unique stream-id for this specific
 stream. A new stream-id should only be created for a stream if the upstream
 stream is split into (potentially) multiple new streams, e.g. in a demuxer,
 but not for every single element in the pipeline.
-<code class="function">gst_util_create_stream_id()</code> can be used to create a stream-id.
+<a class="link" href="GstPad.html#gst-pad-create-stream-id" title="gst_pad_create_stream_id ()"><code class="function">gst_pad_create_stream_id()</code></a> or <a class="link" href="GstPad.html#gst-pad-create-stream-id-printf" title="gst_pad_create_stream_id_printf ()"><code class="function">gst_pad_create_stream_id_printf()</code></a> can be
+used to create a stream-id.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1411,7 +1387,10 @@ but not for every single element in the pipeline.
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_event_parse_stream_start        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **stream_id</code></em>);</pre>
 <p>
-Parse a stream-id <em class="parameter"><code>event</code></em> and store the result in the given <em class="parameter"><code>stream_id</code></em> location.
+Parse a stream-id <em class="parameter"><code>event</code></em> and store the result in the given <em class="parameter"><code>stream_id</code></em>
+location. The string stored in <em class="parameter"><code>stream_id</code></em> must not be modified and will
+remain valid only until <em class="parameter"><code>event</code></em> gets freed. Make a copy if you want to
+modify it or store it for later use.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2446,225 +2425,6 @@ valid.
 <td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
 <td>A pointer to the caps. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GstStreamConfigFlags"></a><h3>enum GstStreamConfigFlags</h3>
-<pre class="programlisting">typedef enum {
-  GST_STREAM_CONFIG_FLAG_NONE = 0
-} GstStreamConfigFlags;
-</pre>
-<p>
-GstStreamConfigFlags are flags passed with the stream config event, see
-<a class="link" href="gstreamer-GstEvent.html#gst-event-new-stream-config" title="gst_event_new_stream_config ()"><code class="function">gst_event_new_stream_config()</code></a>.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><a name="GST-STREAM-CONFIG-FLAG-NONE:CAPS"></a><span class="term"><code class="literal">GST_STREAM_CONFIG_FLAG_NONE</code></span></p></td>
-<td>no flags set
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-new-stream-config"></a><h3>gst_event_new_stream_config ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          gst_event_new_stream_config         (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstStreamConfigFlags" title="enum GstStreamConfigFlags"><span class="type">GstStreamConfigFlags</span></a> flags</code></em>);</pre>
-<p>
-Create a new STREAM CONFIG event. The stream config event travels
-downstream synchronized with the buffer flow and contains stream
-configuration information for the stream, such as stream-headers
-or setup-data. It is optional and should be sent after the CAPS
-event.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
-<td>the stream config flags</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the new STREAM CONFIG event. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-parse-stream-config"></a><h3>gst_event_parse_stream_config ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_parse_stream_config       (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstStreamConfigFlags" title="enum GstStreamConfigFlags"><span class="type">GstStreamConfigFlags</span></a> *flags</code></em>);</pre>
-<p>
-Get the stream config flags from <em class="parameter"><code>event</code></em>.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>The event to parse</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
-<td>a pointer to a variable to store the stream config flags. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-set-stream-config-setup-data"></a><h3>gst_event_set_stream_config_setup_data ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_set_stream_config_setup_data
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);</pre>
-<p>
-Set setup data on the stream info event to signal out of bound setup data
-to downstream elements. Unlike stream headers, setup data contains data
-that is required to interpret the data stream, but is not valid as-is
-inside the data stream and thus can't just be prepended to or inserted
-into the data stream.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>a stream config event</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> with setup data</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-parse-stream-config-setup-data"></a><h3>gst_event_parse_stream_config_setup_data ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_event_parse_stream_config_setup_data
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buf</code></em>);</pre>
-<p>
-Extracts the setup data buffer from the stream info event. Will store
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in <em class="parameter"><code>buf</code></em> if the event contains no setup data. The buffer returned
-will remain valid as long as <em class="parameter"><code>event</code></em> remains valid. The caller should
-acquire a reference to to <em class="parameter"><code>buf</code></em> if needed.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>a stream config event</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
-<td>location where to store the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> with setup data. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE if <em class="parameter"><code>event</code></em> contained setup data and <em class="parameter"><code>buf</code></em> has been set,
-otherwise FALSE.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-add-stream-config-header"></a><h3>gst_event_add_stream_config_header ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_add_stream_config_header  (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);</pre>
-<p>
-Adds a stream header to the stream info event to signal stream headers to
-to downstream elements such as multifilesink, tcpserversink etc. Stream
-headers can be and should usually be prepended to the data stream at any
-point in the stream (which requires a streamable format), e.g. to a new
-client connecting, or when starting a new file segment. stream header
-buffers will all be used together in the order they were added to the
-stream config event. Stream headers are sent as buffers at the beginning
-of the data flow in addition to the stream config event. Elements that
-care about stream headers need to make sure that they don't insert or
-interpret these header buffers twice if they interpret them.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>a stream config event</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
-<td>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> with stream header data</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-get-n-stream-config-headers"></a><h3>gst_event_get_n_stream_config_headers ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               gst_event_get_n_stream_config_headers
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
-<p>
-Extract the number of stream header buffers.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>a stream config event</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the number of stream header buffers attached to the stream info
-<em class="parameter"><code>event</code></em>.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-parse-nth-stream-config-header"></a><h3>gst_event_parse_nth_stream_config_header ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_event_parse_nth_stream_config_header
-                                                        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buf</code></em>);</pre>
-<p>
-Retrieves the n-th stream header buffer attached to the stream config
-event and stores it in <em class="parameter"><code>buf</code></em>. Will store <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in <em class="parameter"><code>buf</code></em> if there is no such
-stream header.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>a stream config event</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>number of the stream header to retrieve</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
-<td>location where to store the n-th stream
-header <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>TRUE if <em class="parameter"><code>event</code></em> contained a stream header at <em class="parameter"><code>index</code></em> and <em class="parameter"><code>buf</code></em> has
-been set, otherwise FALSE.</td>
 </tr>
 </tbody>
 </table></div>
