@@ -25,7 +25,7 @@ cb_feature_filter (GstPluginFeature *feature,
     return FALSE;
 
   /* only parsers, demuxers and decoders */
-  klass = gst_element_factory_get_klass (GST_ELEMENT_FACTORY (feature));
+  klass = gst_element_factory_get_metadata (GST_ELEMENT_FACTORY (feature), GST_ELEMENT_METADATA_KLASS);
   if (g_strrstr (klass, "Demux") == NULL &&
       g_strrstr (klass, "Decoder") == NULL &&
       g_strrstr (klass, "Parse") == NULL)
