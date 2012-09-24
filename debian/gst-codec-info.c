@@ -27,11 +27,11 @@
 #include <string.h>
 
 static const gchar *virtual_packages[] = {
-  "gstreamer0.11-audiosink",
-  "gstreamer0.11-audiosource",
-  "gstreamer0.11-videosink",
-  "gstreamer0.11-videosource",
-  "gstreamer0.11-visualization",
+  "gstreamer1.0-audiosink",
+  "gstreamer1.0-audiosource",
+  "gstreamer1.0-videosink",
+  "gstreamer1.0-videosource",
+  "gstreamer1.0-visualization",
   NULL
 };
 
