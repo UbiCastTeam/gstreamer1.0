@@ -113,6 +113,10 @@ struct              <a class="link" href="GstPad.html#GstPadProbeInfo" title="st
 #define             <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-BUFFER-LIST:CAPS" title="GST_PAD_PROBE_INFO_BUFFER_LIST()">GST_PAD_PROBE_INFO_BUFFER_LIST</a>      (d)
 #define             <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-EVENT:CAPS" title="GST_PAD_PROBE_INFO_EVENT()">GST_PAD_PROBE_INFO_EVENT</a>            (d)
 #define             <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-QUERY:CAPS" title="GST_PAD_PROBE_INFO_QUERY()">GST_PAD_PROBE_INFO_QUERY</a>            (d)
+<a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="returnvalue">GstBuffer</span></a> *         <a class="link" href="GstPad.html#gst-pad-probe-info-get-buffer" title="gst_pad_probe_info_get_buffer ()">gst_pad_probe_info_get_buffer</a>       (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);
+<a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     <a class="link" href="GstPad.html#gst-pad-probe-info-get-buffer-list" title="gst_pad_probe_info_get_buffer_list ()">gst_pad_probe_info_get_buffer_list</a>  (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);
+<a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="GstPad.html#gst-pad-probe-info-get-event" title="gst_pad_probe_info_get_event ()">gst_pad_probe_info_get_event</a>        (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);
+<a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          <a class="link" href="GstPad.html#gst-pad-probe-info-get-query" title="gst_pad_probe_info_get_query ()">gst_pad_probe_info_get_query</a>        (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);
 #define             <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-OFFSET:CAPS" title="GST_PAD_PROBE_INFO_OFFSET()">GST_PAD_PROBE_INFO_OFFSET</a>           (d)
 #define             <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-SIZE:CAPS" title="GST_PAD_PROBE_INFO_SIZE()">GST_PAD_PROBE_INFO_SIZE</a>             (d)
 <a class="link" href="GstPad.html#GstPadProbeReturn" title="enum GstPadProbeReturn"><span class="returnvalue">GstPadProbeReturn</span></a>   (<a class="link" href="GstPad.html#GstPadProbeCallback" title="GstPadProbeCallback ()">*GstPadProbeCallback</a>)              (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
@@ -1795,6 +1799,71 @@ This field can be NULL.</td>
 <a name="GST-PAD-PROBE-INFO-QUERY:CAPS"></a><h3>GST_PAD_PROBE_INFO_QUERY()</h3>
 <pre class="programlisting">#define GST_PAD_PROBE_INFO_QUERY(d)        GST_QUERY_CAST(GST_PAD_PROBE_INFO_DATA(d))
 </pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-probe-info-get-buffer"></a><h3>gst_pad_probe_info_get_buffer ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="returnvalue">GstBuffer</span></a> *         gst_pad_probe_info_get_buffer       (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> from the probe. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-probe-info-get-buffer-list"></a><h3>gst_pad_probe_info_get_buffer_list ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *     gst_pad_probe_info_get_buffer_list  (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-probe-info-get-event"></a><h3>gst_pad_probe_info_get_event ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          gst_pad_probe_info_get_event        (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> from the probe. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-probe-info-get-query"></a><h3>gst_pad_probe_info_get_query ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          gst_pad_probe_info_get_query        (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
+<td>a <a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> from the probe. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
