@@ -186,7 +186,7 @@ of the object.
 <p>
 </p>
 <div class="refsect2">
-<a name="idp28314960"></a><h3>controlled properties</h3>
+<a name="idp27685152"></a><h3>controlled properties</h3>
 <p>
 Controlled properties offers a lightweight way to adjust gobject
 properties over stream-time. It works by using time-stamped value pairs that
@@ -213,13 +213,9 @@ Very little - it is just two steps to make a plugin controllable!
 </p>
 <p>
 What needs to be done in applications?
-Again its not a lot to change.
+Again it's not a lot to change.
 </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><p>
-    first put some properties under control, by calling
-    gst_object_control_properties (object, "prop1", "prop2",...);
-  </p></li>
 <li class="listitem"><p>
     create a <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a>.
     csource = <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstInterpolationControlSource.html#gst-interpolation-control-source-new"><code class="function">gst_interpolation_control_source_new()</code></a>;
@@ -227,7 +223,7 @@ Again its not a lot to change.
   </p></li>
 <li class="listitem"><p>
     Attach the <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a> on the controller to a property.
-    gst_object_add_control_binding (object, gst_direct_control_binding_new (objetct, "prop1", csource));
+    gst_object_add_control_binding (object, gst_direct_control_binding_new (object, "prop1", csource));
   </p></li>
 <li class="listitem"><p>
     Set the control values

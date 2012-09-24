@@ -1257,6 +1257,9 @@ cleanup_hook (GstPad * pad, GHook * hook)
 {
   GstPadProbeType type;
 
+  if (!G_HOOK_IS_VALID (hook))
+    return;
+
   type = (hook->flags) >> G_HOOK_FLAG_USER_SHIFT;
 
   if (type & GST_PAD_PROBE_TYPE_BLOCKING) {
@@ -1841,7 +1844,7 @@ gst_pad_unlink (GstPad * srcpad, GstPad * sinkpad)
     ACQUIRE_PARENT (srcpad, tmpparent, no_src_parent);
 
     GST_PAD_UNLINKFUNC (srcpad) (srcpad, tmpparent);
-    RELEASE_PARENT (parent);
+    RELEASE_PARENT (tmpparent);
   }
 no_src_parent:
   if (GST_PAD_UNLINKFUNC (sinkpad)) {
@@ -1850,7 +1853,7 @@ no_src_parent:
     ACQUIRE_PARENT (sinkpad, tmpparent, no_sink_parent);
 
     GST_PAD_UNLINKFUNC (sinkpad) (sinkpad, tmpparent);
-    RELEASE_PARENT (parent);
+    RELEASE_PARENT (tmpparent);
   }
 no_sink_parent:
 
@@ -5311,4 +5314,67 @@ join_failed:
 
     return FALSE;
   }
+}
+
+/**
+ * gst_pad_probe_info_get_event:
+ * @info: a #GstPadProbeInfo
+ *
+ * Returns: (transfer none): The #GstEvent from the probe
+ */
+
+GstEvent *
+gst_pad_probe_info_get_event (GstPadProbeInfo * info)
+{
+  g_return_val_if_fail (info->type & (GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM |
+          GST_PAD_PROBE_TYPE_EVENT_UPSTREAM), NULL);
+
+  return GST_PAD_PROBE_INFO_EVENT (info);
+}
+
+
+/**
+ * gst_pad_probe_info_get_query:
+ * @info: a #GstPadProbeInfo
+ *
+ * Returns: (transfer none): The #GstQuery from the probe
+ */
+
+GstQuery *
+gst_pad_probe_info_get_query (GstPadProbeInfo * info)
+{
+  g_return_val_if_fail (info->type & (GST_PAD_PROBE_TYPE_QUERY_DOWNSTREAM |
+          GST_PAD_PROBE_TYPE_QUERY_UPSTREAM), NULL);
+
+  return GST_PAD_PROBE_INFO_QUERY (info);
+}
+
+/**
+ * gst_pad_probe_info_get_buffer:
+ * @info: a #GstPadProbeInfo
+ *
+ * Returns: (transfer none): The #GstBuffer from the probe
+ */
+
+GstBuffer *
+gst_pad_probe_info_get_buffer (GstPadProbeInfo * info)
+{
+  g_return_val_if_fail (info->type & GST_PAD_PROBE_TYPE_BUFFER, NULL);
+
+  return GST_PAD_PROBE_INFO_BUFFER (info);
+}
+
+/**
+ * gst_pad_probe_info_get_bufferlist:
+ * @info: a #GstPadProbeInfo
+ *
+ * Returns: (transfer none): The #GstBufferlist from the probe
+ */
+
+GstBufferList *
+gst_pad_probe_info_get_buffer_list (GstPadProbeInfo * info)
+{
+  g_return_val_if_fail (info->type & GST_PAD_PROBE_TYPE_BUFFER_LIST, NULL);
+
+  return GST_PAD_PROBE_INFO_BUFFER_LIST (info);
 }
