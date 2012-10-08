@@ -42,7 +42,6 @@ GstElement *pipeline, *audio;
 static void
 cb_newpad (GstElement *decodebin,
 	   GstPad     *pad,
-	   gboolean    last,
 	   gpointer    data)
 {
   GstCaps *caps;
@@ -101,7 +100,7 @@ main (gint   argc,
   src = gst_element_factory_make ("filesrc", "source");
   g_object_set (G_OBJECT (src), "location", argv[1], NULL);
   dec = gst_element_factory_make ("decodebin", "decoder");
-  g_signal_connect (dec, "new-decoded-pad", G_CALLBACK (cb_newpad), NULL);
+  g_signal_connect (dec, "pad-added", G_CALLBACK (cb_newpad), NULL);
   gst_bin_add_many (GST_BIN (pipeline), src, dec, NULL);
   gst_element_link (src, dec);
 

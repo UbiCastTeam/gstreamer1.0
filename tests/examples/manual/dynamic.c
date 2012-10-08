@@ -146,7 +146,7 @@ try_to_plug (GstPad        *pad,
 	     GstCaps       *caps)
 {
   GstObject *parent = GST_OBJECT (GST_OBJECT_PARENT (pad));
-  const gchar *mime;
+  const gchar *media;
   const GList *item;
   GstCaps *res, *audiocaps;
 
@@ -158,10 +158,10 @@ try_to_plug (GstPad        *pad,
   }
 
   /* as said above, we only try to plug audio... Omit video */
-  mime = gst_structure_get_name (gst_caps_get_structure (caps, 0));
-  if (g_strrstr (mime, "video")) {
-    g_print ("Omitting link for pad %s:%s because mimetype %s is non-audio\n",
-	     GST_OBJECT_NAME (parent), GST_OBJECT_NAME (pad), mime);
+  media = gst_structure_get_name (gst_caps_get_structure (caps, 0));
+  if (g_strrstr (media, "video")) {
+    g_print ("Omitting link for pad %s:%s because media type %s is non-audio\n",
+	     GST_OBJECT_NAME (parent), GST_OBJECT_NAME (pad), media);
     return;
   }
 
@@ -219,7 +219,7 @@ try_to_plug (GstPad        *pad,
 
   /* if we get here, no item was found */
   g_print ("No compatible pad found to decode %s on %s:%s\n",
-	   mime, GST_OBJECT_NAME (parent), GST_OBJECT_NAME (pad));
+	   media, GST_OBJECT_NAME (parent), GST_OBJECT_NAME (pad));
 }
 
 static void
