@@ -35,7 +35,11 @@ EXAMPLES = \
 	init \
 	query \
 	typefind \
-	fakesrc \
+	blockprobe \
+	probe \
+	appsrc \
+	appsink \
+	dynformat \
 	playbin \
 	decodebin
 
@@ -48,7 +52,11 @@ BUILT_SOURCES = \
 	init.c \
 	query.c \
 	typefind.c dynamic.c \
-	fakesrc.c \
+	blockprobe.c \
+	probe.c \
+	appsrc.c \
+	appsink.c \
+	dynformat.c \
 	playbin.c decodebin.c
 
 CLEANFILES = core core.* test-registry.* *.gcno *.gcda $(BUILT_SOURCES)
@@ -81,7 +89,19 @@ query.c: $(top_srcdir)/docs/manual/advanced-position.xml
 typefind.c dynamic.c: $(top_srcdir)/docs/manual/advanced-autoplugging.xml
 	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
 
-fakesrc.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
+blockprobe.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+probe.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+appsrc.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+appsink.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+dynformat.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
 	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
 
 playbin.c decodebin.c: $(top_srcdir)/docs/manual/highlevel-components.xml
