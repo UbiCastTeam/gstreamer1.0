@@ -21,7 +21,6 @@ TESTS_ENVIRONMENT = \
 EXTRA_DIST = extract.pl
 
 EXAMPLES = \
-	dynamic \
 	$(GNOME) \
 	elementcreate \
 	elementmake \
@@ -40,8 +39,12 @@ EXAMPLES = \
 	appsrc \
 	appsink \
 	dynformat \
+	effectswitch \
+	testrtpool \
+	norebuffer \
 	playbin \
-	decodebin
+	decodebin \
+	playsink 
 
 BUILT_SOURCES = \
 	elementmake.c elementcreate.c elementget.c elementlink.c elementfactory.c \
@@ -51,13 +54,17 @@ BUILT_SOURCES = \
 	helloworld.c \
 	init.c \
 	query.c \
-	typefind.c dynamic.c \
+	typefind.c \
 	blockprobe.c \
 	probe.c \
 	appsrc.c \
 	appsink.c \
 	dynformat.c \
-	playbin.c decodebin.c
+	effectswitch.c \
+	testrtpool.c \
+	norebuffer.c \
+	playbin.c decodebin.c \
+	playsink.c
 
 CLEANFILES = core core.* test-registry.* *.gcno *.gcda $(BUILT_SOURCES)
 
@@ -86,7 +93,7 @@ init.c: $(top_srcdir)/docs/manual/basics-init.xml
 query.c: $(top_srcdir)/docs/manual/advanced-position.xml
 	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
 
-typefind.c dynamic.c: $(top_srcdir)/docs/manual/advanced-autoplugging.xml
+typefind.c: $(top_srcdir)/docs/manual/advanced-autoplugging.xml
 	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
 
 blockprobe.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
@@ -104,7 +111,16 @@ appsink.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
 dynformat.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
 	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
 
-playbin.c decodebin.c: $(top_srcdir)/docs/manual/highlevel-components.xml
+effectswitch.c: $(top_srcdir)/docs/manual/advanced-dataaccess.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+norebuffer.c: $(top_srcdir)/docs/manual/advanced-buffering.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+playbin.c decodebin.c playsink.c: $(top_srcdir)/docs/manual/highlevel-playback.xml
+	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
+
+testrtpool.c: $(top_srcdir)/docs/manual/advanced-threads.xml
 	$(PERL_PATH) $(srcdir)/extract.pl $@ $<
 
 TESTS = bin \
@@ -112,3 +128,6 @@ TESTS = bin \
 	ghostpad init
 
 noinst_PROGRAMS = $(EXAMPLES)
+
+testrtpool_LDADD = $(GST_OBJ_LIBS) $(PTHREAD_LIBS)
+testrtpool_CFLAGS = $(GST_OBJ_CFLAGS) $(PTHREAD_CFLAGS)
