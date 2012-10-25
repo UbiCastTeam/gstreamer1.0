@@ -68,7 +68,7 @@ enum                <a class="link" href="GstBaseSrc.html#GstBaseSrcFlags" title
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstBaseSrc.html#gst-base-src-new-seamless-segment" title="gst_base_src_new_seamless_segment ()">gst_base_src_new_seamless_segment</a>   (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> start</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> stop</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> position</code></em>);
+                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstBaseSrc.html#gst-base-src-set-caps" title="gst_base_src_set_caps ()">gst_base_src_set_caps</a>               (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
                                                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="GstBaseSrc.html#gst-base-src-get-allocator" title="gst_base_src_get_allocator ()">gst_base_src_get_allocator</a>          (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
@@ -248,7 +248,7 @@ should install a pad template in its class_init function, like so:
 <p>
 </p>
 <div class="refsect2">
-<a name="idp34470512"></a><h3>Controlled shutdown of live sources in applications</h3>
+<a name="idp6837152"></a><h3>Controlled shutdown of live sources in applications</h3>
 <p>
 Applications that record from a live source may want to stop recording
 in a controlled way, so that the recording is stopped, but the data
@@ -779,7 +779,7 @@ read.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_base_src_new_seamless_segment   (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> start</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> stop</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> position</code></em>);</pre>
+                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);</pre>
 <p>
 Prepare a new seamless segment for emission downstream. This function must
 only be called by derived sub-classes, and only from the <code class="function">create()</code> function,

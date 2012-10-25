@@ -527,6 +527,8 @@ state will yield the running_time against the clock.</td>
   gboolean              (*send_event)           (GstElement *element, GstEvent *event);
 
   gboolean              (*query)                (GstElement *element, GstQuery *query);
+
+  gboolean              (*post_message)         (GstElement *element, GstMessage *message);
 };
 </pre>
 <p>
@@ -604,6 +606,11 @@ functionality.
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstElementClass.query"></a>query</code></em> ()</span></p></td>
 <td>perform a <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> on the element</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstElementClass.post-message"></a>post_message</code></em> ()</span></p></td>
+<td>called when a message is posted on the element. Chain up to
+the parent class' handler to have it posted on the bus.</td>
 </tr>
 </tbody>
 </table></div>

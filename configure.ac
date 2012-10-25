@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT(GStreamer, 1.0.1,
+AC_INIT(GStreamer, 1.0.2,
     http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer,
     gstreamer)
 AG_GST_INIT
@@ -58,7 +58,7 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1, 0, 1)
+AS_LIBTOOL(GST, 2, 0, 2)
 
 dnl *** autotools stuff ****
 
@@ -313,8 +313,8 @@ dnl Check for stdio_ext.f for __fbufsize
 AC_CHECK_HEADERS([stdio_ext.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl check for pthreads
-AC_CHECK_HEADERS([pthread.h], [HAVE_PTHREAD_H=yes], [HAVE_PTHREAD_H=no], [AC_INCLUDES_DEFAULT])
-AM_CONDITIONAL(HAVE_PTHREAD_H, test "x$HAVE_PTHREAD_H" = "xyes")
+AX_PTHREAD([HAVE_PTHREAD=yes], [HAVE_PTHREAD=no])
+AM_CONDITIONAL(HAVE_PTHREAD, test "x$HAVE_PTHREAD" = "xyes")
 
 dnl check for sys/prctl for setting thread name on Linux
 AC_CHECK_HEADERS([sys/prctl.h], [], [], [AC_INCLUDES_DEFAULT])
