@@ -390,7 +390,7 @@ dataflow on the pads.
 <a class="link" href="GstPad.html#gst-pad-get-parent" title="gst_pad_get_parent()"><code class="function">gst_pad_get_parent()</code></a> will retrieve the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> that owns the pad.
 </p>
 <p>
-After two pads are retrieved from an element with <code class="function">gst_element_get_pad()</code>,
+After two pads are retrieved from an element with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-get-pad"><code class="function">gst_element_get_pad()</code></a>,
 the pads can be linked with <a class="link" href="GstPad.html#gst-pad-link" title="gst_pad_link ()"><code class="function">gst_pad_link()</code></a>. (For quick links,
 you can also use <a class="link" href="GstElement.html#gst-element-link" title="gst_element_link ()"><code class="function">gst_element_link()</code></a>, which will make the obvious
 link for you if it's straightforward.). Pads can be unlinked again with
@@ -2893,7 +2893,7 @@ the same caps.  Two such elements are tee and adder.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_pad_proxy_query_accept_caps     (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
 <p>
-Calls <code class="function">gst_pad_accept_caps()</code> for all internally linked pads of <em class="parameter"><code>pad</code></em> and
+Calls <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-accept-caps"><code class="function">gst_pad_accept_caps()</code></a> for all internally linked pads of <em class="parameter"><code>pad</code></em> and
 returns the intersection of the results.
 </p>
 <p>
@@ -3730,7 +3730,7 @@ Check if the given pad accepts the caps.
 <p>
 Gets the capabilities this pad can produce or consume.
 Note that this method doesn't necessarily return the caps set by
-<code class="function">gst_pad_set_caps()</code> - use <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()"><code class="function">gst_pad_get_current_caps()</code></a> for that instead.
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-set-caps"><code class="function">gst_pad_set_caps()</code></a> - use <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()"><code class="function">gst_pad_get_current_caps()</code></a> for that instead.
 gst_pad_query_caps returns all possible caps a pad can operate with, using
 the pad's CAPS query function, If the query fails, this function will return
 <em class="parameter"><code>filter</code></em>, if not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, otherwise ANY.
