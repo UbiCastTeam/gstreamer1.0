@@ -665,8 +665,8 @@ This function takes ownership of <em class="parameter"><code>config</code></em>.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_buffer_pool_set_active          (<em class="parameter"><code><a class="link" href="gstreamer-GstBufferPool.html#GstBufferPool" title="GstBufferPool"><span class="type">GstBufferPool</span></a> *pool</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
 <p>
-Control the active state of <em class="parameter"><code>pool</code></em>. When the pool is active, new calls to
-<a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-acquire-buffer" title="gst_buffer_pool_acquire_buffer ()"><code class="function">gst_buffer_pool_acquire_buffer()</code></a> will return with GST_FLOW_FLUSHING.
+Control the active state of <em class="parameter"><code>pool</code></em>. When the pool is inactive, new calls to
+<a class="link" href="gstreamer-GstBufferPool.html#gst-buffer-pool-acquire-buffer" title="gst_buffer_pool_acquire_buffer ()"><code class="function">gst_buffer_pool_acquire_buffer()</code></a> will return with <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a>.
 </p>
 <p>
 Activating the bufferpool will preallocate all resources in the pool based on
