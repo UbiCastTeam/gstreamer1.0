@@ -216,7 +216,7 @@ _get_merged_memory (GstBuffer * buffer, guint idx, guint length)
     GstMemory *parent = NULL;
     gsize size, poffset = 0;
 
-    size = gst_buffer_get_size (buffer);
+    size = gst_buffer_get_sizes_range (buffer, idx, length, NULL, NULL);
 
     if (G_UNLIKELY (_is_span (mem + idx, length, &poffset, &parent))) {
       if (GST_MEMORY_IS_NO_SHARE (parent)) {
@@ -236,7 +236,7 @@ _get_merged_memory (GstBuffer * buffer, guint idx, guint length)
       ptr = dinfo.data;
       left = size;
 
-      for (i = idx; i < length && left > 0; i++) {
+      for (i = idx; i < (idx + length) && left > 0; i++) {
         gst_memory_map (mem[i], &sinfo, GST_MAP_READ);
         tocopy = MIN (sinfo.size, left);
         GST_CAT_DEBUG (GST_CAT_PERFORMANCE,
@@ -691,12 +691,12 @@ no_memory:
 /**
  * gst_buffer_new_wrapped_full:
  * @flags: #GstMemoryFlags
- * @data: (array length=size) (element-type guint8): data to wrap
+ * @data: (array length=size) (element-type guint8) (transfer none): data to wrap
  * @maxsize: allocated size of @data
  * @offset: offset in @data
  * @size: size of valid data
- * @user_data: user_data
- * @notify: called with @user_data when the memory is freed
+ * @user_data: (allow-none): user_data
+ * @notify: (allow-none) (scope async) (closure user_data): called with @user_data when the memory is freed
  *
  * Allocate a new buffer that wraps the given memory. @data must point to
  * @maxsize of memory, the wrapped buffer will have the region from @offset and
@@ -726,7 +726,7 @@ gst_buffer_new_wrapped_full (GstMemoryFlags flags, gpointer data,
 
 /**
  * gst_buffer_new_wrapped:
- * @data: (array length=size) (element-type guint8): data to wrap
+ * @data: (array length=size) (element-type guint8) (transfer full): data to wrap
  * @size: allocated size of @data
  *
  * Creates a new buffer that wraps the given @data. The memory will be freed
@@ -1492,7 +1492,7 @@ gst_buffer_unmap (GstBuffer * buffer, GstMapInfo * info)
  * gst_buffer_fill:
  * @buffer: a #GstBuffer.
  * @offset: the offset to fill
- * @src: the source address
+ * @src: (array length=size) (element-type guint8): the source address
  * @size: the size to fill
  *
  * Copy @size bytes from @src to @buffer at @offset.
@@ -1509,7 +1509,7 @@ gst_buffer_fill (GstBuffer * buffer, gsize offset, gconstpointer src,
 
   g_return_val_if_fail (GST_IS_BUFFER (buffer), 0);
   g_return_val_if_fail (gst_buffer_is_writable (buffer), 0);
-  g_return_val_if_fail (src != NULL, 0);
+  g_return_val_if_fail (src != NULL || size == 0, 0);
 
   GST_CAT_LOG (GST_CAT_BUFFER,
       "buffer %p, offset %" G_GSIZE_FORMAT ", size %" G_GSIZE_FORMAT, buffer,
@@ -1594,7 +1594,7 @@ gst_buffer_extract (GstBuffer * buffer, gsize offset, gpointer dest, gsize size)
  * gst_buffer_memcmp:
  * @buffer: a #GstBuffer.
  * @offset: the offset in @buffer
- * @mem: the memory to compare
+ * @mem: (array length=size) (element-type guint8): the memory to compare
  * @size: the size to compare
  *
  * Compare @size bytes starting from @offset in @buffer with the memory in @mem.
