@@ -195,7 +195,8 @@ default allocator will be returned.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
-<td>the name of the allocator</td>
+<td>the name of the allocator. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -408,7 +409,9 @@ The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</c
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>data to wrap</td>
+<td>data to
+wrap. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>maxsize</code></em> :</span></p></td>
@@ -426,15 +429,18 @@ The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</c
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user_data</td>
+<td>user_data. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
-<td>called with <em class="parameter"><code>user_data</code></em> when the memory is freed</td>
+<td>called with <em class="parameter"><code>user_data</code></em> when the memory is freed. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="The callback is valid until first called."><span class="acronym">scope async</span></acronym>][<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
+<td>a new <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>

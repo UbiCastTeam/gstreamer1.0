@@ -58,15 +58,15 @@ struct _GstAllocatorPrivate
 };
 
 #if defined(MEMORY_ALIGNMENT_MALLOC)
-size_t gst_memory_alignment = 7;
+gsize gst_memory_alignment = 7;
 #elif defined(MEMORY_ALIGNMENT_PAGESIZE)
 /* we fill this in in the _init method */
-size_t gst_memory_alignment = 0;
+gsize gst_memory_alignment = 0;
 #elif defined(MEMORY_ALIGNMENT)
-size_t gst_memory_alignment = MEMORY_ALIGNMENT - 1;
+gsize gst_memory_alignment = MEMORY_ALIGNMENT - 1;
 #else
 #error "No memory alignment configured"
-size_t gst_memory_alignment = 0;
+gsize gst_memory_alignment = 0;
 #endif
 
 /* the default allocator */
@@ -213,7 +213,7 @@ gst_allocator_register (const gchar * name, GstAllocator * allocator)
 
 /**
  * gst_allocator_find:
- * @name: the name of the allocator
+ * @name: (allow-none): the name of the allocator
  *
  * Find a previously registered allocator with @name. When @name is NULL, the
  * default allocator will be returned.
@@ -595,19 +595,20 @@ _priv_gst_memory_initialize (void)
 /**
  * gst_memory_new_wrapped:
  * @flags: #GstMemoryFlags
- * @data: data to wrap
+ * @data: (array length=size) (element-type guint8) (transfer none): data to
+ *   wrap
  * @maxsize: allocated size of @data
  * @offset: offset in @data
  * @size: size of valid data
- * @user_data: user_data
- * @notify: called with @user_data when the memory is freed
+ * @user_data: (allow-none): user_data
+ * @notify: (allow-none) (scope async) (closure user_data): called with @user_data when the memory is freed
  *
  * Allocate a new memory block that wraps the given @data.
  *
  * The prefix/padding must be filled with 0 if @flags contains
  * #GST_MEMORY_FLAG_ZERO_PREFIXED and #GST_MEMORY_FLAG_ZERO_PADDED respectively.
  *
- * Returns: a new #GstMemory.
+ * Returns: (transfer full): a new #GstMemory.
  */
 GstMemory *
 gst_memory_new_wrapped (GstMemoryFlags flags, gpointer data,

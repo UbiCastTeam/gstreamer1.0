@@ -212,7 +212,7 @@ The following example creates a buffer that can hold a given video frame
 with a given width, height and bits per plane.
 </p>
 <div class="example">
-<a name="idp12446560"></a><p class="title"><b>Example 3. Creating a buffer for a video frame</b></p>
+<a name="idp12963552"></a><p class="title"><b>Example 3. Creating a buffer for a video frame</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -295,7 +295,7 @@ only be made when it is necessary.
 <p>
 Several flags of the buffer can be set and unset with the
 <a class="link" href="gstreamer-GstBuffer.html#GST-BUFFER-FLAG-SET:CAPS" title="GST_BUFFER_FLAG_SET()"><code class="function">GST_BUFFER_FLAG_SET()</code></a> and <a class="link" href="gstreamer-GstBuffer.html#GST-BUFFER-FLAG-UNSET:CAPS" title="GST_BUFFER_FLAG_UNSET()"><code class="function">GST_BUFFER_FLAG_UNSET()</code></a> macros. Use
-<a class="link" href="gstreamer-GstBuffer.html#GST-BUFFER-FLAG-IS-SET:CAPS" title="GST_BUFFER_FLAG_IS_SET()"><code class="function">GST_BUFFER_FLAG_IS_SET()</code></a> to test if a certain <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBufferFlag"><span class="type">GstBufferFlag</span></a> is set.
+<a class="link" href="gstreamer-GstBuffer.html#GST-BUFFER-FLAG-IS-SET:CAPS" title="GST_BUFFER_FLAG_IS_SET()"><code class="function">GST_BUFFER_FLAG_IS_SET()</code></a> to test if a certain <span class="type">GstBufferFlag</span> is set.
 </p>
 <p>
 Buffers can be efficiently merged into a larger buffer with
@@ -490,7 +490,7 @@ A set of buffer flags used to describe properties of a <a class="link" href="gst
 <pre class="programlisting">#define GST_BUFFER_FLAGS(buf)                   GST_MINI_OBJECT_FLAGS(buf)
 </pre>
 <p>
-A flags word containing <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBufferFlag"><span class="type">GstBufferFlag</span></a> flags set on this buffer.
+A flags word containing <span class="type">GstBufferFlag</span> flags set on this buffer.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -517,7 +517,7 @@ Gives the status of a specific flag on a buffer.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flag</code></em> :</span></p></td>
-<td>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBufferFlag"><span class="type">GstBufferFlag</span></a> to check.</td>
+<td>the <span class="type">GstBufferFlag</span> to check.</td>
 </tr>
 </tbody>
 </table></div>
@@ -539,7 +539,7 @@ Sets a buffer flag on a buffer.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flag</code></em> :</span></p></td>
-<td>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBufferFlag"><span class="type">GstBufferFlag</span></a> to set.</td>
+<td>the <span class="type">GstBufferFlag</span> to set.</td>
 </tr>
 </tbody>
 </table></div>
@@ -561,7 +561,7 @@ Clears a buffer flag.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flag</code></em> :</span></p></td>
-<td>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBufferFlag"><span class="type">GstBufferFlag</span></a> to clear.</td>
+<td>the <span class="type">GstBufferFlag</span> to clear.</td>
 </tr>
 </tbody>
 </table></div>
@@ -847,7 +847,7 @@ MT safe.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>data to wrap. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span>
+<td>data to wrap. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -894,7 +894,7 @@ The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</c
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>data to wrap. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span>
+<td>data to wrap. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -913,11 +913,13 @@ The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</c
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user_data</td>
+<td>user_data. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
-<td>called with <em class="parameter"><code>user_data</code></em> when the memory is freed</td>
+<td>called with <em class="parameter"><code>user_data</code></em> when the memory is freed. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="The callback is valid until first called."><span class="acronym">scope async</span></acronym>][<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1769,7 +1771,8 @@ Compare <em class="parameter"><code>size</code></em> bytes starting from <em cla
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
-<td>the memory to compare</td>
+<td>the memory to compare. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
@@ -1842,7 +1845,8 @@ Copy <em class="parameter"><code>size</code></em> bytes from <em class="paramete
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
-<td>the source address</td>
+<td>the source address. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>

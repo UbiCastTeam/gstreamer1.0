@@ -1090,19 +1090,22 @@ feature set of the plugin (e.g. an environment variable containing
 paths where to look for additional modules/plugins of a library),
 or NULL. Environment variable names may be followed by a path component
 which will be added to the content of the environment variable, e.g.
-"HOME/.mystuff/plugins".</td>
+"HOME/.mystuff/plugins". <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>paths</code></em> :</span></p></td>
 <td>NULL-terminated array of directories/paths where dependent files
-may be.</td>
+may be, or NULL. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>names</code></em> :</span></p></td>
 <td>NULL-terminated array of file names (or file name suffixes,
 depending on <em class="parameter"><code>flags</code></em>) to be used in combination with the paths from
 <em class="parameter"><code>paths</code></em> and/or the paths extracted from the environment variables in
-<em class="parameter"><code>env_vars</code></em>, or NULL.</td>
+<em class="parameter"><code>env_vars</code></em>, or NULL. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
@@ -1150,17 +1153,20 @@ arguments separated by predefined delimiters (see above).
 <td>one or more environment variables (separated by ':', ';' or ','),
 or NULL. Environment variable names may be followed by a path component
 which will be added to the content of the environment variable, e.g.
-"HOME/.mystuff/plugins:MYSTUFF_PLUGINS_PATH"</td>
+"HOME/.mystuff/plugins:MYSTUFF_PLUGINS_PATH". <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>paths</code></em> :</span></p></td>
 <td>one ore more directory paths (separated by ':' or ';' or ','),
-or NULL. Example: "/usr/lib/mystuff/plugins"</td>
+or NULL. Example: "/usr/lib/mystuff/plugins". <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>names</code></em> :</span></p></td>
 <td>one or more file names or file name suffixes (separated by commas),
-or NULL</td>
+or NULL. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
