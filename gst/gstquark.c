@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include "gst_private.h"
@@ -66,7 +66,8 @@ static const gchar *_quark_strings[] = {
   "GstMessageResetTime",
   "GstMessageToc", "GstEventTocGlobal", "GstEventTocCurrent",
   "GstEventSegmentDone",
-  "GstEventStreamStart", "stream-id"
+  "GstEventStreamStart", "stream-id", "GstEventContext", "GstQueryContext",
+  "GstMessageNeedContext", "GstMessageHaveContext", "context", "context-types"
 };
 
 GQuark _priv_gst_quark_table[GST_QUARK_MAX];

@@ -10,9 +10,9 @@ REGISTRY_ENVIRONMENT = \
 TESTS_ENVIRONMENT = \
         GST_STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
         $(REGISTRY_ENVIRONMENT)					\
-        GST_PLUGIN_SCANNER=$(top_builddir)/libs/gst/helpers/gst-plugin-scanner \
-        GST_PLUGIN_SYSTEM_PATH=					\
-        GST_PLUGIN_PATH=$(top_builddir)/plugins
+        GST_PLUGIN_SCANNER_1_0=$(top_builddir)/libs/gst/helpers/gst-plugin-scanner \
+        GST_PLUGIN_SYSTEM_PATH_1_0=					\
+        GST_PLUGIN_PATH_1_0=$(top_builddir)/plugins
 
 plugindir = $(libdir)/gstreamer-@GST_API_VERSION@
 
@@ -61,7 +61,8 @@ REGISTRY_CHECKS =				\
 	gst/gst					\
 	gst/gstbin				\
 	gst/gstchildproxy			\
-	gst/gstcontroller				\
+	gst/gstcontext				\
+	gst/gstcontroller			\
 	gst/gstelement				\
 	gst/gstelementfactory			\
 	gst/gstevent				\
@@ -106,6 +107,7 @@ check_PROGRAMS =				\
 	gst/gstmemory				\
 	gst/gstbus				\
 	gst/gstcaps     			\
+	gst/gstcapsfeatures    			\
 	$(CXX_CHECKS)			     	\
 	gst/gstdatetime     			\
 	gst/gstinfo		 		\
@@ -138,6 +140,7 @@ check_PROGRAMS =				\
 	libs/collectpads			\
 	libs/gstnetclientclock			\
 	libs/gstnettimeprovider			\
+	libs/gsttestclock			\
 	libs/transform1				\
 	tools/gstinspect
 

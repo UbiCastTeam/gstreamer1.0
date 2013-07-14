@@ -1,17 +1,17 @@
-# translation of gstreamer-1.0.3.po to Dutch
+# translation of gstreamer-0.10.32.2.po to Dutch
 # Dutch translation of gstreamer
 # Copyright (C) 2003-2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gstreamer package.
 #
 # Thomas Vander Stichele <thomas@apestaart.org>, 2004.
 # Taco Witte <tcwitte@cs.uu.nl>, 2006.
-# Freek de Kruijf <f.de.kruijf@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012.
+# Freek de Kruijf <f.de.kruijf@gmail.com>, 2007, 2008, 2009, 2010, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer 1.0.3\n"
+"Project-Id-Version: gstreamer 0.10.32.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-07-11 19:26+0100\n"
-"PO-Revision-Date: 2012-11-29 22:42+0100\n"
+"POT-Creation-Date: 2013-07-11 15:09+0200\n"
+"PO-Revision-Date: 2011-04-26 23:10+0200\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 1.1\n"
 
 msgid "Print the GStreamer version"
 msgstr "Toon de GStreamer versie"
@@ -121,8 +121,9 @@ msgstr "Interne GStreamer-fout: padprobleem."
 msgid "Internal GStreamer error: thread problem."
 msgstr "Interne GStreamer-fout: threadprobleem."
 
+#, fuzzy
 msgid "GStreamer error: negotiation problem."
-msgstr "GStreamer-fout: onderhandelingsprobleem."
+msgstr "Interne GStreamer-fout: onderhandelingsprobleem."
 
 msgid "Internal GStreamer error: event problem."
 msgstr "Interne GStreamer-fout: gebeurtenisprobleem."
@@ -139,8 +140,9 @@ msgstr "Interne GStreamer-fout: tagprobleem."
 msgid "Your GStreamer installation is missing a plug-in."
 msgstr "Er ontbreekt een plugin in uw GStreamer installatie."
 
+#, fuzzy
 msgid "GStreamer error: clock problem."
-msgstr "GStreamer-fout: klokprobleem."
+msgstr "Interne GStreamer-fout: klokprobleem."
 
 msgid ""
 "This application is trying to use GStreamer functionality that has been "
@@ -254,6 +256,10 @@ msgstr "Geen standaard foutboodschap voor domein %s en code %d."
 msgid "Selected clock cannot be used in pipeline."
 msgstr "Geselecteerde klok kan niet gebruikt worden in de pijplijn."
 
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr ""
+
 msgid "title"
 msgstr "titel"
 
@@ -334,8 +340,8 @@ msgstr "uitgebreid commentaar"
 
 msgid "free text commenting the data in key=value or key[en]=comment form"
 msgstr ""
-"vrij te kiezen commentaartekst bij gegevens in de vorm key=waarde of key[en]"
-"=commentaar "
+"vrij te kiezen commentaartekst bij gegevens in de vorm key=waarde of "
+"key[en]=commentaar "
 
 msgid "track number"
 msgstr "nummer"
@@ -557,14 +563,16 @@ msgstr "referentieniveau van de waarde van tarck- en albumgeluidsterkte"
 msgid "language code"
 msgstr "taalcode"
 
+#, fuzzy
 msgid "language code for this stream, conforming to ISO-639-1 or ISO-639-2"
-msgstr "taalcode van deze stream, conform ISO-639-1 of ISO-639-2"
+msgstr "taalcode van deze stroom, conform ISO-639-1"
 
+#, fuzzy
 msgid "language name"
-msgstr "naam van taal"
+msgstr "taalcode"
 
 msgid "freeform name of the language this stream is in"
-msgstr "naam van de taal in vrije vorm van deze stream"
+msgstr ""
 
 msgid "image"
 msgstr "afbeelding"
@@ -656,12 +664,13 @@ msgstr "stad (Engelse naam) waar het medium is opgenomen of geproduceerd"
 msgid "geo location sublocation"
 msgstr "geografische locatie van de sublocatie"
 
+#, fuzzy
 msgid ""
 "a location within a city where the media has been produced or created (e.g. "
 "the neighborhood)"
 msgstr ""
-"een locatie in een stad waar het medium is geproduceerd of gemaakt (bijv. de "
-"buurt)"
+"een sublocatie in een stad waar het medium is opgenomen of geproduceerd "
+"(bijv. de buurt)"
 
 msgid "geo location horizontal error"
 msgstr "fout in horizontale geo-locatie"
@@ -798,6 +807,14 @@ msgid ", "
 msgstr ", "
 
 #, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
+
+#, c-format
 msgid "ERROR: from element %s: %s\n"
 msgstr "FOUT: van element %s: %s\n"
 
@@ -862,15 +879,6 @@ msgstr "kon doelelement niet verbinden voor URI \"%s\""
 msgid "empty pipeline not allowed"
 msgstr "lege pijplijn niet toegelaten"
 
-msgid "Internal clock error."
-msgstr "Interne fout met de klok."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Interne fout met gegevensdoorvoer."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Er worden veel buffers gedropt."
 
@@ -879,6 +887,15 @@ msgstr "Intern probleem met gegevensdoorvoer."
 
 msgid "Internal data stream error."
 msgstr "Interne fout in gegevensstroom."
+
+msgid "Internal data flow error."
+msgstr "Interne fout met gegevensdoorvoer."
+
+msgid "Internal clock error."
+msgstr "Interne fout met de klok."
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Filteropzetstukken"
@@ -1032,14 +1049,12 @@ msgid "List the plugin contents"
 msgstr "Toon de inhoud van de plugin"
 
 msgid "Check if the specified element or plugin exists"
-msgstr "Controleer of het gespecificeerde element of plug-in bestaat"
+msgstr ""
 
 msgid ""
 "When checking if an element or plugin exists, also check that its version is "
 "at least the version specified"
 msgstr ""
-"Bij het controleren of het gespecificeerde element of plug-in bestaat, "
-"controleer ook dat zijn versie minstens de gespecificeerde versie is"
 
 msgid "Print supported URI schemes, with the elements that implement them"
 msgstr ""
@@ -1091,16 +1106,17 @@ msgstr "TAG GEVONDEN   : gevonden door object \"%s\".\n"
 msgid "FOUND TAG\n"
 msgstr "TAG GEVONDEN\n"
 
-#, c-format
+#, fuzzy, c-format
 msgid "FOUND TOC      : found by element \"%s\".\n"
-msgstr "INH GEVONDEN   : gevonden door element \"%s\".\n"
+msgstr "TAG GEVONDEN   : gevonden door element \"%s\".\n"
 
-#, c-format
+#, fuzzy, c-format
 msgid "FOUND TOC      : found by object \"%s\".\n"
-msgstr "INH GEVONDEN   : gevonden door object \"%s\".\n"
+msgstr "TAG GEVONDEN   : gevonden door object \"%s\".\n"
 
+#, fuzzy
 msgid "FOUND TOC\n"
-msgstr "INH GEVONDEN\n"
+msgstr "TAG GEVONDEN\n"
 
 #, c-format
 msgid ""
@@ -1115,6 +1131,10 @@ msgid "WARNING: from element %s: %s\n"
 msgstr "WAARSCHUWING: van element %s: %s\n"
 
 msgid "Prerolled, waiting for buffering to finish...\n"
+msgstr "Voorbereid, wacht op gereedkomen van de buffering...\n"
+
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
 msgstr "Voorbereid, wacht op gereedkomen van de buffering...\n"
 
 msgid "buffering..."
@@ -1137,14 +1157,22 @@ msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Interrupt: Pijplijn ingesteld op gestopt ...\n"
 
 #, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
+#, fuzzy, c-format
 msgid "Missing element: %s\n"
-msgstr "ontbrekend element: \"%s\"\n"
+msgstr "geen element \"%s\""
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s\n"
+msgstr "WAARSCHUWING: van element %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Tags (ook bekend als metadata) weergeven"
 
 msgid "Output TOC (chapters and editions)"
-msgstr "INH uitvoeren (hoofdstukken en uitgaven)"
+msgstr ""
 
 msgid "Output status information and property notifications"
 msgstr "Statusinformatie en eigenschapswaarschuwingen weergeven"
@@ -1211,8 +1239,9 @@ msgstr "FOUT: pijplijn wil niet afspelen.\n"
 msgid "EOS on shutdown enabled -- Forcing EOS on the pipeline\n"
 msgstr "EOS bij afsluiten ingeschakeld -- Forceer een EOS op de pijplijn\n"
 
+#, fuzzy
 msgid "EOS on shutdown enabled -- waiting for EOS after Error\n"
-msgstr "EOS bij afsluiten ingeschakeld -- wacht op EOS na fout\n"
+msgstr "EOS bij afsluiten ingeschakeld -- Forceer een EOS op de pijplijn\n"
 
 msgid "Waiting for EOS...\n"
 msgstr "Wacht op EOS...\n"
@@ -1220,8 +1249,9 @@ msgstr "Wacht op EOS...\n"
 msgid "EOS received - stopping pipeline...\n"
 msgstr "EOS ontvangen - pijplijn wordt gestopt...\n"
 
+#, fuzzy
 msgid "Interrupt while waiting for EOS - stopping pipeline...\n"
-msgstr "Interrupt bij wachten op EOS - pijplijn wordt gestopt...\n"
+msgstr "Interrupt: Pijplijn ingesteld op gestopt ...\n"
 
 msgid "An error happened while waiting for EOS\n"
 msgstr "Er trad een fout op bij het wachten op EOS\n"
@@ -1238,8 +1268,8 @@ msgstr "Pijplijn gezet op NULL ...\n"
 msgid "Freeing pipeline ...\n"
 msgstr "Pijplijn wordt vrijgemaakt ...\n"
 
-#~ msgid "maximum"
-#~ msgstr "maximum"
+#~ msgid "Print alloc trace (if enabled at compile time)"
+#~ msgstr "Toewijzingsspoor weergeven (indien aangezet tijdens compileren)"
 
 #~ msgid "Usage: gst-xmllaunch <file.xml> [ element.property=value ... ]\n"
 #~ msgstr ""
@@ -1270,6 +1300,3 @@ msgstr "Pijplijn wordt vrijgemaakt ...\n"
 
 #~ msgid "Do not install signal handlers for SIGUSR1 and SIGUSR2"
 #~ msgstr "Geen signaalafhandelaars installeren voor SIGUSR1 en SIGUSR2"
-
-#~ msgid "Print alloc trace (if enabled at compile time)"
-#~ msgstr "Toewijzingsspoor weergeven (indien aangezet tijdens compileren)"

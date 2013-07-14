@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstAllocator</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-Gst.html" title="Gst">
@@ -105,8 +105,11 @@ Last reviewed on 2012-07-09 (0.11.3)
 <p>
 The <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> is used to create new memory.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody></tbody>
 </table></div>
 </div>
@@ -122,8 +125,11 @@ The <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="t
 <p>
 Flags for allocators.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-ALLOCATOR-FLAG-CUSTOM-ALLOC:CAPS"></a><span class="term"><code class="literal">GST_ALLOCATOR_FLAG_CUSTOM_ALLOC</code></span></p></td>
@@ -151,8 +157,11 @@ Flags for allocators.
 <p>
 Parameters to control the allocation of memory
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> <em class="structfield"><code><a name="GstAllocationParams.flags"></a>flags</code></em>;</span></p></td>
@@ -190,8 +199,11 @@ The allocator name for the default system memory allocator
 Find a previously registered allocator with <em class="parameter"><code>name</code></em>. When <em class="parameter"><code>name</code></em> is NULL, the
 default allocator will be returned.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -216,8 +228,11 @@ registered. Use <a class="link" href="GstObject.html#gst-object-unref" title="gs
 Registers the memory <em class="parameter"><code>allocator</code></em> with <em class="parameter"><code>name</code></em>. This function takes ownership of
 <em class="parameter"><code>allocator</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -239,8 +254,11 @@ Registers the memory <em class="parameter"><code>allocator</code></em> with <em 
 <p>
 Set the default allocator. This function takes ownership of <em class="parameter"><code>allocator</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
 <td>a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -255,8 +273,11 @@ Set the default allocator. This function takes ownership of <em class="parameter
 <p>
 Initialize <em class="parameter"><code>params</code></em> to its default values
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
 <td>a <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a>
@@ -274,8 +295,11 @@ Create a copy of <em class="parameter"><code>params</code></em>.
 <p>
 Free-function: gst_allocation_params_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
@@ -298,8 +322,11 @@ Free-function: gst_allocation_params_free
 <p>
 Free <em class="parameter"><code>params</code></em>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>params</code></em> :</span></p></td>
 <td>a <a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a>. <span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -334,8 +361,11 @@ The alignment in <em class="parameter"><code>params</code></em> is given as a bi
 the amount of bytes to align to. For example, to align to 8 bytes,
 use an alignment of 7.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
@@ -367,8 +397,11 @@ use an alignment of 7.
 <p>
 Free <em class="parameter"><code>memory</code></em> that was previously allocated with <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>allocator</code></em> :</span></p></td>
@@ -400,8 +433,11 @@ Allocate a new memory block that wraps the given <em class="parameter"><code>dat
 The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</code></em> contains
 <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>

@@ -91,6 +91,8 @@ gst_bin_find_unlinked_pad
 <SUBSECTION>
 GstBinFlags
 
+GST_BIN_IS_NO_RESYNC
+
 GST_BIN_CHILDREN
 GST_BIN_CHILDREN_COOKIE
 GST_BIN_NUMCHILDREN
@@ -221,6 +223,7 @@ gst_buffer_unmap
 
 gst_buffer_memcmp
 gst_buffer_extract
+gst_buffer_extract_dup
 gst_buffer_fill
 gst_buffer_memset
 
@@ -400,11 +403,15 @@ gst_static_caps_cleanup
 gst_caps_append
 gst_caps_merge
 gst_caps_append_structure
+gst_caps_append_structure_full
 gst_caps_remove_structure
 gst_caps_steal_structure
 gst_caps_merge_structure
+gst_caps_merge_structure_full
 gst_caps_get_size
 gst_caps_get_structure
+gst_caps_get_features
+gst_caps_set_features
 gst_caps_set_value
 gst_caps_set_simple
 gst_caps_set_simple_valist
@@ -417,6 +424,7 @@ gst_caps_is_strictly_equal
 gst_caps_is_always_compatible
 gst_caps_is_subset
 gst_caps_is_subset_structure
+gst_caps_is_subset_structure_full
 gst_caps_can_intersect
 gst_caps_intersect
 gst_caps_intersect_full
@@ -443,6 +451,50 @@ GST_CAPS_CAST
 gst_caps_flags_get_type
 gst_caps_get_type
 gst_caps_intersect_mode_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gstcapsfeatures</FILE>
+<TITLE>GstCapsFeatures</TITLE>
+GstCapsFeatures
+gst_caps_features_new
+gst_caps_features_new_empty
+gst_caps_features_new_any
+gst_caps_features_new_id
+gst_caps_features_new_id_valist
+gst_caps_features_new_valist
+
+gst_caps_features_copy
+gst_caps_features_free
+
+gst_caps_features_from_string
+gst_caps_features_to_string
+
+gst_caps_features_set_parent_refcount
+
+gst_caps_features_is_equal
+gst_caps_features_is_any
+
+gst_caps_features_contains
+gst_caps_features_contains_id
+
+gst_caps_features_get_size
+
+gst_caps_features_get_nth
+gst_caps_features_get_nth_id
+
+gst_caps_features_add
+gst_caps_features_add_id
+gst_caps_features_remove
+gst_caps_features_remove_id
+<SUBSECTION Standard>
+GST_CAPS_FEATURES
+GST_CAPS_FEATURES_CAST
+GST_IS_CAPS_FEATURES
+GST_TYPE_CAPS_FEATURES
+gst_is_caps_features
+<SUBSECTION Private>
+gst_caps_features_get_type
 </SECTION>
 
 <SECTION>
@@ -590,6 +642,9 @@ gst_pad_set_caps
 gst_buffer_new_and_alloc
 GST_BUFFER_TIMESTAMP
 GST_BUFFER_TIMESTAMP_IS_VALID
+GST_MESSAGE_DURATION
+gst_message_new_duration
+gst_message_parse_duration
 gst_adapter_prev_timestamp
 <SUBSECTION Private>
 </SECTION>
@@ -612,9 +667,29 @@ GST_PLUGIN_EXPORT
 GST_PADDING
 GST_PADDING_LARGE
 GST_PADDING_INIT
-GST_USING_PRINTF_EXTENSION
 </SECTION>
 
+<SECTION>
+<FILE>gstcontext</FILE>
+<TITLE>GstContext</TITLE>
+GstContext
+gst_context_new
+gst_context_ref
+gst_context_unref
+gst_context_copy
+gst_context_get_structure
+gst_context_writable_structure
+gst_context_make_writable
+gst_context_is_writable
+gst_context_replace
+<SUBSECTION Standard>
+GST_CONTEXT
+GST_CONTEXT_CAST
+GST_IS_CONTEXT
+GST_TYPE_CONTEXT
+<SUBSECTION Private>
+gst_context_get_type
+</SECTION>
 
 <SECTION>
 <FILE>gstcontrolbinding</FILE>
@@ -747,6 +822,8 @@ gst_element_set_start_time
 gst_element_get_start_time
 gst_element_set_bus
 gst_element_get_bus
+gst_element_set_context
+gst_element_get_context
 gst_element_get_factory
 gst_element_set_name
 gst_element_get_name
@@ -975,6 +1052,8 @@ gst_event_parse_gap
 
 gst_event_new_stream_start
 gst_event_parse_stream_start
+gst_event_set_stream_flags
+gst_event_parse_stream_flags
 
 gst_event_new_segment
 gst_event_parse_segment
@@ -1019,6 +1098,9 @@ gst_event_parse_toc_select
 
 gst_event_new_segment_done
 gst_event_parse_segment_done
+
+gst_event_new_context
+gst_event_parse_context
 <SUBSECTION Standard>
 GstEventClass
 GST_EVENT
@@ -1144,6 +1226,7 @@ gst_debug_is_active
 gst_debug_set_colored
 gst_debug_is_colored
 gst_debug_set_default_threshold
+gst_debug_set_threshold_from_string
 gst_debug_get_default_threshold
 gst_debug_set_threshold_for_name
 gst_debug_unset_threshold_for_name
@@ -1320,6 +1403,8 @@ GST_MEMORY_IS_READONLY
 GST_MEMORY_IS_NO_SHARE
 GST_MEMORY_IS_ZERO_PADDED
 GST_MEMORY_IS_ZERO_PREFIXED
+GST_MEMORY_IS_PHYSICALLY_CONTIGUOUS
+GST_MEMORY_IS_NOT_MAPPABLE
 
 GstMemory
 
@@ -1337,6 +1422,8 @@ GstMemoryIsSpanFunction
 
 gst_memory_init
 
+gst_memory_is_type
+
 gst_memory_ref
 gst_memory_unref
 
@@ -1346,6 +1433,7 @@ gst_memory_resize
 gst_memory_lock
 gst_memory_unlock
 gst_memory_is_writable
+gst_memory_make_writable
 
 gst_memory_make_mapped
 gst_memory_map
@@ -1456,6 +1544,13 @@ gst_message_get_stream_status_object
 GstProgressType
 gst_message_new_progress
 gst_message_parse_progress
+
+gst_message_new_need_context
+gst_message_add_context_type
+gst_message_get_n_context_types
+gst_message_parse_nth_context_type
+gst_message_new_have_context
+gst_message_parse_have_context
 
 <SUBSECTION Standard>
 GstMessageClass
@@ -1771,6 +1866,8 @@ gst_pad_create_stream_id
 gst_pad_create_stream_id_printf
 gst_pad_create_stream_id_printf_valist
 
+gst_pad_get_stream_id
+
 GstPadForwardFunction
 gst_pad_forward
 <SUBSECTION Core>
@@ -2076,6 +2173,7 @@ gst_plugin_feature_set_name
 gst_plugin_feature_get_rank
 gst_plugin_feature_get_name
 gst_plugin_feature_get_plugin
+gst_plugin_feature_get_plugin_name
 gst_plugin_feature_load
 gst_plugin_feature_list_copy
 gst_plugin_feature_list_free
@@ -2246,11 +2344,13 @@ gst_query_add_allocation_pool
 gst_query_get_n_allocation_pools
 gst_query_parse_nth_allocation_pool
 gst_query_set_nth_allocation_pool
+gst_query_remove_nth_allocation_pool
 
 gst_query_add_allocation_param
 gst_query_get_n_allocation_params
 gst_query_parse_nth_allocation_param
 gst_query_set_nth_allocation_param
+gst_query_remove_nth_allocation_param
 
 gst_query_add_allocation_meta
 gst_query_get_n_allocation_metas
@@ -2269,6 +2369,13 @@ gst_query_has_scheduling_mode
 gst_query_has_scheduling_mode_with_flags
 
 gst_query_new_drain
+
+gst_query_new_context
+gst_query_set_context
+gst_query_parse_context
+gst_query_add_context_type
+gst_query_get_n_context_types
+gst_query_parse_nth_context_type
 <SUBSECTION Standard>
 GstQueryClass
 GST_QUERY
@@ -2367,6 +2474,7 @@ gst_structure_new_id_empty
 gst_structure_new
 gst_structure_new_valist
 gst_structure_new_id
+gst_structure_new_from_string
 gst_structure_copy
 gst_structure_free
 gst_structure_get_name
@@ -3078,6 +3186,11 @@ GST_VALUE_HOLDS_DATE_TIME
 GST_VALUE_HOLDS_CAPS
 gst_value_set_caps
 gst_value_get_caps
+
+<SUBSECTION capsfeature>
+GST_VALUE_HOLDS_CAPS_FEATURES
+gst_value_set_caps_features
+gst_value_get_caps_features
 
 <SUBSECTION structure>
 GST_VALUE_HOLDS_STRUCTURE

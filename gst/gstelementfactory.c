@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -730,17 +730,24 @@ gst_element_factory_list_is_type (GstElementFactory * factory,
     res = (strstr (klass, "Formatter") != NULL);
 
   /* Filter by media type now, we only test if it
-   * matched any of the types above. */
-  if (res
+   * matched any of the types above or only checking the media
+   * type was requested. */
+  if ((res || !(type & (GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS - 1)))
       && (type & (GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO |
               GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO |
-              GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE)))
+              GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE |
+              GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE |
+              GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA)))
     res = ((type & GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO)
         && (strstr (klass, "Audio") != NULL))
         || ((type & GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO)
         && (strstr (klass, "Video") != NULL))
         || ((type & GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE)
-        && (strstr (klass, "Image") != NULL));
+        && (strstr (klass, "Image") != NULL)) ||
+        ((type & GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE)
+        && (strstr (klass, "Subtitle") != NULL)) ||
+        ((type & GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA)
+        && (strstr (klass, "Metadata") != NULL));
 
   return res;
 }

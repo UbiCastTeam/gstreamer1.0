@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -83,6 +83,8 @@ _gst_memory_copy (GstMemory * mem)
 static void
 _gst_memory_free (GstMemory * mem)
 {
+  GstAllocator *allocator;
+
   GST_CAT_DEBUG (GST_CAT_MEMORY, "free memory %p", mem);
 
   if (mem->parent) {
@@ -90,7 +92,10 @@ _gst_memory_free (GstMemory * mem)
     gst_memory_unref (mem->parent);
   }
 
-  gst_allocator_free (mem->allocator, mem);
+  allocator = mem->allocator;
+
+  gst_allocator_free (allocator, mem);
+  gst_object_unref (allocator);
 }
 
 /**
@@ -117,7 +122,7 @@ gst_memory_init (GstMemory * mem, GstMemoryFlags flags,
       (GstMiniObjectCopyFunction) _gst_memory_copy, NULL,
       (GstMiniObjectFreeFunction) _gst_memory_free);
 
-  mem->allocator = allocator;
+  mem->allocator = gst_object_ref (allocator);
   if (parent) {
     gst_memory_lock (parent, GST_LOCK_FLAG_EXCLUSIVE);
     gst_memory_ref (parent);
@@ -131,6 +136,27 @@ gst_memory_init (GstMemory * mem, GstMemoryFlags flags,
   GST_CAT_DEBUG (GST_CAT_MEMORY, "new memory %p, maxsize:%" G_GSIZE_FORMAT
       " offset:%" G_GSIZE_FORMAT " size:%" G_GSIZE_FORMAT, mem, maxsize,
       offset, size);
+}
+
+/**
+ * gst_memory_is_type:
+ * @mem: a #GstMemory
+ * @mem_type: a memory type
+ *
+ * Check if @mem if allocated with an allocator for @mem_type.
+ *
+ * Returns: %TRUE if @mem was allocated from an allocator for @mem_type.
+ *
+ * Since: 1.2
+ */
+gboolean
+gst_memory_is_type (GstMemory * mem, const gchar * mem_type)
+{
+  g_return_val_if_fail (mem != NULL, FALSE);
+  g_return_val_if_fail (mem->allocator != NULL, FALSE);
+  g_return_val_if_fail (mem_type != NULL, FALSE);
+
+  return (g_strcmp0 (mem->allocator->mem_type, mem_type) == 0);
 }
 
 /**

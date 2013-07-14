@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstMeta</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstMessage.html" title="GstMessage">
@@ -120,8 +120,11 @@ Last reviewed on 2012-03-28 (0.11.3)
 Base structure for metadata. Custom metadata will put this structure
 as the first member of their structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="gstreamer-GstMeta.html#GstMetaFlags" title="enum GstMetaFlags"><span class="type">GstMetaFlags</span></a> <em class="structfield"><code><a name="GstMeta.flags"></a>flags</code></em>;</span></p></td>
@@ -150,8 +153,11 @@ as the first member of their structure.
 <p>
 Extra metadata flags.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-META-FLAG-NONE:CAPS"></a><span class="term"><code class="literal">GST_META_FLAG_NONE</code></span></p></td>
@@ -189,8 +195,11 @@ Extra metadata flags.
 <p>
 A flags word containing <a class="link" href="gstreamer-GstMeta.html#GstMetaFlags" title="enum GstMetaFlags"><span class="type">GstMetaFlags</span></a> flags set on <em class="parameter"><code>meta</code></em>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>meta</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a>.</td>
@@ -205,8 +214,11 @@ A flags word containing <a class="link" href="gstreamer-GstMeta.html#GstMetaFlag
 <p>
 Gives the status of a specific flag on a metadata.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>meta</code></em> :</span></p></td>
@@ -227,8 +239,11 @@ Gives the status of a specific flag on a metadata.
 <p>
 Sets a metadata flag on a metadata.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>meta</code></em> :</span></p></td>
@@ -249,8 +264,11 @@ Sets a metadata flag on a metadata.
 <p>
 Clears a metadata flag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>meta</code></em> :</span></p></td>
@@ -280,8 +298,11 @@ Clears a metadata flag.
 The <a class="link" href="gstreamer-GstMeta.html#GstMetaInfo" title="struct GstMetaInfo"><span class="type">GstMetaInfo</span></a> provides information about a specific metadata
 structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> <em class="structfield"><code><a name="GstMetaInfo.api"></a>api</code></em>;</span></p></td>
@@ -319,8 +340,11 @@ structure.
 <p>
 Function called when <em class="parameter"><code>meta</code></em> is initialized in <em class="parameter"><code>buffer</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>meta</code></em> :</span></p></td>
@@ -347,8 +371,11 @@ Function called when <em class="parameter"><code>meta</code></em> is initialized
 <p>
 Function called when <em class="parameter"><code>meta</code></em> is freed in <em class="parameter"><code>buffer</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>meta</code></em> :</span></p></td>
@@ -381,8 +408,11 @@ Implementations should check the <em class="parameter"><code>type</code></em> of
 additional type specific fields in <em class="parameter"><code>data</code></em> that should be used to update
 the metadata on <em class="parameter"><code>transbuf</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>transbuf</code></em> :</span></p></td>
@@ -427,8 +457,11 @@ the metadata on <em class="parameter"><code>transbuf</code></em>.
 <p>
 Extra data passed to a "gst-copy" transform <a class="link" href="gstreamer-GstMeta.html#GstMetaTransformFunction" title="GstMetaTransformFunction ()"><span class="type">GstMetaTransformFunction</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GstMetaTransformCopy.region"></a>region</code></em>;</span></p></td>
@@ -455,8 +488,11 @@ Extra data passed to a "gst-copy" transform <a class="link" href="gstreamer-GstM
 <p>
 Check if the transform type is a copy transform
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
 <td>a transform type</td>
@@ -472,8 +508,11 @@ Check if the transform type is a copy transform
 Register and return a GType for the <em class="parameter"><code>api</code></em> and associate it with
 <em class="parameter"><code>tags</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>api</code></em> :</span></p></td>
@@ -499,8 +538,11 @@ Register and return a GType for the <em class="parameter"><code>api</code></em> 
 <p>
 Check if <em class="parameter"><code>api</code></em> was registered with <em class="parameter"><code>tag</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>api</code></em> :</span></p></td>
@@ -544,8 +586,11 @@ Register a new <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="stru
 The same <em class="parameter"><code>info</code></em> can be retrieved later with <a class="link" href="gstreamer-GstMeta.html#gst-meta-get-info" title="gst_meta_get_info ()"><code class="function">gst_meta_get_info()</code></a> by using
 <em class="parameter"><code>impl</code></em> as the key.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>api</code></em> :</span></p></td>
@@ -590,8 +635,11 @@ The same <em class="parameter"><code>info</code></em> can be retrieved later wit
 Lookup a previously registered meta info structure by its implementation name
 <em class="parameter"><code>impl</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>impl</code></em> :</span></p></td>

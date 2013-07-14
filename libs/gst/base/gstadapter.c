@@ -14,8 +14,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -83,12 +83,14 @@
  *
  * The adapter will keep track of the timestamps of the buffers
  * that were pushed. The last seen timestamp before the current position
- * can be queried with gst_adapter_prev_timestamp(). This function can
- * optionally return the amount of bytes between the start of the buffer that
+ * can be queried with gst_adapter_prev_pts(). This function can
+ * optionally return the number of bytes between the start of the buffer that
  * carried the timestamp and the current adapter position. The distance is
  * useful when dealing with, for example, raw audio samples because it allows
  * you to calculate the timestamp of the current adapter position by using the
- * last seen timestamp and the amount of bytes since.
+ * last seen timestamp and the amount of bytes since.  Additionally, the
+ * gst_adapter_prev_pts_at_offset() can be used to determine the last
+ * seen timestamp at a particular offset in the adapter.
  *
  * A last thing to note is that while GstAdapter is pretty optimized,
  * merging buffers still might be an operation that requires a malloc() and
@@ -949,6 +951,104 @@ gst_adapter_prev_dts (GstAdapter * adapter, guint64 * distance)
 }
 
 /**
+ * gst_adapter_prev_pts_at_offset:
+ * @adapter: a #GstAdapter
+ * @offset: the offset in the adapter at which to get timestamp
+ * @distance: (out) (allow-none): pointer to location for distance, or NULL
+ *
+ * Get the pts that was before the byte at offset @offset in the adapter. When
+ * @distance is given, the amount of bytes between the pts and the current
+ * position is returned.
+ *
+ * The pts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
+ * the adapter is first created or when it is cleared. This also means that before
+ * the first byte with a pts is removed from the adapter, the pts
+ * and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
+ *
+ * Since: 1.2
+ * Returns: The previously seen pts at given offset.
+ */
+GstClockTime
+gst_adapter_prev_pts_at_offset (GstAdapter * adapter, gsize offset,
+    guint64 * distance)
+{
+  GstBuffer *cur;
+  GSList *g;
+  gsize read_offset = 0;
+  GstClockTime pts = adapter->pts;
+
+  g_return_val_if_fail (GST_IS_ADAPTER (adapter), GST_CLOCK_TIME_NONE);
+  g_return_val_if_fail (offset >= 0, GST_CLOCK_TIME_NONE);
+
+  g = adapter->buflist;
+
+  while (g && read_offset < offset + adapter->skip) {
+    cur = g->data;
+
+    read_offset += gst_buffer_get_size (cur);
+    if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_PTS (cur))) {
+      pts = GST_BUFFER_PTS (cur);
+    }
+
+    g = g_slist_next (g);
+  }
+
+  if (distance)
+    *distance = adapter->dts_distance + offset;
+
+  return pts;
+}
+
+/**
+ * gst_adapter_prev_dts_at_offset:
+ * @adapter: a #GstAdapter
+ * @offset: the offset in the adapter at which to get timestamp
+ * @distance: (out) (allow-none): pointer to location for distance, or NULL
+ *
+ * Get the dts that was before the byte at offset @offset in the adapter. When
+ * @distance is given, the amount of bytes between the dts and the current
+ * position is returned.
+ *
+ * The dts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
+ * the adapter is first created or when it is cleared. This also means that before
+ * the first byte with a dts is removed from the adapter, the dts
+ * and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
+ *
+ * Since: 1.2
+ * Returns: The previously seen dts at given offset.
+ */
+GstClockTime
+gst_adapter_prev_dts_at_offset (GstAdapter * adapter, gsize offset,
+    guint64 * distance)
+{
+  GstBuffer *cur;
+  GSList *g;
+  gsize read_offset = 0;
+  GstClockTime dts = adapter->dts;
+
+  g_return_val_if_fail (GST_IS_ADAPTER (adapter), GST_CLOCK_TIME_NONE);
+  g_return_val_if_fail (offset >= 0, GST_CLOCK_TIME_NONE);
+
+  g = adapter->buflist;
+
+  while (g && read_offset < offset + adapter->skip) {
+    cur = g->data;
+
+    read_offset += gst_buffer_get_size (cur);
+    if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DTS (cur))) {
+      dts = GST_BUFFER_DTS (cur);
+    }
+
+    g = g_slist_next (g);
+  }
+
+  if (distance)
+    *distance = adapter->dts_distance + offset;
+
+  return dts;
+}
+
+/**
  * gst_adapter_masked_scan_uint32_peek:
  * @adapter: a #GstAdapter
  * @mask: mask to apply to data before matching against @pattern
@@ -971,7 +1071,7 @@ gst_adapter_prev_dts (GstAdapter * adapter, guint64 * distance)
  *
  * Returns: offset of the first match, or -1 if no match was found.
  */
-gsize
+gssize
 gst_adapter_masked_scan_uint32_peek (GstAdapter * adapter, guint32 mask,
     guint32 pattern, gsize offset, gsize size, guint32 * value)
 {
@@ -1108,7 +1208,7 @@ gst_adapter_masked_scan_uint32_peek (GstAdapter * adapter, guint32 mask,
  * // -> returns -1
  * </programlisting>
  */
-gsize
+gssize
 gst_adapter_masked_scan_uint32 (GstAdapter * adapter, guint32 mask,
     guint32 pattern, gsize offset, gsize size)
 {

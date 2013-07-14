@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -192,82 +192,6 @@ enum
  * val ::= [0-5]
  */
 
-#ifndef NUL
-#define NUL '\0'
-#endif
-
-#ifndef GST_DISABLE_GST_DEBUG
-static gboolean
-parse_debug_category (gchar * str, const gchar ** category)
-{
-  if (!str)
-    return FALSE;
-
-  /* works in place */
-  g_strstrip (str);
-
-  if (str[0] != NUL) {
-    *category = str;
-    return TRUE;
-  }
-
-  return FALSE;
-}
-
-static gboolean
-parse_debug_level (gchar * str, GstDebugLevel * level)
-{
-  if (!str)
-    return FALSE;
-
-  /* works in place */
-  g_strstrip (str);
-
-  if (str[0] != NUL && str[1] == NUL
-      && str[0] >= '0' && str[0] < '0' + GST_LEVEL_COUNT) {
-    *level = (GstDebugLevel) (str[0] - '0');
-    return TRUE;
-  }
-
-  return FALSE;
-}
-
-static void
-parse_debug_list (const gchar * list)
-{
-  gchar **split;
-  gchar **walk;
-
-  g_assert (list);
-
-  split = g_strsplit (list, ",", 0);
-
-  for (walk = split; *walk; walk++) {
-    if (strchr (*walk, ':')) {
-      gchar **values = g_strsplit (*walk, ":", 2);
-
-      if (values[0] && values[1]) {
-        GstDebugLevel level;
-        const gchar *category;
-
-        if (parse_debug_category (values[0], &category)
-            && parse_debug_level (values[1], &level))
-          gst_debug_set_threshold_for_name (category, level);
-      }
-
-      g_strfreev (values);
-    } else {
-      GstDebugLevel level;
-
-      if (parse_debug_level (*walk, &level))
-        gst_debug_set_default_threshold (level);
-    }
-  }
-
-  g_strfreev (split);
-}
-#endif
-
 #ifdef G_OS_WIN32
 BOOL WINAPI DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 BOOL WINAPI
@@ -403,6 +327,7 @@ gst_init_check (int *argc, char **argv[], GError ** err)
 #ifndef GST_DISABLE_OPTION_PARSING
   ctx = g_option_context_new ("- GStreamer initialization");
   g_option_context_set_ignore_unknown_options (ctx, TRUE);
+  g_option_context_set_help_enabled (ctx, FALSE);
   group = gst_init_get_option_group ();
   g_option_context_add_group (ctx, group);
   res = g_option_context_parse (ctx, argc, argv, err);
@@ -543,7 +468,6 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
 #endif
 
 #ifdef ENABLE_NLS
-  setlocale (LC_ALL, "");
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 #endif /* ENABLE_NLS */
@@ -557,7 +481,7 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
 
     debug_list = g_getenv ("GST_DEBUG");
     if (debug_list) {
-      parse_debug_list (debug_list);
+      gst_debug_set_threshold_from_string (debug_list, FALSE);
     }
   }
 
@@ -639,6 +563,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   _priv_gst_query_initialize ();
   _priv_gst_structure_initialize ();
   _priv_gst_caps_initialize ();
+  _priv_gst_caps_features_initialize ();
   _priv_gst_meta_initialize ();
 
   g_type_class_ref (gst_object_get_type ());
@@ -731,6 +656,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_control_source_get_type ());
   g_type_class_ref (gst_lock_flags_get_type ());
   g_type_class_ref (gst_allocator_flags_get_type ());
+  g_type_class_ref (gst_stream_flags_get_type ());
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
@@ -738,6 +664,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   _priv_gst_buffer_list_initialize ();
   _priv_gst_sample_initialize ();
   _priv_gst_value_initialize ();
+  _priv_gst_context_initialize ();
 
   g_type_class_ref (gst_param_spec_fraction_get_type ());
   _priv_gst_tag_initialize ();
@@ -883,7 +810,7 @@ parse_one_option (gint opt, const gchar * arg, GError ** err)
       break;
     }
     case ARG_DEBUG:
-      parse_debug_list (arg);
+      gst_debug_set_threshold_from_string (arg, FALSE);
       break;
     case ARG_DEBUG_NO_COLOR:
       gst_debug_set_colored (FALSE);
@@ -1102,6 +1029,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_toc_entry_type_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_lock_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_allocator_flags_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_stream_flags_get_type ()));
 
 
   gst_deinitialized = TRUE;

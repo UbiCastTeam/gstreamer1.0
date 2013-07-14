@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstPoll</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstPluginFeature.html" title="GstPluginFeature">
@@ -131,8 +131,11 @@ A set of file/network descriptors.
 <p>
 A file descriptor object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="type">int</span> <em class="structfield"><code><a name="GstPollFD.fd"></a>fd</code></em>;</span></p></td>
 <td>a file descriptor</td>
@@ -159,8 +162,11 @@ be assigned to a variable. In that case you have to use
 <p>
 Add a file descriptor to the file descriptor set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -186,8 +192,11 @@ Add a file descriptor to the file descriptor set.
 <p>
 Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><code>set</code></em> has data to be read.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -213,8 +222,11 @@ Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><co
 <p>
 Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><code>set</code></em> can be used for writing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -242,8 +254,11 @@ Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><co
 Control whether the descriptor <em class="parameter"><code>fd</code></em> in <em class="parameter"><code>set</code></em> will be monitored for
 readability.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -275,8 +290,11 @@ readability.
 Control whether the descriptor <em class="parameter"><code>fd</code></em> in <em class="parameter"><code>set</code></em> will be monitored for
 writability.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -306,8 +324,11 @@ writability.
 <p>
 Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><code>set</code></em> has closed the connection.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -333,8 +354,11 @@ Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><co
 <p>
 Check if <em class="parameter"><code>fd</code></em> in <em class="parameter"><code>set</code></em> has an error.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -368,8 +392,11 @@ The reason why this is needed is because the underlying implementation
 might not allow querying the fd more than once between calls to one of
 the re-enabling operations.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -390,8 +417,11 @@ the re-enabling operations.
 Initializes <em class="parameter"><code>fd</code></em>. Alternatively you can initialize it with
 <a class="link" href="gstreamer-GstPoll.html#GST-POLL-FD-INIT:CAPS" title="GST_POLL_FD_INIT"><span class="type">GST_POLL_FD_INIT</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>fd</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstPoll.html#GstPollFD" title="GstPollFD"><span class="type">GstPollFD</span></a>
@@ -406,8 +436,11 @@ Initializes <em class="parameter"><code>fd</code></em>. Alternatively you can in
 <p>
 Free a file descriptor set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
 <td>a file descriptor set. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -427,8 +460,11 @@ is possible to restart or flush a call to <a class="link" href="gstreamer-GstPol
 <p>
 Free-function: gst_poll_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>controllable</code></em> :</span></p></td>
@@ -458,8 +494,11 @@ performed from different threads.
 <p>
 Free-function: gst_poll_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in case of an error.
@@ -477,8 +516,11 @@ Free with <a class="link" href="gstreamer-GstPoll.html#gst-poll-free" title="gst
 Get a GPollFD for the reading part of the control socket. This is useful when
 integrating with a GSource and GMainLoop.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -501,8 +543,11 @@ integrating with a GSource and GMainLoop.
 <p>
 Remove a file descriptor from the file descriptor set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -531,8 +576,11 @@ used after adding or removing descriptors to <em class="parameter"><code>set</co
 <p>
 If <em class="parameter"><code>set</code></em> is not controllable, then this call will have no effect.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a>.</td>
@@ -549,8 +597,11 @@ When <em class="parameter"><code>controllable</code></em> is <a href="http://lib
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> will be affected by <a class="link" href="gstreamer-GstPoll.html#gst-poll-restart" title="gst_poll_restart ()"><code class="function">gst_poll_restart()</code></a> and
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-set-flushing" title="gst_poll_set_flushing ()"><code class="function">gst_poll_set_flushing()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -580,8 +631,11 @@ to <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_w
 <p>
 Unsetting the flushing state will restore normal operation of <em class="parameter"><code>set</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -613,8 +667,11 @@ This is not true for timer <a class="link" href="gstreamer-GstPoll.html#GstPoll"
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-new-timer" title="gst_poll_new_timer ()"><code class="function">gst_poll_new_timer()</code></a>, where it is allowed to have multiple threads waiting
 simultaneously.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -642,8 +699,11 @@ Read a byte from the control socket of the controllable <em class="parameter"><c
 This function is mostly useful for timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-new-timer" title="gst_poll_new_timer ()"><code class="function">gst_poll_new_timer()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>
@@ -673,8 +733,11 @@ It will make any current and future <a class="link" href="gstreamer-GstPoll.html
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-read-control" title="gst_poll_read_control ()"><code class="function">gst_poll_read_control()</code></a> have been performed, calls to <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> will
 block again until their timeout expired.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>set</code></em> :</span></p></td>

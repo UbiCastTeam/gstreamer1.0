@@ -12,7 +12,9 @@ libgstbase_@GST_API_VERSION@_la_SOURCES = \
 	gstbytereader.c		\
 	gstbytewriter.c         \
 	gstcollectpads.c	\
+	gstdataqueue.c		\
 	gstpushsrc.c		\
+	gstqueuearray.c		\
 	gsttypefindhelper.c
 
 libgstbase_@GST_API_VERSION@_la_CFLAGS = $(GST_OBJ_CFLAGS)
@@ -23,6 +25,7 @@ libgstbase_@GST_API_VERSION@includedir =		\
 	$(includedir)/gstreamer-@GST_API_VERSION@/gst/base
 
 libgstbase_@GST_API_VERSION@include_HEADERS =	\
+	base.h			\
 	gstadapter.h		\
 	gstbaseparse.h		\
 	gstbasesink.h		\
@@ -32,7 +35,9 @@ libgstbase_@GST_API_VERSION@include_HEADERS =	\
 	gstbytereader.h		\
 	gstbytewriter.h         \
 	gstcollectpads.h	\
+	gstdataqueue.h		\
 	gstpushsrc.h		\
+	gstqueuearray.h		\
 	gsttypefindhelper.h
 
 noinst_HEADERS = \
@@ -67,11 +72,10 @@ BUILT_GIRSOURCES = GstBase-@GST_API_VERSION@.gir
 
 gir_headers=$(patsubst %,$(srcdir)/%, $(libgstbase_@GST_API_VERSION@include_HEADERS))
 gir_sources=$(patsubst %,$(srcdir)/%, $(libgstbase_@GST_API_VERSION@_la_SOURCES))
-gir_cincludes=$(patsubst %,--c-include='gst/base/%',$(libgstbase_@GST_API_VERSION@include_HEADERS))
 
 GstBase-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstbase-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
-		GST_PLUGIN_SYSTEM_PATH="" GST_PLUGIN_PATH="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 		$(INTROSPECTION_SCANNER) -v --namespace GstBase \
 		--nsversion=@GST_API_VERSION@ \
 		--warn-all \
@@ -80,10 +84,9 @@ GstBase-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstbase-@GST_API_VERS
 		-I$(top_srcdir)/libs \
 		-I$(top_builddir) \
 		-I$(top_builddir)/libs \
-		$(gir_cincludes) \
+		--c-include "gst/base/base.h" \
 		--add-include-path=$(top_builddir)/gst \
 		--library-path=$(top_builddir)/gst \
-		--library=$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
 		--library=libgstbase-@GST_API_VERSION@.la \
 		--include=Gst-@GST_API_VERSION@ \
 		--libtool="$(top_builddir)/libtool" \

@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -116,6 +116,7 @@ static GstEventQuarks event_quarks[] = {
   {GST_EVENT_BUFFERSIZE, "buffersize", 0},
   {GST_EVENT_SINK_MESSAGE, "sink-message", 0},
   {GST_EVENT_EOS, "eos", 0},
+  {GST_EVENT_CONTEXT, "context", 0},
   {GST_EVENT_SEGMENT_DONE, "segment-done", 0},
   {GST_EVENT_GAP, "gap", 0},
   {GST_EVENT_QOS, "qos", 0},
@@ -1403,7 +1404,8 @@ gst_event_new_stream_start (const gchar * stream_id)
   g_return_val_if_fail (stream_id != NULL, NULL);
 
   s = gst_structure_new_id (GST_QUARK (EVENT_STREAM_START),
-      GST_QUARK (STREAM_ID), G_TYPE_STRING, stream_id, NULL);
+      GST_QUARK (STREAM_ID), G_TYPE_STRING, stream_id,
+      GST_QUARK (FLAGS), GST_TYPE_STREAM_FLAGS, GST_STREAM_FLAG_NONE, NULL);
 
   return gst_event_new_custom (GST_EVENT_STREAM_START, s);
 }
@@ -1432,6 +1434,43 @@ gst_event_parse_stream_start (GstEvent * event, const gchar ** stream_id)
 
   if (stream_id)
     *stream_id = g_value_get_string (val);
+}
+
+/**
+ * gst_event_set_stream_flags:
+ * @event: a stream-start event
+ * @flags: the stream flags to set
+ *
+ * Since: 1.2
+ */
+void
+gst_event_set_stream_flags (GstEvent * event, GstStreamFlags flags)
+{
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START);
+  g_return_if_fail (gst_event_is_writable (event));
+
+  gst_structure_id_set (GST_EVENT_STRUCTURE (event),
+      GST_QUARK (FLAGS), GST_TYPE_STREAM_FLAGS, flags, NULL);
+}
+
+/**
+ * gst_event_parse_stream_flags:
+ * @event: a stream-start event
+ * @flags: (out): address of variable where to store the stream flags
+ *
+ * Since: 1.2
+ */
+void
+gst_event_parse_stream_flags (GstEvent * event, GstStreamFlags * flags)
+{
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START);
+
+  if (flags) {
+    gst_structure_id_get (GST_EVENT_STRUCTURE (event),
+        GST_QUARK (FLAGS), GST_TYPE_STREAM_FLAGS, flags, NULL);
+  }
 }
 
 /**
@@ -1596,4 +1635,57 @@ gst_event_parse_segment_done (GstEvent * event, GstFormat * format,
   val = gst_structure_id_get_value (structure, GST_QUARK (POSITION));
   if (position != NULL)
     *position = g_value_get_int64 (val);
+}
+
+/**
+ * gst_event_new_context:
+ * @context: (transfer full): the #GstContext
+ *
+ * Create a new context event. The purpose of the context event is
+ * to pass a pipeline-local context to downstream elements.
+ *
+ * Returns: (transfer full): a new #GstEvent
+ *
+ * Since: 1.2
+ */
+GstEvent *
+gst_event_new_context (GstContext * context)
+{
+  GstEvent *event;
+  GstStructure *structure;
+
+  g_return_val_if_fail (context != NULL, NULL);
+
+  GST_CAT_INFO (GST_CAT_EVENT, "creating context event");
+
+  structure = gst_structure_new_id (GST_QUARK (EVENT_SEEK),
+      GST_QUARK (CONTEXT), GST_TYPE_CONTEXT, context, NULL);
+  event = gst_event_new_custom (GST_EVENT_CONTEXT, structure);
+  gst_context_unref (context);
+
+  return event;
+}
+
+/**
+ * gst_event_parse_context:
+ * @event: The event to query
+ * @context: (out) (transfer full): a pointer to store the #GstContext in.
+ *
+ * Parse the context event. Unref @context after usage.
+ *
+ * Since: 1.2
+ */
+void
+gst_event_parse_context (GstEvent * event, GstContext ** context)
+{
+  const GstStructure *structure;
+
+  g_return_if_fail (GST_IS_EVENT (event));
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_CONTEXT);
+
+  structure = GST_EVENT_STRUCTURE (event);
+  if (context)
+    *context =
+        GST_CONTEXT (g_value_dup_boxed (gst_structure_id_get_value
+            (structure, GST_QUARK (CONTEXT))));
 }

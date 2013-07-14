@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GSTINFO_H__
@@ -229,6 +229,21 @@ struct _GstDebugCategory {
 #endif
 #endif /* ifndef GST_FUNCTION */
 
+/**
+ * GST_PTR_FORMAT:
+ *
+ * printf format type used to debug GStreamer types.
+ * This can only be used on types whose size is >= sizeof(gpointer).
+ */
+#define GST_PTR_FORMAT     "p\aA"
+
+/**
+ * GST_SEGMENT_FORMAT:
+ *
+ * printf format type used to debug GStreamer segments.
+ * This can only be used on pointers to GstSegment structures.
+ */
+#define GST_SEGMENT_FORMAT "p\aB"
 
 typedef struct _GstDebugMessage GstDebugMessage;
 
@@ -256,20 +271,6 @@ typedef void (*GstLogFunction)  (GstDebugCategory * category,
                                  GstDebugMessage  * message,
                                  gpointer           user_data);
 
-#ifdef GST_USING_PRINTF_EXTENSION
-
-/* not using G_GNUC_PRINTF, since gcc will choke on GST_PTR_FORMAT being %P */
-void		    gst_debug_log            (GstDebugCategory * category,
-                                          GstDebugLevel      level,
-                                          const gchar      * file,
-                                          const gchar      * function,
-                                          gint               line,
-                                          GObject          * object,
-                                          const gchar      * format,
-                                          ...) G_GNUC_NO_INSTRUMENT;
-
-#else /* GST_USING_PRINTF_EXTENSION */
-
 void		    gst_debug_log            (GstDebugCategory * category,
                                           GstDebugLevel      level,
                                           const gchar      * file,
@@ -278,8 +279,6 @@ void		    gst_debug_log            (GstDebugCategory * category,
                                           GObject          * object,
                                           const gchar      * format,
                                           ...) G_GNUC_PRINTF (7, 8) G_GNUC_NO_INSTRUMENT;
-
-#endif /* GST_USING_PRINTF_EXTENSION */
 
 void            gst_debug_log_valist     (GstDebugCategory * category,
                                           GstDebugLevel      level,
@@ -346,6 +345,7 @@ void            gst_debug_set_default_threshold      (GstDebugLevel level);
 GstDebugLevel   gst_debug_get_default_threshold      (void);
 void            gst_debug_set_threshold_for_name     (const gchar * name,
                                                       GstDebugLevel level);
+void            gst_debug_set_threshold_from_string  (const gchar * list, gboolean reset);
 void            gst_debug_unset_threshold_for_name   (const gchar * name);
 
 

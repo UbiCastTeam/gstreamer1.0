@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libgstnet-@GST_API_VERSION@.la
 
 libgstnet_@GST_API_VERSION@_includedir = $(includedir)/gstreamer-@GST_API_VERSION@/gst/net
 libgstnet_@GST_API_VERSION@_include_HEADERS = \
+    net.h \
     gstnet.h \
     gstnetaddressmeta.h \
     gstnetclientclock.h \
@@ -43,11 +44,11 @@ BUILT_GIRSOURCES = GstNet-@GST_API_VERSION@.gir
 
 gir_headers=$(patsubst %,$(srcdir)/%, $(libgstnet_@GST_API_VERSION@_include_HEADERS))
 gir_sources=$(patsubst %,$(srcdir)/%, $(libgstnet_@GST_API_VERSION@_la_SOURCES))
-gir_cincludes=--c-include="gst/net/gstnet.h"
+gir_cincludes=--c-include="gst/net/net.h"
 
 GstNet-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstnet-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
-		GST_PLUGIN_SYSTEM_PATH="" GST_PLUGIN_PATH="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 		$(INTROSPECTION_SCANNER) -v --namespace GstNet \
 		--strip-prefix=Gst \
 		--warn-all \
@@ -59,7 +60,6 @@ GstNet-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstnet-@GST_API_VERSIO
 		$(gir_cincludes) \
 		--add-include-path=$(top_builddir)/gst \
 		--library-path=$(top_builddir)/gst \
-		--library=$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
 		--library=libgstnet-@GST_API_VERSION@.la \
 		--include=Gst-@GST_API_VERSION@ \
 		--include=Gio-2.0 \

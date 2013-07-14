@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.25.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-07-11 19:26+0100\n"
+"POT-Creation-Date: 2013-07-11 15:09+0200\n"
 "PO-Revision-Date: 2010-02-02 18:58+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -237,6 +237,10 @@ msgstr "域 %s 和代码 %d 中无标准错误信息。"
 
 msgid "Selected clock cannot be used in pipeline."
 msgstr "选中的时钟序列无法用在管道中。"
+
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "寄存器缓存写入 %s 时出错: %s"
 
 msgid "title"
 msgstr "标题"
@@ -774,6 +778,14 @@ msgid ", "
 msgstr ", "
 
 #, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
+
+#, c-format
 msgid "ERROR: from element %s: %s\n"
 msgstr "错误：来自组件 %s：%s\n"
 
@@ -838,15 +850,6 @@ msgstr "无法连接 URI“%s”的消音组件"
 msgid "empty pipeline not allowed"
 msgstr "不允许空管道"
 
-msgid "Internal clock error."
-msgstr "内部时钟错误。"
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "内部数据流错误。"
-
 msgid "A lot of buffers are being dropped."
 msgstr "很多缓冲区正被丢弃。"
 
@@ -855,6 +858,15 @@ msgstr "内部数据流问题。"
 
 msgid "Internal data stream error."
 msgstr "内部数据流错误。"
+
+msgid "Internal data flow error."
+msgstr "内部数据流错误。"
+
+msgid "Internal clock error."
+msgstr "内部时钟错误。"
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "过滤分析器"
@@ -1085,6 +1097,10 @@ msgstr "警告：来自组件 %s：%s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Prerolled，等待缓冲完成...\n"
 
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Prerolled，等待缓冲完成...\n"
+
 msgid "buffering..."
 msgstr "正在缓冲..."
 
@@ -1104,9 +1120,17 @@ msgstr "%2$s 发起请求时状态设置为 %1$s...\n"
 msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "中断: 中止管道 ...\n"
 
+#, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
 #, fuzzy, c-format
 msgid "Missing element: %s\n"
 msgstr "无组件“%s”"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s\n"
+msgstr "警告：来自组件 %s：%s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "输出标识(也可认为是元数据)"
@@ -1209,9 +1233,6 @@ msgstr "设置 NULL 管道 ...\n"
 msgid "Freeing pipeline ...\n"
 msgstr "释放管道资源 ...\n"
 
-#~ msgid "maximum"
-#~ msgstr "最大"
-
 #~ msgid "Usage: gst-xmllaunch <file.xml> [ element.property=value ... ]\n"
 #~ msgstr "用法: gst-xmllaunch <file.xml> [ element.property=value ... ]\n"
 
@@ -1238,9 +1259,6 @@ msgstr "释放管道资源 ...\n"
 
 #~ msgid "Print alloc trace (if enabled at compile time)"
 #~ msgstr "打印分配记录(如果在编译时开启的话)"
-
-#~ msgid "Error writing registry cache to %s: %s"
-#~ msgstr "寄存器缓存写入 %s 时出错: %s"
 
 #~ msgid "Error re-scanning registry %s: %s"
 #~ msgstr "重新扫描寄存器 %s 时出错: %s"

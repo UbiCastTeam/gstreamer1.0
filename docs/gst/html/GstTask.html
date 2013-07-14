@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTask</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstTagSetter.html" title="GstTagSetter">
@@ -108,7 +108,7 @@ might sometimes be needed to create a <a class="link" href="GstTask.html" title=
 a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.
 </p>
 <p>
-Before the <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTask</span></a> can be run, it needs a <a href="http://library.gnome.org/devel/glib/unstable/glib-Deprecated-Thread-APIs.html#GStaticRecMutex"><span class="type">GStaticRecMutex</span></a> that can be set with
+Before the <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTask</span></a> can be run, it needs a <a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GRecMutex"><span class="type">GRecMutex</span></a> that can be set with
 <a class="link" href="GstTask.html#gst-task-set-lock" title="gst_task_set_lock ()"><code class="function">gst_task_set_lock()</code></a>.
 </p>
 <p>
@@ -165,8 +165,11 @@ Last reviewed on 2012-03-29 (0.11.3)
 <p>
 The <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTask</span></a> object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstTask.html#GstTaskState" title="enum GstTaskState"><span class="type">GstTaskState</span></a> <em class="structfield"><code><a name="GstTask-struct.state"></a>state</code></em>;</span></p></td>
@@ -208,8 +211,11 @@ The <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTa
 A function that will repeatedly be called in the thread created by
 a <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTask</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
 <td>user data passed to the function</td>
@@ -228,8 +234,11 @@ a <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTask
 <p>
 The different states a task can be in
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TASK-STARTED:CAPS"></a><span class="term"><code class="literal">GST_TASK_STARTED</code></span></p></td>
@@ -257,8 +266,11 @@ The different states a task can be in
 <p>
 Send a broadcast signal to all waiting task conds
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
 <td>Task to broadcast</td>
@@ -273,8 +285,11 @@ Send a broadcast signal to all waiting task conds
 <p>
 Get access to the cond of the task.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
 <td>Task to get the cond of</td>
@@ -289,8 +304,11 @@ Get access to the cond of the task.
 <p>
 Get access to the task lock.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
 <td>Task to get the lock of</td>
@@ -305,8 +323,11 @@ Get access to the task lock.
 <p>
 Signal the task cond
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
 <td>Task to signal</td>
@@ -321,8 +342,11 @@ Signal the task cond
 <p>
 Get access to the state of the task.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
 <td>Task to get the state of</td>
@@ -337,8 +361,11 @@ Get access to the state of the task.
 <p>
 Wait for the task cond to be signalled
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
 <td>Task to wait for</td>
@@ -365,12 +392,15 @@ This function will not yet create and start a thread. Use <a class="link" href="
 <a class="link" href="GstTask.html#gst-task-pause" title="gst_task_pause ()"><code class="function">gst_task_pause()</code></a> to create and start the GThread.
 </p>
 <p>
-Before the task can be used, a <a href="http://library.gnome.org/devel/glib/unstable/glib-Deprecated-Thread-APIs.html#GStaticRecMutex"><span class="type">GStaticRecMutex</span></a> must be configured using the
+Before the task can be used, a <a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GRecMutex"><span class="type">GRecMutex</span></a> must be configured using the
 <a class="link" href="GstTask.html#gst-task-set-lock" title="gst_task_set_lock ()"><code class="function">gst_task_set_lock()</code></a> function. This lock will always be acquired while
 <em class="parameter"><code>func</code></em> is called.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
@@ -410,8 +440,11 @@ This function has to be called before calling <a class="link" href="GstTask.html
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -436,8 +469,11 @@ will be created by <em class="parameter"><code>task</code></em> will now use <em
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -463,8 +499,11 @@ threads.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -489,8 +528,11 @@ after usage. <span class="annotation">[<acronym title="Free data after the code 
 <p>
 Custom GstTask thread callback functions that can be installed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -521,8 +563,11 @@ Call <em class="parameter"><code>enter_func</code></em> when the task function o
 be passed to <em class="parameter"><code>enter_func</code></em> and <em class="parameter"><code>notify</code></em> will be called when <em class="parameter"><code>user_data</code></em> is no
 longer referenced.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -557,8 +602,11 @@ Call <em class="parameter"><code>leave_func</code></em> when the task function o
 be passed to <em class="parameter"><code>leave_func</code></em> and <em class="parameter"><code>notify</code></em> will be called when <em class="parameter"><code>user_data</code></em> is no
 longer referenced.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -588,8 +636,11 @@ longer referenced.
 <p>
 Get the current state of the task.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -619,8 +670,11 @@ this function will return <a href="http://library.gnome.org/devel/glib/unstable/
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -649,8 +703,11 @@ stopped state, in which case a thread will be started and will remain
 in the paused state. This function does not wait for the task to complete
 the paused state.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -673,8 +730,11 @@ MT safe.</td>
 Starts <em class="parameter"><code>task</code></em>. The <em class="parameter"><code>task</code></em> must have a lock associated with it using
 <a class="link" href="GstTask.html#gst-task-set-lock" title="gst_task_set_lock ()"><code class="function">gst_task_set_lock()</code></a> or this function will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -698,8 +758,11 @@ Stops <em class="parameter"><code>task</code></em>. This method merely schedules
 will not wait for the task to have completely stopped. Use
 <a class="link" href="GstTask.html#gst-task-join" title="gst_task_join ()"><code class="function">gst_task_join()</code></a> to stop and wait for completion.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>
@@ -730,8 +793,11 @@ This function cannot be called from within a task function as this
 would cause a deadlock. The function will detect this and print a
 g_warning.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>task</code></em> :</span></p></td>

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBaseTransform</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseSink.html" title="GstBaseSink">
@@ -99,7 +99,7 @@ This base class is for filter elements that process data.
 <p>
 It provides for:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>one sinkpad and one srcpad</p></li>
 <li class="listitem"><p>
      Possible formats on sink and source pad implemented
@@ -118,14 +118,14 @@ It provides for:
 <p>
 </p>
 <div class="refsect2">
-<a name="idp8789696"></a><h3>Use Cases</h3>
+<a name="idp6953552"></a><h3>Use Cases</h3>
 <p>
 </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
 <div class="itemizedlist">
 <p class="title"><b>Passthrough mode</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     Element has no interest in modifying the buffer. It may want to inspect it,
     in which case the element should have a transform_ip function. If there
@@ -146,7 +146,7 @@ It provides for:
 </div>
 <div class="itemizedlist">
 <p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">Level</li>
 <li class="listitem">Videoscale, audioconvert, videoconvert, audioresample in
     certain modes.</li>
@@ -157,7 +157,7 @@ It provides for:
 <div class="itemizedlist">
 <p class="title"><b>Modifications in-place - input buffer and output buffer are the
     same thing.</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     The element must implement a transform_ip function.
   </p></li>
@@ -180,7 +180,7 @@ It provides for:
 </div>
 <div class="itemizedlist">
 <p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">Volume</li>
 <li class="listitem">Audioconvert in certain modes (signed/unsigned
     conversion)</li>
@@ -192,7 +192,7 @@ It provides for:
 <li class="listitem">
 <div class="itemizedlist">
 <p class="title"><b>Modifications only to the caps/metadata of a buffer</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     The element does not require writable data, but non-writable buffers
     should be subbuffered so that the meta-information can be replaced.
@@ -206,7 +206,7 @@ It provides for:
 </div>
 <div class="itemizedlist">
 <p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">Capsfilter when setting caps on outgoing buffers that have
     none.</li>
 <li class="listitem">identity when it is going to re-timestamp buffers by
@@ -217,7 +217,7 @@ It provides for:
 <li class="listitem">
 <div class="itemizedlist">
 <p class="title"><b>Normal mode</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     always_in_place flag is not set, or there is no transform_ip function
   </p></li>
@@ -231,23 +231,22 @@ It provides for:
 </div>
 <div class="itemizedlist">
 <p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" type="disc"><li class="listitem">Videoscale, videoconvert, audioconvert when doing
+<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Videoscale, videoconvert, audioconvert when doing
     scaling/conversions</li></ul>
 </div>
 </li>
 <li class="listitem">
 <div class="itemizedlist">
 <p class="title"><b>Special output buffer allocations</b></p>
-<ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
     Elements which need to do special allocation of their output buffers
-    other than what gst_buffer_pad_alloc allows should implement a
-    prepare_output_buffer method, which calls the parent implementation and
-    passes the newly allocated buffer.
+    beyond allocating output buffers via the negotiated allocator or
+    buffer pool should implement the prepare_output_buffer method.
   </p></li></ul>
 </div>
 <div class="itemizedlist">
 <p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" type="disc"><li class="listitem">efence</li></ul>
+<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">efence</li></ul>
 </div>
 </li>
 </ol></div>
@@ -258,16 +257,16 @@ It provides for:
 </p>
 <hr>
 <div class="refsect2">
-<a name="idp5740896"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
+<a name="idp5222304"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
 <p>
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
 <p>
   </p>
 <div class="itemizedlist">
 <p class="title"><b>passthrough</b></p>
-<ul class="itemizedlist" type="circle">
+<ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem"><p>
       Implies that in the current configuration, the sub-class is not
       interested in modifying the buffers.
@@ -287,7 +286,7 @@ It provides for:
   </p>
 <div class="itemizedlist">
 <p class="title"><b>always_in_place</b></p>
-<ul class="itemizedlist" type="circle">
+<ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem"><p>
       Determines whether a non-writable buffer will be copied before passing
       to the transform_ip function.
@@ -391,8 +390,11 @@ needed. At minimum either <em class="parameter"><code>transform</code></em> or <
 If the element can overwrite the input data with the results (data is of the
 same type and quantity) it should provide <em class="parameter"><code>transform_ip</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GstElementClass"><span class="type">GstElementClass</span></a> <em class="structfield"><code><a name="GstBaseTransformClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -563,8 +565,11 @@ Transform the incoming buffer in-place.</td>
 <p>
 See if <em class="parameter"><code>trans</code></em> is configured as a passthrough transform.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -594,8 +599,11 @@ or transform_ip method.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -629,8 +637,11 @@ capsfilter.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -652,8 +663,11 @@ MT safe.
 <p>
 See if <em class="parameter"><code>trans</code></em> is configured as a in_place transform.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -676,7 +690,7 @@ MT safe.</td>
 Determines whether a non-writable buffer will be copied before passing
 to the transform_ip function.
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">Always TRUE if no transform function is implemented.</li>
 <li class="listitem">Always FALSE if ONLY transform function is implemented.</li>
 </ul></div>
@@ -685,8 +699,11 @@ to the transform_ip function.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -707,8 +724,11 @@ on in_place buffers.</td>
 <p>
 Queries if the transform will handle QoS.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -734,8 +754,11 @@ Enable or disable QoS handling in the transform.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -764,8 +787,11 @@ when needed.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -805,8 +831,11 @@ unset the flag if the output is no neutral data.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -833,8 +862,11 @@ used by the base class and its <em class="parameter"><code>params</code></em>.
 <p>
 Unref the <em class="parameter"><code>allocator</code></em> after use it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -860,8 +892,11 @@ used. <span class="annotation">[<acronym title="Parameter for returning results.
 <div class="refsect2">
 <a name="gst-base-transform-get-buffer-pool"></a><h3>gst_base_transform_get_buffer_pool ()</h3>
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *     gst_base_transform_get_buffer_pool  (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
@@ -903,8 +938,11 @@ The name of the templates for the source pad.
 <p>
 Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>base transform instance</td>
@@ -919,8 +957,11 @@ Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc
 <p>
 Gives the pointer to the source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>base transform instance</td>

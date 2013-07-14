@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstElement</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstDateTime.html" title="GstDateTime">
@@ -189,6 +189,9 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <span class="returnvalue">void</span>                <a class="link" href="GstElement.html#gst-element-set-bus" title="gst_element_set_bus ()">gst_element_set_bus</a>                 (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> *bus</code></em>);
 <a class="link" href="GstBus.html" title="GstBus"><span class="returnvalue">GstBus</span></a> *            <a class="link" href="GstElement.html#gst-element-get-bus" title="gst_element_get_bus ()">gst_element_get_bus</a>                 (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="GstElement.html#gst-element-set-context" title="gst_element_set_context ()">gst_element_set_context</a>             (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);
+<a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="returnvalue">GstContext</span></a> *        <a class="link" href="GstElement.html#gst-element-get-context" title="gst_element_get_context ()">gst_element_get_context</a>             (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);
 <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="returnvalue">GstElementFactory</span></a> * <a class="link" href="GstElement.html#gst-element-get-factory" title="gst_element_get_factory ()">gst_element_get_factory</a>             (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);
 #define             <a class="link" href="GstElement.html#gst-element-set-name" title="gst_element_set_name()">gst_element_set_name</a>                (elem,
                                                          name)
@@ -385,13 +388,18 @@ Last reviewed on 2012-03-28 (0.11.3)
   guint16               numsinkpads;
   GList                *sinkpads;
   guint32               pads_cookie;
+
+  GstContext           *context;
 };
 </pre>
 <p>
 GStreamer element abstract base class.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GRecMutex"><span class="type">GRecMutex</span></a> <em class="structfield"><code><a name="GstElement-struct.state-lock"></a>state_lock</code></em>;</span></p></td>
@@ -481,6 +489,10 @@ state will yield the running_time against the clock.</td>
 <td><p><span class="term"><span class="type">guint32</span> <em class="structfield"><code><a name="GstElement-struct.pads-cookie"></a>pads_cookie</code></em>;</span></p></td>
 <td>updated whenever the a pad is added or removed</td>
 </tr>
+<tr>
+<td><p><span class="term"><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *<em class="structfield"><code><a name="GstElement-struct.context"></a>context</code></em>;</span></p></td>
+<td></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -529,14 +541,19 @@ state will yield the running_time against the clock.</td>
   gboolean              (*query)                (GstElement *element, GstQuery *query);
 
   gboolean              (*post_message)         (GstElement *element, GstMessage *message);
+
+  void                  (*set_context)          (GstElement *element, GstContext *context);
 };
 </pre>
 <p>
 GStreamer element class. Override the vmethods to implement the element
 functionality.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="GstElementClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -612,6 +629,10 @@ functionality.
 <td>called when a message is posted on the element. Chain up to
 the parent class' handler to have it posted on the bus.</td>
 </tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstElementClass.set-context"></a>set_context</code></em> ()</span></p></td>
+<td>set a <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> on the element</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -632,8 +653,11 @@ the parent class' handler to have it posted on the bus.</td>
 <p>
 The standard flags that an element may have.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-ELEMENT-FLAG-LOCKED-STATE:CAPS"></a><span class="term"><code class="literal">GST_ELEMENT_FLAG_LOCKED_STATE</code></span></p></td>
@@ -688,8 +712,11 @@ The standard flags that an element may have.
 The possible states an element can be in. States can be changed using
 <a class="link" href="GstElement.html#gst-element-set-state" title="gst_element_set_state ()"><code class="function">gst_element_set_state()</code></a> and checked using <a class="link" href="GstElement.html#gst-element-get-state" title="gst_element_get_state ()"><code class="function">gst_element_get_state()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-STATE-VOID-PENDING:CAPS"></a><span class="term"><code class="literal">GST_STATE_VOID_PENDING</code></span></p></td>
@@ -739,13 +766,16 @@ These are the different state changes an element goes through.
 <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> ⇒ <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a> is called an upwards state change
 and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a> ⇒ <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> a downwards state change.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-STATE-CHANGE-NULL-TO-READY:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_NULL_TO_READY</code></span></p></td>
 <td>state change from NULL to READY.
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     The element must check if the resources it needs are available. Device
     sinks and -sources typically try to probe the device to constrain their
@@ -760,7 +790,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <tr>
 <td><p><a name="GST-STATE-CHANGE-READY-TO-PAUSED:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_READY_TO_PAUSED</code></span></p></td>
 <td>state change from READY to PAUSED.
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     The element pads are activated in order to receive data in PAUSED.
     Streaming threads are started.
@@ -784,7 +814,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <tr>
 <td><p><a name="GST-STATE-CHANGE-PAUSED-TO-PLAYING:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_PAUSED_TO_PLAYING</code></span></p></td>
 <td>state change from PAUSED to PLAYING.
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     Most elements ignore this state change.
   </p></li>
@@ -819,7 +849,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <tr>
 <td><p><a name="GST-STATE-CHANGE-PLAYING-TO-PAUSED:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_PLAYING_TO_PAUSED</code></span></p></td>
 <td>state change from PLAYING to PAUSED.
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     Most elements ignore this state change.
   </p></li>
@@ -850,7 +880,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <tr>
 <td><p><a name="GST-STATE-CHANGE-PAUSED-TO-READY:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_PAUSED_TO_READY</code></span></p></td>
 <td>state change from PAUSED to READY.
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     Sinks unblock any waits in the preroll.
   </p></li>
@@ -876,7 +906,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <tr>
 <td><p><a name="GST-STATE-CHANGE-READY-TO-NULL:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_READY_TO_NULL</code></span></p></td>
 <td>state change from READY to NULL.
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     Elements close devices
   </p></li>
@@ -903,8 +933,11 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 The possible return values from a state change function such as 
 <a class="link" href="GstElement.html#gst-element-set-state" title="gst_element_set_state ()"><code class="function">gst_element_set_state()</code></a>. Only <em class="parameter"><code>GST_STATE_CHANGE_FAILURE</code></em> is a real failure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-STATE-CHANGE-FAILURE:CAPS"></a><span class="term"><code class="literal">GST_STATE_CHANGE_FAILURE</code></span></p></td>
@@ -939,8 +972,11 @@ The possible return values from a state change function such as
 <p>
 This macro returns the current <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a> of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to return state for.</td>
@@ -956,8 +992,11 @@ This macro returns the current <a class="link" href="GstElement.html#GstState" t
 Given a current state <em class="parameter"><code>cur</code></em> and a target state <em class="parameter"><code>pending</code></em>, calculate the next (intermediate)
 <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cur</code></em> :</span></p></td>
@@ -980,8 +1019,11 @@ Given a current state <em class="parameter"><code>cur</code></em> and a target s
 <p>
 This macro returns the next <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a> of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to return the next state for.</td>
@@ -996,8 +1038,11 @@ This macro returns the next <a class="link" href="GstElement.html#GstState" titl
 <p>
 This macro returns the currently pending <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a> of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to return the pending state for.</td>
@@ -1012,8 +1057,11 @@ This macro returns the currently pending <a class="link" href="GstElement.html#G
 <p>
 This macro returns the last <a class="link" href="GstElement.html#GstStateChangeReturn" title="enum GstStateChangeReturn"><span class="type">GstStateChangeReturn</span></a> value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to return the last state result for.</td>
@@ -1028,8 +1076,11 @@ This macro returns the last <a class="link" href="GstElement.html#GstStateChange
 <p>
 This macro returns the target <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a> of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to return the target state for.</td>
@@ -1045,8 +1096,11 @@ This macro returns the target <a class="link" href="GstElement.html#GstState" ti
 Given a current state <em class="parameter"><code>cur</code></em> and a next state <em class="parameter"><code>next</code></em>, calculate the associated
 <a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a> transition.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cur</code></em> :</span></p></td>
@@ -1067,8 +1121,11 @@ Given a current state <em class="parameter"><code>cur</code></em> and a next sta
 <p>
 Given a state transition <em class="parameter"><code>trans</code></em>, extract the current <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a>
@@ -1084,8 +1141,11 @@ Given a state transition <em class="parameter"><code>trans</code></em>, extract 
 <p>
 Given a state transition <em class="parameter"><code>trans</code></em>, extract the next <a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>trans</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a>
@@ -1103,8 +1163,11 @@ Get a reference to the state lock of <em class="parameter"><code>elem</code></em
 This lock is used by the core.  It is taken while getting or setting
 the state, during state changes, and while finalizing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>
@@ -1120,8 +1183,11 @@ the state, during state changes, and while finalizing.
 <p>
 Get the conditional used to signal the completion of a state change.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>
@@ -1138,8 +1204,11 @@ Get the conditional used to signal the completion of a state change.
 Gets the name of this element. Use only in core as this is not
 ABI-compatible. Others use <a class="link" href="GstElement.html#gst-element-get-name" title="gst_element_get_name()"><code class="function">gst_element_get_name()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to query</td>
@@ -1154,8 +1223,11 @@ ABI-compatible. Others use <a class="link" href="GstElement.html#gst-element-get
 <p>
 Get the parent object of this element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to query</td>
@@ -1170,8 +1242,11 @@ Get the parent object of this element.
 <p>
 Get the message bus of this element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to query</td>
@@ -1186,8 +1261,11 @@ Get the message bus of this element.
 <p>
 Get the clock of this element
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to query</td>
@@ -1202,8 +1280,11 @@ Get the clock of this element
 <p>
 Get the pads of this elements.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to query</td>
@@ -1219,8 +1300,11 @@ Get the pads of this elements.
 This macro returns the start_time of the <em class="parameter"><code>elem</code></em>. The start_time is the
 running_time of the pipeline when the element went to PAUSED.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to return the start time for.</td>
@@ -1236,8 +1320,11 @@ Utility function that elements can use in case they encountered a fatal
 data processing error. The pipeline will post an error message and the
 application will be requested to stop further media processing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>el</code></em> :</span></p></td>
@@ -1273,8 +1360,11 @@ Utility function that elements can use in case they encountered a non-fatal
 data processing problem. The pipeline will post a warning message and the
 application will be informed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>el</code></em> :</span></p></td>
@@ -1311,8 +1401,11 @@ the application of something noteworthy that is not an error.
 The pipeline will post a info message and the
 application will be informed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>el</code></em> :</span></p></td>
@@ -1348,8 +1441,11 @@ enclosed in parentheses)</td>
 Check if the element is in the locked state and therefore will ignore state
 changes from its parent object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
 <td>A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to query</td>
@@ -1428,8 +1524,11 @@ Adds a padtemplate to an element class. This is mainly used in the _class_init
 functions of classes. If a pad template with the same name as an already
 existing one is added the old one is replaced by the new one.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>klass</code></em> :</span></p></td>
@@ -1457,8 +1556,11 @@ that has subclasses, make sure to pass the g_class parameter of the
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> here.</div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element_class</code></em> :</span></p></td>
@@ -1492,8 +1594,11 @@ that has subclasses, make sure to pass the g_class parameter of the
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> here.</div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element_class</code></em> :</span></p></td>
@@ -1523,8 +1628,11 @@ Sets the detailed information for a <a class="link" href="GstElement.html#GstEle
 <h3 class="title">Note</h3>This function is for use in _class_init functions only.</div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>klass</code></em> :</span></p></td>
@@ -1575,8 +1683,11 @@ Same as <a class="link" href="GstElement.html#gst-element-class-set-metadata" ti
 they will not be copied. (GStreamer plugins will be made resident once
 loaded, so this function can be used even from dynamically loaded plugins.)
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>klass</code></em> :</span></p></td>
@@ -1614,8 +1725,11 @@ multiple author metadata. E.g: "Joe Bloggs &lt;joe.blogs at foo.com&gt;"</td>
 <p>
 Set <em class="parameter"><code>key</code></em> with <em class="parameter"><code>value</code></em> as metadata in <em class="parameter"><code>klass</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>klass</code></em> :</span></p></td>
@@ -1648,8 +1762,11 @@ or an inlined string, as it will not be copied. (GStreamer plugins will
 be made resident once loaded, so this function can be used even from
 dynamically loaded plugins.)
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>klass</code></em> :</span></p></td>
@@ -1686,8 +1803,11 @@ The pad and the element should be unlocked when calling this function.
 <p>
 This function will emit the <a class="link" href="GstElement.html#GstElement-pad-added" title='The "pad-added" signal'><span class="type">"pad-added"</span></a> signal on the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1718,8 +1838,11 @@ Creates a pad for each pad template that is always available.
 This function is only useful during object initialization of
 subclasses of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to create pads for. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
@@ -1743,8 +1866,11 @@ This function will first attempt to find a compatible unlinked ALWAYS pad,
 and if none can be found, it will request a compatible REQUEST pad by looking
 at the templates of <em class="parameter"><code>element</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1780,8 +1906,11 @@ if one cannot be found. <a class="link" href="GstObject.html#gst-object-unref" t
 Retrieves a pad template from <em class="parameter"><code>element</code></em> that is compatible with <em class="parameter"><code>compattempl</code></em>.
 Pads from compatible templates can be linked together.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1817,8 +1946,11 @@ retrieves request pads. The pad should be released with
 This method is slow and will be deprecated in the future. New code should
 use <a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a> with the requested template.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1846,8 +1978,11 @@ Release after usage. <span class="annotation">[<acronym title="Free data after t
 Retrieves a pad from <em class="parameter"><code>element</code></em> by name. This version only retrieves
 already-existing (i.e. 'static') pads.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1882,8 +2017,11 @@ Pad templates can be looked up using
 <p>
 The pad should be released with <a class="link" href="GstElement.html#gst-element-release-request-pad" title="gst_element_release_request_pad ()"><code class="function">gst_element_release_request_pad()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1931,8 +2069,11 @@ This function emits the <a class="link" href="GstElement.html#GstElement-no-more
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>
@@ -1957,8 +2098,11 @@ followed by <a class="link" href="GstObject.html#gst-object-unref" title="gst_ob
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -1998,8 +2142,11 @@ The pad and the element should be unlocked when calling this function.
 <p>
 This function will emit the <a class="link" href="GstElement.html#GstElement-pad-removed" title='The "pad-removed" signal'><span class="type">"pad-removed"</span></a> signal on the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2033,8 +2180,11 @@ be freed after usage. Also more specialized iterators exists such as
 The order of pads returned by the iterator will be the order in which
 the pads were added to the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2042,8 +2192,7 @@ the pads were added to the element.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>. Unref each pad
-after use.
+<td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.
 MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
@@ -2061,8 +2210,11 @@ Retrieves an iterator of <em class="parameter"><code>element</code></em>'s sink 
 The order of pads returned by the iterator will be the order in which
 the pads were added to the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2070,8 +2222,7 @@ the pads were added to the element.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>. Unref each pad
-after use.
+<td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.
 MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
@@ -2089,8 +2240,11 @@ Retrieves an iterator of <em class="parameter"><code>element</code></em>'s sourc
 The order of pads returned by the iterator will be the order in which
 the pads were added to the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2098,8 +2252,7 @@ the pads were added to the element.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>. Unref each pad
-after use.
+<td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.
 MT safe. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
@@ -2122,8 +2275,11 @@ If multiple links are possible, only one is established.
 Make sure you have added your elements to a bin or pipeline with
 <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> before trying to link them.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2155,8 +2311,11 @@ of the sink element to which they are linked.
 If the link has been made using <a class="link" href="GstElement.html#gst-element-link" title="gst_element_link ()"><code class="function">gst_element_link()</code></a>, it could have created an
 requestpad, which has to be released using <a class="link" href="GstElement.html#gst-element-release-request-pad" title="gst_element_release_request_pad ()"><code class="function">gst_element_release_request_pad()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2182,8 +2341,11 @@ Chain together a series of elements. Uses <a class="link" href="GstElement.html#
 Make sure you have added your elements to a bin or pipeline with
 <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> before trying to link them.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element_1</code></em> :</span></p></td>
@@ -2215,8 +2377,11 @@ Make sure you have added your elements to a bin or pipeline with
 <p>
 Unlinks a series of elements. Uses <a class="link" href="GstElement.html#gst-element-unlink" title="gst_element_unlink ()"><code class="function">gst_element_unlink()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element_1</code></em> :</span></p></td>
@@ -2248,8 +2413,11 @@ Side effect is that if one of the pads has no parent, it becomes a
 child of the parent of the other element.  If they have different
 parents, the link fails.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2301,8 +2469,11 @@ linking pads with safety checks applied.
 <p>
 This is a convenience function for <a class="link" href="GstPad.html#gst-pad-link-full" title="gst_pad_link_full ()"><code class="function">gst_pad_link_full()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2349,8 +2520,11 @@ Unlinks the two named pads of the source and destination elements.
 <p>
 This is a convenience function for <a class="link" href="GstPad.html#gst-pad-unlink" title="gst_pad_unlink ()"><code class="function">gst_pad_unlink()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2386,8 +2560,11 @@ is that if one of the pads has no parent, it becomes a child of the parent of
 the other element. If they have different parents, the link fails. If <em class="parameter"><code>caps</code></em>
 is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, makes sure that the caps of the link is a subset of <em class="parameter"><code>caps</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2440,8 +2617,11 @@ If multiple links are possible, only one is established.
 Make sure you have added your elements to a bin or pipeline with
 <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> before trying to link them.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -2473,8 +2653,11 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <p>
 Get metadata with <em class="parameter"><code>key</code></em> in <em class="parameter"><code>klass</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>klass</code></em> :</span></p></td>
@@ -2502,8 +2685,11 @@ Set the base time of an element. See <a class="link" href="GstElement.html#gst-e
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2526,8 +2712,11 @@ absolute time of the clock when this element was last put to
 PLAYING. Subtracting the base time from the clock time gives
 the running time of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2562,8 +2751,11 @@ pipelines, and you can also ensure that the pipelines have the same clock.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2591,8 +2783,11 @@ Usually the start_time is managed by a toplevel element such as
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2617,8 +2812,11 @@ For internal use only, unless you're testing elements.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2640,8 +2838,11 @@ MT safe.
 Returns the bus of the element. Note that only a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> will provide a
 bus for the application.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2658,13 +2859,73 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-element-set-context"></a><h3>gst_element_set_context ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_element_set_context             (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
+<p>
+Sets the context of the element. Increases the refcount of the context.
+</p>
+<p>
+MT safe.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to set the context of.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td>the <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> to set. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-get-context"></a><h3>gst_element_get_context ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="returnvalue">GstContext</span></a> *        gst_element_get_context             (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>
+Gets the current context of the element.
+</p>
+<p>
+MT safe.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to get the context from.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The current context of the element. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-element-get-factory"></a><h3>gst_element_get_factory ()</h3>
 <pre class="programlisting"><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="returnvalue">GstElementFactory</span></a> * gst_element_get_factory             (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>
 Retrieves the factory that was used to create this element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2687,8 +2948,11 @@ element. no refcounting is needed. <span class="annotation">[<acronym title="Don
 <p>
 Sets the name of the element, getting rid of the old name if there was one.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
@@ -2712,8 +2976,11 @@ Caller should <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-
 For a nameless element, this returns NULL, which you can safely <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
 as well.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
@@ -2735,8 +3002,11 @@ as well.
 <p>
 Sets the parent of an element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
@@ -2757,8 +3027,11 @@ Sets the parent of an element.
 <p>
 Get the parent of an element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>elem</code></em> :</span></p></td>
@@ -2782,8 +3055,11 @@ Sets the clock for the element. This function increases the
 refcount on the clock. Any previously set clock on the object
 is unreffed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2812,8 +3088,11 @@ MT safe.</td>
 Gets the currently configured clock of the element. This is the clock as was
 last set with <a class="link" href="GstElement.html#gst-element-set-clock" title="gst_element_set_clock ()"><code class="function">gst_element_set_clock()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2840,8 +3119,11 @@ Get the clock provided by the given element.
 state. Some elements can provide a clock in other states.</div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2872,14 +3154,18 @@ This function can return <a class="link" href="GstElement.html#GST-STATE-CHANGE-
 element will perform the remainder of the state change asynchronously in
 another thread.
 An application can use <a class="link" href="GstElement.html#gst-element-get-state" title="gst_element_get_state ()"><code class="function">gst_element_get_state()</code></a> to wait for the completion
-of the state change or it can wait for a state change message on the bus.
+of the state change or it can wait for a <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a> or
+<a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-STATE-CHANGED:CAPS"><code class="literal">GST_MESSAGE_STATE_CHANGED</code></a> on the bus.
 </p>
 <p>
 State changes to <a class="link" href="GstElement.html#GST-STATE-READY:CAPS"><code class="literal">GST_STATE_READY</code></a> or <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> never return
 <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><span class="type">GST_STATE_CHANGE_ASYNC</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2929,8 +3215,11 @@ some sink elements might not be able to complete their state change because
 an element is not producing data to complete the preroll. When setting the
 element to playing, the preroll will complete and playback will start.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -2977,8 +3266,11 @@ this element anymore.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3011,8 +3303,11 @@ state before changing the state from <a class="link" href="GstElement.html#GST-S
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3040,8 +3335,11 @@ This function should be called with the STATE_LOCK held.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to abort the state of.</td>
@@ -3068,8 +3366,11 @@ the pending state, the next state change is performed.
 This method is used internally and should normally not be called by plugins
 or applications.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3112,8 +3413,11 @@ not in error or an async state change.
 This function is used internally and should normally not be called from
 plugins or applications.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
 <td>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> the state is lost of</td>
@@ -3127,8 +3431,11 @@ plugins or applications.
 <p>
 Gets a string representing the given state.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
@@ -3150,8 +3457,11 @@ Gets a string representing the given state.
 <p>
 Gets a string representing the given state change result.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state_ret</code></em> :</span></p></td>
@@ -3174,8 +3484,11 @@ result. <span class="annotation">[<acronym title="Don't free data after the code
 Tries to change the state of the element to the same as its parent.
 If this function returns FALSE, the state of element is undefined.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3201,8 +3514,11 @@ Perform <em class="parameter"><code>transition</code></em> on <em class="paramet
 This function must be called with STATE_LOCK held and is mainly used
 internally.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3242,8 +3558,11 @@ Post an error, warning or info message on the bus from inside an element.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3301,8 +3620,11 @@ Post a message on the element's <a class="link" href="GstBus.html" title="GstBus
 message; if you want to access the message after this call, you should add an
 additional reference before calling.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3339,8 +3661,11 @@ random linked sinkpad of this element.
 <p>
 Please note that some queries might need a running pipeline to work.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3370,8 +3695,11 @@ MT safe.</td>
 <p>
 Queries an element to convert <em class="parameter"><code>src_val</code></em> in <em class="parameter"><code>src_format</code></em> to <em class="parameter"><code>dest_format</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3412,8 +3740,11 @@ Queries an element to convert <em class="parameter"><code>src_val</code></em> in
 Queries an element for the stream position. If one repeatedly calls this
 function one can also create and reuse it in <a class="link" href="GstElement.html#gst-element-query" title="gst_element_query ()"><code class="function">gst_element_query()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3445,8 +3776,11 @@ position, or NULL. <span class="annotation">[<acronym title="Parameter for retur
 <p>
 Queries an element for the total stream duration.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3485,8 +3819,11 @@ This function takes owership of the provided event so you should
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3531,8 +3868,11 @@ case they will store the seek event and execute it when they are put to
 PAUSED. If the element supports seek in READY, it will always return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when
 it receives the event in the READY state.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3583,8 +3923,11 @@ the parameters. The seek event is sent to the element using
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
@@ -3639,8 +3982,11 @@ This signals that the element will not generate more dynamic pads.
 Note that this signal will usually be emitted from the context of
 the streaming thread.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gstelement</code></em> :</span></p></td>
@@ -3666,8 +4012,11 @@ mind that if you add new elements to the pipeline in the signal handler
 you will need to set them to the desired target state with
 <a class="link" href="GstElement.html#gst-element-set-state" title="gst_element_set_state ()"><code class="function">gst_element_set_state()</code></a> or <a class="link" href="GstElement.html#gst-element-sync-state-with-parent" title="gst_element_sync_state_with_parent ()"><code class="function">gst_element_sync_state_with_parent()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gstelement</code></em> :</span></p></td>
@@ -3693,8 +4042,11 @@ you will need to set them to the desired target state with
 <p>
 a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> has been removed from the element
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gstelement</code></em> :</span></p></td>

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -587,8 +587,8 @@ typedef GstPadProbeReturn   (*GstPadProbeCallback)   (GstPad *pad, GstPadProbeIn
  * returned. When %FALSE is returned, gst_pad_sticky_events_foreach() will return.
  *
  * When @event is set to NULL, the item will be removed from the list of sticky events.
- * When @event has been made writable, the new buffer reference can be assigned
- * to @event. This function is responsible for unreffing the old event when
+ * @event can be replaced by assigning a new reference to it.
+ * This function is responsible for unreffing the old event when
  * removing or modifying.
  *
  * Returns: %TRUE if the iteration should continue
@@ -880,6 +880,7 @@ gpointer		gst_pad_get_element_private		(GstPad *pad);
 
 GstPadTemplate*		gst_pad_get_pad_template		(GstPad *pad);
 
+GstFlowReturn           gst_pad_store_sticky_event              (GstPad *pad, GstEvent *event);
 GstEvent*               gst_pad_get_sticky_event                (GstPad *pad, GstEventType event_type,
                                                                  guint idx);
 void                    gst_pad_sticky_events_foreach           (GstPad *pad, GstPadStickyEventsForeachFunction foreach_func, gpointer user_data);

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:gstversion
@@ -51,13 +51,13 @@ G_BEGIN_DECLS
  *
  * The minor version of GStreamer at compile time:
  */
-#define GST_VERSION_MINOR (0)
+#define GST_VERSION_MINOR (1)
 /**
  * GST_VERSION_MICRO:
  *
  * The micro version of GStreamer at compile time:
  */
-#define GST_VERSION_MICRO (8)
+#define GST_VERSION_MICRO (2)
 /**
  * GST_VERSION_NANO:
  *

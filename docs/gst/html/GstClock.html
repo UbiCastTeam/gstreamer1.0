@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstClock</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstChildProxy.html" title="GstChildProxy">
@@ -283,8 +283,11 @@ protected for subclasses, use the methods to use the <a class="link" href="GstCl
 GStreamer clock class. Override the vmethods to implement the clock
 functionality.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="GstClockClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -368,8 +371,11 @@ Type: GstClockTime
 <p>
 Tests if a given <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> represents a valid defined time.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
 <td>clock time to validate</td>
@@ -436,8 +442,11 @@ Type: GstClockTime
 <p>
 Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> to seconds.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
 <td>the time</td>
@@ -452,8 +461,11 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <p>
 Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> to milliseconds (1/1000 of a second).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
 <td>the time</td>
@@ -468,8 +480,11 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <p>
 Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> to microseconds (1/1000000 of a second).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
 <td>the time</td>
@@ -484,8 +499,11 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 <p>
 Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> to nanoseconds (1/1000000000 of a second).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
 <td>the time</td>
@@ -501,8 +519,11 @@ Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"
 Calculate a difference between two clock times as a <a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a>.
 The difference is calculated as <em class="parameter"><code>e</code></em> - <em class="parameter"><code>s</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
@@ -523,8 +544,11 @@ The difference is calculated as <em class="parameter"><code>e</code></em> - <em 
 <p>
 Convert a <a href="http://library.gnome.org/devel/glib/unstable/glib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a> to a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>tv</code></em> :</span></p></td>
 <td>the timeval to convert</td>
@@ -546,8 +570,11 @@ which is about 68 years.  Expect trouble if you want to schedule stuff
 in your pipeline for 2038.</div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
@@ -568,8 +595,11 @@ in your pipeline for 2038.</div>
 <p>
 Convert a struct timespec (see man pselect) to a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ts</code></em> :</span></p></td>
 <td>the timespec to convert</td>
@@ -583,8 +613,11 @@ Convert a struct timespec (see man pselect) to a <a class="link" href="GstClock.
 <p>
 Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> to a struct timespec (see man pselect)
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
@@ -610,8 +643,11 @@ an entry.
 Note that GstClockEntry should be treated as an opaque structure. It must
 not be extended or allocated using a custom allocator.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstClockEntry.refcount"></a>refcount</code></em>;</span></p></td>
 <td>reference counter (read-only)</td>
@@ -628,8 +664,11 @@ not be extended or allocated using a custom allocator.
 <p>
 The function prototype of the callback.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -666,8 +705,11 @@ The function prototype of the callback.
 <p>
 The type of the clock entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-CLOCK-ENTRY-SINGLE:CAPS"></a><span class="term"><code class="literal">GST_CLOCK_ENTRY_SINGLE</code></span></p></td>
@@ -690,8 +732,11 @@ The type of the clock entry
 <p>
 Cast to a clock entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
 <td>the entry to cast</td>
@@ -706,8 +751,11 @@ Cast to a clock entry
 <p>
 Get the owner clock of the entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
 <td>the entry to query</td>
@@ -722,8 +770,11 @@ Get the owner clock of the entry
 <p>
 Get the type of the clock entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
 <td>the entry to query</td>
@@ -738,8 +789,11 @@ Get the type of the clock entry
 <p>
 Get the requested time of this entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
 <td>the entry to query</td>
@@ -754,8 +808,11 @@ Get the requested time of this entry
 <p>
 Get the interval of this periodic entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
 <td>the entry to query</td>
@@ -770,8 +827,11 @@ Get the interval of this periodic entry
 <p>
 The status of the entry
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
 <td>the entry to query</td>
@@ -795,8 +855,11 @@ The status of the entry
 <p>
 The return value of a clock operation.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-CLOCK-OK:CAPS"></a><span class="term"><code class="literal">GST_CLOCK_OK</code></span></p></td>
@@ -858,8 +921,11 @@ The return value of a clock operation.
 <p>
 The capabilities of this clock
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-CLOCK-FLAG-CAN-DO-SINGLE-SYNC:CAPS"></a><span class="term"><code class="literal">GST_CLOCK_FLAG_CAN_DO_SINGLE_SYNC</code></span></p></td>
@@ -907,8 +973,11 @@ The capabilities of this clock
 <p>
 Gets the <a class="link" href="GstClock.html#GstClockFlags" title="enum GstClockFlags"><span class="type">GstClockFlags</span></a> clock flags.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
 <td>the clock to query</td>
@@ -935,8 +1004,11 @@ means a perfect regression was performed. This value can
 be used to control the sampling frequency of the master and slave
 clocks.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -985,8 +1057,11 @@ calibration values with <a class="link" href="GstClock.html#gst-clock-get-calibr
 however keep reporting its time adjusted with the last configured rate 
 and time offsets.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1017,8 +1092,11 @@ MT safe.</td>
 Get the master clock that <em class="parameter"><code>clock</code></em> is slaved to or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the clock is
 not slaved to any master clock.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1047,8 +1125,11 @@ normally no need to change the default resolution of a clock. The resolution
 of a clock can only be changed if the clock has the
 <a class="link" href="GstClock.html#GST-CLOCK-FLAG-CAN-SET-RESOLUTION:CAPS"><span class="type">GST_CLOCK_FLAG_CAN_SET_RESOLUTION</span></a> flag set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1074,8 +1155,11 @@ of a clock can only be changed if the clock has the
 Get the accuracy of the clock. The accuracy of the clock is the granularity
 of the values returned by <a class="link" href="GstClock.html#gst-clock-get-time" title="gst_clock_get_time ()"><code class="function">gst_clock_get_time()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1099,8 +1183,11 @@ Gets the current time of the given clock. The time is always
 monotonically increasing and adjusted according to the current
 offset and rate.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1128,8 +1215,11 @@ unreffed after usage.
 <p>
 Free-function: gst_clock_id_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1164,8 +1254,11 @@ after usage.
 <p>
 Free-function: gst_clock_id_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1199,8 +1292,11 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 Reinitializes the provided single shot <em class="parameter"><code>id</code></em> to the provided time. Does not
 modify the reference count.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1236,8 +1332,11 @@ modify the reference count.
 Reinitializes the provided periodic <em class="parameter"><code>id</code></em> to the provided start time and
 interval. Does not modify the reference count.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1274,8 +1373,11 @@ interval. Does not modify the reference count.
 Gets the current internal time of the given clock. The time is returned
 unadjusted for the offset and the rate.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1304,8 +1406,11 @@ clock's OBJECT_LOCK held and is mainly used by clock subclasses.
 <p>
 This function is the reverse of <a class="link" href="GstClock.html#gst-clock-unadjust-unlocked" title="gst_clock_unadjust_unlocked ()"><code class="function">gst_clock_unadjust_unlocked()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1336,8 +1441,11 @@ is mainly used by clock subclasses.
 <p>
 This function is the reverse of <a class="link" href="GstClock.html#gst-clock-adjust-unlocked" title="gst_clock_adjust_unlocked ()"><code class="function">gst_clock_adjust_unlocked()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1373,8 +1481,11 @@ caller is not interested in the values.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1445,8 +1556,11 @@ until the clock catches up.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1479,8 +1593,11 @@ internal time</td>
 <p>
 Get the amount of time that master and slave clocks are sampled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1503,8 +1620,11 @@ Get the amount of time that master and slave clocks are sampled.
 Set the amount of time, in nanoseconds, to sample master and slave
 clocks
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>clock</code></em> :</span></p></td>
@@ -1525,8 +1645,11 @@ clocks
 <p>
 Get the time of the clock ID
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
@@ -1561,8 +1684,11 @@ Positive values indicate how late <em class="parameter"><code>id</code></em> was
 Negative values indicate how much time was spent waiting on the clock 
 before this function returned.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
@@ -1603,8 +1729,11 @@ be called when the time of <em class="parameter"><code>id</code></em> has been r
 The callback <em class="parameter"><code>func</code></em> can be invoked from any thread, either provided by the
 core or from a streaming thread. The application should be prepared for this.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
@@ -1644,8 +1773,11 @@ async notifications, you need to create a new <a class="link" href="GstClock.htm
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
 <td>The id to unschedule</td>
@@ -1661,8 +1793,11 @@ MT safe.
 Compares the two <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> instances. This function can be used
 as a GCompareFunc when sorting ids.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id1</code></em> :</span></p></td>
@@ -1688,8 +1823,11 @@ MT safe.</td>
 <p>
 Increase the refcount of given <em class="parameter"><code>id</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
@@ -1715,8 +1853,11 @@ Unref given <em class="parameter"><code>id</code></em>. When the refcount reache
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
 <td>The <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> to unref. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>

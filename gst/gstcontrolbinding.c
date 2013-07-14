@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:gstcontrolbinding
@@ -35,7 +35,7 @@
  * - the weak-ref on object is not nice, as is the same as gst_object_parent()
  *   once the object is added to the parent
  *
- * - another option would be do defer what I am doing in _constructor to when
+ * - another option would be to defer what is done in _constructor to when
  *   the parent is set (need to listen to the signal then)
  *   then basically I could
  *   a) remove the obj arg and wait the binding to be added or
@@ -135,6 +135,11 @@ gst_control_binding_constructor (GType type, guint n_construct_params,
                 G_PARAM_CONSTRUCT_ONLY)) ==
         (G_PARAM_WRITABLE | GST_PARAM_CONTROLLABLE)) {
       binding->pspec = pspec;
+    } else {
+      GST_WARNING_OBJECT (binding->object,
+          "property '%s' on class '%s' needs to "
+          "be writeable, controlable and not construct_only", binding->name,
+          G_OBJECT_TYPE_NAME (binding->object));
     }
   } else {
     GST_WARNING_OBJECT (binding->object, "class '%s' has no property '%s'",

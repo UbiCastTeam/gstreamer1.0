@@ -1,13 +1,13 @@
 # Polish translation for gstreamer.
 # This file is distributed under the same license as the gstreamer package.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2012.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer 1.0.3\n"
+"Project-Id-Version: gstreamer 0.10.32.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-07-11 19:26+0100\n"
-"PO-Revision-Date: 2012-11-28 19:15+0100\n"
+"POT-Creation-Date: 2013-07-11 15:09+0200\n"
+"PO-Revision-Date: 2011-04-26 17:54+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
@@ -115,8 +115,9 @@ msgstr "Błąd wewnętrzny GStreamera: problem z wyrównaniem."
 msgid "Internal GStreamer error: thread problem."
 msgstr "Błąd wewnętrzny GStreamera: problem z wątkami."
 
+#, fuzzy
 msgid "GStreamer error: negotiation problem."
-msgstr "Błąd GStreamera: problem z negocjacją."
+msgstr "Błąd wewnętrzny GStreamera: problem z negocjacją."
 
 msgid "Internal GStreamer error: event problem."
 msgstr "Błąd wewnętrzny GStreamera: problem ze zdarzeniami."
@@ -133,8 +134,9 @@ msgstr "Błąd wewnętrzny GStreamera: problem ze znacznikami."
 msgid "Your GStreamer installation is missing a plug-in."
 msgstr "W tej instalacji GStreamera brakuje wtyczki."
 
+#, fuzzy
 msgid "GStreamer error: clock problem."
-msgstr "Błąd GStreamera: problem z zegarem."
+msgstr "Błąd wewnętrzny GStreamera: problem z zegarem."
 
 msgid ""
 "This application is trying to use GStreamer functionality that has been "
@@ -248,6 +250,10 @@ msgstr "Brak standardowego komunikatu o błędzie dla domeny %s i kodu %d."
 msgid "Selected clock cannot be used in pipeline."
 msgstr "Wybrany zegar nie może być używany w potoku."
 
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr ""
+
 msgid "title"
 msgstr "tytuł"
 
@@ -325,8 +331,8 @@ msgstr "rozszerzony komentarz"
 
 msgid "free text commenting the data in key=value or key[en]=comment form"
 msgstr ""
-"dowolny tekst komentujący dane w postaci klucz=wartość lub klucz[język]"
-"=komentarz"
+"dowolny tekst komentujący dane w postaci klucz=wartość lub "
+"klucz[język]=komentarz"
 
 msgid "track number"
 msgstr "numer ścieżki"
@@ -550,14 +556,16 @@ msgstr "poziom odniesienia wartości osiągów ścieżki i albumu"
 msgid "language code"
 msgstr "kod języka"
 
+#, fuzzy
 msgid "language code for this stream, conforming to ISO-639-1 or ISO-639-2"
-msgstr "kod języka dla tego strumienia, zgodny z ISO-639-1 lub ISO-639-2"
+msgstr "kod języka dla tego strumienia, zgodny z ISO-639-1"
 
+#, fuzzy
 msgid "language name"
-msgstr "nazwa języka"
+msgstr "kod języka"
 
 msgid "freeform name of the language this stream is in"
-msgstr "tekstowa nazwa języka, w jakim jest ten strumień"
+msgstr ""
 
 msgid "image"
 msgstr "obrazek"
@@ -652,6 +660,7 @@ msgstr ""
 msgid "geo location sublocation"
 msgstr "część miejscowości lokalizacji"
 
+#, fuzzy
 msgid ""
 "a location within a city where the media has been produced or created (e.g. "
 "the neighborhood)"
@@ -791,6 +800,14 @@ msgid ", "
 msgstr ", "
 
 #, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
+
+#, c-format
 msgid "ERROR: from element %s: %s\n"
 msgstr "BŁĄD: od elementu %s: %s\n"
 
@@ -855,15 +872,6 @@ msgstr "nie udało się dowiązać elementu osadzającego dla URI \"%s\""
 msgid "empty pipeline not allowed"
 msgstr "pusty potok nie jest dozwolony"
 
-msgid "Internal clock error."
-msgstr "Wewnętrzny błąd zegara."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Wewnętrzny błąd przepływu danych."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Wiele buforów zostało zgubionych."
 
@@ -872,6 +880,15 @@ msgstr "Wewnętrzny problem przepływu danych."
 
 msgid "Internal data stream error."
 msgstr "Wewnętrzny błąd strumienia danych."
+
+msgid "Internal data flow error."
+msgstr "Wewnętrzny błąd przepływu danych."
+
+msgid "Internal clock error."
+msgstr "Wewnętrzny błąd zegara."
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Filtrowanie możliwości"
@@ -1028,14 +1045,12 @@ msgid "List the plugin contents"
 msgstr "Wypisanie zawartości wtyczek"
 
 msgid "Check if the specified element or plugin exists"
-msgstr "Sprawdzenie, czy podany element lub wtyczka istnieje"
+msgstr ""
 
 msgid ""
 "When checking if an element or plugin exists, also check that its version is "
 "at least the version specified"
 msgstr ""
-"Przy sprawdzaniu istnienia elementu lub wtyczki, sprawdzanie także czy "
-"wersja jest co najmniej podaną"
 
 msgid "Print supported URI schemes, with the elements that implement them"
 msgstr ""
@@ -1087,16 +1102,17 @@ msgstr "ZNACZNIK       : znaleziony przez obiekt \"%s\".\n"
 msgid "FOUND TAG\n"
 msgstr "ZNACZNIK\n"
 
-#, c-format
+#, fuzzy, c-format
 msgid "FOUND TOC      : found by element \"%s\".\n"
-msgstr "SPIS TREŚCI    : znaleziony przez element \"%s\".\n"
+msgstr "ZNACZNIK       : znaleziony przez element \"%s\".\n"
 
-#, c-format
+#, fuzzy, c-format
 msgid "FOUND TOC      : found by object \"%s\".\n"
-msgstr "SPIS TREŚCI    : znaleziony przez obiekt \"%s\".\n"
+msgstr "ZNACZNIK       : znaleziony przez obiekt \"%s\".\n"
 
+#, fuzzy
 msgid "FOUND TOC\n"
-msgstr "SPIS TREŚCI\n"
+msgstr "ZNACZNIK\n"
 
 #, c-format
 msgid ""
@@ -1111,6 +1127,10 @@ msgid "WARNING: from element %s: %s\n"
 msgstr "UWAGA: od elementu %s: %s\n"
 
 msgid "Prerolled, waiting for buffering to finish...\n"
+msgstr "Przewinięto, czekanie na zakończenie buforowania...\n"
+
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
 msgstr "Przewinięto, czekanie na zakończenie buforowania...\n"
 
 msgid "buffering..."
@@ -1133,14 +1153,22 @@ msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Przerwanie: Zatrzymywanie potoku...\n"
 
 #, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
+#, fuzzy, c-format
 msgid "Missing element: %s\n"
-msgstr "Brak elementu: %s\n"
+msgstr "brak elementu \"%s\""
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s\n"
+msgstr "UWAGA: od elementu %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Wypisanie znaczników (znanych także jako metadane)"
 
 msgid "Output TOC (chapters and editions)"
-msgstr "Wypisanie spisu treści (rozdziałów i wydań)"
+msgstr ""
 
 msgid "Output status information and property notifications"
 msgstr "Wypisywanie informacji o stanie i powiadomień właściwości"
@@ -1207,8 +1235,9 @@ msgstr "BŁĄD: potok odmawia odtwarzania.\n"
 msgid "EOS on shutdown enabled -- Forcing EOS on the pipeline\n"
 msgstr "Włączony EOS przy wyłączaniu - wymuszanie EOS w potoku\n"
 
+#, fuzzy
 msgid "EOS on shutdown enabled -- waiting for EOS after Error\n"
-msgstr "Włączony EOS przy wyłączaniu - oczekiwanie na EOS po błędzie\n"
+msgstr "Włączony EOS przy wyłączaniu - wymuszanie EOS w potoku\n"
 
 msgid "Waiting for EOS...\n"
 msgstr "Oczekiwanie na EOS...\n"
@@ -1216,8 +1245,9 @@ msgstr "Oczekiwanie na EOS...\n"
 msgid "EOS received - stopping pipeline...\n"
 msgstr "Otrzymano EOS - zatrzymywanie potoku...\n"
 
+#, fuzzy
 msgid "Interrupt while waiting for EOS - stopping pipeline...\n"
-msgstr "Przerwanie podczas oczekiwania na EOS - zatrzymywanie potoku...\n"
+msgstr "Przerwanie: Zatrzymywanie potoku...\n"
 
 msgid "An error happened while waiting for EOS\n"
 msgstr "Wystąpił błąd w trakcie oczekiwania na EOS\n"
@@ -1233,3 +1263,36 @@ msgstr "Ustawianie potoku na NULL...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Zwalnianie potoku...\n"
+
+#~ msgid "Print alloc trace (if enabled at compile time)"
+#~ msgstr ""
+#~ "Wypisanie śladu alokacji (jeśli został włączony w czasie kompilacji)"
+
+#~ msgid "Usage: gst-xmllaunch <file.xml> [ element.property=value ... ]\n"
+#~ msgstr ""
+#~ "Składnia: gst-xmllaunch <plik.xml> [ element.właściwość=wartość ... ]\n"
+
+#~ msgid "ERROR: parse of xml file '%s' failed.\n"
+#~ msgstr "BŁĄD: analiza pliku xml '%s' nie powiodła się.\n"
+
+#~ msgid "ERROR: no toplevel pipeline element in file '%s'.\n"
+#~ msgstr "BŁĄD: brak głównego elementu potoku w pliku '%s'.\n"
+
+#~ msgid "WARNING: only one toplevel element is supported at this time.\n"
+#~ msgstr "UWAGA: aktualnie obsługiwany jest tylko jeden element główny.\n"
+
+#~ msgid "ERROR: could not parse command line argument %d: %s.\n"
+#~ msgstr ""
+#~ "BŁĄD: nie udało się przeanalizować argumentu %d linii poleceń: %s.\n"
+
+#~ msgid "WARNING: element named '%s' not found.\n"
+#~ msgstr "UWAGA: nie znaleziono elementu o nazwie '%s'.\n"
+
+#~ msgid "Save xml representation of pipeline to FILE and exit"
+#~ msgstr "Zapisanie reprezentacji xml potoku do PLIKU i zakończenie"
+
+#~ msgid "FILE"
+#~ msgstr "PLIK"
+
+#~ msgid "Do not install signal handlers for SIGUSR1 and SIGUSR2"
+#~ msgstr "Nieinstalowanie obsługi sygnałów SIGUSR1 i SIGUSR2"

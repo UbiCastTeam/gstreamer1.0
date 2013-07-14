@@ -16,13 +16,18 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include <gst/check/gstcheck.h>
 
+#include <string.h>
+
 #ifndef GST_DISABLE_GST_DEBUG
+
+static GList *messages;         /* NULL */
+static gboolean save_messages;  /* FALSE */
 
 static void
 printf_extension_log_func (GstDebugCategory * category,
@@ -33,6 +38,9 @@ printf_extension_log_func (GstDebugCategory * category,
 
   dbg_msg = gst_debug_message_get (message);
   fail_unless (dbg_msg != NULL);
+
+  if (save_messages)
+    messages = g_list_append (messages, g_strdup (dbg_msg));
 
   /* g_print ("%s\n", dbg_msg); */
 
@@ -241,6 +249,71 @@ GST_START_TEST (info_fixme)
 }
 
 GST_END_TEST;
+
+/* need this indirection so the compiler doesn't check the printf format
+ * like it would if we used GST_INFO directly (it would complain) */
+static void
+call_GST_INFO (const gchar * format, ...)
+{
+  va_list var_args;
+
+  va_start (var_args, format);
+  gst_debug_log_valist (GST_CAT_DEFAULT, GST_LEVEL_INFO, __FILE__, GST_FUNCTION,
+      __LINE__, NULL, format, var_args);
+  va_end (var_args);
+}
+
+GST_START_TEST (info_old_printf_extensions)
+{
+  GstSegment segment;
+  GstCaps *caps;
+  gchar *str;
+
+  /* set up our own log function to make sure the code in gstinfo is actually
+   * executed without GST_DEBUG being set or it being output to stdout */
+  gst_debug_remove_log_function (gst_debug_log_default);
+  gst_debug_add_log_function (printf_extension_log_func, NULL, NULL);
+
+  gst_debug_set_default_threshold (GST_LEVEL_LOG);
+
+  save_messages = TRUE;
+
+  fail_unless (messages == NULL);
+
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  caps = gst_caps_new_simple ("foo/bar", "width", G_TYPE_INT, 4096,
+      "framerate", GST_TYPE_FRACTION, 50, 1, "format", G_TYPE_STRING, "ARGB",
+      NULL);
+  call_GST_INFO ("Segment %Q, caps are %P", &segment, caps);
+  gst_caps_unref (caps);
+
+  fail_unless_equals_int (g_list_length (messages), 1);
+  str = (gchar *) messages->data;
+  fail_unless (str != NULL);
+
+  GST_INFO ("str = '%s'", str);
+
+  fail_unless (strstr (str, "time") != NULL);
+  fail_unless (strstr (str, "start=0:00:00.000000000") != NULL);
+  fail_unless (strstr (str, "stop=99:99:99.999999999") != NULL);
+  fail_unless (strstr (str, "applied_rate=1.000000") != NULL);
+
+  fail_unless (strstr (str, " caps are ") != NULL);
+  fail_unless (strstr (str, "foo/bar") != NULL);
+  fail_unless (strstr (str, "width=(int)4096") != NULL);
+  fail_unless (strstr (str, "framerate=(fraction)50/1") != NULL);
+  fail_unless (strstr (str, "ARGB") != NULL);
+
+  /* clean up */
+  gst_debug_set_default_threshold (GST_LEVEL_NONE);
+  gst_debug_add_log_function (gst_debug_log_default, NULL, NULL);
+  gst_debug_remove_log_function (printf_extension_log_func);
+  save_messages = FALSE;
+  g_list_foreach (messages, (GFunc) g_free, NULL);
+  messages = NULL;
+}
+
+GST_END_TEST;
 #endif
 
 static Suite *
@@ -258,6 +331,7 @@ gst_info_suite (void)
   tcase_add_test (tc_chain, info_log_handler);
   tcase_add_test (tc_chain, info_dump_mem);
   tcase_add_test (tc_chain, info_fixme);
+  tcase_add_test (tc_chain, info_old_printf_extensions);
 #endif
 
   return s;

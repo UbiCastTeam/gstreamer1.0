@@ -20,8 +20,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -60,7 +60,7 @@ _strnlen (const gchar * str, gint maxlen)
 #define unpack_element(inptr, outptr, element, endptr, error_label) G_STMT_START{ \
   if (inptr + sizeof(element) > endptr) { \
     GST_ERROR ("Failed reading element " G_STRINGIFY (element)  \
-        ". Have %d bytes need %" G_GSSIZE_FORMAT, \
+        ". Have %d bytes need %" G_GSIZE_FORMAT, \
         (int) (endptr - inptr), sizeof(element)); \
     goto error_label; \
   } \

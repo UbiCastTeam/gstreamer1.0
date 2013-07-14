@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBufferList</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstBuffer.html" title="GstBuffer">
@@ -105,8 +105,11 @@ the returned <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" t
 <p>
 Free-function: gst_buffer_list_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the new <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a>. <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-unref" title="gst_buffer_list_unref ()"><code class="function">gst_buffer_list_unref()</code></a>
@@ -127,8 +130,11 @@ that memory reallocations can be avoided.
 <p>
 Free-function: gst_buffer_list_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
@@ -150,8 +156,11 @@ after usage. <span class="annotation">[<acronym title="Free data after the code 
 <p>
 Returns the number of buffers in <em class="parameter"><code>list</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -173,8 +182,11 @@ Returns the number of buffers in <em class="parameter"><code>list</code></em>.
 <p>
 Append <em class="parameter"><code>b</code></em> at the end of <em class="parameter"><code>l</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>l</code></em> :</span></p></td>
@@ -202,8 +214,11 @@ this new buffer.
 <p>
 A -1 value for <em class="parameter"><code>idx</code></em> will append the buffer at the end.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -232,8 +247,11 @@ A -1 value for <em class="parameter"><code>idx</code></em> will append the buffe
 Remove <em class="parameter"><code>length</code></em> buffers starting from <em class="parameter"><code>idx</code></em> in <em class="parameter"><code>list</code></em>. The following buffers are
 moved to close the gap.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -264,8 +282,11 @@ Note that the refcount affects the writeability of <em class="parameter"><code>l
 additional references to GstBufferList instances can potentially increase
 the number of memcpy operations in a pipeline.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -289,8 +310,11 @@ the number of memcpy operations in a pipeline.
 Decreases the refcount of the buffer list. If the refcount reaches 0, the
 buffer list will be freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -307,8 +331,11 @@ Create a shallow copy of the given buffer list. This will make a newly
 allocated copy of the source list with copies of buffer pointers. The
 refcount of buffers pointed to will be increased by one.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -331,8 +358,11 @@ refcount of buffers pointed to will be increased by one.
 <p>
 Tests if you can safely add buffers and groups into a buffer list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a>
@@ -350,8 +380,11 @@ Makes a writable buffer list from the given buffer list. If the source buffer
 list is already writable, this will simply return the same buffer list. A
 copy will otherwise be made using <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-copy" title="gst_buffer_list_copy ()"><code class="function">gst_buffer_list_copy()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -387,8 +420,11 @@ When <em class="parameter"><code>buffer</code></em> has been made writable, the 
 to <em class="parameter"><code>buffer</code></em>. This function is responsible for unreffing the old buffer when
 removing or modifying.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
@@ -426,8 +462,11 @@ Call <em class="parameter"><code>func</code></em> with <em class="parameter"><co
 of <em class="parameter"><code>func</code></em> define if this function returns or if the remaining buffers in
 the list should be skipped.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -461,8 +500,11 @@ the list should be skipped.
 <p>
 Get the buffer at <em class="parameter"><code>idx</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>

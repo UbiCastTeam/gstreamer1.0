@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -113,6 +113,7 @@ void            gst_plugin_feature_set_rank             (GstPluginFeature *featu
 guint           gst_plugin_feature_get_rank             (GstPluginFeature *feature);
 
 GstPlugin     * gst_plugin_feature_get_plugin           (GstPluginFeature *feature);
+const gchar   * gst_plugin_feature_get_plugin_name      (GstPluginFeature *feature);
 
 void            gst_plugin_feature_list_free            (GList *list);
 GList          *gst_plugin_feature_list_copy            (GList *list) G_GNUC_MALLOC;

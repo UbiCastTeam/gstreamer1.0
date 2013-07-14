@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBaseSrc</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstBaseParse.html" title="GstBaseParse">
@@ -104,7 +104,7 @@ enum                <a class="link" href="GstBaseSrc.html#GstBaseSrcFlags" title
 This is a generice base class for source elements. The following
 types of sources are supported:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>random access sources like files</p></li>
 <li class="listitem"><p>seekable sources</p></li>
 <li class="listitem"><p>live sources</p></li>
@@ -121,7 +121,7 @@ events. The default format for <a class="link" href="GstBaseSrc.html" title="Gst
 <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> always supports push mode scheduling. If the following
 conditions are met, it also supports pull mode scheduling:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>The format is set to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><span class="type">GST_FORMAT_BYTES</span></a> (default).</p></li>
 <li class="listitem"><p><a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p></li>
 </ul></div>
@@ -133,7 +133,7 @@ automatically seekable in push mode as well. The following conditions must
 be met to make the element seekable in push mode when the format is not
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><span class="type">GST_FORMAT_BYTES</span></a>:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
   </p></li>
@@ -248,7 +248,7 @@ should install a pad template in its class_init function, like so:
 <p>
 </p>
 <div class="refsect2">
-<a name="idp8146128"></a><h3>Controlled shutdown of live sources in applications</h3>
+<a name="idp6538368"></a><h3>Controlled shutdown of live sources in applications</h3>
 <p>
 Applications that record from a live source may want to stop recording
 in a controlled way, so that the recording is stopped, but the data
@@ -358,8 +358,11 @@ Subclasses can override any of the available virtual methods or not, as
 needed. At the minimum, the <em class="parameter"><code>create</code></em> method should be overridden to produce
 buffers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GstElementClass"><span class="type">GstElementClass</span></a> <em class="structfield"><code><a name="GstBaseSrcClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -480,8 +483,11 @@ passed buffer is guaranteed to hold the requested amount of bytes.</td>
 <p>
 The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> flags that a basesrc element may have.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-BASE-SRC-FLAG-STARTING:CAPS"></a><span class="term"><code class="literal">GST_BASE_SRC_FLAG_STARTING</code></span></p></td>
@@ -516,8 +522,11 @@ case this function returns <a href="http://gstreamer.freedesktop.org/data/doc/gs
 to a state change to READY or a FLUSH event (in which case this function
 returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a>).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -539,8 +548,11 @@ continue. Any other return value should be returned from the create vmethod.</td
 <p>
 Check if an element is in live mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -570,8 +582,11 @@ of a pipeline. To signal this fact to the application and the
 pipeline, the state change return value of the live source will
 be GST_STATE_CHANGE_NO_PREROLL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -600,8 +615,11 @@ operate in pull mode if the <a class="link" href="GstBaseSrc.html#GstBaseSrcClas
 <p>
 This function must only be called in states &lt; <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -630,8 +648,11 @@ between the running time and the timestamp of the first buffer.
 <p>
 This function is mostly used by subclasses.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -666,8 +687,11 @@ This function is mostly used by subclasses.
 <p>
 Get the number of bytes that <em class="parameter"><code>src</code></em> will push out with each buffer.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -689,8 +713,11 @@ Get the number of bytes that <em class="parameter"><code>src</code></em> will pu
 Set the number of bytes that <em class="parameter"><code>src</code></em> will push out with each buffer. When
 <em class="parameter"><code>blocksize</code></em> is set to -1, a default length will be used.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -710,8 +737,11 @@ Set the number of bytes that <em class="parameter"><code>src</code></em> will pu
 <p>
 Query if <em class="parameter"><code>src</code></em> timestamps outgoing buffers based on the current running_time.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -735,8 +765,11 @@ Configure <em class="parameter"><code>src</code></em> to automatically timestamp
 current running_time of the pipeline. This property is mostly useful for live
 sources.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -759,8 +792,11 @@ If not <em class="parameter"><code>dynamic</code></em>, size is only updated whe
 read past current tracked size.  Otherwise, size is checked for upon each
 read.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -789,8 +825,11 @@ as the stream-lock needs to be held.
 The format for the new segment will be the current format of the source, as
 configured with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" title="gst_base_src_set_format ()"><code class="function">gst_base_src_set_format()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -824,8 +863,11 @@ configured with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" t
 <p>
 Set new caps on the basesrc source pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -858,8 +900,11 @@ used by the base class and its <em class="parameter"><code>params</code></em>.
 <p>
 Unref the <em class="parameter"><code>allocator</code></em> after use it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -885,8 +930,11 @@ used. <span class="annotation">[<acronym title="Parameter for returning results.
 <div class="refsect2">
 <a name="gst-base-src-get-buffer-pool"></a><h3>gst_base_src_get_buffer_pool ()</h3>
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *     gst_base_src_get_buffer_pool        (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
@@ -910,8 +958,11 @@ by the src; free it after use it. <span class="annotation">[<acronym title="Free
 <p>
 Gives the pointer to the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>base source instance</td>

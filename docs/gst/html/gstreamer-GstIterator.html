@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstIterator</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstGhostPad.html" title="GstGhostPad">
@@ -122,7 +122,7 @@ The basic use pattern of an iterator is as follows:
 <p>
 </p>
 <div class="example">
-<a name="idp21270944"></a><p class="title"><b>Example 9. Using an iterator</b></p>
+<a name="idp20845248"></a><p class="title"><b>Example 9. Using an iterator</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -196,8 +196,11 @@ Last reviewed on 2009-06-16 (0.10.24)
 <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> base structure. The values of this structure are
 protected for subclasses, use the methods to use the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody></tbody>
 </table></div>
 </div>
@@ -213,8 +216,11 @@ protected for subclasses, use the methods to use the <a class="link" href="gstre
 <p>
 The result of a <a class="link" href="gstreamer-GstIterator.html#GstIteratorItemFunction" title="GstIteratorItemFunction ()"><span class="type">GstIteratorItemFunction</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-ITERATOR-ITEM-SKIP:CAPS"></a><span class="term"><code class="literal">GST_ITERATOR_ITEM_SKIP</code></span></p></td>
@@ -247,8 +253,11 @@ The result of a <a class="link" href="gstreamer-GstIterator.html#GstIteratorItem
 <p>
 The result of <a class="link" href="gstreamer-GstIterator.html#gst-iterator-next" title="gst_iterator_next ()"><code class="function">gst_iterator_next()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-ITERATOR-DONE:CAPS"></a><span class="term"><code class="literal">GST_ITERATOR_DONE</code></span></p></td>
@@ -283,8 +292,11 @@ This function will be called when creating a copy of <em class="parameter"><code
 create a copy of all custom iterator fields or increase their
 reference counts.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -311,8 +323,11 @@ Implementors of a <a class="link" href="gstreamer-GstIterator.html#GstIterator" 
 function and pass it to the constructor of the custom iterator.
 The function will be called with the iterator lock held.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -342,8 +357,11 @@ the iterator.
 <p>
 The function will be called with the iterator lock held.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -375,8 +393,11 @@ Implementors of a <a class="link" href="gstreamer-GstIterator.html#GstIterator" 
 function and pass it to the constructor of the custom iterator.
 The function will be called with the iterator lock held.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>the iterator</td>
@@ -395,8 +416,11 @@ Implementors of a <a class="link" href="gstreamer-GstIterator.html#GstIterator" 
 function and pass it to the constructor of the custom iterator.
 The function will be called with the iterator lock held.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>the iterator</td>
@@ -411,8 +435,11 @@ The function will be called with the iterator lock held.
 <p>
 A function that is called by <a class="link" href="gstreamer-GstIterator.html#gst-iterator-foreach" title="gst_iterator_foreach ()"><code class="function">gst_iterator_foreach()</code></a> for every element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>item</code></em> :</span></p></td>
@@ -434,8 +461,11 @@ A function that is called by <a class="link" href="gstreamer-GstIterator.html#gs
 <p>
 A function to be passed to <a class="link" href="gstreamer-GstIterator.html#gst-iterator-fold" title="gst_iterator_fold ()"><code class="function">gst_iterator_fold()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>item</code></em> :</span></p></td>
@@ -465,8 +495,11 @@ A function to be passed to <a class="link" href="gstreamer-GstIterator.html#gst-
 <p>
 Macro to cast to a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> value</td>
@@ -481,8 +514,11 @@ Macro to cast to a <a class="link" href="gstreamer-GstIterator.html#GstIterator"
 <p>
 Macro to get the lock protecting the datastructure being iterated.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> to get the lock of</td>
@@ -502,8 +538,11 @@ Whenever the iterator is iterated, the value is compared to the
 value of the master cookie. If they are different, a concurrent
 modification happened to the iterator and a resync is needed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> to get the cookie of</td>
@@ -520,8 +559,11 @@ Macro to get a pointer to where the master cookie is stored. The
 master cookie protects the structure being iterated and gets updated
 whenever the datastructure changes.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> to get the master cookie of</td>
@@ -548,8 +590,11 @@ implementing the next/resync/free function to iterate a data structure.
 For each item retrieved, the <em class="parameter"><code>item</code></em> function is called with the lock
 held. The <em class="parameter"><code>free</code></em> function is called when the iterator is freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
@@ -623,8 +668,11 @@ holding <em class="parameter"><code>lock</code></em>, <em class="parameter"><cod
 will notice the update of the cookie and will return <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-RESYNC:CAPS"><code class="literal">GST_ITERATOR_RESYNC</code></a> to
 the user of the iterator in the next call to <a class="link" href="gstreamer-GstIterator.html#gst-iterator-next" title="gst_iterator_next ()"><code class="function">gst_iterator_next()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -671,8 +719,11 @@ case where a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title
 a single object has to be considered. This happens often
 for the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstPadIterIntLinkFunction ()"><span class="type">GstPadIterIntLinkFunction</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -697,8 +748,11 @@ for the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstP
 <p>
 Copy the iterator and its state.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -722,8 +776,11 @@ Free the iterator.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>The <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> to free</td>
@@ -757,8 +814,11 @@ get the newly updated list.
 <p>
 A return value of <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-ERROR:CAPS"><code class="literal">GST_ITERATOR_ERROR</code></a> indicates an unrecoverable fatal error.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -792,8 +852,11 @@ with this function.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
 <td>The <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> to resync</td>
@@ -821,8 +884,11 @@ popped.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -851,8 +917,11 @@ return 0 for elements that should be included in the filtered iterator.
 <p>
 When this iterator is freed, <em class="parameter"><code>it</code></em> will also be freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -904,8 +973,11 @@ appropriate.
 <p>
 The iterator will not be freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -943,8 +1015,11 @@ MT safe.</td>
 Iterate over all element of <em class="parameter"><code>it</code></em> and call the given function <em class="parameter"><code>func</code></em> for
 each element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
@@ -990,8 +1065,11 @@ The iterator will not be freed.
 This function will return FALSE if an error happened to the iterator
 or if the element wasn't found.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>it</code></em> :</span></p></td>
