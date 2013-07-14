@@ -2,20 +2,20 @@
 # Copyright (c) 2006 Canonical Ltd, and Rosetta Contributors
 # This file is distributed under the same license as the gstreamer package.
 #
-# Gabor Kelemen <kelemeng@gnome.hu>, 2006, 2007, 2008, 2009, 2010, 2012.
+# Gabor Kelemen <kelemeng@gnome.hu>, 2006, 2007, 2008, 2009, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer 1.0.3\n"
+"Project-Id-Version: gstreamer 0.10.30.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-07-11 19:26+0100\n"
-"PO-Revision-Date: 2012-11-29 14:03+0100\n"
+"POT-Creation-Date: 2013-07-11 15:09+0200\n"
+"PO-Revision-Date: 2010-11-01 13:39+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.4\n"
+"X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 msgid "Print the GStreamer version"
@@ -113,8 +113,9 @@ msgstr "Belső GStreamer hiba: kitöltési probléma."
 msgid "Internal GStreamer error: thread problem."
 msgstr "Belső GStreamer hiba: szálprobléma."
 
+#, fuzzy
 msgid "GStreamer error: negotiation problem."
-msgstr "GStreamer hiba: megállapodási probléma."
+msgstr "Belső GStreamer hiba: megállapodási probléma."
 
 msgid "Internal GStreamer error: event problem."
 msgstr "Belső GStreamer hiba: eseményprobléma."
@@ -131,8 +132,9 @@ msgstr "Belső GStreamer hiba: címkeprobléma."
 msgid "Your GStreamer installation is missing a plug-in."
 msgstr "A GStreamer telepítésből hiányzik egy bővítmény."
 
+#, fuzzy
 msgid "GStreamer error: clock problem."
-msgstr "GStreamer hiba: óraprobléma."
+msgstr "Belső GStreamer hiba: óraprobléma."
 
 msgid ""
 "This application is trying to use GStreamer functionality that has been "
@@ -247,6 +249,10 @@ msgstr ""
 msgid "Selected clock cannot be used in pipeline."
 msgstr "A kijelölt óra nem használható adatcsatornában."
 
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr ""
+
 msgid "title"
 msgstr "cím"
 
@@ -324,8 +330,8 @@ msgstr "kiterjesztett megjegyzés"
 
 msgid "free text commenting the data in key=value or key[en]=comment form"
 msgstr ""
-"az adatokhoz fűzött szabad szöveges megjegyzés kulcs=érték vagy kulcs[hu]"
-"=megjegyzés formában"
+"az adatokhoz fűzött szabad szöveges megjegyzés kulcs=érték vagy "
+"kulcs[hu]=megjegyzés formában"
 
 msgid "track number"
 msgstr "dalsorszám"
@@ -402,11 +408,12 @@ msgstr "védjegy uri"
 msgid "URI to the copyright notice of the data"
 msgstr "Az adatok védjegymegjegyzésének URI címe"
 
+#, fuzzy
 msgid "encoded by"
-msgstr "kódolta"
+msgstr "kódoló"
 
 msgid "name of the encoding person or organization"
-msgstr "a kódoló személy vagy szervezet"
+msgstr ""
 
 msgid "contact"
 msgstr "névjegy"
@@ -549,15 +556,16 @@ msgstr "szám és album hangosításának referenciaszintje"
 msgid "language code"
 msgstr "nyelvi kód"
 
+#, fuzzy
 msgid "language code for this stream, conforming to ISO-639-1 or ISO-639-2"
-msgstr ""
-"az adatfolyam ISO-639-1 vagy ISO-639-2 szabványnak megfelelő nyelvi kódja"
+msgstr "az adatfolyam ISO-639-1 szabványnak megfelelő nyelvi kódja"
 
+#, fuzzy
 msgid "language name"
 msgstr "nyelvi kód"
 
 msgid "freeform name of the language this stream is in"
-msgstr "az adatfolyam nyelvének szabad formátumú neve"
+msgstr ""
 
 msgid "image"
 msgstr "kép"
@@ -649,6 +657,7 @@ msgstr "város (angol név), ahol a média felvételre vagy előállításra ker
 msgid "geo location sublocation"
 msgstr "földrajzi hely részhelye"
 
+#, fuzzy
 msgid ""
 "a location within a city where the media has been produced or created (e.g. "
 "the neighborhood)"
@@ -786,6 +795,14 @@ msgid ", "
 msgstr ", "
 
 #, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
+
+#, c-format
 msgid "ERROR: from element %s: %s\n"
 msgstr "HIBA: a következő elemtől: %s: %s\n"
 
@@ -850,15 +867,6 @@ msgstr "nem linkelhető nyelőelem a következő URI címhez: „%s”"
 msgid "empty pipeline not allowed"
 msgstr "üres adatcsatorna nem engedélyezett"
 
-msgid "Internal clock error."
-msgstr "Belső órahiba."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Belső adatfolyam-hiba."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Rengetek puffer kerül eldobásra."
 
@@ -867,6 +875,15 @@ msgstr "Belső adatfolyam-probléma."
 
 msgid "Internal data stream error."
 msgstr "Belső adatfolyam-hiba."
+
+msgid "Internal data flow error."
+msgstr "Belső adatfolyam-hiba."
+
+msgid "Internal clock error."
+msgstr "Belső órahiba."
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Képességek szűrése"
@@ -1018,14 +1035,12 @@ msgid "List the plugin contents"
 msgstr "A bővítmény tartalmának felsorolása"
 
 msgid "Check if the specified element or plugin exists"
-msgstr "Ellenőrizze, hogy a megadott elem vagy bővítmény létezik-e"
+msgstr ""
 
 msgid ""
 "When checking if an element or plugin exists, also check that its version is "
 "at least the version specified"
 msgstr ""
-"Elem vagy bővítmény létezésének ellenőrzésekor azt is ellenőrizze, hogy a "
-"verziója legalább a megadott-e"
 
 msgid "Print supported URI schemes, with the elements that implement them"
 msgstr "Támogatott URI sémák kiírása, az azokat megvalósító elemmel"
@@ -1039,7 +1054,7 @@ msgid "No such element or plugin '%s'\n"
 msgstr "Nincs ilyen elem vagy bővítmény: „%s”\n"
 
 msgid "Index statistics"
-msgstr "Indexstatisztika"
+msgstr ""
 
 #, c-format
 msgid "Got message #%u from element \"%s\" (%s): "
@@ -1076,16 +1091,17 @@ msgstr "CÍMKE MEGTALÁLVA: a(z) „%s” objektum által.\n"
 msgid "FOUND TAG\n"
 msgstr "CÍMKE MEGTALÁLVA\n"
 
-#, c-format
+#, fuzzy, c-format
 msgid "FOUND TOC      : found by element \"%s\".\n"
-msgstr "TARTALOMJEGYZÉK MEGTALÁLVA: a(z) „%s” elem által.\n"
+msgstr "CÍMKE MEGTALÁLVA: a(z) „%s” elem által.\n"
 
-#, c-format
+#, fuzzy, c-format
 msgid "FOUND TOC      : found by object \"%s\".\n"
-msgstr "TARTALOMJEGYZÉK MEGTALÁLVA: a(z) „%s” objektum által.\n"
+msgstr "CÍMKE MEGTALÁLVA: a(z) „%s” objektum által.\n"
 
+#, fuzzy
 msgid "FOUND TOC\n"
-msgstr "TARTALOMJEGYZÉK MEGTALÁLVA\n"
+msgstr "CÍMKE MEGTALÁLVA\n"
 
 #, c-format
 msgid ""
@@ -1100,6 +1116,10 @@ msgid "WARNING: from element %s: %s\n"
 msgstr "FIGYELMEZTETÉS: a következő elemtől: %s: %s\n"
 
 msgid "Prerolled, waiting for buffering to finish...\n"
+msgstr "Előzetesen betöltve, várakozás a pufferelés befejeződésére…\n"
+
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
 msgstr "Előzetesen betöltve, várakozás a pufferelés befejeződésére…\n"
 
 msgid "buffering..."
@@ -1122,14 +1142,22 @@ msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Megszakítás: Adatcsatorna leállítása…\n"
 
 #, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
+#, fuzzy, c-format
 msgid "Missing element: %s\n"
-msgstr "Hiányzó elem: „%s”\n"
+msgstr "nincs „%s” elem"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s\n"
+msgstr "FIGYELMEZTETÉS: a következő elemtől: %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Kimeneti címkék (metaadatok)"
 
 msgid "Output TOC (chapters and editions)"
-msgstr "TARTALOMJEGYZÉK (fejezetek és változatok) kiírása"
+msgstr ""
 
 msgid "Output status information and property notifications"
 msgstr "Kimeneti állapotinformációk és tulajdonság-értesítések"
@@ -1153,7 +1181,7 @@ msgid "Force EOS on sources before shutting the pipeline down"
 msgstr "EOS kényszerítése a forrásokra az adatcsatorna leállítása előtt"
 
 msgid "Gather and print index statistics"
-msgstr "Indexstatisztikák gyűjtése és kiírása"
+msgstr ""
 
 #, c-format
 msgid "ERROR: pipeline could not be constructed: %s.\n"
@@ -1196,8 +1224,9 @@ msgstr "HIBA: az adatcsatorna nem akar lejátszani.\n"
 msgid "EOS on shutdown enabled -- Forcing EOS on the pipeline\n"
 msgstr "Leállításkor EOS engedélyezve – EOS kényszerítése az adatcsatornára\n"
 
+#, fuzzy
 msgid "EOS on shutdown enabled -- waiting for EOS after Error\n"
-msgstr "Leállításkor EOS engedélyezve – várakozás EOS-ra hiba után\n"
+msgstr "Leállításkor EOS engedélyezve – EOS kényszerítése az adatcsatornára\n"
 
 msgid "Waiting for EOS...\n"
 msgstr "Várakozás EOS-ra…\n"
@@ -1205,8 +1234,9 @@ msgstr "Várakozás EOS-ra…\n"
 msgid "EOS received - stopping pipeline...\n"
 msgstr "EOS érkezett – adatcsatorna leállítása…\n"
 
+#, fuzzy
 msgid "Interrupt while waiting for EOS - stopping pipeline...\n"
-msgstr "Megszakítás az EOS-ra várakozás közben – adatcsatorna leállítása…\n"
+msgstr "Megszakítás: Adatcsatorna leállítása…\n"
 
 msgid "An error happened while waiting for EOS\n"
 msgstr "Hiba történt az EOS-ra várakozáskor\n"
@@ -1223,8 +1253,8 @@ msgstr "Az adatcsatorna beállítása NULL értékre…\n"
 msgid "Freeing pipeline ...\n"
 msgstr "Adatcsatorna felszabadítása…\n"
 
-#~ msgid "maximum"
-#~ msgstr "maximum"
+#~ msgid "Print alloc trace (if enabled at compile time)"
+#~ msgstr "Foglalási nyomkövetés kiírása (ha fordításkor engedélyezték)"
 
 #~ msgid "Usage: gst-xmllaunch <file.xml> [ element.property=value ... ]\n"
 #~ msgstr "Használat: gst-xmllaunch <fájl.xml> [ elem.tulajdonság=érték … ]\n"
@@ -1253,6 +1283,3 @@ msgstr "Adatcsatorna felszabadítása…\n"
 
 #~ msgid "Do not install signal handlers for SIGUSR1 and SIGUSR2"
 #~ msgstr "Ne telepítsen szignálkezelőket a SIGUSR1 és SIGUSR2 szignálokhoz"
-
-#~ msgid "Print alloc trace (if enabled at compile time)"
-#~ msgstr "Foglalási nyomkövetés kiírása (ha fordításkor engedélyezték)"

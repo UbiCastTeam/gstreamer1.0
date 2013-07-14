@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>output-selector</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-multiqueue.html" title="multiqueue">
@@ -58,8 +58,8 @@
 <a name="gstreamer-plugins-output-selector.properties"></a><h2>Properties</h2>
 <pre class="synopsis">
   "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--active-pad" title='The "active-pad" property'>active-pad</a>"               <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a>*               : Read / Write
-  "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--resend-latest" title='The "resend-latest" property'>resend-latest</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
   "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--pad-negotiation-mode" title='The "pad-negotiation-mode" property'>pad-negotiation-mode</a>"     <span class="type">GstOutputSelectorPadNegotiationMode</span>  : Read / Write
+  "<a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--resend-latest" title='The "resend-latest" property'>resend-latest</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
 </pre>
 </div>
 <div class="refsect1">
@@ -70,9 +70,12 @@ Direct input stream to one out of N output pads.
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="idp10117472"></a><h3>Element Information</h3>
-<div class="variablelist"><table border="0">
+<a name="idp6884992"></a><h3>Element Information</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">plugin</span></p></td>
@@ -93,9 +96,12 @@ Direct input stream to one out of N output pads.
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp7942336"></a><h3>Element Pads</h3>
-<div class="variablelist"><table border="0">
+<a name="idp9588000"></a><h3>Element Pads</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
@@ -115,8 +121,11 @@ Direct input stream to one out of N output pads.
 </tr>
 </tbody>
 </table></div>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
@@ -159,17 +168,17 @@ Direct input stream to one out of N output pads.
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstOutputSelector--resend-latest"></a><h3>The <code class="literal">"resend-latest"</code> property</h3>
-<pre class="programlisting">  "resend-latest"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
-<p>Resend latest buffer after a switch to a new pad.</p>
-<p>Default value: FALSE</p>
-</div>
-<hr>
-<div class="refsect2">
 <a name="GstOutputSelector--pad-negotiation-mode"></a><h3>The <code class="literal">"pad-negotiation-mode"</code> property</h3>
 <pre class="programlisting">  "pad-negotiation-mode"     <span class="type">GstOutputSelectorPadNegotiationMode</span>  : Read / Write</pre>
 <p>The mode to be used for pad negotiation.</p>
 <p>Default value: All</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstOutputSelector--resend-latest"></a><h3>The <code class="literal">"resend-latest"</code> property</h3>
+<pre class="programlisting">  "resend-latest"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
+<p>Resend latest buffer after a switch to a new pad.</p>
+<p>Default value: FALSE</p>
 </div>
 </div>
 <div class="refsect1">

@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstSample</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstCaps.html" title="GstCaps">
+<link rel="prev" href="gstreamer-GstCapsFeatures.html" title="GstCapsFeatures">
 <link rel="next" href="GstChildProxy.html" title="GstChildProxy">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -14,7 +14,7 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="gstreamer-GstCaps.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-GstCapsFeatures.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
@@ -81,8 +81,11 @@ exchange buffers with an application.
 <p>
 Get the buffer associated with <em class="parameter"><code>sample</code></em>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
@@ -105,8 +108,11 @@ is no buffer. The buffer remains valid as long as <em class="parameter"><code>sa
 <p>
 Get the caps associated with <em class="parameter"><code>sample</code></em>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
@@ -129,8 +135,11 @@ is no caps. The caps remain valid as long as <em class="parameter"><code>sample<
 <p>
 Get extra information associated with <em class="parameter"><code>sample</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
@@ -153,8 +162,11 @@ The info remains valid as long as <em class="parameter"><code>sample</code></em>
 <p>
 Get the segment associated with <em class="parameter"><code>sample</code></em>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
@@ -183,8 +195,11 @@ Create a new <a class="link" href="gstreamer-GstSample.html#GstSample" title="Gs
 <p>
 Free-function: gst_sample_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
@@ -222,8 +237,11 @@ after usage. <span class="annotation">[<acronym title="Free data after the code 
 <p>
 Increases the refcount of the given sample by one.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
@@ -247,8 +265,11 @@ Increases the refcount of the given sample by one.
 Decreases the refcount of the sample. If the refcount reaches 0, the
 sample will be freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>sample</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>

@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -98,9 +98,6 @@
 #ifdef HAVE_DLFCN_H
 #  include <dlfcn.h>
 #endif
-#ifdef HAVE_PRINTF_EXTENSION
-#  include <printf.h>
-#endif
 #include <stdio.h>              /* fprintf */
 #include <glib/gstdio.h>
 #include <errno.h>
@@ -121,11 +118,19 @@
 #include "gstquark.h"
 #include "gstsegment.h"
 #include "gstvalue.h"
+#include "gstcapsfeatures.h"
 
 #ifdef HAVE_VALGRIND_VALGRIND_H
 #  include <valgrind/valgrind.h>
 #endif
 #include <glib/gprintf.h>       /* g_sprintf */
+
+/* our own printf implementation with custom extensions to %p for caps etc. */
+#include "printf/printf.h"
+#include "printf/printf-extension.h"
+
+static char *gst_info_printf_pointer_extension_func (const char *format,
+    void *ptr);
 
 #endif /* !GST_DISABLE_GST_DEBUG */
 
@@ -174,6 +179,7 @@ GstDebugCategory *GST_CAT_QOS = NULL;
 GstDebugCategory *_priv_GST_CAT_POLL = NULL;
 GstDebugCategory *GST_CAT_META = NULL;
 GstDebugCategory *GST_CAT_LOCKING = NULL;
+GstDebugCategory *GST_CAT_CONTEXT = NULL;
 
 
 #endif /* !defined(GST_DISABLE_GST_DEBUG) || !defined(GST_REMOVE_DISABLED) */
@@ -220,20 +226,6 @@ dladdr (void *address, Dl_info * dl)
 
 static void gst_debug_reset_threshold (gpointer category, gpointer unused);
 static void gst_debug_reset_all_thresholds (void);
-
-#ifdef GST_USING_PRINTF_EXTENSION
-static int _gst_info_printf_extension_ptr (FILE * stream,
-    const struct printf_info *info, const void *const *args);
-static int _gst_info_printf_extension_segment (FILE * stream,
-    const struct printf_info *info, const void *const *args);
-#ifdef HAVE_REGISTER_PRINTF_SPECIFIER
-static int _gst_info_printf_extension_arginfo (const struct printf_info *info,
-    size_t n, int *argtypes, int *size);
-#else
-static int _gst_info_printf_extension_arginfo (const struct printf_info *info,
-    size_t n, int *argtypes);
-#endif
-#endif
 
 struct _GstDebugMessage
 {
@@ -333,19 +325,8 @@ _priv_gst_debug_init (void)
   /* get time we started for debugging messages */
   _priv_gst_info_start_time = gst_util_get_timestamp ();
 
-#ifdef GST_USING_PRINTF_EXTENSION
-#ifdef HAVE_REGISTER_PRINTF_SPECIFIER
-  register_printf_specifier (GST_PTR_FORMAT[0], _gst_info_printf_extension_ptr,
-      _gst_info_printf_extension_arginfo);
-  register_printf_specifier (GST_SEGMENT_FORMAT[0],
-      _gst_info_printf_extension_segment, _gst_info_printf_extension_arginfo);
-#else
-  register_printf_function (GST_PTR_FORMAT[0], _gst_info_printf_extension_ptr,
-      _gst_info_printf_extension_arginfo);
-  register_printf_function (GST_SEGMENT_FORMAT[0],
-      _gst_info_printf_extension_segment, _gst_info_printf_extension_arginfo);
-#endif
-#endif
+  __gst_printf_pointer_extension_set_func
+      (gst_info_printf_pointer_extension_func);
 
   /* do NOT use a single debug function before this line has been run */
   GST_CAT_DEFAULT = _gst_debug_category_new ("default",
@@ -413,7 +394,7 @@ _priv_gst_debug_init (void)
   _priv_GST_CAT_POLL = _gst_debug_category_new ("GST_POLL", 0, "poll");
   GST_CAT_META = _gst_debug_category_new ("GST_META", 0, "meta");
   GST_CAT_LOCKING = _gst_debug_category_new ("GST_LOCKING", 0, "locking");
-
+  GST_CAT_CONTEXT = _gst_debug_category_new ("GST_CONTEXT", 0, NULL);
 
   /* print out the valgrind message if we're in valgrind */
   _priv_gst_in_valgrind ();
@@ -545,7 +526,13 @@ const gchar *
 gst_debug_message_get (GstDebugMessage * message)
 {
   if (message->message == NULL) {
-    message->message = g_strdup_vprintf (message->format, message->arguments);
+    int len;
+
+    len = __gst_vasprintf (&message->message, message->format,
+        message->arguments);
+
+    if (len < 0)
+      message->message = NULL;
   }
   return message->message;
 }
@@ -553,25 +540,19 @@ gst_debug_message_get (GstDebugMessage * message)
 #define MAX_BUFFER_DUMP_STRING_LEN  100
 
 /* structure_to_pretty_string:
- * @structure: a #GstStructure
+ * @str: a serialized #GstStructure
  *
- * Converts @structure to a human-readable string representation. Basically
- * the same as gst_structure_to_string(), but if the structure contains large
- * buffers such as images the hex representation of those buffers will be
- * shortened so that the string remains readable.
+ * If the serialized structure contains large buffers such as images the hex
+ * representation of those buffers will be shortened so that the string remains
+ * readable.
  *
- * Returns: a newly-allocated string. g_free() when no longer needed.
+ * Returns: the filtered string
  */
 static gchar *
-structure_to_pretty_string (const GstStructure * s)
+prettify_structure_string (gchar * str)
 {
-  gchar *str, *pos, *end;
+  gchar *pos = str, *end;
 
-  str = gst_structure_to_string (s);
-  if (str == NULL)
-    return NULL;
-
-  pos = str;
   while ((pos = strstr (pos, "(buffer)"))) {
     guint count = 0;
 
@@ -593,10 +574,69 @@ structure_to_pretty_string (const GstStructure * s)
 static inline gchar *
 gst_info_structure_to_string (const GstStructure * s)
 {
-  if (G_UNLIKELY (pretty_tags && s->name == GST_QUARK (TAGLIST)))
-    return structure_to_pretty_string (s);
-  else
-    return gst_structure_to_string (s);
+  if (G_LIKELY (s)) {
+    gchar *str = gst_structure_to_string (s);;
+    if (G_UNLIKELY (pretty_tags && s->name == GST_QUARK (TAGLIST)))
+      return prettify_structure_string (str);
+    else
+      return str;
+  }
+  return NULL;
+}
+
+static inline gchar *
+gst_info_describe_buffer (GstBuffer * buffer)
+{
+  return g_strdup_printf ("buffer: %p, pts %" GST_TIME_FORMAT ", dts %"
+      GST_TIME_FORMAT ", dur %" GST_TIME_FORMAT ", size %" G_GSIZE_FORMAT
+      ", offset %" G_GUINT64_FORMAT ", offset_end %" G_GUINT64_FORMAT
+      ", flags 0x%x", buffer, GST_TIME_ARGS (GST_BUFFER_PTS (buffer)),
+      GST_TIME_ARGS (GST_BUFFER_DTS (buffer)),
+      GST_TIME_ARGS (GST_BUFFER_DURATION (buffer)),
+      gst_buffer_get_size (buffer), GST_BUFFER_OFFSET (buffer),
+      GST_BUFFER_OFFSET_END (buffer), GST_BUFFER_FLAGS (buffer));
+}
+
+static inline gchar *
+gst_info_describe_event (GstEvent * event)
+{
+  gchar *s, *ret;
+
+  s = gst_info_structure_to_string (gst_event_get_structure (event));
+  ret = g_strdup_printf ("%s event: %p, time %" GST_TIME_FORMAT
+      ", seq-num %d, %s", GST_EVENT_TYPE_NAME (event), event,
+      GST_TIME_ARGS (GST_EVENT_TIMESTAMP (event)), GST_EVENT_SEQNUM (event),
+      (s ? s : "(NULL)"));
+  g_free (s);
+  return ret;
+}
+
+static inline gchar *
+gst_info_describe_message (GstMessage * message)
+{
+  gchar *s, *ret;
+
+  s = gst_info_structure_to_string (gst_message_get_structure (message));
+  ret = g_strdup_printf ("%s message: %p, time %" GST_TIME_FORMAT
+      ", seq-num %d, element '%s', %s", GST_MESSAGE_TYPE_NAME (message),
+      message, GST_TIME_ARGS (GST_MESSAGE_TIMESTAMP (message)),
+      GST_MESSAGE_SEQNUM (message),
+      ((message->src) ? GST_ELEMENT_NAME (message->src) : "(NULL)"),
+      (s ? s : "(NULL)"));
+  g_free (s);
+  return ret;
+}
+
+static inline gchar *
+gst_info_describe_query (GstQuery * query)
+{
+  gchar *s, *ret;
+
+  s = gst_info_structure_to_string (gst_query_get_structure (query));
+  ret = g_strdup_printf ("%s query: %p, %s", GST_QUERY_TYPE_NAME (query),
+      query, (s ? s : "(NULL)"));
+  g_free (s);
+  return ret;
 }
 
 static gchar *
@@ -627,26 +667,21 @@ gst_debug_print_object (gpointer ptr)
   if (*(GType *) ptr == GST_TYPE_STRUCTURE) {
     return gst_info_structure_to_string ((const GstStructure *) ptr);
   }
+  if (*(GType *) ptr == GST_TYPE_CAPS_FEATURES) {
+    return gst_caps_features_to_string ((const GstCapsFeatures *) ptr);
+  }
   if (*(GType *) ptr == GST_TYPE_TAG_LIST) {
-    /* FIXME: want pretty tag list with long byte dumps removed.. */
-    return gst_tag_list_to_string ((GstTagList *) ptr);
+    gchar *str = gst_tag_list_to_string ((GstTagList *) ptr);
+    if (G_UNLIKELY (pretty_tags))
+      return prettify_structure_string (str);
+    else
+      return str;
   }
   if (*(GType *) ptr == GST_TYPE_DATE_TIME) {
     return __gst_date_time_serialize ((GstDateTime *) ptr, TRUE);
   }
   if (GST_IS_BUFFER (ptr)) {
-    GstBuffer *buf = (GstBuffer *) ptr;
-    gchar *ret;
-
-    ret =
-        g_strdup_printf ("%p, pts %" GST_TIME_FORMAT ", dts %" GST_TIME_FORMAT
-        ", dur %" GST_TIME_FORMAT ", size %" G_GSIZE_FORMAT ", offset %"
-        G_GUINT64_FORMAT ", offset_end %" G_GUINT64_FORMAT, buf,
-        GST_TIME_ARGS (GST_BUFFER_PTS (buf)),
-        GST_TIME_ARGS (GST_BUFFER_DTS (buf)),
-        GST_TIME_ARGS (GST_BUFFER_DURATION (buf)), gst_buffer_get_size (buf),
-        GST_BUFFER_OFFSET (buf), GST_BUFFER_OFFSET_END (buf));
-    return ret;
+    return gst_info_describe_buffer (GST_BUFFER_CAST (ptr));
   }
 #ifdef USE_POISONING
   if (*(guint32 *) ptr == 0xffffffff) {
@@ -663,66 +698,34 @@ gst_debug_print_object (gpointer ptr)
     return g_strdup_printf ("<%s@%p>", G_OBJECT_TYPE_NAME (object), object);
   }
   if (GST_IS_MESSAGE (object)) {
-    GstMessage *msg = GST_MESSAGE_CAST (object);
-    gchar *s, *ret;
-    const GstStructure *structure;
-
-    structure = gst_message_get_structure (msg);
-
-    if (structure) {
-      s = gst_info_structure_to_string (structure);
-    } else {
-      s = g_strdup ("(NULL)");
-    }
-
-    ret = g_strdup_printf ("%s message from element '%s': %s",
-        GST_MESSAGE_TYPE_NAME (msg), (msg->src != NULL) ?
-        GST_ELEMENT_NAME (msg->src) : "(NULL)", s);
-    g_free (s);
-    return ret;
+    return gst_info_describe_message (GST_MESSAGE_CAST (object));
   }
   if (GST_IS_QUERY (object)) {
-    GstQuery *query = GST_QUERY_CAST (object);
-    const GstStructure *structure;
-
-    structure = gst_query_get_structure (query);
-
-    if (structure) {
-      return gst_info_structure_to_string (structure);
-    } else {
-      const gchar *query_type_name;
-
-      query_type_name = gst_query_type_get_name (query->type);
-      if (G_LIKELY (query_type_name != NULL)) {
-        return g_strdup_printf ("%s query", query_type_name);
-      } else {
-        return g_strdup_printf ("query of unknown type %d", query->type);
-      }
-    }
+    return gst_info_describe_query (GST_QUERY_CAST (object));
   }
   if (GST_IS_EVENT (object)) {
-    GstEvent *event = GST_EVENT_CAST (object);
+    return gst_info_describe_event (GST_EVENT_CAST (object));
+  }
+  if (GST_IS_CONTEXT (object)) {
+    GstContext *context = GST_CONTEXT_CAST (object);
     gchar *s, *ret;
-    GstStructure *structure;
+    const GstStructure *structure;
 
-    structure = (GstStructure *) gst_event_get_structure (event);
+    structure = gst_context_get_structure (context);
+
     if (structure) {
       s = gst_info_structure_to_string (structure);
     } else {
       s = g_strdup ("(NULL)");
     }
 
-    ret = g_strdup_printf ("%s event at time %"
-        GST_TIME_FORMAT ": %s",
-        GST_EVENT_TYPE_NAME (event), GST_TIME_ARGS (event->timestamp), s);
+    ret = g_strdup_printf ("context '%s'", s);
     g_free (s);
     return ret;
   }
 
   return g_strdup_printf ("%p", ptr);
 }
-
-#ifdef GST_USING_PRINTF_EXTENSION
 
 static gchar *
 gst_debug_print_segment (gpointer ptr)
@@ -765,7 +768,30 @@ gst_debug_print_segment (gpointer ptr)
   }
 }
 
-#endif /* GST_USING_PRINTF_EXTENSION */
+static char *
+gst_info_printf_pointer_extension_func (const char *format, void *ptr)
+{
+  char *s = NULL;
+
+  if (format[0] == 'p' && format[1] == '\a') {
+    switch (format[2]) {
+      case 'A':                /* GST_PTR_FORMAT     */
+        s = gst_debug_print_object (ptr);
+        break;
+      case 'B':                /* GST_SEGMENT_FORMAT */
+        s = gst_debug_print_segment (ptr);
+        break;
+      default:
+        /* must have been compiled against a newer version with an extension
+         * we don't known about yet - just ignore and fallback to %p below */
+        break;
+    }
+  }
+  if (s == NULL)
+    s = g_strdup_printf ("%p", ptr);
+
+  return s;
+}
 
 /**
  * gst_debug_construct_term_color:
@@ -1601,6 +1627,110 @@ _gst_debug_get_category (const gchar * name)
   return NULL;
 }
 
+static gboolean
+parse_debug_category (gchar * str, const gchar ** category)
+{
+  if (!str)
+    return FALSE;
+
+  /* works in place */
+  g_strstrip (str);
+
+  if (str[0] != '\0') {
+    *category = str;
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+static gboolean
+parse_debug_level (gchar * str, GstDebugLevel * level)
+{
+  if (!str)
+    return FALSE;
+
+  /* works in place */
+  g_strstrip (str);
+
+  if (str[0] != '\0' && str[1] == '\0'
+      && str[0] >= '0' && str[0] < '0' + GST_LEVEL_COUNT) {
+    *level = (GstDebugLevel) (str[0] - '0');
+  } else if (strcmp (str, "ERROR") == 0) {
+    *level = GST_LEVEL_ERROR;
+  } else if (strncmp (str, "WARN", 4) == 0) {
+    *level = GST_LEVEL_WARNING;
+  } else if (strcmp (str, "FIXME") == 0) {
+    *level = GST_LEVEL_FIXME;
+  } else if (strcmp (str, "INFO") == 0) {
+    *level = GST_LEVEL_INFO;
+  } else if (strcmp (str, "DEBUG") == 0) {
+    *level = GST_LEVEL_DEBUG;
+  } else if (strcmp (str, "LOG") == 0) {
+    *level = GST_LEVEL_LOG;
+  } else if (strcmp (str, "TRACE") == 0) {
+    *level = GST_LEVEL_TRACE;
+  } else if (strcmp (str, "MEMDUMP") == 0) {
+    *level = GST_LEVEL_MEMDUMP;
+  } else
+    return FALSE;
+
+  return TRUE;
+}
+
+/**
+ * gst_debug_set_threshold_from_string:
+ * @list: comma-separated list of "category:level" pairs to be used
+ *     as debug logging levels
+ * @reset: %TRUE to clear all previously-set debug levels before setting
+ *     new thresholds
+ * %FALSE if adding the threshold described by @list to the one already set.
+ *
+ * Sets the debug logging wanted in the same form as with the GST_DEBUG
+ * environment variable. You can use wildcards such as '*', but note that
+ * the order matters when you use wild cards, e.g. "foosrc:6,*src:3,*:2" sets
+ * everything to log level 2.
+ *
+ * Since: 1.2.0
+ */
+void
+gst_debug_set_threshold_from_string (const gchar * list, gboolean reset)
+{
+  gchar **split;
+  gchar **walk;
+
+  g_assert (list);
+
+  if (reset == TRUE)
+    gst_debug_set_default_threshold (0);
+
+  split = g_strsplit (list, ",", 0);
+
+  for (walk = split; *walk; walk++) {
+    if (strchr (*walk, ':')) {
+      gchar **values = g_strsplit (*walk, ":", 2);
+
+      if (values[0] && values[1]) {
+        GstDebugLevel level;
+        const gchar *category;
+
+        if (parse_debug_category (values[0], &category)
+            && parse_debug_level (values[1], &level))
+          gst_debug_set_threshold_for_name (category, level);
+      }
+
+      g_strfreev (values);
+    } else {
+      GstDebugLevel level;
+
+      if (parse_debug_level (*walk, &level))
+        gst_debug_set_default_threshold (level);
+    }
+  }
+
+  g_strfreev (split);
+}
+
 /*** FUNCTION POINTERS ********************************************************/
 
 static GHashTable *__gst_function_pointers;     /* NULL */
@@ -1660,67 +1790,6 @@ _gst_debug_register_funcptr (GstDebugFuncPtr func, const gchar * ptrname)
 
   g_mutex_unlock (&__dbg_functions_mutex);
 }
-
-/*** PRINTF EXTENSIONS ********************************************************/
-
-#ifdef GST_USING_PRINTF_EXTENSION
-static int
-_gst_info_printf_extension_ptr (FILE * stream, const struct printf_info *info,
-    const void *const *args)
-{
-  char *buffer;
-  int len;
-  void *ptr;
-
-  buffer = NULL;
-  ptr = *(void **) args[0];
-
-  buffer = gst_debug_print_object (ptr);
-  len = fprintf (stream, "%*s", (info->left ? -info->width : info->width),
-      buffer);
-
-  g_free (buffer);
-  return len;
-}
-
-static int
-_gst_info_printf_extension_segment (FILE * stream,
-    const struct printf_info *info, const void *const *args)
-{
-  char *buffer;
-  int len;
-  void *ptr;
-
-  buffer = NULL;
-  ptr = *(void **) args[0];
-
-  buffer = gst_debug_print_segment (ptr);
-  len = fprintf (stream, "%*s", (info->left ? -info->width : info->width),
-      buffer);
-
-  g_free (buffer);
-  return len;
-}
-
-#ifdef HAVE_REGISTER_PRINTF_SPECIFIER
-static int
-_gst_info_printf_extension_arginfo (const struct printf_info *info, size_t n,
-    int *argtypes, int *size)
-#else
-static int
-_gst_info_printf_extension_arginfo (const struct printf_info *info, size_t n,
-    int *argtypes)
-#endif
-{
-  if (n > 0) {
-    argtypes[0] = PA_POINTER;
-#ifdef HAVE_REGISTER_PRINTF_SPECIFIER
-    *size = sizeof (gpointer);
-#endif
-  }
-  return 1;
-}
-#endif /* GST_USING_PRINTF_EXTENSION */
 
 static void
 gst_info_dump_mem_line (gchar * linebuf, gsize linebuf_size,
@@ -1874,6 +1943,11 @@ gst_debug_is_colored (void)
 }
 
 void
+gst_debug_set_threshold_from_string (const gchar * list, gboolean reset)
+{
+}
+
+void
 gst_debug_set_default_threshold (GstDebugLevel level)
 {
 }
@@ -1973,6 +2047,46 @@ _gst_debug_dump_mem (GstDebugCategory * cat, const gchar * file,
 #endif /* GST_REMOVE_DISABLED */
 #endif /* GST_DISABLE_GST_DEBUG */
 
+/* Need this for _gst_element_error_printf even if GST_REMOVE_DISABLED is set:
+ * fallback function that cleans up the format string and replaces all pointer
+ * extension formats with plain %p. */
+#ifdef GST_DISABLE_GST_DEBUG
+#include <glib/gprintf.h>
+int
+__gst_info_fallback_vasprintf (char **result, char const *format, va_list args)
+{
+  gchar *clean_format, *c;
+  gsize len;
+
+  if (format == NULL)
+    return -1;
+
+  clean_format = g_strdup (format);
+  c = clean_format;
+  while ((c = strstr (c, "%p\a"))) {
+    if (c[3] < 'A' || c[3] > 'Z') {
+      c += 3;
+      continue;
+    }
+    len = strlen (c + 4);
+    g_memmove (c + 2, c + 4, len + 1);
+    c += 2;
+  }
+  while ((c = strstr (clean_format, "%P")))     /* old GST_PTR_FORMAT */
+    c[1] = 'p';
+  while ((c = strstr (clean_format, "%Q")))     /* old GST_SEGMENT_FORMAT */
+    c[1] = 'p';
+
+  len = g_vasprintf (result, clean_format, args);
+
+  g_free (clean_format);
+
+  if (*result == NULL)
+    return -1;
+
+  return len;
+}
+#endif
 
 #ifdef GST_ENABLE_FUNC_INSTRUMENTATION
 /* FIXME make this thread specific */

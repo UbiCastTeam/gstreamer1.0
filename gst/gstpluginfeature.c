@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -200,6 +200,28 @@ gst_plugin_feature_get_plugin (GstPluginFeature * feature)
 }
 
 /**
+ * gst_plugin_feature_get_plugin_name:
+ * @feature: a feature
+ *
+ * Get the name of the plugin that provides this feature.
+ *
+ * Returns: the name of the plugin that provides this feature, or %NULL if
+ *     the feature is not associated with a plugin.
+ *
+ * Since: 1.2.0
+ */
+const gchar *
+gst_plugin_feature_get_plugin_name (GstPluginFeature * feature)
+{
+  g_return_val_if_fail (GST_IS_PLUGIN_FEATURE (feature), NULL);
+
+  if (feature->plugin == NULL)
+    return NULL;
+
+  return gst_plugin_get_name (feature->plugin);
+}
+
+/**
  * gst_plugin_feature_list_free:
  * @list: (transfer full) (element-type Gst.PluginFeature): list
  *     of #GstPluginFeature
@@ -360,7 +382,7 @@ gst_plugin_feature_check_version (GstPluginFeature * feature,
  * Returns: negative value if the rank of p1 > the rank of p2 or the ranks are
  * equal but the name of p1 comes before the name of p2; zero if the rank
  * and names are equal; positive value if the rank of p1 < the rank of p2 or the
- * ranks are equal but the name of p2 comes after the name of p1
+ * ranks are equal but the name of p2 comes before the name of p1
  */
 gint
 gst_plugin_feature_rank_compare_func (gconstpointer p1, gconstpointer p2)
@@ -375,7 +397,7 @@ gst_plugin_feature_rank_compare_func (gconstpointer p1, gconstpointer p2)
   if (diff != 0)
     return diff;
 
-  diff = strcmp (GST_OBJECT_NAME (f2), GST_OBJECT_NAME (f1));
+  diff = strcmp (GST_OBJECT_NAME (f1), GST_OBJECT_NAME (f2));
 
   return diff;
 }

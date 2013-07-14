@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -38,7 +38,7 @@
  * might sometimes be needed to create a #GstTask manually if it is not related to
  * a #GstPad.
  *
- * Before the #GstTask can be run, it needs a #GStaticRecMutex that can be set with
+ * Before the #GstTask can be run, it needs a #GRecMutex that can be set with
  * gst_task_set_lock().
  *
  * The task can be started, paused and stopped with gst_task_start(), gst_task_pause()
@@ -386,7 +386,7 @@ gst_task_cleanup_all (void)
  * This function will not yet create and start a thread. Use gst_task_start() or
  * gst_task_pause() to create and start the GThread.
  *
- * Before the task can be used, a #GStaticRecMutex must be configured using the
+ * Before the task can be used, a #GRecMutex must be configured using the
  * gst_task_set_lock() function. This lock will always be acquired while
  * @func is called.
  *

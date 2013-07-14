@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstControlSource</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstControlBinding.html" title="GstControlBinding">
@@ -77,7 +77,7 @@ struct              <a class="link" href="GstControlSource.html#GstTimedValue" t
 <a name="GstControlSource.description"></a><h2>Description</h2>
 <p>
 The <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a> is a base class for control value sources that could
-be used by <span class="type">GstController</span> to get timestamp-value pairs. A control source
+be used by <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstController.html"><span class="type">GstController</span></a> to get timestamp-value pairs. A control source
 essentially is a function over time, returning gloat values between 0.0 and 1.0.
 </p>
 <p>
@@ -110,8 +110,11 @@ These are then used by <a class="link" href="GstControlSource.html#gst-control-s
 <p>
 The instance structure of <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstControlSource.html#GstControlSourceGetValue" title="GstControlSourceGetValue ()"><span class="type">GstControlSourceGetValue</span></a> <em class="structfield"><code><a name="GstControlSource-struct.get-value"></a>get_value</code></em>;</span></p></td>
@@ -134,8 +137,11 @@ The instance structure of <a class="link" href="GstControlSource.html" title="Gs
 <p>
 The class structure of <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="GstControlSourceClass.parent-class"></a>parent_class</code></em>;</span></p></td>
 <td>Parent class</td>
@@ -151,8 +157,11 @@ The class structure of <a class="link" href="GstControlSource.html" title="GstCo
 <p>
 Function for returning a value for a given timestamp.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -185,8 +194,11 @@ Function for returning a value for a given timestamp.
 <p>
 Function for returning an array of values for starting at a given timestamp.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -227,8 +239,11 @@ Function for returning an array of values for starting at a given timestamp.
 <p>
 Structure for saving a timestamp and a value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> <em class="structfield"><code><a name="GstTimedValue.timestamp"></a>timestamp</code></em>;</span></p></td>
@@ -250,8 +265,11 @@ Structure for saving a timestamp and a value.
 <p>
 Gets the value for this <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a> at a given timestamp.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>
@@ -284,8 +302,11 @@ Gets the value for this <a class="link" href="GstControlSource.html" title="GstC
 Gets an array of values for for this <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a>. Values that are
 undefined contain NANs.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>self</code></em> :</span></p></td>

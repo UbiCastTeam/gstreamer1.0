@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:gstnettimeprovider
@@ -280,6 +280,7 @@ gst_net_time_provider_start (GstNetTimeProvider * self)
   GSocket *socket;
   GError *err = NULL;
   int port;
+  gchar *address;
 
   if (self->priv->address) {
     inet_addr = g_inet_address_new_from_string (self->priv->address);
@@ -307,14 +308,25 @@ gst_net_time_provider_start (GstNetTimeProvider * self)
 
   bound_addr = g_socket_get_local_address (socket, NULL);
   port = g_inet_socket_address_get_port (G_INET_SOCKET_ADDRESS (bound_addr));
-  GST_DEBUG_OBJECT (self, "bound on UDP port %d", port);
-  g_object_unref (bound_addr);
+  inet_addr =
+      g_inet_socket_address_get_address (G_INET_SOCKET_ADDRESS (bound_addr));
+  address = g_inet_address_to_string (inet_addr);
 
+  if (g_strcmp0 (address, self->priv->address)) {
+    g_free (self->priv->address);
+    self->priv->address = address;
+    GST_DEBUG_OBJECT (self, "notifying address %s", address);
+    g_object_notify (G_OBJECT (self), "address");
+  } else {
+    g_free (address);
+  }
   if (port != self->priv->port) {
     self->priv->port = port;
     GST_DEBUG_OBJECT (self, "notifying port %d", port);
     g_object_notify (G_OBJECT (self), "port");
   }
+  GST_DEBUG_OBJECT (self, "bound on UDP address %s, port %d", address, port);
+  g_object_unref (bound_addr);
 
   self->priv->socket = socket;
   self->priv->cancel = g_cancellable_new ();
@@ -382,7 +394,7 @@ gst_net_time_provider_stop (GstNetTimeProvider * self)
 /**
  * gst_net_time_provider_new:
  * @clock: a #GstClock to export over the network
- * @address: an address to bind on as a dotted quad (xxx.xxx.xxx.xxx), or NULL
+ * @address: an address to bind on as a dotted quad (xxx.xxx.xxx.xxx), IPv6 address, or NULL
  *           to bind to all addresses
  * @port: a port to bind on, or 0 to let the kernel choose
  *

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstEvent</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstGError.html" title="GstGError">
@@ -90,6 +90,10 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
 <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-stream-start" title="gst_event_new_stream_start ()">gst_event_new_stream_start</a>          (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-stream-start" title="gst_event_parse_stream_start ()">gst_event_parse_stream_start</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **stream_id</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-set-stream-flags" title="gst_event_set_stream_flags ()">gst_event_set_stream_flags</a>          (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstStreamFlags</span> flags</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-stream-flags" title="gst_event_parse_stream_flags ()">gst_event_parse_stream_flags</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstStreamFlags</span> *flags</code></em>);
 <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-segment" title="gst_event_new_segment ()">gst_event_new_segment</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstSegment.html#GstSegment" title="struct GstSegment"><span class="type">GstSegment</span></a> *segment</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-segment" title="gst_event_parse_segment ()">gst_event_parse_segment</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gstreamer-GstSegment.html#GstSegment" title="struct GstSegment"><span class="type">GstSegment</span></a> **segment</code></em>);
@@ -170,6 +174,9 @@ enum                <a class="link" href="gstreamer-GstEvent.html#GstSeekFlags" 
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-segment-done" title="gst_event_parse_segment_done ()">gst_event_parse_segment_done</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *format</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *position</code></em>);
+<a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-context" title="gst_event_new_context ()">gst_event_new_context</a>               (<em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-context" title="gst_event_parse_context ()">gst_event_parse_context</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> **context</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -206,7 +213,7 @@ To do that <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" tit
 the needed parameters to specify seeking time and mode.
 </p>
 <div class="example">
-<a name="idp21558560"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
+<a name="idp22429776"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -268,8 +275,11 @@ Last reviewed on 2012-03-28 (0.11.3)
 <p>
 A <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> <em class="structfield"><code><a name="GstEvent.mini-object"></a>mini_object</code></em>;</span></p></td>
@@ -306,8 +316,11 @@ A <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent
 values. You can get the type flags of a <a class="link" href="gstreamer-GstEvent.html#GstEventType" title="enum GstEventType"><span class="type">GstEventType</span></a> with the
 <a class="link" href="gstreamer-GstEvent.html#gst-event-type-get-flags" title="gst_event_type_get_flags ()"><code class="function">gst_event_type_get_flags()</code></a> function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-EVENT-TYPE-UPSTREAM:CAPS"></a><span class="term"><code class="literal">GST_EVENT_TYPE_UPSTREAM</code></span></p></td>
@@ -355,8 +368,11 @@ The same thing as <a class="link" href="gstreamer-GstEvent.html#GST-EVENT-TYPE-U
 when making custom event types, use this macro with the num and
 the given flags
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>num</code></em> :</span></p></td>
@@ -388,6 +404,7 @@ the given flags
   GST_EVENT_SINK_MESSAGE          = GST_EVENT_MAKE_TYPE (100, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
   GST_EVENT_EOS                   = GST_EVENT_MAKE_TYPE (110, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
+  GST_EVENT_CONTEXT               = GST_EVENT_MAKE_TYPE (130, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
 
   /* non-sticky downstream serialized */
   GST_EVENT_SEGMENT_DONE          = GST_EVENT_MAKE_TYPE (150, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
@@ -421,8 +438,11 @@ GStreamer buffer passing semantics. Custom events carry an arbitrary
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>.
 Specific custom events are distinguished by the name of the structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-EVENT-UNKNOWN:CAPS"></a><span class="term"><code class="literal">GST_EVENT_UNKNOWN</code></span></p></td>
@@ -490,6 +510,12 @@ Specific custom events are distinguished by the name of the structure.
 <td><p><a name="GST-EVENT-TOC:CAPS"></a><span class="term"><code class="literal">GST_EVENT_TOC</code></span></p></td>
 <td>An event which indicates that a new table of contents (TOC)
                 was found or updated.
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-EVENT-CONTEXT:CAPS"></a><span class="term"><code class="literal">GST_EVENT_CONTEXT</code></span></p></td>
+<td>An event to communicate a <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> to other
+                elements (Since 1.2)
 </td>
 </tr>
 <tr>
@@ -587,8 +613,11 @@ Specific custom events are distinguished by the name of the structure.
 <p>
 Get the <a class="link" href="gstreamer-GstEvent.html#GstEventType" title="enum GstEventType"><span class="type">GstEventType</span></a> of the event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -603,8 +632,11 @@ Get the <a class="link" href="gstreamer-GstEvent.html#GstEventType" title="enum 
 <p>
 Get a constant string representation of the <a class="link" href="gstreamer-GstEvent.html#GstEventType" title="enum GstEventType"><span class="type">GstEventType</span></a> of the event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -620,8 +652,11 @@ Get a constant string representation of the <a class="link" href="gstreamer-GstE
 Get the <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp of the event. This is the time when the event
 was created.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -636,8 +671,11 @@ was created.
 <p>
 The sequence number of <em class="parameter"><code>event</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -652,8 +690,11 @@ The sequence number of <em class="parameter"><code>event</code></em>.
 <p>
 Check if an event can travel upstream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ev</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -668,8 +709,11 @@ Check if an event can travel upstream.
 <p>
 Check if an event can travel downstream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ev</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -684,8 +728,11 @@ Check if an event can travel downstream.
 <p>
 Check if an event is serialized with the data stream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ev</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -700,8 +747,11 @@ Check if an event is serialized with the data stream.
 <p>
 Check if an event is sticky on the pads.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ev</code></em> :</span></p></td>
 <td>the event to query</td>
@@ -715,8 +765,11 @@ Check if an event is sticky on the pads.
 <p>
 Gets the <a class="link" href="gstreamer-GstEvent.html#GstEventTypeFlags" title="enum GstEventTypeFlags"><span class="type">GstEventTypeFlags</span></a> associated with <em class="parameter"><code>type</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -737,8 +790,11 @@ Gets the <a class="link" href="gstreamer-GstEvent.html#GstEventTypeFlags" title=
 <p>
 Get a printable name for the given event type. Do not modify or free.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -758,8 +814,11 @@ Get a printable name for the given event type. Do not modify or free.
 <p>
 Get the unique quark for the given event type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -779,8 +838,11 @@ Get the unique quark for the given event type.
 <p>
 Increase the refcount of this event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -802,8 +864,11 @@ Increase the refcount of this event.
 <p>
 Decrease the refcount of an event, freeing it if the refcount reaches 0.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
 <td>the event to refcount. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -825,8 +890,11 @@ event is unreffed, the new one is reffed).
 <p>
 Either <em class="parameter"><code>new_event</code></em> or the <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> pointed to by <em class="parameter"><code>old_event</code></em> may be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>old_event</code></em> :</span></p></td>
@@ -855,8 +923,11 @@ replace the event pointed to by <em class="parameter"><code>old_event</code></em
 <p>
 Copy the event using the event specific copy function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -878,8 +949,11 @@ Copy the event using the event specific copy function.
 Atomically replace the <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> pointed to by <em class="parameter"><code>old_event</code></em> with NULL and
 return the original event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>old_event</code></em> :</span></p></td>
@@ -908,8 +982,11 @@ function is similar to <a class="link" href="gstreamer-GstEvent.html#gst-event-r
 <p>
 Either <em class="parameter"><code>new_event</code></em> or the <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> pointed to by <em class="parameter"><code>old_event</code></em> may be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>old_event</code></em> :</span></p></td>
@@ -940,8 +1017,11 @@ replace the event pointed to by <em class="parameter"><code>old_event</code></em
 Tests if you can safely write data into a event's structure or validly
 modify the seqnum and timestamp field.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ev</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>
@@ -959,8 +1039,11 @@ Makes a writable event from the given event. If the source event is
 already writable, this will simply return the same event. A copy will
 otherwise be made using <a class="link" href="gstreamer-GstEvent.html#gst-event-copy" title="gst_event_copy ()"><code class="function">gst_event_copy()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ev</code></em> :</span></p></td>
@@ -983,8 +1066,11 @@ same as <em class="parameter"><code>ev</code></em>. <span class="annotation">[<a
 <p>
 Get a writable version of the structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1020,8 +1106,11 @@ serialization flags.
 New custom events can also be created by subclassing the event type if
 needed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -1048,8 +1137,11 @@ take ownership of the structure. <span class="annotation">[<acronym title="Free 
 <p>
 Access the structure of the event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1074,8 +1166,11 @@ MT safe.</td>
 Checks if <em class="parameter"><code>event</code></em> has the given <em class="parameter"><code>name</code></em>. This function is usually used to
 check the name of a custom event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1113,8 +1208,11 @@ Note that events and messages share the same sequence number incrementor;
 two events or messages will never have the same sequence number unless
 that correspondence was made explicitly.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1144,8 +1242,11 @@ more information.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1181,8 +1282,11 @@ functions as fast as possible when this event is received.
 This event is typically generated after a seek to flush out all queued data
 in the pipeline so that the new media is played as soon as possible.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new flush start event. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -1208,8 +1312,11 @@ the preceeding FLUSH_START event stopped the dataflow.
 This event is typically generated to complete a seek and to resume
 dataflow.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>reset_time</code></em> :</span></p></td>
@@ -1231,8 +1338,11 @@ dataflow.
 <p>
 Parse the FLUSH_STOP event and retrieve the <em class="parameter"><code>reset_time</code></em> member.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1268,8 +1378,11 @@ forwarded to the application.
 <p>
 The EOS event itself will not cause any state transitions of the pipeline.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the new EOS event. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -1289,8 +1402,11 @@ amount of time. This is useful to signal a gap to downstream elements
 which may wait for data, such as muxers or mixers or overlays, especially
 for sparse streams such as subtitle streams.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>timestamp</code></em> :</span></p></td>
@@ -1317,8 +1433,11 @@ for sparse streams such as subtitle streams.
 <p>
 Extract timestamp and duration from a new GAP event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1366,8 +1485,11 @@ but not for every single element in the pipeline.
 <a class="link" href="GstPad.html#gst-pad-create-stream-id" title="gst_pad_create_stream_id ()"><code class="function">gst_pad_create_stream_id()</code></a> or <a class="link" href="GstPad.html#gst-pad-create-stream-id-printf" title="gst_pad_create_stream_id_printf ()"><code class="function">gst_pad_create_stream_id_printf()</code></a> can be
 used to create a stream-id.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>stream_id</code></em> :</span></p></td>
@@ -1392,8 +1514,11 @@ location. The string stored in <em class="parameter"><code>stream_id</code></em>
 remain valid only until <em class="parameter"><code>event</code></em> gets freed. Make a copy if you want to
 modify it or store it for later use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1406,6 +1531,53 @@ modify it or store it for later use.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-set-stream-flags"></a><h3>gst_event_set_stream_flags ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_set_stream_flags          (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstStreamFlags</span> flags</code></em>);</pre>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
+<td>a stream-start event</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td>the stream flags to set</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-stream-flags"></a><h3>gst_event_parse_stream_flags ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_parse_stream_flags        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><span class="type">GstStreamFlags</span> *flags</code></em>);</pre>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
+<td>a stream-start event</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td>address of variable where to store the stream flags. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1450,8 +1622,11 @@ After a newsegment event, the buffer stream time is calculated with:
 <p>
   time + (TIMESTAMP(buf) - start) * ABS (rate * applied_rate)
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>segment</code></em> :</span></p></td>
@@ -1476,8 +1651,11 @@ Parses a segment <em class="parameter"><code>event</code></em> and stores the re
 <em class="parameter"><code>segment</code></em> remains valid only until the <em class="parameter"><code>event</code></em> is freed. Don't modify the segment
 and make a copy if you want to modify it or store it for later use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1500,8 +1678,11 @@ and make a copy if you want to modify it or store it for later use.
 Parses a segment <em class="parameter"><code>event</code></em> and copies the <a class="link" href="gstreamer-GstSegment.html#GstSegment" title="struct GstSegment"><span class="type">GstSegment</span></a> into the location
 given by <em class="parameter"><code>segment</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1529,8 +1710,11 @@ is a sticky event, elements should merge tags received from
 upstream with a given scope with their own tags with the same
 scope and create a new tag event from it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>taglist</code></em> :</span></p></td>
@@ -1557,8 +1741,11 @@ No reference to the taglist will be returned, it remains valid only until
 the <em class="parameter"><code>event</code></em> is freed. Don't modify or free the taglist, make a copy if you
 want to modify it or store it for later use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1586,8 +1773,11 @@ elements that they should provide a buffer of the specified dimensions.
 <p>
 When the <em class="parameter"><code>async</code></em> flag is set, a thread boundary is preferred.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
@@ -1624,8 +1814,11 @@ When the <em class="parameter"><code>async</code></em> flag is set, a thread bou
 <p>
 Get the format, minsize, maxsize and async-flag in the buffersize event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1667,8 +1860,11 @@ Get the format, minsize, maxsize and async-flag in the buffersize event.
 The different types of QoS events that can be given to the
 <a class="link" href="gstreamer-GstEvent.html#gst-event-new-qos" title="gst_event_new_qos ()"><code class="function">gst_event_new_qos()</code></a> method.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-QOS-TYPE-OVERFLOW:CAPS"></a><span class="term"><code class="literal">GST_QOS_TYPE_OVERFLOW</code></span></p></td>
@@ -1751,8 +1947,11 @@ result smaller than 0 is not allowed.
 The application can use general event probes to intercept the QoS
 event and implement custom application specific QoS handling.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -1790,8 +1989,11 @@ event and implement custom application specific QoS handling.
 Get the type, proportion, diff and timestamp in the qos event. See
 <a class="link" href="gstreamer-GstEvent.html#gst-event-new-qos" title="gst_event_new_qos ()"><code class="function">gst_event_new_qos()</code></a> for more information about the different QoS values.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -1834,8 +2036,11 @@ Get the type, proportion, diff and timestamp in the qos event. See
 The different types of seek events. When constructing a seek event with
 <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" title="gst_event_new_seek ()"><code class="function">gst_event_new_seek()</code></a> or when doing <a class="link" href="gstreamer-GstSegment.html#gst-segment-do-seek" title="gst_segment_do_seek ()"><code class="function">gst_segment_do_seek()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-SEEK-TYPE-NONE:CAPS"></a><span class="term"><code class="literal">GST_SEEK_TYPE_NONE</code></span></p></td>
@@ -1914,8 +2119,11 @@ Also see part-seeking.txt in the GStreamer design documentation for more
 details on the meaning of these flags and the behaviour expected of
 elements that handle them.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-SEEK-FLAG-NONE:CAPS"></a><span class="term"><code class="literal">GST_SEEK_FLAG_NONE</code></span></p></td>
@@ -2026,8 +2234,11 @@ this, PAUSE the pipeline, query the current playback position with
 <a class="link" href="gstreamer-GstQuery.html#GST-QUERY-POSITION:CAPS"><span class="type">GST_QUERY_POSITION</span></a> and update the playback segment current position with a
 <a class="link" href="gstreamer-GstEvent.html#GST-SEEK-TYPE-SET:CAPS"><span class="type">GST_SEEK_TYPE_SET</span></a> to the desired position.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>rate</code></em> :</span></p></td>
@@ -2079,8 +2290,11 @@ this, PAUSE the pipeline, query the current playback position with
 <p>
 Parses a seek <em class="parameter"><code>event</code></em> and stores the results in the given result locations.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2131,8 +2345,11 @@ Parses a seek <em class="parameter"><code>event</code></em> and stores the resul
 <p>
 Create a new navigation event from the given description.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2161,8 +2378,11 @@ running time before synchronising against the clock.
 The latency is mostly used in live sinks and is always expressed in
 the time format.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>latency</code></em> :</span></p></td>
@@ -2184,8 +2404,11 @@ the time format.
 <p>
 Get the latency in the latency event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2225,8 +2448,11 @@ the step operation.
 The <em class="parameter"><code>intermediate</code></em> flag instructs the pipeline that this step operation is
 part of a larger step operation.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
@@ -2269,8 +2495,11 @@ part of a larger step operation.
 <p>
 Parse the step event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2318,8 +2547,11 @@ with the stream.
 <p>
 <em class="parameter"><code>name</code></em> is used to store multiple sticky events on one pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -2346,8 +2578,11 @@ with the stream.
 <p>
 Parse the sink-message event. Unref <em class="parameter"><code>msg</code></em> after usage.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2371,8 +2606,11 @@ to travel upstream and make elements renegotiate their caps or reconfigure
 their buffer pools. This is useful when changing properties on elements
 or changing the topology of the pipeline.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -2389,8 +2627,11 @@ Create a new CAPS event for <em class="parameter"><code>caps</code></em>. The ca
 synchronized with the buffer flow and contains the format of the buffers
 that will follow after the event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
@@ -2414,8 +2655,11 @@ that will follow after the event.
 Get the caps from <em class="parameter"><code>event</code></em>. The caps remains valid as long as <em class="parameter"><code>event</code></em> remains
 valid.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2438,8 +2682,11 @@ valid.
 Generate a TOC event from the given <em class="parameter"><code>toc</code></em>. The purpose of the TOC event is to
 inform elements that some kind of the TOC was found.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -2468,8 +2715,11 @@ inform elements that some kind of the TOC was found.
 <p>
 Parse a TOC <em class="parameter"><code>event</code></em> and store the results in the given <em class="parameter"><code>toc</code></em> and <em class="parameter"><code>updated</code></em> locations.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2497,8 +2747,11 @@ Generate a TOC select event with the given <em class="parameter"><code>uid</code
 TOC select event is to start playback based on the TOC's entry with the
 given <em class="parameter"><code>uid</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>uid</code></em> :</span></p></td>
@@ -2519,8 +2772,11 @@ given <em class="parameter"><code>uid</code></em>.
 <p>
 Parse a TOC select <em class="parameter"><code>event</code></em> and store the results in the given <em class="parameter"><code>uid</code></em> location.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2543,8 +2799,11 @@ Parse a TOC select <em class="parameter"><code>event</code></em> and store the r
 Create a new segment-done event. This event is sent by elements that
 finish playback of a segment as a result of a segment seek.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
@@ -2571,8 +2830,11 @@ finish playback of a segment as a result of a segment seek.
 <p>
 Extracts the position and format from the segment done message.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
@@ -2590,6 +2852,61 @@ Extracts the position and format from the segment done message.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-new-context"></a><h3>gst_event_new_context ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          gst_event_new_context               (<em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
+<p>
+Create a new context event. The purpose of the context event is
+to pass a pipeline-local context to downstream elements.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td>the <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a new <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-context"></a><h3>gst_event_parse_context ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_parse_context             (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> **context</code></em>);</pre>
+<p>
+Parse the context event. Unref <em class="parameter"><code>context</code></em> after usage.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
+<td>The event to query</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td>a pointer to store the <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 </div>
 <div class="refsect1">

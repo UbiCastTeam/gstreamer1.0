@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -791,6 +791,44 @@ GST_START_TEST (test_find)
 
 GST_END_TEST;
 
+GST_START_TEST (test_fill)
+{
+  GstBuffer *buf;
+  guint8 data[1024], data2[25];
+  gint i;
+
+  buf = gst_buffer_new ();
+  gst_buffer_append_memory (buf, gst_allocator_alloc (NULL, 0, NULL));
+  gst_buffer_append_memory (buf, gst_allocator_alloc (NULL, 10, NULL));
+  gst_buffer_append_memory (buf, gst_allocator_alloc (NULL, 15, NULL));
+  gst_buffer_append_memory (buf, gst_allocator_alloc (NULL, 0, NULL));
+
+  for (i = 0; i < G_N_ELEMENTS (data); ++i)
+    data[i] = i & 0xff;
+
+  /* a NULL src pointer should be ok if the src length is 0 bytes */
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, NULL, 0), 0);
+  fail_unless_equals_int (gst_buffer_fill (buf, 20, NULL, 0), 0);
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data, 0), 0);
+
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data, 1), 1);
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data, 11), 11);
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data, 15), 15);
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data, 25), 25);
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data, 26), 25);
+  fail_unless_equals_int (gst_buffer_fill (buf, 1, data, 26), 24);
+  fail_unless_equals_int (gst_buffer_fill (buf, 10, data, 100), 15);
+  fail_unless_equals_int (gst_buffer_fill (buf, 11, data, 100), 14);
+  fail_unless_equals_int (gst_buffer_fill (buf, 25, data, 100), 0);
+
+  fail_unless_equals_int (gst_buffer_fill (buf, 0, data + 10, 25), 25);
+  fail_unless_equals_int (gst_buffer_extract (buf, 0, data2, 25), 25);
+  fail_unless (memcmp (data2, data + 10, 25) == 0);
+
+  gst_buffer_unref (buf);
+}
+
+GST_END_TEST;
 
 static Suite *
 gst_buffer_suite (void)
@@ -811,6 +849,7 @@ gst_buffer_suite (void)
   tcase_add_test (tc_chain, test_map);
   tcase_add_test (tc_chain, test_map_range);
   tcase_add_test (tc_chain, test_find);
+  tcase_add_test (tc_chain, test_fill);
 
   return s;
 }

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Gst</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="libgstreamer.html" title="GStreamer Core Library">
@@ -83,7 +83,7 @@ options, as shown in the following example.
 <p>
 </p>
 <div class="example">
-<a name="idp8499728"></a><p class="title"><b>Example 1. Initializing the gstreamer library</b></p>
+<a name="idp8948784"></a><p class="title"><b>Example 1. Initializing the gstreamer library</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -119,7 +119,7 @@ You can also use GOption to initialize your own parameters as shown in
 the next code fragment:
 </p>
 <div class="example">
-<a name="idp7349680"></a><p class="title"><b>Example 2. Initializing own parameters when initializing gstreamer</b></p>
+<a name="idp11022576"></a><p class="title"><b>Example 2. Initializing own parameters when initializing gstreamer</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -218,12 +218,15 @@ use <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_che
 </p>
 <p>
 WARNING: This function does not work in the same way as corresponding
-functions in other glib-style libraries, such as <a href="http://developer.gnome.org/devel/gtk/gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>.  In
+functions in other glib-style libraries, such as <a href="http://developer.gnome.org/gtk2/gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>.  In
 particular, unknown command line options cause this function to
 abort program execution.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>argc</code></em> :</span></p></td>
@@ -253,8 +256,11 @@ This function will return <a href="http://library.gnome.org/devel/glib/unstable/
 for some reason.  If you want your program to fail fatally,
 use <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a> instead.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>argc</code></em> :</span></p></td>
@@ -297,8 +303,11 @@ If you use this function, you should make sure you initialise the GLib
 threading system as one of the very first things in your program
 (see the example at the beginning of this section).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a pointer to GStreamer's option group. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -314,8 +323,11 @@ threading system as one of the very first things in your program
 Use this function to check if GStreamer has been initialized with <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>
 or <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_check ()"><code class="function">gst_init_check()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>TRUE if initialization has been done, FALSE otherwise.</td>
@@ -349,8 +361,11 @@ After this call GStreamer (including this method) should not be used anymore.
 <p>
 Gets the version number of the GStreamer library.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>major</code></em> :</span></p></td>
@@ -383,8 +398,11 @@ Gets the version number of the GStreamer library.
 This function returns a string that is useful for describing this version
 of GStreamer to the outside world: user agent strings, logging, ...
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a newly allocated string describing this version
@@ -407,8 +425,11 @@ Applications might want to disable this behaviour with the
 <a class="link" href="gstreamer-Gst.html#gst-segtrap-set-enabled" title="gst_segtrap_set_enabled ()"><code class="function">gst_segtrap_set_enabled()</code></a> function. This is typically done if the application
 wants to install its own handler without GStreamer interfering.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
@@ -424,8 +445,11 @@ wants to install its own handler without GStreamer interfering.
 Applications might want to disable/enable the SIGSEGV handling of
 the GStreamer core. See <a class="link" href="gstreamer-Gst.html#gst-segtrap-is-enabled" title="gst_segtrap_is_enabled ()"><code class="function">gst_segtrap_is_enabled()</code></a> for more information.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>enabled</code></em> :</span></p></td>
 <td>whether a custom SIGSEGV handler should be installed.</td>
@@ -445,8 +469,11 @@ Applications might want to disable this behaviour with the
 <a class="link" href="gstreamer-Gst.html#gst-registry-fork-set-enabled" title="gst_registry_fork_set_enabled ()"><code class="function">gst_registry_fork_set_enabled()</code></a> function, in which case new plugins
 are scanned (and loaded) into the application process.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
@@ -464,8 +491,11 @@ Applications might want to disable/enable spawning of a child helper process
 when rebuilding the registry. See <a class="link" href="gstreamer-Gst.html#gst-registry-fork-is-enabled" title="gst_registry_fork_is_enabled ()"><code class="function">gst_registry_fork_is_enabled()</code></a> for more
 information.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>enabled</code></em> :</span></p></td>
 <td>whether rebuilding the registry can use a temporary child helper process.</td>
@@ -497,8 +527,11 @@ progress.
 <p>
 Note that this function may block for a significant amount of time.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>

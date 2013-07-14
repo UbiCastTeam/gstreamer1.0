@@ -10,7 +10,9 @@ EXPORTS
 	gst_adapter_masked_scan_uint32_peek
 	gst_adapter_new
 	gst_adapter_prev_dts
+	gst_adapter_prev_dts_at_offset
 	gst_adapter_prev_pts
+	gst_adapter_prev_pts_at_offset
 	gst_adapter_push
 	gst_adapter_take
 	gst_adapter_take_buffer
@@ -29,15 +31,18 @@ EXPORTS
 	gst_base_parse_set_duration
 	gst_base_parse_set_frame_rate
 	gst_base_parse_set_has_timing_info
+	gst_base_parse_set_infer_ts
 	gst_base_parse_set_latency
 	gst_base_parse_set_min_frame_size
 	gst_base_parse_set_passthrough
 	gst_base_parse_set_pts_interpolation
 	gst_base_parse_set_syncable
+	gst_base_parse_set_ts_at_offset
 	gst_base_sink_do_preroll
 	gst_base_sink_get_blocksize
 	gst_base_sink_get_last_sample
 	gst_base_sink_get_latency
+	gst_base_sink_get_max_bitrate
 	gst_base_sink_get_max_lateness
 	gst_base_sink_get_render_delay
 	gst_base_sink_get_sync
@@ -51,6 +56,7 @@ EXPORTS
 	gst_base_sink_set_async_enabled
 	gst_base_sink_set_blocksize
 	gst_base_sink_set_last_sample_enabled
+	gst_base_sink_set_max_bitrate
 	gst_base_sink_set_max_lateness
 	gst_base_sink_set_qos_enabled
 	gst_base_sink_set_render_delay
@@ -238,7 +244,28 @@ EXPORTS
 	gst_collect_pads_start
 	gst_collect_pads_stop
 	gst_collect_pads_take_buffer
+	gst_data_queue_drop_head
+	gst_data_queue_flush
+	gst_data_queue_get_level
+	gst_data_queue_get_type
+	gst_data_queue_is_empty
+	gst_data_queue_is_full
+	gst_data_queue_limits_changed
+	gst_data_queue_new
+	gst_data_queue_peek
+	gst_data_queue_pop
+	gst_data_queue_push
+	gst_data_queue_set_flushing
 	gst_push_src_get_type
+	gst_queue_array_drop_element
+	gst_queue_array_find
+	gst_queue_array_free
+	gst_queue_array_get_length
+	gst_queue_array_is_empty
+	gst_queue_array_new
+	gst_queue_array_peek_head
+	gst_queue_array_pop_head
+	gst_queue_array_push_tail
 	gst_type_find_helper
 	gst_type_find_helper_for_buffer
 	gst_type_find_helper_for_data

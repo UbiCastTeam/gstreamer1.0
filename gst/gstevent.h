@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -99,6 +99,8 @@ typedef enum {
  * @GST_EVENT_GAP: Marks a gap in the datastream.
  * @GST_EVENT_TOC: An event which indicates that a new table of contents (TOC)
  *                 was found or updated.
+ * @GST_EVENT_CONTEXT: An event to communicate a #GstContext to other
+ *                 elements (Since 1.2)
  * @GST_EVENT_QOS: A quality message. Used to indicate to upstream elements
  *                 that the downstream elements should adjust their processing
  *                 rate.
@@ -147,6 +149,7 @@ typedef enum {
   GST_EVENT_SINK_MESSAGE          = GST_EVENT_MAKE_TYPE (100, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
   GST_EVENT_EOS                   = GST_EVENT_MAKE_TYPE (110, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
+  GST_EVENT_CONTEXT               = GST_EVENT_MAKE_TYPE (130, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
 
   /* non-sticky downstream serialized */
   GST_EVENT_SEGMENT_DONE          = GST_EVENT_MAKE_TYPE (150, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
@@ -180,6 +183,7 @@ typedef enum {
 #include <gst/gstsegment.h>
 #include <gst/gstsegment.h>
 #include <gst/gstmessage.h>
+#include <gst/gstcontext.h>
 
 G_BEGIN_DECLS
 
@@ -365,6 +369,30 @@ typedef enum {
 } GstQOSType;
 
 /**
+ * GstStreamFlags:
+ * @GST_STREAM_FLAG_NONE: This stream has no special attributes
+ * @GST_STREAM_FLAG_SPARSE: This stream is a sparse stream (e.g. a subtitle
+ *    stream), data may flow only in irregular intervals with large gaps in
+ *    between.
+ * @GST_STREAM_FLAG_SELECT: This stream should be selected by default. This
+ *    flag may be used by demuxers to signal that a stream should be selected
+ *    by default in a playback scenario.
+ * @GST_STREAM_FLAG_UNSELECT: This stream should not be selected by default.
+ *    This flag may be used by demuxers to signal that a stream should not
+ *    be selected by default in a playback scenario, but only if explicitly
+ *    selected by the user (e.g. an audio track for the hard of hearing or
+ *    a director's commentary track).
+ *
+ * Since: 1.2
+ */
+typedef enum {
+  GST_STREAM_FLAG_NONE,
+  GST_STREAM_FLAG_SPARSE       = (1 << 0),
+  GST_STREAM_FLAG_SELECT       = (1 << 1),
+  GST_STREAM_FLAG_UNSELECT     = (1 << 2)
+} GstStreamFlags;
+
+/**
  * GstEvent:
  * @mini_object: the parent structure
  * @type: the #GstEventType of the event
@@ -461,6 +489,9 @@ void            gst_event_set_seqnum            (GstEvent *event, guint32 seqnum
 GstEvent *      gst_event_new_stream_start      (const gchar *stream_id) G_GNUC_MALLOC;
 void            gst_event_parse_stream_start    (GstEvent *event, const gchar **stream_id);
 
+void            gst_event_set_stream_flags      (GstEvent *event, GstStreamFlags flags);
+void            gst_event_parse_stream_flags    (GstEvent *event, GstStreamFlags *flags);
+
 /* flush events */
 GstEvent *      gst_event_new_flush_start       (void) G_GNUC_MALLOC;
 
@@ -544,6 +575,10 @@ void            gst_event_parse_toc_select      (GstEvent *event, gchar **uid);
 /* segment-done event */
 GstEvent*       gst_event_new_segment_done      (GstFormat format, gint64 position) G_GNUC_MALLOC;
 void            gst_event_parse_segment_done    (GstEvent *event, GstFormat *format, gint64 *position);
+
+/* context */
+GstEvent*       gst_event_new_context           (GstContext * context) G_GNUC_MALLOC;
+void            gst_event_parse_context         (GstEvent *event, GstContext **context);
 
 G_END_DECLS
 

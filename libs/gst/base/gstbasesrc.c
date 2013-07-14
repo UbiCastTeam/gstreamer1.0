@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -346,7 +346,7 @@ static GstFlowReturn gst_base_src_get_range (GstBaseSrc * src, guint64 offset,
 static gboolean gst_base_src_seekable (GstBaseSrc * src);
 static gboolean gst_base_src_negotiate (GstBaseSrc * basesrc);
 static gboolean gst_base_src_update_length (GstBaseSrc * src, guint64 offset,
-    guint * length);
+    guint * length, gboolean force);
 
 static void
 gst_base_src_class_init (GstBaseSrcClass * klass)
@@ -878,7 +878,7 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
     res = bclass->set_caps (src, caps);
 
   if (res)
-    res = gst_pad_set_caps (src->srcpad, caps);
+    res = gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
 
   return res;
 }
@@ -1018,8 +1018,8 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
           guint length = 0;
 
           /* may have to refresh duration */
-          if (g_atomic_int_get (&src->priv->dynamic_size))
-            gst_base_src_update_length (src, 0, &length);
+          gst_base_src_update_length (src, 0, &length,
+              g_atomic_int_get (&src->priv->dynamic_size));
 
           /* this is the duration as configured by the subclass. */
           GST_OBJECT_LOCK (src);
@@ -1287,6 +1287,8 @@ gst_base_src_do_seek (GstBaseSrc * src, GstSegment * segment)
   gboolean result = FALSE;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
+
+  GST_INFO_OBJECT (src, "seeking: %" GST_SEGMENT_FORMAT, segment);
 
   if (bclass->do_seek)
     result = bclass->do_seek (src, segment);
@@ -1658,6 +1660,7 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
 
     /* for deriving a stop position for the playback segment from the seek
      * segment, we must take the duration when the stop is not set */
+    /* FIXME: This is never used below */
     if ((stop = seeksegment.stop) == -1)
       stop = seeksegment.duration;
 
@@ -2218,13 +2221,13 @@ no_sync:
 
 /* Called with STREAM_LOCK and LIVE_LOCK */
 static gboolean
-gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length)
+gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
+    gboolean force)
 {
   guint64 size, maxsize;
   GstBaseSrcClass *bclass;
   GstFormat format;
   gint64 stop;
-  gboolean dynamic;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
@@ -2249,14 +2252,11 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length)
       ", segment.stop %" G_GINT64_FORMAT ", maxsize %" G_GINT64_FORMAT, offset,
       *length, size, stop, maxsize);
 
-  dynamic = g_atomic_int_get (&src->priv->dynamic_size);
-  GST_DEBUG_OBJECT (src, "dynamic size: %d", dynamic);
-
   /* check size if we have one */
   if (maxsize != -1) {
     /* if we run past the end, check if the file became bigger and
      * retry. */
-    if (G_UNLIKELY (offset + *length >= maxsize || dynamic)) {
+    if (G_UNLIKELY (offset + *length >= maxsize || force)) {
       /* see if length of the file changed */
       if (bclass->get_size)
         if (!bclass->get_size (src, &size))
@@ -2324,7 +2324,7 @@ again:
   if (G_UNLIKELY (!bclass->create))
     goto no_function;
 
-  if (G_UNLIKELY (!gst_base_src_update_length (src, offset, &length)))
+  if (G_UNLIKELY (!gst_base_src_update_length (src, offset, &length, FALSE)))
     goto unexpected_length;
 
   /* track position */
@@ -3369,7 +3369,7 @@ gst_base_src_stop (GstBaseSrc * basesrc)
 
 was_stopped:
   {
-    GST_DEBUG_OBJECT (basesrc, "was started");
+    GST_DEBUG_OBJECT (basesrc, "was stopped");
     GST_OBJECT_UNLOCK (basesrc);
     return TRUE;
   }

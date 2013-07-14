@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -110,6 +110,7 @@ static GstQueryQuarks query_quarks[] = {
   {GST_QUERY_ACCEPT_CAPS, "accept-caps", 0},
   {GST_QUERY_CAPS, "caps", 0},
   {GST_QUERY_DRAIN, "drain", 0},
+  {GST_QUERY_CONTEXT, "context", 0},
 
   {0, NULL, 0}
 };
@@ -1623,6 +1624,31 @@ gst_query_set_nth_allocation_pool (GstQuery * query, guint index,
   g_array_index (array, AllocationPool, index) = ap;
 }
 
+/**
+ * gst_query_remove_nth_allocation_pool:
+ * @query: a GST_QUERY_ALLOCATION type query #GstQuery
+ * @index: position in the allocation pool array to remove
+ *
+ * Remove the allocation pool at @index of the allocation pool array.
+ */
+void
+gst_query_remove_nth_allocation_pool (GstQuery * query, guint index)
+{
+  GArray *array;
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_ALLOCATION);
+  g_return_if_fail (gst_query_is_writable (query));
+
+  structure = GST_QUERY_STRUCTURE (query);
+  array =
+      ensure_array (structure, GST_QUARK (POOL), sizeof (AllocationPool),
+      (GDestroyNotify) allocation_pool_free);
+  g_return_if_fail (index < array->len);
+
+  g_array_remove_index (array, index);
+}
+
 typedef struct
 {
   GType api;
@@ -1847,7 +1873,9 @@ gst_query_add_allocation_param (GstQuery * query, GstAllocator * allocator,
  * allocator params array of the query's structure.
  *
  * If no memory allocator is specified, the downstream element can handle
- * the default memory allocator.
+ * the default memory allocator. The first memory allocator in the query
+ * should be generic and allow mapping to system memory, all following
+ * allocators should be ordered by preference with the preferred one first.
  *
  * Returns: the allocator array size as a #guint.
  */
@@ -1870,7 +1898,7 @@ gst_query_get_n_allocation_params (GstQuery * query)
  * gst_query_parse_nth_allocation_param:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @index: position in the allocator array to read
- * @allocator: (out) (transfer none) (allow-none): variable to hold the result
+ * @allocator: (out) (transfer full) (allow-none): variable to hold the result
  * @params: (out) (allow-none): parameters for the allocator
  *
  * Parse an available query and get the alloctor and its params
@@ -1936,6 +1964,31 @@ gst_query_set_nth_allocation_param (GstQuery * query, guint index,
     gst_allocation_params_init (&ap.params);
 
   g_array_index (array, AllocationParam, index) = ap;
+}
+
+/**
+ * gst_query_remove_nth_allocation_param:
+ * @query: a GST_QUERY_ALLOCATION type query #GstQuery
+ * @index: position in the allocation param array to remove
+ *
+ * Remove the allocation param at @index of the allocation param array.
+ */
+void
+gst_query_remove_nth_allocation_param (GstQuery * query, guint index)
+{
+  GArray *array;
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_ALLOCATION);
+  g_return_if_fail (gst_query_is_writable (query));
+
+  structure = GST_QUERY_STRUCTURE (query);
+  array =
+      ensure_array (structure, GST_QUARK (ALLOCATOR), sizeof (AllocationParam),
+      (GDestroyNotify) allocation_param_free);
+  g_return_if_fail (index < array->len);
+
+  g_array_remove_index (array, index);
 }
 
 /**
@@ -2377,4 +2430,153 @@ gst_query_new_drain (void)
   query = gst_query_new_custom (GST_QUERY_DRAIN, structure);
 
   return query;
+}
+
+/**
+ * gst_query_new_context:
+ *
+ * Constructs a new query object for querying the pipeline-local context.
+ *
+ * Free-function: gst_query_unref
+ *
+ * Returns: (transfer full): a new #GstQuery
+ */
+GstQuery *
+gst_query_new_context (void)
+{
+  GstQuery *query;
+  GstStructure *structure;
+
+  structure = gst_structure_new_id_empty (GST_QUARK (QUERY_CONTEXT));
+  query = gst_query_new_custom (GST_QUERY_CONTEXT, structure);
+
+  return query;
+}
+
+/**
+ * gst_query_set_context:
+ * @query: a #GstQuery with query type GST_QUERY_CONTEXT
+ * @context: the requested #GstContext
+ *
+ * Answer a context query by setting the requested context.
+ */
+void
+gst_query_set_context (GstQuery * query, GstContext * context)
+{
+  GstStructure *s;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT);
+
+  s = GST_QUERY_STRUCTURE (query);
+
+  gst_structure_id_set (s,
+      GST_QUARK (CONTEXT), GST_TYPE_CONTEXT, context, NULL);
+}
+
+/**
+ * gst_query_parse_context:
+ * @query: The query to parse
+ * @context: (out): A pointer to store the #GstContext
+ *
+ * Get the context from the context @query. The context remains valid as long as
+ * @query remains valid.
+ */
+void
+gst_query_parse_context (GstQuery * query, GstContext ** context)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT);
+  g_return_if_fail (context != NULL);
+
+  structure = GST_QUERY_STRUCTURE (query);
+  *context = g_value_get_boxed (gst_structure_id_get_value (structure,
+          GST_QUARK (CONTEXT)));
+}
+
+static void
+free_array_string (gpointer ptr)
+{
+  gchar *str = *(gchar **) ptr;
+  g_free (str);
+}
+
+/**
+ * gst_query_add_context_type:
+ * @query: a GST_QUERY_NEED_CONTEXT type query
+ * @context_type: a context type
+ *
+ * Add a new context type to @query.
+ */
+void
+gst_query_add_context_type (GstQuery * query, const gchar * context_type)
+{
+  GstStructure *structure;
+  GArray *array;
+  gchar *copy;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT);
+  g_return_if_fail (gst_query_is_writable (query));
+
+  structure = GST_QUERY_STRUCTURE (query);
+  array = ensure_array (structure, GST_QUARK (CONTEXT_TYPES),
+      sizeof (gchar *), free_array_string);
+
+  copy = g_strdup (context_type);
+  g_array_append_val (array, copy);
+}
+
+/**
+ * gst_query_get_n_context_types:
+ * @query: a GST_QUERY_NEED_CONTEXT type query
+ *
+ * Retrieve the number of values currently stored in the
+ * context-types array of the query's structure.
+ *
+ * Returns: the context-types array size as a #guint.
+ */
+guint
+gst_query_get_n_context_types (GstQuery * query)
+{
+  GstStructure *structure;
+  GArray *array;
+
+  g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT, 0);
+
+  structure = GST_QUERY_STRUCTURE (query);
+  array = ensure_array (structure, GST_QUARK (CONTEXT_TYPES),
+      sizeof (gchar *), free_array_string);
+
+  return array->len;
+}
+
+/**
+ * gst_query_parse_nth_context_type:
+ * @query: a GST_QUERY_NEED_CONTEXT type query
+ * @context_type: (out) (allow-none): the context type, or NULL
+ *
+ * Parse a context type from an existing GST_QUERY_NEED_CONTEXT query
+ * from @index.
+ *
+ * Returns: a #gboolean indicating if the parsing succeeded.
+ */
+gboolean
+gst_query_parse_nth_context_type (GstQuery * query, guint index,
+    const gchar ** context_type)
+{
+  GstStructure *structure;
+  GArray *array;
+
+  g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT, FALSE);
+
+  structure = GST_QUERY_STRUCTURE (query);
+
+  array = ensure_array (structure, GST_QUARK (CONTEXT_TYPES),
+      sizeof (gchar *), free_array_string);
+  g_return_val_if_fail (index < array->len, FALSE);
+
+  if (context_type)
+    *context_type = g_array_index (array, gchar *, index);
+
+  return TRUE;
 }

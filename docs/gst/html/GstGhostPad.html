@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstGhostPad</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstFormat.html" title="GstFormat">
@@ -152,8 +152,11 @@ from the target pad. <em class="parameter"><code>target</code></em> must be unli
 <p>
 Will ref the target.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -186,8 +189,11 @@ A target can be set on the ghostpad later with the
 <p>
 The created ghostpad will not have a padtemplate.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -219,8 +225,11 @@ from the target pad. The template used on the ghostpad will be <em class="parame
 <p>
 Will ref the target.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -255,8 +264,11 @@ Will ref the target.
 Create a new ghostpad based on <em class="parameter"><code>templ</code></em>, without setting a target. The
 direction will be taken from the <em class="parameter"><code>templ</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -286,8 +298,11 @@ Set the new target of the ghostpad <em class="parameter"><code>gpad</code></em>.
 is unlinked and links to the new target are established. if <em class="parameter"><code>newtarget</code></em> is
 NULL the target will be cleared.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gpad</code></em> :</span></p></td>
@@ -315,8 +330,11 @@ can return FALSE when the internal pads could not be linked. <span class="annota
 <p>
 Get the target pad of <em class="parameter"><code>gpad</code></em>. Unref target pad after usage.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gpad</code></em> :</span></p></td>
@@ -345,8 +363,11 @@ This function is most useful in language bindings and when subclassing
 function. Call this function directly after a call to g_object_new
 (GST_TYPE_GHOST_PAD, "direction", <em class="parameter"><code>dir</code></em>, ..., NULL).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gpad</code></em> :</span></p></td>
@@ -370,8 +391,11 @@ function. Call this function directly after a call to g_object_new
 <p>
 Invoke the default activate mode function of a ghost pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -410,8 +434,11 @@ Invoke the default activate mode function of a ghost pad.
 Invoke the default activate mode function of a proxy pad that is
 owned by a ghost pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -449,8 +476,11 @@ Get the internal pad of <em class="parameter"><code>pad</code></em>. Unref targe
 The internal pad of a <a class="link" href="GstGhostPad.html" title="GstGhostPad"><span class="type">GstGhostPad</span></a> is the internally used
 pad of opposite direction, which is used to link to the target.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -475,8 +505,11 @@ Unref target pad after usage. <span class="annotation">[<acronym title="Free dat
 <p>
 Invoke the default iterate internal links function of the proxy pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -504,8 +537,11 @@ returned pad with <a class="link" href="GstObject.html#gst-object-unref" title="
 <p>
 Invoke the default chain function of the proxy pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -538,8 +574,11 @@ if not. <span class="annotation">[<acronym title="Free data after the code is do
 <p>
 Invoke the default chain list function of the proxy pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -574,8 +613,11 @@ if not. <span class="annotation">[<acronym title="Free data after the code is do
 <p>
 Invoke the default getrange function of the proxy pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>

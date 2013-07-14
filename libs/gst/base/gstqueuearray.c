@@ -15,35 +15,86 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
+
+/**
+ * SECTION:gstqueuearray
+ * @short_description: Array based queue object
+ *
+ * #GstQueueArray is an object that provides standard queue functionality
+ * based on an array instead of linked lists. This reduces the overhead
+ * caused by memory managment by a large factor.
+ */
+
 
 #include <string.h>
 #include <gst/gst.h>
 #include "gstqueuearray.h"
 
-void
-gst_queue_array_init (GstQueueArray * array, guint initial_size)
+struct _GstQueueArray
 {
-  array->size = initial_size;
-  array->array = g_new0 (gpointer, initial_size);
-  array->head = 0;
-  array->tail = 0;
-  array->length = 0;
+  /* < private > */
+  gpointer *array;
+  guint size;
+  guint head;
+  guint tail;
+  guint length;
+};
 
-}
-
+/**
+ * gst_queue_array_new:
+ * @initial_size: Initial size of the new queue
+ *
+ * Allocates a new #GstQueueArray object with an initial
+ * queue size of @initial_size.
+ *
+ * Returns: a new #GstQueueArray object
+ *
+ * Since: 1.2.0
+ */
 GstQueueArray *
 gst_queue_array_new (guint initial_size)
 {
   GstQueueArray *array;
 
-  array = g_new (GstQueueArray, 1);
-  gst_queue_array_init (array, initial_size);
+  array = g_slice_new (GstQueueArray);
+  array->size = initial_size;
+  array->array = g_new0 (gpointer, initial_size);
+  array->head = 0;
+  array->tail = 0;
+  array->length = 0;
   return array;
 }
 
+
+/**
+ * gst_queue_array_free:
+ * @array: a #GstQueueArray object
+ *
+ * Frees queue @array and all memory associated to it.
+ *
+ * Since: 1.2.0
+ */
+void
+gst_queue_array_free (GstQueueArray * array)
+{
+  g_free (array->array);
+  g_slice_free (GstQueueArray, array);
+}
+
+/**
+ * gst_queue_array_pop_head:
+ * @array: a #GstQueueArray object
+ *
+ * Returns and head of the queue @array and removes
+ * it from the queue.
+ *
+ * Returns: The head of the queue
+ *
+ * Since: 1.2.0
+ */
 gpointer
 gst_queue_array_pop_head (GstQueueArray * array)
 {
@@ -59,6 +110,35 @@ gst_queue_array_pop_head (GstQueueArray * array)
   return ret;
 }
 
+/**
+ * gst_queue_array_pop_head:
+ * @array: a #GstQueueArray object
+ *
+ * Returns and head of the queue @array and does not
+ * remove it from the queue.
+ *
+ * Returns: The head of the queue
+ *
+ * Since: 1.2.0
+ */
+gpointer
+gst_queue_array_peek_head (GstQueueArray * array)
+{
+  /* empty array */
+  if (G_UNLIKELY (array->length == 0))
+    return NULL;
+  return array->array[array->head];
+}
+
+/**
+ * gst_queue_array_push_tail:
+ * @array: a #GstQueueArray object
+ * @data: object to push
+ *
+ * Pushes @data to the tail of the queue @array.
+ *
+ * Since: 1.2.0
+ */
 void
 gst_queue_array_push_tail (GstQueueArray * array, gpointer data)
 {
@@ -102,49 +182,64 @@ gst_queue_array_push_tail (GstQueueArray * array, gpointer data)
   array->length++;
 }
 
+/**
+ * gst_queue_array_is_empty:
+ * @array: a #GstQueueArray object
+ *
+ * Checks if the queue @array is empty.
+ *
+ * Returns: %TRUE if the queue @array is empty
+ *
+ * Since: 1.2.0
+ */
 gboolean
 gst_queue_array_is_empty (GstQueueArray * array)
 {
   return (array->length == 0);
 }
 
-void
-gst_queue_array_clear (GstQueueArray * array)
-{
-  g_free (array->array);
-}
-
-void
-gst_queue_array_free (GstQueueArray * array)
-{
-  gst_queue_array_clear (array);
-  g_free (array);
-}
-
-void
+/**
+ * gst_queue_array_drop_element:
+ * @array: a #GstQueueArray object
+ * @idx: index to drop
+ *
+ * Drops the queue element at position @idx from queue @array.
+ *
+ * Returns: the dropped element
+ *
+ * Since: 1.2.0
+ */
+gpointer
 gst_queue_array_drop_element (GstQueueArray * array, guint idx)
 {
-  int first_item_index = array->head;
+  int first_item_index, last_item_index;
+  gpointer element;
+
+  g_return_val_if_fail (array->length > 0, NULL);
+  g_return_val_if_fail (idx < array->size, NULL);
+
+  first_item_index = array->head;
+
   /* tail points to the first free spot */
-  int last_item_index = (array->tail - 1 + array->size) % array->size;
+  last_item_index = (array->tail - 1 + array->size) % array->size;
 
-  g_assert (array->length > 0);
+  element = array->array[idx];
 
-  /* simply case idx == first item */
+  /* simple case idx == first item */
   if (idx == first_item_index) {
-    /* move head by plus one */
+    /* move the head plus one */
     array->head++;
     array->head %= array->size;
     array->length--;
-    return;
+    return element;
   }
 
-  /* simply case idx == last item */
+  /* simple case idx == last item */
   if (idx == last_item_index) {
     /* move tail minus one, potentially wrapping */
     array->tail = (array->tail - 1 + array->size) % array->size;
     array->length--;
-    return;
+    return element;
   }
 
   /* non-wrapped case */
@@ -156,7 +251,7 @@ gst_queue_array_drop_element (GstQueueArray * array, guint idx)
     /* tail might wrap, ie if tail == 0 (and last_item_index == size) */
     array->tail = (array->tail - 1 + array->size) % array->size;
     array->length--;
-    return;
+    return element;
   }
 
   /* only wrapped cases left */
@@ -170,10 +265,11 @@ gst_queue_array_drop_element (GstQueueArray * array, guint idx)
     g_assert (array->tail > 0);
     array->tail--;
     array->length--;
-    return;
+    return element;
   }
 
   if (idx > first_item_index) {
+    element = array->array[idx];
     /* idx is after first_item_index, move data to higher indices */
     memmove (&array->array[first_item_index + 1],
         &array->array[first_item_index],
@@ -182,12 +278,31 @@ gst_queue_array_drop_element (GstQueueArray * array, guint idx)
     /* head should not wrap in this case! */
     g_assert (array->head < array->size);
     array->length--;
-    return;
+    return element;
   }
 
-  g_assert_not_reached ();
+  g_return_val_if_reached (NULL);
 }
 
+/**
+ * gst_queue_array_find:
+ * @array: a #GstQueueArray object
+ * @func: (allow-none): comparison function, or %NULL to find @data by value
+ * @data: data for comparison function
+ *
+ * Finds an element in the queue @array, either by comparing every element
+ * with @func or by looking up @data if no compare function @func is provided,
+ * and returning the index of the found element.
+ *
+ * Note that the index is not 0-based, but an internal index number with a
+ * random offset. The index can be used in connection with
+ * gst_queue_array_drop_element(). FIXME: return index 0-based and make
+ * _drop_element() take a 0-based index.
+ *
+ * Returns: Index of the found element or -1 if nothing was found.
+ *
+ * Since: 1.2.0
+ */
 guint
 gst_queue_array_find (GstQueueArray * array, GCompareFunc func, gpointer data)
 {
@@ -207,4 +322,20 @@ gst_queue_array_find (GstQueueArray * array, GCompareFunc func, gpointer data)
   }
 
   return -1;
+}
+
+/**
+ * gst_queue_array_get_length:
+ * @array: a #GstQueueArray object
+ *
+ * Returns the length of the queue @array
+ *
+ * Returns: the length of the queue @array.
+ *
+ * Since: 1.2.0
+ */
+guint
+gst_queue_array_get_length (GstQueueArray * array)
+{
+  return array->length;
 }

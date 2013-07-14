@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -81,8 +81,19 @@ print_caps (const GstCaps * caps, const gchar * pfx)
 
   for (i = 0; i < gst_caps_get_size (caps); i++) {
     GstStructure *structure = gst_caps_get_structure (caps, i);
+    GstCapsFeatures *features = gst_caps_get_features (caps, i);
 
-    n_print ("%s%s\n", pfx, gst_structure_get_name (structure));
+    if (features && (gst_caps_features_is_any (features) ||
+            !gst_caps_features_is_equal (features,
+                GST_CAPS_FEATURES_MEMORY_SYSTEM_MEMORY))) {
+      gchar *features_string = gst_caps_features_to_string (features);
+
+      n_print ("%s%s(%s)\n", pfx, gst_structure_get_name (structure),
+          features_string);
+      g_free (features_string);
+    } else {
+      n_print ("%s%s\n", pfx, gst_structure_get_name (structure));
+    }
     gst_structure_foreach (structure, print_field, (gpointer) pfx);
   }
 }
@@ -190,7 +201,7 @@ print_factory_details_info (GstElementFactory * factory)
 
   rank = gst_plugin_feature_get_rank (GST_PLUGIN_FEATURE (factory));
   n_print ("Factory Details:\n");
-  n_print ("  Rank:\t\t%s (%d)\n", get_rank_name (s, rank), rank);
+  n_print ("  %-25s%s (%d)\n", "Rank", get_rank_name (s, rank), rank);
 
   keys = gst_element_factory_get_metadata_keys (factory);
   if (keys != NULL) {
@@ -200,7 +211,7 @@ print_factory_details_info (GstElementFactory * factory)
 
       val = gst_element_factory_get_metadata (factory, key);
       key[0] = g_ascii_toupper (key[0]);
-      n_print ("  %s:\t\t%s\n", key, val);
+      n_print ("  %-25s%s\n", key, val);
     }
     g_strfreev (keys);
   }
@@ -1172,12 +1183,12 @@ print_plugin_info (GstPlugin * plugin)
   const gchar *filename = gst_plugin_get_filename (plugin);
 
   n_print ("Plugin Details:\n");
-  n_print ("  Name:\t\t\t%s\n", gst_plugin_get_name (plugin));
-  n_print ("  Description:\t\t%s\n", gst_plugin_get_description (plugin));
-  n_print ("  Filename:\t\t%s\n", (filename != NULL) ? filename : "(null)");
-  n_print ("  Version:\t\t%s\n", gst_plugin_get_version (plugin));
-  n_print ("  License:\t\t%s\n", gst_plugin_get_license (plugin));
-  n_print ("  Source module:\t%s\n", gst_plugin_get_source (plugin));
+  n_print ("  %-25s%s\n", "Name", gst_plugin_get_name (plugin));
+  n_print ("  %-25s%s\n", "Description", gst_plugin_get_description (plugin));
+  n_print ("  %-25s%s\n", "Filename", (filename != NULL) ? filename : "(null)");
+  n_print ("  %-25s%s\n", "Version", gst_plugin_get_version (plugin));
+  n_print ("  %-25s%s\n", "License", gst_plugin_get_license (plugin));
+  n_print ("  %-25s%s\n", "Source module", gst_plugin_get_source (plugin));
 
   if (release_date != NULL) {
     const gchar *tz = "(UTC)";
@@ -1195,11 +1206,11 @@ print_plugin_info (GstPlugin * plugin)
     } else {
       tz = "";
     }
-    n_print ("  Source release date:\t%s%s\n", str, tz);
+    n_print ("  %-25s%s%s\n", "Source release date", str, tz);
     g_free (str);
   }
-  n_print ("  Binary package:\t%s\n", gst_plugin_get_package (plugin));
-  n_print ("  Origin URL:\t\t%s\n", gst_plugin_get_origin (plugin));
+  n_print ("  %-25s%s\n", "Binary package", gst_plugin_get_package (plugin));
+  n_print ("  %-25s%s\n", "Origin URL", gst_plugin_get_origin (plugin));
   n_print ("\n");
 }
 
@@ -1247,7 +1258,7 @@ print_plugin_features (GstPlugin * plugin)
       if (extensions) {
         guint i = 0;
 
-        g_print ("%s: %s: ", gst_plugin_get_name (plugin),
+        g_print ("  %s: %s: ", gst_plugin_get_name (plugin),
             gst_plugin_feature_get_name (feature));
         while (extensions[i]) {
           g_print ("%s%s", i > 0 ? ", " : "", extensions[i]);
@@ -1255,7 +1266,7 @@ print_plugin_features (GstPlugin * plugin)
         }
         g_print ("\n");
       } else
-        g_print ("%s: %s: no extensions\n", gst_plugin_get_name (plugin),
+        g_print ("  %s: %s: no extensions\n", gst_plugin_get_name (plugin),
             gst_plugin_feature_get_name (feature));
 
       num_typefinders++;

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:element-capsfilter
@@ -83,6 +83,9 @@ static GstFlowReturn gst_capsfilter_transform_ip (GstBaseTransform * base,
     GstBuffer * buf);
 static GstFlowReturn gst_capsfilter_prepare_buf (GstBaseTransform * trans,
     GstBuffer * input, GstBuffer ** buf);
+static gboolean gst_capsfilter_sink_event (GstBaseTransform * trans,
+    GstEvent * event);
+static gboolean gst_capsfilter_stop (GstBaseTransform * trans);
 
 static void
 gst_capsfilter_class_init (GstCapsFilterClass * klass)
@@ -121,6 +124,8 @@ gst_capsfilter_class_init (GstCapsFilterClass * klass)
   trans_class->accept_caps = GST_DEBUG_FUNCPTR (gst_capsfilter_accept_caps);
   trans_class->prepare_output_buffer =
       GST_DEBUG_FUNCPTR (gst_capsfilter_prepare_buf);
+  trans_class->sink_event = GST_DEBUG_FUNCPTR (gst_capsfilter_sink_event);
+  trans_class->stop = GST_DEBUG_FUNCPTR (gst_capsfilter_stop);
 }
 
 static void
@@ -193,6 +198,8 @@ gst_capsfilter_dispose (GObject * object)
   GstCapsFilter *filter = GST_CAPSFILTER (object);
 
   gst_caps_replace (&filter->filter_caps, NULL);
+  g_list_free_full (filter->pending_events, (GDestroyNotify) gst_event_unref);
+  filter->pending_events = NULL;
 
   G_OBJECT_CLASS (parent_class)->dispose (object);
 }
@@ -268,11 +275,11 @@ gst_capsfilter_transform_ip (GstBaseTransform * base, GstBuffer * buf)
   return GST_FLOW_OK;
 }
 
-/* Output buffer preparation... if the buffer has no caps, and
- * our allowed output caps is fixed, then give the caps to the
- * buffer.
- * This ensures that outgoing buffers have caps if we can, so
- * that pipelines like:
+/* Ouput buffer preparation ... if the buffer has no caps, and our allowed
+ * output caps is fixed, then send the caps downstream, making sure caps are
+ * sent before segment event.
+ *
+ * This ensures that caps event is sent if we can, so that pipelines like:
  *   gst-launch filesrc location=rawsamples.raw !
  *       audio/x-raw,format=S16LE,rate=48000,channels=2 ! alsasink
  * will work.
@@ -287,10 +294,14 @@ gst_capsfilter_prepare_buf (GstBaseTransform * trans, GstBuffer * input,
   *buf = input;
 
   if (!gst_pad_has_current_caps (trans->sinkpad)) {
-    /* Buffer has no caps. See if the output pad only supports fixed caps */
+    /* No caps. See if the output pad only supports fixed caps */
+    GstCapsFilter *filter = GST_CAPSFILTER (trans);
     GstCaps *out_caps;
+    GList *pending_events = filter->pending_events;
 
     GST_LOG_OBJECT (trans, "Input pad does not have caps");
+
+    filter->pending_events = NULL;
 
     out_caps = gst_pad_get_current_caps (trans->srcpad);
     if (out_caps == NULL) {
@@ -304,9 +315,26 @@ gst_capsfilter_prepare_buf (GstBaseTransform * trans, GstBuffer * input,
       GST_DEBUG_OBJECT (trans, "Have fixed output caps %"
           GST_PTR_FORMAT " to apply to srcpad", out_caps);
 
-      if (!gst_pad_has_current_caps (trans->srcpad))
-        if (!gst_pad_set_caps (trans->srcpad, out_caps))
+      if (!gst_pad_has_current_caps (trans->srcpad)) {
+        if (gst_pad_set_caps (trans->srcpad, out_caps)) {
+          if (pending_events) {
+            GList *l;
+
+            for (l = g_list_last (pending_events); l; l = l->prev) {
+              GST_LOG_OBJECT (trans, "Forwarding %s event",
+                  GST_EVENT_TYPE_NAME (l->data));
+              GST_BASE_TRANSFORM_CLASS (parent_class)->sink_event (trans,
+                  l->data);
+            }
+            g_list_free (pending_events);
+            pending_events = NULL;
+          }
+        } else {
           ret = GST_FLOW_NOT_NEGOTIATED;
+        }
+      }
+
+      g_list_free_full (pending_events, (GDestroyNotify) gst_event_unref);
       gst_caps_unref (out_caps);
     } else {
       gchar *caps_str = gst_caps_to_string (out_caps);
@@ -315,13 +343,75 @@ gst_capsfilter_prepare_buf (GstBaseTransform * trans, GstBuffer * input,
           GST_PTR_FORMAT, out_caps);
       gst_caps_unref (out_caps);
 
-      ret = GST_FLOW_ERROR;
       GST_ELEMENT_ERROR (trans, STREAM, FORMAT,
           ("Filter caps do not completely specify the output format"),
           ("Output caps are unfixed: %s", caps_str));
+
       g_free (caps_str);
+      g_list_free_full (pending_events, (GDestroyNotify) gst_event_unref);
+
+      ret = GST_FLOW_ERROR;
     }
   }
 
   return ret;
+}
+
+/* Queue the segment event if there was no caps event */
+static gboolean
+gst_capsfilter_sink_event (GstBaseTransform * trans, GstEvent * event)
+{
+  GstCapsFilter *filter = GST_CAPSFILTER (trans);
+
+  if (GST_EVENT_TYPE (event) == GST_EVENT_FLUSH_STOP) {
+    GList *l;
+
+    for (l = filter->pending_events; l;) {
+      if (GST_EVENT_TYPE (l->data) == GST_EVENT_SEGMENT) {
+        gst_event_unref (l->data);
+        l = g_list_delete_link (l, l);
+      } else {
+        l = l->next;
+      }
+    }
+  }
+
+  if (!GST_EVENT_IS_STICKY (event) || GST_EVENT_TYPE (event) <= GST_EVENT_CAPS)
+    goto done;
+
+  /* If we get EOS before any buffers, just push all pending events */
+  if (GST_EVENT_TYPE (event) == GST_EVENT_EOS) {
+    GList *l;
+
+    for (l = g_list_last (filter->pending_events); l; l = l->prev) {
+      GST_LOG_OBJECT (trans, "Forwarding %s event",
+          GST_EVENT_TYPE_NAME (l->data));
+      GST_BASE_TRANSFORM_CLASS (parent_class)->sink_event (trans, l->data);
+    }
+    g_list_free (filter->pending_events);
+    filter->pending_events = NULL;
+  } else if (!gst_pad_has_current_caps (trans->sinkpad)) {
+    GST_LOG_OBJECT (trans, "Got %s event before caps, queueing",
+        GST_EVENT_TYPE_NAME (event));
+
+    filter->pending_events = g_list_prepend (filter->pending_events, event);
+
+    return TRUE;
+  }
+
+done:
+
+  GST_LOG_OBJECT (trans, "Forwarding %s event", GST_EVENT_TYPE_NAME (event));
+  return GST_BASE_TRANSFORM_CLASS (parent_class)->sink_event (trans, event);
+}
+
+static gboolean
+gst_capsfilter_stop (GstBaseTransform * trans)
+{
+  GstCapsFilter *filter = GST_CAPSFILTER (trans);
+
+  g_list_free_full (filter->pending_events, (GDestroyNotify) gst_event_unref);
+  filter->pending_events = NULL;
+
+  return TRUE;
 }

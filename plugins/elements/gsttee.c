@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -262,7 +262,7 @@ gst_tee_class_init (GstTeeClass * klass)
           DEFAULT_PULL_MODE,
           G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   pspec_alloc_pad = g_param_spec_object ("alloc-pad", "Allocation Src Pad",
-      "The pad used for gst_pad_alloc_buffer", GST_TYPE_PAD,
+      "The pad ALLOCATION queries will be proxied to (unused)", GST_TYPE_PAD,
       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_property (gobject_class, PROP_ALLOC_PAD,
       pspec_alloc_pad);

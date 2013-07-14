@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTagList</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstSystemClock.html" title="GstSystemClock">
@@ -324,8 +324,11 @@ Last reviewed on 2009-06-09 (0.10.23)
 <p>
 Object describing tags / metadata.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> <em class="structfield"><code><a name="GstTagList.mini-object"></a>mini_object</code></em>;</span></p></td>
 <td>the parent type</td>
@@ -359,7 +362,7 @@ In the table below this is shown for the cases that a tag exists in the list
 <p>
 </p>
 <div class="table">
-<a name="idp44880240"></a><p class="title"><b>Table 1. merge mode</b></p>
+<a name="idp45082624"></a><p class="title"><b>Table 1. merge mode</b></p>
 <div class="table-contents"><table summary="merge mode" border="1">
 <colgroup>
 <col>
@@ -423,8 +426,11 @@ In the table below this is shown for the cases that a tag exists in the list
 </div>
 <p><br class="table-break">
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TAG-MERGE-UNDEFINED:CAPS"></a><span class="term"><code class="literal">GST_TAG_MERGE_UNDEFINED</code></span></p></td>
@@ -483,8 +489,11 @@ In the table below this is shown for the cases that a tag exists in the list
 <p>
 Extra tag flags used when registering tags.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TAG-FLAG-UNDEFINED:CAPS"></a><span class="term"><code class="literal">GST_TAG_FLAG_UNDEFINED</code></span></p></td>
@@ -524,8 +533,11 @@ Extra tag flags used when registering tags.
 A function that will be called in <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-foreach" title="gst_tag_list_foreach ()"><code class="function">gst_tag_list_foreach()</code></a>. The function may
 not modify the tag list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -553,8 +565,11 @@ not modify the tag list.
 A function for merging multiple values of a tag used when registering
 tags.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
@@ -581,8 +596,11 @@ tags.
 GstTagScope specifies if a taglist applies to the complete
 medium or only to one single stream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TAG-SCOPE-STREAM:CAPS"></a><span class="term"><code class="literal">GST_TAG_SCOPE_STREAM</code></span></p></td>
@@ -1456,8 +1474,11 @@ merge function was supplied and if so which one.
 Two default merge functions are provided: <a class="link" href="gstreamer-GstTagList.html#gst-tag-merge-use-first" title="gst_tag_merge_use_first ()"><code class="function">gst_tag_merge_use_first()</code></a> and
 <a class="link" href="gstreamer-GstTagList.html#gst-tag-merge-strings-with-comma" title="gst_tag_merge_strings_with_comma ()"><code class="function">gst_tag_merge_strings_with_comma()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -1505,8 +1526,11 @@ static strings or inlined strings, as they will not be copied. (GStreamer
 plugins will be made resident once loaded, so this function can be used
 even from dynamically loaded plugins.)
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -1545,8 +1569,11 @@ even from dynamically loaded plugins.)
 This is a convenience function for the func argument of <a class="link" href="gstreamer-GstTagList.html#gst-tag-register" title="gst_tag_register ()"><code class="function">gst_tag_register()</code></a>.
 It creates a copy of the first value from the list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
@@ -1570,8 +1597,11 @@ This is a convenience function for the func argument of <a class="link" href="gs
 It concatenates all given strings using a comma. The tag must be registered
 as a G_TYPE_STRING or this function will fail.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
@@ -1592,8 +1622,11 @@ as a G_TYPE_STRING or this function will fail.
 <p>
 Checks if the given type is already registered.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1613,8 +1646,11 @@ Checks if the given type is already registered.
 <p>
 Gets the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> used for this tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1635,8 +1671,11 @@ Gets the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-I
 Returns the human-readable name of this tag, You must not change or free
 this string.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1657,8 +1696,11 @@ this string.
 Returns the human-readable description of this tag, You must not change or
 free this string.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1678,8 +1720,11 @@ free this string.
 <p>
 Gets the flag of <em class="parameter"><code>tag</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1700,8 +1745,11 @@ Gets the flag of <em class="parameter"><code>tag</code></em>.
 Checks if the given tag is fixed. A fixed tag can only contain one value.
 Unfixed tags can contain lists of values.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1736,8 +1784,11 @@ default stream scope is assumes. See <a class="link" href="gstreamer-GstTagList.
 <p>
 Free-function: gst_tag_list_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>tag</code></em> :</span></p></td>
@@ -1766,8 +1817,11 @@ Creates a new empty GstTagList.
 <p>
 Free-function: gst_tag_list_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>An empty tag list. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -1786,8 +1840,11 @@ Useful mostly for language bindings.
 <p>
 Free-function: gst_tag_list_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>var_args</code></em> :</span></p></td>
@@ -1809,8 +1866,11 @@ when no longer needed. <span class="annotation">[<acronym title="Free data after
 <p>
 Deserializes a tag list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
@@ -1829,6 +1889,10 @@ Deserializes a tag list.
 <a name="gst-tag-list-free"></a><h3>gst_tag_list_free()</h3>
 <pre class="programlisting">#define gst_tag_list_free(taglist)    gst_tag_list_unref(taglist)
 </pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">Warning</h3>
+<p><code class="literal">gst_tag_list_free</code> is deprecated and should not be used in newly-written code.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -1837,8 +1901,11 @@ Deserializes a tag list.
 <p>
 Gets the scope of <em class="parameter"><code>list</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -1862,8 +1929,11 @@ Gets the scope of <em class="parameter"><code>list</code></em>.
 Sets the scope of <em class="parameter"><code>list</code></em> to <em class="parameter"><code>scope</code></em>. By default the scope
 of a taglist is stream scope.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -1885,8 +1955,11 @@ of a taglist is stream scope.
 <p>
 Serializes a tag list to a string.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -1908,8 +1981,11 @@ string must be freed with <a href="http://library.gnome.org/devel/glib/unstable/
 <p>
 Checks if the given taglist is empty.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -1930,8 +2006,11 @@ Checks if the given taglist is empty.
 <p>
 Checks if the two given taglists are equal.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list1</code></em> :</span></p></td>
@@ -1965,8 +2044,11 @@ reference to the data, you should use <a class="link" href="gstreamer-GstTagList
 <p>
 When you are finished with the taglist, call <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-unref" title="gst_tag_list_unref ()"><code class="function">gst_tag_list_unref()</code></a> on it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>taglist</code></em> :</span></p></td>
@@ -1994,8 +2076,11 @@ not change. To use a <a class="link" href="gstreamer-GstTagList.html#GstTagList"
 it -- either the one made implicitly by e.g. <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-new" title="gst_tag_list_new ()"><code class="function">gst_tag_list_new()</code></a>, or via
 taking one explicitly with this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>taglist</code></em> :</span></p></td>
@@ -2015,8 +2100,11 @@ taking one explicitly with this function.
 <p>
 Unref a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a>, and and free all its memory when the refcount reaches 0.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>taglist</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a>.</td>
@@ -2032,8 +2120,11 @@ Unref a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struc
 Tests if you can safely modify <em class="parameter"><code>taglist</code></em>. It is only safe to modify taglist
 when there is only one owner of the taglist - ie, the refcount is 1.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>taglist</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a>
@@ -2062,8 +2153,11 @@ In short, this function unrefs the taglist in the argument and refs the
 taglist that it returns. Don't access the argument after calling this
 function. See also: <a class="link" href="gstreamer-GstTagList.html#gst-tag-list-ref" title="gst_tag_list_ref ()"><code class="function">gst_tag_list_ref()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>taglist</code></em> :</span></p></td>
@@ -2088,8 +2182,11 @@ same as <em class="parameter"><code>taglist</code></em>. <span class="annotation
 <p>
 Inserts the tags of the <em class="parameter"><code>from</code></em> list into the first list using the given mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>into</code></em> :</span></p></td>
@@ -2119,8 +2216,11 @@ copy of the other is returned. If both lists are NULL, NULL is returned.
 <p>
 Free-function: gst_tag_list_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list1</code></em> :</span></p></td>
@@ -2150,8 +2250,11 @@ Free-function: gst_tag_list_unref
 <p>
 Checks how many value are stored in this tag list for the given tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2175,8 +2278,11 @@ Checks how many value are stored in this tag list for the given tag.
 <p>
 Get the number of tags in <em class="parameter"><code>list</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2197,8 +2303,11 @@ Get the number of tags in <em class="parameter"><code>list</code></em>.
 <p>
 Get the name of the tag in <em class="parameter"><code>list</code></em> at <em class="parameter"><code>index</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2225,8 +2334,11 @@ Get the name of the tag in <em class="parameter"><code>list</code></em> at <em c
 <p>
 Sets the values for the given tags using the specified mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2257,8 +2369,11 @@ Sets the values for the given tags using the specified mode.
 <p>
 Sets the GValue for a given tag using the specified mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2289,8 +2404,11 @@ Sets the GValue for a given tag using the specified mode.
 <p>
 Sets the GValues for the given tags using the specified mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2321,8 +2439,11 @@ Sets the GValues for the given tags using the specified mode.
 <p>
 Sets the values for the given tags using the specified mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2353,8 +2474,11 @@ Sets the values for the given tags using the specified mode.
 <p>
 Sets the GValues for the given tags using the specified mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2383,8 +2507,11 @@ Sets the GValues for the given tags using the specified mode.
 <p>
 Removes the given tag from the taglist.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2407,8 +2534,11 @@ Removes the given tag from the taglist.
 Calls the given function for each tag inside the tag list. Note that if there
 is no tag, the function won't be called at all.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2437,8 +2567,11 @@ is no tag, the function won't be called at all.
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2474,8 +2607,11 @@ merging multiple values into one if multiple values are associated
 with the tag.
 You must <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-unset"><code class="function">g_value_unset()</code></a> the value after use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
@@ -2508,8 +2644,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2543,8 +2682,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2581,8 +2723,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2616,8 +2761,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2654,8 +2802,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2689,8 +2840,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2735,8 +2889,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2773,8 +2930,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2808,8 +2968,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2846,8 +3009,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2881,8 +3047,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2919,8 +3088,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -2954,8 +3126,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3004,8 +3179,11 @@ returned string is also guaranteed to be non-NULL and non-empty.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3047,8 +3225,11 @@ returned string is also guaranteed to be non-NULL and non-empty.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3091,8 +3272,11 @@ The resulting string in <em class="parameter"><code>value</code></em> will be in
 to be freed by the caller. The returned string is also guaranteed to
 be non-NULL and non-empty.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3129,8 +3313,11 @@ given list.</td>
 Copies the contents for the given tag into the value, merging multiple values
 into one if multiple values are associated with the tag.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3164,8 +3351,11 @@ given list.</td>
 Gets the value that is at the given index for the given tag in the given
 list.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3206,8 +3396,11 @@ needed.
 <p>
 Free-function: g_date_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3246,8 +3439,11 @@ with <a href="http://library.gnome.org/devel/glib/unstable/glib-Date-and-Time-Fu
 <p>
 Free-function: g_date_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3288,8 +3484,11 @@ it is no longer needed.
 <p>
 Free-function: gst_date_time_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3328,8 +3527,11 @@ with <a class="link" href="gstreamer-GstDateTime.html#gst-date-time-unref" title
 <p>
 Free-function: gst_date_time_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3372,8 +3574,11 @@ no longer needed. You can retrieve the buffer from the sample using
 <p>
 Free-function: gst_sample_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -3414,8 +3619,11 @@ caps (if any) with <a class="link" href="gstreamer-GstSample.html#gst-sample-get
 <p>
 Free-function: gst_sample_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>

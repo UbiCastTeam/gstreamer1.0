@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -66,7 +66,7 @@ GST_START_TEST (test_stress_preroll)
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
 
   g_timeout_add (500, &change_state_timeout, pipeline);
-  g_timeout_add (10000, &quit_timeout, NULL);
+  g_timeout_add_seconds (10, &quit_timeout, NULL);
 
   while (!quit) {
     g_main_context_iteration (NULL, TRUE);

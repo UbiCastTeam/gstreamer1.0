@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstLFOControlSource</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-control.html" title="GStreamer Dynamic Parameter Control">
 <link rel="prev" href="GstInterpolationControlSource.html" title="GstInterpolationControlSource">
@@ -72,13 +72,13 @@ enum                <a class="link" href="GstLFOControlSource.html#GstLFOWavefor
 <div class="refsect1">
 <a name="GstLFOControlSource.description"></a><h2>Description</h2>
 <p>
-<a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a> is a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html"><span class="type">GstControlSource</span></a>, that provides several periodic waveforms
-as control values. It supports all fundamental, numeric GValue types as property.
+<a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a> is a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html"><span class="type">GstControlSource</span></a>, that provides several periodic
+waveforms as control values.
 </p>
 <p>
-To use <a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a> get a new instance by calling <a class="link" href="GstLFOControlSource.html#gst-lfo-control-source-new" title="gst_lfo_control_source_new ()"><code class="function">gst_lfo_control_source_new()</code></a>,
-bind it to a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> and set the relevant properties or use
-gst_lfo_control_source_set_waveform.
+To use <a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a> get a new instance by calling
+<a class="link" href="GstLFOControlSource.html#gst-lfo-control-source-new" title="gst_lfo_control_source_new ()"><code class="function">gst_lfo_control_source_new()</code></a>, bind it to a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> and set the relevant
+properties.
 </p>
 <p>
 All functions are MT-safe.
@@ -107,8 +107,11 @@ The instance structure of <a href="http://gstreamer.freedesktop.org/data/doc/gst
 <p>
 The various waveform modes available.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-LFO-WAVEFORM-SINE:CAPS"></a><span class="term"><code class="literal">GST_LFO_WAVEFORM_SINE</code></span></p></td>
@@ -145,8 +148,11 @@ The various waveform modes available.
 <p>
 This returns a new, unbound <a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new, unbound <a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -175,7 +181,7 @@ Specifies the frequency that should be used for the waveform
 of this <a class="link" href="GstLFOControlSource.html" title="GstLFOControlSource"><span class="type">GstLFOControlSource</span></a>. It should be large enough
 so that the period is longer than one nanosecond.
 </p>
-<p>Allowed values: &gt;= 0</p>
+<p>Allowed values: &gt;= G_MINDOUBLE</p>
 <p>Default value: 1</p>
 </div>
 <hr>

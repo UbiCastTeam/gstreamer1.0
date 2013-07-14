@@ -1,5 +1,5 @@
 
-Release notes for GStreamer 1.0.8
+Release notes for GStreamer 1.1.2
 
 
 The GStreamer team is proud to announce a new bug-fix release
@@ -42,16 +42,17 @@ contains a set of codecs plugins based on libav (formerly gst-ffmpeg)
 
 Features of this release
     
-      * basesink: improve position reporting without clock
-      * fix caps leak in typefind/decodebin/playbin
-      * gobject-introspection fixes for bindings
 
 Bugs fixed in this release
      
-      * 693365 : gst_structure_is_subset false positive
-      * 702617 : buffer: Wrong size/index handling when merging memory
-      * 702778 : REGRESSION : Backward seeking doesn't work with mp3 files.
-      * 703562 : Missing few allow-none annotation
+      * 652037 : basesrc: less persistent caching of size
+      * 701985 : gst-launch: Unreffing GstContext that is still used
+      * 702089 : gst_init: Don't intercept --help
+      * 702520 : queue: deadlock when reconfigure event
+      * 702632 : acceptcaps query can be very very slow
+      * 703267 : funnel: Needs to be usable in playbin
+      * 703377 : gst_check_setup_events() and multiple src or sink pads
+      * 703682 : POTFILES.in is out of date
 
 ==== Download ====
 
@@ -88,10 +89,18 @@ subscribe to the gstreamer-devel list.
         
 Contributors to this release
     
+      * Brendan Long
+      * Edward Hervey
+      * Hans de Goede
+      * Jonas Holmberg
+      * Kim Lam
       * Nicolas Dufresne
       * Olivier Crête
       * Paul HENRYS
+      * Piotr Drąg
       * Sebastian Dröge
+      * Sjoerd Simons
+      * Stefan Sauer
       * Thibault Saunier
       * Tim-Philipp Müller
       * Wim Taymans

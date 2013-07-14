@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBaseParse</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
@@ -104,7 +104,7 @@ into separate audio/video/whatever frames.
 <p>
 It provides for:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>provides one sink pad and one source pad</p></li>
 <li class="listitem"><p>handles state changes</p></li>
 <li class="listitem"><p>can operate in pull mode or push mode</p></li>
@@ -127,7 +127,7 @@ Description of the parsing mechanism:
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem"><div class="itemizedlist">
 <p class="title"><b>Set-up phase</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     GstBaseParse calls <em class="parameter"><code>start</code></em> to inform subclass that data processing is
     about to start now.
@@ -151,7 +151,7 @@ Description of the parsing mechanism:
 </div></li>
 <li class="listitem"><div class="itemizedlist">
 <p class="title"><b>Parsing phase</b></p>
-<ul class="itemizedlist" type="disc">
+<ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
       GstBaseParse gathers at least min_frame_size bytes of data either
       by pulling it from upstream or collecting buffers in an internal
@@ -209,7 +209,7 @@ Description of the parsing mechanism:
 </div></li>
 <li class="listitem"><div class="itemizedlist">
 <p class="title"><b>Shutdown phase</b></p>
-<ul class="itemizedlist" type="disc"><li class="listitem"><p>
+<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
     GstBaseParse class calls <em class="parameter"><code>stop</code></em> to inform the subclass that data
     parsing will be stopped.
   </p></li></ul>
@@ -240,7 +240,7 @@ and end of data processing.
 <p>
 Things that subclass need to take care of:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Provide pad templates</p></li>
 <li class="listitem"><p>
      Fixate the source pad caps when appropriate
@@ -292,8 +292,11 @@ Things that subclass need to take care of:
 <p>
 The opaque <a class="link" href="gstreamer-libs-GstBaseParse.html#GstBaseParse" title="struct GstBaseParse"><span class="type">GstBaseParse</span></a> data structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> <em class="structfield"><code><a name="GstBaseParse.element"></a>element</code></em>;</span></p></td>
 <td>the parent element.</td>
@@ -339,6 +342,12 @@ The opaque <a class="link" href="gstreamer-libs-GstBaseParse.html#GstBaseParse" 
 
   GstFlowReturn (*detect)             (GstBaseParse * parse,
                                        GstBuffer    * buffer);
+
+  gboolean      (*sink_query)         (GstBaseParse * parse,
+                                       GstQuery     * query);
+
+  gboolean      (*src_query)          (GstBaseParse * parse,
+                                       GstQuery     * query);
 };
 </pre>
 <p>
@@ -346,8 +355,11 @@ Subclasses can override any of the available virtual methods or not, as
 needed. At minimum <em class="parameter"><code>check_valid_frame</code></em> and <em class="parameter"><code>parse_frame</code></em> needs to be
 overridden.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GstElementClass"><span class="type">GstElementClass</span></a> <em class="structfield"><code><a name="GstBaseParseClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -420,6 +432,19 @@ Called until it doesn't return GST_FLOW_OK anymore for
 the first buffers. Can be used by the subclass to detect
 the stream format.</td>
 </tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseParseClass.sink-query"></a>sink_query</code></em> ()</span></p></td>
+<td>Optional.
+Query handler on the sink pad. This function should chain
+up to the parent implementation to let the default handler
+run (Since 1.2)</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="GstBaseParseClass.src-query"></a>src_query</code></em> ()</span></p></td>
+<td>Optional.
+Query handler on the source pad. Should chain up to the
+parent to let the default handler run (Since 1.2)</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -437,8 +462,11 @@ duration.  Alternatively, if <em class="parameter"><code>interval</code></em> is
 duration is determined based on estimated bitrate, and updated every <em class="parameter"><code>interval</code></em>
 frames.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -476,8 +504,11 @@ is used to estimate the total duration of the stream and to estimate
 a seek position, if there's no index and the format is syncable
 (see <a class="link" href="gstreamer-libs-GstBaseParse.html#gst-base-parse-set-syncable" title="gst_base_parse_set_syncable ()"><code class="function">gst_base_parse_set_syncable()</code></a>).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -500,8 +531,11 @@ a seek position, if there's no index and the format is syncable
 Subclass can use this function to tell the base class that it needs to
 give at least <span class="type">min_size</span> buffers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -530,8 +564,11 @@ callbacks will be invoked, but <em class="parameter"><code>pre_push_frame</code>
 so subclass can perform as much or as little is appropriate for
 passthrough semantics in <em class="parameter"><code>pre_push_frame</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -556,8 +593,11 @@ Set if frame starts can be identified. This is set by default and
 determines whether seeking based on bitrate averages
 is possible for a format/stream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -581,8 +621,11 @@ Set if frames carry timing information which the subclass can (generally)
 parse and provide.  In particular, intrinsic (rather than estimated) time
 can be obtained following a seek.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -611,8 +654,11 @@ location, a corresponding decoder might need an initial <em class="parameter"><c
 following <em class="parameter"><code>lead_out</code></em> number of frames to ensure the desired segment is
 entirely filled upon decoding.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -648,8 +694,11 @@ Sets the minimum and maximum (which may likely be equal) latency introduced
 by the parsing process.  If there is such a latency, which depends on the
 particular parsing of the format, it typically corresponds to 1 frame duration.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -678,8 +727,11 @@ particular parsing of the format, it typically corresponds to 1 frame duration.
 <p>
 Default implementation of "convert" vmethod in <a class="link" href="gstreamer-libs-GstBaseParse.html#GstBaseParse" title="struct GstBaseParse"><span class="type">GstBaseParse</span></a> class.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -725,8 +777,11 @@ to only add keyframe entries.  <em class="parameter"><code>force</code></em> all
 whether the stream is (upstream) seekable, another entry is already "close"
 to the new entry, etc.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -777,8 +832,11 @@ than global parameters).  Some of these may apply to each parsing stage, others
 only to some a particular one.  These parameters are effectively zeroed at start
 of each frame's processing, i.e. parsing virtual method invocation sequence.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="GstBaseParseFrame.buffer"></a>buffer</code></em>;</span></p></td>
@@ -824,8 +882,11 @@ skipped in bitrate calculation.</td>
 <p>
 Flags to be used in a <a class="link" href="gstreamer-libs-GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-BASE-PARSE-FRAME-FLAG-NONE:CAPS"></a><span class="term"><code class="literal">GST_BASE_PARSE_FRAME_FLAG_NONE</code></span></p></td>
@@ -882,8 +943,11 @@ Allocates a new <a class="link" href="gstreamer-libs-GstBaseParse.html#GstBasePa
 elements written in C should usually allocate the frame on the stack and
 then use <a class="link" href="gstreamer-libs-GstBaseParse.html#gst-base-parse-frame-init" title="gst_base_parse_frame_init ()"><code class="function">gst_base_parse_frame_init()</code></a> to initialise it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
@@ -919,8 +983,11 @@ sure <a class="link" href="gstreamer-libs-GstBaseParse.html#gst-base-parse-frame
 the actual frame. Use this function to initialise a <a class="link" href="gstreamer-libs-GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>
 allocated on the stack.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>frame</code></em> :</span></p></td>
 <td>
@@ -946,8 +1013,11 @@ frame's buffer, though caller retains ownership of <em class="parameter"><code>f
 <p>
 This must be called with sinkpad STREAM_LOCK held.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -987,8 +1057,11 @@ ignored for any but the above purpose/information).
 Note that the latter buffer is invalidated by this call, whereas the
 caller retains ownership of <em class="parameter"><code>frame</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
@@ -1020,8 +1093,11 @@ caller retains ownership of <em class="parameter"><code>frame</code></em>.
 Obtains current drain status (ie. whether EOS has been received and
 the parser is now processing the frames at the end of the stream)
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
 <td>base parse instance</td>
@@ -1059,8 +1135,11 @@ to forego pushing buffer.
 <p>
 Obtains current sync status.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>parse</code></em> :</span></p></td>
 <td>base parse instance</td>
@@ -1075,8 +1154,11 @@ Obtains current sync status.
 <p>
 Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>base parse instance</td>
@@ -1091,8 +1173,11 @@ Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc
 <p>
 Gives the pointer to the source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>base parse instance</td>

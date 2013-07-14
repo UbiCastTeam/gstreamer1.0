@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GST_VALUE_H__
@@ -23,6 +23,7 @@
 #include <gst/gstconfig.h>
 #include <gst/gstcaps.h>
 #include <gst/gststructure.h>
+#include <gst/gstcapsfeatures.h>
 
 G_BEGIN_DECLS
 
@@ -148,6 +149,14 @@ G_BEGIN_DECLS
  * Checks if the given #GValue contains a #GST_TYPE_STRUCTURE value.
  */
 #define GST_VALUE_HOLDS_STRUCTURE(x)            (G_VALUE_HOLDS((x), GST_TYPE_STRUCTURE))
+
+/**
+ * GST_VALUE_HOLDS_CAPS_FEATURES:
+ * @x: the #GValue to check
+ *
+ * Checks if the given #GValue contains a #GST_TYPE_CAPS_FEATURES value.
+ */
+#define GST_VALUE_HOLDS_CAPS_FEATURES(x)        (G_VALUE_HOLDS((x), GST_TYPE_CAPS_FEATURES))
 
 /**
  * GST_VALUE_HOLDS_BUFFER:
@@ -284,6 +293,16 @@ G_BEGIN_DECLS
 #define GST_TYPE_BITMASK                 gst_bitmask_get_type ()
 
 /**
+ * GST_TYPE_G_THREAD:
+ *
+ * a boxed #GValue type for #GThread that represents a thread.
+ *
+ * Returns: the #GType of GstGThread
+ */
+
+#define GST_TYPE_G_THREAD                gst_g_thread_get_type ()
+
+/**
  * GST_VALUE_LESS_THAN:
  *
  * Indicates that the first value provided to a comparison function
@@ -381,6 +400,11 @@ GType gst_value_list_get_type (void);
 GType gst_value_array_get_type (void);
 GType gst_bitmask_get_type (void);
 
+/* Hide this compatibility type from introspection */
+#ifndef __GI_SCANNER__
+GType gst_g_thread_get_type (void);
+#endif
+
 GType gst_date_time_get_type (void);
 
 void            gst_value_register              (const GstValueTable   *table);
@@ -394,6 +418,8 @@ gboolean        gst_value_deserialize           (GValue                *dest,
 /* list */
 void            gst_value_list_append_value     (GValue         *value,
                                                  const GValue   *append_value);
+void            gst_value_list_append_and_take_value (GValue         *value,
+                                                 GValue   *append_value);
 void            gst_value_list_prepend_value    (GValue         *value,
                                                  const GValue   *prepend_value);
 void            gst_value_list_concat           (GValue         *dest,
@@ -409,6 +435,8 @@ const GValue *  gst_value_list_get_value        (const GValue   *value,
 /* array */
 void            gst_value_array_append_value    (GValue         *value,
                                                  const GValue   *append_value);
+void            gst_value_array_append_and_take_value    (GValue         *value,
+                                                 GValue   *append_value);
 void            gst_value_array_prepend_value   (GValue         *value,
                                                  const GValue   *prepend_value);
 guint           gst_value_array_get_size        (const GValue   *value);
@@ -456,6 +484,12 @@ const GstStructure *
                 gst_value_get_structure         (const GValue   *value);
 void            gst_value_set_structure         (GValue         *value,
                                                  const GstStructure  *structure);
+
+/* caps features */
+const GstCapsFeatures *
+                gst_value_get_caps_features     (const GValue   *value);
+void            gst_value_set_caps_features     (GValue         *value,
+                                                 const GstCapsFeatures  *features);
 
 /* fraction */
 void            gst_value_set_fraction          (GValue         *value,

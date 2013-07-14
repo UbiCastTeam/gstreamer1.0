@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -2718,8 +2718,8 @@ gst_pad_peer_query_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
  * @filter: (allow-none): suggested #GstCaps, or NULL
  *
  * Gets the capabilities this pad can produce or consume.
- * Note that this method doesn't necessarily return the caps set by
- * gst_pad_set_caps() - use gst_pad_get_current_caps() for that instead.
+ * Note that this method doesn't necessarily return the caps set by sending a
+ * gst_event_new_caps() - use gst_pad_get_current_caps() for that instead.
  * gst_pad_query_caps returns all possible caps a pad can operate with, using
  * the pad's CAPS query function, If the query fails, this function will return
  * @filter, if not #NULL, otherwise ANY.
@@ -3096,7 +3096,8 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
 GstClockTime
 gst_util_get_timestamp (void)
 {
-#if defined (HAVE_POSIX_TIMERS) && defined(HAVE_MONOTONIC_CLOCK)
+#if defined (HAVE_POSIX_TIMERS) && defined(HAVE_MONOTONIC_CLOCK) &&\
+    defined (HAVE_CLOCK_GETTIME)
   struct timespec now;
 
   clock_gettime (CLOCK_MONOTONIC, &now);
@@ -3699,6 +3700,10 @@ gst_pad_create_stream_id_printf (GstPad * pad, GstElement * parent,
  * handler interface should ideally generate a unique, deterministic
  * stream-id manually instead.
  *
+ * Since stream IDs are sorted alphabetically, any numbers in the
+ * stream ID should be printed with a fixed number of characters,
+ * preceded by 0's, such as by using the format %%03u instead of %%u.
+ *
  * Returns: A stream-id for @pad. g_free() after usage.
  */
 gchar *
@@ -3706,4 +3711,44 @@ gst_pad_create_stream_id (GstPad * pad, GstElement * parent,
     const gchar * stream_id)
 {
   return gst_pad_create_stream_id_printf (pad, parent, stream_id, NULL);
+}
+
+/**
+ * gst_pad_get_stream_id:
+ * @pad: A source #GstPad
+ *
+ * Returns the current stream-id for the @pad, or %NULL if none has been
+ * set yet, i.e. the pad has not received a stream-start event yet.
+ *
+ * This is a convenience wrapper around gst_pad_get_sticky_event() and
+ * gst_event_parse_stream_start().
+ *
+ * The returned stream-id string should be treated as an opaque string, its
+ * contents should not be interpreted.
+ *
+ * Returns: a newly-allocated copy of the stream-idfor @pad, or %NULL.
+ *     g_free() the returned string when no longer needed.
+ *
+ * Since: 1.2
+ */
+gchar *
+gst_pad_get_stream_id (GstPad * pad)
+{
+  const gchar *stream_id = NULL;
+  GstEvent *event;
+  gchar *ret = NULL;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+
+  event = gst_pad_get_sticky_event (pad, GST_EVENT_STREAM_START, 0);
+  if (event != NULL) {
+    gst_event_parse_stream_start (event, &stream_id);
+    ret = g_strdup (stream_id);
+    gst_event_unref (event);
+    GST_LOG_OBJECT (pad, "pad has stream-id '%s'", ret);
+  } else {
+    GST_DEBUG_OBJECT (pad, "pad has not received a stream-start event yet");
+  }
+
+  return ret;
 }

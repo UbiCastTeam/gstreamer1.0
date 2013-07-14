@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -35,6 +35,7 @@
 #include <gst/gstpad.h>
 #include <gst/gstallocator.h>
 #include <gst/gsttoc.h>
+#include <gst/gstcontext.h>
 
 G_BEGIN_DECLS
 
@@ -101,6 +102,7 @@ typedef enum {
  * @GST_QUERY_ACCEPT_CAPS: the accept caps query
  * @GST_QUERY_CAPS: the caps query
  * @GST_QUERY_DRAIN: wait till all serialized data is consumed downstream
+ * @GST_QUERY_CONTEXT: query the pipeline-local context from downstream
  *
  * Standard predefined Query types
  */
@@ -124,7 +126,8 @@ typedef enum {
   GST_QUERY_SCHEDULING   = GST_QUERY_MAKE_TYPE (150, FLAG(UPSTREAM)),
   GST_QUERY_ACCEPT_CAPS  = GST_QUERY_MAKE_TYPE (160, FLAG(BOTH)),
   GST_QUERY_CAPS         = GST_QUERY_MAKE_TYPE (170, FLAG(BOTH)),
-  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED))
+  GST_QUERY_DRAIN        = GST_QUERY_MAKE_TYPE (180, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+  GST_QUERY_CONTEXT      = GST_QUERY_MAKE_TYPE (190, FLAG(DOWNSTREAM))
 } GstQueryType;
 #undef FLAG
 
@@ -411,6 +414,7 @@ void            gst_query_set_nth_allocation_pool    (GstQuery *query, guint ind
                                                       GstBufferPool *pool,
                                                       guint size, guint min_buffers,
                                                       guint max_buffers);
+void            gst_query_remove_nth_allocation_pool (GstQuery *query, guint index);
 
 /* allocators */
 void            gst_query_add_allocation_param       (GstQuery *query, GstAllocator *allocator,
@@ -422,6 +426,7 @@ void            gst_query_parse_nth_allocation_param (GstQuery *query, guint ind
 void            gst_query_set_nth_allocation_param   (GstQuery *query, guint index,
                                                       GstAllocator *allocator,
                                                       const GstAllocationParams *params);
+void            gst_query_remove_nth_allocation_param (GstQuery *query, guint index);
 
 /* metadata */
 void            gst_query_add_allocation_meta        (GstQuery *query, GType api, const GstStructure *params);
@@ -437,12 +442,14 @@ gboolean        gst_query_find_allocation_meta       (GstQuery *query, GType api
  * GstSchedulingFlags:
  * @GST_SCHEDULING_FLAG_SEEKABLE: if seeking is possible
  * @GST_SCHEDULING_FLAG_SEQUENTIAL: if sequential access is recommended
+ * @GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED: if bandwidth is limited and buffering possible
  *
  * The different scheduling flags.
  */
 typedef enum {
-  GST_SCHEDULING_FLAG_SEEKABLE      = (1 << 0),
-  GST_SCHEDULING_FLAG_SEQUENTIAL    = (1 << 1)
+  GST_SCHEDULING_FLAG_SEEKABLE          = (1 << 0),
+  GST_SCHEDULING_FLAG_SEQUENTIAL        = (1 << 1),
+  GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED = (1 << 2)
 } GstSchedulingFlags;
 
 GstQuery *      gst_query_new_scheduling          (void) G_GNUC_MALLOC;
@@ -474,6 +481,14 @@ void            gst_query_parse_caps_result        (GstQuery *query, GstCaps **c
 
 /* drain query */
 GstQuery *      gst_query_new_drain                (void) G_GNUC_MALLOC;
+
+/* context query */
+GstQuery *      gst_query_new_context              (void) G_GNUC_MALLOC;
+void            gst_query_add_context_type         (GstQuery * query, const gchar * context_type);
+guint           gst_query_get_n_context_types      (GstQuery * query);
+gboolean        gst_query_parse_nth_context_type   (GstQuery * query, guint i, const gchar ** context_type);
+void            gst_query_set_context              (GstQuery *query, GstContext *context);
+void            gst_query_parse_context            (GstQuery *query, GstContext **context);
 
 G_END_DECLS
 

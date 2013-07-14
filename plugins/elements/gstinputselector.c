@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -307,9 +307,13 @@ gst_selector_pad_get_property (GObject * object, guint prop_id,
       GstInputSelector *sel;
 
       sel = GST_INPUT_SELECTOR (gst_pad_get_parent (spad));
-      g_value_set_boolean (value, gst_input_selector_is_active_sinkpad (sel,
-              GST_PAD_CAST (spad)));
-      gst_object_unref (sel);
+      if (sel) {
+        g_value_set_boolean (value, gst_input_selector_is_active_sinkpad (sel,
+                GST_PAD_CAST (spad)));
+        gst_object_unref (sel);
+      } else {
+        g_value_set_boolean (value, FALSE);
+      }
       break;
     }
     case PROP_PAD_ALWAYS_OK:
@@ -452,13 +456,19 @@ gst_selector_pad_event (GstPad * pad, GstObject * parent, GstEvent * event)
   GST_DEBUG_OBJECT (selpad, "received event %" GST_PTR_FORMAT, event);
 
   GST_INPUT_SELECTOR_LOCK (sel);
-  prev_active_sinkpad = sel->active_sinkpad;
+  prev_active_sinkpad =
+      sel->active_sinkpad ? gst_object_ref (sel->active_sinkpad) : NULL;
   active_sinkpad = gst_input_selector_activate_sinkpad (sel, pad);
   GST_INPUT_SELECTOR_UNLOCK (sel);
 
   if (prev_active_sinkpad != active_sinkpad && pad == active_sinkpad) {
+    if (prev_active_sinkpad)
+      g_object_notify (G_OBJECT (prev_active_sinkpad), "active");
+    g_object_notify (G_OBJECT (active_sinkpad), "active");
     g_object_notify (G_OBJECT (sel), "active-pad");
   }
+  if (prev_active_sinkpad)
+    gst_object_unref (prev_active_sinkpad);
 
   GST_INPUT_SELECTOR_LOCK (sel);
   active_sinkpad = gst_input_selector_activate_sinkpad (sel, pad);
@@ -494,6 +504,7 @@ gst_selector_pad_event (GstPad * pad, GstObject * parent, GstEvent * event)
           gst_event_set_seqnum (event, selpad->segment_seqnum);
         }
       }
+
       GST_DEBUG_OBJECT (pad, "configured SEGMENT %" GST_SEGMENT_FORMAT,
           &selpad->segment);
       break;
@@ -745,7 +756,7 @@ forward_sticky_events (GstPad * sinkpad, GstEvent ** event, gpointer user_data)
     gst_event_set_seqnum (e, GST_SELECTOR_PAD_CAST (sinkpad)->segment_seqnum);
 
     gst_pad_push_event (sel->srcpad, e);
-  } else if (GST_EVENT_TYPE (*event) != GST_EVENT_STREAM_START) {
+  } else {
     gst_pad_push_event (sel->srcpad, gst_event_ref (*event));
   }
 
@@ -918,7 +929,7 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
   GstInputSelector *sel;
   GstFlowReturn res;
   GstPad *active_sinkpad;
-  GstPad *prev_active_sinkpad;
+  GstPad *prev_active_sinkpad = NULL;
   GstSelectorPad *selpad;
   GstClockTime start_time;
 
@@ -938,7 +949,8 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
 
   GST_LOG_OBJECT (pad, "getting active pad");
 
-  prev_active_sinkpad = sel->active_sinkpad;
+  prev_active_sinkpad =
+      sel->active_sinkpad ? gst_object_ref (sel->active_sinkpad) : NULL;
   active_sinkpad = gst_input_selector_activate_sinkpad (sel, pad);
 
   /* In sync mode wait until the active pad has advanced
@@ -1021,6 +1033,9 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
   GST_INPUT_SELECTOR_UNLOCK (sel);
 
   if (prev_active_sinkpad != active_sinkpad && pad == active_sinkpad) {
+    if (prev_active_sinkpad)
+      g_object_notify (G_OBJECT (prev_active_sinkpad), "active");
+    g_object_notify (G_OBJECT (active_sinkpad), "active");
     g_object_notify (G_OBJECT (sel), "active-pad");
   }
 
@@ -1031,6 +1046,10 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
         sel);
     selpad->events_pending = FALSE;
   }
+
+  if (prev_active_sinkpad)
+    gst_object_unref (prev_active_sinkpad);
+  prev_active_sinkpad = NULL;
 
   if (selpad->discont) {
     buf = gst_buffer_make_writable (buf);
@@ -1068,6 +1087,11 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
   GST_INPUT_SELECTOR_UNLOCK (sel);
 
 done:
+
+  if (prev_active_sinkpad)
+    gst_object_unref (prev_active_sinkpad);
+  prev_active_sinkpad = NULL;
+
   return res;
 
   /* dropped buffers */

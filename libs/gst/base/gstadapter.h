@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include <gst/gst.h>
@@ -65,11 +65,13 @@ gsize                   gst_adapter_available_fast      (GstAdapter *adapter);
 
 GstClockTime            gst_adapter_prev_pts            (GstAdapter *adapter, guint64 *distance);
 GstClockTime            gst_adapter_prev_dts            (GstAdapter *adapter, guint64 *distance);
+GstClockTime            gst_adapter_prev_pts_at_offset  (GstAdapter * adapter, gsize offset, guint64 * distance);
+GstClockTime            gst_adapter_prev_dts_at_offset  (GstAdapter * adapter, gsize offset, guint64 * distance);
 
-gsize                   gst_adapter_masked_scan_uint32  (GstAdapter * adapter, guint32 mask,
+gssize                  gst_adapter_masked_scan_uint32  (GstAdapter * adapter, guint32 mask,
                                                          guint32 pattern, gsize offset, gsize size);
 
-gsize                   gst_adapter_masked_scan_uint32_peek  (GstAdapter * adapter, guint32 mask,
+gssize                  gst_adapter_masked_scan_uint32_peek  (GstAdapter * adapter, guint32 mask,
                                                          guint32 pattern, gsize offset, gsize size, guint32 * value);
 
 G_END_DECLS

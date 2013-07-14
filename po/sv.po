@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.31.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-07-11 19:26+0100\n"
+"POT-Creation-Date: 2013-07-11 15:09+0200\n"
 "PO-Revision-Date: 2011-01-09 19:46+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -255,6 +255,10 @@ msgstr "Inget standardfelmeddelande för domänen %s och koden %d."
 msgid "Selected clock cannot be used in pipeline."
 msgstr "Vald klocka kan inte användas i rörledning."
 
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "Fel vid skrivning av registercache till %s: %s"
+
 msgid "title"
 msgstr "titel"
 
@@ -332,8 +336,8 @@ msgstr "utökad kommentar"
 
 msgid "free text commenting the data in key=value or key[en]=comment form"
 msgstr ""
-"fri text som kommenterar dessa data i formatet key=värde eller key[sv]"
-"=kommentar"
+"fri text som kommenterar dessa data i formatet key=värde eller "
+"key[sv]=kommentar"
 
 msgid "track number"
 msgstr "spårnummer"
@@ -802,6 +806,14 @@ msgid ", "
 msgstr ", "
 
 #, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
+
+#, c-format
 msgid "ERROR: from element %s: %s\n"
 msgstr "FEL: från element %s: %s\n"
 
@@ -868,15 +880,6 @@ msgstr "kunde inte länka utgångselementet för URI:n \"%s\""
 msgid "empty pipeline not allowed"
 msgstr "tom rörledning är inte tillåtet"
 
-msgid "Internal clock error."
-msgstr "Internt klockfel."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Internt fel i dataflöde."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Förkastar en stor mängd buffertar."
 
@@ -885,6 +888,15 @@ msgstr "Internt dataflödesproblem."
 
 msgid "Internal data stream error."
 msgstr "Internt fel i dataström."
+
+msgid "Internal data flow error."
+msgstr "Internt fel i dataflöde."
+
+msgid "Internal clock error."
+msgstr "Internt klockfel."
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Filtrera förmågor"
@@ -1125,6 +1137,10 @@ msgstr "VARNING: från elementet %s: %s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Förinläst, väntar på att buffringen ska bli färdig...\n"
 
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Förinläst, väntar på att buffringen ska bli färdig...\n"
+
 msgid "buffering..."
 msgstr "buffrar..."
 
@@ -1144,9 +1160,17 @@ msgstr "Ställer in tillståndet till %s enligt begäran från %s...\n"
 msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Avbrott: Stoppar rörledningen ...\n"
 
+#, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
 #, fuzzy, c-format
 msgid "Missing element: %s\n"
 msgstr "inget \"%s\"-element"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s\n"
+msgstr "VARNING: från elementet %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Utmatningstaggar (även känt som metadata)"
@@ -1281,9 +1305,6 @@ msgstr "Frigör rörledning ...\n"
 
 #~ msgid "Do not install signal handlers for SIGUSR1 and SIGUSR2"
 #~ msgstr "Installera inte signalhanterare för SIGUSR1 och SIGUSR2"
-
-#~ msgid "Error writing registry cache to %s: %s"
-#~ msgstr "Fel vid skrivning av registercache till %s: %s"
 
 #~ msgid "Error re-scanning registry %s: %s"
 #~ msgstr "Fel vid återsökning av registret %s: %s"

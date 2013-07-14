@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstMiniObject</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstMeta.html" title="GstMeta">
@@ -160,8 +160,11 @@ Unref Func: gst_mini_object_unref
 Set Value Func: g_value_set_boxed
 Get Value Func: g_value_get_boxed
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> <em class="structfield"><code><a name="GstMiniObject.type"></a>type</code></em>;</span></p></td>
@@ -201,8 +204,11 @@ Get Value Func: g_value_get_boxed
 <p>
 Function prototype for methods to create copies of instances.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -226,8 +232,11 @@ passed object by doing a <a class="link" href="gstreamer-GstMiniObject.html#gst-
 revived after the dispose function, the function should return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
 and the memory associated with the object is freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -249,8 +258,11 @@ and the memory associated with the object is freed.
 Virtual function prototype for methods to free ressources used by
 mini-objects.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>MiniObject to free</td>
@@ -267,8 +279,11 @@ A <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObjectNotify" title=
 callback that gets triggered when <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-unref" title="gst_mini_object_unref ()"><code class="function">gst_mini_object_unref()</code></a> drops the
 last ref and <em class="parameter"><code>obj</code></em> is about to be freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -289,8 +304,11 @@ last ref and <em class="parameter"><code>obj</code></em> is about to be freed.
 <p>
 This macro returns the type of the mini-object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>MiniObject to return type for.</td>
@@ -310,8 +328,11 @@ This macro returns the type of the mini-object.
 <p>
 Flags for the mini object
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-MINI-OBJECT-FLAG-LOCKABLE:CAPS"></a><span class="term"><code class="literal">GST_MINI_OBJECT_FLAG_LOCKABLE</code></span></p></td>
@@ -341,8 +362,11 @@ READONLY mode. Only read locks can be performed on the object.
 <p>
 This macro returns the entire set of flags for the mini-object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>MiniObject to return flags for.</td>
@@ -357,8 +381,11 @@ This macro returns the entire set of flags for the mini-object.
 <p>
 This macro checks to see if the given flag is set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -379,8 +406,11 @@ This macro checks to see if the given flag is set.
 <p>
 This macro sets the given bits.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -401,8 +431,11 @@ This macro sets the given bits.
 <p>
 This macro usets the given bits.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -424,8 +457,11 @@ This macro usets the given bits.
 Check if <em class="parameter"><code>obj</code></em> is lockable. A lockable object can be locked and unlocked with
 <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-lock" title="gst_mini_object_lock ()"><code class="function">gst_mini_object_lock()</code></a> and <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-unlock" title="gst_mini_object_unlock ()"><code class="function">gst_mini_object_unlock()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a>
@@ -447,8 +483,11 @@ Check if <em class="parameter"><code>obj</code></em> is lockable. A lockable obj
 <p>
 Flags used when locking miniobjects
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-LOCK-FLAG-READ:CAPS"></a><span class="term"><code class="literal">GST_LOCK_FLAG_READ</code></span></p></td>
@@ -490,8 +529,11 @@ GstLockFlags value alias for GST_LOCK_FLAG_READ | GST_LOCK_FLAG_WRITE
 <p>
 Get access to the reference count field of the mini-object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a>
@@ -507,8 +549,11 @@ Get access to the reference count field of the mini-object.
 <p>
 Get the reference count value of the mini-object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a>
@@ -523,8 +568,11 @@ Get the reference count value of the mini-object.
 <p>
 Define a new mini-object type with the given name
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>TypeName</code></em> :</span></p></td>
@@ -550,8 +598,11 @@ Define a new mini-object type with the given name
 Initializes a mini-object with the desired type and copy/dispose/free
 functions.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
@@ -600,8 +651,11 @@ GstMiniObject instances can potentially increase the number
 of memcpy operations in a pipeline, especially if the miniobject
 is a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
@@ -623,8 +677,11 @@ is a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct Gst
 Decreases the reference count of the mini-object, possibly freeing
 the mini-object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
 <td>the mini-object</td>
@@ -645,8 +702,11 @@ to the mini object without calling <a class="link" href="gstreamer-GstMiniObject
 (<a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-ref" title="gst_mini_object_ref ()"><code class="function">gst_mini_object_ref()</code></a> adds a strong reference, that is, forces the object
 to stay alive).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -673,8 +733,11 @@ to stay alive).
 <p>
 Removes a weak reference callback from a mini object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -700,8 +763,11 @@ Removes a weak reference callback from a mini object.
 <p>
 Lock the mini-object with the specified access mode in <em class="parameter"><code>flags</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -727,8 +793,11 @@ Lock the mini-object with the specified access mode in <em class="parameter"><co
 <p>
 Unlock the mini-object with the specified access mode in <em class="parameter"><code>flags</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -759,8 +828,11 @@ object is therefore writable.
 Modification of a mini-object should only be done after verifying that it
 is writable.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
@@ -785,8 +857,11 @@ and returns a reference to the new object.
 <p>
 MT safe
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
@@ -812,8 +887,11 @@ Creates a copy of the mini-object.
 <p>
 MT safe
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mini_object</code></em> :</span></p></td>
@@ -849,8 +927,11 @@ removes the data stored.
 when the <em class="parameter"><code>object</code></em> is disposed, or the data is being overwritten by
 a call to <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-set-qdata" title="gst_mini_object_set_qdata ()"><code class="function">gst_mini_object_set_qdata()</code></a> with the same <em class="parameter"><code>quark</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -882,8 +963,11 @@ needs to be freed</td>
 This function gets back user data pointers stored via
 <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-set-qdata" title="gst_mini_object_set_qdata ()"><code class="function">gst_mini_object_set_qdata()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -911,8 +995,11 @@ This function gets back user data pointers stored via <a class="link" href="gstr
 and removes the data from <em class="parameter"><code>object</code></em> without invoking its <code class="function">destroy()</code> function (if
 any was set).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -943,8 +1030,11 @@ The reference count of <em class="parameter"><code>olddata</code></em> is decrea
 <p>
 Either <em class="parameter"><code>newdata</code></em> and the value pointed to by <em class="parameter"><code>olddata</code></em> may be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>olddata</code></em> :</span></p></td>
@@ -978,8 +1068,11 @@ takes ownership of <em class="parameter"><code>newdata</code></em>.
 <p>
 Either <em class="parameter"><code>newdata</code></em> and the value pointed to by <em class="parameter"><code>olddata</code></em> may be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>olddata</code></em> :</span></p></td>
@@ -1007,8 +1100,11 @@ be replaced. <span class="annotation">[<acronym title="Parameter for input and f
 Replace the current <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> pointer to by <em class="parameter"><code>olddata</code></em> with NULL and
 return the old value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>olddata</code></em> :</span></p></td>

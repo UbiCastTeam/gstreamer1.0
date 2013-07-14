@@ -4,7 +4,7 @@
 %define 	_glib2		2.32.0
 
 Name: 		%{gstreamer}
-Version: 	1.0.8
+Version: 	1.1.2
 Release: 	1
 Summary: 	GStreamer streaming media framework runtime
 
@@ -33,8 +33,6 @@ BuildRequires:	libxslt
 BuildRequires:  docbook-style-dsssl
 BuildRequires:  docbook-style-xsl
 BuildRequires:  docbook-utils
-BuildRequires:	transfig
-BuildRequires:  xfig
 BuildRequires:  netpbm-progs
 BuildRequires:  tetex-dvips
 BuildRequires:  ghostscript

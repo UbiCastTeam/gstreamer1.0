@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstObject</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstMiniObject.html" title="GstMiniObject">
@@ -186,11 +186,11 @@ of the object.
 <p>
 </p>
 <div class="refsect2">
-<a name="idp28825360"></a><h3>controlled properties</h3>
+<a name="idp28716320"></a><h3>controlled properties</h3>
 <p>
 Controlled properties offers a lightweight way to adjust gobject
 properties over stream-time. It works by using time-stamped value pairs that
-are queued for element-properties. At run-time the elements continously pull
+are queued for element-properties. At run-time the elements continuously pull
 values changes for the current stream-time.
 </p>
 <p>
@@ -257,8 +257,11 @@ Last reviewed on 2012-03-29 (0.11.3)
 <p>
 GStreamer base object class.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> <em class="structfield"><code><a name="GstObject-struct.lock"></a>lock</code></em>;</span></p></td>
@@ -296,8 +299,11 @@ GStreamer base object class.
 <p>
 GStreamer base object class.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnownedClass"><span class="type">GInitiallyUnownedClass</span></a> <em class="structfield"><code><a name="GstObjectClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -326,8 +332,11 @@ GStreamer base object class.
 <p>
 The standard flags that an gstobject may have.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><a name="GST-OBJECT-FLAG-LAST:CAPS"></a><span class="term"><code class="literal">GST_OBJECT_FLAG_LAST</code></span></p></td>
 <td>subclasses can add additional flags starting from this flag
@@ -343,8 +352,11 @@ The standard flags that an gstobject may have.
 <p>
 This macro returns the entire set of flags for the object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>
@@ -360,8 +372,11 @@ This macro returns the entire set of flags for the object.
 <p>
 This macro checks to see if the given flag is set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -383,8 +398,11 @@ This macro checks to see if the given flag is set.
 <p>
 This macro sets the given bits.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -406,8 +424,11 @@ This macro sets the given bits.
 <p>
 This macro usets the given bits.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -429,8 +450,11 @@ This macro usets the given bits.
 <p>
 Get the name of this object
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>
@@ -446,8 +470,11 @@ Get the name of this object
 <p>
 Get the parent of this object
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>
@@ -463,8 +490,11 @@ Get the parent of this object
 <p>
 Get access to the reference count field of the object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>
@@ -480,8 +510,11 @@ Get access to the reference count field of the object.
 <p>
 Get the reference count value of the object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>
@@ -498,8 +531,11 @@ Get the reference count value of the object.
 This macro will obtain a lock on the object, making serialization possible.
 It blocks until the lock can be obtained.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to lock</td>
@@ -515,8 +551,11 @@ It blocks until the lock can be obtained.
 This macro will try to obtain a lock on the object, but will return with
 FALSE if it can't get it immediately.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>.</td>
@@ -531,8 +570,11 @@ FALSE if it can't get it immediately.
 <p>
 This macro releases a lock on the object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to unlock.</td>
@@ -547,8 +589,11 @@ This macro releases a lock on the object.
 <p>
 Acquire a reference to the mutex of this object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>
@@ -567,8 +612,11 @@ name (if <em class="parameter"><code>name</code></em> is NULL).
 This function makes a copy of the provided name, so the caller
 retains ownership of the name it sent.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -602,8 +650,11 @@ as well.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -628,8 +679,11 @@ MT safe. This function grabs and releases <em class="parameter"><code>object</co
 Sets the parent of <em class="parameter"><code>object</code></em> to <em class="parameter"><code>parent</code></em>. The object's reference count will
 be incremented, and any floating reference will be removed (see <a class="link" href="GstObject.html#gst-object-ref-sink" title="gst_object_ref_sink ()"><code class="function">gst_object_ref_sink()</code></a>).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -657,8 +711,11 @@ MT safe. Grabs and releases <em class="parameter"><code>object</code></em>'s LOC
 Returns the parent of <em class="parameter"><code>object</code></em>. This function increases the refcount
 of the parent object so you should <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> it after usage.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -686,8 +743,11 @@ This function decreases the refcount of <em class="parameter"><code>object</code
 <p>
 MT safe. Grabs and releases <em class="parameter"><code>object</code></em>'s lock.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to unparent</td>
@@ -711,8 +771,11 @@ using g_print.
 MT safe. This function grabs and releases <em class="parameter"><code>object</code></em>'s LOCK for getting its
          path string.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -748,8 +811,11 @@ and the optional debug sting..
 <p>
 The default handler will simply print the error string using g_print.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>source</code></em> :</span></p></td>
@@ -780,8 +846,11 @@ provided list with the lock of the owner of the list. This function
 will lock each <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> in the list to compare the name, so be
 carefull when passing a list with a locked object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
@@ -811,8 +880,11 @@ MT safe. Grabs and releases the LOCK of each object in the list.</td>
 Check if <em class="parameter"><code>object</code></em> has an ancestor <em class="parameter"><code>ancestor</code></em> somewhere up in
 the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> is inside a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -844,8 +916,11 @@ This object returns the input parameter to ease writing
 constructs like :
  result = gst_object_ref (object-&gt;parent);
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -873,8 +948,11 @@ on <em class="parameter"><code>object</code></em> as it relies on atomic refcoun
 The unref method should never be called with the LOCK held since
 this might deadlock the dispose function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to unreference. <span class="annotation">[<acronym title="Override the parsed C type with given type"><span class="acronym">type</span></acronym> Gst.Object]</span>
@@ -897,8 +975,11 @@ the floating flag while leaving the reference count unchanged. If the object
 is not floating, then this call adds a new normal reference increasing the
 reference count by one.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
 <td>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to sink</td>
@@ -918,8 +999,11 @@ The reference count of <em class="parameter"><code>oldobj</code></em> is decreas
 <p>
 Either <em class="parameter"><code>newobj</code></em> and the value pointed to by <em class="parameter"><code>oldobj</code></em> may be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>oldobj</code></em> :</span></p></td>
@@ -951,8 +1035,11 @@ the object hierarchy. Only useful (or used) for debugging.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -978,8 +1065,11 @@ in the hierarchy. <span class="annotation">[<acronym title="Free data after the 
 Returns a suggestion for timestamps where buffers should be split
 to get best controller results.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1006,8 +1096,11 @@ Sets the properties of the object, according to the <a href="http://gstreamer.fr
 If this function fails, it is most likely the application developers fault.
 Most probably the control sources are not setup correctly.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1034,8 +1127,11 @@ properties, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-
 <p>
 Check if the <em class="parameter"><code>object</code></em> has an active controlled properties.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1059,8 +1155,11 @@ Check if the <em class="parameter"><code>object</code></em> has an active contro
 This function is used to disable all controlled properties of the <em class="parameter"><code>object</code></em> for
 some time, i.e. <a class="link" href="GstObject.html#gst-object-sync-values" title="gst_object_sync_values ()"><code class="function">gst_object_sync_values()</code></a> will do nothing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1082,12 +1181,15 @@ or not.</td>
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> disabled</code></em>);</pre>
 <p>
-This function is used to disable the <span class="type">GstController</span> on a property for
-some time, i.e. <code class="function">gst_controller_sync_values()</code> will do nothing for the
+This function is used to disable the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstController.html"><span class="type">GstController</span></a> on a property for
+some time, i.e. <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstController.html#gst-controller-sync-values"><code class="function">gst_controller_sync_values()</code></a> will do nothing for the
 property.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1111,12 +1213,17 @@ or not.</td>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_object_add_control_binding      (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
                                                          <em class="parameter"><code><a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> *binding</code></em>);</pre>
 <p>
-Sets the <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a>. If there already was a <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a>
-for this property it will be replaced.
+Attach the <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> to the object. If there already was a
+<a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> for this property it will be replaced.
+</p>
+<p>
 The <em class="parameter"><code>object</code></em> will take ownership of the <em class="parameter"><code>binding</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1130,8 +1237,8 @@ The <em class="parameter"><code>object</code></em> will take ownership of the <e
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the given <em class="parameter"><code>binding</code></em> has not been setup for this object  or
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> otherwise.</td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the given <em class="parameter"><code>binding</code></em> has not been setup for this object or
+has been setup for a non suitable property, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> otherwise.</td>
 </tr>
 </tbody>
 </table></div>
@@ -1145,8 +1252,11 @@ The <em class="parameter"><code>object</code></em> will take ownership of the <e
 Gets the corresponding <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> for the property. This should be
 unreferenced again after use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1174,8 +1284,11 @@ the property is not controlled. <span class="annotation">[<acronym title="Free d
 Removes the corresponding <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a>. If it was the
 last ref of the binding, it will be disposed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1202,8 +1315,11 @@ last ref of the binding, it will be disposed.
 <p>
 Gets the value for the given controlled property at the requested time.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1248,8 +1364,11 @@ The values are unboxed and ready to be used. The similar function
 <a class="link" href="GstObject.html#gst-object-get-g-value-array" title="gst_object_get_g_value_array ()"><code class="function">gst_object_get_g_value_array()</code></a> returns the array as <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValues</span></a> and is
 better suites for bindings.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1301,8 +1420,11 @@ requested time. The array <em class="parameter"><code>values</code></em> need to
 This function is useful if one wants to e.g. draw a graph of the control
 curve or apply a control curve sample by sample.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1354,8 +1476,11 @@ If the <em class="parameter"><code>object</code></em> is not under property cont
 The control-rate is not expected to change if the element is in
 <a class="link" href="GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a> or <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1383,8 +1508,11 @@ should be up to <em class="parameter"><code>control</code></em>-rate nanoseconds
 The control-rate should not change if the element is in <a class="link" href="GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a> or
 <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -1426,8 +1554,11 @@ The deep notify signal is used to be notified of property changes. It is
 typically attached to the toplevel bin to receive notifications from all
 the elements contained in that bin.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>gstobject</code></em> :</span></p></td>
