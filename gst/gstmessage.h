@@ -97,6 +97,8 @@ typedef struct _GstMessage GstMessage;
  *     e.g. when using playbin in gapless playback mode, to get notified when
  *     the next title actually starts playing (which will be some time after
  *     the URI for the next title has been set).
+ * @GST_MESSAGE_NEED_CONTEXT: Message indicating that an element wants a specific context (Since 1.2)
+ * @GST_MESSAGE_HAVE_CONTEXT: Message indicating that an element created a context (Since 1.2)
  * @GST_MESSAGE_ANY: mask for all of the above messages.
  *
  * The different message types that are available.
@@ -558,6 +560,9 @@ void            gst_message_parse_reset_time    (GstMessage *message, GstClockTi
 
 /* STREAM_START */
 GstMessage *    gst_message_new_stream_start    (GstObject * src) G_GNUC_MALLOC;
+
+void            gst_message_set_group_id        (GstMessage *message, guint group_id);
+gboolean        gst_message_parse_group_id      (GstMessage *message, guint *group_id);
 
 /* NEED_CONTEXT */
 GstMessage *    gst_message_new_need_context    (GstObject * src) G_GNUC_MALLOC;

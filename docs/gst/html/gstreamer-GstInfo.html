@@ -91,7 +91,11 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-active" title="gst_debug_set_active ()">gst_debug_set_active</a>                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstInfo.html#gst-debug-is-active" title="gst_debug_is_active ()">gst_debug_is_active</a>                 (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-colored" title="gst_debug_set_colored ()">gst_debug_set_colored</a>               (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> colored</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode" title="gst_debug_set_color_mode ()">gst_debug_set_color_mode</a>            (<em class="parameter"><code><span class="type">GstDebugColorMode</span> mode</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode-from-string" title="gst_debug_set_color_mode_from_string ()">gst_debug_set_color_mode_from_string</a>
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstInfo.html#gst-debug-is-colored" title="gst_debug_is_colored ()">gst_debug_is_colored</a>                (<em class="parameter"><code><span class="type">void</span></code></em>);
+<span class="returnvalue">GstDebugColorMode</span>   <a class="link" href="gstreamer-GstInfo.html#gst-debug-get-color-mode" title="gst_debug_get_color_mode ()">gst_debug_get_color_mode</a>            (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-default-threshold" title="gst_debug_set_default_threshold ()">gst_debug_set_default_threshold</a>     (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-threshold-from-string" title="gst_debug_set_threshold_from_string ()">gst_debug_set_threshold_from_string</a> (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *list</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset</code></em>);
@@ -1092,6 +1096,8 @@ Checks if debugging output is activated.
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_colored               (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> colored</code></em>);</pre>
 <p>
 Sets or unsets the use of coloured debugging output.
+Same as <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode" title="gst_debug_set_color_mode ()"><code class="function">gst_debug_set_color_mode()</code></a> with the argument being
+being GST_DEBUG_COLOR_MODE_ON or GST_DEBUG_COLOR_MODE_OFF.
 </p>
 <p>
 This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
@@ -1106,6 +1112,52 @@ This function may be called before <a class="link" href="gstreamer-Gst.html#gst-
 <td>Whether to use colored output or not</td>
 </tr></tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-set-color-mode"></a><h3>gst_debug_set_color_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_color_mode            (<em class="parameter"><code><span class="type">GstDebugColorMode</span> mode</code></em>);</pre>
+<p>
+Changes the coloring mode for debug output.
+</p>
+<p>
+This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>The coloring mode for debug output. See <em class="parameter"><code>GstDebugColorMode</code></em>.</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-set-color-mode-from-string"></a><h3>gst_debug_set_color_mode_from_string ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_color_mode_from_string
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>);</pre>
+<p>
+Changes the coloring mode for debug output.
+</p>
+<p>
+This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>The coloring mode for debug output. One of the following:
+"on", "auto", "off", "disable", "unix".</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1124,6 +1176,25 @@ Checks if the debugging output should be colored.
 <td>TRUE, if the debug output should be colored.</td>
 </tr></tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-get-color-mode"></a><h3>gst_debug_get_color_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">GstDebugColorMode</span>   gst_debug_get_color_mode            (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>
+Changes the coloring mode for debug output.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>see <em class="parameter"><code>GstDebugColorMode</code></em> for possible values.</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">

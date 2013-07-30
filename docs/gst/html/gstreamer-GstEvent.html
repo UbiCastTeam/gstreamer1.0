@@ -94,6 +94,10 @@ const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="str
                                                          <em class="parameter"><code><span class="type">GstStreamFlags</span> flags</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-stream-flags" title="gst_event_parse_stream_flags ()">gst_event_parse_stream_flags</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code><span class="type">GstStreamFlags</span> *flags</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-set-group-id" title="gst_event_set_group_id ()">gst_event_set_group_id</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> group_id</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-group-id" title="gst_event_parse_group_id ()">gst_event_parse_group_id</a>            (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *group_id</code></em>);
 <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-segment" title="gst_event_new_segment ()">gst_event_new_segment</a>               (<em class="parameter"><code>const <a class="link" href="gstreamer-GstSegment.html#GstSegment" title="struct GstSegment"><span class="type">GstSegment</span></a> *segment</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-segment" title="gst_event_parse_segment ()">gst_event_parse_segment</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="gstreamer-GstSegment.html#GstSegment" title="struct GstSegment"><span class="type">GstSegment</span></a> **segment</code></em>);
@@ -213,7 +217,7 @@ To do that <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" tit
 the needed parameters to specify seeking time and mode.
 </p>
 <div class="example">
-<a name="idp22429776"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
+<a name="idp24141072"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -1574,6 +1578,69 @@ modify it or store it for later use.
 <td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
 <td>address of variable where to store the stream flags. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
 </td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-set-group-id"></a><h3>gst_event_set_group_id ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_set_group_id              (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> group_id</code></em>);</pre>
+<p>
+All streams that have the same group id are supposed to be played
+together, i.e. all streams inside a container file should have the
+same group id but different stream ids. The group id should change
+each time the stream is started, resulting in different group ids
+each time a file is played for example.
+</p>
+<p>
+Use <a class="link" href="gstreamer-GstUtils.html#gst-util-group-id-next" title="gst_util_group_id_next ()"><code class="function">gst_util_group_id_next()</code></a> to get a new group id.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
+<td>a stream-start event</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>group_id</code></em> :</span></p></td>
+<td>the group id to set</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-group-id"></a><h3>gst_event_parse_group_id ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_event_parse_group_id            (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *group_id</code></em>);</pre>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
+<td>a stream-start event</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>group_id</code></em> :</span></p></td>
+<td>address of variable where to store the group id. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a group id was set on the event and could be parsed,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</td>
 </tr>
 </tbody>
 </table></div>

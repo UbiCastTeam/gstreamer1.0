@@ -840,14 +840,16 @@ gst_base_src_send_stream_start (GstBaseSrc * src)
 
   if (src->priv->stream_start_pending) {
     gchar *stream_id;
+    GstEvent *event;
 
     stream_id =
         gst_pad_create_stream_id (src->srcpad, GST_ELEMENT_CAST (src), NULL);
 
     GST_DEBUG_OBJECT (src, "Pushing STREAM_START");
-    ret =
-        gst_pad_push_event (src->srcpad,
-        gst_event_new_stream_start (stream_id));
+    event = gst_event_new_stream_start (stream_id);
+    gst_event_set_group_id (event, gst_util_group_id_next ());
+
+    ret = gst_pad_push_event (src->srcpad, event);
     src->priv->stream_start_pending = FALSE;
     g_free (stream_id);
   }
@@ -1076,23 +1078,23 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
     }
     case GST_QUERY_SEGMENT:
     {
+      GstFormat format;
       gint64 start, stop;
 
       GST_OBJECT_LOCK (src);
-      /* no end segment configured, current duration then */
+
+      format = src->segment.format;
+
+      start =
+          gst_segment_to_stream_time (&src->segment, format,
+          src->segment.start);
       if ((stop = src->segment.stop) == -1)
         stop = src->segment.duration;
-      start = src->segment.start;
+      else
+        stop = gst_segment_to_stream_time (&src->segment, format, stop);
 
-      /* adjust to stream time */
-      if (src->segment.time != -1) {
-        start -= src->segment.time;
-        if (stop != -1)
-          stop -= src->segment.time;
-      }
+      gst_query_set_segment (query, src->segment.rate, format, start, stop);
 
-      gst_query_set_segment (query, src->segment.rate, src->segment.format,
-          start, stop);
       GST_OBJECT_UNLOCK (src);
       res = TRUE;
       break;
@@ -2573,7 +2575,19 @@ gst_base_src_loop (GstPad * pad)
 
   src = GST_BASE_SRC (GST_OBJECT_PARENT (pad));
 
+  /* Just leave immediately if we're flushing */
+  GST_LIVE_LOCK (src);
+  if (G_UNLIKELY (src->priv->flushing || GST_PAD_IS_FLUSHING (pad)))
+    goto flushing;
+  GST_LIVE_UNLOCK (src);
+
   gst_base_src_send_stream_start (src);
+
+  /* The stream-start event could've caused something to flush us */
+  GST_LIVE_LOCK (src);
+  if (G_UNLIKELY (src->priv->flushing || GST_PAD_IS_FLUSHING (pad)))
+    goto flushing;
+  GST_LIVE_UNLOCK (src);
 
   /* check if we need to renegotiate */
   if (gst_pad_check_reconfigure (pad)) {
@@ -2588,7 +2602,7 @@ gst_base_src_loop (GstPad * pad)
 
   GST_LIVE_LOCK (src);
 
-  if (G_UNLIKELY (src->priv->flushing))
+  if (G_UNLIKELY (src->priv->flushing || GST_PAD_IS_FLUSHING (pad)))
     goto flushing;
 
   blocksize = src->blocksize;

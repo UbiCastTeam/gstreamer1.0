@@ -31,9 +31,9 @@ How to run and debug your GStreamer application
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
-<a name="idp7463296"></a><h2>Running and debugging GStreamer Applications</h2>
+<a name="idp9917200"></a><h2>Running and debugging GStreamer Applications</h2>
 <div class="refsect2">
-<a name="idp6761232"></a><h3>Environment variables</h3>
+<a name="idp11252880"></a><h3>Environment variables</h3>
 <p> 
 GStreamer inspects a few of environment variables in addition to standard
 variables like <code class="envar">LANG</code>, <code class="envar">PATH</code> or <code class="envar">HOME</code>. 
@@ -193,11 +193,79 @@ e.g. GST_DEBUG=*:WARNING,*audio*:LOG
 <p><a name="GST_DEBUG_NO_COLOR"></a><b><code class="envar">GST_DEBUG_NO_COLOR</code>. </b>
 Set this environment variable to any value ("1" typically) to switch off
 colouring in GST_DEBUG output. This has the same effect as specifying the
-<code class="option">--gst-debug-no-color</code> command line option to well-behaved
-GStreamer applications (ie. those that pass command-line options correctly to
-GStreamer).
+<code class="option">--gst-debug-no-color</code> or
+<code class="option">--gst-debug-color-mode</code>=off command line option to
+well-behaved GStreamer applications (ie. those that pass command-line
+options correctly to GStreamer).
 This is particularly useful to reduce the size of debug output and also allows
 for the output to be compressed much better than with colours turned on.
+  
+Has the same effect as setting GST_DEBUG_COLOR_MODE environment variable to
+"off".
+  </p>
+<p><a name="GST_DEBUG_COLOR_MODE"></a><b><code class="envar">GST_DEBUG_COLOR_MODE</code>. </b>
+Set this environment variable to change log colouring in GST_DEBUG output.
+Possible values:
+    </p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="option">on</code></span></p></td>
+<td><p>
+Enables debug log output coloring. Uses default coloring method for current
+platform. This is the default.
+          </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="option">off</code></span></p></td>
+<td>
+<p>
+Disables debug log output coloring. This has the same effect as specifying the
+<code class="option">--gst-debug-color-mode</code>=off command line option to
+well-behaved GStreamer applications (ie. those that pass command-line
+options correctly to GStreamer).
+This is particularly useful to reduce the size of debug output and also allows
+for the output to be compressed much better than with colours turned on.
+          </p>
+<p>
+Has the same effect as setting GST_DEBUG_NO_COLOR environment variable to
+any value.
+          </p>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="option">auto</code></span></p></td>
+<td><p>
+Same as <code class="option">on</code>.
+          </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="option">disable</code></span></p></td>
+<td><p>
+Same as <code class="option">off</code>.
+          </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="option">unix</code></span></p></td>
+<td><p>
+Enables debug log output coloring and forces the use of UNIX termial codes
+for coloring, even if this method is not normally used on current platform.
+This has the same effect as specifying the
+<code class="option">--gst-debug-color-mode</code>=unix command line option to
+well-behaved GStreamer applications (ie. those that pass command-line options
+correctly to GStreamer).
+This is particularly useful to dump debug output into a file on non-UNIX
+platforms to be sent to developers who have viewers that support UNIX terminal
+codes.
+          </p></td>
+</tr>
+</tbody>
+</table></div>
+<p>
   </p>
 <p><a name="GST_DEBUG_OPTIONS"></a><b><code class="envar">GST_DEBUG_OPTIONS</code>. </b>
 This environment variable can be used to tweak the behaviour of the debugging

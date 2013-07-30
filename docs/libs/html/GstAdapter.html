@@ -541,9 +541,10 @@ Free-function: g_free
 <p>
 Returns a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> containing the first <em class="parameter"><code>nbytes</code></em> bytes of the
 <em class="parameter"><code>adapter</code></em>. The returned bytes will be flushed from the adapter.
-This function is potentially more performant than <a class="link" href="GstAdapter.html#gst-adapter-take" title="gst_adapter_take ()"><code class="function">gst_adapter_take()</code></a>
-since it can reuse the memory in pushed buffers by subbuffering
-or merging.
+This function is potentially more performant than
+<a class="link" href="GstAdapter.html#gst-adapter-take" title="gst_adapter_take ()"><code class="function">gst_adapter_take()</code></a> since it can reuse the memory in pushed buffers
+by subbuffering or merging. This function will always return a
+buffer with a single memory region.
 </p>
 <p>
 Note that no assumptions should be made as to whether certain buffer

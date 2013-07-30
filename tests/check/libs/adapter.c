@@ -834,6 +834,70 @@ GST_START_TEST (test_merge)
 
 GST_END_TEST;
 
+GST_START_TEST (test_take_buffer_fast)
+{
+  GstAdapter *adapter;
+  GstBuffer *buffer;
+
+  adapter = gst_adapter_new ();
+  fail_if (adapter == NULL);
+
+  buffer = gst_buffer_new_and_alloc (5);
+  fail_if (buffer == NULL);
+  gst_adapter_push (adapter, buffer);
+
+  buffer = gst_buffer_new_and_alloc (10);
+  fail_if (buffer == NULL);
+  gst_adapter_push (adapter, buffer);
+
+  buffer = gst_buffer_new_and_alloc (15);
+  fail_if (buffer == NULL);
+  gst_adapter_push (adapter, buffer);
+
+  fail_unless (gst_adapter_available (adapter) == 30);
+
+  buffer = gst_adapter_take_buffer_fast (adapter, 30);
+  fail_unless (gst_adapter_available (adapter) == 0);
+  fail_unless (gst_buffer_n_memory (buffer) == 3);
+  fail_unless (gst_buffer_get_sizes_range (buffer, 0, 1, NULL, NULL) == 5);
+  fail_unless (gst_buffer_get_sizes_range (buffer, 1, 1, NULL, NULL) == 10);
+  fail_unless (gst_buffer_get_sizes_range (buffer, 2, 1, NULL, NULL) == 15);
+  gst_buffer_unref (buffer);
+
+  fail_unless (gst_adapter_available (adapter) == 0);
+
+  buffer = gst_buffer_new_and_alloc (10);
+  fail_if (buffer == NULL);
+  gst_adapter_push (adapter, buffer);
+
+  buffer = gst_buffer_new_and_alloc (20);
+  fail_if (buffer == NULL);
+  gst_adapter_push (adapter, buffer);
+
+  gst_adapter_flush (adapter, 2);
+  fail_unless (gst_adapter_available (adapter) == 28);
+
+  buffer = gst_adapter_take_buffer_fast (adapter, 10);
+  fail_unless (gst_buffer_n_memory (buffer) == 2);
+  fail_unless (gst_buffer_get_sizes_range (buffer, 0, 1, NULL, NULL) == 8);
+  fail_unless (gst_buffer_get_sizes_range (buffer, 1, 1, NULL, NULL) == 2);
+  fail_unless (gst_adapter_available (adapter) == 18);
+  gst_buffer_unref (buffer);
+
+  buffer = gst_adapter_take_buffer_fast (adapter, 8);
+  fail_unless (gst_buffer_n_memory (buffer) == 1);
+  fail_unless (gst_buffer_get_size (buffer) == 8);
+  fail_unless (gst_adapter_available (adapter) == 10);
+  gst_buffer_unref (buffer);
+
+  gst_adapter_clear (adapter);
+  fail_unless (gst_adapter_available (adapter) == 0);
+
+  g_object_unref (adapter);
+}
+
+GST_END_TEST;
+
 static Suite *
 gst_adapter_suite (void)
 {
@@ -853,6 +917,7 @@ gst_adapter_suite (void)
   tcase_add_test (tc_chain, test_scan);
   tcase_add_test (tc_chain, test_take_list);
   tcase_add_test (tc_chain, test_merge);
+  tcase_add_test (tc_chain, test_take_buffer_fast);
 
   return s;
 }

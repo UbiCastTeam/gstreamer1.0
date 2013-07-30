@@ -3008,11 +3008,19 @@ gst_base_sink_default_event (GstBaseSink * basesink, GstEvent * event)
     {
       GstMessage *message;
       guint32 seqnum;
+      guint group_id;
 
       seqnum = gst_event_get_seqnum (event);
       GST_DEBUG_OBJECT (basesink, "Now posting STREAM_START (seqnum:%d)",
           seqnum);
       message = gst_message_new_stream_start (GST_OBJECT_CAST (basesink));
+      if (gst_event_parse_group_id (event, &group_id)) {
+        gst_message_set_group_id (message, group_id);
+      } else {
+        GST_FIXME_OBJECT (basesink, "stream-start event without group-id. "
+            "Consider implementing group-id handling in the upstream "
+            "elements");
+      }
       gst_message_set_seqnum (message, seqnum);
       gst_element_post_message (GST_ELEMENT_CAST (basesink), message);
       break;
@@ -3290,10 +3298,12 @@ gst_base_sink_chain_unlocked (GstBaseSink * basesink, GstPad * pad,
   }
 
   if (bclass->prepare || bclass->prepare_list) {
-    gboolean late = FALSE;
-    gboolean do_sync = TRUE, stepped = FALSE, step_end = FALSE, syncable = TRUE;
+    gboolean do_sync = TRUE, stepped = FALSE, syncable = TRUE;
     GstClockTime sstart, sstop, rstart, rstop, rnext;
     GstStepInfo *current;
+
+    late = FALSE;
+    step_end = FALSE;
 
     current = &priv->current_step;
     syncable =
@@ -4704,8 +4714,21 @@ default_element_query (GstElement * element, GstQuery * query)
     case GST_QUERY_SEGMENT:
     {
       if (basesink->pad_mode == GST_PAD_MODE_PULL) {
-        gst_query_set_segment (query, basesink->segment.rate,
-            GST_FORMAT_TIME, basesink->segment.start, basesink->segment.stop);
+        GstFormat format;
+        gint64 start, stop;
+
+        format = basesink->segment.format;
+
+        start =
+            gst_segment_to_stream_time (&basesink->segment, format,
+            basesink->segment.start);
+        if ((stop = basesink->segment.stop) == -1)
+          stop = basesink->segment.duration;
+        else
+          stop = gst_segment_to_stream_time (&basesink->segment, format, stop);
+
+        gst_query_set_segment (query, basesink->segment.rate, format, start,
+            stop);
         res = TRUE;
       } else {
         res = gst_pad_peer_query (basesink->sinkpad, query);
