@@ -281,6 +281,8 @@ enum                <a class="link" href="gstreamer-GstQuery.html#GstSchedulingF
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-parse-nth-context-type" title="gst_query_parse_nth_context_type ()">gst_query_parse_nth_context_type</a>    (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> i</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **context_type</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstQuery.html#gst-query-has-context-type" title="gst_query_has_context_type ()">gst_query_has_context_type</a>          (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -301,7 +303,7 @@ The following example shows how to query the duration of a pipeline:
 <p>
 </p>
 <div class="example">
-<a name="idp39942192"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
+<a name="idp42113008"></a><p class="title"><b>Example 12. Query duration on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -573,7 +575,8 @@ Standard predefined Query types
 </tr>
 <tr>
 <td><p><a name="GST-QUERY-CONTEXT:CAPS"></a><span class="term"><code class="literal">GST_QUERY_CONTEXT</code></span></p></td>
-<td>query the pipeline-local context from downstream
+<td>query the pipeline-local context from
+    downstream (since 1.2)
 </td>
 </tr>
 </tbody>
@@ -2811,6 +2814,7 @@ Remove the allocation pool at <em class="parameter"><code>index</code></em> of t
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2982,6 +2986,7 @@ Remove the allocation param at <em class="parameter"><code>index</code></em> of 
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3173,7 +3178,7 @@ The different scheduling flags.
 </tr>
 <tr>
 <td><p><a name="GST-SCHEDULING-FLAG-BANDWIDTH-LIMITED:CAPS"></a><span class="term"><code class="literal">GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED</code></span></p></td>
-<td>if bandwidth is limited and buffering possible
+<td>if bandwidth is limited and buffering possible (since 1.2)
 </td>
 </tr>
 </tbody>
@@ -3495,6 +3500,7 @@ Free-function: gst_query_unref
 </td>
 </tr></tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3521,6 +3527,7 @@ Answer a context query by setting the requested context.
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3548,6 +3555,7 @@ Get the context from the context <em class="parameter"><code>query</code></em>. 
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3565,7 +3573,7 @@ Add a new context type to <em class="parameter"><code>query</code></em>.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
-<td>a GST_QUERY_NEED_CONTEXT type query</td>
+<td>a GST_QUERY_CONTEXT type query</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>context_type</code></em> :</span></p></td>
@@ -3573,6 +3581,7 @@ Add a new context type to <em class="parameter"><code>query</code></em>.
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3590,7 +3599,7 @@ context-types array of the query's structure.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
-<td>a GST_QUERY_NEED_CONTEXT type query</td>
+<td>a GST_QUERY_CONTEXT type query</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -3598,6 +3607,7 @@ context-types array of the query's structure.
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3606,7 +3616,7 @@ context-types array of the query's structure.
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> i</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **context_type</code></em>);</pre>
 <p>
-Parse a context type from an existing GST_QUERY_NEED_CONTEXT query
+Parse a context type from an existing GST_QUERY_CONTEXT query
 from <em class="parameter"><code>index</code></em>.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
@@ -3617,7 +3627,7 @@ from <em class="parameter"><code>index</code></em>.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
-<td>a GST_QUERY_NEED_CONTEXT type query</td>
+<td>a GST_QUERY_CONTEXT type query</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>context_type</code></em> :</span></p></td>
@@ -3630,6 +3640,38 @@ from <em class="parameter"><code>index</code></em>.
 </tr>
 </tbody>
 </table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-query-has-context-type"></a><h3>gst_query_has_context_type ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_query_has_context_type          (<em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>);</pre>
+<p>
+Check if <em class="parameter"><code>query</code></em> is asking for <em class="parameter"><code>context_type</code></em>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>a GST_QUERY_CONTEXT type query</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context_type</code></em> :</span></p></td>
+<td>the context type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>context_type</code></em> is requested.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 </div>
 <div class="refsect1">

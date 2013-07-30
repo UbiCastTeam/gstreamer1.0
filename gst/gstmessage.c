@@ -2146,10 +2146,81 @@ GstMessage *
 gst_message_new_stream_start (GstObject * src)
 {
   GstMessage *message;
+  GstStructure *s;
 
-  message = gst_message_new_custom (GST_MESSAGE_STREAM_START, src, NULL);
+  s = gst_structure_new_id_empty (GST_QUARK (MESSAGE_STREAM_START));
+  message = gst_message_new_custom (GST_MESSAGE_STREAM_START, src, s);
 
   return message;
+}
+
+
+/**
+ * gst_message_set_group_id:
+ * @message: the message
+ * @group_id: the group id
+ *
+ * Sets the group id on the stream-start message.
+ *
+ * All streams that have the same group id are supposed to be played
+ * together, i.e. all streams inside a container file should have the
+ * same group id but different stream ids. The group id should change
+ * each time the stream is started, resulting in different group ids
+ * each time a file is played for example.
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+void
+gst_message_set_group_id (GstMessage * message, guint group_id)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_IS_MESSAGE (message));
+  g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_STREAM_START);
+  g_return_if_fail (gst_message_is_writable (message));
+
+  structure = GST_MESSAGE_STRUCTURE (message);
+  gst_structure_id_set (structure, GST_QUARK (GROUP_ID), G_TYPE_UINT, group_id,
+      NULL);
+}
+
+/**
+ * gst_message_parse_group_id:
+ * @message: A valid #GstMessage of type GST_MESSAGE_STREAM_START.
+ * @group_id: (out) (allow-none): Result location for the group id or
+ *      NULL
+ *
+ * Extract the group from the STREAM_START message.
+ *
+ * Returns: %TRUE if the message had a group id set, %FALSE otherwise
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+gboolean
+gst_message_parse_group_id (GstMessage * message, guint * group_id)
+{
+  GstStructure *structure;
+  const GValue *v;
+
+  g_return_val_if_fail (GST_IS_MESSAGE (message), FALSE);
+  g_return_val_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_STREAM_START,
+      FALSE);
+
+  if (!group_id)
+    return TRUE;
+
+  structure = GST_MESSAGE_STRUCTURE (message);
+
+  v = gst_structure_id_get_value (structure, GST_QUARK (GROUP_ID));
+  if (!v)
+    return FALSE;
+
+  *group_id = g_value_get_uint (v);
+  return TRUE;
 }
 
 /**
@@ -2161,6 +2232,8 @@ gst_message_new_stream_start (GstObject * src)
  * Returns: (transfer full): The new need-context message.
  *
  * MT safe.
+ *
+ * Since: 1.2
  */
 GstMessage *
 gst_message_new_need_context (GstObject * src)
@@ -2212,6 +2285,8 @@ free_array_string (gpointer ptr)
  * @context_type: a context type
  *
  * Add a new context type to @message.
+ *
+ * Since: 1.2
  */
 void
 gst_message_add_context_type (GstMessage * message, const gchar * context_type)
@@ -2239,6 +2314,8 @@ gst_message_add_context_type (GstMessage * message, const gchar * context_type)
  * context-types array of the message's structure.
  *
  * Returns: the context-types array size as a #guint.
+ *
+ * Since: 1.2
  */
 guint
 gst_message_get_n_context_types (GstMessage * message)
@@ -2265,6 +2342,8 @@ gst_message_get_n_context_types (GstMessage * message)
  * from @index.
  *
  * Returns: a #gboolean indicating if the parsing succeeded.
+ *
+ * Since: 1.2
  */
 gboolean
 gst_message_parse_nth_context_type (GstMessage * message, guint index,
@@ -2298,6 +2377,8 @@ gst_message_parse_nth_context_type (GstMessage * message, guint index,
  * Returns: (transfer full): The new have-context message.
  *
  * MT safe.
+ *
+ * Since: 1.2
  */
 GstMessage *
 gst_message_new_have_context (GstObject * src, GstContext * context)
@@ -2322,6 +2403,8 @@ gst_message_new_have_context (GstObject * src, GstContext * context)
  * Extract the context from the HAVE_CONTEXT message.
  *
  * MT safe.
+ *
+ * Since: 1.2
  */
 void
 gst_message_parse_have_context (GstMessage * message, GstContext ** context)

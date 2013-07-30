@@ -1630,6 +1630,8 @@ gst_query_set_nth_allocation_pool (GstQuery * query, guint index,
  * @index: position in the allocation pool array to remove
  *
  * Remove the allocation pool at @index of the allocation pool array.
+ *
+ * Since: 1.2
  */
 void
 gst_query_remove_nth_allocation_pool (GstQuery * query, guint index)
@@ -1972,6 +1974,8 @@ gst_query_set_nth_allocation_param (GstQuery * query, guint index,
  * @index: position in the allocation param array to remove
  *
  * Remove the allocation param at @index of the allocation param array.
+ *
+ * Since: 1.2
  */
 void
 gst_query_remove_nth_allocation_param (GstQuery * query, guint index)
@@ -2440,6 +2444,8 @@ gst_query_new_drain (void)
  * Free-function: gst_query_unref
  *
  * Returns: (transfer full): a new #GstQuery
+ *
+ * Since: 1.2
  */
 GstQuery *
 gst_query_new_context (void)
@@ -2459,6 +2465,8 @@ gst_query_new_context (void)
  * @context: the requested #GstContext
  *
  * Answer a context query by setting the requested context.
+ *
+ * Since: 1.2
  */
 void
 gst_query_set_context (GstQuery * query, GstContext * context)
@@ -2480,18 +2488,24 @@ gst_query_set_context (GstQuery * query, GstContext * context)
  *
  * Get the context from the context @query. The context remains valid as long as
  * @query remains valid.
+ *
+ * Since: 1.2
  */
 void
 gst_query_parse_context (GstQuery * query, GstContext ** context)
 {
   GstStructure *structure;
+  const GValue *v;
 
   g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT);
   g_return_if_fail (context != NULL);
 
   structure = GST_QUERY_STRUCTURE (query);
-  *context = g_value_get_boxed (gst_structure_id_get_value (structure,
-          GST_QUARK (CONTEXT)));
+  v = gst_structure_id_get_value (structure, GST_QUARK (CONTEXT));
+  if (v)
+    *context = g_value_get_boxed (v);
+  else
+    *context = NULL;
 }
 
 static void
@@ -2503,10 +2517,12 @@ free_array_string (gpointer ptr)
 
 /**
  * gst_query_add_context_type:
- * @query: a GST_QUERY_NEED_CONTEXT type query
+ * @query: a GST_QUERY_CONTEXT type query
  * @context_type: a context type
  *
  * Add a new context type to @query.
+ *
+ * Since: 1.2
  */
 void
 gst_query_add_context_type (GstQuery * query, const gchar * context_type)
@@ -2528,12 +2544,14 @@ gst_query_add_context_type (GstQuery * query, const gchar * context_type)
 
 /**
  * gst_query_get_n_context_types:
- * @query: a GST_QUERY_NEED_CONTEXT type query
+ * @query: a GST_QUERY_CONTEXT type query
  *
  * Retrieve the number of values currently stored in the
  * context-types array of the query's structure.
  *
  * Returns: the context-types array size as a #guint.
+ *
+ * Since: 1.2
  */
 guint
 gst_query_get_n_context_types (GstQuery * query)
@@ -2552,13 +2570,15 @@ gst_query_get_n_context_types (GstQuery * query)
 
 /**
  * gst_query_parse_nth_context_type:
- * @query: a GST_QUERY_NEED_CONTEXT type query
+ * @query: a GST_QUERY_CONTEXT type query
  * @context_type: (out) (allow-none): the context type, or NULL
  *
- * Parse a context type from an existing GST_QUERY_NEED_CONTEXT query
+ * Parse a context type from an existing GST_QUERY_CONTEXT query
  * from @index.
  *
  * Returns: a #gboolean indicating if the parsing succeeded.
+ *
+ * Since: 1.2
  */
 gboolean
 gst_query_parse_nth_context_type (GstQuery * query, guint index,
@@ -2579,4 +2599,36 @@ gst_query_parse_nth_context_type (GstQuery * query, guint index,
     *context_type = g_array_index (array, gchar *, index);
 
   return TRUE;
+}
+
+/**
+ * gst_query_has_context_type:
+ * @query: a GST_QUERY_CONTEXT type query
+ * @context_type: the context type
+ *
+ * Check if @query is asking for @context_type.
+ *
+ * Returns: %TRUE if @context_type is requested.
+ *
+ * Since: 1.2
+ */
+gboolean
+gst_query_has_context_type (GstQuery * query, const gchar * context_type)
+{
+  guint i, n;
+
+  g_return_val_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_CONTEXT, FALSE);
+  g_return_val_if_fail (context_type != NULL, FALSE);
+
+  n = gst_query_get_n_context_types (query);
+  for (i = 0; i < n; i++) {
+    const gchar *tmp;
+
+    if (gst_query_parse_nth_context_type (query, i, &tmp) &&
+        strcmp (tmp, context_type) == 0)
+      return TRUE;
+  }
+
+
+  return FALSE;
 }

@@ -934,6 +934,7 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
       const GstSegment *in_segment;
       GstSegment out_segment;
       gint64 offset = 0, next_dts;
+      guint32 seqnum = gst_event_get_seqnum (event);
 
       gst_event_parse_segment (event, &in_segment);
       gst_segment_init (&out_segment, GST_FORMAT_TIME);
@@ -989,6 +990,7 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
         gst_event_unref (event);
 
         event = gst_event_new_segment (&out_segment);
+        gst_event_set_seqnum (event, seqnum);
 
         GST_DEBUG_OBJECT (parse, "Converted incoming segment to TIME. %"
             GST_SEGMENT_FORMAT, in_segment);
@@ -1003,6 +1005,7 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
         out_segment.time = 0;
 
         event = gst_event_new_segment (&out_segment);
+        gst_event_set_seqnum (event, seqnum);
 
         next_dts = 0;
       } else {
@@ -3019,13 +3022,17 @@ gst_base_parse_loop (GstPad * pad)
 
   if (G_UNLIKELY (parse->priv->push_stream_start)) {
     gchar *stream_id;
+    GstEvent *event;
 
     stream_id =
         gst_pad_create_stream_id (parse->srcpad, GST_ELEMENT_CAST (parse),
         NULL);
 
+    event = gst_event_new_stream_start (stream_id);
+    gst_event_set_group_id (event, gst_util_group_id_next ());
+
     GST_DEBUG_OBJECT (parse, "Pushing STREAM_START");
-    gst_pad_push_event (parse->srcpad, gst_event_new_stream_start (stream_id));
+    gst_pad_push_event (parse->srcpad, event);
     parse->priv->push_stream_start = FALSE;
     g_free (stream_id);
   }
@@ -3674,6 +3681,25 @@ gst_base_parse_src_query_default (GstBaseParse * parse, GstQuery * query)
       }
       break;
     }
+    case GST_QUERY_SEGMENT:
+    {
+      GstFormat format;
+      gint64 start, stop;
+
+      format = parse->segment.format;
+
+      start =
+          gst_segment_to_stream_time (&parse->segment, format,
+          parse->segment.start);
+      if ((stop = parse->segment.stop) == -1)
+        stop = parse->segment.duration;
+      else
+        stop = gst_segment_to_stream_time (&parse->segment, format, stop);
+
+      gst_query_set_segment (query, parse->segment.rate, format, start, stop);
+      res = TRUE;
+      break;
+    }
     default:
       res = gst_pad_query_default (pad, GST_OBJECT_CAST (parse), query);
       break;
@@ -3955,6 +3981,8 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
   gint64 start, stop, seekpos, seekstop;
   GstSegment seeksegment = { 0, };
   GstClockTime start_ts;
+  guint32 seqnum;
+  GstEvent *segment_event;
 
   /* try upstream first, unless we're driving the streaming thread ourselves */
   if (parse->priv->pad_mode != GST_PAD_MODE_PULL) {
@@ -3965,6 +3993,7 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
 
   gst_event_parse_seek (event, &rate, &format, &flags,
       &start_type, &start, &stop_type, &stop);
+  seqnum = gst_event_get_seqnum (event);
 
   GST_DEBUG_OBJECT (parse, "seek to format %s, rate %f, "
       "start type %d at %" GST_TIME_FORMAT ", end type %d at %"
@@ -4055,10 +4084,14 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
 
     if (flush) {
       if (parse->srcpad) {
+        GstEvent *fevent = gst_event_new_flush_start ();
         GST_DEBUG_OBJECT (parse, "sending flush start");
-        gst_pad_push_event (parse->srcpad, gst_event_new_flush_start ());
+
+        gst_event_set_seqnum (fevent, seqnum);
+
+        gst_pad_push_event (parse->srcpad, gst_event_ref (fevent));
         /* unlock upstream pull_range */
-        gst_pad_push_event (parse->sinkpad, gst_event_new_flush_start ());
+        gst_pad_push_event (parse->sinkpad, fevent);
       }
     } else {
       gst_pad_pause_task (parse->sinkpad);
@@ -4077,9 +4110,11 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
 
     /* prepare for streaming again */
     if (flush) {
+      GstEvent *fevent = gst_event_new_flush_stop (TRUE);
       GST_DEBUG_OBJECT (parse, "sending flush stop");
-      gst_pad_push_event (parse->srcpad, gst_event_new_flush_stop (TRUE));
-      gst_pad_push_event (parse->sinkpad, gst_event_new_flush_stop (TRUE));
+      gst_event_set_seqnum (fevent, seqnum);
+      gst_pad_push_event (parse->srcpad, gst_event_ref (fevent));
+      gst_pad_push_event (parse->sinkpad, fevent);
       gst_base_parse_clear_queues (parse);
     } else {
       /* keep track of our position */
@@ -4092,9 +4127,10 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
     /* store the newsegment event so it can be sent from the streaming thread. */
     /* This will be sent later in _loop() */
     parse->priv->pending_segment = TRUE;
+    segment_event = gst_event_new_segment (&parse->segment);
+    gst_event_set_seqnum (segment_event, seqnum);
     parse->priv->pending_events =
-        g_list_prepend (parse->priv->pending_events,
-        gst_event_new_segment (&parse->segment));
+        g_list_prepend (parse->priv->pending_events, segment_event);
 
     GST_DEBUG_OBJECT (parse, "Created newseg format %d, "
         "start = %" GST_TIME_FORMAT ", stop = %" GST_TIME_FORMAT
@@ -4158,6 +4194,7 @@ gst_base_parse_handle_seek (GstBaseParse * parse, GstEvent * event)
       seekstop = seekpos;
     new_event = gst_event_new_seek (rate, GST_FORMAT_BYTES, flags,
         GST_SEEK_TYPE_SET, seekpos, stop_type, seekstop);
+    gst_event_set_seqnum (new_event, seqnum);
 
     /* store segment info so its precise details can be reconstructed when
      * receiving newsegment;
