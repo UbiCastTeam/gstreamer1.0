@@ -92,7 +92,9 @@ Get the buffer associated with <em class="parameter"><code>sample</code></em>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the buffer of <em class="parameter"><code>sample</code></em> or NULL when there
-is no buffer. The buffer remains valid as long as <em class="parameter"><code>sample</code></em> is valid. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+is no buffer. The buffer remains valid as long as <em class="parameter"><code>sample</code></em> is valid.
+If you need to hold on to it for longer than that, take a ref to
+the buffer with <a class="link" href="gstreamer-GstBuffer.html#gst-buffer-ref" title="gst_buffer_ref ()"><code class="function">gst_buffer_ref()</code></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -116,7 +118,9 @@ Get the caps associated with <em class="parameter"><code>sample</code></em>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the caps of <em class="parameter"><code>sample</code></em> or NULL when there
-is no caps. The caps remain valid as long as <em class="parameter"><code>sample</code></em> is valid. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+is no caps. The caps remain valid as long as <em class="parameter"><code>sample</code></em> is valid.
+If you need to hold on to the caps for longer than that, take a ref to
+the caps with <a class="link" href="gstreamer-GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
