@@ -150,6 +150,11 @@ enum                <a class="link" href="gstreamer-GstBuffer.html#GstBufferFlag
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> size</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstBuffer.html#gst-buffer-extract-dup" title="gst_buffer_extract_dup ()">gst_buffer_extract_dup</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> size</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *dest</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> *dest_size</code></em>);
 <span class="returnvalue">gsize</span>               <a class="link" href="gstreamer-GstBuffer.html#gst-buffer-fill" title="gst_buffer_fill ()">gst_buffer_fill</a>                     (<em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> src</code></em>,
@@ -212,7 +217,7 @@ The following example creates a buffer that can hold a given video frame
 with a given width, height and bits per plane.
 </p>
 <div class="example">
-<a name="idp13502640"></a><p class="title"><b>Example 3. Creating a buffer for a video frame</b></p>
+<a name="idp14098752"></a><p class="title"><b>Example 3. Creating a buffer for a video frame</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -1821,6 +1826,49 @@ when <em class="parameter"><code>buffer</code></em> did not contain enough data.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-extract-dup"></a><h3>gst_buffer_extract_dup ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_buffer_extract_dup              (<em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> size</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *dest</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> *dest_size</code></em>);</pre>
+<p>
+Extracts a copy of at most <em class="parameter"><code>size</code></em> bytes the data at <em class="parameter"><code>offset</code></em> into a <a href="http://library.gnome.org/devel/glib/unstable/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a>.
+<em class="parameter"><code>dest</code></em> must be freed using <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when done.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>offset</code></em> :</span></p></td>
+<td>the offset to extract</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
+<td>the size to extract</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
+<td>A pointer where
+the destination array will be written. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=dest_size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dest_size</code></em> :</span></p></td>
+<td>A location where the size of <em class="parameter"><code>dest</code></em> can be written. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.0.10</p>
 </div>
 <hr>
 <div class="refsect2">
