@@ -1174,7 +1174,8 @@ gst_query_parse_buffering_stats (GstQuery * query,
  * @format: the format to set for the @start and @stop values
  * @start: the start to set
  * @stop: the stop to set
- * @estimated_total: estimated total amount of download time
+ * @estimated_total: estimated total amount of download time remaining in
+ *     miliseconds
  *
  * Set the available query result fields in @query.
  */
@@ -1203,7 +1204,7 @@ gst_query_set_buffering_range (GstQuery * query, GstFormat format,
  * @start: (out) (allow-none): the start to set, or NULL
  * @stop: (out) (allow-none): the stop to set, or NULL
  * @estimated_total: (out) (allow-none): estimated total amount of download
- *     time, or NULL
+ *     time remaining in miliseconds, or NULL
  *
  * Parse an available query, writing the format into @format, and
  * other results into the passed parameters, if the respective parameters
@@ -1397,7 +1398,7 @@ gst_query_set_uri (GstQuery * query, const gchar * uri)
 /**
  * gst_query_parse_uri:
  * @query: a #GstQuery
- * @uri: (out callee-allocates) (allow-none): the storage for the current URI
+ * @uri: (out) (transfer full) (allow-none): the storage for the current URI
  *     (may be NULL)
  *
  * Parse an URI query, writing the URI into @uri as a newly
@@ -1415,6 +1416,56 @@ gst_query_parse_uri (GstQuery * query, gchar ** uri)
   if (uri)
     *uri = g_value_dup_string (gst_structure_id_get_value (structure,
             GST_QUARK (URI)));
+}
+
+/**
+ * gst_query_set_uri_redirection:
+ * @query: a #GstQuery with query type GST_QUERY_URI
+ * @uri: the URI to set
+ *
+ * Answer a URI query by setting the requested URI redirection.
+ *
+ * Since: 1.2
+ */
+void
+gst_query_set_uri_redirection (GstQuery * query, const gchar * uri)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_URI);
+  g_return_if_fail (gst_query_is_writable (query));
+  g_return_if_fail (gst_uri_is_valid (uri));
+
+  structure = GST_QUERY_STRUCTURE (query);
+  gst_structure_id_set (structure, GST_QUARK (URI_REDIRECTION),
+      G_TYPE_STRING, uri, NULL);
+}
+
+/**
+ * gst_query_parse_uri_redirection:
+ * @query: a #GstQuery
+ * @uri: (out) (transfer full) (allow-none): the storage for the redirect URI
+ *     (may be NULL)
+ *
+ * Parse an URI query, writing the URI into @uri as a newly
+ * allocated string, if the respective parameters are non-NULL.
+ * Free the string with g_free() after usage.
+ *
+ * Since: 1.2
+ */
+void
+gst_query_parse_uri_redirection (GstQuery * query, gchar ** uri)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_URI);
+
+  structure = GST_QUERY_STRUCTURE (query);
+  if (uri) {
+    if (!gst_structure_id_get (structure, GST_QUARK (URI_REDIRECTION),
+            G_TYPE_STRING, uri, NULL))
+      *uri = NULL;
+  }
 }
 
 /**
@@ -1724,7 +1775,7 @@ gst_query_get_n_allocation_metas (GstQuery * query)
  * gst_query_parse_nth_allocation_meta:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @index: position in the metadata API array to read
- * @params: (out) (allow-none): API specific flags
+ * @params: (out) (transfer none) (allow-none): API specific flags
  *
  * Parse an available query and get the metadata API
  * at @index of the metadata API array.
@@ -1785,7 +1836,7 @@ gst_query_remove_nth_allocation_meta (GstQuery * query, guint index)
  * gst_query_find_allocation_meta:
  * @query: a GST_QUERY_ALLOCATION type query #GstQuery
  * @api: the metadata API
- * @index: (out) (allow-none): the index
+ * @index: (out) (transfer none) (allow-none): the index
  *
  * Check if @query has metadata @api set. When this function returns TRUE,
  * @index will contain the index where the requested API and the flags can be
@@ -2242,7 +2293,7 @@ gst_query_new_accept_caps (GstCaps * caps)
 /**
  * gst_query_parse_accept_caps:
  * @query: The query to parse
- * @caps: (out): A pointer to the caps
+ * @caps: (out) (transfer none): A pointer to the caps
  *
  * Get the caps from @query. The caps remains valid as long as @query remains
  * valid.
@@ -2343,7 +2394,7 @@ gst_query_new_caps (GstCaps * filter)
 /**
  * gst_query_parse_caps:
  * @query: The query to parse
- * @filter: (out): A pointer to the caps filter
+ * @filter: (out) (transfer none): A pointer to the caps filter
  *
  * Get the filter from the caps @query. The caps remains valid as long as
  * @query remains valid.
@@ -2383,7 +2434,7 @@ gst_query_set_caps_result (GstQuery * query, GstCaps * caps)
 /**
  * gst_query_parse_caps_result:
  * @query: The query to parse
- * @caps: (out): A pointer to the caps
+ * @caps: (out) (transfer none): A pointer to the caps
  *
  * Get the caps result from @query. The caps remains valid as long as
  * @query remains valid.
@@ -2484,7 +2535,7 @@ gst_query_set_context (GstQuery * query, GstContext * context)
 /**
  * gst_query_parse_context:
  * @query: The query to parse
- * @context: (out): A pointer to store the #GstContext
+ * @context: (out) (transfer none): A pointer to store the #GstContext
  *
  * Get the context from the context @query. The context remains valid as long as
  * @query remains valid.
@@ -2571,7 +2622,7 @@ gst_query_get_n_context_types (GstQuery * query)
 /**
  * gst_query_parse_nth_context_type:
  * @query: a GST_QUERY_CONTEXT type query
- * @context_type: (out) (allow-none): the context type, or NULL
+ * @context_type: (out) (transfer none) (allow-none): the context type, or NULL
  *
  * Parse a context type from an existing GST_QUERY_CONTEXT query
  * from @index.

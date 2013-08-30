@@ -61,7 +61,7 @@ extern int priv_gst_parse_yydebug;
 typedef union YYSTYPE
 {
 /* Line 2053 of yacc.c  */
-#line 632 "./grammar.y"
+#line 633 "./grammar.y"
 
     gchar *s;
     chain_t *c;

@@ -2136,8 +2136,15 @@ gst_element_unlink (GstElement * src, GstElement * dest)
  * @cur: (out) (allow-none): a location in which to store the current
  *     position, or NULL.
  *
- * Queries an element for the stream position. If one repeatedly calls this
- * function one can also create and reuse it in gst_element_query().
+ * Queries an element (usually top-level pipeline or playbin element) for the
+ * stream position in nanoseconds. This will be a value between 0 and the
+ * stream duration (if the stream duration is known). This query will usually
+ * only work once the pipeline is prerolled (i.e. reached PAUSED or PLAYING
+ * state). The application will receive an ASYNC_DONE message on the pipeline
+ * bus when that is the case.
+ *
+ * If one repeatedly calls this function one can also create a query and reuse
+ * it in gst_element_query().
  *
  * Returns: TRUE if the query could be performed.
  */
@@ -2168,7 +2175,14 @@ gst_element_query_position (GstElement * element, GstFormat format,
  * @format: the #GstFormat requested
  * @duration: (out) (allow-none): A location in which to store the total duration, or NULL.
  *
- * Queries an element for the total stream duration.
+ * Queries an element (usually top-level pipeline or playbin element) for the
+ * total stream duration in nanoseconds. This query will only work once the
+ * pipeline is prerolled (i.e. reached PAUSED or PLAYING state). The application
+ * will receive an ASYNC_DONE message on the pipeline bus when that is the case.
+ *
+ * If the duration changes for some reason, you will get a DURATION_CHANGED
+ * message on the pipeline bus, in which case you should re-query the duration
+ * using this function.
  *
  * Returns: TRUE if the query could be performed.
  */
@@ -3030,8 +3044,9 @@ gst_parse_bin_from_description (const gchar * bin_description,
  * and want them all ghosted, you will have to create the ghost pads
  * yourself).
  *
- * Returns: (transfer full) (type Gst.Bin): a newly-created bin, or
- *   %NULL if an error occurred.
+ * Returns: (transfer full) (type Gst.Element): a newly-created element, which
+ *   is guaranteed to be a bin unless GST_FLAG_NO_SINGLE_ELEMENT_BINS was
+ *   passed, or %NULL if an error occurred.
  */
 GstElement *
 gst_parse_bin_from_description_full (const gchar * bin_description,
@@ -3040,6 +3055,7 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
 {
 #ifndef GST_DISABLE_PARSE
   GstPad *pad = NULL;
+  GstElement *element;
   GstBin *bin;
   gchar *desc;
 
@@ -3049,14 +3065,24 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
   GST_DEBUG ("Making bin from description '%s'", bin_description);
 
   /* parse the pipeline to a bin */
-  desc = g_strdup_printf ("bin.( %s )", bin_description);
-  bin = (GstBin *) gst_parse_launch_full (desc, context, flags, err);
-  g_free (desc);
+  if (flags & GST_PARSE_FLAG_NO_SINGLE_ELEMENT_BINS) {
+    element = gst_parse_launch_full (bin_description, context, flags, err);
+  } else {
+    desc = g_strdup_printf ("bin.( %s )", bin_description);
+    element = gst_parse_launch_full (desc, context, flags, err);
+    g_free (desc);
+  }
 
-  if (bin == NULL || (err && *err != NULL)) {
-    if (bin)
-      gst_object_unref (bin);
+  if (element == NULL || (err && *err != NULL)) {
+    if (element)
+      gst_object_unref (element);
     return NULL;
+  }
+
+  if (GST_IS_BIN (element)) {
+    bin = GST_BIN (element);
+  } else {
+    return element;
   }
 
   /* find pads and ghost them if necessary */
@@ -3762,7 +3788,8 @@ gst_pad_get_stream_id (GstPad * pad)
  * stream-start event.
  *
  * Returns: A constantly incrementing unsigned integer, which might
- * overflow back to 0 at some point. */
+ * overflow back to 0 at some point.
+ */
 guint
 gst_util_group_id_next (void)
 {

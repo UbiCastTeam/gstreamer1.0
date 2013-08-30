@@ -1951,6 +1951,24 @@ positive number if <em class="parameter"><code>s1</code></em> is after <em class
 <div class="refsect2">
 <a name="gst-util-group-id-next"></a><h3>gst_util_group_id_next ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               gst_util_group_id_next              (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>
+Return a constantly incrementing group id.
+</p>
+<p>
+This function is used to generate a new group-id for the
+stream-start event.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>A constantly incrementing unsigned integer, which might
+overflow back to 0 at some point.</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
