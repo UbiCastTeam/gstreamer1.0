@@ -585,6 +585,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_bus_get_type ());
   g_type_class_ref (gst_task_get_type ());
   g_type_class_ref (gst_clock_get_type ());
+  g_type_class_ref (gst_debug_color_mode_get_type ());
 
   gst_uri_handler_get_type ();
 
@@ -931,6 +932,7 @@ parse_goption_arg (const gchar * opt,
 void
 gst_deinit (void)
 {
+  GstBinClass *bin_class;
   GstClock *clock;
 
   GST_INFO ("deinitializing GStreamer");
@@ -939,6 +941,13 @@ gst_deinit (void)
     GST_DEBUG ("already deinitialized");
     return;
   }
+
+  bin_class = GST_BIN_CLASS (g_type_class_peek (gst_bin_get_type ()));
+  if (bin_class->pool != NULL) {
+    g_thread_pool_free (bin_class->pool, FALSE, TRUE);
+    bin_class->pool = NULL;
+  }
+  gst_task_cleanup_all ();
 
   g_slist_foreach (_priv_gst_preload_plugins, (GFunc) g_free, NULL);
   g_slist_free (_priv_gst_preload_plugins);
@@ -1052,7 +1061,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_lock_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_allocator_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stream_flags_get_type ()));
-
+  g_type_class_unref (g_type_class_peek (gst_debug_color_mode_get_type ()));
 
   gst_deinitialized = TRUE;
   GST_INFO ("deinitialized GStreamer");

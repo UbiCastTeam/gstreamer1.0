@@ -783,7 +783,6 @@ static gboolean
 get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
     gint * percent)
 {
-  gboolean post = FALSE;
   gint perc;
 
   if (queue->high_percent <= 0) {
@@ -817,21 +816,6 @@ get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
   }
 #undef GET_PERCENT
 
-  if (queue->is_buffering) {
-    post = TRUE;
-    /* if we were buffering see if we reached the high watermark */
-    if (perc >= queue->high_percent)
-      queue->is_buffering = FALSE;
-  } else {
-    /* we were not buffering, check if we need to start buffering if we drop
-     * below the low threshold */
-    if (perc < queue->low_percent) {
-      queue->is_buffering = TRUE;
-      queue->buffering_iteration++;
-      post = TRUE;
-    }
-  }
-
   if (is_buffering)
     *is_buffering = queue->is_buffering;
 
@@ -841,19 +825,13 @@ get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
   if (perc > 100)
     perc = 100;
 
-  if (post) {
-    if (perc == queue->buffering_percent)
-      post = FALSE;
-    else
-      queue->buffering_percent = perc;
-  }
   if (percent)
     *percent = perc;
 
   GST_DEBUG_OBJECT (queue, "buffering %d, percent %d", queue->is_buffering,
       perc);
 
-  return post;
+  return TRUE;
 }
 
 static void
@@ -897,7 +875,30 @@ update_buffering (GstQueue2 * queue)
   gint percent;
   gboolean post = FALSE;
 
-  post = get_buffering_percent (queue, NULL, &percent);
+  if (!get_buffering_percent (queue, NULL, &percent))
+    return;
+
+  if (queue->is_buffering) {
+    post = TRUE;
+    /* if we were buffering see if we reached the high watermark */
+    if (percent >= queue->high_percent)
+      queue->is_buffering = FALSE;
+  } else {
+    /* we were not buffering, check if we need to start buffering if we drop
+     * below the low threshold */
+    if (percent < queue->low_percent) {
+      queue->is_buffering = TRUE;
+      queue->buffering_iteration++;
+      post = TRUE;
+    }
+  }
+
+  if (post) {
+    if (percent == queue->buffering_percent)
+      post = FALSE;
+    else
+      queue->buffering_percent = percent;
+  }
 
   if (post) {
     GstMessage *message;
@@ -1124,21 +1125,13 @@ gst_queue2_have_data (GstQueue2 * queue, guint64 offset, guint length)
       guint64 threshold = 1024 * 512;
 
       if (QUEUE_IS_USING_RING_BUFFER (queue)) {
-        guint64 distance;
-
-        distance = QUEUE_MAX_BYTES (queue) - queue->cur_level.bytes;
-        /* don't wait for the complete buffer to fill */
-        distance = MIN (distance, threshold);
-
-        if (offset >= queue->current->offset && offset <=
-            queue->current->writing_pos + distance) {
-          GST_INFO_OBJECT (queue,
-              "requested data is within range, wait for data");
-          return FALSE;
-        }
-      } else if (offset < queue->current->writing_pos + threshold) {
-        update_cur_pos (queue, queue->current, offset + length);
-        GST_INFO_OBJECT (queue, "wait for data");
+        threshold = MIN (threshold,
+            QUEUE_MAX_BYTES (queue) - queue->cur_level.bytes);
+      }
+      if (offset >= queue->current->offset && offset <=
+          queue->current->writing_pos + threshold) {
+        GST_INFO_OBJECT (queue,
+            "requested data is within range, wait for data");
         return FALSE;
       }
     }
@@ -2079,6 +2072,10 @@ gst_queue2_locked_dequeue (GstQueue2 * queue, GstQueue2ItemType * item_type)
     item = gst_queue2_read_item_from_file (queue);
   } else {
     GstQueue2Item *qitem = g_queue_pop_head (&queue->queue);
+
+    if (qitem == NULL)
+      goto no_item;
+
     item = qitem->item;
     g_slice_free (GstQueue2Item, qitem);
   }
@@ -2941,6 +2938,11 @@ gst_queue2_handle_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
       gboolean pull_mode;
       GstSchedulingFlags flags = 0;
 
+      if (!gst_pad_peer_query (queue->sinkpad, query))
+        goto peer_failed;
+
+      gst_query_parse_scheduling (query, &flags, NULL, NULL, NULL);
+
       /* we can operate in pull mode when we are using a tempfile */
       pull_mode = !QUEUE_IS_USING_QUEUE (queue);
 
@@ -3076,8 +3078,18 @@ gst_queue2_sink_activate_mode (GstPad * pad, GstObject * parent,
         GST_DEBUG_OBJECT (queue, "deactivating push mode");
         queue->srcresult = GST_FLOW_FLUSHING;
         queue->sinkresult = GST_FLOW_FLUSHING;
+        GST_QUEUE2_SIGNAL_DEL (queue);
+        /* Unblock query handler */
+        queue->last_query = FALSE;
+        g_cond_signal (&queue->query_handled);
+        GST_QUEUE2_MUTEX_UNLOCK (queue);
+
+        /* wait until it is unblocked and clean up */
+        GST_PAD_STREAM_LOCK (pad);
+        GST_QUEUE2_MUTEX_LOCK (queue);
         gst_queue2_locked_flush (queue, TRUE);
         GST_QUEUE2_MUTEX_UNLOCK (queue);
+        GST_PAD_STREAM_UNLOCK (pad);
       }
       result = TRUE;
       break;
@@ -3277,8 +3289,10 @@ gst_queue2_change_state (GstElement * element, GstStateChange transition)
 /* changing the capacity of the queue must wake up
  * the _chain function, it might have more room now
  * to store the buffer/event in the queue */
-#define QUEUE_CAPACITY_CHANGE(q)\
-  GST_QUEUE2_SIGNAL_DEL (queue);
+#define QUEUE_CAPACITY_CHANGE(q) \
+  GST_QUEUE2_SIGNAL_DEL (queue); \
+  if (queue->use_buffering)      \
+    update_buffering (queue);
 
 /* Changing the minimum required fill level must
  * wake up the _loop function as it might now

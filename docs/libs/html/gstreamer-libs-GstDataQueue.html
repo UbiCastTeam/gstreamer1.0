@@ -58,6 +58,8 @@ struct              <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDa
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> checkdata</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-push" title="gst_data_queue_push ()">gst_data_queue_push</a>                 (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a> *item</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-push-force" title="gst_data_queue_push_force ()">gst_data_queue_push_force</a>           (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a> *item</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-pop" title="gst_data_queue_pop ()">gst_data_queue_pop</a>                  (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a> **item</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-flush" title="gst_data_queue_flush ()">gst_data_queue_flush</a>                (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>);
@@ -295,6 +297,46 @@ or not.</td>
 Pushes a <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a> (or a structure that begins with the same fields)
 on the <em class="parameter"><code>queue</code></em>. If the <em class="parameter"><code>queue</code></em> is full, the call will block until space is
 available, OR the <em class="parameter"><code>queue</code></em> is set to flushing state.
+MT safe.
+</p>
+<p>
+Note that this function has slightly different semantics than <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-push"><code class="function">gst_pad_push()</code></a>
+and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-push-event"><code class="function">gst_pad_push_event()</code></a>: this function only takes ownership of <em class="parameter"><code>item</code></em> and
+the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMiniObject.html#GstMiniObject"><span class="type">GstMiniObject</span></a> contained in <em class="parameter"><code>item</code></em> if the push was successful. If FALSE
+is returned, the caller is responsible for freeing <em class="parameter"><code>item</code></em> and its contents.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>queue</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>item</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a>.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a> if the <em class="parameter"><code>item</code></em> was successfully pushed on the <em class="parameter"><code>queue</code></em>.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2.0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-data-queue-push-force"></a><h3>gst_data_queue_push_force ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_data_queue_push_force           (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a> *item</code></em>);</pre>
+<p>
+Pushes a <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueItem" title="struct GstDataQueueItem"><span class="type">GstDataQueueItem</span></a> (or a structure that begins with the same fields)
+on the <em class="parameter"><code>queue</code></em>. It ignores if the <em class="parameter"><code>queue</code></em> is full or not and forces the <em class="parameter"><code>item</code></em>
+to be pushed anyway.
 MT safe.
 </p>
 <p>

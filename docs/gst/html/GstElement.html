@@ -3737,8 +3737,16 @@ Queries an element to convert <em class="parameter"><code>src_val</code></em> in
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *cur</code></em>);</pre>
 <p>
-Queries an element for the stream position. If one repeatedly calls this
-function one can also create and reuse it in <a class="link" href="GstElement.html#gst-element-query" title="gst_element_query ()"><code class="function">gst_element_query()</code></a>.
+Queries an element (usually top-level pipeline or playbin element) for the
+stream position in nanoseconds. This will be a value between 0 and the
+stream duration (if the stream duration is known). This query will usually
+only work once the pipeline is prerolled (i.e. reached PAUSED or PLAYING
+state). The application will receive an ASYNC_DONE message on the pipeline
+bus when that is the case.
+</p>
+<p>
+If one repeatedly calls this function one can also create a query and reuse
+it in <a class="link" href="GstElement.html#gst-element-query" title="gst_element_query ()"><code class="function">gst_element_query()</code></a>.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -3774,7 +3782,15 @@ position, or NULL. <span class="annotation">[<acronym title="Parameter for retur
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *duration</code></em>);</pre>
 <p>
-Queries an element for the total stream duration.
+Queries an element (usually top-level pipeline or playbin element) for the
+total stream duration in nanoseconds. This query will only work once the
+pipeline is prerolled (i.e. reached PAUSED or PLAYING state). The application
+will receive an ASYNC_DONE message on the pipeline bus when that is the case.
+</p>
+<p>
+If the duration changes for some reason, you will get a DURATION_CHANGED
+message on the pipeline bus, in which case you should re-query the duration
+using this function.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
