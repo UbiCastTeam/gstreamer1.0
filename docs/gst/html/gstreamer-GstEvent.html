@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstGError.html" title="GstGError">
 <link rel="next" href="gstreamer-GstFormat.html" title="GstFormat">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -178,9 +178,6 @@ enum                <a class="link" href="gstreamer-GstEvent.html#GstSeekFlags" 
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-segment-done" title="gst_event_parse_segment_done ()">gst_event_parse_segment_done</a>        (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *format</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *position</code></em>);
-<a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          <a class="link" href="gstreamer-GstEvent.html#gst-event-new-context" title="gst_event_new_context ()">gst_event_new_context</a>               (<em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstEvent.html#gst-event-parse-context" title="gst_event_parse_context ()">gst_event_parse_context</a>             (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> **context</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -217,7 +214,7 @@ To do that <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" tit
 the needed parameters to specify seeking time and mode.
 </p>
 <div class="example">
-<a name="idp73218128"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
+<a name="id-1.3.24.4.7.2"></a><p class="title"><b>Example 8. performing a seek on a pipeline</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -408,7 +405,6 @@ the given flags
   GST_EVENT_SINK_MESSAGE          = GST_EVENT_MAKE_TYPE (100, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
   GST_EVENT_EOS                   = GST_EVENT_MAKE_TYPE (110, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY)),
   GST_EVENT_TOC                   = GST_EVENT_MAKE_TYPE (120, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
-  GST_EVENT_CONTEXT               = GST_EVENT_MAKE_TYPE (130, FLAG(DOWNSTREAM) | FLAG(SERIALIZED) | FLAG(STICKY) | FLAG(STICKY_MULTI)),
 
   /* non-sticky downstream serialized */
   GST_EVENT_SEGMENT_DONE          = GST_EVENT_MAKE_TYPE (150, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
@@ -514,12 +510,6 @@ Specific custom events are distinguished by the name of the structure.
 <td><p><a name="GST-EVENT-TOC:CAPS"></a><span class="term"><code class="literal">GST_EVENT_TOC</code></span></p></td>
 <td>An event which indicates that a new table of contents (TOC)
                 was found or updated.
-</td>
-</tr>
-<tr>
-<td><p><a name="GST-EVENT-CONTEXT:CAPS"></a><span class="term"><code class="literal">GST_EVENT_CONTEXT</code></span></p></td>
-<td>An event to communicate a <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> to other
-                elements (Since 1.2)
 </td>
 </tr>
 <tr>
@@ -2920,61 +2910,6 @@ Extracts the position and format from the segment done message.
 </tbody>
 </table></div>
 </div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-new-context"></a><h3>gst_event_new_context ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          gst_event_new_context               (<em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
-<p>
-Create a new context event. The purpose of the context event is
-to pass a pipeline-local context to downstream elements.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
-<td>the <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 1.2</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-event-parse-context"></a><h3>gst_event_parse_context ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                gst_event_parse_context             (<em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
-                                                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> **context</code></em>);</pre>
-<p>
-Parse the context event. Unref <em class="parameter"><code>context</code></em> after usage.
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>event</code></em> :</span></p></td>
-<td>The event to query</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
-<td>a pointer to store the <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
-</td>
-</tr>
-</tbody>
-</table></div>
-<p class="since">Since 1.2</p>
-</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstEvent.see-also"></a><h2>See Also</h2>
@@ -2983,6 +2918,6 @@ Parse the context event. Unref <em class="parameter"><code>context</code></em> a
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

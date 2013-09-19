@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstUtils.html" title="GstUtils">
 <link rel="next" href="gstreamer-GstVersion.html" title="GstVersion">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1064,7 +1064,7 @@ of type <a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title=
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
-<td>an uninitialized <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to take the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+<td>an uninitialized <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to take the result. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -1103,7 +1103,7 @@ were equal).
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
-<td>an uninitialized <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to take the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+<td>an uninitialized <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to take the result. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2193,7 +2193,7 @@ the contents from source to target.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
-<td>the target value. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+<td>the target value. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2251,7 +2251,7 @@ If the operation succeeds, TRUE is returned, FALSE otherwise.
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
 <td>
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to fill with contents of
-deserialization. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+deserialization. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2344,7 +2344,7 @@ Creates a GValue corresponding to the union of <em class="parameter"><code>value
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
-<td>the destination value. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+<td>the destination value. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2418,7 +2418,7 @@ Note that this means subtraction as in sets, not as in mathematics.
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
 <td>the destination value for the result if the
 subtraction is not empty. May be NULL, in which case the resulting set
-will not be computed, which can give a fair speedup. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+will not be computed, which can give a fair speedup. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2487,7 +2487,7 @@ is placed in <em class="parameter"><code>dest</code></em>, unless NULL.  If the 
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
 <td>a uninitialized <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> that will hold the calculated
-intersection value. May be NULL if the resulting set if not needed. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+intersection value. May be NULL if the resulting set if not needed. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2712,6 +2712,6 @@ If <em class="parameter"><code>src</code></em> is already fixed, this function r
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

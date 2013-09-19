@@ -73,7 +73,7 @@
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
   <functions>
-    <keyword type="" name="Environment variables" link="gst-running.html#idp52014880"/>
+    <keyword type="" name="Environment variables" link="gst-running.html#id-1.2.6.3.2"/>
     <keyword type="function" name="gst_init ()" link="gstreamer-Gst.html#gst-init"/>
     <keyword type="function" name="gst_init_check ()" link="gstreamer-Gst.html#gst-init-check"/>
     <keyword type="function" name="gst_init_get_option_group ()" link="gstreamer-Gst.html#gst-init-get-option-group"/>
@@ -107,7 +107,7 @@
     <keyword type="function" name="gst_atomic_queue_peek ()" link="gstreamer-GstAtomicQueue.html#gst-atomic-queue-peek"/>
     <keyword type="function" name="gst_atomic_queue_pop ()" link="gstreamer-GstAtomicQueue.html#gst-atomic-queue-pop"/>
     <keyword type="function" name="gst_atomic_queue_length ()" link="gstreamer-GstAtomicQueue.html#gst-atomic-queue-length"/>
-    <keyword type="" name="Notes" link="GstBin.html#idp62124640"/>
+    <keyword type="" name="Notes" link="GstBin.html#id-1.3.6.8.9.1"/>
     <keyword type="struct" name="struct GstBin" link="GstBin.html#GstBin-struct"/>
     <keyword type="struct" name="struct GstBinClass" link="GstBin.html#GstBinClass"/>
     <keyword type="function" name="gst_bin_new ()" link="GstBin.html#gst-bin-new"/>
@@ -456,6 +456,9 @@
     <keyword type="function" name="gst_context_ref ()" link="gstreamer-GstContext.html#gst-context-ref"/>
     <keyword type="function" name="gst_context_unref ()" link="gstreamer-GstContext.html#gst-context-unref"/>
     <keyword type="function" name="gst_context_copy ()" link="gstreamer-GstContext.html#gst-context-copy"/>
+    <keyword type="function" name="gst_context_get_context_type ()" link="gstreamer-GstContext.html#gst-context-get-context-type" since="1.2"/>
+    <keyword type="function" name="gst_context_has_context_type ()" link="gstreamer-GstContext.html#gst-context-has-context-type" since="1.2"/>
+    <keyword type="function" name="gst_context_is_persistent ()" link="gstreamer-GstContext.html#gst-context-is-persistent" since="1.2"/>
     <keyword type="function" name="gst_context_get_structure ()" link="gstreamer-GstContext.html#gst-context-get-structure" since="1.2"/>
     <keyword type="function" name="gst_context_writable_structure ()" link="gstreamer-GstContext.html#gst-context-writable-structure" since="1.2"/>
     <keyword type="macro" name="gst_context_make_writable()" link="gstreamer-GstContext.html#gst-context-make-writable"/>
@@ -579,7 +582,6 @@
     <keyword type="function" name="gst_element_set_bus ()" link="GstElement.html#gst-element-set-bus"/>
     <keyword type="function" name="gst_element_get_bus ()" link="GstElement.html#gst-element-get-bus"/>
     <keyword type="function" name="gst_element_set_context ()" link="GstElement.html#gst-element-set-context"/>
-    <keyword type="function" name="gst_element_get_context ()" link="GstElement.html#gst-element-get-context"/>
     <keyword type="function" name="gst_element_get_factory ()" link="GstElement.html#gst-element-get-factory"/>
     <keyword type="macro" name="gst_element_set_name()" link="GstElement.html#gst-element-set-name"/>
     <keyword type="macro" name="gst_element_get_name()" link="GstElement.html#gst-element-get-name"/>
@@ -736,8 +738,6 @@
     <keyword type="function" name="gst_event_parse_toc_select ()" link="gstreamer-GstEvent.html#gst-event-parse-toc-select"/>
     <keyword type="function" name="gst_event_new_segment_done ()" link="gstreamer-GstEvent.html#gst-event-new-segment-done"/>
     <keyword type="function" name="gst_event_parse_segment_done ()" link="gstreamer-GstEvent.html#gst-event-parse-segment-done"/>
-    <keyword type="function" name="gst_event_new_context ()" link="gstreamer-GstEvent.html#gst-event-new-context" since="1.2"/>
-    <keyword type="function" name="gst_event_parse_context ()" link="gstreamer-GstEvent.html#gst-event-parse-context" since="1.2"/>
     <keyword type="enum" name="enum GstFormat" link="gstreamer-GstFormat.html#GstFormat"/>
     <keyword type="macro" name="GST_FORMAT_PERCENT_MAX" link="gstreamer-GstFormat.html#GST-FORMAT-PERCENT-MAX:CAPS"/>
     <keyword type="macro" name="GST_FORMAT_PERCENT_SCALE" link="gstreamer-GstFormat.html#GST-FORMAT-PERCENT-SCALE:CAPS"/>
@@ -912,9 +912,7 @@
     <keyword type="function" name="gst_message_new_progress ()" link="gstreamer-GstMessage.html#gst-message-new-progress"/>
     <keyword type="function" name="gst_message_parse_progress ()" link="gstreamer-GstMessage.html#gst-message-parse-progress"/>
     <keyword type="function" name="gst_message_new_need_context ()" link="gstreamer-GstMessage.html#gst-message-new-need-context" since="1.2"/>
-    <keyword type="function" name="gst_message_add_context_type ()" link="gstreamer-GstMessage.html#gst-message-add-context-type" since="1.2"/>
-    <keyword type="function" name="gst_message_get_n_context_types ()" link="gstreamer-GstMessage.html#gst-message-get-n-context-types" since="1.2"/>
-    <keyword type="function" name="gst_message_parse_nth_context_type ()" link="gstreamer-GstMessage.html#gst-message-parse-nth-context-type" since="1.2"/>
+    <keyword type="function" name="gst_message_parse_context_type ()" link="gstreamer-GstMessage.html#gst-message-parse-context-type" since="1.2"/>
     <keyword type="function" name="gst_message_new_have_context ()" link="gstreamer-GstMessage.html#gst-message-new-have-context" since="1.2"/>
     <keyword type="function" name="gst_message_parse_have_context ()" link="gstreamer-GstMessage.html#gst-message-parse-have-context" since="1.2"/>
     <keyword type="struct" name="struct GstMeta" link="gstreamer-GstMeta.html#GstMeta"/>
@@ -931,7 +929,8 @@
     <keyword type="macro" name="GST_META_TRANSFORM_IS_COPY()" link="gstreamer-GstMeta.html#GST-META-TRANSFORM-IS-COPY:CAPS"/>
     <keyword type="function" name="gst_meta_api_type_register ()" link="gstreamer-GstMeta.html#gst-meta-api-type-register"/>
     <keyword type="function" name="gst_meta_api_type_has_tag ()" link="gstreamer-GstMeta.html#gst-meta-api-type-has-tag"/>
-    <keyword type="macro" name="GST_META_TAG_MEMORY" link="gstreamer-GstMeta.html#GST-META-TAG-MEMORY:CAPS"/>
+    <keyword type="macro" name="GST_META_TAG_MEMORY" link="gstreamer-GstMeta.html#GST-META-TAG-MEMORY:CAPS" deprecated=""/>
+    <keyword type="macro" name="GST_META_TAG_MEMORY_STR" link="gstreamer-GstMeta.html#GST-META-TAG-MEMORY-STR:CAPS" since="1.2"/>
     <keyword type="function" name="gst_meta_register ()" link="gstreamer-GstMeta.html#gst-meta-register"/>
     <keyword type="function" name="gst_meta_get_info ()" link="gstreamer-GstMeta.html#gst-meta-get-info"/>
     <keyword type="struct" name="struct GstMiniObject" link="gstreamer-GstMiniObject.html#GstMiniObject"/>
@@ -967,7 +966,7 @@
     <keyword type="function" name="gst_mini_object_replace ()" link="gstreamer-GstMiniObject.html#gst-mini-object-replace"/>
     <keyword type="function" name="gst_mini_object_take ()" link="gstreamer-GstMiniObject.html#gst-mini-object-take"/>
     <keyword type="function" name="gst_mini_object_steal ()" link="gstreamer-GstMiniObject.html#gst-mini-object-steal"/>
-    <keyword type="" name="controlled properties" link="GstObject.html#idp80230544"/>
+    <keyword type="" name="controlled properties" link="GstObject.html#id-1.3.32.7.6.1"/>
     <keyword type="struct" name="struct GstObject" link="GstObject.html#GstObject-struct"/>
     <keyword type="struct" name="struct GstObjectClass" link="GstObject.html#GstObjectClass"/>
     <keyword type="enum" name="enum GstObjectFlags" link="GstObject.html#GstObjectFlags"/>
@@ -1385,10 +1384,7 @@
     <keyword type="function" name="gst_query_new_context ()" link="gstreamer-GstQuery.html#gst-query-new-context" since="1.2"/>
     <keyword type="function" name="gst_query_set_context ()" link="gstreamer-GstQuery.html#gst-query-set-context" since="1.2"/>
     <keyword type="function" name="gst_query_parse_context ()" link="gstreamer-GstQuery.html#gst-query-parse-context" since="1.2"/>
-    <keyword type="function" name="gst_query_add_context_type ()" link="gstreamer-GstQuery.html#gst-query-add-context-type" since="1.2"/>
-    <keyword type="function" name="gst_query_get_n_context_types ()" link="gstreamer-GstQuery.html#gst-query-get-n-context-types" since="1.2"/>
-    <keyword type="function" name="gst_query_parse_nth_context_type ()" link="gstreamer-GstQuery.html#gst-query-parse-nth-context-type" since="1.2"/>
-    <keyword type="function" name="gst_query_has_context_type ()" link="gstreamer-GstQuery.html#gst-query-has-context-type" since="1.2"/>
+    <keyword type="function" name="gst_query_parse_context_type ()" link="gstreamer-GstQuery.html#gst-query-parse-context-type" since="1.2"/>
     <keyword type="struct" name="struct GstRegistry" link="GstRegistry.html#GstRegistry-struct"/>
     <keyword type="function" name="gst_registry_get ()" link="GstRegistry.html#gst-registry-get"/>
     <keyword type="function" name="gst_registry_get_feature_list ()" link="GstRegistry.html#gst-registry-get-feature-list"/>
@@ -2163,7 +2159,6 @@
     <keyword type="constant" name="GST_EVENT_SINK_MESSAGE" link="gstreamer-GstEvent.html#GST-EVENT-SINK-MESSAGE:CAPS"/>
     <keyword type="constant" name="GST_EVENT_EOS" link="gstreamer-GstEvent.html#GST-EVENT-EOS:CAPS"/>
     <keyword type="constant" name="GST_EVENT_TOC" link="gstreamer-GstEvent.html#GST-EVENT-TOC:CAPS"/>
-    <keyword type="constant" name="GST_EVENT_CONTEXT" link="gstreamer-GstEvent.html#GST-EVENT-CONTEXT:CAPS"/>
     <keyword type="constant" name="GST_EVENT_SEGMENT_DONE" link="gstreamer-GstEvent.html#GST-EVENT-SEGMENT-DONE:CAPS"/>
     <keyword type="constant" name="GST_EVENT_GAP" link="gstreamer-GstEvent.html#GST-EVENT-GAP:CAPS"/>
     <keyword type="constant" name="GST_EVENT_QOS" link="gstreamer-GstEvent.html#GST-EVENT-QOS:CAPS"/>
