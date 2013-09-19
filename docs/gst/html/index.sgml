@@ -524,6 +524,9 @@
 <ANCHOR id="gst-context-ref" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-ref">
 <ANCHOR id="gst-context-unref" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-unref">
 <ANCHOR id="gst-context-copy" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-copy">
+<ANCHOR id="gst-context-get-context-type" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-get-context-type">
+<ANCHOR id="gst-context-has-context-type" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-has-context-type">
+<ANCHOR id="gst-context-is-persistent" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-is-persistent">
 <ANCHOR id="gst-context-get-structure" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-get-structure">
 <ANCHOR id="gst-context-writable-structure" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-writable-structure">
 <ANCHOR id="gst-context-make-writable" href="gstreamer-1.0/gstreamer-GstContext.html#gst-context-make-writable">
@@ -693,7 +696,6 @@
 <ANCHOR id="gst-element-set-bus" href="gstreamer-1.0/GstElement.html#gst-element-set-bus">
 <ANCHOR id="gst-element-get-bus" href="gstreamer-1.0/GstElement.html#gst-element-get-bus">
 <ANCHOR id="gst-element-set-context" href="gstreamer-1.0/GstElement.html#gst-element-set-context">
-<ANCHOR id="gst-element-get-context" href="gstreamer-1.0/GstElement.html#gst-element-get-context">
 <ANCHOR id="gst-element-get-factory" href="gstreamer-1.0/GstElement.html#gst-element-get-factory">
 <ANCHOR id="gst-element-set-name" href="gstreamer-1.0/GstElement.html#gst-element-set-name">
 <ANCHOR id="gst-element-get-name" href="gstreamer-1.0/GstElement.html#gst-element-get-name">
@@ -867,7 +869,6 @@
 <ANCHOR id="GST-EVENT-SINK-MESSAGE:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-SINK-MESSAGE:CAPS">
 <ANCHOR id="GST-EVENT-EOS:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-EOS:CAPS">
 <ANCHOR id="GST-EVENT-TOC:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-TOC:CAPS">
-<ANCHOR id="GST-EVENT-CONTEXT:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-CONTEXT:CAPS">
 <ANCHOR id="GST-EVENT-SEGMENT-DONE:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-SEGMENT-DONE:CAPS">
 <ANCHOR id="GST-EVENT-GAP:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-GAP:CAPS">
 <ANCHOR id="GST-EVENT-QOS:CAPS" href="gstreamer-1.0/gstreamer-GstEvent.html#GST-EVENT-QOS:CAPS">
@@ -965,8 +966,6 @@
 <ANCHOR id="gst-event-parse-toc-select" href="gstreamer-1.0/gstreamer-GstEvent.html#gst-event-parse-toc-select">
 <ANCHOR id="gst-event-new-segment-done" href="gstreamer-1.0/gstreamer-GstEvent.html#gst-event-new-segment-done">
 <ANCHOR id="gst-event-parse-segment-done" href="gstreamer-1.0/gstreamer-GstEvent.html#gst-event-parse-segment-done">
-<ANCHOR id="gst-event-new-context" href="gstreamer-1.0/gstreamer-GstEvent.html#gst-event-new-context">
-<ANCHOR id="gst-event-parse-context" href="gstreamer-1.0/gstreamer-GstEvent.html#gst-event-parse-context">
 <ANCHOR id="gstreamer-GstEvent.see-also" href="gstreamer-1.0/gstreamer-GstEvent.html#gstreamer-GstEvent.see-also">
 <ANCHOR id="gstreamer-GstFormat" href="gstreamer-1.0/gstreamer-GstFormat.html">
 <ANCHOR id="gstreamer-GstFormat.synopsis" href="gstreamer-1.0/gstreamer-GstFormat.html#gstreamer-GstFormat.synopsis">
@@ -1238,9 +1237,7 @@
 <ANCHOR id="gst-message-new-progress" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-new-progress">
 <ANCHOR id="gst-message-parse-progress" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-progress">
 <ANCHOR id="gst-message-new-need-context" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-new-need-context">
-<ANCHOR id="gst-message-add-context-type" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-add-context-type">
-<ANCHOR id="gst-message-get-n-context-types" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-get-n-context-types">
-<ANCHOR id="gst-message-parse-nth-context-type" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-nth-context-type">
+<ANCHOR id="gst-message-parse-context-type" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-context-type">
 <ANCHOR id="gst-message-new-have-context" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-new-have-context">
 <ANCHOR id="gst-message-parse-have-context" href="gstreamer-1.0/gstreamer-GstMessage.html#gst-message-parse-have-context">
 <ANCHOR id="gstreamer-GstMessage.see-also" href="gstreamer-1.0/gstreamer-GstMessage.html#gstreamer-GstMessage.see-also">
@@ -1268,6 +1265,7 @@
 <ANCHOR id="gst-meta-api-type-register" href="gstreamer-1.0/gstreamer-GstMeta.html#gst-meta-api-type-register">
 <ANCHOR id="gst-meta-api-type-has-tag" href="gstreamer-1.0/gstreamer-GstMeta.html#gst-meta-api-type-has-tag">
 <ANCHOR id="GST-META-TAG-MEMORY:CAPS" href="gstreamer-1.0/gstreamer-GstMeta.html#GST-META-TAG-MEMORY:CAPS">
+<ANCHOR id="GST-META-TAG-MEMORY-STR:CAPS" href="gstreamer-1.0/gstreamer-GstMeta.html#GST-META-TAG-MEMORY-STR:CAPS">
 <ANCHOR id="gst-meta-register" href="gstreamer-1.0/gstreamer-GstMeta.html#gst-meta-register">
 <ANCHOR id="gst-meta-get-info" href="gstreamer-1.0/gstreamer-GstMeta.html#gst-meta-get-info">
 <ANCHOR id="gstreamer-GstMiniObject" href="gstreamer-1.0/gstreamer-GstMiniObject.html">
@@ -1930,10 +1928,7 @@
 <ANCHOR id="gst-query-new-context" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-new-context">
 <ANCHOR id="gst-query-set-context" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-set-context">
 <ANCHOR id="gst-query-parse-context" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-parse-context">
-<ANCHOR id="gst-query-add-context-type" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-add-context-type">
-<ANCHOR id="gst-query-get-n-context-types" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-get-n-context-types">
-<ANCHOR id="gst-query-parse-nth-context-type" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-parse-nth-context-type">
-<ANCHOR id="gst-query-has-context-type" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-has-context-type">
+<ANCHOR id="gst-query-parse-context-type" href="gstreamer-1.0/gstreamer-GstQuery.html#gst-query-parse-context-type">
 <ANCHOR id="gstreamer-GstQuery.see-also" href="gstreamer-1.0/gstreamer-GstQuery.html#gstreamer-GstQuery.see-also">
 <ANCHOR id="GstRegistry" href="gstreamer-1.0/GstRegistry.html">
 <ANCHOR id="GstRegistry.synopsis" href="gstreamer-1.0/GstRegistry.html#GstRegistry.synopsis">
@@ -2740,16 +2735,20 @@
 <ANCHOR id="gst-debug-bin-to-dot-file" href="gstreamer-1.0/gstreamer-GstInfo.html#gst-debug-bin-to-dot-file">
 <ANCHOR id="gst-debug-bin-to-dot-file-with-ts" href="gstreamer-1.0/gstreamer-GstInfo.html#gst-debug-bin-to-dot-file-with-ts">
 <ANCHOR id="gstreamer-GstInfo.see-also" href="gstreamer-1.0/gstreamer-GstInfo.html#gstreamer-GstInfo.see-also">
-<ANCHOR id="annotation-glossterm-out" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-out">
-<ANCHOR id="annotation-glossterm-scope async" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-scope async">
-<ANCHOR id="annotation-glossterm-allow-none" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-allow-none">
 <ANCHOR id="annotation-glossterm-inout" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-inout">
+<ANCHOR id="annotation-glossterm-transfer full" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-transfer full">
 <ANCHOR id="annotation-glossterm-closure" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-closure">
-<ANCHOR id="annotation-glossterm-transfer none" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-transfer none">
-<ANCHOR id="annotation-glossterm-array" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-array">
+<ANCHOR id="annotation-glossterm-type" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-type">
+<ANCHOR id="annotation-glossterm-out caller-allocates" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-out caller-allocates">
+<ANCHOR id="annotation-glossterm-allow-none" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-allow-none">
+<ANCHOR id="annotation-glossterm-transfer floating" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-transfer floating">
 <ANCHOR id="annotation-glossterm-element-type" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-element-type">
 <ANCHOR id="annotation-glossterm-transfer container" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-transfer container">
+<ANCHOR id="annotation-glossterm-transfer none" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-transfer none">
 <ANCHOR id="annotation-glossterm-in" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-in">
+<ANCHOR id="annotation-glossterm-skip" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-skip">
 <ANCHOR id="annotation-glossterm-scope call" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-scope call">
-<ANCHOR id="annotation-glossterm-transfer full" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-transfer full">
-<ANCHOR id="annotation-glossterm-type" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-type">
+<ANCHOR id="annotation-glossterm-out" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-out">
+<ANCHOR id="annotation-glossterm-out callee-allocates" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-out callee-allocates">
+<ANCHOR id="annotation-glossterm-scope async" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-scope async">
+<ANCHOR id="annotation-glossterm-array" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-array">

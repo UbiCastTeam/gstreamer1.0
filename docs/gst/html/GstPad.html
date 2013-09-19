@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstObject.html" title="GstObject">
 <link rel="next" href="GstPadTemplate.html" title="GstPadTemplate">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -532,9 +532,6 @@ The direction of a pad.
   GST_PAD_FLAG_LAST        = (GST_OBJECT_FLAG_LAST &lt;&lt; 16)
 } GstPadFlags;
 </pre>
-<p>
-Pad state flags
-</p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -583,34 +580,23 @@ Pad state flags
 <td><p><a name="GST-PAD-FLAG-FIXED-CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_FIXED_CAPS</code></span></p></td>
 <td>the pad is using fixed caps this means that once the
                      caps are set on the pad, the caps query function only
-                     returns those caps.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-PROXY-CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_CAPS</code></span></p></td>
-<td>the default event and query handler will forward
-                     all events and queries to the internally linked pads
-                     instead of discarding them.
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-PROXY-ALLOCATION:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_ALLOCATION</code></span></p></td>
-<td>the default query handler will forward
-                     allocation queries to the internally linked pads
-                     instead of discarding them.
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-PROXY-SCHEDULING:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_SCHEDULING</code></span></p></td>
-<td>the default query handler will forward
-                     scheduling queries to the internally linked pads
-                     instead of discarding them.
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-LAST:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_LAST</code></span></p></td>
-<td>offset to define more flags
-</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -1617,9 +1603,6 @@ MT safe.</td>
   GST_PAD_PROBE_PASS,
 } GstPadProbeReturn;
 </pre>
-<p>
-Different return values for the <a class="link" href="GstPad.html#GstPadProbeCallback" title="GstPadProbeCallback ()"><span class="type">GstPadProbeCallback</span></a>.
-</p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -1631,7 +1614,6 @@ Different return values for the <a class="link" href="GstPad.html#GstPadProbeCal
 <td>drop data in data probes. For push mode this means that
        the data item is not sent downstream. For pull mode, it means that the
        data item is not passed upstream. In both cases, this result code
-       returns <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to the caller.
 </td>
 </tr>
 <tr>
@@ -1641,14 +1623,11 @@ Different return values for the <a class="link" href="GstPad.html#GstPadProbeCal
 </tr>
 <tr>
 <td><p><a name="GST-PAD-PROBE-REMOVE:CAPS"></a><span class="term"><code class="literal">GST_PAD_PROBE_REMOVE</code></span></p></td>
-<td>remove probe
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-PROBE-PASS:CAPS"></a><span class="term"><code class="literal">GST_PAD_PROBE_PASS</code></span></p></td>
-<td>pass the data item in the block probe and block on
-                        the next item
-</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -2240,7 +2219,7 @@ This function makes a copy of the name so you can safely free the name.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or NULL in case of an error.
-MT safe. <span class="annotation">[transfer floating]</span>
+MT safe. <span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -2542,6 +2521,9 @@ execution of this function.</td>
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buffer</code></em>);</pre>
 <p>
+returns <a class="link" href="GstPad.html#GST-FLOW-ERROR:CAPS"><span class="type">GST_FLOW_ERROR</span></a> if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
+</p>
+<p>
 When <em class="parameter"><code>pad</code></em> is flushing this function returns <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a>
 immediately and <em class="parameter"><code>buffer</code></em> is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
 </p>
@@ -2595,8 +2577,7 @@ This is a lowlevel function. Usualy <a class="link" href="GstPad.html#gst-pad-pu
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
-<td>a pointer to hold the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>,
-returns <a class="link" href="GstPad.html#GST-FLOW-ERROR:CAPS"><span class="type">GST_FLOW_ERROR</span></a> if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates]</span>
+<td>a pointer to hold the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>,. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out callee-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -3594,7 +3575,7 @@ bytes. The caller should check the result buffer size to get the result size.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
 <td>a pointer to hold the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>, returns
-GST_FLOW_ERROR if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates]</span>
+GST_FLOW_ERROR if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out callee-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -5251,6 +5232,6 @@ Signals that a pad has been unlinked from the peer pad.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>
