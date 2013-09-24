@@ -26,9 +26,17 @@ else
 GST_PLUGIN_SRC = gstplugin.c
 endif
 
-SUBDIRS = $(SUBDIRS_PARSE)
+if !GST_DISABLE_GST_DEBUG
+SUBDIRS_PRINTF = printf
+GST_PRINTF_LA = printf/libgstprintf.la
+else
+SUBDIRS_PRINTF =
+GST_PRINTF_LA =
+endif
 
-DIST_SUBDIRS = parse
+SUBDIRS = $(SUBDIRS_PARSE) $(SUBDIRS_PRINTF)
+
+DIST_SUBDIRS = parse printf
 
 # make variables for all generated source and header files to make the
 # distinction clear
@@ -55,8 +63,10 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstbufferpool.c		\
 	gstbus.c		\
 	gstcaps.c		\
+	gstcapsfeatures.c	\
 	gstchildproxy.c		\
 	gstclock.c		\
+	gstcontext.c \
 	gstcontrolbinding.c \
 	gstcontrolsource.c \
 	gstdatetime.c		\
@@ -130,6 +140,7 @@ libgstreamer_@GST_API_VERSION@_la_CFLAGS =		\
 
 libgstreamer_@GST_API_VERSION@_la_LIBADD =		\
 	$(GST_PARSE_LA)					\
+	$(GST_PRINTF_LA)				\
 	$(GST_ALL_LIBS)					\
 	$(WIN32_LIBS)					\
 	$(LIBM)
@@ -150,9 +161,11 @@ gst_headers =			\
 	gstbufferpool.h		\
 	gstbus.h		\
 	gstcaps.h		\
+	gstcapsfeatures.h	\
 	gstchildproxy.h		\
 	gstclock.h		\
 	gstcompat.h		\
+	gstcontext.h \
 	gstcontrolbinding.h \
 	gstcontrolsource.h \
 	gstdatetime.h		\
@@ -265,7 +278,7 @@ gir_sources=$(patsubst %,$(srcdir)/%, $(libgstreamer_@GST_API_VERSION@_la_SOURCE
 gir_sources+=$(patsubst %,$(builddir)/%, $(built_source_make))
 
 Gst-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstreamer-@GST_API_VERSION@.la
-	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH="" GST_PLUGIN_PATH="" GST_REGISTRY_UPDATE=no \
+	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 		$(INTROSPECTION_SCANNER) -v --namespace Gst \
 		--nsversion=@GST_API_VERSION@ \
 		--warn-all \
@@ -281,7 +294,6 @@ Gst-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstreamer-@GST_API_VERSIO
 		--pkg glib-2.0 \
 		--pkg gobject-2.0 \
 		--pkg gmodule-no-export-2.0 \
-		--pkg gthread-2.0 \
 		--pkg-export gstreamer-@GST_API_VERSION@ \
 		--add-init-section="gst_init(NULL, NULL);" \
 		--output $@ \

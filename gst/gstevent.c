@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -1403,7 +1403,8 @@ gst_event_new_stream_start (const gchar * stream_id)
   g_return_val_if_fail (stream_id != NULL, NULL);
 
   s = gst_structure_new_id (GST_QUARK (EVENT_STREAM_START),
-      GST_QUARK (STREAM_ID), G_TYPE_STRING, stream_id, NULL);
+      GST_QUARK (STREAM_ID), G_TYPE_STRING, stream_id,
+      GST_QUARK (FLAGS), GST_TYPE_STREAM_FLAGS, GST_STREAM_FLAG_NONE, NULL);
 
   return gst_event_new_custom (GST_EVENT_STREAM_START, s);
 }
@@ -1432,6 +1433,94 @@ gst_event_parse_stream_start (GstEvent * event, const gchar ** stream_id)
 
   if (stream_id)
     *stream_id = g_value_get_string (val);
+}
+
+/**
+ * gst_event_set_stream_flags:
+ * @event: a stream-start event
+ * @flags: the stream flags to set
+ *
+ * Since: 1.2
+ */
+void
+gst_event_set_stream_flags (GstEvent * event, GstStreamFlags flags)
+{
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START);
+  g_return_if_fail (gst_event_is_writable (event));
+
+  gst_structure_id_set (GST_EVENT_STRUCTURE (event),
+      GST_QUARK (FLAGS), GST_TYPE_STREAM_FLAGS, flags, NULL);
+}
+
+/**
+ * gst_event_parse_stream_flags:
+ * @event: a stream-start event
+ * @flags: (out): address of variable where to store the stream flags
+ *
+ * Since: 1.2
+ */
+void
+gst_event_parse_stream_flags (GstEvent * event, GstStreamFlags * flags)
+{
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START);
+
+  if (flags) {
+    gst_structure_id_get (GST_EVENT_STRUCTURE (event),
+        GST_QUARK (FLAGS), GST_TYPE_STREAM_FLAGS, flags, NULL);
+  }
+}
+
+/**
+ * gst_event_set_group_id:
+ * @event: a stream-start event
+ * @group_id: the group id to set
+ *
+ * All streams that have the same group id are supposed to be played
+ * together, i.e. all streams inside a container file should have the
+ * same group id but different stream ids. The group id should change
+ * each time the stream is started, resulting in different group ids
+ * each time a file is played for example.
+ *
+ * Use gst_util_group_id_next() to get a new group id.
+ *
+ * Since: 1.2
+ */
+void
+gst_event_set_group_id (GstEvent * event, guint group_id)
+{
+  g_return_if_fail (event != NULL);
+  g_return_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START);
+  g_return_if_fail (gst_event_is_writable (event));
+
+  gst_structure_id_set (GST_EVENT_STRUCTURE (event),
+      GST_QUARK (GROUP_ID), G_TYPE_UINT, group_id, NULL);
+}
+
+/**
+ * gst_event_parse_group_id:
+ * @event: a stream-start event
+ * @group_id: (out): address of variable where to store the group id
+ *
+ * Returns: %TRUE if a group id was set on the event and could be parsed,
+ *   %FALSE otherwise.
+ *
+ * Since: 1.2
+ */
+gboolean
+gst_event_parse_group_id (GstEvent * event, guint * group_id)
+{
+  g_return_val_if_fail (event != NULL, FALSE);
+  g_return_val_if_fail (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START,
+      FALSE);
+
+  if (group_id) {
+    return gst_structure_id_get (GST_EVENT_STRUCTURE (event),
+        GST_QUARK (GROUP_ID), G_TYPE_UINT, group_id, NULL);
+  }
+
+  return TRUE;
 }
 
 /**

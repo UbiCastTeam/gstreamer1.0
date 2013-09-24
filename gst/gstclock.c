@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -192,6 +192,35 @@ G_STMT_START {                                    \
   g_atomic_int_inc (&clock->priv->post_count);    \
   GST_OBJECT_UNLOCK (clock);                      \
 } G_STMT_END;
+
+#ifndef GST_DISABLE_GST_DEBUG
+static const gchar *
+gst_clock_return_get_name (GstClockReturn ret)
+{
+  switch (ret) {
+    case GST_CLOCK_OK:
+      return "ok";
+    case GST_CLOCK_EARLY:
+      return "early";
+    case GST_CLOCK_UNSCHEDULED:
+      return "unscheduled";
+    case GST_CLOCK_BUSY:
+      return "busy";
+    case GST_CLOCK_BADTIME:
+      return "bad-time";
+    case GST_CLOCK_ERROR:
+      return "error";
+    case GST_CLOCK_UNSUPPORTED:
+      return "unsupported";
+    case GST_CLOCK_DONE:
+      return "done";
+    default:
+      break;
+  }
+
+  return "unknown";
+}
+#endif /* GST_DISABLE_GST_DEBUG */
 
 static void gst_clock_dispose (GObject * object);
 static void gst_clock_finalize (GObject * object);
@@ -512,7 +541,8 @@ gst_clock_id_wait (GstClockID id, GstClockTimeDiff * jitter)
   res = cclass->wait (clock, entry, jitter);
 
   GST_CAT_DEBUG_OBJECT (GST_CAT_CLOCK, clock,
-      "done waiting entry %p, res: %d", id, res);
+      "done waiting entry %p, res: %d (%s)", id, res,
+      gst_clock_return_get_name (res));
 
   if (entry->type == GST_CLOCK_ENTRY_PERIODIC)
     entry->time = requested + entry->interval;

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include <unistd.h>
@@ -223,6 +223,7 @@ GST_START_TEST (test_non_leaky_overrun)
   GstBuffer *buffer2;
   GstBuffer *buffer3;
   GstBuffer *buffer;
+  GstSegment segment;
 
   g_signal_connect (queue, "overrun",
       G_CALLBACK (queue_overrun_link_and_activate), NULL);
@@ -239,7 +240,9 @@ GST_START_TEST (test_non_leaky_overrun)
   UNDERRUN_WAIT ();
   UNDERRUN_UNLOCK ();
 
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
   gst_pad_push_event (mysrcpad, gst_event_new_stream_start ("test"));
+  gst_pad_push_event (mysrcpad, gst_event_new_segment (&segment));
 
   fail_unless (underrun_count == 1);
   fail_unless (overrun_count == 0);
@@ -316,6 +319,7 @@ GST_START_TEST (test_leaky_upstream)
   GstBuffer *buffer2;
   GstBuffer *buffer3;
   GstBuffer *buffer;
+  GstSegment segment;
 
   g_signal_connect (queue, "overrun", G_CALLBACK (queue_overrun), NULL);
   g_object_set (G_OBJECT (queue), "max-size-buffers", 2, "leaky", 1, NULL);
@@ -331,7 +335,9 @@ GST_START_TEST (test_leaky_upstream)
   UNDERRUN_WAIT ();
   UNDERRUN_UNLOCK ();
 
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
   gst_pad_push_event (mysrcpad, gst_event_new_stream_start ("test"));
+  gst_pad_push_event (mysrcpad, gst_event_new_segment (&segment));
 
   fail_unless (overrun_count == 0);
   fail_unless (underrun_count == 1);
@@ -402,6 +408,7 @@ GST_START_TEST (test_leaky_downstream)
   GstBuffer *buffer2;
   GstBuffer *buffer3;
   GstBuffer *buffer;
+  GstSegment segment;
 
   g_signal_connect (queue, "overrun", G_CALLBACK (queue_overrun), NULL);
   g_object_set (G_OBJECT (queue), "max-size-buffers", 2, "leaky", 2, NULL);
@@ -417,7 +424,9 @@ GST_START_TEST (test_leaky_downstream)
   UNDERRUN_WAIT ();
   UNDERRUN_UNLOCK ();
 
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
   gst_pad_push_event (mysrcpad, gst_event_new_stream_start ("test"));
+  gst_pad_push_event (mysrcpad, gst_event_new_segment (&segment));
 
   fail_unless (overrun_count == 0);
   fail_unless (underrun_count == 1);
@@ -483,6 +492,7 @@ GST_START_TEST (test_time_level)
 {
   GstBuffer *buffer = NULL;
   GstClockTime time;
+  GstSegment segment;
 
   g_signal_connect (queue, "overrun",
       G_CALLBACK (queue_overrun_link_and_activate), NULL);
@@ -500,7 +510,9 @@ GST_START_TEST (test_time_level)
   UNDERRUN_WAIT ();
   UNDERRUN_UNLOCK ();
 
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
   gst_pad_push_event (mysrcpad, gst_event_new_stream_start ("test"));
+  gst_pad_push_event (mysrcpad, gst_event_new_segment (&segment));
 
   /* push buffer without duration */
   buffer = gst_buffer_new_and_alloc (4);
@@ -622,6 +634,62 @@ GST_START_TEST (test_time_level_task_not_started)
   fail_if (time != 4 * GST_SECOND);
 
   unblock_src ();
+
+  GST_DEBUG ("stopping");
+  fail_unless (gst_element_set_state (queue,
+          GST_STATE_NULL) == GST_STATE_CHANGE_SUCCESS, "could not set to null");
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_sticky_not_linked)
+{
+  GstEvent *event;
+  GstSegment segment;
+  gboolean ret;
+  GstFlowReturn flow_ret;
+
+  GST_DEBUG ("starting");
+
+  g_object_set (queue, "max-size-buffers", 1, NULL);
+
+  UNDERRUN_LOCK ();
+  fail_unless (gst_element_set_state (queue,
+          GST_STATE_PLAYING) == GST_STATE_CHANGE_SUCCESS,
+      "could not set to playing");
+  UNDERRUN_WAIT ();
+  UNDERRUN_UNLOCK ();
+
+  gst_pad_push_event (mysrcpad, gst_event_new_stream_start ("test"));
+
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  segment.start = 1 * GST_SECOND;
+  segment.stop = 5 * GST_SECOND;
+  segment.time = 0;
+  segment.position = 1 * GST_SECOND;
+
+  event = gst_event_new_segment (&segment);
+  ret = gst_pad_push_event (mysrcpad, event);
+  fail_unless (ret == TRUE);
+
+  /* the first few buffers can return OK as they are queued and gst_queue_loop
+   * is woken up, tries to push and sets ->srcresult to NOT_LINKED
+   */
+  flow_ret = GST_FLOW_OK;
+  while (flow_ret != GST_FLOW_NOT_LINKED)
+    flow_ret = gst_pad_push (mysrcpad, gst_buffer_new ());
+
+  /* send a new sticky event so that it will be pushed on the next gst_pad_push
+   */
+  event = gst_event_new_segment (&segment);
+  ret = gst_pad_push_event (mysrcpad, event);
+  fail_unless (ret == TRUE);
+
+  /* make sure that gst_queue_sink_event doesn't return FALSE if the queue is
+   * unlinked, as that would make gst_pad_push return ERROR
+   */
+  flow_ret = gst_pad_push (mysrcpad, gst_buffer_new ());
+  fail_unless_equals_int (flow_ret, GST_FLOW_NOT_LINKED);
 
   GST_DEBUG ("stopping");
   fail_unless (gst_element_set_state (queue,
@@ -844,6 +912,7 @@ queue_suite (void)
 #if 0
   tcase_add_test (tc_chain, test_newsegment);
 #endif
+  tcase_add_test (tc_chain, test_sticky_not_linked);
 
   return s;
 }

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GST_PARSE_H__
@@ -64,13 +64,16 @@ typedef enum
  * @GST_PARSE_FLAG_FATAL_ERRORS: Always return NULL when an error occurs
  *     (default behaviour is to return partially constructed bins or elements
  *      in some cases)
+ * @GST_PARSE_FLAG_NO_SINGLE_ELEMENT_BINS: If a bin only has a single element,
+ *     just return the element.
  *
  * Parsing options.
  */
 typedef enum
 {
   GST_PARSE_FLAG_NONE = 0,
-  GST_PARSE_FLAG_FATAL_ERRORS = (1 << 0)
+  GST_PARSE_FLAG_FATAL_ERRORS = (1 << 0),
+  GST_PARSE_FLAG_NO_SINGLE_ELEMENT_BINS = (1 << 1)
 } GstParseFlags;
 
 #define GST_TYPE_PARSE_CONTEXT (gst_parse_context_get_type())

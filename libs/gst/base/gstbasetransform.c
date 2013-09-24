@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -149,9 +149,8 @@
  *   <itemizedlist><title>Special output buffer allocations</title>
  *   <listitem><para>
  *     Elements which need to do special allocation of their output buffers
- *     other than what gst_buffer_pad_alloc allows should implement a
- *     prepare_output_buffer method, which calls the parent implementation and
- *     passes the newly allocated buffer.
+ *     beyond allocating output buffers via the negotiated allocator or
+ *     buffer pool should implement the prepare_output_buffer method.
  *   </para></listitem>
  *   </itemizedlist>
  *   <itemizedlist>
@@ -357,6 +356,9 @@ static GstFlowReturn default_prepare_output_buffer (GstBaseTransform * trans,
     GstBuffer * inbuf, GstBuffer ** outbuf);
 static gboolean default_copy_metadata (GstBaseTransform * trans,
     GstBuffer * inbuf, GstBuffer * outbuf);
+static gboolean
+gst_base_transform_default_transform_meta (GstBaseTransform * trans,
+    GstBuffer * inbuf, GstMeta * meta, GstBuffer * outbuf);
 
 /* static guint gst_base_transform_signals[LAST_SIGNAL] = { 0 }; */
 
@@ -408,6 +410,8 @@ gst_base_transform_class_init (GstBaseTransformClass * klass)
       GST_DEBUG_FUNCPTR (gst_base_transform_default_propose_allocation);
   klass->transform_size =
       GST_DEBUG_FUNCPTR (gst_base_transform_default_transform_size);
+  klass->transform_meta =
+      GST_DEBUG_FUNCPTR (gst_base_transform_default_transform_meta);
 
   klass->sink_event = GST_DEBUG_FUNCPTR (gst_base_transform_sink_eventfunc);
   klass->src_event = GST_DEBUG_FUNCPTR (gst_base_transform_src_eventfunc);
@@ -543,6 +547,21 @@ gst_base_transform_transform_caps (GstBaseTransform * trans,
   GST_DEBUG_OBJECT (trans, "to: %" GST_PTR_FORMAT, ret);
 
   return ret;
+}
+
+static gboolean
+gst_base_transform_default_transform_meta (GstBaseTransform * trans,
+    GstBuffer * inbuf, GstMeta * meta, GstBuffer * outbuf)
+{
+  const GstMetaInfo *info = meta->info;
+  const gchar *const *tags;
+
+  tags = gst_meta_api_type_get_tags (info->api);
+
+  if (!tags)
+    return TRUE;
+
+  return FALSE;
 }
 
 static gboolean
@@ -1237,9 +1256,9 @@ gst_base_transform_acceptcaps_default (GstBaseTransform * trans,
 
     /* get all the formats we can handle on this pad */
     if (direction == GST_PAD_SRC)
-      allowed = gst_pad_query_caps (trans->srcpad, NULL);
+      allowed = gst_pad_query_caps (trans->srcpad, caps);
     else
-      allowed = gst_pad_query_caps (trans->sinkpad, NULL);
+      allowed = gst_pad_query_caps (trans->sinkpad, caps);
 
     if (!allowed) {
       GST_DEBUG_OBJECT (trans, "gst_pad_query_caps() failed");
@@ -1299,7 +1318,7 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
     GstCaps * incaps)
 {
   GstBaseTransformPrivate *priv = trans->priv;
-  GstCaps *outcaps;
+  GstCaps *outcaps, *prevcaps;
   gboolean ret = TRUE;
 
   GST_DEBUG_OBJECT (pad, "have new caps %p %" GST_PTR_FORMAT, incaps, incaps);
@@ -1322,8 +1341,14 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
   if (!(ret = gst_base_transform_configure_caps (trans, incaps, outcaps)))
     goto failed_configure;
 
-  /* let downstream know about our caps */
-  ret = gst_pad_set_caps (trans->srcpad, outcaps);
+  prevcaps = gst_pad_get_current_caps (trans->srcpad);
+
+  if (!prevcaps || !gst_caps_is_equal (outcaps, prevcaps))
+    /* let downstream know about our caps */
+    ret = gst_pad_set_caps (trans->srcpad, outcaps);
+
+  if (prevcaps)
+    gst_caps_unref (prevcaps);
 
   if (ret) {
     /* try to get a pool when needed */
@@ -1592,6 +1617,10 @@ default_prepare_output_buffer (GstBaseTransform * trans,
 
   GST_DEBUG_OBJECT (trans, "doing alloc of size %" G_GSIZE_FORMAT, outsize);
   *outbuf = gst_buffer_new_allocate (priv->allocator, outsize, &priv->params);
+  if (!*outbuf) {
+    ret = GST_FLOW_ERROR;
+    goto alloc_failed;
+  }
 
 copy_meta:
   /* copy the metadata */
@@ -1644,7 +1673,7 @@ foreach_metadata (GstBuffer * inbuf, GstMeta ** meta, gpointer user_data)
   GstBaseTransformClass *klass;
   const GstMetaInfo *info = (*meta)->info;
   GstBuffer *outbuf = data->outbuf;
-  gboolean do_copy;
+  gboolean do_copy = FALSE;
 
   klass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
@@ -1662,10 +1691,6 @@ foreach_metadata (GstBuffer * inbuf, GstMeta ** meta, gpointer user_data)
     do_copy = klass->transform_meta (trans, outbuf, *meta, inbuf);
     GST_DEBUG_OBJECT (trans, "transformed metadata %s: copy: %d",
         g_type_name (info->api), do_copy);
-  } else {
-    do_copy = FALSE;
-    GST_DEBUG_OBJECT (trans, "not copying metadata %s",
-        g_type_name (info->api));
   }
 
   /* we only copy metadata when the subclass implemented a transform_meta

@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstCollectPads</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstByteWriter.html" title="GstByteWriter">
 <link rel="next" href="gstreamer-libs-GstTypeFindHelper.html" title="GstTypeFindHelper">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -140,7 +140,7 @@ enum                <a class="link" href="GstCollectPads.html#GstCollectPadsStat
 Manages a set of pads that operate in collect mode. This means that control
 is given to the manager of this object when all pads have data.
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     Collectpads are created with <a class="link" href="GstCollectPads.html#gst-collect-pads-new" title="gst_collect_pads_new ()"><code class="function">gst_collect_pads_new()</code></a>. A callback should then
     be installed with <a class="link" href="GstCollectPads.html#gst-collect-pads-set-function" title="gst_collect_pads_set_function ()"><code class="function">gst_collect_pads_set_function()</code></a>.
@@ -168,7 +168,7 @@ is given to the manager of this object when all pads have data.
   </p></li>
 <li class="listitem"><p>
     Data can also be dequeued in byte units using the <a class="link" href="GstCollectPads.html#gst-collect-pads-available" title="gst_collect_pads_available ()"><code class="function">gst_collect_pads_available()</code></a>,
-    <code class="function">gst_collect_pads_read()</code> and <a class="link" href="GstCollectPads.html#gst-collect-pads-flush" title="gst_collect_pads_flush ()"><code class="function">gst_collect_pads_flush()</code></a> calls.
+    <a class="link" href="GstCollectPads.html#gst-collect-pads-read-buffer" title="gst_collect_pads_read_buffer ()"><code class="function">gst_collect_pads_read_buffer()</code></a> and <a class="link" href="GstCollectPads.html#gst-collect-pads-flush" title="gst_collect_pads_flush ()"><code class="function">gst_collect_pads_flush()</code></a> calls.
   </p></li>
 <li class="listitem"><p>
     Elements should call <a class="link" href="GstCollectPads.html#gst-collect-pads-start" title="gst_collect_pads_start ()"><code class="function">gst_collect_pads_start()</code></a> and <a class="link" href="GstCollectPads.html#gst-collect-pads-stop" title="gst_collect_pads_stop ()"><code class="function">gst_collect_pads_stop()</code></a> in
@@ -178,7 +178,7 @@ is given to the manager of this object when all pads have data.
     no pad is blocked and the element can finish streaming.
   </p></li>
 <li class="listitem"><p>
-    <code class="function">gst_collect_pads_collect()</code> and <code class="function">gst_collect_pads_collect_range()</code> can be used by
+    <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstCollectPads.html#gst-collect-pads-collect"><code class="function">gst_collect_pads_collect()</code></a> and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstCollectPads.html#gst-collect-pads-collect-range"><code class="function">gst_collect_pads_collect_range()</code></a> can be used by
     elements that start a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTask.html"><span class="type">GstTask</span></a> to drive the collect_pads. This feature is however
     not yet implemented.
   </p></li>
@@ -206,8 +206,11 @@ Last reviewed on 2011-10-28 (0.10.36)
 <p>
 Collectpads object.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *<em class="structfield"><code><a name="GstCollectPads-struct.data"></a>data</code></em>;</span></p></td>
 <td>
@@ -230,8 +233,11 @@ Collectpads object.
 <p>
 Structure used by the collect_pads.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *<em class="structfield"><code><a name="GstCollectData.collect"></a>collect</code></em>;</span></p></td>
@@ -267,8 +273,11 @@ A function that will be called when the <a class="link" href="GstCollectPads.htm
 It is passed the pointer to the structure and should free any custom
 memory and resources allocated for it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
 <td>the <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> that will be freed</td>
@@ -287,8 +296,11 @@ A function that will be called when a (considered oldest) buffer can be muxed.
 If all pads have reached EOS, this function is called with NULL <em class="parameter"><code>buffer</code></em>
 and NULL <em class="parameter"><code>data</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -328,8 +340,11 @@ and NULL <em class="parameter"><code>data</code></em>.
 <p>
 A function for comparing two timestamps of buffers or newsegments collected on one pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -380,8 +395,11 @@ ownership of the event and is responsible for chaining up (to
 <code class="function">gst_collect_pads_event_default()</code>) or dropping events (such typical cases
 being handled by the default handler).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -428,8 +446,11 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>.
 This function takes ownership of <em class="parameter"><code>inbuffer</code></em> and should output a buffer in
 <em class="parameter"><code>outbuffer</code></em> or return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in <em class="parameter"><code>outbuffer</code></em> if the buffer should be dropped.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -470,8 +491,11 @@ This function takes ownership of <em class="parameter"><code>inbuffer</code></em
 <p>
 A function that will be called when all pads have received data.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -501,8 +525,11 @@ A function that will be called when all pads have received data.
   GST_COLLECT_PADS_STATE_LOCKED = 1 &lt;&lt; 4
 } GstCollectPadsStateFlags;
 </pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-COLLECT-PADS-STATE-EOS:CAPS"></a><span class="term"><code class="literal">GST_COLLECT_PADS_STATE_EOS</code></span></p></td>
@@ -545,8 +572,11 @@ A function that will be called when all pads have received data.
 A flags word containing <a class="link" href="GstCollectPads.html#GstCollectPadsStateFlags" title="enum GstCollectPadsStateFlags"><span class="type">GstCollectPadsStateFlags</span></a> flags set
 on this collected pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
 <td>a <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a>.</td>
@@ -561,8 +591,11 @@ on this collected pad.
 <p>
 Gives the status of a specific flag on a collected pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -583,8 +616,11 @@ Gives the status of a specific flag on a collected pad.
 <p>
 Sets a state flag on a collected pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -605,8 +641,11 @@ Sets a state flag on a collected pad.
 <p>
 Clears a state flag on a collected pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -629,8 +668,11 @@ Get the stream lock of <em class="parameter"><code>pads</code></em>. The stream 
 serialize execution among the various streams being collected, and in
 protecting the resources used to accomplish this.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
 <td>a <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>
@@ -646,8 +688,11 @@ protecting the resources used to accomplish this.
 <p>
 Lock the stream lock of <em class="parameter"><code>pads</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
 <td>a <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>
@@ -663,8 +708,11 @@ Lock the stream lock of <em class="parameter"><code>pads</code></em>.
 <p>
 Unlock the stream lock of <em class="parameter"><code>pads</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
 <td>a <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>
@@ -682,8 +730,11 @@ Create a new instance of <a class="link" href="GstCollectPads.html" title="GstCo
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>, or NULL in case of an error. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -731,8 +782,11 @@ started.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -780,8 +834,11 @@ The pad will be deactivated automatically when <em class="parameter"><code>pads<
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -810,8 +867,11 @@ Starts the processing of data in the collect_pads.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
 <td>the collectpads to use</td>
@@ -829,8 +889,11 @@ will also unblock any blocking operations.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
 <td>the collectpads to use</td>
@@ -853,8 +916,11 @@ in the callback.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -884,8 +950,11 @@ in the callback.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -920,8 +989,11 @@ handler.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -952,8 +1024,11 @@ handler.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -988,8 +1063,11 @@ callback.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1030,8 +1108,11 @@ callback.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1070,8 +1151,11 @@ it.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1102,8 +1186,11 @@ Set the timestamp comparison function.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1138,8 +1225,11 @@ if so (unusually) needed.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1166,8 +1256,11 @@ MT safe.
 Install a clipping function that is called right after a buffer is received
 on a pad managed by <em class="parameter"><code>pads</code></em>. See <a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()"><span class="type">GstCollectPadsClipFunction</span></a> for more info.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1200,8 +1293,11 @@ e.g. by sending a FLUSH_START downstream.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1234,8 +1330,11 @@ If this callback is set, the former will be unset.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1270,8 +1369,11 @@ in the callback.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pads</code></em> :</span></p></td>
@@ -1293,6 +1395,6 @@ in waiting or non-waiting mode</td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

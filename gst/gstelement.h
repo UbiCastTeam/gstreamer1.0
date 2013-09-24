@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -593,6 +593,7 @@ struct _GstElement
  * @state_changed: called immediately after a new state was set.
  * @post_message: called when a message is posted on the element. Chain up to
  *                the parent class' handler to have it posted on the bus.
+ * @set_context: set a #GstContext on the element
  *
  * GStreamer element class. Override the vmethods to implement the element
  * functionality.
@@ -649,8 +650,10 @@ struct _GstElementClass
 
   gboolean              (*post_message)         (GstElement *element, GstMessage *message);
 
+  void                  (*set_context)          (GstElement *element, GstContext *context);
+
   /*< private >*/
-  gpointer _gst_reserved[GST_PADDING_LARGE-1];
+  gpointer _gst_reserved[GST_PADDING_LARGE-2];
 };
 
 /* element class pad templates */
@@ -737,6 +740,9 @@ GstClockTime            gst_element_get_start_time      (GstElement *element);
 void                    gst_element_set_bus             (GstElement * element, GstBus * bus);
 GstBus *                gst_element_get_bus             (GstElement * element);
 
+/* context */
+void                    gst_element_set_context         (GstElement * element, GstContext * context);
+
 /* pad management */
 gboolean                gst_element_add_pad             (GstElement *element, GstPad *pad);
 gboolean                gst_element_remove_pad          (GstElement *element, GstPad *pad);
@@ -765,7 +771,7 @@ gboolean                gst_element_post_message        (GstElement * element, G
 
 /* error handling */
 /* gcc versions < 3.3 warn about NULL being passed as format to printf */
-#if (defined(GST_USING_PRINTF_EXTENSION) || !defined(__GNUC__) || (__GNUC__ < 3) || (__GNUC__ == 3 && __GNUC_MINOR__ < 3))
+#if (!defined(__GNUC__) || (__GNUC__ < 3) || (__GNUC__ == 3 && __GNUC_MINOR__ < 3))
 gchar *                 _gst_element_error_printf       (const gchar *format, ...);
 #else
 gchar *                 _gst_element_error_printf       (const gchar *format, ...) G_GNUC_PRINTF (1, 2);

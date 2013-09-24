@@ -14,8 +14,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -83,12 +83,14 @@
  *
  * The adapter will keep track of the timestamps of the buffers
  * that were pushed. The last seen timestamp before the current position
- * can be queried with gst_adapter_prev_timestamp(). This function can
- * optionally return the amount of bytes between the start of the buffer that
+ * can be queried with gst_adapter_prev_pts(). This function can
+ * optionally return the number of bytes between the start of the buffer that
  * carried the timestamp and the current adapter position. The distance is
  * useful when dealing with, for example, raw audio samples because it allows
  * you to calculate the timestamp of the current adapter position by using the
- * last seen timestamp and the amount of bytes since.
+ * last seen timestamp and the amount of bytes since.  Additionally, the
+ * gst_adapter_prev_pts_at_offset() can be used to determine the last
+ * seen timestamp at a particular offset in the adapter.
  *
  * A last thing to note is that while GstAdapter is pretty optimized,
  * merging buffers still might be an operation that requires a malloc() and
@@ -707,15 +709,102 @@ gst_adapter_take (GstAdapter * adapter, gsize nbytes)
 }
 
 /**
+ * gst_adapter_take_buffer_fast:
+ * @adapter:  a #GstAdapter
+ * @nbytes: the number of bytes to take
+ *
+ * Returns a #GstBuffer containing the first @nbytes of the @adapter.
+ * The returned bytes will be flushed from the adapter.  This function
+ * is potentially more performant than gst_adapter_take_buffer() since
+ * it can reuse the memory in pushed buffers by subbuffering or
+ * merging. Unlike gst_adapter_take_buffer(), the returned buffer may
+ * be composed of multiple non-contiguous #GstMemory objects, no
+ * copies are made.
+ *
+ * Note that no assumptions should be made as to whether certain buffer
+ * flags such as the DISCONT flag are set on the returned buffer, or not.
+ * The caller needs to explicitly set or unset flags that should be set or
+ * unset.
+ *
+ * This function can return buffer up to the return value of
+ * gst_adapter_available() without making copies if possible.
+ *
+ * Caller owns a reference to the returned buffer. gst_buffer_unref() after
+ * usage.
+ *
+ * Free-function: gst_buffer_unref
+ *
+ * Returns: (transfer full): a #GstBuffer containing the first @nbytes of
+ *     the adapter, or #NULL if @nbytes bytes are not available.
+ *     gst_buffer_unref() when no longer needed.
+ *
+ * Since: 1.2
+ */
+
+GstBuffer *
+gst_adapter_take_buffer_fast (GstAdapter * adapter, gsize nbytes)
+{
+  GstBuffer *buffer = NULL;
+  GstBuffer *cur;
+  GSList *item;
+  gsize skip;
+  gsize left = nbytes;
+
+  g_return_val_if_fail (GST_IS_ADAPTER (adapter), NULL);
+  g_return_val_if_fail (nbytes > 0, NULL);
+
+  GST_LOG_OBJECT (adapter, "taking buffer of %" G_GSIZE_FORMAT " bytes",
+      nbytes);
+
+  /* we don't have enough data, return NULL. This is unlikely
+   * as one usually does an _available() first instead of grabbing a
+   * random size. */
+  if (G_UNLIKELY (nbytes > adapter->size))
+    return NULL;
+
+  skip = adapter->skip;
+  cur = adapter->buflist->data;
+
+  if (skip == 0 && gst_buffer_get_size (cur) == nbytes) {
+    GST_LOG_OBJECT (adapter, "providing buffer of %" G_GSIZE_FORMAT " bytes"
+        " as head buffer", nbytes);
+    buffer = gst_buffer_ref (cur);
+    goto done;
+  }
+
+  for (item = adapter->buflist; item && left > 0; item = item->next) {
+    gsize size;
+
+    cur = item->data;
+    size = MIN (gst_buffer_get_size (cur) - skip, left);
+
+    GST_LOG_OBJECT (adapter, "appending %" G_GSIZE_FORMAT " bytes"
+        " via region copy", size);
+    if (buffer)
+      gst_buffer_copy_into (buffer, cur, GST_BUFFER_COPY_MEMORY, skip, size);
+    else
+      buffer = gst_buffer_copy_region (cur, GST_BUFFER_COPY_ALL, skip, size);
+    skip = 0;
+    left -= size;
+  }
+
+done:
+  gst_adapter_flush_unchecked (adapter, nbytes);
+
+  return buffer;
+}
+
+/**
  * gst_adapter_take_buffer:
  * @adapter: a #GstAdapter
  * @nbytes: the number of bytes to take
  *
  * Returns a #GstBuffer containing the first @nbytes bytes of the
  * @adapter. The returned bytes will be flushed from the adapter.
- * This function is potentially more performant than gst_adapter_take()
- * since it can reuse the memory in pushed buffers by subbuffering
- * or merging.
+ * This function is potentially more performant than
+ * gst_adapter_take() since it can reuse the memory in pushed buffers
+ * by subbuffering or merging. This function will always return a
+ * buffer with a single memory region.
  *
  * Note that no assumptions should be made as to whether certain buffer
  * flags such as the DISCONT flag are set on the returned buffer, or not.
@@ -949,6 +1038,104 @@ gst_adapter_prev_dts (GstAdapter * adapter, guint64 * distance)
 }
 
 /**
+ * gst_adapter_prev_pts_at_offset:
+ * @adapter: a #GstAdapter
+ * @offset: the offset in the adapter at which to get timestamp
+ * @distance: (out) (allow-none): pointer to location for distance, or NULL
+ *
+ * Get the pts that was before the byte at offset @offset in the adapter. When
+ * @distance is given, the amount of bytes between the pts and the current
+ * position is returned.
+ *
+ * The pts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
+ * the adapter is first created or when it is cleared. This also means that before
+ * the first byte with a pts is removed from the adapter, the pts
+ * and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
+ *
+ * Since: 1.2
+ * Returns: The previously seen pts at given offset.
+ */
+GstClockTime
+gst_adapter_prev_pts_at_offset (GstAdapter * adapter, gsize offset,
+    guint64 * distance)
+{
+  GstBuffer *cur;
+  GSList *g;
+  gsize read_offset = 0;
+  GstClockTime pts = adapter->pts;
+
+  g_return_val_if_fail (GST_IS_ADAPTER (adapter), GST_CLOCK_TIME_NONE);
+  g_return_val_if_fail (offset >= 0, GST_CLOCK_TIME_NONE);
+
+  g = adapter->buflist;
+
+  while (g && read_offset < offset + adapter->skip) {
+    cur = g->data;
+
+    read_offset += gst_buffer_get_size (cur);
+    if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_PTS (cur))) {
+      pts = GST_BUFFER_PTS (cur);
+    }
+
+    g = g_slist_next (g);
+  }
+
+  if (distance)
+    *distance = adapter->dts_distance + offset;
+
+  return pts;
+}
+
+/**
+ * gst_adapter_prev_dts_at_offset:
+ * @adapter: a #GstAdapter
+ * @offset: the offset in the adapter at which to get timestamp
+ * @distance: (out) (allow-none): pointer to location for distance, or NULL
+ *
+ * Get the dts that was before the byte at offset @offset in the adapter. When
+ * @distance is given, the amount of bytes between the dts and the current
+ * position is returned.
+ *
+ * The dts is reset to GST_CLOCK_TIME_NONE and the distance is set to 0 when
+ * the adapter is first created or when it is cleared. This also means that before
+ * the first byte with a dts is removed from the adapter, the dts
+ * and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
+ *
+ * Since: 1.2
+ * Returns: The previously seen dts at given offset.
+ */
+GstClockTime
+gst_adapter_prev_dts_at_offset (GstAdapter * adapter, gsize offset,
+    guint64 * distance)
+{
+  GstBuffer *cur;
+  GSList *g;
+  gsize read_offset = 0;
+  GstClockTime dts = adapter->dts;
+
+  g_return_val_if_fail (GST_IS_ADAPTER (adapter), GST_CLOCK_TIME_NONE);
+  g_return_val_if_fail (offset >= 0, GST_CLOCK_TIME_NONE);
+
+  g = adapter->buflist;
+
+  while (g && read_offset < offset + adapter->skip) {
+    cur = g->data;
+
+    read_offset += gst_buffer_get_size (cur);
+    if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DTS (cur))) {
+      dts = GST_BUFFER_DTS (cur);
+    }
+
+    g = g_slist_next (g);
+  }
+
+  if (distance)
+    *distance = adapter->dts_distance + offset;
+
+  return dts;
+}
+
+/**
  * gst_adapter_masked_scan_uint32_peek:
  * @adapter: a #GstAdapter
  * @mask: mask to apply to data before matching against @pattern
@@ -971,7 +1158,7 @@ gst_adapter_prev_dts (GstAdapter * adapter, guint64 * distance)
  *
  * Returns: offset of the first match, or -1 if no match was found.
  */
-gsize
+gssize
 gst_adapter_masked_scan_uint32_peek (GstAdapter * adapter, guint32 mask,
     guint32 pattern, gsize offset, gsize size, guint32 * value)
 {
@@ -1108,7 +1295,7 @@ gst_adapter_masked_scan_uint32_peek (GstAdapter * adapter, guint32 mask,
  * // -> returns -1
  * </programlisting>
  */
-gsize
+gssize
 gst_adapter_masked_scan_uint32 (GstAdapter * adapter, guint32 mask,
     guint32 pattern, gsize offset, gsize size)
 {

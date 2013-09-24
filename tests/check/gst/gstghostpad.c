@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include <gst/check/gstcheck.h>
@@ -1130,6 +1130,7 @@ GST_START_TEST (test_ghost_pads_remove_while_playing)
 {
   GstPad *sinkpad;
   GstPad *srcpad;
+  GstSegment segment;
 
   bin = gst_bin_new (NULL);
   gst_element_set_state (bin, GST_STATE_PLAYING);
@@ -1146,6 +1147,12 @@ GST_START_TEST (test_ghost_pads_remove_while_playing)
   srcpad = gst_pad_new ("srcpad", GST_PAD_SRC);
   gst_pad_set_active (srcpad, TRUE);
   gst_pad_link (srcpad, ghostsink);
+
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_stream_start ("test")) == TRUE);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_segment (&segment)) == TRUE);
 
   gst_pad_add_probe (ghostsrc, GST_PAD_PROBE_TYPE_BUFFER,
       remove_ghostpad_probe_cb, NULL, NULL);

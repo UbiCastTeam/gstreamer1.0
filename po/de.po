@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 1.0.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-08-28 12:47+0100\n"
+"POT-Creation-Date: 2013-09-19 10:02+0200\n"
 "PO-Revision-Date: 2012-11-28 19:22+0100\n"
 "Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -50,6 +50,11 @@ msgstr "LISTE"
 
 msgid "Disable colored debugging output"
 msgstr "Farbige Fehlerdiagnoseausgabe deaktivieren"
+
+msgid ""
+"Changes coloring mode of the debug log. Possible modes: off, on, disable, "
+"auto, unix"
+msgstr ""
 
 msgid "Disable debugging"
 msgstr "Fehlerdiagnose deaktivieren"
@@ -263,6 +268,10 @@ msgstr "Keine Standardfehlermeldung für den Bereich %s und Fehlercode %d."
 msgid "Selected clock cannot be used in pipeline."
 msgstr ""
 "Der ausgewählte Referenztakt kann nicht in der Pipeline verwendet werden."
+
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "Fehler beim Schreiben des Zwischenspeichers der Registry nach %s: %s"
 
 msgid "title"
 msgstr "Titel"
@@ -808,8 +817,28 @@ msgstr "Bildorientierung"
 msgid "How the image should be rotated or flipped before display"
 msgstr "Wie das Bild vor der Darstellung gedreht oder gespiegelt werden soll"
 
+msgid "publisher"
+msgstr ""
+
+msgid "Name of the label or publisher"
+msgstr ""
+
+msgid "interpreted-by"
+msgstr ""
+
+msgid "Information about the people behind a remix and similar interpretations"
+msgstr ""
+
 msgid ", "
 msgstr ", "
+
+#, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
 
 #, c-format
 msgid "ERROR: from element %s: %s\n"
@@ -877,15 +906,6 @@ msgstr "Zielelement für URI »%s« nicht verknüpft werden"
 msgid "empty pipeline not allowed"
 msgstr "Leere Leitung ist nicht erlaubt"
 
-msgid "Internal clock error."
-msgstr "Interner Zeitfehler"
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Interner Fehler im Datenfluss."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Es werden viele Puffer verworfen."
 
@@ -894,6 +914,15 @@ msgstr "Internes Problem im Datenfluss."
 
 msgid "Internal data stream error."
 msgstr "Interner Fehler im Datenstrom."
+
+msgid "Internal data flow error."
+msgstr "Interner Fehler im Datenfluss."
+
+msgid "Internal clock error."
+msgstr "Interner Zeitfehler"
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Filterfähigkeiten"
@@ -1131,6 +1160,10 @@ msgstr "WARNUNG: Von Element %s: %s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Vorgelaufen, auf Ende des Zwischenspeicherns warten …\n"
 
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Vorgelaufen, auf Ende des Zwischenspeicherns warten …\n"
+
 msgid "buffering..."
 msgstr "Zwischenspeichern läuft …"
 
@@ -1154,8 +1187,16 @@ msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Interrupt: Leitung wird gestoppt ...\n"
 
 #, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
+#, c-format
 msgid "Missing element: %s\n"
 msgstr "Fehlendes Element »%s«\n"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s=%s\n"
+msgstr "WARNUNG: Von Element %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Kennzeichen (auch bekannt als Metadaten) ausgeben"
@@ -1291,10 +1332,6 @@ msgstr "Leitung wird geleert ...\n"
 #~ msgid "Print alloc trace (if enabled at compile time)"
 #~ msgstr ""
 #~ "Speicherzuordnungsverfolgung ausgeben (falls zur Kompilierzeit aktiviert)"
-
-#~ msgid "Error writing registry cache to %s: %s"
-#~ msgstr ""
-#~ "Fehler beim Schreiben des Zwischenspeichers der Registry nach %s: %s"
 
 #~ msgid "Error re-scanning registry %s: %s"
 #~ msgstr "Fehler beim erneuten Einlesen der Registry %s : %s"

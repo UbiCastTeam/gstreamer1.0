@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GSTINFO_H__
@@ -159,6 +159,20 @@ typedef enum {
   GST_DEBUG_UNDERLINE		= 0x0200
 } GstDebugColorFlags;
 
+/**
+ * GstDebugColorMode:
+ * @GST_DEBUG_COLOR_MODE_OFF: Do not use colors in logs.
+ * @GST_DEBUG_COLOR_MODE_ON: Paint logs in a platform-specific way.
+ * @GST_DEBUG_COLOR_MODE_UNIX: Paint logs with UNIX terminal color codes
+ *                             no matter what platform GStreamer is running on.
+ */
+typedef enum {
+  GST_DEBUG_COLOR_MODE_OFF  = 0,
+  GST_DEBUG_COLOR_MODE_ON   = 1,
+  GST_DEBUG_COLOR_MODE_UNIX = 2
+} GstDebugColorMode;
+
+
 #define GST_DEBUG_FG_MASK	(0x000F)
 #define GST_DEBUG_BG_MASK	(0x00F0)
 #define GST_DEBUG_FORMAT_MASK	(0xFF00)
@@ -229,6 +243,21 @@ struct _GstDebugCategory {
 #endif
 #endif /* ifndef GST_FUNCTION */
 
+/**
+ * GST_PTR_FORMAT:
+ *
+ * printf format type used to debug GStreamer types.
+ * This can only be used on types whose size is >= sizeof(gpointer).
+ */
+#define GST_PTR_FORMAT     "p\aA"
+
+/**
+ * GST_SEGMENT_FORMAT:
+ *
+ * printf format type used to debug GStreamer segments.
+ * This can only be used on pointers to GstSegment structures.
+ */
+#define GST_SEGMENT_FORMAT "p\aB"
 
 typedef struct _GstDebugMessage GstDebugMessage;
 
@@ -256,20 +285,6 @@ typedef void (*GstLogFunction)  (GstDebugCategory * category,
                                  GstDebugMessage  * message,
                                  gpointer           user_data);
 
-#ifdef GST_USING_PRINTF_EXTENSION
-
-/* not using G_GNUC_PRINTF, since gcc will choke on GST_PTR_FORMAT being %P */
-void		    gst_debug_log            (GstDebugCategory * category,
-                                          GstDebugLevel      level,
-                                          const gchar      * file,
-                                          const gchar      * function,
-                                          gint               line,
-                                          GObject          * object,
-                                          const gchar      * format,
-                                          ...) G_GNUC_NO_INSTRUMENT;
-
-#else /* GST_USING_PRINTF_EXTENSION */
-
 void		    gst_debug_log            (GstDebugCategory * category,
                                           GstDebugLevel      level,
                                           const gchar      * file,
@@ -278,8 +293,6 @@ void		    gst_debug_log            (GstDebugCategory * category,
                                           GObject          * object,
                                           const gchar      * format,
                                           ...) G_GNUC_PRINTF (7, 8) G_GNUC_NO_INSTRUMENT;
-
-#endif /* GST_USING_PRINTF_EXTENSION */
 
 void            gst_debug_log_valist     (GstDebugCategory * category,
                                           GstDebugLevel      level,
@@ -340,12 +353,16 @@ void            gst_debug_set_active  (gboolean active);
 gboolean        gst_debug_is_active   (void);
 
 void            gst_debug_set_colored (gboolean colored);
+void            gst_debug_set_color_mode   (GstDebugColorMode mode);
+void            gst_debug_set_color_mode_from_string (const gchar * mode);
 gboolean        gst_debug_is_colored  (void);
+GstDebugColorMode gst_debug_get_color_mode (void);
 
 void            gst_debug_set_default_threshold      (GstDebugLevel level);
 GstDebugLevel   gst_debug_get_default_threshold      (void);
 void            gst_debug_set_threshold_for_name     (const gchar * name,
                                                       GstDebugLevel level);
+void            gst_debug_set_threshold_from_string  (const gchar * list, gboolean reset);
 void            gst_debug_unset_threshold_for_name   (const gchar * name);
 
 
@@ -1239,7 +1256,10 @@ GST_TRACE (const char *format, ...)
 #define gst_debug_set_active(active)			G_STMT_START{ }G_STMT_END
 #define gst_debug_is_active()				(FALSE)
 #define gst_debug_set_colored(colored)			G_STMT_START{ }G_STMT_END
+#define gst_debug_set_color_mode(mode)			G_STMT_START{ }G_STMT_END
+#define gst_debug_set_color_mode_from_string(mode)	G_STMT_START{ }G_STMT_END
 #define gst_debug_is_colored()				(FALSE)
+#define gst_debug_get_color_mode()			(GST_DEBUG_COLOR_MODE_OFF)
 #define gst_debug_set_default_threshold(level)		G_STMT_START{ }G_STMT_END
 #define gst_debug_get_default_threshold()		(GST_LEVEL_NONE)
 #define gst_debug_set_threshold_for_name(name,level)	G_STMT_START{ }G_STMT_END

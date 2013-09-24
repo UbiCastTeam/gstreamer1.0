@@ -17,44 +17,33 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
 
-/* FIXME: hack alert */
-#ifdef HAVE_WIN32
-#define DISABLE_FAULT_HANDLER
-#endif
-
+#include <glib.h>
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifndef DISABLE_FAULT_HANDLER
+#ifdef G_OS_UNIX
+#include <glib-unix.h>
 #include <sys/wait.h>
 #endif
 #include <locale.h>             /* for LC_ALL */
 #include "tools.h"
 
-/* FIXME: This is just a temporary hack.  We should have a better
- * check for siginfo handling. */
-#ifdef SA_SIGINFO
-#define USE_SIGINFO
-#endif
-
 extern volatile gboolean glib_on_error_halt;
 
-#ifndef DISABLE_FAULT_HANDLER
+#ifdef G_OS_UNIX
 static void fault_restore (void);
 static void fault_spin (void);
-static void sigint_restore (void);
-static gboolean caught_intr = FALSE;
 #endif
 
 /* event_loop return codes */
@@ -77,8 +66,7 @@ static gboolean waiting_eos = FALSE;
 /* convenience macro so we don't have to litter the code with if(!quiet) */
 #define PRINT if(!quiet)g_print
 
-#ifndef DISABLE_FAULT_HANDLER
-#ifndef USE_SIGINFO
+#ifdef G_OS_UNIX
 static void
 fault_handler_sighandler (int signum)
 {
@@ -102,34 +90,6 @@ fault_handler_sighandler (int signum)
   fault_spin ();
 }
 
-#else /* USE_SIGINFO */
-
-static void
-fault_handler_sigaction (int signum, siginfo_t * si, void *misc)
-{
-  fault_restore ();
-
-  /* printf is used instead of g_print(), since it's less likely to
-   * deadlock */
-  switch (si->si_signo) {
-    case SIGSEGV:
-      fprintf (stderr, "Caught SIGSEGV accessing address %p\n", si->si_addr);
-      break;
-    case SIGQUIT:
-      if (!quiet)
-        printf ("Caught SIGQUIT\n");
-      break;
-    default:
-      fprintf (stderr, "signo:  %d\n", si->si_signo);
-      fprintf (stderr, "errno:  %d\n", si->si_errno);
-      fprintf (stderr, "code:   %d\n", si->si_code);
-      break;
-  }
-
-  fault_spin ();
-}
-#endif /* USE_SIGINFO */
-
 static void
 fault_spin (void)
 {
@@ -142,7 +102,7 @@ fault_spin (void)
 
   /* FIXME how do we know if we were run by libtool? */
   fprintf (stderr,
-      "Spinning.  Please run 'gdb gst-launch- " GST_API_VERSION " %d' to "
+      "Spinning.  Please run 'gdb gst-launch-" GST_API_VERSION " %d' to "
       "continue debugging, Ctrl-C to quit, or Ctrl-\\ to dump core.\n",
       (gint) getpid ());
   while (spinning)
@@ -167,17 +127,12 @@ fault_setup (void)
   struct sigaction action;
 
   memset (&action, 0, sizeof (action));
-#ifdef USE_SIGINFO
-  action.sa_sigaction = fault_handler_sigaction;
-  action.sa_flags = SA_SIGINFO;
-#else
   action.sa_handler = fault_handler_sighandler;
-#endif
 
   sigaction (SIGSEGV, &action, NULL);
   sigaction (SIGQUIT, &action, NULL);
 }
-#endif /* DISABLE_FAULT_HANDLER */
+#endif /* G_OS_UNIX */
 
 #if 0
 typedef struct _GstIndexStats
@@ -503,89 +458,49 @@ print_toc_entry (gpointer data, gpointer user_data)
   g_list_foreach (subentries, print_toc_entry, GUINT_TO_POINTER (indent));
 }
 
-#ifndef DISABLE_FAULT_HANDLER
-/* we only use sighandler here because the registers are not important */
-static void
-sigint_handler_sighandler (int signum)
-{
-  PRINT ("Caught interrupt -- ");
-
-  /* If we were waiting for an EOS, we still want to catch
-   * the next signal to shutdown properly (and the following one
-   * will quit the program). */
-  if (waiting_eos) {
-    waiting_eos = FALSE;
-  } else {
-    sigint_restore ();
-  }
-  /* we set a flag that is checked by the mainloop, we cannot do much in the
-   * interrupt handler (no mutex or other blocking stuff) */
-  caught_intr = TRUE;
-}
-
-/* is called every 250 milliseconds (4 times a second), the interrupt handler
- * will set a flag for us. We react to this by posting a message. */
+#ifdef G_OS_UNIX
+/* As the interrupt handler is dispatched from GMainContext as a GSourceFunc
+ * handler, we can react to this by posting a message. */
 static gboolean
-check_intr (GstElement * pipeline)
+intr_handler (gpointer user_data)
 {
-  if (!caught_intr) {
-    return TRUE;
-  } else {
-    caught_intr = FALSE;
-    PRINT ("handling interrupt.\n");
+  GstElement *pipeline = (GstElement *) user_data;
 
-    /* post an application specific message */
-    gst_element_post_message (GST_ELEMENT (pipeline),
-        gst_message_new_application (GST_OBJECT (pipeline),
-            gst_structure_new ("GstLaunchInterrupt",
-                "message", G_TYPE_STRING, "Pipeline interrupted", NULL)));
+  PRINT ("handling interrupt.\n");
 
-    /* remove timeout handler */
-    return FALSE;
-  }
+  /* post an application specific message */
+  gst_element_post_message (GST_ELEMENT (pipeline),
+      gst_message_new_application (GST_OBJECT (pipeline),
+          gst_structure_new ("GstLaunchInterrupt",
+              "message", G_TYPE_STRING, "Pipeline interrupted", NULL)));
+
+  /* remove signal handler */
+  return FALSE;
 }
 
-static void
-sigint_setup (void)
-{
-  struct sigaction action;
-
-  memset (&action, 0, sizeof (action));
-  action.sa_handler = sigint_handler_sighandler;
-
-  sigaction (SIGINT, &action, NULL);
-}
-
-static void
-sigint_restore (void)
-{
-  struct sigaction action;
-
-  memset (&action, 0, sizeof (action));
-  action.sa_handler = SIG_DFL;
-
-  sigaction (SIGINT, &action, NULL);
-}
-#endif /* DISABLE_FAULT_HANDLER */
+#endif /* G_OS_UNIX */
 
 /* returns ELR_ERROR if there was an error
  * or ELR_INTERRUPT if we caught a keyboard interrupt
  * or ELR_NO_ERROR otherwise. */
 static EventLoopResult
-event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
+event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
+    GstState target_state)
 {
-#ifndef DISABLE_FAULT_HANDLER
-  gulong timeout_id;
+#ifdef G_OS_UNIX
+  guint signal_watch_id;
 #endif
   GstBus *bus;
   GstMessage *message = NULL;
   EventLoopResult res = ELR_NO_ERROR;
-  gboolean buffering = FALSE;
+  gboolean buffering = FALSE, in_progress = FALSE;
+  gboolean prerolled = target_state != GST_STATE_PAUSED;
 
   bus = gst_element_get_bus (GST_ELEMENT (pipeline));
 
-#ifndef DISABLE_FAULT_HANDLER
-  timeout_id = g_timeout_add (250, (GSourceFunc) check_intr, pipeline);
+#ifdef G_OS_UNIX
+  signal_watch_id =
+      g_unix_signal_add (SIGINT, (GSourceFunc) intr_handler, pipeline);
 #endif
 
   while (TRUE) {
@@ -752,19 +667,23 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
         if (GST_MESSAGE_SRC (message) != GST_OBJECT_CAST (pipeline))
           break;
 
-        /* ignore when we are buffering since then we mess with the states
-         * ourselves. */
-        if (buffering) {
-          PRINT (_("Prerolled, waiting for buffering to finish...\n"));
-          break;
-        }
-
         gst_message_parse_state_changed (message, &old, &new, &pending);
 
         /* if we reached the final target state, exit */
-        if (target_state == GST_STATE_PAUSED && new == target_state)
+        if (target_state == GST_STATE_PAUSED && new == target_state) {
+          prerolled = TRUE;
+          /* ignore when we are buffering since then we mess with the states
+           * ourselves. */
+          if (buffering) {
+            PRINT (_("Prerolled, waiting for buffering to finish...\n"));
+            break;
+          }
+          if (in_progress) {
+            PRINT (_("Prerolled, waiting for progress to finish...\n"));
+            break;
+          }
           goto exit;
-
+        }
         /* else not an interesting message */
         break;
       }
@@ -785,7 +704,7 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
           if (target_state == GST_STATE_PLAYING) {
             PRINT (_("Done buffering, setting pipeline to PLAYING ...\n"));
             gst_element_set_state (pipeline, GST_STATE_PLAYING);
-          } else
+          } else if (prerolled && !in_progress)
             goto exit;
         } else {
           /* buffering busy */
@@ -833,6 +752,37 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
         }
         break;
       }
+      case GST_MESSAGE_PROGRESS:
+      {
+        GstProgressType type;
+        gchar *code, *text;
+
+        gst_message_parse_progress (message, &type, &code, &text);
+
+        switch (type) {
+          case GST_PROGRESS_TYPE_START:
+          case GST_PROGRESS_TYPE_CONTINUE:
+            if (do_progress) {
+              in_progress = TRUE;
+              blocking = TRUE;
+            }
+            break;
+          case GST_PROGRESS_TYPE_COMPLETE:
+          case GST_PROGRESS_TYPE_CANCELED:
+          case GST_PROGRESS_TYPE_ERROR:
+            in_progress = FALSE;
+            break;
+          default:
+            break;
+        }
+        PRINT (_("Progress: (%s) %s\n"), code, text);
+        g_free (code);
+        g_free (text);
+
+        if (do_progress && !in_progress && !buffering && prerolled)
+          goto exit;
+        break;
+      }
       case GST_MESSAGE_ELEMENT:{
         if (gst_is_missing_plugin_message (message)) {
           const gchar *desc;
@@ -840,6 +790,23 @@ event_loop (GstElement * pipeline, gboolean blocking, GstState target_state)
           desc = gst_missing_plugin_message_get_description (message);
           PRINT (_("Missing element: %s\n"), desc ? desc : "(no description)");
         }
+        break;
+      }
+      case GST_MESSAGE_HAVE_CONTEXT:{
+        GstContext *context;
+        const gchar *context_type;
+        gchar *context_str;
+
+        gst_message_parse_have_context (message, &context);
+
+        context_type = gst_context_get_context_type (context);
+        context_str =
+            gst_structure_to_string (gst_context_get_structure (context));
+        PRINT (_("Got context from element '%s': %s=%s\n"),
+            GST_ELEMENT_NAME (GST_MESSAGE_SRC (message)), context_type,
+            context_str);
+        g_free (context_str);
+        gst_context_unref (context);
         break;
       }
       default:
@@ -856,8 +823,8 @@ exit:
     if (message)
       gst_message_unref (message);
     gst_object_unref (bus);
-#ifndef DISABLE_FAULT_HANDLER
-    g_source_remove (timeout_id);
+#ifdef G_OS_UNIX
+    g_source_remove (signal_watch_id);
 #endif
     return res;
   }
@@ -899,6 +866,7 @@ bus_sync_handler (GstBus * bus, GstMessage * message, gpointer data)
 
         g_free (state_transition_name);
       }
+      break;
     default:
       break;
   }
@@ -951,6 +919,7 @@ main (int argc, char *argv[])
 #endif
   gchar **argvn;
   GError *error = NULL;
+  gulong deep_notify_id = 0;
   gint res = 0;
 
   free (malloc (8));            /* -lefence */
@@ -981,11 +950,9 @@ main (int argc, char *argv[])
 
   gst_tools_print_version ();
 
-#ifndef DISABLE_FAULT_HANDLER
+#ifdef G_OS_UNIX
   if (!no_fault)
     fault_setup ();
-
-  sigint_setup ();
 #endif
 
   /* make a null-terminated version of argv */
@@ -1016,7 +983,7 @@ main (int argc, char *argv[])
   if (verbose) {
     gchar **exclude_list =
         exclude_args ? g_strsplit (exclude_args, ",", 0) : NULL;
-    g_signal_connect (pipeline, "deep-notify",
+    deep_notify_id = g_signal_connect (pipeline, "deep-notify",
         G_CALLBACK (gst_object_default_deep_notify), exclude_list);
   }
 
@@ -1064,7 +1031,7 @@ main (int argc, char *argv[])
       case GST_STATE_CHANGE_FAILURE:
         g_printerr (_("ERROR: Pipeline doesn't want to pause.\n"));
         res = -1;
-        event_loop (pipeline, FALSE, GST_STATE_VOID_PENDING);
+        event_loop (pipeline, FALSE, FALSE, GST_STATE_VOID_PENDING);
         goto end;
       case GST_STATE_CHANGE_NO_PREROLL:
         PRINT (_("Pipeline is live and does not need PREROLL ...\n"));
@@ -1072,7 +1039,7 @@ main (int argc, char *argv[])
         break;
       case GST_STATE_CHANGE_ASYNC:
         PRINT (_("Pipeline is PREROLLING ...\n"));
-        caught_error = event_loop (pipeline, TRUE, GST_STATE_PAUSED);
+        caught_error = event_loop (pipeline, TRUE, TRUE, GST_STATE_PAUSED);
         if (caught_error) {
           g_printerr (_("ERROR: pipeline doesn't want to preroll.\n"));
           goto end;
@@ -1084,7 +1051,7 @@ main (int argc, char *argv[])
         break;
     }
 
-    caught_error = event_loop (pipeline, FALSE, GST_STATE_PLAYING);
+    caught_error = event_loop (pipeline, FALSE, TRUE, GST_STATE_PLAYING);
 
     if (caught_error) {
       g_printerr (_("ERROR: pipeline doesn't want to preroll.\n"));
@@ -1111,7 +1078,7 @@ main (int argc, char *argv[])
       }
 
       tfthen = gst_util_get_timestamp ();
-      caught_error = event_loop (pipeline, TRUE, GST_STATE_PLAYING);
+      caught_error = event_loop (pipeline, TRUE, FALSE, GST_STATE_PLAYING);
       if (eos_on_shutdown && caught_error != ELR_NO_ERROR) {
         gboolean ignore_errors;
 
@@ -1127,7 +1094,7 @@ main (int argc, char *argv[])
         PRINT (_("Waiting for EOS...\n"));
 
         while (TRUE) {
-          caught_error = event_loop (pipeline, TRUE, GST_STATE_PLAYING);
+          caught_error = event_loop (pipeline, TRUE, FALSE, GST_STATE_PLAYING);
 
           if (caught_error == ELR_NO_ERROR) {
             /* we got EOS */
@@ -1149,7 +1116,8 @@ main (int argc, char *argv[])
 
       diff = GST_CLOCK_DIFF (tfthen, tfnow);
 
-      PRINT (_("Execution ended after %" G_GINT64_FORMAT " ns.\n"), diff);
+      PRINT (_("Execution ended after %" GST_TIME_FORMAT "\n"),
+          GST_TIME_ARGS (diff));
     }
 
     PRINT (_("Setting pipeline to PAUSED ...\n"));
@@ -1159,6 +1127,10 @@ main (int argc, char *argv[])
 
     /* iterate mainloop to process pending stuff */
     while (g_main_context_iteration (NULL, FALSE));
+
+    /* No need to see all those pad caps going to NULL etc., it's just noise */
+    if (deep_notify_id != 0)
+      g_signal_handler_disconnect (pipeline, deep_notify_id);
 
     PRINT (_("Setting pipeline to READY ...\n"));
     gst_element_set_state (pipeline, GST_STATE_READY);

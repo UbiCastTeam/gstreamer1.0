@@ -579,7 +579,7 @@ main (gint   argc,
         </listitem>
         <listitem>
           <para>
-            It the appsrc operates in live mode or not. This can be configured
+            If the appsrc operates in live mode or not. This can be configured
             with the is-live property. When operating in live-mode it is
             important to configure the min-latency and max-latency in appsrc.
             The min-latency should be set to the amount of time it takes between
@@ -1396,7 +1396,7 @@ event_probe_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 
   gst_pad_remove_probe (pad, GST_PAD_PROBE_INFO_ID (info));
 
-  /* push current event back into the queue */
+  /* push current effect back into the queue */
   g_queue_push_tail (&effects, gst_object_ref (cur_effect));
   /* take next effect from the queue */
   next = g_queue_pop_head (&effects);

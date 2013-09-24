@@ -16,17 +16,17 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:gstdirectcontrolbinding
  * @short_description: direct attachment for control sources
  *
  * A value mapping object that attaches control sources to gobject properties. It
- * will map the control values [0.0 ... 1.0] to the target property range.
+ * will map the control values [0.0 ... 1.0] to the target property range. If a
+ * control value is outside of the range, it will be clipped.
  */
-
 
 #include <glib-object.h>
 #include <gst/gst.h>
@@ -178,7 +178,7 @@ gst_direct_control_binding_class_init (GstDirectControlBindingClass * klass)
       g_param_spec_object ("control-source", "ControlSource",
       "The control source",
       GST_TYPE_CONTROL_SOURCE,
-      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (gobject_class, PROP_LAST, properties);
 }

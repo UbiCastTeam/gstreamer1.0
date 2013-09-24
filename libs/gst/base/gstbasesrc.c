@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -224,8 +224,10 @@ struct _GstBaseSrcPrivate
   /* if a stream-start event should be sent */
   gboolean stream_start_pending;
 
-  /* if segment should be sent */
+  /* if segment should be sent and a
+   * seqnum if it was originated by a seek */
   gboolean segment_pending;
+  guint32 segment_seqnum;
 
   /* if EOS is pending (atomic) */
   gint pending_eos;
@@ -346,7 +348,7 @@ static GstFlowReturn gst_base_src_get_range (GstBaseSrc * src, guint64 offset,
 static gboolean gst_base_src_seekable (GstBaseSrc * src);
 static gboolean gst_base_src_negotiate (GstBaseSrc * basesrc);
 static gboolean gst_base_src_update_length (GstBaseSrc * src, guint64 offset,
-    guint * length);
+    guint * length, gboolean force);
 
 static void
 gst_base_src_class_init (GstBaseSrcClass * klass)
@@ -818,6 +820,7 @@ gst_base_src_new_seamless_segment (GstBaseSrc * src, gint64 start, gint64 stop,
 
   /* Mark pending segment. Will be sent before next data */
   src->priv->segment_pending = TRUE;
+  src->priv->segment_seqnum = gst_util_seqnum_next ();
 
   GST_DEBUG_OBJECT (src,
       "Starting new seamless segment. Start %" GST_TIME_FORMAT " stop %"
@@ -840,14 +843,16 @@ gst_base_src_send_stream_start (GstBaseSrc * src)
 
   if (src->priv->stream_start_pending) {
     gchar *stream_id;
+    GstEvent *event;
 
     stream_id =
         gst_pad_create_stream_id (src->srcpad, GST_ELEMENT_CAST (src), NULL);
 
     GST_DEBUG_OBJECT (src, "Pushing STREAM_START");
-    ret =
-        gst_pad_push_event (src->srcpad,
-        gst_event_new_stream_start (stream_id));
+    event = gst_event_new_stream_start (stream_id);
+    gst_event_set_group_id (event, gst_util_group_id_next ());
+
+    ret = gst_pad_push_event (src->srcpad, event);
     src->priv->stream_start_pending = FALSE;
     g_free (stream_id);
   }
@@ -878,7 +883,7 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
     res = bclass->set_caps (src, caps);
 
   if (res)
-    res = gst_pad_set_caps (src->srcpad, caps);
+    res = gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
 
   return res;
 }
@@ -1018,8 +1023,8 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
           guint length = 0;
 
           /* may have to refresh duration */
-          if (g_atomic_int_get (&src->priv->dynamic_size))
-            gst_base_src_update_length (src, 0, &length);
+          gst_base_src_update_length (src, 0, &length,
+              g_atomic_int_get (&src->priv->dynamic_size));
 
           /* this is the duration as configured by the subclass. */
           GST_OBJECT_LOCK (src);
@@ -1076,23 +1081,23 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
     }
     case GST_QUERY_SEGMENT:
     {
+      GstFormat format;
       gint64 start, stop;
 
       GST_OBJECT_LOCK (src);
-      /* no end segment configured, current duration then */
+
+      format = src->segment.format;
+
+      start =
+          gst_segment_to_stream_time (&src->segment, format,
+          src->segment.start);
       if ((stop = src->segment.stop) == -1)
         stop = src->segment.duration;
-      start = src->segment.start;
+      else
+        stop = gst_segment_to_stream_time (&src->segment, format, stop);
 
-      /* adjust to stream time */
-      if (src->segment.time != -1) {
-        start -= src->segment.time;
-        if (stop != -1)
-          stop -= src->segment.time;
-      }
+      gst_query_set_segment (query, src->segment.rate, format, start, stop);
 
-      gst_query_set_segment (query, src->segment.rate, src->segment.format,
-          start, stop);
       GST_OBJECT_UNLOCK (src);
       res = TRUE;
       break;
@@ -1287,6 +1292,8 @@ gst_base_src_do_seek (GstBaseSrc * src, GstSegment * segment)
   gboolean result = FALSE;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
+
+  GST_INFO_OBJECT (src, "seeking: %" GST_SEGMENT_FORMAT, segment);
 
   if (bclass->do_seek)
     result = bclass->do_seek (src, segment);
@@ -1658,10 +1665,12 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
 
     /* for deriving a stop position for the playback segment from the seek
      * segment, we must take the duration when the stop is not set */
+    /* FIXME: This is never used below */
     if ((stop = seeksegment.stop) == -1)
       stop = seeksegment.duration;
 
     src->priv->segment_pending = TRUE;
+    src->priv->segment_seqnum = seqnum;
   }
 
   src->priv->discont = TRUE;
@@ -1693,8 +1702,10 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
 {
   GstBaseSrc *src;
   gboolean result = FALSE;
+  GstBaseSrcClass *bclass;
 
   src = GST_BASE_SRC (element);
+  bclass = GST_BASE_SRC_GET_CLASS (src);
 
   GST_DEBUG_OBJECT (src, "handling event %p %" GST_PTR_FORMAT, event, event);
 
@@ -1703,26 +1714,55 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
     case GST_EVENT_FLUSH_START:
       GST_DEBUG_OBJECT (src, "pushing flush-start event downstream");
       result = gst_pad_push_event (src->srcpad, event);
-      event = NULL;
-      break;
-    case GST_EVENT_FLUSH_STOP:
+      /* also unblock the create function */
+      gst_base_src_activate_pool (src, FALSE);
+      /* unlock any subclasses, we need to do this before grabbing the
+       * LIVE_LOCK since we hold this lock before going into ::create. We pass an
+       * unlock to the params because of backwards compat (see seek handler)*/
+      if (bclass->unlock)
+        bclass->unlock (src);
+
+      /* the live lock is released when we are blocked, waiting for playing or
+       * when we sync to the clock. */
       GST_LIVE_LOCK (src);
-      src->priv->segment_pending = TRUE;
-      /* sending random flushes downstream can break stuff,
-       * especially sync since all segment info will get flushed */
-      GST_DEBUG_OBJECT (src, "pushing flush-stop event downstream");
-      result = gst_pad_push_event (src->srcpad, event);
+      src->priv->flushing = TRUE;
+      /* clear pending EOS if any */
+      g_atomic_int_set (&src->priv->pending_eos, FALSE);
+      if (bclass->unlock_stop)
+        bclass->unlock_stop (src);
+      if (src->clock_id)
+        gst_clock_id_unschedule (src->clock_id);
+      GST_DEBUG_OBJECT (src, "signal");
+      GST_LIVE_SIGNAL (src);
       GST_LIVE_UNLOCK (src);
       event = NULL;
       break;
+    case GST_EVENT_FLUSH_STOP:
+    {
+      gboolean start;
+
+      GST_LIVE_LOCK (src);
+      src->priv->segment_pending = TRUE;
+      src->priv->flushing = FALSE;
+      GST_DEBUG_OBJECT (src, "pushing flush-stop event downstream");
+      result = gst_pad_push_event (src->srcpad, event);
+
+      gst_base_src_activate_pool (src, TRUE);
+
+      GST_OBJECT_LOCK (src->srcpad);
+      start = (GST_PAD_MODE (src->srcpad) == GST_PAD_MODE_PUSH);
+      GST_OBJECT_UNLOCK (src->srcpad);
+      if (start)
+        gst_pad_start_task (src->srcpad, (GstTaskFunction) gst_base_src_loop,
+            src->srcpad, NULL);
+      GST_LIVE_UNLOCK (src);
+      event = NULL;
+      break;
+    }
 
       /* downstream serialized events */
     case GST_EVENT_EOS:
     {
-      GstBaseSrcClass *bclass;
-
-      bclass = GST_BASE_SRC_GET_CLASS (src);
-
       /* queue EOS and make sure the task or pull function performs the EOS
        * actions.
        *
@@ -2218,13 +2258,13 @@ no_sync:
 
 /* Called with STREAM_LOCK and LIVE_LOCK */
 static gboolean
-gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length)
+gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
+    gboolean force)
 {
   guint64 size, maxsize;
   GstBaseSrcClass *bclass;
   GstFormat format;
   gint64 stop;
-  gboolean dynamic;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
@@ -2249,14 +2289,11 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length)
       ", segment.stop %" G_GINT64_FORMAT ", maxsize %" G_GINT64_FORMAT, offset,
       *length, size, stop, maxsize);
 
-  dynamic = g_atomic_int_get (&src->priv->dynamic_size);
-  GST_DEBUG_OBJECT (src, "dynamic size: %d", dynamic);
-
   /* check size if we have one */
   if (maxsize != -1) {
     /* if we run past the end, check if the file became bigger and
      * retry. */
-    if (G_UNLIKELY (offset + *length >= maxsize || dynamic)) {
+    if (G_UNLIKELY (offset + *length >= maxsize || force)) {
       /* see if length of the file changed */
       if (bclass->get_size)
         if (!bclass->get_size (src, &size))
@@ -2324,7 +2361,7 @@ again:
   if (G_UNLIKELY (!bclass->create))
     goto no_function;
 
-  if (G_UNLIKELY (!gst_base_src_update_length (src, offset, &length)))
+  if (G_UNLIKELY (!gst_base_src_update_length (src, offset, &length, FALSE)))
     goto unexpected_length;
 
   /* track position */
@@ -2573,7 +2610,19 @@ gst_base_src_loop (GstPad * pad)
 
   src = GST_BASE_SRC (GST_OBJECT_PARENT (pad));
 
+  /* Just leave immediately if we're flushing */
+  GST_LIVE_LOCK (src);
+  if (G_UNLIKELY (src->priv->flushing || GST_PAD_IS_FLUSHING (pad)))
+    goto flushing;
+  GST_LIVE_UNLOCK (src);
+
   gst_base_src_send_stream_start (src);
+
+  /* The stream-start event could've caused something to flush us */
+  GST_LIVE_LOCK (src);
+  if (G_UNLIKELY (src->priv->flushing || GST_PAD_IS_FLUSHING (pad)))
+    goto flushing;
+  GST_LIVE_UNLOCK (src);
 
   /* check if we need to renegotiate */
   if (gst_pad_check_reconfigure (pad)) {
@@ -2588,7 +2637,7 @@ gst_base_src_loop (GstPad * pad)
 
   GST_LIVE_LOCK (src);
 
-  if (G_UNLIKELY (src->priv->flushing))
+  if (G_UNLIKELY (src->priv->flushing || GST_PAD_IS_FLUSHING (pad)))
     goto flushing;
 
   blocksize = src->blocksize;
@@ -2626,7 +2675,11 @@ gst_base_src_loop (GstPad * pad)
 
   /* push events to close/start our segment before we push the buffer. */
   if (G_UNLIKELY (src->priv->segment_pending)) {
-    gst_pad_push_event (pad, gst_event_new_segment (&src->segment));
+    GstEvent *seg_event = gst_event_new_segment (&src->segment);
+
+    gst_event_set_seqnum (seg_event, src->priv->segment_seqnum);
+    src->priv->segment_seqnum = gst_util_seqnum_next ();
+    gst_pad_push_event (pad, seg_event);
     src->priv->segment_pending = FALSE;
   }
 
@@ -3137,6 +3190,7 @@ gst_base_src_start (GstBaseSrc * basesrc)
   basesrc->num_buffers_left = basesrc->num_buffers;
   basesrc->running = FALSE;
   basesrc->priv->segment_pending = FALSE;
+  basesrc->priv->segment_seqnum = gst_util_seqnum_next ();
   GST_LIVE_UNLOCK (basesrc);
 
   bclass = GST_BASE_SRC_GET_CLASS (basesrc);
@@ -3369,7 +3423,7 @@ gst_base_src_stop (GstBaseSrc * basesrc)
 
 was_stopped:
   {
-    GST_DEBUG_OBJECT (basesrc, "was started");
+    GST_DEBUG_OBJECT (basesrc, "was stopped");
     GST_OBJECT_UNLOCK (basesrc);
     return TRUE;
   }

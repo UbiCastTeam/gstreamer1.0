@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -107,6 +107,8 @@ static GstMessageQuarks message_quarks[] = {
   {GST_MESSAGE_TOC, "toc", 0},
   {GST_MESSAGE_RESET_TIME, "reset-time", 0},
   {GST_MESSAGE_STREAM_START, "stream-start", 0},
+  {GST_MESSAGE_NEED_CONTEXT, "need-context", 0},
+  {GST_MESSAGE_HAVE_CONTEXT, "have-context", 0},
   {0, NULL, 0}
 };
 
@@ -1405,7 +1407,7 @@ gst_message_parse_segment_start (GstMessage * message, GstFormat * format,
  * @format: (out) (allow-none): Result location for the format, or NULL
  * @position: (out) (allow-none): Result location for the position, or NULL
  *
- * Extracts the position and format from the segment start message.
+ * Extracts the position and format from the segment done message.
  *
  * MT safe.
  */
@@ -2146,8 +2148,188 @@ GstMessage *
 gst_message_new_stream_start (GstObject * src)
 {
   GstMessage *message;
+  GstStructure *s;
 
-  message = gst_message_new_custom (GST_MESSAGE_STREAM_START, src, NULL);
+  s = gst_structure_new_id_empty (GST_QUARK (MESSAGE_STREAM_START));
+  message = gst_message_new_custom (GST_MESSAGE_STREAM_START, src, s);
 
   return message;
+}
+
+
+/**
+ * gst_message_set_group_id:
+ * @message: the message
+ * @group_id: the group id
+ *
+ * Sets the group id on the stream-start message.
+ *
+ * All streams that have the same group id are supposed to be played
+ * together, i.e. all streams inside a container file should have the
+ * same group id but different stream ids. The group id should change
+ * each time the stream is started, resulting in different group ids
+ * each time a file is played for example.
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+void
+gst_message_set_group_id (GstMessage * message, guint group_id)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_IS_MESSAGE (message));
+  g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_STREAM_START);
+  g_return_if_fail (gst_message_is_writable (message));
+
+  structure = GST_MESSAGE_STRUCTURE (message);
+  gst_structure_id_set (structure, GST_QUARK (GROUP_ID), G_TYPE_UINT, group_id,
+      NULL);
+}
+
+/**
+ * gst_message_parse_group_id:
+ * @message: A valid #GstMessage of type GST_MESSAGE_STREAM_START.
+ * @group_id: (out) (allow-none): Result location for the group id or
+ *      NULL
+ *
+ * Extract the group from the STREAM_START message.
+ *
+ * Returns: %TRUE if the message had a group id set, %FALSE otherwise
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+gboolean
+gst_message_parse_group_id (GstMessage * message, guint * group_id)
+{
+  GstStructure *structure;
+  const GValue *v;
+
+  g_return_val_if_fail (GST_IS_MESSAGE (message), FALSE);
+  g_return_val_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_STREAM_START,
+      FALSE);
+
+  if (!group_id)
+    return TRUE;
+
+  structure = GST_MESSAGE_STRUCTURE (message);
+
+  v = gst_structure_id_get_value (structure, GST_QUARK (GROUP_ID));
+  if (!v)
+    return FALSE;
+
+  *group_id = g_value_get_uint (v);
+  return TRUE;
+}
+
+/**
+ * gst_message_new_need_context:
+ * @src: (transfer none): The object originating the message.
+ * @context_type: The context type that is needed
+ *
+ * This message is posted when an element needs a specific #GstContext.
+ *
+ * Returns: (transfer full): The new need-context message.
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+GstMessage *
+gst_message_new_need_context (GstObject * src, const gchar * context_type)
+{
+  GstMessage *message;
+  GstStructure *structure;
+
+  g_return_val_if_fail (context_type != NULL, NULL);
+
+  structure = gst_structure_new_id (GST_QUARK (MESSAGE_NEED_CONTEXT),
+      GST_QUARK (CONTEXT_TYPE), G_TYPE_STRING, context_type, NULL);
+  message = gst_message_new_custom (GST_MESSAGE_NEED_CONTEXT, src, structure);
+
+  return message;
+}
+
+/**
+ * gst_message_parse_context_type:
+ * @message: a GST_MESSAGE_NEED_CONTEXT type message
+ * @context_type: (out) (allow-none): the context type, or NULL
+ *
+ * Parse a context type from an existing GST_MESSAGE_NEED_CONTEXT message.
+ *
+ * Returns: a #gboolean indicating if the parsing succeeded.
+ *
+ * Since: 1.2
+ */
+gboolean
+gst_message_parse_context_type (GstMessage * message,
+    const gchar ** context_type)
+{
+  GstStructure *structure;
+  const GValue *value;
+
+  g_return_val_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_NEED_CONTEXT,
+      FALSE);
+
+  structure = GST_MESSAGE_STRUCTURE (message);
+
+  if (context_type) {
+    value = gst_structure_id_get_value (structure, GST_QUARK (CONTEXT_TYPE));
+    *context_type = g_value_get_string (value);
+  }
+
+  return TRUE;
+}
+
+/**
+ * gst_message_new_have_context:
+ * @src: (transfer none): The object originating the message.
+ * @context: (transfer full): the context
+ *
+ * This message is posted when an element has a new local #GstContext.
+ *
+ * Returns: (transfer full): The new have-context message.
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+GstMessage *
+gst_message_new_have_context (GstObject * src, GstContext * context)
+{
+  GstMessage *message;
+  GstStructure *structure;
+
+  structure = gst_structure_new_id (GST_QUARK (MESSAGE_HAVE_CONTEXT),
+      GST_QUARK (CONTEXT), GST_TYPE_CONTEXT, context, NULL);
+  message = gst_message_new_custom (GST_MESSAGE_HAVE_CONTEXT, src, structure);
+  gst_context_unref (context);
+
+  return message;
+}
+
+/**
+ * gst_message_parse_have_context:
+ * @message: A valid #GstMessage of type GST_MESSAGE_HAVE_CONTEXT.
+ * @context: (out) (transfer full) (allow-none): Result location for the
+ *      context or NULL
+ *
+ * Extract the context from the HAVE_CONTEXT message.
+ *
+ * MT safe.
+ *
+ * Since: 1.2
+ */
+void
+gst_message_parse_have_context (GstMessage * message, GstContext ** context)
+{
+  g_return_if_fail (GST_IS_MESSAGE (message));
+  g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_HAVE_CONTEXT);
+
+  if (context)
+    gst_structure_id_get (GST_MESSAGE_STRUCTURE (message),
+        GST_QUARK (CONTEXT), GST_TYPE_CONTEXT, context, NULL);
 }

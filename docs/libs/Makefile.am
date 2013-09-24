@@ -62,13 +62,14 @@ GTKDOC_LIBS = \
 	$(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/net/libgstnet-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(GST_OBJ_LIBS)
 
 GTKDOC_CC=$(LIBTOOL) --tag=CC --mode=compile $(CC)
 GTKDOC_LD=$(LIBTOOL) --tag=CC --mode=link $(CC)
 
 GTKDOC_EXTRA_ENVIRONMENT= \
-    GST_PLUGIN_SCANNER=$(top_builddir)/libs/gst/helpers/gst-plugin-scanner
+    GST_PLUGIN_SCANNER_1_0=$(top_builddir)/libs/gst/helpers/gst-plugin-scanner
 
 # If you need to override some of the declarations, place them in this file
 # and uncomment this line.

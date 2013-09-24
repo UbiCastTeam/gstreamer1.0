@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -771,6 +771,31 @@ gst_byte_reader_dup_data (GstByteReader * reader, guint size, guint8 ** val)
   return _gst_byte_reader_dup_data_inline (reader, size, val);
 }
 
+/* Special optimized scan for mask 0xffffff00 and pattern 0x00000100 */
+static inline gint
+_scan_for_start_code (const guint8 * data, guint offset, guint size)
+{
+  guint i = 0;
+
+  while (i <= (size - 4)) {
+    if (data[i + 2] > 1) {
+      i += 3;
+    } else if (data[i + 1]) {
+      i += 2;
+    } else if (data[i] || data[i + 2] != 1) {
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  if (i <= (size - 4))
+    return i + offset;
+
+  /* nothing found */
+  return -1;
+}
+
 /**
  * gst_byte_reader_masked_scan_uint32:
  * @reader: a #GstByteReader
@@ -830,6 +855,10 @@ gst_byte_reader_masked_scan_uint32 (const GstByteReader * reader, guint32 mask,
     return -1;
 
   data = reader->data + reader->byte + offset;
+
+  /* Handle special case found in MPEG and H264 */
+  if ((pattern == 0x00000100) && (mask == 0xffffff00))
+    return _scan_for_start_code (data, offset, size);
 
   /* set the state to something that does not match */
   state = ~pattern;

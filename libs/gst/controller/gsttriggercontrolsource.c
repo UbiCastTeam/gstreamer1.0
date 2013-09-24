@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
  /**
@@ -68,7 +68,7 @@ _interpolate_trigger (GstTimedValueControlSource * self, GSequenceIter * iter,
   if (GST_CLOCK_DIFF (cp->timestamp, timestamp) <= tolerance) {
     found = TRUE;
   } else {
-    if ((iter = g_sequence_iter_next (iter))) {
+    if ((iter = g_sequence_iter_next (iter)) && !g_sequence_iter_is_end (iter)) {
       cp = g_sequence_get (iter);
       if (GST_CLOCK_DIFF (timestamp, cp->timestamp) <= tolerance) {
         found = TRUE;

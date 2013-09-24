@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -1043,6 +1043,23 @@ gst_tag_list_copy (const GstTagList * taglist)
  * 'flip' means an horizontal mirroring.
  */
 #define GST_TAG_IMAGE_ORIENTATION            "image-orientation"
+/**
+ * GST_TAG_PUBLISHER:
+ *
+ * Name of the label or publisher (string)
+ *
+ * Since: 1.2
+ */
+#define GST_TAG_PUBLISHER                         "publisher"
+/**
+ * GST_TAG_INTERPRETED_BY:
+ *
+ * Information about the people behind a remix and similar
+ * interpretations of another existing piece (string)
+ *
+ * Since: 1.2
+ */
+#define GST_TAG_INTERPRETED_BY                    "interpreted-by"
 
 G_END_DECLS
 

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GST_PRIVATE_H__
@@ -105,6 +105,7 @@ G_GNUC_INTERNAL  void  _priv_gst_buffer_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_buffer_list_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_structure_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_caps_initialize (void);
+G_GNUC_INTERNAL  void  _priv_gst_caps_features_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_event_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_format_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_message_initialize (void);
@@ -116,6 +117,7 @@ G_GNUC_INTERNAL  void  _priv_gst_sample_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_tag_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_value_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_debug_init (void);
+G_GNUC_INTERNAL  void  _priv_gst_context_initialize (void);
 
 /* Private registry functions */
 G_GNUC_INTERNAL
@@ -131,10 +133,19 @@ G_GNUC_INTERNAL  void _priv_gst_element_state_changed (GstElement *element,
 
 /* used in both gststructure.c and gstcaps.c; numbers are completely made up */
 #define STRUCTURE_ESTIMATED_STRING_LEN(s) (16 + gst_structure_n_fields(s) * 22)
+#define FEATURES_ESTIMATED_STRING_LEN(s) (16 + gst_caps_features_get_size(s) * 14)
 
 G_GNUC_INTERNAL
 gboolean  priv_gst_structure_append_to_gstring (const GstStructure * structure,
                                                 GString            * s);
+G_GNUC_INTERNAL
+void priv_gst_caps_features_append_to_gstring (const GstCapsFeatures * features, GString *s);
+
+G_GNUC_INTERNAL
+gboolean priv_gst_structure_parse_name (gchar * str, gchar **start, gchar ** end, gchar ** next);
+G_GNUC_INTERNAL
+gboolean priv_gst_structure_parse_fields (gchar *str, gchar ** end, GstStructure *structure);
+
 /* registry cache backends */
 G_GNUC_INTERNAL
 gboolean		priv_gst_registry_binary_read_cache	(GstRegistry * registry, const char *location);
@@ -220,6 +231,7 @@ GST_EXPORT GstDebugCategory *GST_CAT_REGISTRY;
 GST_EXPORT GstDebugCategory *GST_CAT_QOS;
 GST_EXPORT GstDebugCategory *GST_CAT_META;
 GST_EXPORT GstDebugCategory *GST_CAT_LOCKING;
+GST_EXPORT GstDebugCategory *GST_CAT_CONTEXT;
 
 /* Categories that should be completely private to
  * libgstreamer should be done like this: */
@@ -262,9 +274,15 @@ extern GstDebugCategory *_priv_GST_CAT_POLL;
 #define GST_CAT_POLL             NULL
 #define GST_CAT_META             NULL
 #define GST_CAT_LOCKING          NULL
+#define GST_CAT_CONTEXT          NULL
 
 #endif
 
+#ifdef GST_DISABLE_GST_DEBUG
+/* for _gst_element_error_printf */
+#define __gst_vasprintf __gst_info_fallback_vasprintf
+int __gst_vasprintf (char **result, char const *format, va_list args);
+#endif
 
 /**** objects made opaque until the private bits have been made private ****/
 

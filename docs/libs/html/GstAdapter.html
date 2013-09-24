@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstAdapter</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstPushSrc.html" title="GstPushSrc">
 <link rel="next" href="gstreamer-libs-GstBitReader.html" title="GstBitReader">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -68,12 +68,12 @@
                                                          <em class="parameter"><code><span class="type">guint64</span> *distance</code></em>);
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>        <a class="link" href="GstAdapter.html#gst-adapter-prev-dts" title="gst_adapter_prev_dts ()">gst_adapter_prev_dts</a>                (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
                                                          <em class="parameter"><code><span class="type">guint64</span> *distance</code></em>);
-<span class="returnvalue">gsize</span>               <a class="link" href="GstAdapter.html#gst-adapter-masked-scan-uint32" title="gst_adapter_masked_scan_uint32 ()">gst_adapter_masked_scan_uint32</a>      (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
+<span class="returnvalue">gssize</span>              <a class="link" href="GstAdapter.html#gst-adapter-masked-scan-uint32" title="gst_adapter_masked_scan_uint32 ()">gst_adapter_masked_scan_uint32</a>      (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> mask</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> pattern</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> size</code></em>);
-<span class="returnvalue">gsize</span>               <a class="link" href="GstAdapter.html#gst-adapter-masked-scan-uint32-peek" title="gst_adapter_masked_scan_uint32_peek ()">gst_adapter_masked_scan_uint32_peek</a> (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
+<span class="returnvalue">gssize</span>              <a class="link" href="GstAdapter.html#gst-adapter-masked-scan-uint32-peek" title="gst_adapter_masked_scan_uint32_peek ()">gst_adapter_masked_scan_uint32_peek</a> (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> mask</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> pattern</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
@@ -193,12 +193,14 @@ need to clear the adapter after a discontinuity.
 <p>
 The adapter will keep track of the timestamps of the buffers
 that were pushed. The last seen timestamp before the current position
-can be queried with <code class="function">gst_adapter_prev_timestamp()</code>. This function can
-optionally return the amount of bytes between the start of the buffer that
+can be queried with <a class="link" href="GstAdapter.html#gst-adapter-prev-pts" title="gst_adapter_prev_pts ()"><code class="function">gst_adapter_prev_pts()</code></a>. This function can
+optionally return the number of bytes between the start of the buffer that
 carried the timestamp and the current adapter position. The distance is
 useful when dealing with, for example, raw audio samples because it allows
 you to calculate the timestamp of the current adapter position by using the
-last seen timestamp and the amount of bytes since.
+last seen timestamp and the amount of bytes since.  Additionally, the
+<code class="function">gst_adapter_prev_pts_at_offset()</code> can be used to determine the last
+seen timestamp at a particular offset in the adapter.
 </p>
 <p>
 A last thing to note is that while GstAdapter is pretty optimized,
@@ -241,8 +243,11 @@ The opaque <a class="link" href="GstAdapter.html" title="GstAdapter"><span class
 <p>
 Creates a new <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a>. Free with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -257,8 +262,11 @@ Creates a new <a class="link" href="GstAdapter.html" title="GstAdapter"><span cl
 <p>
 Removes all buffers from <em class="parameter"><code>adapter</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
 <td>a <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a>
@@ -275,8 +283,11 @@ Removes all buffers from <em class="parameter"><code>adapter</code></em>.
 Adds the data from <em class="parameter"><code>buf</code></em> to the data stored inside <em class="parameter"><code>adapter</code></em> and takes
 ownership of the buffer.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -313,8 +324,11 @@ as <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/h
 <p>
 Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if <em class="parameter"><code>size</code></em> bytes are not available.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -340,8 +354,11 @@ Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macr
 <p>
 Releases the memory obtained with the last <a class="link" href="GstAdapter.html#gst-adapter-map" title="gst_adapter_map ()"><code class="function">gst_adapter_map()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
 <td>a <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a>
@@ -365,8 +382,11 @@ The array <em class="parameter"><code>dest</code></em> should be large enough to
 The user should check that the adapter has (<em class="parameter"><code>offset</code></em> + <em class="parameter"><code>size</code></em>) bytes
 available before calling this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -375,7 +395,7 @@ available before calling this function.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>dest</code></em> :</span></p></td>
-<td>the memory to copy into. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span>
+<td>the memory to copy into. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span>
 </td>
 </tr>
 <tr>
@@ -401,8 +421,11 @@ at least this many bytes are available.
 <p>
 See also: <a class="link" href="GstAdapter.html#gst-adapter-map" title="gst_adapter_map ()"><code class="function">gst_adapter_map()</code></a>, <a class="link" href="GstAdapter.html#gst-adapter-unmap" title="gst_adapter_unmap ()"><code class="function">gst_adapter_unmap()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -425,8 +448,11 @@ Gets the maximum amount of bytes available, that is it returns the maximum
 value that can be supplied to <a class="link" href="GstAdapter.html#gst-adapter-map" title="gst_adapter_map ()"><code class="function">gst_adapter_map()</code></a> without that function
 returning NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -450,8 +476,11 @@ Gets the maximum number of bytes that are immediately available without
 requiring any expensive operations (like copying the data into a
 temporary buffer).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -481,8 +510,11 @@ Caller owns returned value. g_free after usage.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -509,9 +541,10 @@ Free-function: g_free
 <p>
 Returns a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> containing the first <em class="parameter"><code>nbytes</code></em> bytes of the
 <em class="parameter"><code>adapter</code></em>. The returned bytes will be flushed from the adapter.
-This function is potentially more performant than <a class="link" href="GstAdapter.html#gst-adapter-take" title="gst_adapter_take ()"><code class="function">gst_adapter_take()</code></a>
-since it can reuse the memory in pushed buffers by subbuffering
-or merging.
+This function is potentially more performant than
+<a class="link" href="GstAdapter.html#gst-adapter-take" title="gst_adapter_take ()"><code class="function">gst_adapter_take()</code></a> since it can reuse the memory in pushed buffers
+by subbuffering or merging. This function will always return a
+buffer with a single memory region.
 </p>
 <p>
 Note that no assumptions should be made as to whether certain buffer
@@ -526,8 +559,11 @@ usage.
 <p>
 Free-function: gst_buffer_unref
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -563,8 +599,11 @@ performant because no memory should be copied.
 Caller owns returned list and contained buffers. <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#gst-buffer-unref"><code class="function">gst_buffer_unref()</code></a> each
 buffer in the list before freeing the list after usage.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -601,8 +640,11 @@ the adapter is first created or when it is cleared. This also means that before
 the first byte with a pts is removed from the adapter, the pts
 and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -637,8 +679,11 @@ the adapter is first created or when it is cleared. This also means that before
 the first byte with a dts is removed from the adapter, the dts
 and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -660,7 +705,7 @@ and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.
 <hr>
 <div class="refsect2">
 <a name="gst-adapter-masked-scan-uint32"></a><h3>gst_adapter_masked_scan_uint32 ()</h3>
-<pre class="programlisting"><span class="returnvalue">gsize</span>               gst_adapter_masked_scan_uint32      (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
+<pre class="programlisting"><span class="returnvalue">gssize</span>              gst_adapter_masked_scan_uint32      (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> mask</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> pattern</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
@@ -682,8 +727,11 @@ enough data (offset+size bytes) in the adapter.
 This function calls <a class="link" href="GstAdapter.html#gst-adapter-masked-scan-uint32-peek" title="gst_adapter_masked_scan_uint32_peek ()"><code class="function">gst_adapter_masked_scan_uint32_peek()</code></a> passing NULL
 for value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -737,7 +785,7 @@ gst_adapter_masked_scan_uint32 (adapter, 0xffff0000, 0x02030000, 0, 4);
 <hr>
 <div class="refsect2">
 <a name="gst-adapter-masked-scan-uint32-peek"></a><h3>gst_adapter_masked_scan_uint32_peek ()</h3>
-<pre class="programlisting"><span class="returnvalue">gsize</span>               gst_adapter_masked_scan_uint32_peek (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
+<pre class="programlisting"><span class="returnvalue">gssize</span>              gst_adapter_masked_scan_uint32_peek (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> mask</code></em>,
                                                          <em class="parameter"><code><span class="type">guint32</span> pattern</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
@@ -757,8 +805,11 @@ adapter for it to match, even if the first or last bytes are masked out.
 It is an error to call this function without making sure that there is
 enough data (offset+size bytes) in the adapter.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>adapter</code></em> :</span></p></td>
@@ -798,6 +849,6 @@ the last scanned position.</td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

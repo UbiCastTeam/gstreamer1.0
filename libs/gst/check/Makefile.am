@@ -11,7 +11,8 @@ libgstcheck_@GST_API_VERSION@_la_DEPENDENCIES = \
 libgstcheck_@GST_API_VERSION@_la_SOURCES =	\
 	gstbufferstraw.c			\
 	gstcheck.c				\
-	gstconsistencychecker.c
+	gstconsistencychecker.c			\
+	gsttestclock.c
 
 libgstcheck_@GST_API_VERSION@_la_CFLAGS = $(GST_OBJ_CFLAGS) \
 	-I$(top_builddir)/libs \
@@ -26,10 +27,12 @@ libgstcheck_@GST_API_VERSION@_la_LDFLAGS = \
 libgstcheck_@GST_API_VERSION@includedir =		\
 	$(includedir)/gstreamer-@GST_API_VERSION@/gst/check
 
-libgstcheck_@GST_API_VERSION@include_HEADERS =	 \
+libgstcheck_@GST_API_VERSION@include_HEADERS =	\
+	check.h					\
 	gstbufferstraw.h			\
 	gstcheck.h				\
-	gstconsistencychecker.h
+	gstconsistencychecker.h			\
+	gsttestclock.h
 
 nodist_libgstcheck_@GST_API_VERSION@include_HEADERS =	\
 	internal-check.h	
@@ -76,6 +79,8 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_check_message_error \
 	gst_check_run_suite \
 	gst_check_setup_element \
+	gst_check_setup_events \
+	gst_check_setup_events_with_stream_id \
 	gst_check_setup_sink_pad \
 	gst_check_setup_sink_pad_by_name \
 	gst_check_setup_src_pad \
@@ -87,7 +92,19 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_consistency_checker_add_pad \
 	gst_consistency_checker_new \
 	gst_consistency_checker_reset \
-	gst_consistency_checker_free
+	gst_consistency_checker_free \
+	gst_test_clock_get_type \
+	gst_test_clock_new \
+	gst_test_clock_new_with_start_time \
+	gst_test_clock_set_time \
+	gst_test_clock_advance_time \
+	gst_test_clock_peek_id_count \
+	gst_test_clock_has_id \
+	gst_test_clock_peek_next_pending_id \
+	gst_test_clock_wait_for_next_pending_id \
+	gst_test_clock_wait_for_pending_id_count \
+	gst_test_clock_process_next_clock_id \
+	gst_test_clock_get_next_entry_time
 
 LIBGSTCHECK_EXPORTED_SYMBOLS = \
 	$(LIBGSTCHECK_EXPORTED_VARS) \
@@ -101,7 +118,7 @@ print-check-symbols:
 	  echo $$s; \
 	done;
 
-$(SYMBOLS_FILE):
+$(SYMBOLS_FILE): $(libgstcheck_@GST_API_VERSION@include_HEADERS) libcheck/check.h
 	$(AM_V_GEN)rm -f $(SYMBOLS_FILE) 2>/dev/null; \
 	for s in $(LIBGSTCHECK_EXPORTED_SYMBOLS) $(CHECK_SYMS); do \
 	  echo $$s >> $(SYMBOLS_FILE); \
@@ -110,15 +127,12 @@ $(SYMBOLS_FILE):
 if HAVE_INTROSPECTION
 BUILT_GIRSOURCES = GstCheck-@GST_API_VERSION@.gir
 
-gir_headers=$(patsubst %,$(srcdir)/%, $(libgstcheck_@GST_API_VERSION@include_HEADERS)) \
-    $(patsubst %,$(builddir)/%, $(nodist_libgstcheck_@GST_API_VERSION@include_HEADERS))
+gir_headers=$(patsubst %,$(srcdir)/%, $(libgstcheck_@GST_API_VERSION@include_HEADERS))
 gir_sources=$(patsubst %,$(srcdir)/%, $(libgstcheck_@GST_API_VERSION@_la_SOURCES))
-gir_cincludes=$(patsubst %,--c-include='gst/check/%',$(libgstcheck_@GST_API_VERSION@include_HEADERS)) \
-    $(patsubst %,--c-include='gst/check/%',$(nodist_libgstcheck_@GST_API_VERSION@include_HEADERS))
 
 GstCheck-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstcheck-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
-		GST_PLUGIN_SYSTEM_PATH="" GST_PLUGIN_PATH="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 		$(INTROSPECTION_SCANNER) -v --namespace GstCheck \
 		--nsversion=@GST_API_VERSION@ \
 		--strip-prefix=Gst \
@@ -127,10 +141,9 @@ GstCheck-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstcheck-@GST_API_VE
 		-I$(top_srcdir)/libs \
 		-I$(top_builddir) \
 		-I$(top_builddir)/libs \
-		$(gir_cincludes) \
+		--c-include "gst/check/check.h" \
 		--add-include-path=$(top_builddir)/gst \
 		--library-path=$(top_builddir)/gst \
-		--library=$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
 		--library=libgstcheck-@GST_API_VERSION@.la \
 		--include=Gst-@GST_API_VERSION@ \
 		--libtool="$(top_builddir)/libtool" \

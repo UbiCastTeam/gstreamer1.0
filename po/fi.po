@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.30.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-08-28 12:47+0100\n"
+"POT-Creation-Date: 2013-09-19 10:02+0200\n"
 "PO-Revision-Date: 2010-11-17 23:10+0200\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -52,6 +52,11 @@ msgstr "LUETTELO"
 
 msgid "Disable colored debugging output"
 msgstr "Ei väritettyjä vianetsintätietoja"
+
+msgid ""
+"Changes coloring mode of the debug log. Possible modes: off, on, disable, "
+"auto, unix"
+msgstr ""
 
 msgid "Disable debugging"
 msgstr "Ei vianetsintää"
@@ -253,6 +258,10 @@ msgstr "Standardia virheviestiä alueelle %s ja koodille %d ei ole."
 
 msgid "Selected clock cannot be used in pipeline."
 msgstr "Valittua kelloa ei voi käyttää liukuhihnassa."
+
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "Virhe kirjoitettaessa rekisterivälimuistia kohteeseen %s: %s"
 
 msgid "title"
 msgstr "nimi"
@@ -794,8 +803,28 @@ msgstr "kuvasuunta"
 msgid "How the image should be rotated or flipped before display"
 msgstr "Kuinka kuva tulisi pyöräyttää tai kääntää ympäri ennen näyttämistä"
 
+msgid "publisher"
+msgstr ""
+
+msgid "Name of the label or publisher"
+msgstr ""
+
+msgid "interpreted-by"
+msgstr ""
+
+msgid "Information about the people behind a remix and similar interpretations"
+msgstr ""
+
 msgid ", "
 msgstr ", "
+
+#, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
 
 #, c-format
 msgid "ERROR: from element %s: %s\n"
@@ -862,16 +891,6 @@ msgstr "nieluelementtiä ei voitu linkittää URIlle ”%s”"
 msgid "empty pipeline not allowed"
 msgstr "tyhjää liukuhihnaa ei sallita"
 
-msgid "Internal clock error."
-msgstr "Sisäinen kellovirhe."
-
-#, fuzzy
-msgid "Failed to map buffer."
-msgstr "Kuvan koodaus epäonnistui."
-
-msgid "Internal data flow error."
-msgstr "Sisäinen tiedon virtausvirhe."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Useita puskureita putoilee."
 
@@ -880,6 +899,16 @@ msgstr "Sisäinen tiedon virtausongelma."
 
 msgid "Internal data stream error."
 msgstr "Sisäinen tietovirtavirhe."
+
+msgid "Internal data flow error."
+msgstr "Sisäinen tiedon virtausvirhe."
+
+msgid "Internal clock error."
+msgstr "Sisäinen kellovirhe."
+
+#, fuzzy
+msgid "Failed to map buffer."
+msgstr "Kuvan koodaus epäonnistui."
 
 msgid "Filter caps"
 msgstr "Kykysuodatus"
@@ -1115,6 +1144,10 @@ msgstr "VAROITUS: elementiltä %s: %s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Esipyöritetty, odotetaan puskuroinnin päättymistä...\n"
 
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Esipyöritetty, odotetaan puskuroinnin päättymistä...\n"
+
 msgid "buffering..."
 msgstr "puskuroidaan..."
 
@@ -1134,9 +1167,17 @@ msgstr "Asetetaan tilaan %s kuten %s pyysi...\n"
 msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Keskeytys: Pysäytetään liukuhihna ...\n"
 
+#, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
 #, fuzzy, c-format
 msgid "Missing element: %s\n"
 msgstr "ei elementtiä ”%s”"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s=%s\n"
+msgstr "VAROITUS: elementiltä %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Tulostemerkinnät (tunnetaan myös metadatana)"
@@ -1272,9 +1313,6 @@ msgstr "Vapautetaan liukuhihna...\n"
 
 #~ msgid "Do not install signal handlers for SIGUSR1 and SIGUSR2"
 #~ msgstr "Älä asenna SIGUSR1- ja SIGUSR2-signaalinkäsittelijöitä"
-
-#~ msgid "Error writing registry cache to %s: %s"
-#~ msgstr "Virhe kirjoitettaessa rekisterivälimuistia kohteeseen %s: %s"
 
 #~ msgid "Error re-scanning registry %s: %s"
 #~ msgstr "Virhe uudelleenskannatessa rekisteriä %s: %s"

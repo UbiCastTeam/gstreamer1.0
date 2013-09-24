@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -47,7 +47,7 @@
  * <para>
  * Controlled properties offers a lightweight way to adjust gobject
  * properties over stream-time. It works by using time-stamped value pairs that
- * are queued for element-properties. At run-time the elements continously pull
+ * are queued for element-properties. At run-time the elements continuously pull
  * values changes for the current stream-time.
  *
  * What needs to be changed in a #GstElement?
@@ -1162,12 +1162,13 @@ gst_object_set_control_binding_disabled (GstObject * object,
  * @object: the controller object
  * @binding: (transfer full): the #GstControlBinding that should be used
  *
- * Sets the #GstControlBinding. If there already was a #GstControlBinding
- * for this property it will be replaced.
+ * Attach the #GstControlBinding to the object. If there already was a
+ * #GstControlBinding for this property it will be replaced.
+ *
  * The @object will take ownership of the @binding.
  *
- * Returns: %FALSE if the given @binding has not been setup for this object  or
- * %TRUE otherwise.
+ * Returns: %FALSE if the given @binding has not been setup for this object or
+ * has been setup for a non suitable property, %TRUE otherwise.
  */
 gboolean
 gst_object_add_control_binding (GstObject * object, GstControlBinding * binding)
@@ -1176,6 +1177,7 @@ gst_object_add_control_binding (GstObject * object, GstControlBinding * binding)
 
   g_return_val_if_fail (GST_IS_OBJECT (object), FALSE);
   g_return_val_if_fail (GST_IS_CONTROL_BINDING (binding), FALSE);
+  g_return_val_if_fail (binding->pspec, FALSE);
 
   GST_OBJECT_LOCK (object);
   if ((old = gst_object_find_control_binding (object, binding->name))) {

@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -1781,7 +1781,6 @@ priv_gst_structure_append_to_gstring (const GstStructure * structure,
 
   g_return_val_if_fail (s != NULL, FALSE);
 
-  g_string_append (s, g_quark_to_string (structure->name));
   len = GST_STRUCTURE_FIELDS (structure)->len;
   for (i = 0; i < len; i++) {
     char *t;
@@ -1839,6 +1838,7 @@ gst_structure_to_string (const GstStructure * structure)
   /* we estimate a minimum size based on the number of fields in order to
    * avoid unnecessary reallocs within GString */
   s = g_string_sized_new (STRUCTURE_ESTIMATED_STRING_LEN (structure));
+  g_string_append (s, g_quark_to_string (structure->name));
   priv_gst_structure_append_to_gstring (structure, s);
   return g_string_free (s, FALSE);
 }
@@ -2236,10 +2236,102 @@ gst_structure_parse_value (gchar * str,
   return ret;
 }
 
+gboolean
+priv_gst_structure_parse_name (gchar * str, gchar ** start, gchar ** end,
+    gchar ** next)
+{
+  char *w;
+  char *r;
+
+  r = str;
+
+  /* skip spaces (FIXME: _isspace treats tabs and newlines as space!) */
+  while (*r && (g_ascii_isspace (*r) || (r[0] == '\\'
+              && g_ascii_isspace (r[1]))))
+    r++;
+
+  *start = r;
+
+  if (G_UNLIKELY (!gst_structure_parse_string (r, &w, &r, TRUE))) {
+    GST_WARNING ("Failed to parse structure string '%s'", str);
+    return FALSE;
+  }
+
+  *end = w;
+  *next = r;
+
+  return TRUE;
+}
+
+gboolean
+priv_gst_structure_parse_fields (gchar * str, gchar ** end,
+    GstStructure * structure)
+{
+  gchar *r;
+  GstStructureField field;
+
+  r = str;
+
+  do {
+    while (*r && (g_ascii_isspace (*r) || (r[0] == '\\'
+                && g_ascii_isspace (r[1]))))
+      r++;
+    if (*r == ';') {
+      /* end of structure, get the next char and finish */
+      r++;
+      break;
+    }
+    if (*r == '\0') {
+      /* accept \0 as end delimiter */
+      break;
+    }
+    if (G_UNLIKELY (*r != ',')) {
+      GST_WARNING ("Failed to find delimiter, r=%s", r);
+      return FALSE;
+    }
+    r++;
+    while (*r && (g_ascii_isspace (*r) || (r[0] == '\\'
+                && g_ascii_isspace (r[1]))))
+      r++;
+
+    memset (&field, 0, sizeof (field));
+    if (G_UNLIKELY (!gst_structure_parse_field (r, &r, &field))) {
+      GST_WARNING ("Failed to parse field, r=%s", r);
+      return FALSE;
+    }
+    gst_structure_set_field (structure, &field);
+  } while (TRUE);
+
+  *end = r;
+
+  return TRUE;
+}
+
+/**
+ * gst_structure_new_from_string:
+ * @string: a string representation of a #GstStructure
+ *
+ * Creates a #GstStructure from a string representation.
+ * If end is not NULL, a pointer to the place inside the given string
+ * where parsing ended will be returned.
+ *
+ * Free-function: gst_structure_free
+ *
+ * Returns: (transfer full): a new #GstStructure or NULL when the string could
+ *     not be parsed. Free with gst_structure_free() after use.
+ *
+ * Since: 1.2
+ */
+GstStructure *
+gst_structure_new_from_string (const gchar * string)
+{
+  return gst_structure_from_string (string, NULL);
+}
+
 /**
  * gst_structure_from_string:
  * @string: a string representation of a #GstStructure.
- * @end: (out) (allow-none) (transfer none): pointer to store the end of the string in.
+ * @end: (out) (allow-none) (transfer none) (skip): pointer to store the end of the string in.
  *
  * Creates a #GstStructure from a string representation.
  * If end is not NULL, a pointer to the place inside the given string
@@ -2259,23 +2351,14 @@ gst_structure_from_string (const gchar * string, gchar ** end)
   char *r;
   char save;
   GstStructure *structure = NULL;
-  GstStructureField field;
 
   g_return_val_if_fail (string != NULL, NULL);
 
   copy = g_strdup (string);
   r = copy;
 
-  /* skip spaces (FIXME: _isspace treats tabs and newlines as space!) */
-  while (*r && (g_ascii_isspace (*r) || (r[0] == '\\'
-              && g_ascii_isspace (r[1]))))
-    r++;
-
-  name = r;
-  if (G_UNLIKELY (!gst_structure_parse_string (r, &w, &r, TRUE))) {
-    GST_WARNING ("Failed to parse structure string '%s'", string);
+  if (!priv_gst_structure_parse_name (r, &name, &w, &r))
     goto error;
-  }
 
   save = *w;
   *w = '\0';
@@ -2285,35 +2368,8 @@ gst_structure_from_string (const gchar * string, gchar ** end)
   if (G_UNLIKELY (structure == NULL))
     goto error;
 
-  do {
-    while (*r && (g_ascii_isspace (*r) || (r[0] == '\\'
-                && g_ascii_isspace (r[1]))))
-      r++;
-    if (*r == ';') {
-      /* end of structure, get the next char and finish */
-      r++;
-      break;
-    }
-    if (*r == '\0') {
-      /* accept \0 as end delimiter */
-      break;
-    }
-    if (G_UNLIKELY (*r != ',')) {
-      GST_WARNING ("Failed to find delimiter, r=%s", r);
-      goto error;
-    }
-    r++;
-    while (*r && (g_ascii_isspace (*r) || (r[0] == '\\'
-                && g_ascii_isspace (r[1]))))
-      r++;
-
-    memset (&field, 0, sizeof (field));
-    if (G_UNLIKELY (!gst_structure_parse_field (r, &r, &field))) {
-      GST_WARNING ("Failed to parse field, r=%s", r);
-      goto error;
-    }
-    gst_structure_set_field (structure, &field);
-  } while (TRUE);
+  if (!priv_gst_structure_parse_fields (r, &r, structure))
+    goto error;
 
   if (end)
     *end = (char *) string + (r - copy);
@@ -2687,8 +2743,7 @@ default_fixate (GQuark field_id, const GValue * value, gpointer data)
   GValue v = { 0 };
 
   if (gst_value_fixate (&v, value)) {
-    gst_structure_id_set_value (s, field_id, &v);
-    g_value_unset (&v);
+    gst_structure_id_take_value (s, field_id, &v);
   }
   return TRUE;
 }
@@ -3023,8 +3078,7 @@ gst_structure_intersect_field1 (GQuark id, const GValue * val1, gpointer data)
   } else {
     GValue dest_value = { 0 };
     if (gst_value_intersect (&dest_value, val1, val2)) {
-      gst_structure_id_set_value (idata->dest, id, &dest_value);
-      g_value_unset (&dest_value);
+      gst_structure_id_take_value (idata->dest, id, &dest_value);
     } else {
       return FALSE;
     }
@@ -3138,27 +3192,18 @@ gst_structure_can_intersect (const GstStructure * struct1,
 }
 
 static gboolean
-gst_caps_structure_has_field (GQuark field_id, const GValue * value,
+gst_caps_structure_is_superset_field (GQuark field_id, const GValue * value,
     gpointer user_data)
 {
   GstStructure *subset = user_data;
-
-  return gst_structure_id_get_value (subset, field_id) != NULL;
-}
-
-static gboolean
-gst_caps_structure_is_subset_field (GQuark field_id, const GValue * value,
-    gpointer user_data)
-{
-  GstStructure *superset = user_data;
   const GValue *other;
   int comparison;
 
-  if (!(other = gst_structure_id_get_value (superset, field_id)))
-    /* field is missing in the superset => is subset */
-    return TRUE;
+  if (!(other = gst_structure_id_get_value (subset, field_id)))
+    /* field is missing in the subset => no subset */
+    return FALSE;
 
-  comparison = gst_value_compare (other, value);
+  comparison = gst_value_compare (value, other);
 
   /* equal values are subset */
   if (comparison == GST_VALUE_EQUAL)
@@ -3168,7 +3213,7 @@ gst_caps_structure_is_subset_field (GQuark field_id, const GValue * value,
   if (comparison != GST_VALUE_UNORDERED)
     return FALSE;
 
-  return gst_value_is_subset (value, other);
+  return gst_value_is_subset (other, value);
 }
 
 /**
@@ -3190,13 +3235,8 @@ gst_structure_is_subset (const GstStructure * subset,
       (gst_structure_n_fields (superset) > gst_structure_n_fields (subset)))
     return FALSE;
 
-  /* The subset must have all fields that are in superset */
-  if (!gst_structure_foreach ((GstStructure *) superset,
-          gst_caps_structure_has_field, (gpointer) subset))
-    return FALSE;
-
-  return gst_structure_foreach ((GstStructure *) subset,
-      gst_caps_structure_is_subset_field, (gpointer) superset);
+  return gst_structure_foreach ((GstStructure *) superset,
+      gst_caps_structure_is_superset_field, (gpointer) subset);
 }
 
 

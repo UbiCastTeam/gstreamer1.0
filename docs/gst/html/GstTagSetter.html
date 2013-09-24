@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTagSetter</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstTagList.html" title="GstTagList">
 <link rel="next" href="GstTask.html" title="GstTask">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -194,8 +194,11 @@ Opaque <a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class
 <p>
 <a class="link" href="GstTagSetter.html#GstTagSetterInterface" title="struct GstTagSetterInterface"><span class="type">GstTagSetterInterface</span></a> interface.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstTagSetterInterface.g-iface"></a>g_iface</code></em>;</span></p></td>
 <td>parent interface type.</td>
@@ -210,8 +213,11 @@ Opaque <a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class
 Reset the internal taglist. Elements should call this from within the
 state-change handler.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
 <td>a <a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a>
@@ -228,8 +234,11 @@ state-change handler.
 <p>
 Merges the given list into the setter's list using the given mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -258,8 +267,11 @@ Merges the given list into the setter's list using the given mode.
 Adds the given tag / value pairs on the setter using the given merge mode.
 The list must be terminated with NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -291,8 +303,11 @@ The list must be terminated with NULL.
 <p>
 Adds the given tag / GValue pair on the setter using the given merge mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -325,8 +340,11 @@ Adds the given tag / GValue pair on the setter using the given merge mode.
 Adds the given tag / GValue pairs on the setter using the given merge mode.
 The list must be terminated with NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -359,8 +377,11 @@ The list must be terminated with NULL.
 Adds the given tag / value pairs on the setter using the given merge mode.
 The list must be terminated with NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -394,8 +415,11 @@ The list must be terminated with NULL.
 Adds the given tag / GValue pairs on the setter using the given merge mode.
 The list must be terminated with NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -428,8 +452,11 @@ modified or freed.
 <p>
 This function is not thread-safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -455,8 +482,11 @@ Sets the given merge mode that is used for adding tags from events to tags
 specified by this interface. The default is <a class="link" href="gstreamer-GstTagList.html#GST-TAG-MERGE-KEEP:CAPS"><span class="type">GST_TAG_MERGE_KEEP</span></a>, which keeps
 the tags set with this interface and discards tags from events.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -478,8 +508,11 @@ the tags set with this interface and discards tags from events.
 Queries the mode by which tags inside the setter are overwritten by tags
 from events
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>setter</code></em> :</span></p></td>
@@ -497,6 +530,6 @@ from events
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

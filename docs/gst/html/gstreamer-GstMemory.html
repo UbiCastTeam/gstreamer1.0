@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstMemory</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstIterator.html" title="GstIterator">
 <link rel="next" href="gstreamer-GstMessage.html" title="GstMessage">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -50,6 +50,8 @@ enum                <a class="link" href="gstreamer-GstMemory.html#GstMemoryFlag
 #define             <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-IS-NO-SHARE:CAPS" title="GST_MEMORY_IS_NO_SHARE()">GST_MEMORY_IS_NO_SHARE</a>              (mem)
 #define             <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-IS-ZERO-PADDED:CAPS" title="GST_MEMORY_IS_ZERO_PADDED()">GST_MEMORY_IS_ZERO_PADDED</a>           (mem)
 #define             <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-IS-ZERO-PREFIXED:CAPS" title="GST_MEMORY_IS_ZERO_PREFIXED()">GST_MEMORY_IS_ZERO_PREFIXED</a>         (mem)
+#define             <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-IS-PHYSICALLY-CONTIGUOUS:CAPS" title="GST_MEMORY_IS_PHYSICALLY_CONTIGUOUS()">GST_MEMORY_IS_PHYSICALLY_CONTIGUOUS</a> (mem)
+#define             <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-IS-NOT-MAPPABLE:CAPS" title="GST_MEMORY_IS_NOT_MAPPABLE()">GST_MEMORY_IS_NOT_MAPPABLE</a>          (mem)
 struct              <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory">GstMemory</a>;
 enum                <a class="link" href="gstreamer-GstMemory.html#GstMapFlags" title="enum GstMapFlags">GstMapFlags</a>;
 #define             <a class="link" href="gstreamer-GstMemory.html#GST-MAP-READWRITE:CAPS" title="GST_MAP_READWRITE">GST_MAP_READWRITE</a>
@@ -76,6 +78,8 @@ enum                <a class="link" href="gstreamer-GstMemory.html#GstMapFlags" 
                                                          <em class="parameter"><code><span class="type">gsize</span> align</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> size</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstMemory.html#gst-memory-is-type" title="gst_memory_is_type ()">gst_memory_is_type</a>                  (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mem_type</code></em>);
 <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *         <a class="link" href="gstreamer-GstMemory.html#gst-memory-ref" title="gst_memory_ref ()">gst_memory_ref</a>                      (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstMemory.html#gst-memory-unref" title="gst_memory_unref ()">gst_memory_unref</a>                    (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);
 <span class="returnvalue">gsize</span>               <a class="link" href="gstreamer-GstMemory.html#gst-memory-get-sizes" title="gst_memory_get_sizes ()">gst_memory_get_sizes</a>                (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
@@ -89,6 +93,7 @@ enum                <a class="link" href="gstreamer-GstMemory.html#GstMapFlags" 
 #define             <a class="link" href="gstreamer-GstMemory.html#gst-memory-unlock" title="gst_memory_unlock()">gst_memory_unlock</a>                   (m,
                                                          f)
 #define             <a class="link" href="gstreamer-GstMemory.html#gst-memory-is-writable" title="gst_memory_is_writable()">gst_memory_is_writable</a>              (m)
+#define             <a class="link" href="gstreamer-GstMemory.html#gst-memory-make-writable" title="gst_memory_make_writable()">gst_memory_make_writable</a>            (m)
 <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *         <a class="link" href="gstreamer-GstMemory.html#gst-memory-make-mapped" title="gst_memory_make_mapped ()">gst_memory_make_mapped</a>              (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMapFlags" title="enum GstMapFlags"><span class="type">GstMapFlags</span></a> flags</code></em>);
@@ -170,6 +175,8 @@ Last reviewed on 2012-03-28 (0.11.3)
   GST_MEMORY_FLAG_NO_SHARE      = (GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 0),
   GST_MEMORY_FLAG_ZERO_PREFIXED = (GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 1),
   GST_MEMORY_FLAG_ZERO_PADDED   = (GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 2),
+  GST_MEMORY_FLAG_PHYSICALLY_CONTIGUOUS = (GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 3),
+  GST_MEMORY_FLAG_NOT_MAPPABLE  = (GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 4),
 
   GST_MEMORY_FLAG_LAST          = (GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 16)
 } GstMemoryFlags;
@@ -177,8 +184,11 @@ Last reviewed on 2012-03-28 (0.11.3)
 <p>
 Flags for wrapped memory.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-MEMORY-FLAG-READONLY:CAPS"></a><span class="term"><code class="literal">GST_MEMORY_FLAG_READONLY</code></span></p></td>
@@ -203,6 +213,16 @@ made when this memory needs to be shared between buffers.
 </td>
 </tr>
 <tr>
+<td><p><a name="GST-MEMORY-FLAG-PHYSICALLY-CONTIGUOUS:CAPS"></a><span class="term"><code class="literal">GST_MEMORY_FLAG_PHYSICALLY_CONTIGUOUS</code></span></p></td>
+<td>the memory is physically contiguous. Since 1.2
+</td>
+</tr>
+<tr>
+<td><p><a name="GST-MEMORY-FLAG-NOT-MAPPABLE:CAPS"></a><span class="term"><code class="literal">GST_MEMORY_FLAG_NOT_MAPPABLE</code></span></p></td>
+<td>the memory can't be mapped via <a class="link" href="gstreamer-GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> without any preconditions. Since 1.2
+</td>
+</tr>
+<tr>
 <td><p><a name="GST-MEMORY-FLAG-LAST:CAPS"></a><span class="term"><code class="literal">GST_MEMORY_FLAG_LAST</code></span></p></td>
 <td>first flag that can be used for custom purposes
 </td>
@@ -218,8 +238,11 @@ made when this memory needs to be shared between buffers.
 <p>
 A flags word containing <a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags set on <em class="parameter"><code>mem</code></em>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
@@ -234,8 +257,11 @@ A flags word containing <a class="link" href="gstreamer-GstMemory.html#GstMemory
 <p>
 Gives the status of a specific flag on a <em class="parameter"><code>mem</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -256,8 +282,11 @@ Gives the status of a specific flag on a <em class="parameter"><code>mem</code><
 <p>
 Clear a specific flag on a <em class="parameter"><code>mem</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -278,8 +307,11 @@ Clear a specific flag on a <em class="parameter"><code>mem</code></em>.
 <p>
 Check if <em class="parameter"><code>mem</code></em> is readonly.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
@@ -294,8 +326,11 @@ Check if <em class="parameter"><code>mem</code></em> is readonly.
 <p>
 Check if <em class="parameter"><code>mem</code></em> cannot be shared between buffers
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
@@ -310,8 +345,11 @@ Check if <em class="parameter"><code>mem</code></em> cannot be shared between bu
 <p>
 Check if the padding in <em class="parameter"><code>mem</code></em> is 0 filled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
@@ -326,13 +364,56 @@ Check if the padding in <em class="parameter"><code>mem</code></em> is 0 filled.
 <p>
 Check if the prefix in <em class="parameter"><code>mem</code></em> is 0 filled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
 </tr></tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-MEMORY-IS-PHYSICALLY-CONTIGUOUS:CAPS"></a><h3>GST_MEMORY_IS_PHYSICALLY_CONTIGUOUS()</h3>
+<pre class="programlisting">#define GST_MEMORY_IS_PHYSICALLY_CONTIGUOUS(mem)     GST_MEMORY_FLAG_IS_SET(mem,GST_MEMORY_FLAG_PHYSICALLY_CONTIGUOUS)
+</pre>
+<p>
+Check if <em class="parameter"><code>mem</code></em> is physically contiguous.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-MEMORY-IS-NOT-MAPPABLE:CAPS"></a><h3>GST_MEMORY_IS_NOT_MAPPABLE()</h3>
+<pre class="programlisting">#define GST_MEMORY_IS_NOT_MAPPABLE(mem)     GST_MEMORY_FLAG_IS_SET(mem,GST_MEMORY_FLAG_NOT_MAPPABLE)
+</pre>
+<p>
+Check if <em class="parameter"><code>mem</code></em> can't be mapped via <a class="link" href="gstreamer-GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> without any preconditions
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -353,8 +434,11 @@ Check if the prefix in <em class="parameter"><code>mem</code></em> is 0 filled.
 Base structure for memory implementations. Custom memory will put this structure
 as the first member of their structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> <em class="structfield"><code><a name="GstMemory.mini-object"></a>mini_object</code></em>;</span></p></td>
@@ -401,8 +485,11 @@ as the first member of their structure.
 <p>
 Flags used when mapping memory
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-MAP-READ:CAPS"></a><span class="term"><code class="literal">GST_MAP_READ</code></span></p></td>
@@ -446,8 +533,11 @@ GstMapFlags value alias for GST_MAP_READ | GST_MAP_WRITE
 A structure containing the result of a map operation such as
 <a class="link" href="gstreamer-GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a>. It contains the data and size.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *<em class="structfield"><code><a name="GstMapInfo.memory"></a>memory</code></em>;</span></p></td>
@@ -495,8 +585,11 @@ Get the memory of <em class="parameter"><code>mem</code></em> that can be access
 in <em class="parameter"><code>flags</code></em>. The function should return a pointer that contains at least
 <em class="parameter"><code>maxsize</code></em> bytes.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -526,8 +619,11 @@ accessed according to the access pattern in <em class="parameter"><code>flags</c
 <p>
 Return the pointer previously retrieved with <a class="link" href="gstreamer-GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -553,8 +649,11 @@ Copy <em class="parameter"><code>size</code></em> bytes from <em class="paramete
 new GstMemory object.
 If <em class="parameter"><code>size</code></em> is set to -1, all bytes starting at <em class="parameter"><code>offset</code></em> are copied.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -588,8 +687,11 @@ Share <em class="parameter"><code>size</code></em> bytes from <em class="paramet
 new GstMemory object. If <em class="parameter"><code>size</code></em> is set to -1, all bytes starting at <em class="parameter"><code>offset</code></em> are
 shared. This function does not make a copy of the bytes in <em class="parameter"><code>mem</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -621,8 +723,11 @@ shared. This function does not make a copy of the bytes in <em class="parameter"
 Check if <em class="parameter"><code>mem1</code></em> and <em class="parameter"><code>mem2</code></em> occupy contiguous memory and return the offset of
 <em class="parameter"><code>mem1</code></em> in the parent buffer in <em class="parameter"><code>offset</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem1</code></em> :</span></p></td>
@@ -661,8 +766,11 @@ Check if <em class="parameter"><code>mem1</code></em> and <em class="parameter">
 Initializes a newly allocated <em class="parameter"><code>mem</code></em> with the given parameters. This function
 will call <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-init" title="gst_mini_object_init ()"><code class="function">gst_mini_object_init()</code></a> with the default memory parameters.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -704,13 +812,48 @@ will call <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-ini
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-memory-is-type"></a><h3>gst_memory_is_type ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_memory_is_type                  (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
+                                                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mem_type</code></em>);</pre>
+<p>
+Check if <em class="parameter"><code>mem</code></em> if allocated with an allocator for <em class="parameter"><code>mem_type</code></em>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
+<td>a <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mem_type</code></em> :</span></p></td>
+<td>a memory type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem</code></em> was allocated from an allocator for <em class="parameter"><code>mem_type</code></em>.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-memory-ref"></a><h3>gst_memory_ref ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *         gst_memory_ref                      (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);</pre>
 <p>
 Increase the refcount of this memory.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>memory</code></em> :</span></p></td>
@@ -732,8 +875,11 @@ Increase the refcount of this memory.
 <p>
 Decrease the refcount of an memory, freeing it if the refcount reaches 0.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>memory</code></em> :</span></p></td>
 <td>the memory to refcount. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -750,8 +896,11 @@ Decrease the refcount of an memory, freeing it if the refcount reaches 0.
 <p>
 Get the current <em class="parameter"><code>size</code></em>, <em class="parameter"><code>offset</code></em> and <em class="parameter"><code>maxsize</code></em> of <em class="parameter"><code>mem</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -788,8 +937,11 @@ less than the maxsize of <em class="parameter"><code>mem</code></em>.
 <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> will be
 cleared when offset or padding is increased respectively.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -827,6 +979,12 @@ cleared when offset or padding is increased respectively.
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-memory-make-writable"></a><h3>gst_memory_make_writable()</h3>
+<pre class="programlisting">#define        gst_memory_make_writable(m) GST_MEMORY_CAST (gst_mini_object_make_writable (GST_MINI_OBJECT_CAST (m)))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-memory-make-mapped"></a><h3>gst_memory_make_mapped ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *         gst_memory_make_mapped              (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>,
@@ -840,8 +998,11 @@ mapped copy of <em class="parameter"><code>mem</code></em> is returned.
 This function takes ownership of old <em class="parameter"><code>mem</code></em> and returns a reference to a new
 <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -879,7 +1040,7 @@ accessed according to <em class="parameter"><code>flags</code></em>.
 <p>
 This function can return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for various reasons:
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>the memory backed by <em class="parameter"><code>mem</code></em> is not accessible with the given <em class="parameter"><code>flags</code></em>.</p></li>
 <li class="listitem"><p>the memory was already mapped with a different mapping.</p></li>
 </ul></div>
@@ -893,8 +1054,11 @@ until <a class="link" href="gstreamer-GstMemory.html#gst-memory-unmap" title="gs
 For each <a class="link" href="gstreamer-GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> call, a corresponding <a class="link" href="gstreamer-GstMemory.html#gst-memory-unmap" title="gst_memory_unmap ()"><code class="function">gst_memory_unmap()</code></a> call
 should be done.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -926,8 +1090,11 @@ should be done.
 <p>
 Release the memory obtained with <a class="link" href="gstreamer-GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -953,8 +1120,11 @@ Return a copy of <em class="parameter"><code>size</code></em> bytes from <em cla
 guaranteed to be writable. <em class="parameter"><code>size</code></em> can be set to -1 to return a copy all bytes
 from <em class="parameter"><code>offset</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -988,8 +1158,11 @@ memory copy is performed and the memory region is simply shared. The result
 is guaranteed to be not-writable. <em class="parameter"><code>size</code></em> can be set to -1 to return a share
 all bytes from <em class="parameter"><code>offset</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem</code></em> :</span></p></td>
@@ -1026,8 +1199,11 @@ If this is the case, the memory of <em class="parameter"><code>mem1</code></em> 
 efficiently by performing <a class="link" href="gstreamer-GstMemory.html#gst-memory-share" title="gst_memory_share ()"><code class="function">gst_memory_share()</code></a> on the parent object from
 the returned <em class="parameter"><code>offset</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mem1</code></em> :</span></p></td>
@@ -1059,6 +1235,6 @@ the returned <em class="parameter"><code>offset</code></em>.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

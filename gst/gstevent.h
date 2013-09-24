@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -180,6 +180,7 @@ typedef enum {
 #include <gst/gstsegment.h>
 #include <gst/gstsegment.h>
 #include <gst/gstmessage.h>
+#include <gst/gstcontext.h>
 
 G_BEGIN_DECLS
 
@@ -365,6 +366,30 @@ typedef enum {
 } GstQOSType;
 
 /**
+ * GstStreamFlags:
+ * @GST_STREAM_FLAG_NONE: This stream has no special attributes
+ * @GST_STREAM_FLAG_SPARSE: This stream is a sparse stream (e.g. a subtitle
+ *    stream), data may flow only in irregular intervals with large gaps in
+ *    between.
+ * @GST_STREAM_FLAG_SELECT: This stream should be selected by default. This
+ *    flag may be used by demuxers to signal that a stream should be selected
+ *    by default in a playback scenario.
+ * @GST_STREAM_FLAG_UNSELECT: This stream should not be selected by default.
+ *    This flag may be used by demuxers to signal that a stream should not
+ *    be selected by default in a playback scenario, but only if explicitly
+ *    selected by the user (e.g. an audio track for the hard of hearing or
+ *    a director's commentary track).
+ *
+ * Since: 1.2
+ */
+typedef enum {
+  GST_STREAM_FLAG_NONE,
+  GST_STREAM_FLAG_SPARSE       = (1 << 0),
+  GST_STREAM_FLAG_SELECT       = (1 << 1),
+  GST_STREAM_FLAG_UNSELECT     = (1 << 2)
+} GstStreamFlags;
+
+/**
  * GstEvent:
  * @mini_object: the parent structure
  * @type: the #GstEventType of the event
@@ -460,6 +485,12 @@ void            gst_event_set_seqnum            (GstEvent *event, guint32 seqnum
 /* Stream start event */
 GstEvent *      gst_event_new_stream_start      (const gchar *stream_id) G_GNUC_MALLOC;
 void            gst_event_parse_stream_start    (GstEvent *event, const gchar **stream_id);
+
+void            gst_event_set_stream_flags      (GstEvent *event, GstStreamFlags flags);
+void            gst_event_parse_stream_flags    (GstEvent *event, GstStreamFlags *flags);
+
+void            gst_event_set_group_id          (GstEvent *event, guint group_id);
+gboolean        gst_event_parse_group_id        (GstEvent *event, guint *group_id);
 
 /* flush events */
 GstEvent *      gst_event_new_flush_start       (void) G_GNUC_MALLOC;

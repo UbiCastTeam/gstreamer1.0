@@ -14,8 +14,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #include <gst/check/gstcheck.h>
@@ -225,6 +225,7 @@ GST_START_TEST (test_filled_read)
   GstBuffer *buffer;
   GstPad *sinkpad, *srcpad;
   GThread *thread;
+  GstSegment segment;
 
   queue2 = gst_element_factory_make ("queue2", NULL);
   sinkpad = gst_element_get_static_pad (queue2, "sink");
@@ -237,6 +238,10 @@ GST_START_TEST (test_filled_read)
 
   gst_pad_activate_mode (srcpad, GST_PAD_MODE_PULL, TRUE);
   gst_element_set_state (queue2, GST_STATE_PLAYING);
+
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
+  gst_pad_send_event (sinkpad, gst_event_new_stream_start ("test"));
+  gst_pad_send_event (sinkpad, gst_event_new_segment (&segment));
 
   /* fill up the buffer */
   buffer = gst_buffer_new_and_alloc (4 * 1024);

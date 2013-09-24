@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>queue2</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-queue.html" title="queue">
 <link rel="next" href="gstreamer-plugins-tee.html" title="tee">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -65,12 +65,12 @@
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--max-size-buffers" title='The "max-size-buffers" property'>max-size-buffers</a>"         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--max-size-bytes" title='The "max-size-bytes" property'>max-size-bytes</a>"           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--max-size-time" title='The "max-size-time" property'>max-size-time</a>"            <span class="type">guint64</span>               : Read / Write
+  "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--ring-buffer-max-size" title='The "ring-buffer-max-size" property'>ring-buffer-max-size</a>"     <span class="type">guint64</span>               : Read / Write
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--temp-location" title='The "temp-location" property'>temp-location</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read
+  "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--temp-remove" title='The "temp-remove" property'>temp-remove</a>"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--temp-template" title='The "temp-template" property'>temp-template</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--use-buffering" title='The "use-buffering" property'>use-buffering</a>"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
   "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--use-rate-estimate" title='The "use-rate-estimate" property'>use-rate-estimate</a>"        <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
-  "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--temp-remove" title='The "temp-remove" property'>temp-remove</a>"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
-  "<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--ring-buffer-max-size" title='The "ring-buffer-max-size" property'>ring-buffer-max-size</a>"     <span class="type">guint64</span>               : Read / Write
 </pre>
 </div>
 <div class="refsect1">
@@ -110,9 +110,12 @@ Last reviewed on 2009-07-10 (0.10.24)
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="idp10850912"></a><h3>Element Information</h3>
-<div class="variablelist"><table border="0">
+<a name="id-1.2.15.6.9.1"></a><h3>Element Information</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">plugin</span></p></td>
@@ -133,9 +136,12 @@ Last reviewed on 2009-07-10 (0.10.24)
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp10858320"></a><h3>Element Pads</h3>
-<div class="variablelist"><table border="0">
+<a name="id-1.2.15.6.9.2"></a><h3>Element Pads</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
@@ -155,8 +161,11 @@ Last reviewed on 2009-07-10 (0.10.24)
 </tr>
 </tbody>
 </table></div>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
@@ -251,10 +260,29 @@ Last reviewed on 2009-07-10 (0.10.24)
 </div>
 <hr>
 <div class="refsect2">
+<a name="GstQueue2--ring-buffer-max-size"></a><h3>The <code class="literal">"ring-buffer-max-size"</code> property</h3>
+<pre class="programlisting">  "ring-buffer-max-size"     <span class="type">guint64</span>               : Read / Write</pre>
+<p>
+The maximum size of the ring buffer in bytes. If set to 0, the ring
+buffer is disabled. Default 0.
+</p>
+<p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstQueue2--temp-location"></a><h3>The <code class="literal">"temp-location"</code> property</h3>
 <pre class="programlisting">  "temp-location"            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read</pre>
 <p>Location to store temporary files in (Only read this property, use temp-template to configure the name template).</p>
 <p>Default value: NULL</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstQueue2--temp-remove"></a><h3>The <code class="literal">"temp-remove"</code> property</h3>
+<pre class="programlisting">  "temp-remove"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
+<p>
+When temp-template is set, remove the temporary file when going to READY.
+</p>
+<p>Default value: TRUE</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -277,29 +305,10 @@ Last reviewed on 2009-07-10 (0.10.24)
 <p>Estimate the bitrate of the stream to calculate time level.</p>
 <p>Default value: TRUE</p>
 </div>
-<hr>
-<div class="refsect2">
-<a name="GstQueue2--temp-remove"></a><h3>The <code class="literal">"temp-remove"</code> property</h3>
-<pre class="programlisting">  "temp-remove"              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write</pre>
-<p>
-When temp-template is set, remove the temporary file when going to READY.
-</p>
-<p>Default value: TRUE</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GstQueue2--ring-buffer-max-size"></a><h3>The <code class="literal">"ring-buffer-max-size"</code> property</h3>
-<pre class="programlisting">  "ring-buffer-max-size"     <span class="type">guint64</span>               : Read / Write</pre>
-<p>
-The maximum size of the ring buffer in bytes. If set to 0, the ring
-buffer is disabled. Default 0.
-</p>
-<p>Default value: 0</p>
-</div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

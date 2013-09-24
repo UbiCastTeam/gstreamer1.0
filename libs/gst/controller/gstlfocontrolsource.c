@@ -17,24 +17,25 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
  * SECTION:gstlfocontrolsource
  * @short_description: LFO control source
  *
- * #GstLFOControlSource is a #GstControlSource, that provides several periodic waveforms
- * as control values. It supports all fundamental, numeric GValue types as property.
+ * #GstLFOControlSource is a #GstControlSource, that provides several periodic
+ * waveforms as control values.
  *
- * To use #GstLFOControlSource get a new instance by calling gst_lfo_control_source_new(),
- * bind it to a #GParamSpec and set the relevant properties or use
- * gst_lfo_control_source_set_waveform.
+ * To use #GstLFOControlSource get a new instance by calling
+ * gst_lfo_control_source_new(), bind it to a #GParamSpec and set the relevant
+ * properties.
  *
  * All functions are MT-safe.
- *
  */
+
+#include <float.h>
 
 #include <glib-object.h>
 #include <gst/gst.h>
@@ -453,6 +454,7 @@ gst_lfo_control_source_init (GstLFOControlSource * self)
   self->priv->waveform = gst_lfo_control_source_set_waveform (self,
       GST_LFO_WAVEFORM_SINE);
   self->priv->frequency = 1.0;
+  self->priv->amplitude = 1.0;
   self->priv->period = GST_SECOND / self->priv->frequency;
   self->priv->timeshift = 0;
 
@@ -486,8 +488,7 @@ gst_lfo_control_source_set_property (GObject * object, guint prop_id,
     case PROP_FREQUENCY:{
       gdouble frequency = g_value_get_double (value);
 
-      g_return_if_fail (frequency > 0
-          || ((GstClockTime) (GST_SECOND / frequency)) != 0);
+      g_return_if_fail (((GstClockTime) (GST_SECOND / frequency)) != 0);
 
       g_mutex_lock (&self->lock);
       self->priv->frequency = frequency;
@@ -574,7 +575,7 @@ gst_lfo_control_source_class_init (GstLFOControlSourceClass * klass)
    */
   g_object_class_install_property (gobject_class, PROP_FREQUENCY,
       g_param_spec_double ("frequency", "Frequency",
-          "Frequency of the waveform", 0.0, G_MAXDOUBLE, 1.0,
+          "Frequency of the waveform", DBL_MIN, G_MAXDOUBLE, 1.0,
           G_PARAM_READWRITE | GST_PARAM_CONTROLLABLE | G_PARAM_STATIC_STRINGS));
 
   /**

@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
  
 #ifndef __GST_INPUT_SELECTOR_H__
@@ -71,6 +71,8 @@ struct _GstInputSelector {
   gboolean sync_streams;
   GstInputSelectorSyncMode sync_mode;
   gboolean cache_buffers;
+
+  gboolean have_group_id;
 
   GMutex lock;
   GCond cond;

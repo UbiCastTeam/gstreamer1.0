@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -94,6 +94,28 @@ static inline void
 gst_sample_unref (GstSample * sample)
 {
   gst_mini_object_unref (GST_MINI_OBJECT_CAST (sample));
+}
+
+/* copy sample */
+/**
+ * gst_sample_copy:
+ * @buf: a #GstSample.
+ *
+ * Create a copy of the given sample. This will also make a newly allocated
+ * copy of the data the source sample contains.
+ *
+ * Returns: (transfer full): a new copy of @buf.
+ *
+ * Since: 1.2
+ */
+#ifdef _FOOL_GTK_DOC_
+G_INLINE_FUNC GstSample * gst_sample_copy (const GstSample * buf);
+#endif
+
+static inline GstSample *
+gst_sample_copy (const GstSample * buf)
+{
+  return GST_SAMPLE_CAST (gst_mini_object_copy (GST_MINI_OBJECT_CONST_CAST (buf)));
 }
 
 /**

@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GST_QUARK_H__
@@ -188,7 +188,15 @@ typedef enum _GstQuarkId
   GST_QUARK_EVENT_SEGMENT_DONE = 159,
   GST_QUARK_EVENT_STREAM_START = 160,
   GST_QUARK_STREAM_ID = 161,
-  GST_QUARK_MAX = 162
+  GST_QUARK_QUERY_CONTEXT = 162,
+  GST_QUARK_MESSAGE_NEED_CONTEXT = 163,
+  GST_QUARK_MESSAGE_HAVE_CONTEXT = 164,
+  GST_QUARK_CONTEXT = 165,
+  GST_QUARK_CONTEXT_TYPE = 166,
+  GST_QUARK_MESSAGE_STREAM_START = 167,
+  GST_QUARK_GROUP_ID = 168,
+  GST_QUARK_URI_REDIRECTION = 169,
+  GST_QUARK_MAX = 170
 } GstQuarkId;
 
 extern GQuark _priv_gst_quark_table[GST_QUARK_MAX];

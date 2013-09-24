@@ -3,18 +3,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstControlBinding</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-gstconfig.html" title="gstconfig">
+<link rel="prev" href="gstreamer-GstContext.html" title="GstContext">
 <link rel="next" href="GstControlSource.html" title="GstControlSource">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="gstreamer-gstconfig.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-GstContext.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">GStreamer 1.0 Core Reference Manual</th>
@@ -105,8 +105,11 @@ bound property.
 <p>
 The instance structure of <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstControlBinding-struct.name"></a>name</code></em>;</span></p></td>
@@ -136,8 +139,11 @@ The instance structure of <a class="link" href="GstControlBinding.html" title="G
 <p>
 The class structure of <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="GstControlBindingClass.parent-class"></a>parent_class</code></em>;</span></p></td>
@@ -177,8 +183,11 @@ handle them and for the given timestamp.
 If this function fails, it is most likely the application developers fault.
 Most probably the control sources are not setup correctly.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
@@ -213,8 +222,11 @@ property, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Ma
 <p>
 Gets the value for the given controlled property at the requested time.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
@@ -254,8 +266,11 @@ The values are unboxed and ready to be used. The similar function
 <a class="link" href="GstControlBinding.html#gst-control-binding-get-g-value-array" title="gst_control_binding_get_g_value_array ()"><code class="function">gst_control_binding_get_g_value_array()</code></a> returns the array as <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValues</span></a> and is
 more suitable for bindings.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
@@ -303,8 +318,11 @@ requested time. The array <em class="parameter"><code>values</code></em> need to
 This function is useful if one wants to e.g. draw a graph of the control
 curve or apply a control curve sample by sample.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
@@ -343,8 +361,11 @@ curve or apply a control curve sample by sample.
 This function is used to disable a control binding for some time, i.e.
 <a class="link" href="GstObject.html#gst-object-sync-values" title="gst_object_sync_values ()"><code class="function">gst_object_sync_values()</code></a> will do nothing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
@@ -365,8 +386,11 @@ or not.</td>
 <p>
 Check if the control binding is disabled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>binding</code></em> :</span></p></td>
@@ -399,6 +423,6 @@ Check if the control binding is disabled.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

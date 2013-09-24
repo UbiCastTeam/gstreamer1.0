@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -825,8 +825,7 @@ gst_buffer_pool_config_add_option (GstStructure * config, const gchar * option)
   }
   g_value_init (&option_value, G_TYPE_STRING);
   g_value_set_string (&option_value, option);
-  gst_value_array_append_value ((GValue *) value, &option_value);
-  g_value_unset (&option_value);
+  gst_value_array_append_and_take_value ((GValue *) value, &option_value);
 }
 
 /**

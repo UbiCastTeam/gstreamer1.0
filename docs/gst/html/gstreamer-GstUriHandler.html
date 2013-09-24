@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstUriHandler</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstTypeFindFactory.html" title="GstTypeFindFactory">
 <link rel="next" href="gstreamer-GstUtils.html" title="GstUtils">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -127,8 +127,11 @@ Opaque <a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span c
 <p>
 Any <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> using this interface should implement these methods.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstURIHandlerInterface.parent"></a>parent</code></em>;</span></p></td>
@@ -165,8 +168,11 @@ Any <a class="link" href="GstElement.html" title="GstElement"><span class="type"
 <p>
 The different types of URI direction.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-URI-UNKNOWN:CAPS"></a><span class="term"><code class="literal">GST_URI_UNKNOWN</code></span></p></td>
@@ -199,8 +205,11 @@ The different types of URI direction.
 <p>
 Different URI-related errors that can occur.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-URI-ERROR-UNSUPPORTED-PROTOCOL:CAPS"></a><span class="term"><code class="literal">GST_URI_ERROR_UNSUPPORTED_PROTOCOL</code></span></p></td>
@@ -240,8 +249,11 @@ Different URI-related errors that can occur.
 <p>
 Tests if the type direction is valid.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
 <td>A <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="type">GstURIType</span></a>
@@ -258,8 +270,11 @@ Tests if the given string is a valid protocol identifier. Protocols
 must consist of alphanumeric characters, '+', '-' and '.' and must
 start with a alphabetic character. See RFC 3986 Section 3.1.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>protocol</code></em> :</span></p></td>
@@ -282,8 +297,11 @@ Checks if an element exists that supports the given URI protocol. Note
 that a positive return value does not imply that a subsequent call to
 <a class="link" href="gstreamer-GstUriHandler.html#gst-element-make-from-uri" title="gst_element_make_from_uri ()"><code class="function">gst_element_make_from_uri()</code></a> is guaranteed to work.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -308,8 +326,11 @@ that a positive return value does not imply that a subsequent call to
 Tests if the given string is a valid URI identifier. URIs start with a valid
 scheme followed by ":" and maybe a string identifying the location.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
@@ -330,8 +351,11 @@ scheme followed by ":" and maybe a string identifying the location.
 <p>
 Checks if the protocol of a given valid URI matches <em class="parameter"><code>protocol</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
@@ -357,8 +381,11 @@ Checks if the protocol of a given valid URI matches <em class="parameter"><code>
 Extracts the protocol out of a given valid URI. The returned string must be
 freed using <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
@@ -384,8 +411,11 @@ the hostname if one is specified. The returned string must be freed using
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
@@ -412,8 +442,11 @@ Constructs a URI for a given valid protocol and location.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>protocol</code></em> :</span></p></td>
@@ -447,8 +480,11 @@ will be canonicalised so that it doesn't contain any './' or '../' segments.
 <p>
 On Windows <span class="type">filename</span> should be in UTF-8 encoding.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
@@ -471,8 +507,11 @@ On Windows <span class="type">filename</span> should be in UTF-8 encoding.
 <p>
 Creates an element for handling the given URI.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -494,7 +533,7 @@ Creates an element for handling the given URI.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new element or NULL if none could be created. <span class="annotation">[transfer floating]</span>
+<td>a new element or NULL if none could be created. <span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -507,8 +546,11 @@ Creates an element for handling the given URI.
 <p>
 Gets the type of the given URI handler
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>handler</code></em> :</span></p></td>
@@ -530,8 +572,11 @@ Returns <a class="link" href="gstreamer-GstUriHandler.html#GST-URI-UNKNOWN:CAPS"
 Gets the list of protocols supported by <em class="parameter"><code>handler</code></em>. This list may not be
 modified.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>handler</code></em> :</span></p></td>
@@ -554,8 +599,11 @@ doesn't support any protocols. <span class="annotation">[<acronym title="Don't f
 <p>
 Gets the currently handled URI.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>handler</code></em> :</span></p></td>
@@ -581,8 +629,11 @@ returned string must be freed with <a href="http://library.gnome.org/devel/glib/
 <p>
 Tries to set the URI of the given handler.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>handler</code></em> :</span></p></td>
@@ -610,6 +661,6 @@ an error, or NULL. <span class="annotation">[<acronym title="NULL is ok, both fo
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

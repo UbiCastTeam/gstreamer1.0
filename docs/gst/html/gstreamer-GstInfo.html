@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstInfo</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -91,8 +91,14 @@ const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.htm
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-active" title="gst_debug_set_active ()">gst_debug_set_active</a>                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstInfo.html#gst-debug-is-active" title="gst_debug_is_active ()">gst_debug_is_active</a>                 (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-colored" title="gst_debug_set_colored ()">gst_debug_set_colored</a>               (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> colored</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode" title="gst_debug_set_color_mode ()">gst_debug_set_color_mode</a>            (<em class="parameter"><code><span class="type">GstDebugColorMode</span> mode</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode-from-string" title="gst_debug_set_color_mode_from_string ()">gst_debug_set_color_mode_from_string</a>
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mode</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="gstreamer-GstInfo.html#gst-debug-is-colored" title="gst_debug_is_colored ()">gst_debug_is_colored</a>                (<em class="parameter"><code><span class="type">void</span></code></em>);
+<span class="returnvalue">GstDebugColorMode</span>   <a class="link" href="gstreamer-GstInfo.html#gst-debug-get-color-mode" title="gst_debug_get_color_mode ()">gst_debug_get_color_mode</a>            (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-default-threshold" title="gst_debug_set_default_threshold ()">gst_debug_set_default_threshold</a>     (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-threshold-from-string" title="gst_debug_set_threshold_from_string ()">gst_debug_set_threshold_from_string</a> (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *list</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset</code></em>);
 <a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="returnvalue">GstDebugLevel</span></a>       <a class="link" href="gstreamer-GstInfo.html#gst-debug-get-default-threshold" title="gst_debug_get_default_threshold ()">gst_debug_get_default_threshold</a>     (<em class="parameter"><code><span class="type">void</span></code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-threshold-for-name" title="gst_debug_set_threshold_for_name ()">gst_debug_set_threshold_for_name</a>    (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);
@@ -223,7 +229,7 @@ methods (g_warning and friends) for that.
 <p>
 The debugging subsystem works only after GStreamer has been initialized
 </p>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>for example by calling <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p></li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>for example by calling <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p></li></ul></div>
 <p>
 </p>
 <p>
@@ -322,8 +328,11 @@ categories. These are explained at <a class="link" href="gstreamer-GstInfo.html#
 The level defines the importance of a debugging message. The more important a
 message is, the greater the probability that the debugging system outputs it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-LEVEL-NONE:CAPS"></a><span class="term"><code class="literal">GST_LEVEL_NONE</code></span></p></td>
@@ -450,8 +459,11 @@ reset the debugging output to default behaviour.
 These are some terminal style flags you can use when creating your
 debugging categories to make them stand out in debugging output.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-DEBUG-FG-BLACK:CAPS"></a><span class="term"><code class="literal">GST_DEBUG_FG_BLACK</code></span></p></td>
@@ -572,8 +584,11 @@ This is the struct that describes the categories. Once initialized with
 Available details for pipeline graphs produced by <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>
 and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-DEBUG-GRAPH-SHOW-MEDIA-TYPE:CAPS"></a><span class="term"><code class="literal">GST_DEBUG_GRAPH_SHOW_MEDIA_TYPE</code></span></p></td>
@@ -615,8 +630,11 @@ In GStreamer printf string arguments may not be NULL, because on some
 platforms (ie Solaris) the libc crashes in that case. This includes debugging
 strings.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
 <td>The string to check.</td>
@@ -631,8 +649,11 @@ strings.
 Evaluates to 2 strings, that describe the pad. Often used in debugging
 statements.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>The pad to debug.</td>
@@ -671,8 +692,11 @@ Function prototype for a logging function that can be registered with
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
 Use G_GNUC_NO_INSTRUMENT on that function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -726,8 +750,11 @@ Use G_GNUC_NO_INSTRUMENT on that function.
 <p>
 Logs the given message using the currently registered debugging handlers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -780,8 +807,11 @@ or NULL if none. <span class="annotation">[<acronym title="Don't free data after
 <p>
 Logs the given message using the currently registered debugging handlers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -828,8 +858,11 @@ or NULL if none. <span class="annotation">[<acronym title="Don't free data after
 Gets the string representation of a <span class="type">GstDebugMessage</span>. This function is used
 in debug handlers to extract the message.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>message</code></em> :</span></p></td>
@@ -864,8 +897,11 @@ You can add other handlers by using <a class="link" href="gstreamer-GstInfo.html
 And you can remove this handler by calling
 gst_debug_remove_log_function(gst_debug_log_default);
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -911,8 +947,11 @@ or NULL if none. <span class="annotation">[<acronym title="Don't free data after
 <p>
 Get the string representation of a debugging level
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>level</code></em> :</span></p></td>
@@ -935,8 +974,11 @@ Get the string representation of a debugging level
 Adds the logging function to the list of logging functions.
 Be sure to use <a href="http://library.gnome.org/devel/glib/unstable/glib-Miscellaneous-Macros.html#G-GNUC-NO-INSTRUMENT:CAPS"><span class="type">G_GNUC_NO_INSTRUMENT</span></a> on that function, it is needed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
@@ -960,8 +1002,11 @@ Be sure to use <a href="http://library.gnome.org/devel/glib/unstable/glib-Miscel
 <p>
 Removes all registered instances of the given logging functions.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
@@ -983,8 +1028,11 @@ Removes all registered instances of the given logging functions.
 <p>
 Removes all registered instances of log functions with the given user data.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -1013,8 +1061,11 @@ during initialization.</p>
 </div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>active</code></em> :</span></p></td>
 <td>Whether to use debugging output or not</td>
@@ -1028,8 +1079,11 @@ during initialization.</p>
 <p>
 Checks if debugging output is activated.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>TRUE, if debugging is activated</td>
@@ -1042,12 +1096,17 @@ Checks if debugging output is activated.
 <pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_colored               (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> colored</code></em>);</pre>
 <p>
 Sets or unsets the use of coloured debugging output.
+Same as <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode" title="gst_debug_set_color_mode ()"><code class="function">gst_debug_set_color_mode()</code></a> with the argument being
+being GST_DEBUG_COLOR_MODE_ON or GST_DEBUG_COLOR_MODE_OFF.
 </p>
 <p>
 This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>colored</code></em> :</span></p></td>
 <td>Whether to use colored output or not</td>
@@ -1056,18 +1115,86 @@ This function may be called before <a class="link" href="gstreamer-Gst.html#gst-
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-debug-set-color-mode"></a><h3>gst_debug_set_color_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_color_mode            (<em class="parameter"><code><span class="type">GstDebugColorMode</span> mode</code></em>);</pre>
+<p>
+Changes the coloring mode for debug output.
+</p>
+<p>
+This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>The coloring mode for debug output. See <em class="parameter"><code>GstDebugColorMode</code></em>.</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-set-color-mode-from-string"></a><h3>gst_debug_set_color_mode_from_string ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_color_mode_from_string
+                                                        (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mode</code></em>);</pre>
+<p>
+Changes the coloring mode for debug output.
+</p>
+<p>
+This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>The coloring mode for debug output. One of the following:
+"on", "auto", "off", "disable", "unix".</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-debug-is-colored"></a><h3>gst_debug_is_colored ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_debug_is_colored                (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>
 Checks if the debugging output should be colored.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>TRUE, if the debug output should be colored.</td>
 </tr></tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-get-color-mode"></a><h3>gst_debug_get_color_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">GstDebugColorMode</span>   gst_debug_get_color_mode            (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>
+Changes the coloring mode for debug output.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>see <em class="parameter"><code>GstDebugColorMode</code></em> for possible values.</td>
+</tr></tbody>
+</table></div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1080,8 +1207,11 @@ use this threshold.
 <p>
 This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>level</code></em> :</span></p></td>
 <td>level to set</td>
@@ -1090,13 +1220,49 @@ This function may be called before <a class="link" href="gstreamer-Gst.html#gst-
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-debug-set-threshold-from-string"></a><h3>gst_debug_set_threshold_from_string ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                gst_debug_set_threshold_from_string (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *list</code></em>,
+                                                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset</code></em>);</pre>
+<p>
+Sets the debug logging wanted in the same form as with the GST_DEBUG
+environment variable. You can use wildcards such as '*', but note that
+the order matters when you use wild cards, e.g. "foosrc:6,*src:3,*:2" sets
+everything to log level 2.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list</code></em> :</span></p></td>
+<td>comma-separated list of "category:level" pairs to be used
+as debug logging levels</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>reset</code></em> :</span></p></td>
+<td>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to clear all previously-set debug levels before setting
+new thresholds
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if adding the threshold described by <em class="parameter"><code>list</code></em> to the one already set.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2.0</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-debug-get-default-threshold"></a><h3>gst_debug_get_default_threshold ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="returnvalue">GstDebugLevel</span></a>       gst_debug_get_default_threshold     (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>
 Returns the default threshold that is used for new categories.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the default threshold level</td>
@@ -1112,8 +1278,11 @@ Returns the default threshold that is used for new categories.
 Sets all categories which match the given glob style pattern to the given
 level.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -1133,8 +1302,11 @@ level.
 <p>
 Resets all categories with the given name back to the default level.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
 <td>name of the categories to set</td>
@@ -1150,8 +1322,11 @@ Resets all categories with the given name back to the default level.
 Defines a GstDebugCategory variable.
 This macro expands to nothing if debugging is disabled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
 <td>the category</td>
@@ -1167,8 +1342,11 @@ This macro expands to nothing if debugging is disabled.
 Declares a GstDebugCategory variable as extern. Use in header files.
 This macro expands to nothing if debugging is disabled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
 <td>the category</td>
@@ -1184,8 +1362,11 @@ This macro expands to nothing if debugging is disabled.
 Defines a static GstDebugCategory variable.
 This macro expands to nothing if debugging is disabled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
 <td>the category</td>
@@ -1229,8 +1410,11 @@ to include uppercase letters.
 </div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1285,8 +1469,11 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1306,8 +1493,11 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 <p>
 Removes and frees the category and all associated resources.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
 <td>
@@ -1335,8 +1525,11 @@ function to use when debugging (even from gdb).
 </div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -1360,8 +1553,11 @@ debugging message.
 Use this function to set the threshold back to where it was after using
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-category-set-threshold" title="gst_debug_category_set_threshold ()"><code class="function">gst_debug_category_set_threshold()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> to reset threshold of.</td>
@@ -1375,8 +1571,11 @@ Use this function to set the threshold back to where it was after using
 <p>
 Returns the threshold of a <a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -1396,8 +1595,11 @@ Returns the threshold of a <a class="link" href="gstreamer-GstInfo.html#GstDebug
 <p>
 Returns the name of a debug category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -1418,8 +1620,11 @@ Returns the name of a debug category.
 Returns the color of a debug category used when printing output in this
 category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -1439,8 +1644,11 @@ category.
 <p>
 Returns the description of a debug category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>category</code></em> :</span></p></td>
@@ -1462,8 +1670,11 @@ Returns a snapshot of a all categories that are currently in use . This list
 may change anytime.
 The caller has to free the list after use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>the list of
@@ -1481,8 +1692,11 @@ Constructs a string that can be used for getting the desired color in color
 terminals.
 You need to free the string after use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>colorinfo</code></em> :</span></p></td>
@@ -1491,7 +1705,7 @@ You need to free the string after use.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a string containing the color
-definition. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Override the parsed C type with given type"><span class="acronym">type</span></acronym> gchar*]</span>
+definition. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> gchar*]</span>
 </td>
 </tr>
 </tbody>
@@ -1509,8 +1723,11 @@ ignore this attribute.
 <p>
 This function returns 0 on non-windows machines.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>colorinfo</code></em> :</span></p></td>
@@ -1532,8 +1749,11 @@ Outputs a debugging message. This is the most general macro for outputting
 debugging messages. You will probably want to use one of the ones described
 below.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1563,8 +1783,11 @@ below.
 <p>
 Output an error message belonging to the given object in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1589,8 +1812,11 @@ Output an error message belonging to the given object in the given category.
 <p>
 Output a warning message belonging to the given object in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1616,8 +1842,11 @@ Output a warning message belonging to the given object in the given category.
 Output an informational message belonging to the given object in the given
 category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1642,8 +1871,11 @@ category.
 <p>
 Output an debugging message belonging to the given object in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1668,8 +1900,11 @@ Output an debugging message belonging to the given object in the given category.
 <p>
 Output an logging message belonging to the given object in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1694,8 +1929,11 @@ Output an logging message belonging to the given object in the given category.
 <p>
 Output a fixme message belonging to the given object in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1721,8 +1959,11 @@ Output a fixme message belonging to the given object in the given category.
 Output a tracing message belonging to the given object in the given
 category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1747,8 +1988,11 @@ category.
 Output a hexdump of <em class="parameter"><code>data</code></em> relating to the given object in the given
 category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1781,8 +2025,11 @@ category.
 <p>
 Output an error message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1803,8 +2050,11 @@ Output an error message in the given category.
 <p>
 Output an warning message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1825,8 +2075,11 @@ Output an warning message in the given category.
 <p>
 Output an informational message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1847,8 +2100,11 @@ Output an informational message in the given category.
 <p>
 Output an debugging message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1869,8 +2125,11 @@ Output an debugging message in the given category.
 <p>
 Output an logging message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1891,8 +2150,11 @@ Output an logging message in the given category.
 <p>
 Output an fixme message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1913,8 +2175,11 @@ Output an fixme message in the given category.
 <p>
 Output a tracing message in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1934,8 +2199,11 @@ Output a tracing message in the given category.
 <p>
 Output a hexdump of <em class="parameter"><code>data</code></em> in the given category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cat</code></em> :</span></p></td>
@@ -1964,8 +2232,11 @@ Output a hexdump of <em class="parameter"><code>data</code></em> in the given ca
 <p>
 Output an error message belonging to the given object in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -1986,8 +2257,11 @@ Output an error message belonging to the given object in the default category.
 <p>
 Output a warning message belonging to the given object in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2009,8 +2283,11 @@ Output a warning message belonging to the given object in the default category.
 Output an informational message belonging to the given object in the default
 category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2032,8 +2309,11 @@ category.
 Output a debugging message belonging to the given object in the default
 category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2054,8 +2334,11 @@ category.
 <p>
 Output a logging message belonging to the given object in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2076,8 +2359,11 @@ Output a logging message belonging to the given object in the default category.
 <p>
 Output a fixme message belonging to the given object in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2098,8 +2384,11 @@ Output a fixme message belonging to the given object in the default category.
 <p>
 Output a tracing message belonging to the given object in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2119,8 +2408,11 @@ Output a tracing message belonging to the given object in the default category.
 <p>
 Output a logging message belonging to the given object in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>obj</code></em> :</span></p></td>
@@ -2149,8 +2441,11 @@ Output a logging message belonging to the given object in the default category.
 <p>
 Output an error message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2165,8 +2460,11 @@ Output an error message in the default category.
 <p>
 Output a warning message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2181,8 +2479,11 @@ Output a warning message in the default category.
 <p>
 Output an informational message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2197,8 +2498,11 @@ Output an informational message in the default category.
 <p>
 Output a debugging message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2213,8 +2517,11 @@ Output a debugging message in the default category.
 <p>
 Output a logging message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2229,8 +2536,11 @@ Output a logging message in the default category.
 <p>
 Output a fixme message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2245,8 +2555,11 @@ Output a fixme message in the default category.
 <p>
 Output a tracing message in the default category.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>printf-style message to output</td>
@@ -2260,8 +2573,11 @@ Output a tracing message in the default category.
 <p>
 Output a hexdump of <em class="parameter"><code>data</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>msg</code></em> :</span></p></td>
@@ -2289,8 +2605,11 @@ Register a pointer to a function with its name, so it can later be used by
 <p>
 Use this variant of <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCPTR:CAPS" title="GST_DEBUG_FUNCPTR()"><span class="type">GST_DEBUG_FUNCPTR</span></a> if you do not need to use <em class="parameter"><code>ptr</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ptr</code></em> :</span></p></td>
 <td>pointer to the function to register</td>
@@ -2305,8 +2624,11 @@ Use this variant of <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCP
 Register a pointer to a function with its name, so it can later be used by
 <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCPTR-NAME:CAPS" title="GST_DEBUG_FUNCPTR_NAME()"><code class="function">GST_DEBUG_FUNCPTR_NAME()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ptr</code></em> :</span></p></td>
@@ -2331,8 +2653,11 @@ Retrieves the name of the function, if it was previously registered with
 This macro returns a constant string which must not be modified or
 freed by the caller.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ptr</code></em> :</span></p></td>
 <td>address of the function of which to look up the name</td>
@@ -2367,8 +2692,11 @@ The macro is only active if gstreamer is configured with
 "--gst-enable-gst-debug" and the environment variable
 GST_DEBUG_DUMP_DOT_DIR is set to a basepath (e.g. /tmp).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
@@ -2395,8 +2723,11 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 This works like <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>, but adds the current timestamp
 to the filename, so that it can be used to take multiple snapshots.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bin</code></em> :</span></p></td>
@@ -2458,8 +2789,11 @@ Example:
 Format <em class="parameter"><code>t</code></em> for the <a class="link" href="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS" title="GST_TIME_FORMAT"><span class="type">GST_TIME_FORMAT</span></a> format string. Note: <em class="parameter"><code>t</code></em> will be
 evaluated more than once.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
 <td>a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a>
@@ -2490,6 +2824,6 @@ and environment variables that affect the debugging output.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -253,6 +253,8 @@ struct _GstBuffer {
 
 GType       gst_buffer_get_type            (void);
 
+guint       gst_buffer_get_max_memory      (void);
+
 /* allocation */
 GstBuffer * gst_buffer_new                 (void);
 GstBuffer * gst_buffer_new_allocate        (GstAllocator * allocator, gsize size,
@@ -293,7 +295,7 @@ gsize       gst_buffer_memset              (GstBuffer *buffer, gsize offset,
 
 gsize       gst_buffer_get_sizes_range     (GstBuffer *buffer, guint idx, gint length,
                                             gsize *offset, gsize *maxsize);
-void        gst_buffer_resize_range        (GstBuffer *buffer, guint idx, gint length,
+gboolean    gst_buffer_resize_range        (GstBuffer *buffer, guint idx, gint length,
                                             gssize offset, gssize size);
 
 gsize       gst_buffer_get_sizes           (GstBuffer *buffer, gsize *offset, gsize *maxsize);
@@ -378,13 +380,17 @@ gst_buffer_copy (const GstBuffer * buf)
  * @GST_BUFFER_COPY_NONE: copy nothing
  * @GST_BUFFER_COPY_FLAGS: flag indicating that buffer flags should be copied
  * @GST_BUFFER_COPY_TIMESTAMPS: flag indicating that buffer pts, dts,
- * duration, offset and offset_end should be copied
- * @GST_BUFFER_COPY_MEMORY: flag indicating that buffer memory should be copied
- * and appended to already existing memory
+ *   duration, offset and offset_end should be copied
+ * @GST_BUFFER_COPY_MEMORY: flag indicating that buffer memory should be reffed
+ *   and appended to already existing memory. Unless the memory is marked as
+ *   NO_SHARE, no actual copy of the memory is made but it is simply reffed.
+ *   Add @GST_BUFFER_COPY_DEEP to force a real copy.
  * @GST_BUFFER_COPY_MERGE: flag indicating that buffer memory should be
- * merged
+ *   merged
  * @GST_BUFFER_COPY_META: flag indicating that buffer meta should be
- * copied
+ *   copied
+ * @GST_BUFFER_COPY_DEEP: flag indicating that memory should always be
+ *   copied instead of reffed (Since 1.2)
  *
  * A set of flags that can be provided to the gst_buffer_copy_into()
  * function to specify which items should be copied.
@@ -395,7 +401,8 @@ typedef enum {
   GST_BUFFER_COPY_TIMESTAMPS     = (1 << 1),
   GST_BUFFER_COPY_META           = (1 << 2),
   GST_BUFFER_COPY_MEMORY         = (1 << 3),
-  GST_BUFFER_COPY_MERGE          = (1 << 4)
+  GST_BUFFER_COPY_MERGE          = (1 << 4),
+  GST_BUFFER_COPY_DEEP           = (1 << 5)
 } GstBufferCopyFlags;
 
 /**
@@ -416,7 +423,7 @@ typedef enum {
 #define GST_BUFFER_COPY_ALL  ((GstBufferCopyFlags)(GST_BUFFER_COPY_METADATA | GST_BUFFER_COPY_MEMORY))
 
 /* copies memory or metadata into newly allocated buffer */
-void            gst_buffer_copy_into            (GstBuffer *dest, GstBuffer *src,
+gboolean        gst_buffer_copy_into            (GstBuffer *dest, GstBuffer *src,
                                                  GstBufferCopyFlags flags,
                                                  gsize offset, gsize size);
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.32.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-08-28 12:47+0100\n"
+"POT-Creation-Date: 2013-09-19 10:02+0200\n"
 "PO-Revision-Date: 2012-01-28 11:44+0700\n"
 "Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -47,6 +47,11 @@ msgstr "SENARAI"
 
 msgid "Disable colored debugging output"
 msgstr "Nonaktifkan keluaran awakutu berwarna"
+
+msgid ""
+"Changes coloring mode of the debug log. Possible modes: off, on, disable, "
+"auto, unix"
+msgstr ""
 
 msgid "Disable debugging"
 msgstr "Nonaktifkan awakutu"
@@ -250,6 +255,10 @@ msgstr "Tak ada pesan galat standar untuk domain %s dan kode %d."
 msgid "Selected clock cannot be used in pipeline."
 msgstr "Jam terpilih tak dapat digunakan dalam baris pipa."
 
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "Galat menulis tembolok registry ke %s: %s"
+
 msgid "title"
 msgstr "judul"
 
@@ -328,8 +337,8 @@ msgstr "komentar diperpanjang"
 
 msgid "free text commenting the data in key=value or key[en]=comment form"
 msgstr ""
-"teks bebas untuk mengomentari data dalam bentuk kunci=nilai atau kunci[en]"
-"=komentar"
+"teks bebas untuk mengomentari data dalam bentuk kunci=nilai atau "
+"kunci[en]=komentar"
 
 msgid "track number"
 msgstr "nomor jalur"
@@ -790,8 +799,28 @@ msgstr "orientasi gambar"
 msgid "How the image should be rotated or flipped before display"
 msgstr "Bagaimana gambar harus diputar atau dibalik sebelum ditampilkan"
 
+msgid "publisher"
+msgstr ""
+
+msgid "Name of the label or publisher"
+msgstr ""
+
+msgid "interpreted-by"
+msgstr ""
+
+msgid "Information about the people behind a remix and similar interpretations"
+msgstr ""
+
 msgid ", "
 msgstr ", "
+
+#, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
 
 #, c-format
 msgid "ERROR: from element %s: %s\n"
@@ -858,15 +887,6 @@ msgstr "tak dapat menautkan elemen buang untuk URI \"%s\""
 msgid "empty pipeline not allowed"
 msgstr "baris pipa kosong tak diizinkan"
 
-msgid "Internal clock error."
-msgstr "Galat jam internal."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Galat aliran data internal."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Banyak penyangga yang didrop."
 
@@ -875,6 +895,15 @@ msgstr "Masalah aliran data internal."
 
 msgid "Internal data stream error."
 msgstr "Galat arus data internal."
+
+msgid "Internal data flow error."
+msgstr "Galat aliran data internal."
+
+msgid "Internal clock error."
+msgstr "Galat jam internal."
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Filter huruf"
@@ -1107,6 +1136,10 @@ msgstr "PERINGATAN: dari elemen %s: %s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Pragulung, menunggu hingga penyangga selesai...\n"
 
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Pragulung, menunggu hingga penyangga selesai...\n"
+
 msgid "buffering..."
 msgstr "menyangga..."
 
@@ -1126,9 +1159,17 @@ msgstr "Mengatur tingkat ke %s seperti diminta oleh %s...\n"
 msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Interupsi: Menghentikan baris pipa ...\n"
 
+#, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
 #, fuzzy, c-format
 msgid "Missing element: %s\n"
 msgstr "tak ada elemen \"%s\""
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s=%s\n"
+msgstr "PERINGATAN: dari elemen %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Tag keluaran (juga dikenal sebagai metadata)"
@@ -1264,9 +1305,6 @@ msgstr "Membebaskan baris pipa ...\n"
 
 #~ msgid "Print alloc trace (if enabled at compile time)"
 #~ msgstr "Cetak jejak alokasi (jika diaktifkan sewaktu kompilasi)"
-
-#~ msgid "Error writing registry cache to %s: %s"
-#~ msgstr "Galat menulis tembolok registry ke %s: %s"
 
 #~ msgid "Error re-scanning registry %s: %s"
 #~ msgstr "Galat memindai ulang registry %s: %s"

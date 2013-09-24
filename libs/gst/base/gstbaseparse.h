@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GST_BASE_PARSE_H__
@@ -213,6 +213,13 @@ struct _GstBaseParse {
  *                   Called until it doesn't return GST_FLOW_OK anymore for
  *                   the first buffers. Can be used by the subclass to detect
  *                   the stream format.
+ * @sink_query:     Optional.
+ *                   Query handler on the sink pad. This function should chain
+ *                   up to the parent implementation to let the default handler
+ *                   run (Since 1.2)
+ * @src_query:      Optional.
+ *                   Query handler on the source pad. Should chain up to the
+ *                   parent to let the default handler run (Since 1.2)
  *
  * Subclasses can override any of the available virtual methods or not, as
  * needed. At minimum @check_valid_frame and @parse_frame needs to be
@@ -256,8 +263,14 @@ struct _GstBaseParseClass {
   GstFlowReturn (*detect)             (GstBaseParse * parse,
                                        GstBuffer    * buffer);
 
+  gboolean      (*sink_query)         (GstBaseParse * parse,
+                                       GstQuery     * query);
+
+  gboolean      (*src_query)          (GstBaseParse * parse,
+                                       GstQuery     * query);
+
   /*< private >*/
-  gpointer       _gst_reserved[GST_PADDING_LARGE];
+  gpointer       _gst_reserved[GST_PADDING_LARGE - 2];
 };
 
 GType           gst_base_parse_get_type (void);
@@ -302,6 +315,9 @@ void            gst_base_parse_set_passthrough (GstBaseParse * parse,
 void            gst_base_parse_set_pts_interpolation (GstBaseParse * parse,
                                                       gboolean pts_interpolate);
 
+void            gst_base_parse_set_infer_ts (GstBaseParse * parse,
+                                             gboolean infer_ts);
+
 void            gst_base_parse_set_frame_rate  (GstBaseParse * parse,
                                                 guint          fps_num,
                                                 guint          fps_den,
@@ -323,6 +339,9 @@ gboolean        gst_base_parse_add_index_entry (GstBaseParse * parse,
                                                 GstClockTime   ts,
                                                 gboolean       key,
                                                 gboolean       force);
+
+void            gst_base_parse_set_ts_at_offset (GstBaseParse *parse,
+                                                 gsize offset);
 
 G_END_DECLS
 
