@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstPad</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstObject.html" title="GstObject">
 <link rel="next" href="GstPadTemplate.html" title="GstPadTemplate">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -310,6 +310,7 @@ struct              <a class="link" href="GstPad.html#GstPadProbeInfo" title="st
                                                          <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *parent</code></em>,
                                                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>,
                                                          <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="GstPad.html#gst-pad-get-stream-id" title="gst_pad_get_stream_id ()">gst_pad_get_stream_id</a>               (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            (<a class="link" href="GstPad.html#GstPadForwardFunction" title="GstPadForwardFunction ()">*GstPadForwardFunction</a>)            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="GstPad.html#gst-pad-forward" title="gst_pad_forward ()">gst_pad_forward</a>                     (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
@@ -390,7 +391,7 @@ dataflow on the pads.
 <a class="link" href="GstPad.html#gst-pad-get-parent" title="gst_pad_get_parent()"><code class="function">gst_pad_get_parent()</code></a> will retrieve the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> that owns the pad.
 </p>
 <p>
-After two pads are retrieved from an element with <code class="function">gst_element_get_pad()</code>,
+After two pads are retrieved from an element with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-get-pad"><code class="function">gst_element_get_pad()</code></a>,
 the pads can be linked with <a class="link" href="GstPad.html#gst-pad-link" title="gst_pad_link ()"><code class="function">gst_pad_link()</code></a>. (For quick links,
 you can also use <a class="link" href="GstElement.html#gst-element-link" title="gst_element_link ()"><code class="function">gst_element_link()</code></a>, which will make the obvious
 link for you if it's straightforward.). Pads can be unlinked again with
@@ -454,8 +455,11 @@ Last reviewed on 2012-03-29 (0.11.3)
 <p>
 The <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> structure. Use the functions to update the variables.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="GstPad-struct.element-private"></a>element_private</code></em>;</span></p></td>
@@ -485,8 +489,11 @@ the pad.</td>
 <p>
 The direction of a pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-UNKNOWN:CAPS"></a><span class="term"><code class="literal">GST_PAD_UNKNOWN</code></span></p></td>
@@ -525,11 +532,11 @@ The direction of a pad.
   GST_PAD_FLAG_LAST        = (GST_OBJECT_FLAG_LAST &lt;&lt; 16)
 } GstPadFlags;
 </pre>
-<p>
-Pad state flags
-</p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-FLAG-BLOCKED:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_BLOCKED</code></span></p></td>
@@ -573,34 +580,23 @@ Pad state flags
 <td><p><a name="GST-PAD-FLAG-FIXED-CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_FIXED_CAPS</code></span></p></td>
 <td>the pad is using fixed caps this means that once the
                      caps are set on the pad, the caps query function only
-                     returns those caps.
 </td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-PROXY-CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_CAPS</code></span></p></td>
-<td>the default event and query handler will forward
-                     all events and queries to the internally linked pads
-                     instead of discarding them.
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-PROXY-ALLOCATION:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_ALLOCATION</code></span></p></td>
-<td>the default query handler will forward
-                     allocation queries to the internally linked pads
-                     instead of discarding them.
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-PROXY-SCHEDULING:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_PROXY_SCHEDULING</code></span></p></td>
-<td>the default query handler will forward
-                     scheduling queries to the internally linked pads
-                     instead of discarding them.
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-FLAG-LAST:CAPS"></a><span class="term"><code class="literal">GST_PAD_FLAG_LAST</code></span></p></td>
-<td>offset to define more flags
-</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -621,8 +617,11 @@ Pad state flags
 <p>
 Result values from gst_pad_link and friends.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-LINK-OK:CAPS"></a><span class="term"><code class="literal">GST_PAD_LINK_OK</code></span></p></td>
@@ -671,8 +670,11 @@ Result values from gst_pad_link and friends.
 Macro to test if the given <a class="link" href="GstPad.html#GstPadLinkReturn" title="enum GstPadLinkReturn"><span class="type">GstPadLinkReturn</span></a> value indicates a failed
 link step.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ret</code></em> :</span></p></td>
 <td>the <a class="link" href="GstPad.html#GstPadLinkReturn" title="enum GstPadLinkReturn"><span class="type">GstPadLinkReturn</span></a> value</td>
@@ -688,8 +690,11 @@ link step.
 Macro to test if the given <a class="link" href="GstPad.html#GstPadLinkReturn" title="enum GstPadLinkReturn"><span class="type">GstPadLinkReturn</span></a> value indicates a successful
 link step.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>ret</code></em> :</span></p></td>
 <td>the <a class="link" href="GstPad.html#GstPadLinkReturn" title="enum GstPadLinkReturn"><span class="type">GstPadLinkReturn</span></a> value</td>
@@ -726,8 +731,11 @@ for linking the pads.
 </div>
 <p>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-LINK-CHECK-NOTHING:CAPS"></a><span class="term"><code class="literal">GST_PAD_LINK_CHECK_NOTHING</code></span></p></td>
@@ -796,8 +804,11 @@ The result of passing data to a pad.
 Note that the custom return values should not be exposed outside of the
 element scope.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-FLOW-CUSTOM-SUCCESS-2:CAPS"></a><span class="term"><code class="literal">GST_FLOW_CUSTOM_SUCCESS_2</code></span></p></td>
@@ -883,8 +894,11 @@ element scope.
 <p>
 Gets a string representing the given flow return.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ret</code></em> :</span></p></td>
@@ -904,8 +918,11 @@ Gets a string representing the given flow return.
 <p>
 Get the unique quark for the given GstFlowReturn.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>ret</code></em> :</span></p></td>
@@ -933,8 +950,11 @@ The status of a GstPad. After activating a pad, which usually happens when the
 parent element goes from READY to PAUSED, the GstPadMode defines if the
 pad operates in push or pull mode.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-MODE-NONE:CAPS"></a><span class="term"><code class="literal">GST_PAD_MODE_NONE</code></span></p></td>
@@ -961,8 +981,11 @@ pad operates in push or pull mode.
 <p>
 Return the name of a pad mode, for use in debug messages mostly.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
@@ -987,8 +1010,11 @@ Get a copy of the name of the pad. <a href="http://library.gnome.org/devel/glib/
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>the pad to get the name from</td>
@@ -1004,8 +1030,11 @@ Gets the direction of the pad. The direction of the pad is
 decided at construction time so this function does not take
 the LOCK.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1032,8 +1061,11 @@ Can return NULL if the pad did not have a parent.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>the pad to get the parent of</td>
@@ -1048,8 +1080,11 @@ MT safe.
 Gets the parent of <em class="parameter"><code>pad</code></em>, cast to a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>. If a <em class="parameter"><code>pad</code></em> has no parent or
 its parent is not an element, return NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1072,8 +1107,11 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <p>
 Gets the template for <em class="parameter"><code>pad</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1097,8 +1135,11 @@ usage. <span class="annotation">[<acronym title="Free data after the code is don
 <p>
 Links the source pad and the sink pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>srcpad</code></em> :</span></p></td>
@@ -1136,8 +1177,11 @@ for more information.
 <p>
 MT Safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>srcpad</code></em> :</span></p></td>
@@ -1168,8 +1212,11 @@ what went wrong.</td>
 Unlinks the source pad from the sink pad. Will emit the <a class="link" href="GstPad.html#GstPad-unlinked" title='The "unlinked" signal'><span class="type">"unlinked"</span></a>
 signal on both pads.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>srcpad</code></em> :</span></p></td>
@@ -1195,8 +1242,11 @@ MT safe.</td>
 <p>
 Checks if a <em class="parameter"><code>pad</code></em> is linked to another pad or not.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1219,8 +1269,11 @@ MT safe.</td>
 Checks if the source pad and the sink pad are compatible so they can be
 linked.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>srcpad</code></em> :</span></p></td>
@@ -1250,8 +1303,11 @@ The allowed capabilities is calculated as the intersection of the results of
 calling <a class="link" href="GstPad.html#gst-pad-query-caps" title="gst_pad_query_caps ()"><code class="function">gst_pad_query_caps()</code></a> on <em class="parameter"><code>pad</code></em> and its peer. The caller owns a reference
 on the resulting caps.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1276,8 +1332,11 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 Gets the capabilities currently configured on <em class="parameter"><code>pad</code></em> with the last
 <a class="link" href="gstreamer-GstEvent.html#GST-EVENT-CAPS"><span class="type">GST_EVENT_CAPS</span></a> event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1297,8 +1356,11 @@ Gets the capabilities currently configured on <em class="parameter"><code>pad</c
 <p>
 Gets the capabilities for <em class="parameter"><code>pad</code></em>'s template.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1321,8 +1383,11 @@ Unref after usage. <span class="annotation">[<acronym title="Free data after the
 Gets the peer of <em class="parameter"><code>pad</code></em>. This function refs the peer pad so
 you need to unref it after use.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1351,8 +1416,11 @@ The negotiated caps are the caps of the last CAPS event that passed on the
 pad. Use this function on a pad that, once it negotiated to a CAPS, cannot
 be renegotiated to something else.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>the pad to use</td>
@@ -1366,8 +1434,11 @@ be renegotiated to something else.
 <p>
 Check if <em class="parameter"><code>pad</code></em> has caps set on it with a <a class="link" href="gstreamer-GstEvent.html#GST-EVENT-CAPS"><span class="type">GST_EVENT_CAPS</span></a> event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1390,8 +1461,11 @@ Check if <em class="parameter"><code>pad</code></em> has caps set on it with a <
 Returns a new reference of the sticky event of type <em class="parameter"><code>event_type</code></em>
 from the event.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1430,12 +1504,15 @@ returned. When <a href="http://library.gnome.org/devel/glib/unstable/glib-Standa
 </p>
 <p>
 When <em class="parameter"><code>event</code></em> is set to NULL, the item will be removed from the list of sticky events.
-When <em class="parameter"><code>event</code></em> has been made writable, the new buffer reference can be assigned
-to <em class="parameter"><code>event</code></em>. This function is responsible for unreffing the old event when
+<em class="parameter"><code>event</code></em> can be replaced by assigning a new reference to it.
+This function is responsible for unreffing the old event when
 removing or modifying.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1467,8 +1544,11 @@ removing or modifying.
 Iterates all sticky events on <em class="parameter"><code>pad</code></em> and calls <em class="parameter"><code>foreach_func</code></em> for every
 event. If <em class="parameter"><code>foreach_func</code></em> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> the iteration is immediately stopped.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1495,8 +1575,11 @@ should be called for every event. <span class="annotation">[<acronym title="The 
 <p>
 Query if a pad is active
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1520,18 +1603,17 @@ MT safe.</td>
   GST_PAD_PROBE_PASS,
 } GstPadProbeReturn;
 </pre>
-<p>
-Different return values for the <a class="link" href="GstPad.html#GstPadProbeCallback" title="GstPadProbeCallback ()"><span class="type">GstPadProbeCallback</span></a>.
-</p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-PROBE-DROP:CAPS"></a><span class="term"><code class="literal">GST_PAD_PROBE_DROP</code></span></p></td>
 <td>drop data in data probes. For push mode this means that
        the data item is not sent downstream. For pull mode, it means that the
        data item is not passed upstream. In both cases, this result code
-       returns <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to the caller.
 </td>
 </tr>
 <tr>
@@ -1541,14 +1623,11 @@ Different return values for the <a class="link" href="GstPad.html#GstPadProbeCal
 </tr>
 <tr>
 <td><p><a name="GST-PAD-PROBE-REMOVE:CAPS"></a><span class="term"><code class="literal">GST_PAD_PROBE_REMOVE</code></span></p></td>
-<td>remove probe
-</td>
+<td></td>
 </tr>
 <tr>
 <td><p><a name="GST-PAD-PROBE-PASS:CAPS"></a><span class="term"><code class="literal">GST_PAD_PROBE_PASS</code></span></p></td>
-<td>pass the data item in the block probe and block on
-                        the next item
-</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -1591,8 +1670,11 @@ The different probing types that can occur. When either one of
 <em class="parameter"><code>GST_PAD_PROBE_TYPE_IDLE</code></em> or <em class="parameter"><code>GST_PAD_PROBE_TYPE_BLOCK</code></em> is used, the probe will be a
 blocking probe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-PAD-PROBE-TYPE-INVALID:CAPS"></a><span class="term"><code class="literal">GST_PAD_PROBE_TYPE_INVALID</code></span></p></td>
@@ -1724,8 +1806,11 @@ blocking probe.
 <p>
 Info passed in the <a class="link" href="GstPad.html#GstPadProbeCallback" title="GstPadProbeCallback ()"><span class="type">GstPadProbeCallback</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a class="link" href="GstPad.html#GstPadProbeType" title="enum GstPadProbeType"><span class="type">GstPadProbeType</span></a> <em class="structfield"><code><a name="GstPadProbeInfo.type"></a>type</code></em>;</span></p></td>
@@ -1801,8 +1886,11 @@ This field can be NULL.</td>
 <div class="refsect2">
 <a name="gst-pad-probe-info-get-buffer"></a><h3>gst_pad_probe_info_get_buffer ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="returnvalue">GstBuffer</span></a> *         gst_pad_probe_info_get_buffer       (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
@@ -1826,8 +1914,11 @@ This field can be NULL.</td>
 <div class="refsect2">
 <a name="gst-pad-probe-info-get-event"></a><h3>gst_pad_probe_info_get_event ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="returnvalue">GstEvent</span></a> *          gst_pad_probe_info_get_event        (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
@@ -1846,8 +1937,11 @@ This field can be NULL.</td>
 <div class="refsect2">
 <a name="gst-pad-probe-info-get-query"></a><h3>gst_pad_probe_info_get_query ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="returnvalue">GstQuery</span></a> *          gst_pad_probe_info_get_query        (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>info</code></em> :</span></p></td>
@@ -1887,8 +1981,11 @@ blocking type.
 <p>
 The callback is allowed to modify the data pointer in <em class="parameter"><code>info</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1922,8 +2019,11 @@ The callback is allowed to modify the data pointer in <em class="parameter"><cod
 Be notified of different states of pads. The provided callback is called for
 every state that matches <em class="parameter"><code>mask</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1969,8 +2069,11 @@ Remove the probe with <em class="parameter"><code>id</code></em> from <em class=
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -1992,8 +2095,11 @@ Checks if the pad is blocked or not. This function returns the
 last requested state of the pad. It is not certain that the pad
 is actually blocking at this point (see <a class="link" href="GstPad.html#gst-pad-is-blocking" title="gst_pad_is_blocking ()"><code class="function">gst_pad_is_blocking()</code></a>).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2015,8 +2121,11 @@ MT safe.</td>
 Checks if the pad is blocking or not. This is a guaranteed state
 of whether the pad is actually blocking on a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> or a <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2038,8 +2147,11 @@ MT safe.</td>
 Get the offset applied to the running time of <em class="parameter"><code>pad</code></em>. <em class="parameter"><code>pad</code></em> has to be a source
 pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2061,8 +2173,11 @@ pad.
 <p>
 Set the offset that will be applied to the running time of <em class="parameter"><code>pad</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2087,8 +2202,11 @@ If name is NULL, a guaranteed unique name (across all pads)
 will be assigned.
 This function makes a copy of the name so you can safely free the name.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -2101,7 +2219,7 @@ This function makes a copy of the name so you can safely free the name.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or NULL in case of an error.
-MT safe. <span class="annotation">[transfer floating]</span>
+MT safe. <span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -2118,8 +2236,11 @@ If name is NULL, a guaranteed unique name (across all pads)
 will be assigned.
 This function makes a copy of the name so you can safely free the name.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>templ</code></em> :</span></p></td>
@@ -2148,8 +2269,11 @@ If name is NULL, a guaranteed unique name (across all pads)
 will be assigned.
 This function makes a copy of the name so you can safely free the name.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>templ</code></em> :</span></p></td>
@@ -2176,8 +2300,11 @@ This function makes a copy of the name so you can safely free the name.
 Calls <a class="link" href="GstPad.html#gst-pad-set-chain-function-full" title="gst_pad_set_chain_function_full ()"><code class="function">gst_pad_set_chain_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2201,8 +2328,11 @@ notify.
 Sets the given chain function for the pad. The chain function is called to
 process a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> input buffer. see <a class="link" href="GstPad.html#GstPadChainFunction" title="GstPadChainFunction ()"><span class="type">GstPadChainFunction</span></a> for more details.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2243,8 +2373,11 @@ The implementer of this function receives a refcount to <em class="parameter"><c
 When a chain function detects an error in the data stream, it must post an
 error on the bus and return an appropriate <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2277,8 +2410,11 @@ execution of this function.</td>
 Calls <a class="link" href="GstPad.html#gst-pad-set-chain-list-function-full" title="gst_pad_set_chain_list_function_full ()"><code class="function">gst_pad_set_chain_list_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2304,8 +2440,11 @@ Sets the given chain list function for the pad. The chainlist function is
 called to process a <a class="link" href="gstreamer-GstBufferList.html#GstBufferList" title="GstBufferList"><span class="type">GstBufferList</span></a> input buffer list. See
 <a class="link" href="GstPad.html#GstPadChainListFunction" title="GstPadChainListFunction ()"><span class="type">GstPadChainListFunction</span></a> for more details.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2346,8 +2485,11 @@ should <a class="link" href="gstreamer-GstBufferList.html#gst-buffer-list-unref"
 When a chainlist function detects an error in the data stream, it must
 post an error on the bus and return an appropriate <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2378,6 +2520,9 @@ execution of this function.</td>
                                                          <em class="parameter"><code><span class="type">guint64</span> offset</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> **buffer</code></em>);</pre>
+<p>
+returns <a class="link" href="GstPad.html#GST-FLOW-ERROR:CAPS"><span class="type">GST_FLOW_ERROR</span></a> if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
+</p>
 <p>
 When <em class="parameter"><code>pad</code></em> is flushing this function returns <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a>
 immediately and <em class="parameter"><code>buffer</code></em> is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
@@ -2412,8 +2557,11 @@ will be unchanged.
 <p>
 This is a lowlevel function. Usualy <a class="link" href="GstPad.html#gst-pad-pull-range" title="gst_pad_pull_range ()"><code class="function">gst_pad_pull_range()</code></a> is used.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2429,8 +2577,7 @@ This is a lowlevel function. Usualy <a class="link" href="GstPad.html#gst-pad-pu
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
-<td>a pointer to hold the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>,
-returns <a class="link" href="GstPad.html#GST-FLOW-ERROR:CAPS"><span class="type">GST_FLOW_ERROR</span></a> if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates]</span>
+<td>a pointer to hold the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>,. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out callee-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2450,8 +2597,11 @@ MT safe.</td>
 Calls <a class="link" href="GstPad.html#gst-pad-set-getrange-function-full" title="gst_pad_set_getrange_function_full ()"><code class="function">gst_pad_set_getrange_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2476,8 +2626,11 @@ Sets the given getrange function for the pad. The getrange function is
 called to produce a new <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> to start the processing pipeline. see
 <a class="link" href="GstPad.html#GstPadGetRangeFunction" title="GstPadGetRangeFunction ()"><span class="type">GstPadGetRangeFunction</span></a> for a description of the getrange function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2549,8 +2702,11 @@ When this function is called with a -1 <em class="parameter"><code>length</code>
 optimal length is returned in <em class="parameter"><code>buffer</code></em>. The length might depend on the value
 of <em class="parameter"><code>offset</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2592,8 +2748,11 @@ return value leaves <em class="parameter"><code>buffer</code></em> undefined.</t
 Calls <a class="link" href="GstPad.html#gst-pad-set-event-function-full" title="gst_pad_set_event_function_full ()"><code class="function">gst_pad_set_event_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2616,8 +2775,11 @@ notify.
 <p>
 Sets the given event handler for the pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2648,8 +2810,11 @@ Sets the given event handler for the pad.
 <p>
 Function signature to handle an event for the pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2681,8 +2846,11 @@ execution of this function.</td>
 Calls <a class="link" href="GstPad.html#gst-pad-set-link-function-full" title="gst_pad_set_link_function_full ()"><code class="function">gst_pad_set_link_function_full()</code></a> with NULL
 for the user_data and notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2718,8 +2886,11 @@ cannot be made for some reason.
 If <em class="parameter"><code>link</code></em> is installed on a source pad, it should call the <a class="link" href="GstPad.html#GstPadLinkFunction" title="GstPadLinkFunction ()"><span class="type">GstPadLinkFunction</span></a>
 of the peer sink pad, if present.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2750,8 +2921,11 @@ of the peer sink pad, if present.
 <p>
 Function signature to handle a new link on the pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2783,8 +2957,11 @@ execution of this function.</td>
 Calls <a class="link" href="GstPad.html#gst-pad-set-unlink-function-full" title="gst_pad_set_unlink_function_full ()"><code class="function">gst_pad_set_unlink_function_full()</code></a> with NULL
 for the user_data and notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2808,8 +2985,11 @@ for the user_data and notify.
 Sets the given unlink function for the pad. It will be called
 when the pad is unlinked.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2839,8 +3019,11 @@ when the pad is unlinked.
 <p>
 Function signature to handle a unlinking the pad prom its peer.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2869,8 +3052,11 @@ This function is useful as a default caps query function for an element
 that can handle any stream format, but requires all its pads to have
 the same caps.  Two such elements are tee and adder.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2893,7 +3079,7 @@ the same caps.  Two such elements are tee and adder.
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_pad_proxy_query_accept_caps     (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
 <p>
-Calls <code class="function">gst_pad_accept_caps()</code> for all internally linked pads of <em class="parameter"><code>pad</code></em> and
+Calls <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-accept-caps"><code class="function">gst_pad_accept_caps()</code></a> for all internally linked pads of <em class="parameter"><code>pad</code></em> and
 returns the intersection of the results.
 </p>
 <p>
@@ -2901,8 +3087,11 @@ This function is useful as a default accept caps query function for an element
 that can handle any stream format, but requires caps that are acceptable for
 all oposite pads.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2928,8 +3117,11 @@ all oposite pads.
 Calls <a class="link" href="GstPad.html#gst-pad-set-activate-function-full" title="gst_pad_set_activate_function_full ()"><code class="function">gst_pad_set_activate_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -2957,8 +3149,11 @@ Only makes sense to set on sink pads.
 <p>
 Call this function if your sink pad can start a pull-based task.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -2991,8 +3186,11 @@ READY to PAUSED state change. By default this function will call the
 activate function that puts the pad in push mode but elements can
 override this function to activate the pad in pull mode if they wish.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3020,8 +3218,11 @@ override this function to activate the pad in pull mode if they wish.
 Calls <a class="link" href="GstPad.html#gst-pad-set-activatemode-function-full" title="gst_pad_set_activatemode_function_full ()"><code class="function">gst_pad_set_activatemode_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -3046,8 +3247,11 @@ notify.
 Sets the given activate_mode function for the pad. An activate_mode function
 prepares the element for data passing.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3079,8 +3283,11 @@ prepares the element for data passing.
 <p>
 The prototype of the push and pull activate functions.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3116,8 +3323,11 @@ The prototype of the push and pull activate functions.
 Check the <a class="link" href="GstPad.html#GST-PAD-FLAG-NEED-RECONFIGURE:CAPS"><span class="type">GST_PAD_FLAG_NEED_RECONFIGURE</span></a> flag on <em class="parameter"><code>pad</code></em> and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
 if the flag was set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3139,8 +3349,11 @@ if the flag was set.
 Check and clear the <a class="link" href="GstPad.html#GST-PAD-FLAG-NEED-RECONFIGURE:CAPS"><span class="type">GST_PAD_FLAG_NEED_RECONFIGURE</span></a> flag on <em class="parameter"><code>pad</code></em> and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
 if the flag was set.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3162,8 +3375,11 @@ if the flag was set.
 Mark a pad for needing reconfiguration. The next call to
 <a class="link" href="GstPad.html#gst-pad-check-reconfigure" title="gst_pad_check_reconfigure ()"><code class="function">gst_pad_check_reconfigure()</code></a> will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> after this call.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to mark</td>
@@ -3191,8 +3407,11 @@ be returned.
 In all cases, success or failure, the caller loses its reference to <em class="parameter"><code>buffer</code></em>
 after calling this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3226,8 +3445,11 @@ elements.
 This function takes owership of the provided event so you should
 <a class="link" href="gstreamer-GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3269,8 +3491,11 @@ chained via <a class="link" href="GstPad.html#gst-pad-chain" title="gst_pad_chai
 In all cases, success or failure, the caller loses its reference to <em class="parameter"><code>list</code></em>
 after calling this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3329,8 +3554,11 @@ Note that less than <em class="parameter"><code>size</code></em> bytes can be re
 an EOS condition is near or when <em class="parameter"><code>buffer</code></em> is not large enough to hold <em class="parameter"><code>size</code></em>
 bytes. The caller should check the result buffer size to get the result size.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3347,7 +3575,7 @@ bytes. The caller should check the result buffer size to get the result size.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
 <td>a pointer to hold the <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>, returns
-GST_FLOW_ERROR if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates]</span>
+GST_FLOW_ERROR if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out callee-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -3371,8 +3599,11 @@ pad's activatemodefunc. For use from within pad activation functions only.
 <p>
 If you don't know what this is, you probably don't want to call it.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3424,8 +3655,11 @@ all necessary locks and checks.
 This function takes owership of the provided event so you should
 <a class="link" href="gstreamer-GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3460,8 +3694,11 @@ to all internally linked pads,
 The the event is sent to all pads internally linked to <em class="parameter"><code>pad</code></em>. This function
 takes ownership of <em class="parameter"><code>event</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3503,8 +3740,11 @@ the query structure.
 <p>
 Please also note that some queries might need a running pipeline to work.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3534,8 +3774,11 @@ Performs <a class="link" href="GstPad.html#gst-pad-query" title="gst_pad_query (
 The caller is responsible for both the allocation and deallocation of
 the query structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3567,8 +3810,11 @@ if there are many possible sink pads that are internally linked to
 <em class="parameter"><code>pad</code></em>, only one will be sent the query.
 Multi-sinkpad elements should implement custom query handlers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3600,8 +3846,11 @@ Multi-sinkpad elements should implement custom query handlers.
 <p>
 Queries a pad for the stream position.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3632,8 +3881,11 @@ Queries a pad for the stream position.
 <p>
 Queries a pad for the total stream duration.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3667,8 +3919,11 @@ duration, or NULL. <span class="annotation">[<acronym title="Parameter for retur
 <p>
 Queries a pad to convert <em class="parameter"><code>src_val</code></em> in <em class="parameter"><code>src_format</code></em> to <em class="parameter"><code>dest_format</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3706,8 +3961,11 @@ Queries a pad to convert <em class="parameter"><code>src_val</code></em> in <em 
 <p>
 Check if the given pad accepts the caps.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3731,8 +3989,8 @@ Check if the given pad accepts the caps.
                                                          <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
 <p>
 Gets the capabilities this pad can produce or consume.
-Note that this method doesn't necessarily return the caps set by
-<code class="function">gst_pad_set_caps()</code> - use <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()"><code class="function">gst_pad_get_current_caps()</code></a> for that instead.
+Note that this method doesn't necessarily return the caps set by sending a
+<a class="link" href="gstreamer-GstEvent.html#gst-event-new-caps" title="gst_event_new_caps ()"><code class="function">gst_event_new_caps()</code></a> - use <a class="link" href="GstPad.html#gst-pad-get-current-caps" title="gst_pad_get_current_caps ()"><code class="function">gst_pad_get_current_caps()</code></a> for that instead.
 gst_pad_query_caps returns all possible caps a pad can operate with, using
 the pad's CAPS query function, If the query fails, this function will return
 <em class="parameter"><code>filter</code></em>, if not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, otherwise ANY.
@@ -3748,8 +4006,11 @@ if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 Note that this function does not return writable <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a>, use
 <a class="link" href="gstreamer-GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a> before modifying the caps.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3777,8 +4038,11 @@ Note that this function does not return writable <a class="link" href="gstreamer
 <p>
 Queries the peer of a given sink pad for the stream position.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3811,8 +4075,11 @@ position, or NULL. <span class="annotation">[<acronym title="Parameter for retur
 <p>
 Queries the peer pad of a given sink pad for the total stream duration.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3848,8 +4115,11 @@ duration, or NULL. <span class="annotation">[<acronym title="Parameter for retur
 Queries the peer pad of a given sink pad to convert <em class="parameter"><code>src_val</code></em> in <em class="parameter"><code>src_format</code></em>
 to <em class="parameter"><code>dest_format</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3889,8 +4159,11 @@ Must be a sink pad.</td>
 Check if the peer of <em class="parameter"><code>pad</code></em> accepts <em class="parameter"><code>caps</code></em>. If <em class="parameter"><code>pad</code></em> has no peer, this function
 returns TRUE.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3923,8 +4196,11 @@ called on sinkpads <em class="parameter"><code>filter</code></em> contains the c
 downstream in the preffered order. <em class="parameter"><code>filter</code></em> might be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> but
 if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> the returned caps will be a subset of <em class="parameter"><code>filter</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -3953,8 +4229,11 @@ caps.</td>
 Calls <a class="link" href="GstPad.html#gst-pad-set-query-function-full" title="gst_pad_set_query_function_full ()"><code class="function">gst_pad_set_query_function_full()</code></a> with NULL for the user_data and
 notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -3977,8 +4256,11 @@ notify.
 <p>
 Set the given query function for the pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4009,8 +4291,11 @@ Set the given query function for the pad.
 <p>
 The signature of the query function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4042,8 +4327,11 @@ execution of this function.</td>
 Calls <a class="link" href="GstPad.html#gst-pad-set-iterate-internal-links-function-full" title="gst_pad_set_iterate_internal_links_function_full ()"><code class="function">gst_pad_set_iterate_internal_links_function_full()</code></a> with NULL
 for the user_data and notify.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>p</code></em> :</span></p></td>
@@ -4067,8 +4355,11 @@ for the user_data and notify.
 <p>
 Sets the given internal link iterator function for the pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4098,8 +4389,11 @@ Sets the given internal link iterator function for the pad.
 <p>
 The signature of the internal pad link iterator function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4135,8 +4429,11 @@ so unref after use.
 <p>
 Free-function: gst_iterator_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4167,8 +4464,11 @@ pads inside the parent element with opposite direction.
 <p>
 The caller must free this iterator after use with <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4197,8 +4497,11 @@ Set the given private data gpointer on the pad.
 This function can only be used by the element that owns the pad.
 No locking is performed in this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4219,8 +4522,11 @@ No locking is performed in this function.
 Gets the private data of a pad.
 No locking is performed in this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4256,8 +4562,16 @@ a random number. Source elements that don't implement the URI
 handler interface should ideally generate a unique, deterministic
 stream-id manually instead.
 </p>
-<div class="variablelist"><table border="0">
+<p>
+Since stream IDs are sorted alphabetically, any numbers in the
+stream ID should be printed with a fixed number of characters,
+preceded by 0's, such as by using the format %<code class="literal">03u</code> instead of %<code class="literal">u</code>.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4304,8 +4618,11 @@ a random number. Source elements that don't implement the URI
 handler interface should ideally generate a unique, deterministic
 stream-id manually instead.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4357,8 +4674,11 @@ a random number. Source elements that don't implement the URI
 handler interface should ideally generate a unique, deterministic
 stream-id manually instead.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4388,6 +4708,42 @@ stream-id manually instead.
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-pad-get-stream-id"></a><h3>gst_pad_get_stream_id ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             gst_pad_get_stream_id               (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>
+Returns the current stream-id for the <em class="parameter"><code>pad</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none has been
+set yet, i.e. the pad has not received a stream-start event yet.
+</p>
+<p>
+This is a convenience wrapper around <a class="link" href="GstPad.html#gst-pad-get-sticky-event" title="gst_pad_get_sticky_event ()"><code class="function">gst_pad_get_sticky_event()</code></a> and
+<a class="link" href="gstreamer-GstEvent.html#gst-event-parse-stream-start" title="gst_event_parse_stream_start ()"><code class="function">gst_event_parse_stream_start()</code></a>.
+</p>
+<p>
+The returned stream-id string should be treated as an opaque string, its
+contents should not be interpreted.
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
+<td>A source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a newly-allocated copy of the stream-idfor <em class="parameter"><code>pad</code></em>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> the returned string when no longer needed.</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstPadForwardFunction"></a><h3>GstPadForwardFunction ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            (*GstPadForwardFunction)            (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
@@ -4395,8 +4751,11 @@ stream-id manually instead.
 A forward function is called for all internally linked pads, see
 <a class="link" href="GstPad.html#gst-pad-forward" title="gst_pad_forward ()"><code class="function">gst_pad_forward()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4427,8 +4786,11 @@ function is only called once for each pad.
 <p>
 When <em class="parameter"><code>forward</code></em> returns TRUE, no further pads will be processed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4478,8 +4840,11 @@ chain function.
 In all cases, success or failure, the caller loses its reference to <em class="parameter"><code>buffer</code></em>
 after calling this function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4527,8 +4892,11 @@ after calling this function.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4560,8 +4928,11 @@ is mostly used in pad activation functions to start the dataflow.
 The <a class="link" href="GstPad.html#GST-PAD-STREAM-LOCK:CAPS" title="GST_PAD_STREAM_LOCK()"><span class="type">GST_PAD_STREAM_LOCK</span></a> of <em class="parameter"><code>pad</code></em> will automatically be acquired
 before <em class="parameter"><code>func</code></em> is called.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4595,8 +4966,11 @@ Pause the task of <em class="parameter"><code>pad</code></em>. This function wil
 function executed by the task is finished if this function is not
 called from the task function.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4627,8 +5001,11 @@ the task. Use <a class="link" href="GstTask.html#gst-task-pause" title="gst_task
 Regardless of whether the pad has a task, the stream lock is acquired and
 released so as to ensure that streaming through this pad has finished.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4659,8 +5036,11 @@ function to perform the actual activation.
 If not <em class="parameter"><code>active</code></em>, calls <a class="link" href="GstPad.html#gst-pad-activate-mode" title="gst_pad_activate_mode ()"><code class="function">gst_pad_activate_mode()</code></a> with the pad's current mode
 and a FALSE argument.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4688,8 +5068,11 @@ MT safe.</td>
 Get the stream lock of <em class="parameter"><code>pad</code></em>. The stream lock is protecting the
 resources used in the data processing functions of <em class="parameter"><code>pad</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>
@@ -4705,8 +5088,11 @@ resources used in the data processing functions of <em class="parameter"><code>p
 <p>
 Lock the stream lock of <em class="parameter"><code>pad</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>
@@ -4723,8 +5109,11 @@ Lock the stream lock of <em class="parameter"><code>pad</code></em>.
 Try to Lock the stream lock of the pad, return TRUE if the lock could be
 taken.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>
@@ -4740,8 +5129,11 @@ taken.
 <p>
 Unlock the stream lock of <em class="parameter"><code>pad</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
 <td>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>
@@ -4781,8 +5173,11 @@ Unlock the stream lock of <em class="parameter"><code>pad</code></em>.
 <p>
 Signals that a pad has been linked to the peer pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4808,8 +5203,11 @@ Signals that a pad has been linked to the peer pad.
 <p>
 Signals that a pad has been unlinked from the peer pad.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
@@ -4834,6 +5232,6 @@ Signals that a pad has been unlinked from the peer pad.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

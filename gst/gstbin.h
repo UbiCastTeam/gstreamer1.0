@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -41,7 +41,7 @@ G_BEGIN_DECLS
 /**
  * GstBinFlags:
  * @GST_BIN_FLAG_NO_RESYNC: don't resync a state change when elements are
- *             added or linked in the bin (Since 1.0.5)
+ *             added or linked in the bin.
  * @GST_BIN_FLAG_LAST: the last enum in the series of flags for bins.
  * Derived classes can use this as first value in a list of flags.
  *
@@ -62,7 +62,7 @@ typedef enum {
  * Check if @bin will resync its state change when elements are added and
  * removed.
  *
- * Since: 1.0.5
+ * Since: 1.1.1
  */
 #define GST_BIN_IS_NO_RESYNC(bin)        (GST_OBJECT_FLAG_IS_SET(bin,GST_BIN_FLAG_NO_RESYNC))
 

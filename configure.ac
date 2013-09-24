@@ -1,16 +1,14 @@
-AC_PREREQ(2.62)
+AC_PREREQ([2.68])
 
 dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT(GStreamer, 1.0.10,
-    http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer,
-    gstreamer)
+AC_INIT([GStreamer],[1.1.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
-AM_INIT_AUTOMAKE([-Wno-portability 1.11 no-dist-gzip dist-xz tar-ustar])
+AM_INIT_AUTOMAKE([-Wno-portability 1.11 no-dist-gzip dist-xz tar-ustar subdir-objects])
 
 dnl define PACKAGE_VERSION_* variables
 AS_VERSION
@@ -57,8 +55,16 @@ dnl - library source changed -> increment REVISION
 dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
+dnl
+dnl Keep CURRENT as MINOR * 100 + MICRO
+dnl Ex : 1.0.0 => 0
+dnl      1.0.3 => 3
+dnl      1.1.0 => 100
+dnl      1.2.5 => 205
+dnl      1.10.9 (who knows) => 1009
+dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 9, 0, 9)
+AS_LIBTOOL(GST, 190, 0, 190)
 
 dnl *** autotools stuff ****
 
@@ -152,7 +158,7 @@ AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
 
 dnl building of tests
 AC_ARG_ENABLE(tests,
-  AC_HELP_STRING([--disable-tests], [disable building test apps]),
+  AS_HELP_STRING([--disable-tests],[disable building test apps]),
   [
     case "${enableval}" in
       yes) BUILD_TESTS=yes ;;
@@ -165,8 +171,7 @@ AM_CONDITIONAL(BUILD_TESTS,         test "x$BUILD_TESTS" = "xyes")
 
 dnl tests known to fail
 AC_ARG_ENABLE(failing-tests,
-  AC_HELP_STRING([--disable-failing-tests],
-    [disable building tests known to fail]),
+  AS_HELP_STRING([--disable-failing-tests],[disable building tests known to fail]),
   [
     case "${enableval}" in
       yes) BUILD_FAILING_TESTS=yes ;;
@@ -184,7 +189,7 @@ fi
 
 dnl building of benchmarks
 AC_ARG_ENABLE(benchmarks,
-  AC_HELP_STRING([--disable-benchmarks], [disable building benchmarks apps]),
+  AS_HELP_STRING([--disable-benchmarks],[disable building benchmarks apps]),
   [
     case "${enableval}" in
       yes) BUILD_BENCHMARKS=yes ;;
@@ -197,7 +202,7 @@ AM_CONDITIONAL(BUILD_BENCHMARKS, test "x$BUILD_BENCHMARKS" = "xyes")
 
 dnl building of tools
 AC_ARG_ENABLE(tools,
-  AC_HELP_STRING([--disable-tools], [disable building tools]),
+  AS_HELP_STRING([--disable-tools],[disable building tools]),
   [
     case "${enableval}" in
       yes) BUILD_TOOLS=yes ;;
@@ -210,8 +215,7 @@ AM_CONDITIONAL(BUILD_TOOLS, test "x$BUILD_TOOLS" = "xyes")
 
 dnl poison destroyed objects
 AC_ARG_ENABLE(poisoning,
-  AC_HELP_STRING([--enable-poisoning],
-    [enable poisoning of deallocated objects]),
+  AS_HELP_STRING([--enable-poisoning],[enable poisoning of deallocated objects]),
   [
     case "${enableval}" in
       yes) USE_POISONING=yes ;;
@@ -273,7 +277,7 @@ AC_PROG_CXX
 dnl CXX may be set to some default even if no c++ compiler is available
 dnl (thanks autotools!), so just try to compile some c++ code to make sure
 AC_LANG_PUSH([C++])
-AC_TRY_COMPILE([ class Foo { int bar; };], , working_cxx=yes, working_cxx=no)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[ class Foo { int bar; };]], [[]])],[working_cxx=yes],[working_cxx=no])
 AC_LANG_POP([C++])
 AC_MSG_NOTICE([working c++ compiler found: $working_cxx])
 AM_CONDITIONAL(HAVE_CXX, test "x$working_cxx" = "xyes")
@@ -299,8 +303,7 @@ GOBJECT_INTROSPECTION_CHECK([1.31.1])
 dnl check for documentation tools
 AG_GST_DOCBOOK_CHECK
 GTK_DOC_CHECK([1.12])
-AS_PATH_PYTHON([2.1])
-AG_GST_PLUGIN_DOCS([1.3],[2.1])
+AG_GST_PLUGIN_DOCS([1.12])
 
 dnl *** checks for libraries ***
 
@@ -380,14 +383,14 @@ dnl check if the compiler supports __uint128_t (gcc)
 dnl Actually check for 128-bit division, since that's what we use
 dnl uint128_t for.
 AC_CACHE_CHECK(for __uint128_t, gst_cv_uint128_t,
-    AC_TRY_LINK([ ], [
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([[ ]], [[
       static __uint128_t v1 = 100;
       static __uint128_t v2 = 10;
       static __uint128_t u;
       u = v1 / v2;
-    ], [
+    ]])],[
       gst_cv_uint128_t=yes
-    ], [
+    ],[
       gst_cv_uint128_t=no
     ])
 )
@@ -477,22 +480,27 @@ AC_CHECK_FUNCS(clock_gettime, [], [
   AC_CHECK_LIB(rt, clock_gettime, [
     AC_DEFINE(HAVE_CLOCK_GETTIME, 1)
     LIBS="$LIBS -lrt"
+  ], [
+    AC_CHECK_LIB(pthread, clock_gettime, [
+      AC_DEFINE(HAVE_CLOCK_GETTIME, 1)
+      LIBS="$LIBS -lpthread"
+    ])
   ])
 ])
 
 AC_CACHE_CHECK(for posix timers, gst_cv_posix_timers,
-    AC_TRY_COMPILE([
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <time.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-    ], [
+    ]], [[
 #if !defined(_POSIX_TIMERS) || _POSIX_TIMERS < 0 || !defined(CLOCK_REALTIME)
 #error Either _POSIX_TIMERS or CLOCK_REALTIME not defined
 #endif
-    ], [
+    ]])],[
       gst_cv_posix_timers=yes
-    ], [
+    ],[
       gst_cv_posix_timers=no
     ])
 )
@@ -507,18 +515,18 @@ AC_SUBST(GST_HAVE_POSIX_TIMERS_DEFINE)
 AM_CONDITIONAL(GST_HAVE_POSIX_TIMERS, test "$gst_cv_posix_timers" = "yes")
 
 AC_CACHE_CHECK(for monotonic clock, gst_cv_monotonic_clock,
-    AC_TRY_COMPILE([
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <time.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-    ], [
+    ]], [[
 #if !defined(_POSIX_MONOTONIC_CLOCK) || _POSIX_MONOTONIC_CLOCK < 0 || !defined(CLOCK_MONOTONIC)
 #error Either _POSIX_MONOTONIC_CLOCK or CLOCK_MONOTONIC not defined
 #endif
-    ], [
+    ]])],[
       gst_cv_monotonic_clock=yes
-    ], [
+    ],[
       gst_cv_monotonic_clock=no
     ])
 )
@@ -535,25 +543,6 @@ AM_CONDITIONAL(GST_HAVE_MONOTONIC_CLOCK, test "$gst_cv_monotonic_clock" = "yes")
 dnl Check for a way to display the function name in debug output
 AG_GST_CHECK_FUNCTION
 
-dnl test for register_printf_specifier or register_printf_function
-AC_CHECK_FUNCS([register_printf_specifier register_printf_function],
-    [HAVE_PRINTF_EXTENSION=yes])
-
-if test "$HAVE_PRINTF_EXTENSION" = yes; then
-  GST_PRINTF_EXTENSION_POINTER_FORMAT_DEFINE="#define GST_PTR_FORMAT \"P\""
-  GST_PRINTF_EXTENSION_SEGMENT_FORMAT_DEFINE="#define GST_SEGMENT_FORMAT \"Q\""
-  GST_USING_PRINTF_EXTENSION_DEFINE="#define GST_USING_PRINTF_EXTENSION"
-  AC_DEFINE(HAVE_PRINTF_EXTENSION, 1,
-      [Defined if we have printf specifier extensions available])
-else
-    GST_PRINTF_EXTENSION_POINTER_FORMAT_DEFINE="#define GST_PTR_FORMAT \"p\""
-    GST_PRINTF_EXTENSION_SEGMENT_FORMAT_DEFINE="#define GST_SEGMENT_FORMAT \"p\""
-    GST_USING_PRINTF_EXTENSION_DEFINE="#undef GST_USING_PRINTF_EXTENSION"
-fi
-AC_SUBST(GST_PRINTF_EXTENSION_POINTER_FORMAT_DEFINE)
-AC_SUBST(GST_PRINTF_EXTENSION_SEGMENT_FORMAT_DEFINE)
-AC_SUBST(GST_USING_PRINTF_EXTENSION_DEFINE)
-
 dnl test if we have dladdr(); we use it for debugging; see gst/gstinfo.c
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -D_GNU_SOURCE"
@@ -561,6 +550,27 @@ AC_CHECK_LIB(dl, dladdr,
    AC_DEFINE(HAVE_DLADDR, 1, [Defined if we have dladdr ()])
    LIBS="$LIBS -ldl")
 CFLAGS="$save_cflags"
+
+dnl Check printf stuff
+if test "x${GST_DISABLE_GST_DEBUG}" != "xyes"; then
+  AC_TYPE_LONG_LONG_INT
+  AC_TYPE_UNSIGNED_LONG_LONG_INT
+
+  if test x$ac_cv_type_long_long_int$ac_cv_type_unsigned_long_long_int = xyesyes; then
+    AC_DEFINE([HAVE_LONG_LONG], [1], [Define to 1 if the system has the type long long])
+  fi
+
+  dnl /usr/share/aclocal/inttypes_h.m4 - ships with gettext apparently
+  gl_AC_HEADER_INTTYPES_H
+
+  dnl /usr/share/aclocal/stdint_h.m4 - ships with gettext apparently
+  gl_AC_HEADER_STDINT_H
+
+  AC_CHECK_TYPES(ptrdiff_t)
+
+  AC_TYPE_INTMAX_T
+  AC_TYPE_SIZE_T
+fi
 
 dnl *** checks for dependency libraries ***
 
@@ -574,7 +584,7 @@ AC_SUBST(GLIB_PREFIX)
 
 dnl building of unit test libraries
 AC_ARG_ENABLE(check,
-  AC_HELP_STRING([--disable-check], [disable building unit test libraries]),
+  AS_HELP_STRING([--disable-check],[disable building unit test libraries]),
   [
     case "${enableval}" in
       yes) BUILD_CHECK=yes ;;
@@ -614,16 +624,15 @@ AC_ARG_WITH([memory-alignment],
 dnl Check for -Bsymbolic-functions linker flag used to avoid
 dnl intra-library PLT jumps, if available.
 AC_ARG_ENABLE(Bsymbolic,
-              [AC_HELP_STRING([--disable-Bsymbolic],
-                              [avoid linking with -Bsymbolic])],,
+              [AS_HELP_STRING([--disable-Bsymbolic],[avoid linking with -Bsymbolic])],,
               [SAVED_LDFLAGS="${LDFLAGS}"
                AC_MSG_CHECKING([for -Bsymbolic-functions linker flag])
                LDFLAGS=-Wl,-Bsymbolic-functions
-               AC_TRY_LINK([], [int main (void) { return 0; }],
+               AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[int main (void) { return 0; }]])],[
                            AC_MSG_RESULT(yes)
-                           enable_Bsymbolic=yes,
+                           enable_Bsymbolic=yes],[
                            AC_MSG_RESULT(no)
-                           enable_Bsymbolic=no)
+                           enable_Bsymbolic=no])
                LDFLAGS="${SAVED_LDFLAGS}"])
 
 
@@ -643,9 +652,6 @@ AC_DEFINE_UNQUOTED(GST_DATADIR, "$DATADIR", [data dir])
 dnl set location of plugin directory
 AG_GST_SET_PLUGINDIR
 
-GST_PKG_DEPS="glib-2.0, gobject-2.0, gmodule-no-export-2.0, gthread-2.0"
-AC_SUBST(GST_PKG_DEPS)
-
 dnl make sure it doesn't complain about unused variables if debugging is disabled
 NO_WARNINGS=""
 if test "x${GST_DISABLE_GST_DEBUG}" = "xyes"; then
@@ -654,6 +660,10 @@ fi
 
 dnl define an ERROR_CFLAGS Makefile variable
 AG_GST_SET_ERROR_CFLAGS($FATAL_WARNINGS, [-Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wundef -Wwrite-strings -Wformat-nonliteral -Wformat-security -Wold-style-definition -Winit-self -Wmissing-include-dirs -Waddress -Waggregate-return -Wno-multichar -Wnested-externs $NO_WARNINGS])
+
+dnl special warning flags for gst/printf
+AS_COMPILER_FLAG([-Wno-format-nonliteral], [PRINTF_CFLAGS="-Wno-format-nonliteral"])
+AC_SUBST(PRINTF_CFLAGS)
 
 dnl define correct level for debugging messages
 AG_GST_SET_LEVEL_DEFAULT($GST_GIT)
@@ -758,6 +768,7 @@ gst/Makefile
 gst/gstconfig.h
 gst/gstversion.h
 gst/parse/Makefile
+gst/printf/Makefile
 libs/Makefile
 libs/gst/Makefile
 libs/gst/base/Makefile

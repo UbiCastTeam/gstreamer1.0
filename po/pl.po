@@ -1,13 +1,13 @@
 # Polish translation for gstreamer.
 # This file is distributed under the same license as the gstreamer package.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2012.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer 1.0.3\n"
+"Project-Id-Version: gstreamer 1.1.4\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-08-28 12:47+0100\n"
-"PO-Revision-Date: 2012-11-28 19:15+0100\n"
+"POT-Creation-Date: 2013-09-19 10:02+0200\n"
+"PO-Revision-Date: 2013-09-15 10:23+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
@@ -48,6 +48,13 @@ msgstr "LISTA"
 
 msgid "Disable colored debugging output"
 msgstr "Wyłączenie kolorowanego wyjścia diagnostycznego"
+
+msgid ""
+"Changes coloring mode of the debug log. Possible modes: off, on, disable, "
+"auto, unix"
+msgstr ""
+"Zmiana trybu kolorowania logu diagnostycznego. Możliwe tryby: off, on, "
+"disable, auto, unix"
 
 msgid "Disable debugging"
 msgstr "Wyłączenie diagnostyki"
@@ -248,6 +255,10 @@ msgstr "Brak standardowego komunikatu o błędzie dla domeny %s i kodu %d."
 msgid "Selected clock cannot be used in pipeline."
 msgstr "Wybrany zegar nie może być używany w potoku."
 
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "Błąd zapisu pamięci podręcznej rejestru do %s: %s"
+
 msgid "title"
 msgstr "tytuł"
 
@@ -325,8 +336,8 @@ msgstr "rozszerzony komentarz"
 
 msgid "free text commenting the data in key=value or key[en]=comment form"
 msgstr ""
-"dowolny tekst komentujący dane w postaci klucz=wartość lub klucz[język]"
-"=komentarz"
+"dowolny tekst komentujący dane w postaci klucz=wartość lub "
+"klucz[język]=komentarz"
 
 msgid "track number"
 msgstr "numer ścieżki"
@@ -787,8 +798,29 @@ msgid "How the image should be rotated or flipped before display"
 msgstr ""
 "W jaki sposób obraz powinien być obrócony lub odbity przed wyświetleniem"
 
+msgid "publisher"
+msgstr "wydawca"
+
+msgid "Name of the label or publisher"
+msgstr "Nazwa wytwórni lub wydawcy"
+
+msgid "interpreted-by"
+msgstr "interpretacja"
+
+msgid "Information about the people behind a remix and similar interpretations"
+msgstr ""
+"Informacja o osobach odpowiedzialnych za remix lub podobne interpretacje"
+
 msgid ", "
 msgstr ", "
+
+#, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr "Nie znaleziono sposobu obsługi URI dla protokołu %s"
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr "Schemat URI '%s' nie jest obsługiwany"
 
 #, c-format
 msgid "ERROR: from element %s: %s\n"
@@ -855,15 +887,6 @@ msgstr "nie udało się dowiązać elementu osadzającego dla URI \"%s\""
 msgid "empty pipeline not allowed"
 msgstr "pusty potok nie jest dozwolony"
 
-msgid "Internal clock error."
-msgstr "Wewnętrzny błąd zegara."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Wewnętrzny błąd przepływu danych."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Wiele buforów zostało zgubionych."
 
@@ -872,6 +895,15 @@ msgstr "Wewnętrzny problem przepływu danych."
 
 msgid "Internal data stream error."
 msgstr "Wewnętrzny błąd strumienia danych."
+
+msgid "Internal data flow error."
+msgstr "Wewnętrzny błąd przepływu danych."
+
+msgid "Internal clock error."
+msgstr "Wewnętrzny błąd zegara."
+
+msgid "Failed to map buffer."
+msgstr "Nie udało się odwzorować bufora."
 
 msgid "Filter caps"
 msgstr "Filtrowanie możliwości"
@@ -1113,6 +1145,9 @@ msgstr "UWAGA: od elementu %s: %s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Przewinięto, czekanie na zakończenie buforowania...\n"
 
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Przewinięto, czekanie na zakończenie postępu...\n"
+
 msgid "buffering..."
 msgstr "buforowanie..."
 
@@ -1133,8 +1168,16 @@ msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Przerwanie: Zatrzymywanie potoku...\n"
 
 #, c-format
+msgid "Progress: (%s) %s\n"
+msgstr "Postęp: (%s) %s\n"
+
+#, c-format
 msgid "Missing element: %s\n"
 msgstr "Brak elementu: %s\n"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s=%s\n"
+msgstr "Otrzymano kontekst od elementu '%s': %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Wypisanie znaczników (znanych także jako metadane)"

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -1089,22 +1089,6 @@ GST_START_TEST (test_read_macros)
   guint32 uarray[2];
   guint8 *cpointer;
 
-#define fail_unless_equals_int_hex(a, b)                                \
-G_STMT_START {								\
-  int first = a;							\
-  int second = b;							\
-  fail_unless(first == second,						\
-    "'" #a "' (0x%08x) is not equal to '" #b"' (0x%08x)", first, second);	\
-} G_STMT_END;
-
-#define fail_unless_equals_int64_hex(a, b)                                \
-G_STMT_START {								\
-  gint64 first = a;							\
-  gint64 second = b;							\
-  fail_unless(first == second,						\
-    "'" #a "' (0x%016x) is not equal to '" #b"' (0x%016x)", first, second);	\
-} G_STMT_END;
-
   memcpy (uarray, carray, 8);
   cpointer = carray;
 
@@ -1240,10 +1224,86 @@ G_STMT_START {								\
       0x4142434445464748);
   fail_unless_equals_int64_hex (GST_READ_UINT64_LE (uarray),
       0x4847464544434241);
+
+  /* make sure the data argument is not duplicated inside the macro
+   * with possibly unexpected side-effects */
+  cpointer = carray;
+  fail_unless_equals_int (GST_READ_UINT8 (cpointer++), 'A');
+  fail_unless (cpointer == carray + 1);
+
+  cpointer = carray;
+  fail_unless_equals_int_hex (GST_READ_UINT16_BE (cpointer++), 0x4142);
+  fail_unless (cpointer == carray + 1);
+
+  cpointer = carray;
+  fail_unless_equals_int_hex (GST_READ_UINT32_BE (cpointer++), 0x41424344);
+  fail_unless (cpointer == carray + 1);
+
+  cpointer = carray;
+  fail_unless_equals_int64_hex (GST_READ_UINT64_BE (cpointer++),
+      0x4142434445464748);
+  fail_unless (cpointer == carray + 1);
 }
 
 GST_END_TEST;
 
+GST_START_TEST (test_write_macros)
+{
+  guint8 carray[8];
+  guint8 *cpointer;
+
+  /* make sure the data argument is not duplicated inside the macro
+   * with possibly unexpected side-effects */
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT8 (cpointer++, 'A');
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'A');
+
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT16_BE (cpointer++, 0x4142);
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'A');
+  fail_unless_equals_int (carray[1], 'B');
+
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT32_BE (cpointer++, 0x41424344);
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'A');
+  fail_unless_equals_int (carray[3], 'D');
+
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT64_BE (cpointer++, 0x4142434445464748);
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'A');
+  fail_unless_equals_int (carray[7], 'H');
+
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT16_LE (cpointer++, 0x4142);
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'B');
+  fail_unless_equals_int (carray[1], 'A');
+
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT32_LE (cpointer++, 0x41424344);
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'D');
+  fail_unless_equals_int (carray[3], 'A');
+
+  memset (carray, 0, sizeof (carray));
+  cpointer = carray;
+  GST_WRITE_UINT64_LE (cpointer++, 0x4142434445464748);
+  fail_unless_equals_pointer (cpointer, carray + 1);
+  fail_unless_equals_int (carray[0], 'H');
+  fail_unless_equals_int (carray[7], 'A');
+}
+
+GST_END_TEST;
 static Suite *
 gst_utils_suite (void)
 {
@@ -1279,6 +1339,7 @@ gst_utils_suite (void)
   tcase_add_test (tc_chain, test_greatest_common_divisor);
 
   tcase_add_test (tc_chain, test_read_macros);
+  tcase_add_test (tc_chain, test_write_macros);
   return s;
 }
 

@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 #ifndef __GST_MESSAGE_H__
@@ -97,6 +97,8 @@ typedef struct _GstMessage GstMessage;
  *     e.g. when using playbin in gapless playback mode, to get notified when
  *     the next title actually starts playing (which will be some time after
  *     the URI for the next title has been set).
+ * @GST_MESSAGE_NEED_CONTEXT: Message indicating that an element wants a specific context (Since 1.2)
+ * @GST_MESSAGE_HAVE_CONTEXT: Message indicating that an element created a context (Since 1.2)
  * @GST_MESSAGE_ANY: mask for all of the above messages.
  *
  * The different message types that are available.
@@ -136,6 +138,8 @@ typedef enum
   GST_MESSAGE_TOC               = (1 << 26),
   GST_MESSAGE_RESET_TIME        = (1 << 27),
   GST_MESSAGE_STREAM_START      = (1 << 28),
+  GST_MESSAGE_NEED_CONTEXT      = (1 << 29),
+  GST_MESSAGE_HAVE_CONTEXT      = (1 << 30),
   GST_MESSAGE_ANY               = ~0
 } GstMessageType;
 
@@ -556,6 +560,17 @@ void            gst_message_parse_reset_time    (GstMessage *message, GstClockTi
 
 /* STREAM_START */
 GstMessage *    gst_message_new_stream_start    (GstObject * src) G_GNUC_MALLOC;
+
+void            gst_message_set_group_id        (GstMessage *message, guint group_id);
+gboolean        gst_message_parse_group_id      (GstMessage *message, guint *group_id);
+
+/* NEED_CONTEXT */
+GstMessage *    gst_message_new_need_context    (GstObject * src, const gchar * context_type) G_GNUC_MALLOC;
+gboolean        gst_message_parse_context_type  (GstMessage * message, const gchar ** context_type);
+
+/* HAVE_CONTEXT */
+GstMessage *    gst_message_new_have_context    (GstObject * src, GstContext *context) G_GNUC_MALLOC;
+void            gst_message_parse_have_context  (GstMessage *message, GstContext **context);
 
 G_END_DECLS
 

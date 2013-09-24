@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstTypeFind</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstTocSetter.html" title="GstTocSetter">
 <link rel="next" href="GstTypeFindFactory.html" title="GstTypeFindFactory">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -99,8 +99,11 @@ Last reviewed on 2005-11-09 (0.9.4)
 <p>
 Object that stores typefind callbacks. To use with <a class="link" href="GstTypeFindFactory.html" title="GstTypeFindFactory"><span class="type">GstTypeFindFactory</span></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="structfield"><code><a name="GstTypeFind.peek"></a>peek</code></em> ()</span></p></td>
@@ -129,8 +132,11 @@ Object that stores typefind callbacks. To use with <a class="link" href="GstType
 <p>
 A function that will be called by typefinding.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>find</code></em> :</span></p></td>
@@ -159,8 +165,11 @@ A function that will be called by typefinding.
 The probability of the typefind function. Higher values have more certainty
 in doing a reliable typefind.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TYPE-FIND-NONE:CAPS"></a><span class="term"><code class="literal">GST_TYPE_FIND_NONE</code></span></p></td>
@@ -202,14 +211,13 @@ in doing a reliable typefind.
                                                          <em class="parameter"><code><span class="type">gint64</span> offset</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);</pre>
 <p>
-Returns the <em class="parameter"><code>size</code></em> bytes of the stream to identify beginning at offset. If
-offset is a positive number, the offset is relative to the beginning of the
-stream, if offset is a negative number the offset is relative to the end of
-the stream. The returned memory is valid until the typefinding function
 returns and must not be freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>find</code></em> :</span></p></td>
@@ -244,8 +252,11 @@ given probability. A <a class="link" href="gstreamer-GstTypeFind.html#GstTypeFin
 in one call.
 It is up to the caller of the <a class="link" href="gstreamer-GstTypeFind.html#GstTypeFindFunction" title="GstTypeFindFunction ()"><span class="type">GstTypeFindFunction</span></a> to interpret these values.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>find</code></em> :</span></p></td>
@@ -287,8 +298,11 @@ the values passed have the correct type (in terms of width in bytes when
 passed to the vararg function - this applies particularly to gdouble and
 guint64 arguments).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>find</code></em> :</span></p></td>
@@ -323,8 +337,11 @@ field GType and field value)</td>
 <p>
 Get the length of the data stream.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>find</code></em> :</span></p></td>
@@ -353,8 +370,11 @@ Registers a new typefind function to be used for typefinding. After
 registering this function will be available for typefinding.
 This function is typically called during an element's plugin initialization.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>plugin</code></em> :</span></p></td>
@@ -405,6 +425,6 @@ is unloaded.</td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

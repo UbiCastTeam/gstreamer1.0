@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -368,7 +368,6 @@ gst_output_selector_switch (GstOutputSelector * osel)
   gboolean res = FALSE;
   GstEvent *ev = NULL;
   GstSegment *seg = NULL;
-  gint64 start = 0, position = 0;
 
   /* Switch */
   GST_OBJECT_LOCK (GST_OBJECT (osel));
@@ -391,13 +390,9 @@ gst_output_selector_switch (GstOutputSelector * osel)
       /* If resending then mark segment start and position accordingly */
       if (osel->resend_latest && osel->latest_buffer &&
           GST_BUFFER_TIMESTAMP_IS_VALID (osel->latest_buffer)) {
-        start = position = GST_BUFFER_TIMESTAMP (osel->latest_buffer);
-      } else {
-        start = position = seg->position;
+        seg->position = GST_BUFFER_TIMESTAMP (osel->latest_buffer);
       }
 
-      seg->start = start;
-      seg->position = position;
       ev = gst_event_new_segment (seg);
 
       if (!gst_pad_push_event (osel->active_srcpad, ev)) {
@@ -546,19 +541,19 @@ gst_output_selector_event (GstPad * pad, GstObject * parent, GstEvent * event)
       res = gst_pad_event_default (pad, parent, event);
       break;
     }
-    case GST_EVENT_EOS:
-      /* Send eos to all src pads */
-      res = gst_pad_event_default (pad, parent, event);
-      break;
     default:
     {
-      /* Send other events to pending or active src pad */
-      active = gst_output_selector_get_active (sel);
-      if (active) {
-        res = gst_pad_push_event (active, event);
-        gst_object_unref (active);
+      if (GST_EVENT_IS_STICKY (event)) {
+        res = gst_pad_event_default (pad, parent, event);
       } else {
-        gst_event_unref (event);
+        /* Send other events to pending or active src pad */
+        active = gst_output_selector_get_active (sel);
+        if (active) {
+          res = gst_pad_push_event (active, event);
+          gst_object_unref (active);
+        } else {
+          gst_event_unref (event);
+        }
       }
       break;
     }

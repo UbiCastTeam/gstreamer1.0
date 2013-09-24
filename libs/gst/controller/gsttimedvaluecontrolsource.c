@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -105,12 +105,13 @@ gst_control_point_compare (gconstpointer p1, gconstpointer p2)
  * gst_control_point_find:
  * @p1: a pointer to a #GstControlPoint
  * @p2: a pointer to a #GstClockTime
+ * @user_data: supplied user data
  *
- * Compare function for g_list operations that operates on a #GstControlPoint and
+ * Compare function for g_sequence operations that operates on a #GstControlPoint and
  * a #GstClockTime.
  */
 static gint
-gst_control_point_find (gconstpointer p1, gconstpointer p2)
+gst_control_point_find (gconstpointer p1, gconstpointer p2, gpointer user_data)
 {
   GstClockTime ct1 = ((GstControlPoint *) p1)->timestamp;
   GstClockTime ct2 = *(GstClockTime *) p2;

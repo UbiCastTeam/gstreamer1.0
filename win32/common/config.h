@@ -62,7 +62,7 @@
 #define GST_PACKAGE_ORIGIN "Unknown package origin"
 
 /* GStreamer package release date/time for plugins as YYYY-MM-DD */
-#define GST_PACKAGE_RELEASE_DATETIME "2013-08-28"
+#define GST_PACKAGE_RELEASE_DATETIME "2013-09-19"
 
 /* Define if static plugins should be built */
 #undef GST_PLUGIN_BUILD_STATIC
@@ -169,11 +169,24 @@
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 
+/* Define to 1 if the system has the type `intmax_t'. */
+#undef HAVE_INTMAX_T
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define if <inttypes.h> exists, doesn't clash with <sys/types.h>, and
+   declares uintmax_t. */
+#undef HAVE_INTTYPES_H_WITH_UINTMAX
+
 /* Define to 1 if you have the `localtime_r' function. */
 #undef HAVE_LOCALTIME_R
+
+/* Define to 1 if the system has the type long long */
+#undef HAVE_LONG_LONG
+
+/* Define to 1 if the system has the type `long long int'. */
+#undef HAVE_LONG_LONG_INT
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
@@ -205,9 +218,6 @@
 /* defined if the compiler implements __PRETTY_FUNCTION__ */
 #undef HAVE_PRETTY_FUNCTION
 
-/* Defined if we have printf specifier extensions available */
-#undef HAVE_PRINTF_EXTENSION
-
 /* Define to 1 if you have the <process.h> header file. */
 #define HAVE_PROCESS_H 1
 
@@ -220,20 +230,21 @@
 /* Have PTHREAD_PRIO_INHERIT. */
 #undef HAVE_PTHREAD_PRIO_INHERIT
 
+/* Define to 1 if the system has the type `ptrdiff_t'. */
+#undef HAVE_PTRDIFF_T
+
 /* Define if RDTSC is available */
 #undef HAVE_RDTSC
-
-/* Define to 1 if you have the `register_printf_function' function. */
-#undef HAVE_REGISTER_PRINTF_FUNCTION
-
-/* Define to 1 if you have the `register_printf_specifier' function. */
-#undef HAVE_REGISTER_PRINTF_SPECIFIER
 
 /* Define to 1 if you have the `sigaction' function. */
 #undef HAVE_SIGACTION
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
+
+/* Define if <stdint.h> exists, doesn't clash with <sys/types.h>, and declares
+   uintmax_t. */
+#undef HAVE_STDINT_H_WITH_UINTMAX
 
 /* Define to 1 if you have the <stdio_ext.h> header file. */
 #undef HAVE_STDIO_EXT_H
@@ -292,6 +303,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if the system has the type `unsigned long long int'. */
+#undef HAVE_UNSIGNED_LONG_LONG_INT
+
 /* Define if valgrind should be used */
 #undef HAVE_VALGRIND
 
@@ -330,9 +344,6 @@
 /* Memory alignment by pagesize */
 #undef MEMORY_ALIGNMENT_PAGESIZE
 
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
-
 /* Name of package */
 #define PACKAGE "gstreamer"
 
@@ -343,7 +354,7 @@
 #define PACKAGE_NAME "GStreamer"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "GStreamer 1.0.10"
+#define PACKAGE_STRING "GStreamer 1.1.90"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gstreamer"
@@ -352,7 +363,7 @@
 #undef PACKAGE_URL
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.0.10"
+#define PACKAGE_VERSION "1.1.90"
 
 /* directory where plugins are located */
 #ifdef _DEBUG
@@ -390,7 +401,7 @@
 #undef USE_POISONING
 
 /* Version number of package */
-#define VERSION "1.0.10"
+#define VERSION "1.1.90"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
@@ -420,3 +431,10 @@
 
 /* We need at least WinXP SP2 for __stat64 */
 #undef __MSVCRT_VERSION__
+
+/* Define to the widest signed integer type if <stdint.h> and <inttypes.h> do
+   not define. */
+#undef intmax_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t

@@ -57,15 +57,16 @@ setup_test_objects (struct TestData *td, GstPadChainFunction chain_func)
   td->mysink = gst_pad_new ("sink", GST_PAD_SINK);
   gst_pad_set_chain_function (td->mysink, chain_func);
   gst_pad_set_active (td->mysink, TRUE);
-  gst_pad_set_caps (td->mysink, td->mycaps);
 
   td->mysrc1 = gst_pad_new ("src1", GST_PAD_SRC);
   gst_pad_set_active (td->mysrc1, TRUE);
-  gst_pad_set_caps (td->mysrc1, td->mycaps);
+  gst_check_setup_events_with_stream_id (td->mysrc1, td->funnel, td->mycaps,
+      GST_FORMAT_BYTES, "test1");
 
   td->mysrc2 = gst_pad_new ("src2", GST_PAD_SRC);
   gst_pad_set_active (td->mysrc2, TRUE);
-  gst_pad_set_caps (td->mysrc2, td->mycaps);
+  gst_check_setup_events_with_stream_id (td->mysrc2, td->funnel, td->mycaps,
+      GST_FORMAT_BYTES, "test2");
 
   fail_unless (GST_PAD_LINK_SUCCESSFUL (gst_pad_link (td->funnelsrc,
               td->mysink)));
@@ -118,10 +119,6 @@ chain_ok (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 GST_START_TEST (test_funnel_simple)
 {
   struct TestData td;
-#if 0
-  GstBuffer *buf1 = NULL;
-  GstBuffer *buf2 = NULL;
-#endif
 
   setup_test_objects (&td, chain_ok);
 
@@ -132,18 +129,6 @@ GST_START_TEST (test_funnel_simple)
   fail_unless (gst_pad_push (td.mysrc2, gst_buffer_new ()) == GST_FLOW_OK);
 
   fail_unless (bufcount == 2);
-
-#if 0
-  fail_unless (gst_pad_alloc_buffer (td.mysrc1, 0, 1024, td.mycaps,
-          &buf1) == GST_FLOW_OK);
-  fail_unless (gst_pad_alloc_buffer (td.mysrc2, 1024, 1024, td.mycaps,
-          &buf2) == GST_FLOW_OK);
-
-  fail_unless (alloccount == 2);
-
-  gst_buffer_unref (buf1);
-  gst_buffer_unref (buf2);
-#endif
 
   release_test_objects (&td);
 }
@@ -164,6 +149,7 @@ eos_event_func (GstPad * pad, GstObject * parent, GstEvent * event)
 GST_START_TEST (test_funnel_eos)
 {
   struct TestData td;
+  GstSegment segment;
 
   setup_test_objects (&td, chain_ok);
 
@@ -196,6 +182,10 @@ GST_START_TEST (test_funnel_eos)
   fail_unless (gst_pad_push_event (td.mysrc1, gst_event_new_flush_start ()));
   fail_unless (gst_pad_push_event (td.mysrc1, gst_event_new_flush_stop (TRUE)));
 
+  gst_segment_init (&segment, GST_FORMAT_BYTES);
+  gst_pad_push_event (td.mysrc1, gst_event_new_segment (&segment));
+  gst_pad_push_event (td.mysrc2, gst_event_new_segment (&segment));
+
   fail_unless (gst_pad_push (td.mysrc1, gst_buffer_new ()) == GST_FLOW_OK);
   fail_unless (gst_pad_push (td.mysrc2, gst_buffer_new ()) == GST_FLOW_EOS);
 
@@ -214,7 +204,7 @@ GST_START_TEST (test_funnel_eos)
               td.funnelsink11)));
 
   /* This will fail because everything is EOS already */
-  fail_if (gst_pad_push_event (td.mysrc1, gst_event_new_eos ()));
+  fail_unless (gst_pad_push_event (td.mysrc1, gst_event_new_eos ()));
   fail_unless (num_eos == 2);
 
   fail_unless (gst_pad_unlink (td.mysrc1, td.funnelsink11));
@@ -236,11 +226,6 @@ funnel_suite (void)
 {
   Suite *s = suite_create ("funnel");
   TCase *tc_chain;
-  GLogLevelFlags fatal_mask;
-
-  fatal_mask = g_log_set_always_fatal (G_LOG_FATAL_MASK);
-  fatal_mask |= G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL;
-  g_log_set_always_fatal (fatal_mask);
 
   tc_chain = tcase_create ("funnel simple");
   tcase_add_test (tc_chain, test_funnel_simple);

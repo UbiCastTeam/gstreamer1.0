@@ -81,6 +81,8 @@ GType gst_event_type_get_type (void);
 #define GST_TYPE_EVENT_TYPE (gst_event_type_get_type())
 GType gst_qos_type_get_type (void);
 #define GST_TYPE_QOS_TYPE (gst_qos_type_get_type())
+GType gst_stream_flags_get_type (void);
+#define GST_TYPE_STREAM_FLAGS (gst_stream_flags_get_type())
 
 /* enumerations from "gstformat.h" */
 GType gst_format_get_type (void);
@@ -91,6 +93,8 @@ GType gst_debug_level_get_type (void);
 #define GST_TYPE_DEBUG_LEVEL (gst_debug_level_get_type())
 GType gst_debug_color_flags_get_type (void);
 #define GST_TYPE_DEBUG_COLOR_FLAGS (gst_debug_color_flags_get_type())
+GType gst_debug_color_mode_get_type (void);
+#define GST_TYPE_DEBUG_COLOR_MODE (gst_debug_color_mode_get_type())
 
 /* enumerations from "gstiterator.h" */
 GType gst_iterator_result_get_type (void);

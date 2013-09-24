@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -188,12 +188,8 @@ gst_bus_class_init (GstBusClass * klass)
    * A message has been posted on the bus. This signal is emitted from the
    * thread that posted the message so one has to be careful with locking.
    *
-   * This signal will not be emitted by default, you have to set up
-   * gst_bus_sync_signal_handler() as a sync handler if you want this
-   * signal to be emitted when a message is posted on the bus, like this:
-   * <programlisting>
-   * gst_bus_set_sync_handler (bus, gst_bus_sync_signal_handler, yourdata);
-   * </programlisting>
+   * This signal will not be emitted by default, you have to call
+   * gst_bus_enable_sync_message_emission() before.
    */
   gst_bus_signals[SYNC_MESSAGE] =
       g_signal_new ("sync-message", G_TYPE_FROM_CLASS (klass),
@@ -1208,7 +1204,7 @@ void
 gst_bus_disable_sync_message_emission (GstBus * bus)
 {
   g_return_if_fail (GST_IS_BUS (bus));
-  g_return_if_fail (bus->priv->num_signal_watchers == 0);
+  g_return_if_fail (bus->priv->num_sync_message_emitters > 0);
 
   GST_OBJECT_LOCK (bus);
   bus->priv->num_sync_message_emitters--;

@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>fakesrc</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-capsfilter.html" title="capsfilter">
 <link rel="next" href="gstreamer-plugins-fakesink.html" title="fakesink">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -70,6 +70,7 @@ enum                <a class="link" href="gstreamer-plugins-fakesrc.html#GstFake
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--datarate" title='The "datarate" property'>datarate</a>"                 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--dump" title='The "dump" property'>dump</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--filltype" title='The "filltype" property'>filltype</a>"                 <a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrcFillType" title="enum GstFakeSrcFillType"><span class="type">GstFakeSrcFillType</span></a>    : Read / Write
+  "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--format" title='The "format" property'>format</a>"                   <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--is-live" title='The "is-live" property'>is-live</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write / Construct
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--last-message" title='The "last-message" property'>last-message</a>"             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--parentsize" title='The "parentsize" property'>parentsize</a>"               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
@@ -80,7 +81,6 @@ enum                <a class="link" href="gstreamer-plugins-fakesrc.html#GstFake
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--sizemin" title='The "sizemin" property'>sizemin</a>"                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                  : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--sizetype" title='The "sizetype" property'>sizetype</a>"                 <a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrcSizeType" title="enum GstFakeSrcSizeType"><span class="type">GstFakeSrcSizeType</span></a>    : Read / Write
   "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--sync" title='The "sync" property'>sync</a>"                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>              : Read / Write
-  "<a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc--format" title='The "format" property'>format</a>"                   <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write
 </pre>
 </div>
 <div class="refsect1">
@@ -102,7 +102,7 @@ basic <span class="application">GStreamer</span> core functionality is:
 <p>
 </p>
 <div class="refsect2">
-<a name="idp8889216"></a><h3>Example launch line</h3>
+<a name="id-1.2.3.7.4.1"></a><h3>Example launch line</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -124,9 +124,12 @@ Last reviewed on 2008-06-20 (0.10.21)
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="idp8892400"></a><h3>Element Information</h3>
-<div class="variablelist"><table border="0">
+<a name="id-1.2.3.7.6.1"></a><h3>Element Information</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">plugin</span></p></td>
@@ -147,9 +150,12 @@ Last reviewed on 2008-06-20 (0.10.21)
 </div>
 <hr>
 <div class="refsect2">
-<a name="idp8899808"></a><h3>Element Pads</h3>
-<div class="variablelist"><table border="0">
+<a name="id-1.2.3.7.6.2"></a><h3>Element Pads</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term">name</span></p></td>
@@ -194,8 +200,11 @@ Opaque <a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrc"><span cl
 <p>
 The different ways buffers are allocated.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FAKE-SRC-DATA-ALLOCATE:CAPS"></a><span class="term"><code class="literal">FAKE_SRC_DATA_ALLOCATE</code></span></p></td>
@@ -224,8 +233,11 @@ The different ways buffers are allocated.
 <p>
 The different ways of filling the buffers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FAKE-SRC-FILLTYPE-NOTHING:CAPS"></a><span class="term"><code class="literal">FAKE_SRC_FILLTYPE_NOTHING</code></span></p></td>
@@ -272,8 +284,11 @@ The different ways of filling the buffers.
 <p>
 The different output types. Unused currently.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FAKE-SRC-FIRST-LAST-LOOP:CAPS"></a><span class="term"><code class="literal">FAKE_SRC_FIRST_LAST_LOOP</code></span></p></td>
@@ -330,8 +345,11 @@ The different output types. Unused currently.
 <p>
 The different size of the allocated buffers.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="FAKE-SRC-SIZETYPE-EMPTY:CAPS"></a><span class="term"><code class="literal">FAKE_SRC_SIZETYPE_EMPTY</code></span></p></td>
@@ -395,6 +413,15 @@ The different size of the allocated buffers.
 <pre class="programlisting">  "filltype"                 <a class="link" href="gstreamer-plugins-fakesrc.html#GstFakeSrcFillType" title="enum GstFakeSrcFillType"><span class="type">GstFakeSrcFillType</span></a>    : Read / Write</pre>
 <p>How to fill the buffer, if at all.</p>
 <p>Default value: Fill buffers with zeros</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstFakeSrc--format"></a><h3>The <code class="literal">"format"</code> property</h3>
+<pre class="programlisting">  "format"                   <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write</pre>
+<p>
+Set the format of the newsegment events to produce.
+</p>
+<p>Default value: GST_FORMAT_BYTES</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -469,15 +496,6 @@ The different size of the allocated buffers.
 <p>Sync to the clock to the datarate.</p>
 <p>Default value: FALSE</p>
 </div>
-<hr>
-<div class="refsect2">
-<a name="GstFakeSrc--format"></a><h3>The <code class="literal">"format"</code> property</h3>
-<pre class="programlisting">  "format"                   <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>             : Read / Write</pre>
-<p>
-Set the format of the newsegment events to produce.
-</p>
-<p>Default value: GST_FORMAT_BYTES</p>
-</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-fakesrc.signal-details"></a><h2>Signal Details</h2>
@@ -490,8 +508,11 @@ Set the format of the newsegment events to produce.
 <p>
 This signal gets emitted before sending the buffer.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>fakesrc</code></em> :</span></p></td>
@@ -520,6 +541,6 @@ This signal gets emitted before sending the buffer.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

@@ -16,8 +16,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -97,6 +97,10 @@
 #include "gst-i18n-lib.h"
 #include "glib-compat-private.h"
 
+#ifndef GST_DISABLE_GST_DEBUG
+#include "printf/printf.h"
+#endif
+
 /* Element signals and args */
 enum
 {
@@ -132,7 +136,6 @@ static gboolean gst_element_set_clock_func (GstElement * element,
 static void gst_element_set_bus_func (GstElement * element, GstBus * bus);
 static gboolean gst_element_post_message_default (GstElement * element,
     GstMessage * message);
-
 
 static gboolean gst_element_default_send_event (GstElement * element,
     GstEvent * event);
@@ -1121,8 +1124,7 @@ gst_element_iterate_pad_list (GstElement * element, GList ** padlist)
  * The order of pads returned by the iterator will be the order in which
  * the pads were added to the element.
  *
- * Returns: (transfer full): the #GstIterator of #GstPad. Unref each pad
- *     after use.
+ * Returns: (transfer full): the #GstIterator of #GstPad.
  *
  * MT safe.
  */
@@ -1143,8 +1145,7 @@ gst_element_iterate_pads (GstElement * element)
  * The order of pads returned by the iterator will be the order in which
  * the pads were added to the element.
  *
- * Returns: (transfer full): the #GstIterator of #GstPad. Unref each pad
- *     after use.
+ * Returns: (transfer full): the #GstIterator of #GstPad.
  *
  * MT safe.
  */
@@ -1165,8 +1166,7 @@ gst_element_iterate_src_pads (GstElement * element)
  * The order of pads returned by the iterator will be the order in which
  * the pads were added to the element.
  *
- * Returns: (transfer full): the #GstIterator of #GstPad. Unref each pad
- *     after use.
+ * Returns: (transfer full): the #GstIterator of #GstPad.
  *
  * MT safe.
  */
@@ -1650,20 +1650,19 @@ gst_element_default_query (GstElement * element, GstQuery * query)
 gboolean
 gst_element_query (GstElement * element, GstQuery * query)
 {
-  GstElementClass *oclass;
-  gboolean result = FALSE;
+  GstElementClass *klass;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (query != NULL, FALSE);
 
-  oclass = GST_ELEMENT_GET_CLASS (element);
-
-  if (oclass->query) {
+  klass = GST_ELEMENT_GET_CLASS (element);
+  if (klass->query) {
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send query on element %s",
         GST_ELEMENT_NAME (element));
-    result = oclass->query (element, query);
+    return klass->query (element, query);
   }
-  return result;
+
+  return FALSE;
 }
 
 static gboolean
@@ -1722,6 +1721,7 @@ gst_element_post_message (GstElement * element, GstMessage * message)
   GstElementClass *klass;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
+  g_return_val_if_fail (message != NULL, FALSE);
 
   klass = GST_ELEMENT_GET_CLASS (element);
   if (klass->post_message)
@@ -1746,6 +1746,7 @@ _gst_element_error_printf (const gchar * format, ...)
 {
   va_list args;
   gchar *buffer;
+  int len;
 
   if (format == NULL)
     return NULL;
@@ -1753,8 +1754,14 @@ _gst_element_error_printf (const gchar * format, ...)
     return NULL;
 
   va_start (args, format);
-  buffer = g_strdup_vprintf (format, args);
+
+  len = __gst_vasprintf (&buffer, format, args);
+
   va_end (args);
+
+  if (len < 0)
+    buffer = NULL;
+
   return buffer;
 }
 
@@ -2428,7 +2435,8 @@ only_async_start:
  * element will perform the remainder of the state change asynchronously in
  * another thread.
  * An application can use gst_element_get_state() to wait for the completion
- * of the state change or it can wait for a state change message on the bus.
+ * of the state change or it can wait for a %GST_MESSAGE_ASYNC_DONE or
+ * %GST_MESSAGE_STATE_CHANGED on the bus.
  *
  * State changes to %GST_STATE_READY or %GST_STATE_NULL never return
  * #GST_STATE_CHANGE_ASYNC.
@@ -3012,4 +3020,30 @@ gst_element_get_bus (GstElement * element)
       result);
 
   return result;
+}
+
+/**
+ * gst_element_set_context:
+ * @element: a #GstElement to set the context of.
+ * @context: (transfer none): the #GstContext to set.
+ *
+ * Sets the context of the element. Increases the refcount of the context.
+ *
+ * MT safe.
+ */
+void
+gst_element_set_context (GstElement * element, GstContext * context)
+{
+  GstElementClass *oclass;
+
+  g_return_if_fail (GST_IS_ELEMENT (element));
+
+  oclass = GST_ELEMENT_GET_CLASS (element);
+
+  GST_CAT_DEBUG_OBJECT (GST_CAT_CONTEXT, element,
+      "set context %p %" GST_PTR_FORMAT, context,
+      gst_context_get_structure (context));
+
+  if (oclass->set_context)
+    oclass->set_context (element, context);
 }

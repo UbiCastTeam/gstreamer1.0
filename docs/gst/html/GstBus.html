@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstBus</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstBufferPool.html" title="GstBufferPool">
 <link rel="next" href="gstreamer-GstCaps.html" title="GstCaps">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -200,8 +200,11 @@ The opaque <a class="link" href="GstBus.html" title="GstBus"><span class="type">
 <p>
 The standard flags that a bus may have.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-BUS-FLUSHING:CAPS"></a><span class="term"><code class="literal">GST_BUS_FLUSHING</code></span></p></td>
@@ -228,8 +231,11 @@ The standard flags that a bus may have.
 <p>
 The result values for a GstBusSyncHandler.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-BUS-DROP:CAPS"></a><span class="term"><code class="literal">GST_BUS_DROP</code></span></p></td>
@@ -268,8 +274,11 @@ function so it should not be freed in the function.
 Note that this function is used as a GSourceFunc which means that returning
 FALSE will remove the GSource from the mainloop.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -307,8 +316,11 @@ can be attached to a given bus.
 If the handler returns GST_BUS_DROP, it should unref the message, else the
 message should not be unreffed by the sync handler.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -338,8 +350,11 @@ message should not be unreffed by the sync handler.
 <p>
 Creates a new <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> instance.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>a new <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> instance. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -356,8 +371,11 @@ Creates a new <a class="link" href="GstBus.html" title="GstBus"><span class="typ
 Post a message on the given bus. Ownership of the message
 is taken by the bus.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -384,8 +402,11 @@ MT safe.</td>
 Check if there are pending messages on the bus that
 should be handled.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -409,8 +430,11 @@ Peek the message on the top of the bus' queue. The message will remain
 on the bus' message queue. A reference is returned, and needs to be unreffed
 by the caller.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -434,8 +458,11 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <p>
 Get a message from the bus.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -463,8 +490,11 @@ the bus that do not match <em class="parameter"><code>type</code></em> and that 
 message that does match <em class="parameter"><code>type</code></em>.  If there is no message matching <em class="parameter"><code>type</code></em> on
 the bus, all messages will be discarded.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -499,8 +529,11 @@ If <em class="parameter"><code>timeout</code></em> is 0, this function behaves l
 <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><span class="type">GST_CLOCK_TIME_NONE</span></a>, this function will block forever until a message was
 posted on the bus.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -538,8 +571,11 @@ If <em class="parameter"><code>timeout</code></em> is 0, this function behaves l
 <em class="parameter"><code>timeout</code></em> is <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><span class="type">GST_CLOCK_TIME_NONE</span></a>, this function will block forever until a
 matching message was posted on the bus.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -578,8 +614,11 @@ references to the message origin objects. Will flush future messages until
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -612,8 +651,11 @@ functions.
 You cannot replace an existing sync_handler. You can pass NULL to this
 function, which will clear the existing handler.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -645,8 +687,11 @@ function, which will clear the existing handler.
 A helper GstBusSyncHandler that can be used to convert all synchronous
 messages into signals.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -677,8 +722,11 @@ Create watch for this bus. The GSource will be dispatched whenever
 a message is on the bus. After the GSource is dispatched, the
 message is popped off the bus and unreffed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -723,8 +771,11 @@ from <em class="parameter"><code>func</code></em>.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -776,8 +827,11 @@ can set a new one.
 The watch can be removed using <a href="http://library.gnome.org/devel/glib/unstable/glib-The-Main-Event-Loop.html#g-source-remove"><code class="function">g_source_remove()</code></a> or by returning FALSE
 from <em class="parameter"><code>func</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -819,8 +873,11 @@ disable.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
 <td>a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> on which you previously called
@@ -856,8 +913,11 @@ signal is marshalled to the main thread via the main loop.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
 <td>a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> on which you want to receive the "sync-message" signal</td>
@@ -874,8 +934,11 @@ MT safe.
 A helper <a class="link" href="GstBus.html#GstBusFunc" title="GstBusFunc ()"><span class="type">GstBusFunc</span></a> that can be used to convert all asynchronous messages
 into signals.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -920,8 +983,11 @@ function is called.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
 <td>a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> on which you want to receive the "message" signal</td>
@@ -956,8 +1022,11 @@ watch before you can set another type of watch.
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -980,8 +1049,11 @@ Removes a signal watch previously added with <a class="link" href="GstBus.html#g
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
 <td>a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> you previously added a signal watch to</td>
@@ -1032,8 +1104,11 @@ other short timeouts use <a class="link" href="GstBus.html#gst-bus-timed-pop-fil
 better handled by setting up an asynchronous bus watch and doing things
 from there.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -1082,8 +1157,11 @@ A message has been posted on the bus. This signal is emitted from a
 GSource added to the mainloop. this signal will only be emitted when
 there is a mainloop running.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -1111,17 +1189,14 @@ A message has been posted on the bus. This signal is emitted from the
 thread that posted the message so one has to be careful with locking.
 </p>
 <p>
-This signal will not be emitted by default, you have to set up
-<a class="link" href="GstBus.html#gst-bus-sync-signal-handler" title="gst_bus_sync_signal_handler ()"><code class="function">gst_bus_sync_signal_handler()</code></a> as a sync handler if you want this
-signal to be emitted when a message is posted on the bus, like this:
+This signal will not be emitted by default, you have to call
+<a class="link" href="GstBus.html#gst-bus-enable-sync-message-emission" title="gst_bus_enable_sync_message_emission ()"><code class="function">gst_bus_enable_sync_message_emission()</code></a> before.
 </p>
-<pre class="programlisting">
-gst_bus_set_sync_handler (bus, gst_bus_sync_signal_handler, yourdata);
-</pre>
-<p>
-</p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bus</code></em> :</span></p></td>
@@ -1146,6 +1221,6 @@ gst_bus_set_sync_handler (bus, gst_bus_sync_signal_handler, yourdata);
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:gstargbcontrolbinding
@@ -105,25 +105,25 @@ gst_argb_control_binding_class_init (GstARGBControlBindingClass * klass)
       g_param_spec_object ("control-source-a", "ControlSource A",
       "The control source for the alpha color component",
       GST_TYPE_CONTROL_SOURCE,
-      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_CS_R] =
       g_param_spec_object ("control-source-r", "ControlSource R",
       "The control source for the red color component",
       GST_TYPE_CONTROL_SOURCE,
-      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_CS_G] =
       g_param_spec_object ("control-source-g", "ControlSource G",
       "The control source for the green color component",
       GST_TYPE_CONTROL_SOURCE,
-      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_CS_B] =
       g_param_spec_object ("control-source-b", "ControlSource B",
       "The control source for the blue color component",
       GST_TYPE_CONTROL_SOURCE,
-      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (gobject_class, PROP_LAST, properties);
 }
@@ -164,16 +164,20 @@ gst_argb_control_binding_set_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_CS_A:
-      self->cs_a = g_value_dup_object (value);
+      gst_object_replace ((GstObject **) & self->cs_a,
+          g_value_dup_object (value));
       break;
     case PROP_CS_R:
-      self->cs_r = g_value_dup_object (value);
+      gst_object_replace ((GstObject **) & self->cs_r,
+          g_value_dup_object (value));
       break;
     case PROP_CS_G:
-      self->cs_r = g_value_dup_object (value);
+      gst_object_replace ((GstObject **) & self->cs_g,
+          g_value_dup_object (value));
       break;
     case PROP_CS_B:
-      self->cs_g = g_value_dup_object (value);
+      gst_object_replace ((GstObject **) & self->cs_b,
+          g_value_dup_object (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -211,14 +215,10 @@ gst_argb_control_binding_dispose (GObject * object)
 {
   GstARGBControlBinding *self = GST_ARGB_CONTROL_BINDING (object);
 
-  if (self->cs_a)
-    gst_object_replace ((GstObject **) & self->cs_a, NULL);
-  if (self->cs_r)
-    gst_object_replace ((GstObject **) & self->cs_r, NULL);
-  if (self->cs_g)
-    gst_object_replace ((GstObject **) & self->cs_g, NULL);
-  if (self->cs_b)
-    gst_object_replace ((GstObject **) & self->cs_b, NULL);
+  gst_object_replace ((GstObject **) & self->cs_a, NULL);
+  gst_object_replace ((GstObject **) & self->cs_r, NULL);
+  gst_object_replace ((GstObject **) & self->cs_g, NULL);
+  gst_object_replace ((GstObject **) & self->cs_b, NULL);
 
   G_OBJECT_CLASS (parent_class)->dispose (object);
 }

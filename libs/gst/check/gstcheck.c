@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 /**
  * SECTION:gstcheck
@@ -27,6 +27,9 @@
  * These macros and functions are for internal use of the unit tests found
  * inside the 'check' directories of various GStreamer packages.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "gstcheck.h"
 
@@ -115,9 +118,15 @@ print_plugins (void)
 void
 gst_check_init (int *argc, char **argv[])
 {
+  guint timeout_multiplier = 1;
+
   gst_init (argc, argv);
 
   GST_DEBUG_CATEGORY_INIT (check_debug, "check", 0, "check regression tests");
+
+  if (atexit (gst_deinit) != 0) {
+    GST_ERROR ("failed to set gst_deinit as exit function");
+  }
 
   if (g_getenv ("GST_TEST_DEBUG"))
     _gst_check_debug = TRUE;
@@ -136,6 +145,28 @@ gst_check_init (int *argc, char **argv[])
       gst_check_log_critical_func, NULL);
 
   print_plugins ();
+
+#ifdef TARGET_CPU
+  GST_INFO ("target CPU: %s", TARGET_CPU);
+#endif
+
+#ifdef HAVE_CPU_ARM
+  timeout_multiplier = 10;
+#endif
+
+  if (timeout_multiplier > 1) {
+    const gchar *tmult = g_getenv ("CK_TIMEOUT_MULTIPLIER");
+
+    if (tmult == NULL) {
+      gchar num_str[32];
+
+      g_snprintf (num_str, sizeof (num_str), "%d", timeout_multiplier);
+      GST_INFO ("slow CPU, setting CK_TIMEOUT_MULTIPLIER to %s", num_str);
+      g_setenv ("CK_TIMEOUT_MULTIPLIER", num_str, TRUE);
+    } else {
+      GST_INFO ("CK_TIMEOUT_MULTIPLIER already set to '%s'", tmult);
+    }
+  }
 }
 
 /* message checking */
@@ -411,14 +442,13 @@ static gboolean
 buffer_event_function (GstPad * pad, GstObject * noparent, GstEvent * event)
 {
   if (GST_EVENT_TYPE (event) == GST_EVENT_CAPS) {
-    GstCaps *event_caps, *current_caps;
+    GstCaps *event_caps;
+    GstCaps *expected_caps = gst_pad_get_element_private (pad);
 
-    current_caps = gst_pad_get_current_caps (pad);
     gst_event_parse_caps (event, &event_caps);
-    fail_unless (gst_caps_is_fixed (current_caps));
+    fail_unless (gst_caps_is_fixed (expected_caps));
     fail_unless (gst_caps_is_fixed (event_caps));
-    fail_unless (gst_caps_is_equal_fixed (event_caps, current_caps));
-    gst_caps_unref (current_caps);
+    fail_unless (gst_caps_is_equal_fixed (event_caps, expected_caps));
     gst_event_unref (event);
     return TRUE;
   }
@@ -474,8 +504,7 @@ gst_check_element_push_buffer_list (const gchar * element_name,
   /* activate the pad */
   gst_pad_set_active (src_pad, TRUE);
   GST_DEBUG ("src pad activated");
-  if (caps_in)
-    fail_unless (gst_pad_set_caps (src_pad, caps_in));
+  gst_check_setup_events (src_pad, element, caps_in, GST_FORMAT_BYTES);
   pad_peer = gst_element_get_static_pad (element, "sink");
   fail_if (pad_peer == NULL);
   fail_unless (gst_pad_link (src_pad, pad_peer) == GST_PAD_LINK_OK,
@@ -502,9 +531,10 @@ gst_check_element_push_buffer_list (const gchar * element_name,
     /* configure the sink pad */
     gst_pad_set_chain_function (sink_pad, gst_check_chain_func);
     gst_pad_set_active (sink_pad, TRUE);
-    gst_pad_set_caps (sink_pad, caps_out);
-    if (caps_out)
+    if (caps_out) {
+      gst_pad_set_element_private (sink_pad, caps_out);
       gst_pad_set_event_function (sink_pad, buffer_event_function);
+    }
     /* get the peer pad */
     pad_peer = gst_element_get_static_pad (element, "src");
     fail_unless (gst_pad_link (pad_peer, sink_pad) == GST_PAD_LINK_OK,
@@ -690,4 +720,55 @@ _gst_check_run_test_func (const gchar * func_name)
   }
   g_strfreev (funcs);
   return res;
+}
+
+/**
+ * gst_check_setup_events_with_stream_id:
+ * @srcpad: The src #GstPad to push on
+ * @element: The #GstElement use to create the stream id
+ * @caps: (allow-none): #GstCaps in case caps event must be sent
+ * @format: The #GstFormat of the default segment to send
+ * @stream_id: A unique identifier for the stream
+ *
+ * Push stream-start, caps and segment event, which concist of the minimum
+ * required events to allow streaming. Caps is optional to allow raw src
+ * testing.
+ */
+void
+gst_check_setup_events_with_stream_id (GstPad * srcpad, GstElement * element,
+    GstCaps * caps, GstFormat format, const gchar * stream_id)
+{
+  GstSegment segment;
+
+  gst_segment_init (&segment, format);
+
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_stream_start (stream_id)));
+  if (caps)
+    fail_unless (gst_pad_push_event (srcpad, gst_event_new_caps (caps)));
+  fail_unless (gst_pad_push_event (srcpad, gst_event_new_segment (&segment)));
+}
+
+/**
+ * gst_check_setup_events:
+ * @srcpad: The src #GstPad to push on
+ * @element: The #GstElement use to create the stream id
+ * @caps: (allow-none): #GstCaps in case caps event must be sent
+ * @format: The #GstFormat of the default segment to send
+ *
+ * Push stream-start, caps and segment event, which concist of the minimum
+ * required events to allow streaming. Caps is optional to allow raw src
+ * testing. If @element has more than one src or sink pad, use
+ * gst_check_setup_events_with_stream_id() instead.
+ */
+void
+gst_check_setup_events (GstPad * srcpad, GstElement * element,
+    GstCaps * caps, GstFormat format)
+{
+  gchar *stream_id;
+
+  stream_id = gst_pad_create_stream_id (srcpad, element, NULL);
+  gst_check_setup_events_with_stream_id (srcpad, element, caps, format,
+      stream_id);
+  g_free (stream_id);
 }

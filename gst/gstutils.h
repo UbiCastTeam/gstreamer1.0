@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -75,6 +75,7 @@ guint64         gst_util_uint64_scale_int_ceil  (guint64 val, gint num, gint den
 guint32         gst_util_seqnum_next            (void);
 gint32          gst_util_seqnum_compare         (guint32 s1, guint32 s2);
 
+guint           gst_util_group_id_next          (void);
 
 /**
  * GST_CALL_PARENT:
@@ -158,7 +159,7 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
 #  define GST_READ_UINT64_LE(data)      _GST_FAST_READ (64, data)
 # endif
 #else
-# define GST_READ_UINT64_BE(data)	(_GST_GET (data, 0, 64, 56) | \
+#define _GST_READ_UINT64_BE(data)	(_GST_GET (data, 0, 64, 56) | \
 					 _GST_GET (data, 1, 64, 48) | \
 					 _GST_GET (data, 2, 64, 40) | \
 					 _GST_GET (data, 3, 64, 32) | \
@@ -167,7 +168,7 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
 					 _GST_GET (data, 6, 64,  8) | \
 					 _GST_GET (data, 7, 64,  0))
 
-# define GST_READ_UINT64_LE(data)	(_GST_GET (data, 7, 64, 56) | \
+#define _GST_READ_UINT64_LE(data)	(_GST_GET (data, 7, 64, 56) | \
 					 _GST_GET (data, 6, 64, 48) | \
 					 _GST_GET (data, 5, 64, 40) | \
 					 _GST_GET (data, 4, 64, 32) | \
@@ -175,6 +176,15 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
 					 _GST_GET (data, 2, 64, 16) | \
 					 _GST_GET (data, 1, 64,  8) | \
 					 _GST_GET (data, 0, 64,  0))
+
+#define GST_READ_UINT64_BE(data) __gst_slow_read64_be((const guint8 *)(data))
+static inline guint64 __gst_slow_read64_be (const guint8 * data) {
+  return _GST_READ_UINT64_BE (data);
+}
+#define GST_READ_UINT64_LE(data) __gst_slow_read64_le((const guint8 *)(data))
+static inline guint64 __gst_slow_read64_le (const guint8 * data) {
+  return _GST_READ_UINT64_LE (data);
+}
 #endif
 
 /**
@@ -199,15 +209,24 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
 #  define GST_READ_UINT32_LE(data)      _GST_FAST_READ (32, data)
 # endif
 #else
-# define GST_READ_UINT32_BE(data)	(_GST_GET (data, 0, 32, 24) | \
+#define _GST_READ_UINT32_BE(data)	(_GST_GET (data, 0, 32, 24) | \
 					 _GST_GET (data, 1, 32, 16) | \
 					 _GST_GET (data, 2, 32,  8) | \
 					 _GST_GET (data, 3, 32,  0))
 
-# define GST_READ_UINT32_LE(data)	(_GST_GET (data, 3, 32, 24) | \
+#define _GST_READ_UINT32_LE(data)	(_GST_GET (data, 3, 32, 24) | \
 					 _GST_GET (data, 2, 32, 16) | \
 					 _GST_GET (data, 1, 32,  8) | \
 					 _GST_GET (data, 0, 32,  0))
+
+#define GST_READ_UINT32_BE(data) __gst_slow_read32_be((const guint8 *)(data))
+static inline guint32 __gst_slow_read32_be (const guint8 * data) {
+  return _GST_READ_UINT32_BE (data);
+}
+#define GST_READ_UINT32_LE(data) __gst_slow_read32_le((const guint8 *)(data))
+static inline guint32 __gst_slow_read32_le (const guint8 * data) {
+  return _GST_READ_UINT32_LE (data);
+}
 #endif
 
 /**
@@ -216,9 +235,14 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  *
  * Read a 24 bit unsigned integer value in big endian format from the memory buffer.
  */
-#define GST_READ_UINT24_BE(data)        (_GST_GET (data, 0, 32, 16) | \
+#define _GST_READ_UINT24_BE(data)       (_GST_GET (data, 0, 32, 16) | \
                                          _GST_GET (data, 1, 32,  8) | \
                                          _GST_GET (data, 2, 32,  0))
+
+#define GST_READ_UINT24_BE(data) __gst_slow_read24_be((const guint8 *)(data))
+static inline guint32 __gst_slow_read24_be (const guint8 * data) {
+  return _GST_READ_UINT24_BE (data);
+}
 
 /**
  * GST_READ_UINT24_LE:
@@ -226,9 +250,14 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  *
  * Read a 24 bit unsigned integer value in little endian format from the memory buffer.
  */
-#define GST_READ_UINT24_LE(data)        (_GST_GET (data, 2, 32, 16) | \
+#define _GST_READ_UINT24_LE(data)       (_GST_GET (data, 2, 32, 16) | \
                                          _GST_GET (data, 1, 32,  8) | \
                                          _GST_GET (data, 0, 32,  0))
+
+#define GST_READ_UINT24_LE(data) __gst_slow_read24_le((const guint8 *)(data))
+static inline guint32 __gst_slow_read24_le (const guint8 * data) {
+  return _GST_READ_UINT24_LE (data);
+}
 
 /**
  * GST_READ_UINT16_BE:
@@ -251,11 +280,20 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
 #  define GST_READ_UINT16_LE(data)      _GST_FAST_READ (16, data)
 # endif
 #else
-# define GST_READ_UINT16_BE(data)	(_GST_GET (data, 0, 16,  8) | \
+#define _GST_READ_UINT16_BE(data)	(_GST_GET (data, 0, 16,  8) | \
 					 _GST_GET (data, 1, 16,  0))
 
-# define GST_READ_UINT16_LE(data)	(_GST_GET (data, 1, 16,  8) | \
+#define _GST_READ_UINT16_LE(data)	(_GST_GET (data, 1, 16,  8) | \
 					 _GST_GET (data, 0, 16,  0))
+
+#define GST_READ_UINT16_BE(data) __gst_slow_read16_be((const guint8 *)(data))
+static inline guint16 __gst_slow_read16_be (const guint8 * data) {
+  return _GST_READ_UINT16_BE (data);
+}
+#define GST_READ_UINT16_LE(data) __gst_slow_read16_le((const guint8 *)(data))
+static inline guint16 __gst_slow_read16_le (const guint8 * data) {
+  return _GST_READ_UINT16_LE (data);
+}
 #endif
 
 /**
@@ -274,14 +312,15 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 64 bit unsigned integer value in big endian format into the memory buffer.
  */
 #define GST_WRITE_UINT64_BE(data, num)  do { \
-                                          _GST_PUT (data, 0, 64, 56, num); \
-                                          _GST_PUT (data, 1, 64, 48, num); \
-                                          _GST_PUT (data, 2, 64, 40, num); \
-                                          _GST_PUT (data, 3, 64, 32, num); \
-                                          _GST_PUT (data, 4, 64, 24, num); \
-                                          _GST_PUT (data, 5, 64, 16, num); \
-                                          _GST_PUT (data, 6, 64,  8, num); \
-                                          _GST_PUT (data, 7, 64,  0, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 64, 56, num); \
+                                          _GST_PUT (__put_data, 1, 64, 48, num); \
+                                          _GST_PUT (__put_data, 2, 64, 40, num); \
+                                          _GST_PUT (__put_data, 3, 64, 32, num); \
+                                          _GST_PUT (__put_data, 4, 64, 24, num); \
+                                          _GST_PUT (__put_data, 5, 64, 16, num); \
+                                          _GST_PUT (__put_data, 6, 64,  8, num); \
+                                          _GST_PUT (__put_data, 7, 64,  0, num); \
                                         } while (0)
 
 /**
@@ -292,14 +331,15 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 64 bit unsigned integer value in little endian format into the memory buffer.
  */
 #define GST_WRITE_UINT64_LE(data, num)  do { \
-                                          _GST_PUT (data, 0, 64,  0, num); \
-                                          _GST_PUT (data, 1, 64,  8, num); \
-                                          _GST_PUT (data, 2, 64, 16, num); \
-                                          _GST_PUT (data, 3, 64, 24, num); \
-                                          _GST_PUT (data, 4, 64, 32, num); \
-                                          _GST_PUT (data, 5, 64, 40, num); \
-                                          _GST_PUT (data, 6, 64, 48, num); \
-                                          _GST_PUT (data, 7, 64, 56, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 64,  0, num); \
+                                          _GST_PUT (__put_data, 1, 64,  8, num); \
+                                          _GST_PUT (__put_data, 2, 64, 16, num); \
+                                          _GST_PUT (__put_data, 3, 64, 24, num); \
+                                          _GST_PUT (__put_data, 4, 64, 32, num); \
+                                          _GST_PUT (__put_data, 5, 64, 40, num); \
+                                          _GST_PUT (__put_data, 6, 64, 48, num); \
+                                          _GST_PUT (__put_data, 7, 64, 56, num); \
                                         } while (0)
 
 /**
@@ -310,10 +350,11 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 32 bit unsigned integer value in big endian format into the memory buffer.
  */
 #define GST_WRITE_UINT32_BE(data, num)  do { \
-                                          _GST_PUT (data, 0, 32, 24, num); \
-                                          _GST_PUT (data, 1, 32, 16, num); \
-                                          _GST_PUT (data, 2, 32,  8, num); \
-                                          _GST_PUT (data, 3, 32,  0, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 32, 24, num); \
+                                          _GST_PUT (__put_data, 1, 32, 16, num); \
+                                          _GST_PUT (__put_data, 2, 32,  8, num); \
+                                          _GST_PUT (__put_data, 3, 32,  0, num); \
                                         } while (0)
 
 /**
@@ -324,10 +365,11 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 32 bit unsigned integer value in little endian format into the memory buffer.
  */
 #define GST_WRITE_UINT32_LE(data, num)  do { \
-                                          _GST_PUT (data, 0, 32,  0, num); \
-                                          _GST_PUT (data, 1, 32,  8, num); \
-                                          _GST_PUT (data, 2, 32, 16, num); \
-                                          _GST_PUT (data, 3, 32, 24, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 32,  0, num); \
+                                          _GST_PUT (__put_data, 1, 32,  8, num); \
+                                          _GST_PUT (__put_data, 2, 32, 16, num); \
+                                          _GST_PUT (__put_data, 3, 32, 24, num); \
                                         } while (0)
 
 /**
@@ -338,9 +380,10 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 24 bit unsigned integer value in big endian format into the memory buffer.
  */
 #define GST_WRITE_UINT24_BE(data, num)  do { \
-                                          _GST_PUT (data, 0, 32,  16, num); \
-                                          _GST_PUT (data, 1, 32,  8, num); \
-                                          _GST_PUT (data, 2, 32,  0, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 32,  16, num); \
+                                          _GST_PUT (__put_data, 1, 32,  8, num); \
+                                          _GST_PUT (__put_data, 2, 32,  0, num); \
                                         } while (0)
 
 /**
@@ -351,9 +394,10 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 24 bit unsigned integer value in little endian format into the memory buffer.
  */
 #define GST_WRITE_UINT24_LE(data, num)  do { \
-                                          _GST_PUT (data, 0, 32,  0, num); \
-                                          _GST_PUT (data, 1, 32,  8, num); \
-                                          _GST_PUT (data, 2, 32,  16, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 32,  0, num); \
+                                          _GST_PUT (__put_data, 1, 32,  8, num); \
+                                          _GST_PUT (__put_data, 2, 32,  16, num); \
                                         } while (0)
 
 /**
@@ -364,8 +408,9 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 16 bit unsigned integer value in big endian format into the memory buffer.
  */
 #define GST_WRITE_UINT16_BE(data, num)  do { \
-                                          _GST_PUT (data, 0, 16,  8, num); \
-                                          _GST_PUT (data, 1, 16,  0, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 16,  8, num); \
+                                          _GST_PUT (__put_data, 1, 16,  0, num); \
                                         } while (0)
 
 /**
@@ -376,8 +421,9 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
  * Store a 16 bit unsigned integer value in little endian format into the memory buffer.
  */
 #define GST_WRITE_UINT16_LE(data, num)  do { \
-                                          _GST_PUT (data, 0, 16,  0, num); \
-                                          _GST_PUT (data, 1, 16,  8, num); \
+                                          gpointer __put_data = data; \
+                                          _GST_PUT (__put_data, 0, 16,  0, num); \
+                                          _GST_PUT (__put_data, 1, 16,  8, num); \
                                         } while (0)
 
 /**
@@ -891,6 +937,8 @@ gboolean                gst_pad_peer_query_accept_caps  (GstPad * pad, GstCaps *
 gchar *                 gst_pad_create_stream_id               (GstPad * pad, GstElement * parent, const gchar *stream_id);
 gchar *                 gst_pad_create_stream_id_printf        (GstPad * pad, GstElement * parent, const gchar *stream_id, ...);
 gchar *                 gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent, const gchar *stream_id, va_list var_args);
+
+gchar *                 gst_pad_get_stream_id           (GstPad * pad);
 
 /* bin functions */
 void                    gst_bin_add_many                (GstBin *bin, GstElement *element_1, ...) G_GNUC_NULL_TERMINATED;

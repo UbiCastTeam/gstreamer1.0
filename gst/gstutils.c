@@ -17,8 +17,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -2732,8 +2732,8 @@ gst_pad_peer_query_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
  * @filter: (allow-none): suggested #GstCaps, or NULL
  *
  * Gets the capabilities this pad can produce or consume.
- * Note that this method doesn't necessarily return the caps set by
- * gst_pad_set_caps() - use gst_pad_get_current_caps() for that instead.
+ * Note that this method doesn't necessarily return the caps set by sending a
+ * gst_event_new_caps() - use gst_pad_get_current_caps() for that instead.
  * gst_pad_query_caps returns all possible caps a pad can operate with, using
  * the pad's CAPS query function, If the query fails, this function will return
  * @filter, if not #NULL, otherwise ANY.
@@ -3044,8 +3044,9 @@ gst_parse_bin_from_description (const gchar * bin_description,
  * and want them all ghosted, you will have to create the ghost pads
  * yourself).
  *
- * Returns: (transfer full) (type Gst.Bin): a newly-created bin, or
- *   %NULL if an error occurred.
+ * Returns: (transfer full) (type Gst.Element): a newly-created element, which
+ *   is guaranteed to be a bin unless GST_FLAG_NO_SINGLE_ELEMENT_BINS was
+ *   passed, or %NULL if an error occurred.
  */
 GstElement *
 gst_parse_bin_from_description_full (const gchar * bin_description,
@@ -3054,6 +3055,7 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
 {
 #ifndef GST_DISABLE_PARSE
   GstPad *pad = NULL;
+  GstElement *element;
   GstBin *bin;
   gchar *desc;
 
@@ -3063,14 +3065,24 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
   GST_DEBUG ("Making bin from description '%s'", bin_description);
 
   /* parse the pipeline to a bin */
-  desc = g_strdup_printf ("bin.( %s )", bin_description);
-  bin = (GstBin *) gst_parse_launch_full (desc, context, flags, err);
-  g_free (desc);
+  if (flags & GST_PARSE_FLAG_NO_SINGLE_ELEMENT_BINS) {
+    element = gst_parse_launch_full (bin_description, context, flags, err);
+  } else {
+    desc = g_strdup_printf ("bin.( %s )", bin_description);
+    element = gst_parse_launch_full (desc, context, flags, err);
+    g_free (desc);
+  }
 
-  if (bin == NULL || (err && *err != NULL)) {
-    if (bin)
-      gst_object_unref (bin);
+  if (element == NULL || (err && *err != NULL)) {
+    if (element)
+      gst_object_unref (element);
     return NULL;
+  }
+
+  if (GST_IS_BIN (element)) {
+    bin = GST_BIN (element);
+  } else {
+    return element;
   }
 
   /* find pads and ghost them if necessary */
@@ -3110,7 +3122,8 @@ gst_parse_bin_from_description_full (const gchar * bin_description,
 GstClockTime
 gst_util_get_timestamp (void)
 {
-#if defined (HAVE_POSIX_TIMERS) && defined(HAVE_MONOTONIC_CLOCK)
+#if defined (HAVE_POSIX_TIMERS) && defined(HAVE_MONOTONIC_CLOCK) &&\
+    defined (HAVE_CLOCK_GETTIME)
   struct timespec now;
 
   clock_gettime (CLOCK_MONOTONIC, &now);
@@ -3713,6 +3726,10 @@ gst_pad_create_stream_id_printf (GstPad * pad, GstElement * parent,
  * handler interface should ideally generate a unique, deterministic
  * stream-id manually instead.
  *
+ * Since stream IDs are sorted alphabetically, any numbers in the
+ * stream ID should be printed with a fixed number of characters,
+ * preceded by 0's, such as by using the format %%03u instead of %%u.
+ *
  * Returns: A stream-id for @pad. g_free() after usage.
  */
 gchar *
@@ -3720,4 +3737,62 @@ gst_pad_create_stream_id (GstPad * pad, GstElement * parent,
     const gchar * stream_id)
 {
   return gst_pad_create_stream_id_printf (pad, parent, stream_id, NULL);
+}
+
+/**
+ * gst_pad_get_stream_id:
+ * @pad: A source #GstPad
+ *
+ * Returns the current stream-id for the @pad, or %NULL if none has been
+ * set yet, i.e. the pad has not received a stream-start event yet.
+ *
+ * This is a convenience wrapper around gst_pad_get_sticky_event() and
+ * gst_event_parse_stream_start().
+ *
+ * The returned stream-id string should be treated as an opaque string, its
+ * contents should not be interpreted.
+ *
+ * Returns: a newly-allocated copy of the stream-idfor @pad, or %NULL.
+ *     g_free() the returned string when no longer needed.
+ *
+ * Since: 1.2
+ */
+gchar *
+gst_pad_get_stream_id (GstPad * pad)
+{
+  const gchar *stream_id = NULL;
+  GstEvent *event;
+  gchar *ret = NULL;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+
+  event = gst_pad_get_sticky_event (pad, GST_EVENT_STREAM_START, 0);
+  if (event != NULL) {
+    gst_event_parse_stream_start (event, &stream_id);
+    ret = g_strdup (stream_id);
+    gst_event_unref (event);
+    GST_LOG_OBJECT (pad, "pad has stream-id '%s'", ret);
+  } else {
+    GST_DEBUG_OBJECT (pad, "pad has not received a stream-start event yet");
+  }
+
+  return ret;
+}
+
+/**
+ * gst_util_group_id_next:
+ *
+ * Return a constantly incrementing group id.
+ *
+ * This function is used to generate a new group-id for the
+ * stream-start event.
+ *
+ * Returns: A constantly incrementing unsigned integer, which might
+ * overflow back to 0 at some point.
+ */
+guint
+gst_util_group_id_next (void)
+{
+  static gint counter = 0;
+  return g_atomic_int_add (&counter, 1);
 }

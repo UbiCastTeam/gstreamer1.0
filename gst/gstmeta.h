@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 
@@ -80,6 +80,14 @@ typedef enum {
  * Clears a metadata flag.
  */
 #define GST_META_FLAG_UNSET(meta,flag)         (GST_META_FLAGS (meta) &= ~(flag))
+
+/**
+ * GST_META_TAG_MEMORY_STR:
+ * This metadata stays relevant as long as memory layout is unchanged.
+ *
+ * Since: 1.2
+ */
+#define GST_META_TAG_MEMORY_STR "memory"
 
 /**
  * GstMeta:
@@ -199,6 +207,7 @@ const GstMetaInfo *  gst_meta_register          (GType api, const gchar *impl,
                                                  GstMetaFreeFunction      free_func,
                                                  GstMetaTransformFunction transform_func);
 const GstMetaInfo *  gst_meta_get_info          (const gchar * impl);
+const gchar* const*  gst_meta_api_type_get_tags (GType api);
 
 /* some default tags */
 GST_EXPORT GQuark _gst_meta_tag_memory;
@@ -208,6 +217,9 @@ GST_EXPORT GQuark _gst_meta_tag_memory;
  *
  * Metadata tagged with this tag depends on the particular memory
  * or buffer that it is on.
+ *
+ * Deprecated: The GQuarks are not exported by any public API, use
+ *   GST_META_TAG_MEMORY_STR instead.
  */
 #define GST_META_TAG_MEMORY (_gst_meta_tag_memory)
 

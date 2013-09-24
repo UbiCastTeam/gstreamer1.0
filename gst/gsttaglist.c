@@ -15,8 +15,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
 
 /**
@@ -387,6 +387,15 @@ _priv_gst_tag_initialize (void)
   gst_tag_register_static (GST_TAG_IMAGE_ORIENTATION, GST_TAG_FLAG_META,
       G_TYPE_STRING, _("image orientation"),
       _("How the image should be rotated or flipped before display"), NULL);
+  gst_tag_register_static (GST_TAG_PUBLISHER, GST_TAG_FLAG_META,
+      G_TYPE_STRING,
+      _("publisher"),
+      _("Name of the label or publisher"), gst_tag_merge_strings_with_comma);
+  gst_tag_register_static (GST_TAG_INTERPRETED_BY, GST_TAG_FLAG_META,
+      G_TYPE_STRING,
+      _("interpreted-by"),
+      _("Information about the people behind a remix and similar "
+          "interpretations"), gst_tag_merge_strings_with_comma);
 }
 
 /**
@@ -1031,14 +1040,20 @@ gst_tag_list_add_value_internal (GstTagList * tag_list, GstTagMergeMode mode,
         gst_structure_id_set_value (list, tag_quark, value);
         break;
       case GST_TAG_MERGE_PREPEND:
-        gst_value_list_merge (&dest, value, value2);
-        gst_structure_id_set_value (list, tag_quark, &dest);
-        g_value_unset (&dest);
+        if (GST_VALUE_HOLDS_LIST (value2) && !GST_VALUE_HOLDS_LIST (value))
+          gst_value_list_prepend_value ((GValue *) value2, value);
+        else {
+          gst_value_list_merge (&dest, value, value2);
+          gst_structure_id_take_value (list, tag_quark, &dest);
+        }
         break;
       case GST_TAG_MERGE_APPEND:
-        gst_value_list_merge (&dest, value2, value);
-        gst_structure_id_set_value (list, tag_quark, &dest);
-        g_value_unset (&dest);
+        if (GST_VALUE_HOLDS_LIST (value2) && !GST_VALUE_HOLDS_LIST (value))
+          gst_value_list_append_value ((GValue *) value2, value);
+        else {
+          gst_value_list_merge (&dest, value2, value);
+          gst_structure_id_take_value (list, tag_quark, &dest);
+        }
         break;
       case GST_TAG_MERGE_KEEP:
       case GST_TAG_MERGE_KEEP_ALL:

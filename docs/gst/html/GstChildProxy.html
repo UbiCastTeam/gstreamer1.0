@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstChildProxy</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstSample.html" title="GstSample">
 <link rel="next" href="GstClock.html" title="GstClock">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -155,8 +155,11 @@ Opaque <a class="link" href="GstChildProxy.html" title="GstChildProxy"><span cla
 <p>
 <a class="link" href="GstChildProxy.html" title="GstChildProxy"><span class="type">GstChildProxy</span></a> interface.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstChildProxyInterface.parent"></a>parent</code></em>;</span></p></td>
@@ -184,8 +187,11 @@ Opaque <a class="link" href="GstChildProxy.html" title="GstChildProxy"><span cla
 <p>
 Gets the number of child objects this parent contains.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
@@ -212,8 +218,11 @@ This virtual method has a default implementation that uses <a class="link" href=
 together with <a class="link" href="GstObject.html#gst-object-get-name" title="gst_object_get_name ()"><code class="function">gst_object_get_name()</code></a>. If the interface is to be used with
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObjects</span></a>, this methods needs to be overridden.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
@@ -241,8 +250,11 @@ MT safe. <span class="annotation">[<acronym title="Free data after the code is d
 <p>
 Fetches a child by its number.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
@@ -275,11 +287,14 @@ Looks up which object and <a href="http://library.gnome.org/devel/gobject/unstab
 <p>
 MT safe.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>childproxy</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
 <td>child proxy object to lookup the property in</td>
 </tr>
 <tr>
@@ -317,8 +332,11 @@ usage. For plain GObjects <em class="parameter"><code>target</code></em> is the 
 Gets a single property using the GstChildProxy mechanism.
 You are responsible for freeing it by calling <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-unset"><code class="function">g_value_unset()</code></a>
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -330,7 +348,7 @@ You are responsible for freeing it by calling <a href="http://library.gnome.org/
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> that should take the result. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> caller-allocates]</span>
+<td>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> that should take the result. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -345,8 +363,11 @@ You are responsible for freeing it by calling <a href="http://library.gnome.org/
 <p>
 Gets properties of the parent object and its children.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -372,8 +393,11 @@ Gets properties of the parent object and its children.
 <p>
 Gets properties of the parent object and its children.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -399,8 +423,11 @@ Gets properties of the parent object and its children.
 <p>
 Sets a single property using the GstChildProxy mechanism.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -426,8 +453,11 @@ Sets a single property using the GstChildProxy mechanism.
 <p>
 Sets properties of the parent object and its children.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -453,8 +483,11 @@ Sets properties of the parent object and its children.
 <p>
 Sets properties of the parent object and its children.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
@@ -480,8 +513,11 @@ Sets properties of the parent object and its children.
 <p>
 Emits the "child-added" signal.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
@@ -507,8 +543,11 @@ Emits the "child-added" signal.
 <p>
 Emits the "child-removed" signal.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>parent</code></em> :</span></p></td>
@@ -537,8 +576,11 @@ Emits the "child-removed" signal.
 <p>
 Will be emitted after the <em class="parameter"><code>object</code></em> was added to the <em class="parameter"><code>child_proxy</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>child_proxy</code></em> :</span></p></td>
@@ -570,8 +612,11 @@ Will be emitted after the <em class="parameter"><code>object</code></em> was add
 <p>
 Will be emitted after the <em class="parameter"><code>object</code></em> was removed from the <em class="parameter"><code>child_proxy</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>child_proxy</code></em> :</span></p></td>
@@ -601,6 +646,6 @@ Will be emitted after the <em class="parameter"><code>object</code></em> was rem
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

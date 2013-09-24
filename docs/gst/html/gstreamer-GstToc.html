@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstToc</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstTaskPool.html" title="GstTaskPool">
 <link rel="next" href="gstreamer-GstTocSetter.html" title="GstTocSetter">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -139,6 +139,16 @@ chapters and angles, for example, while the current TOC would only contain
 the chapters for the currently playing title if playback of a specific
 title was requested.
 </p>
+<p>
+Applications and plugins should not rely on TOCs having a certain kind of
+structure, but should allow for different alternatives. For example, a
+simple CUE sheet embedded in a file may be presented as a flat list of
+track entries, or could have a top-level edition node (or some other
+alternative type entry) with track entries underneath that node; or even
+multiple top-level edition nodes (or some other alternative type entries)
+each with track entries underneath, in case the source file has extracted
+a track listing from different sources).
+</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstToc.details"></a><h2>Details</h2>
@@ -157,8 +167,11 @@ title was requested.
 <p>
 The scope of a TOC.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TOC-SCOPE-GLOBAL:CAPS"></a><span class="term"><code class="literal">GST_TOC_SCOPE_GLOBAL</code></span></p></td>
@@ -203,8 +216,11 @@ The different types of TOC entries (see <a class="link" href="gstreamer-GstToc.h
 <p>
 There are two types of TOC entries: alternatives or parts in a sequence.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><a name="GST-TOC-ENTRY-TYPE-ANGLE:CAPS"></a><span class="term"><code class="literal">GST_TOC_ENTRY_TYPE_ANGLE</code></span></p></td>
@@ -251,8 +267,11 @@ There are two types of TOC entries: alternatives or parts in a sequence.
 <p>
 Create a new <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>scope</code></em> :</span></p></td>
@@ -287,8 +306,11 @@ with <a class="link" href="gstreamer-GstToc.html#gst-toc-unref" title="gst_toc_u
 <p>
 Copy <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> with all subentries (deep copy).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -313,8 +335,11 @@ free it when done with <a class="link" href="gstreamer-GstToc.html#gst-toc-unref
 <div class="refsect2">
 <a name="gst-toc-get-scope"></a><h3>gst_toc_get_scope ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstToc.html#GstTocScope" title="enum GstTocScope"><span class="returnvalue">GstTocScope</span></a>         gst_toc_get_scope                   (<em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> *toc</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -335,8 +360,11 @@ free it when done with <a class="link" href="gstreamer-GstToc.html#gst-toc-unref
 <p>
 Gets the list of <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> of <em class="parameter"><code>toc</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -358,8 +386,11 @@ Gets the list of <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title=
 <p>
 Appends the <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> <em class="parameter"><code>entry</code></em> to <em class="parameter"><code>toc</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -380,8 +411,11 @@ Appends the <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstT
 <p>
 Gets the tags for <em class="parameter"><code>toc</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -404,8 +438,11 @@ Gets the tags for <em class="parameter"><code>toc</code></em>.
 <p>
 Merge <em class="parameter"><code>tags</code></em> into the existing tags of <em class="parameter"><code>toc</code></em> using <em class="parameter"><code>mode</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -432,8 +469,11 @@ Merge <em class="parameter"><code>tags</code></em> into the existing tags of <em
 <p>
 Set a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> with tags for the complete <em class="parameter"><code>toc</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -460,8 +500,11 @@ Set a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct 
 <p>
 Create new <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -498,8 +541,11 @@ Create new <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTo
 <p>
 Copy <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> with all subentries (deep copy).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -528,8 +574,11 @@ free it when done with <a class="link" href="gstreamer-GstToc.html#gst-toc-entry
 <p>
 Find <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> with given <em class="parameter"><code>uid</code></em> in the <em class="parameter"><code>toc</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>toc</code></em> :</span></p></td>
@@ -556,8 +605,11 @@ Find <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry
 <p>
 Gets the parent <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstToc"><span class="type">GstToc</span></a> of <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -578,8 +630,11 @@ Gets the parent <a class="link" href="gstreamer-GstToc.html#GstToc" title="GstTo
 <p>
 Gets the UID of <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -600,8 +655,11 @@ Gets the UID of <em class="parameter"><code>entry</code></em>.
 <p>
 Gets the parent <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> of <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -622,8 +680,11 @@ Gets the parent <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="
 <p>
 Gets the sub-entries of <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -645,8 +706,11 @@ Gets the sub-entries of <em class="parameter"><code>entry</code></em>.
 <p>
 Appends the <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> <em class="parameter"><code>subentry</code></em> to <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -669,8 +733,11 @@ Appends the <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstT
 <p>
 Get start and stop values from the <em class="parameter"><code>entry</code></em> and write them into appropriate storages.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -704,8 +771,11 @@ FALSE otherwise.</td>
 <p>
 Set <em class="parameter"><code>start</code></em> and <em class="parameter"><code>stop</code></em> values for the <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -730,8 +800,11 @@ Set <em class="parameter"><code>start</code></em> and <em class="parameter"><cod
 <p>
 Gets the tags for <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -754,8 +827,11 @@ Gets the tags for <em class="parameter"><code>entry</code></em>.
 <p>
 Merge <em class="parameter"><code>tags</code></em> into the existing tags of <em class="parameter"><code>entry</code></em> using <em class="parameter"><code>mode</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -782,8 +858,11 @@ Merge <em class="parameter"><code>tags</code></em> into the existing tags of <em
 <p>
 Set a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> with tags for the complete <em class="parameter"><code>entry</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -804,8 +883,11 @@ Set a <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct 
 <p>
 Converts <em class="parameter"><code>type</code></em> to a string representation.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
@@ -824,8 +906,11 @@ interface.</td>
 <div class="refsect2">
 <a name="gst-toc-entry-get-entry-type"></a><h3>gst_toc_entry_get_entry_type ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstToc.html#GstTocEntryType" title="enum GstTocEntryType"><span class="returnvalue">GstTocEntryType</span></a>     gst_toc_entry_get_entry_type        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -844,8 +929,11 @@ interface.</td>
 <div class="refsect2">
 <a name="gst-toc-entry-is-alternative"></a><h3>gst_toc_entry_is_alternative ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_toc_entry_is_alternative        (<em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -865,8 +953,11 @@ interface.</td>
 <div class="refsect2">
 <a name="gst-toc-entry-is-sequence"></a><h3>gst_toc_entry_is_sequence ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            gst_toc_entry_is_sequence           (<em class="parameter"><code>const <a class="link" href="gstreamer-GstToc.html#GstTocEntry" title="GstTocEntry"><span class="type">GstTocEntry</span></a> *entry</code></em>);</pre>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>entry</code></em> :</span></p></td>
@@ -902,6 +993,6 @@ interface.</td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

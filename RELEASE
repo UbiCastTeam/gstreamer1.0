@@ -1,5 +1,5 @@
 
-Release notes for GStreamer 1.0.10
+Release notes for GStreamer 1.1.90
 
 
 The GStreamer team is proud to announce a new bug-fix release
@@ -40,26 +40,14 @@ contains a set of codecs plugins based on libav (formerly gst-ffmpeg)
 
   
 
-Features of this release
-    
-      * parse: make gst-launch syntax parser work with Bison 3
-      * memory: only copy the requested part instead of the complete source memory for default system memory
-      * queue2: update buffering when changing capacity
-      * g-i: add bindings-friendly buffer.extract() function
-      * g-i: miscellaneous gobject-introspection annotation fixes (queries, pipeline)
-
 Bugs fixed in this release
      
-      * 705630 : directcontrolbinding: Wrong behaviour of control bindings with properties that span +-INT_MAX
-      * 705678 : sysmem allocator copies too much
-      * 705751 : gst_pipeline_use_clock: clock should allow-none
-      * 706462 : parse: fix build with Bison 3
-
-API changes in this release
-     
- - API additions:
-    
-      * gst_buffer_extract_dup()
+      * 701996 : context: Still inconvenient to use and racy
+      * 707088 : capsfilter: Don't forget to update pending_events.
+      * 707130 : output-selector: Changes the start of the segment it sends to a pad when making it active
+      * 707156 : multiqueue: Lowering single queue limits below automatically detected limits can cause the pipeline to starve
+      * 707648 : queue2: Update the buffering state before stalling for more data
+      * 707657 : tests/capsfilter: Improving check test code coverage...
 
 ==== Download ====
 
@@ -96,12 +84,15 @@ subscribe to the gstreamer-devel list.
         
 Contributors to this release
     
-      * Adrian Pardini
-      * Andoni Morales Alastruey
-      * Kerrick Staley
-      * Olivier Crête
+      * Christian Fredrik Kalager Schaller
+      * Gustavo Noronha Silva
+      * Jonas Holmberg
+      * Matej Knopp
+      * Mathieu Duponchelle
+      * Rico Tzschichholz
       * Sebastian Dröge
+      * Sebastian Rasmussen
       * Thiago Santos
       * Tim-Philipp Müller
-      * Wim Taymans
+      * Zaheer Abbas Merali
  

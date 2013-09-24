@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstStructure</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstSegment.html" title="GstSegment">
 <link rel="next" href="GstSystemClock.html" title="GstSystemClock">
-<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -58,6 +58,7 @@ struct              <a class="link" href="gstreamer-GstStructure.html#GstStructu
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-id" title="gst_structure_new_id ()">gst_structure_new_id</a>                (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> name_quark</code></em>,
                                                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_quark</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
+<a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-new-from-string" title="gst_structure_new_from_string ()">gst_structure_new_from_string</a>       (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);
 <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      <a class="link" href="gstreamer-GstStructure.html#gst-structure-copy" title="gst_structure_copy ()">gst_structure_copy</a>                  (<em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="gstreamer-GstStructure.html#gst-structure-free" title="gst_structure_free ()">gst_structure_free</a>                  (<em class="parameter"><code><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);
 const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="gstreamer-GstStructure.html#gst-structure-get-name" title="gst_structure_get_name ()">gst_structure_get_name</a>              (<em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);
@@ -258,8 +259,11 @@ Last reviewed on 2012-03-29 (0.11.3)
 <p>
 The GstStructure object. Most fields are private.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> <em class="structfield"><code><a name="GstStructure.type"></a>type</code></em>;</span></p></td>
 <td>the GType of a structure</td>
@@ -276,8 +280,11 @@ The GstStructure object. Most fields are private.
 A function that will be called in <a class="link" href="gstreamer-GstStructure.html#gst-structure-foreach" title="gst_structure_foreach ()"><code class="function">gst_structure_foreach()</code></a>. The function may
 not modify <em class="parameter"><code>value</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>field_id</code></em> :</span></p></td>
@@ -309,8 +316,11 @@ the foreach operation should stop with FALSE.</td>
 A function that will be called in <a class="link" href="gstreamer-GstStructure.html#gst-structure-map-in-place" title="gst_structure_map_in_place ()"><code class="function">gst_structure_map_in_place()</code></a>. The function
 may modify <em class="parameter"><code>value</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>field_id</code></em> :</span></p></td>
@@ -345,8 +355,11 @@ See <a class="link" href="gstreamer-GstStructure.html#gst-structure-set-name" ti
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -370,8 +383,11 @@ Creates a new, empty <a class="link" href="gstreamer-GstStructure.html#GstStruct
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>quark</code></em> :</span></p></td>
@@ -400,8 +416,11 @@ and value.  Last variable argument should be NULL.
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -440,8 +459,11 @@ See <a class="link" href="gstreamer-GstStructure.html#gst-structure-set-name" ti
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
@@ -481,8 +503,11 @@ The last variable argument must be NULL (or 0).
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>name_quark</code></em> :</span></p></td>
@@ -506,6 +531,39 @@ Free-function: gst_structure_free
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-structure-new-from-string"></a><h3>gst_structure_new_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_new_from_string       (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);</pre>
+<p>
+Creates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> from a string representation.
+If end is not NULL, a pointer to the place inside the given string
+where parsing ended will be returned.
+</p>
+<p>
+Free-function: gst_structure_free
+</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td>a string representation of a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>a new <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> or NULL when the string could
+not be parsed. Free with <a class="link" href="gstreamer-GstStructure.html#gst-structure-free" title="gst_structure_free ()"><code class="function">gst_structure_free()</code></a> after use. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-structure-copy"></a><h3>gst_structure_copy ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *      gst_structure_copy                  (<em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);</pre>
 <p>
@@ -514,8 +572,11 @@ Duplicates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" tit
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -537,8 +598,11 @@ Free-function: gst_structure_free
 Frees a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> and all its fields and values. The structure must not
 have a parent when this function is called.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
 <td>the <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> to free. <span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
@@ -553,8 +617,11 @@ have a parent when this function is called.
 <p>
 Get the name of <em class="parameter"><code>structure</code></em> as a string.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -576,8 +643,11 @@ Get the name of <em class="parameter"><code>structure</code></em> as a string.
 <p>
 Checks if the structure has the given name
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -605,8 +675,11 @@ Sets the name of the structure to the given <em class="parameter"><code>name</co
 provided is copied before being used. It must not be empty, start with a
 letter and can be followed by letters, numbers and any of "/-_.:".
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -627,8 +700,11 @@ letter and can be followed by letters, numbers and any of "/-_.:".
 <p>
 Get the name of <em class="parameter"><code>structure</code></em> as a GQuark.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -667,8 +743,11 @@ you must release with a suitable <code class="function">_unref()</code> when no 
 strings and boxed types you will receive a copy which you will need to
 release with either <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> or the suitable function for the boxed type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -703,8 +782,11 @@ Parses the variable arguments and reads fields from <em class="parameter"><code>
 valist-variant of <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-get" title="gst_structure_id_get ()"><code class="function">gst_structure_id_get()</code></a>. Look at the documentation of
 <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-get" title="gst_structure_id_get ()"><code class="function">gst_structure_id_get()</code></a> for more details.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -734,8 +816,11 @@ valist-variant of <a class="link" href="gstreamer-GstStructure.html#gst-structur
 <p>
 Get the value of the field with GQuark <em class="parameter"><code>field</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -765,8 +850,11 @@ Sets the field with the given GQuark <em class="parameter"><code>field</code></e
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -795,8 +883,11 @@ Sets the field with the given GQuark <em class="parameter"><code>field</code></e
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -833,8 +924,11 @@ you must release with a suitable <code class="function">_unref()</code> when no 
 strings and boxed types you will receive a copy which you will need to
 release with either <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> or the suitable function for the boxed type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -869,8 +963,11 @@ Parses the variable arguments and reads fields from <em class="parameter"><code>
 valist-variant of <a class="link" href="gstreamer-GstStructure.html#gst-structure-get" title="gst_structure_get ()"><code class="function">gst_structure_get()</code></a>. Look at the documentation of
 <a class="link" href="gstreamer-GstStructure.html#gst-structure-get" title="gst_structure_get ()"><code class="function">gst_structure_get()</code></a> for more details.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -900,8 +997,11 @@ valist-variant of <a class="link" href="gstreamer-GstStructure.html#gst-structur
 <p>
 Get the value of the field with name <em class="parameter"><code>fieldname</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -930,8 +1030,11 @@ Sets the field with the given name <em class="parameter"><code>field</code></em>
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -960,8 +1063,11 @@ Sets the field with the given name <em class="parameter"><code>field</code></em>
 does not exist, it is created.  If the field exists, the previous
 value is replaced and freed. The function will take ownership of <em class="parameter"><code>value</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -991,8 +1097,11 @@ Parses the variable arguments and sets fields accordingly.
 Variable arguments should be in the form field name, field type
 (as a GType), value(s).  The last variable argument should be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1019,8 +1128,11 @@ Variable arguments should be in the form field name, field type
 <p>
 va_list form of <a class="link" href="gstreamer-GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1051,8 +1163,11 @@ setting of the structure if the caller already knows the associated
 quark values.
 The last variable argument must be NULL.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1079,8 +1194,11 @@ The last variable argument must be NULL.
 <p>
 va_list form of <a class="link" href="gstreamer-GstStructure.html#gst-structure-id-set" title="gst_structure_id_set ()"><code class="function">gst_structure_id_set()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1107,8 +1225,11 @@ va_list form of <a class="link" href="gstreamer-GstStructure.html#gst-structure-
 Removes the field with the given name.  If the field with the given
 name does not exist, the structure is unchanged.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1132,8 +1253,11 @@ name does not exist, the structure is unchanged.
 Removes the fields with the given names. If a field does not exist, the
 argument is ignored.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1160,8 +1284,11 @@ argument is ignored.
 <p>
 va_list form of <a class="link" href="gstreamer-GstStructure.html#gst-structure-remove-fields" title="gst_structure_remove_fields ()"><code class="function">gst_structure_remove_fields()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1186,8 +1313,11 @@ va_list form of <a class="link" href="gstreamer-GstStructure.html#gst-structure-
 <p>
 Removes all fields in a GstStructure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>
@@ -1205,8 +1335,11 @@ Finds the field with the given name, and returns the type of the
 value it contains.  If the field is not found, G_TYPE_INVALID is
 returned.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1234,8 +1367,11 @@ returned.
 Calls the provided function once for each field in the <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>. The
 function must not modify the fields. Also see <a class="link" href="gstreamer-GstStructure.html#gst-structure-map-in-place" title="gst_structure_map_in_place ()"><code class="function">gst_structure_map_in_place()</code></a>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1267,8 +1403,11 @@ FALSE otherwise.</td>
 <p>
 Get the number of fields in the structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1290,8 +1429,11 @@ Get the number of fields in the structure.
 <p>
 Check if <em class="parameter"><code>structure</code></em> contains a field named <em class="parameter"><code>fieldname</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1318,8 +1460,11 @@ Check if <em class="parameter"><code>structure</code></em> contains a field name
 <p>
 Check if <em class="parameter"><code>structure</code></em> contains a field named <em class="parameter"><code>fieldname</code></em> and with GType <em class="parameter"><code>type</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1349,8 +1494,11 @@ Check if <em class="parameter"><code>structure</code></em> contains a field name
 <p>
 Tests if the two <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> are equal.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure1</code></em> :</span></p></td>
@@ -1377,8 +1525,11 @@ Checks if <em class="parameter"><code>subset</code></em> is a subset of <em clas
 structure name and for all fields that are existing in <em class="parameter"><code>superset</code></em>,
 <em class="parameter"><code>subset</code></em> has a value that is a subset of the value in <em class="parameter"><code>superset</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>subset</code></em> :</span></p></td>
@@ -1408,8 +1559,11 @@ structure name and for all fields that are existing in <em class="parameter"><co
 Tries intersecting <em class="parameter"><code>struct1</code></em> and <em class="parameter"><code>struct2</code></em> and reports whether the result
 would not be empty.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>struct1</code></em> :</span></p></td>
@@ -1437,8 +1591,11 @@ would not be empty.
 <p>
 Interesects <em class="parameter"><code>struct1</code></em> and <em class="parameter"><code>struct2</code></em> and returns the intersection.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>struct1</code></em> :</span></p></td>
@@ -1466,8 +1623,11 @@ Interesects <em class="parameter"><code>struct1</code></em> and <em class="param
 <p>
 Check if <em class="parameter"><code>structure</code></em> contains a field named <em class="parameter"><code>field</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1495,8 +1655,11 @@ Check if <em class="parameter"><code>structure</code></em> contains a field name
 <p>
 Check if <em class="parameter"><code>structure</code></em> contains a field named <em class="parameter"><code>field</code></em> and with GType <em class="parameter"><code>type</code></em>.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1530,8 +1693,11 @@ Sets the boolean pointed to by <em class="parameter"><code>value</code></em> cor
 given field.  Caller is responsible for making sure the field exists
 and has the correct type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1567,8 +1733,11 @@ Sets the int pointed to by <em class="parameter"><code>value</code></em> corresp
 given field.  Caller is responsible for making sure the field exists
 and has the correct type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1605,8 +1774,11 @@ Sets the uint pointed to by <em class="parameter"><code>value</code></em> corres
 given field.  Caller is responsible for making sure the field exists
 and has the correct type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1643,8 +1815,11 @@ Sets the double pointed to by <em class="parameter"><code>value</code></em> corr
 given field.  Caller is responsible for making sure the field exists
 and has the correct type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1683,8 +1858,11 @@ sure the field exists and has the correct type.
 The string should not be modified, and remains valid until the next
 call to a gst_structure_*() function with the given structure.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1720,8 +1898,11 @@ should be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-
 inconsistent with e.g. <a class="link" href="gstreamer-GstStructure.html#gst-structure-get-string" title="gst_structure_get_string ()"><code class="function">gst_structure_get_string()</code></a> which doesn't return a
 copy of the string).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1734,7 +1915,7 @@ copy of the string).
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>a pointer to a <a href="http://library.gnome.org/devel/glib/unstable/glib-Date-and-Time-Functions.html#GDate"><span class="type">GDate</span></a> to set. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates]</span>
+<td>a pointer to a <a href="http://library.gnome.org/devel/glib/unstable/glib-Date-and-Time-Functions.html#GDate"><span class="type">GDate</span></a> to set. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out callee-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -1763,8 +1944,11 @@ should be unreffed with <a class="link" href="gstreamer-GstDateTime.html#gst-dat
 (note: this is inconsistent with e.g. <a class="link" href="gstreamer-GstStructure.html#gst-structure-get-string" title="gst_structure_get_string ()"><code class="function">gst_structure_get_string()</code></a>
 which doesn't return a copy of the string).
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1777,7 +1961,7 @@ which doesn't return a copy of the string).
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
-<td>a pointer to a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> to set. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym> callee-allocates]</span>
+<td>a pointer to a <a class="link" href="gstreamer-GstDateTime.html#GstDateTime" title="GstDateTime"><span class="type">GstDateTime</span></a> to set. <span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out callee-allocates</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -1800,8 +1984,11 @@ Sets the clock time pointed to by <em class="parameter"><code>value</code></em> 
 of the given field.  Caller is responsible for making sure the field exists
 and has the correct type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1838,8 +2025,11 @@ Sets the int pointed to by <em class="parameter"><code>value</code></em> corresp
 given field.  Caller is responsible for making sure the field exists,
 has the correct type and that the enumtype is correct.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1880,8 +2070,11 @@ Sets the integers pointed to by <em class="parameter"><code>value_numerator</cod
 corresponding to the value of the given field.  Caller is responsible
 for making sure the field exists and has the correct type.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1922,8 +2115,11 @@ Calls the provided function once for each field in the <a class="link" href="gst
 contrast to <a class="link" href="gstreamer-GstStructure.html#gst-structure-foreach" title="gst_structure_foreach ()"><code class="function">gst_structure_foreach()</code></a>, the function may modify but not delete the
 fields. The structure must be mutable.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1956,8 +2152,11 @@ FALSE otherwise.</td>
 <p>
 Get the name of the given field number, counting from 0 onwards.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -1986,8 +2185,11 @@ determine whether a structure is mutable or not. This function should only be
 called by code implementing parent objects of <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>, as described in
 the MT Refcounting section of the design documents.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2034,8 +2236,11 @@ This prints the structure in human readble form.
 <p>
 Free-function: g_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2064,8 +2269,11 @@ where parsing ended will be returned.
 <p>
 Free-function: gst_structure_free
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
@@ -2073,7 +2281,7 @@ Free-function: gst_structure_free
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>end</code></em> :</span></p></td>
-<td>pointer to store the end of the string in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+<td>pointer to store the end of the string in. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -2093,8 +2301,11 @@ not be parsed. Free with <a class="link" href="gstreamer-GstStructure.html#gst-s
 Fixate all values in <em class="parameter"><code>structure</code></em> using <a class="link" href="gstreamer-GstValue.html#gst-value-fixate" title="gst_value_fixate ()"><code class="function">gst_value_fixate()</code></a>.
 <em class="parameter"><code>structure</code></em> will be modified in-place and should be writable.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
 <td>a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a>
@@ -2110,8 +2321,11 @@ Fixate all values in <em class="parameter"><code>structure</code></em> using <a 
 <p>
 Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> by changing the given field with its fixated value.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2141,8 +2355,11 @@ Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title=
 Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> by changing the given field to the nearest
 integer to <em class="parameter"><code>target</code></em> that is a subset of the existing field.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2176,8 +2393,11 @@ integer to <em class="parameter"><code>target</code></em> that is a subset of th
 Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> by changing the given field to the nearest
 double to <em class="parameter"><code>target</code></em> that is a subset of the existing field.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2213,8 +2433,11 @@ Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title=
 fraction to <em class="parameter"><code>target_numerator</code></em>/<em class="parameter"><code>target_denominator</code></em> that is a subset
 of the existing field.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2251,8 +2474,11 @@ of the existing field.
 Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> by changing the given <em class="parameter"><code>field_name</code></em> field to the given
 <em class="parameter"><code>target</code></em> boolean if that field is not fixed yet.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2285,8 +2511,11 @@ Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title=
 Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> by changing the given <em class="parameter"><code>field_name</code></em> field to the given
 <em class="parameter"><code>target</code></em> string if that field is not fixed yet.
 </p>
-<div class="variablelist"><table border="0">
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
 <col align="left" valign="top">
+<col>
+</colgroup>
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>structure</code></em> :</span></p></td>
@@ -2317,6 +2546,6 @@ Fixates a <a class="link" href="gstreamer-GstStructure.html#GstStructure" title=
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

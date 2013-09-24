@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.32.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2013-08-28 12:47+0100\n"
+"POT-Creation-Date: 2013-09-19 10:02+0200\n"
 "PO-Revision-Date: 2011-10-02 15:45+0200\n"
 "Last-Translator: Jorge González González <aloriel@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -48,6 +48,11 @@ msgstr "LISTA"
 
 msgid "Disable colored debugging output"
 msgstr "Desactivar la coloración de la salida depurada"
+
+msgid ""
+"Changes coloring mode of the debug log. Possible modes: off, on, disable, "
+"auto, unix"
+msgstr ""
 
 msgid "Disable debugging"
 msgstr "Desactivar depuración"
@@ -253,6 +258,10 @@ msgstr "No hay un mensaje de error estándar para el dominio %s y código %d."
 
 msgid "Selected clock cannot be used in pipeline."
 msgstr "El reloj seleccionado no se puede usar en la segmentación."
+
+#, c-format
+msgid "Error writing registry cache to %s: %s"
+msgstr "Error al escribir la caché de registro a %s: %s"
 
 msgid "title"
 msgstr "título"
@@ -799,8 +808,28 @@ msgstr "orientación de la imagen"
 msgid "How the image should be rotated or flipped before display"
 msgstr "Cómo se debería rotar o voltear la imagen antes de mostrarla"
 
+msgid "publisher"
+msgstr ""
+
+msgid "Name of the label or publisher"
+msgstr ""
+
+msgid "interpreted-by"
+msgstr ""
+
+msgid "Information about the people behind a remix and similar interpretations"
+msgstr ""
+
 msgid ", "
 msgstr ", "
+
+#, c-format
+msgid "No URI handler for the %s protocol found"
+msgstr ""
+
+#, c-format
+msgid "URI scheme '%s' not supported"
+msgstr ""
 
 #, c-format
 msgid "ERROR: from element %s: %s\n"
@@ -867,15 +896,6 @@ msgstr "no se pudo enlazar el elemento sumidero para el URI «%s»"
 msgid "empty pipeline not allowed"
 msgstr "no se permite un conducto vacío"
 
-msgid "Internal clock error."
-msgstr "Error en el reloj interno."
-
-msgid "Failed to map buffer."
-msgstr ""
-
-msgid "Internal data flow error."
-msgstr "Error en el flujo de datos interno."
-
 msgid "A lot of buffers are being dropped."
 msgstr "Se están desechando muchos búferes."
 
@@ -884,6 +904,15 @@ msgstr "Problema en el flujo de datos interno."
 
 msgid "Internal data stream error."
 msgstr "Error interno de flujo de datos."
+
+msgid "Internal data flow error."
+msgstr "Error en el flujo de datos interno."
+
+msgid "Internal clock error."
+msgstr "Error en el reloj interno."
+
+msgid "Failed to map buffer."
+msgstr ""
 
 msgid "Filter caps"
 msgstr "Filtro de capacidades"
@@ -1121,6 +1150,10 @@ msgstr "ADVERTENCIA: del elemento %s: %s\n"
 msgid "Prerolled, waiting for buffering to finish...\n"
 msgstr "Preparado, esperando a llenar el búfer para terminar…\n"
 
+#, fuzzy
+msgid "Prerolled, waiting for progress to finish...\n"
+msgstr "Preparado, esperando a llenar el búfer para terminar…\n"
+
 msgid "buffering..."
 msgstr "almacenando en el búfer…"
 
@@ -1142,9 +1175,17 @@ msgstr "Estableciendo el estado a %s según lo solicitó %s…\n"
 msgid "Interrupt: Stopping pipeline ...\n"
 msgstr "Interrumpir: parando el conducto …\n"
 
+#, c-format
+msgid "Progress: (%s) %s\n"
+msgstr ""
+
 #, fuzzy, c-format
 msgid "Missing element: %s\n"
 msgstr "no hay un elemento «%s»"
+
+#, fuzzy, c-format
+msgid "Got context from element '%s': %s=%s\n"
+msgstr "ADVERTENCIA: del elemento %s: %s\n"
 
 msgid "Output tags (also known as metadata)"
 msgstr "Etiquetas de salida (también conocidos como metadatos)"
@@ -1281,9 +1322,6 @@ msgstr "Liberando la tubería…\n"
 
 #~ msgid "Do not install signal handlers for SIGUSR1 and SIGUSR2"
 #~ msgstr "No instalar los manejadores de señales para SIGUSR1 y SIGUSR2"
-
-#~ msgid "Error writing registry cache to %s: %s"
-#~ msgstr "Error al escribir la caché de registro a %s: %s"
 
 #~ msgid "Error re-scanning registry %s: %s"
 #~ msgstr "Error al volver a escanear el registro %s: %s"
