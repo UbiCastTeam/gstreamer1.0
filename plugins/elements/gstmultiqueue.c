@@ -836,7 +836,7 @@ update_buffering (GstMultiQueue * mq, GstSingleQueue * sq)
       size.bytes, sq->max_size.bytes, sq->cur_time, sq->max_size.time);
 
   /* get bytes and time percentages and take the max */
-  if (sq->is_eos) {
+  if (sq->is_eos || sq->srcresult == GST_FLOW_NOT_LINKED) {
     percent = 100;
   } else {
     percent = 0;
@@ -1197,6 +1197,7 @@ gst_multi_queue_loop (GstPad * pad)
   GstFlowReturn result;
   GstClockTime next_time;
   gboolean is_buffer;
+  gboolean do_update_buffering = FALSE;
 
   sq = (GstSingleQueue *) gst_pad_get_element_private (pad);
   mq = sq->mqueue;
@@ -1348,6 +1349,7 @@ gst_multi_queue_loop (GstPad * pad)
         sq->id);
 
     compute_high_id (mq);
+    do_update_buffering = TRUE;
 
     /* maybe no-one is waiting */
     if (mq->numwaiting > 0) {
@@ -1369,6 +1371,10 @@ gst_multi_queue_loop (GstPad * pad)
     sq->pushed = TRUE;
   sq->srcresult = result;
   sq->last_oldid = newid;
+
+  if (do_update_buffering)
+    update_buffering (mq, sq);
+
   GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
 
   if (result != GST_FLOW_OK && result != GST_FLOW_NOT_LINKED
@@ -1731,8 +1737,10 @@ gst_multi_queue_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_RECONFIGURE:
       GST_MULTI_QUEUE_MUTEX_LOCK (mq);
-      if (sq->srcresult == GST_FLOW_NOT_LINKED)
+      if (sq->srcresult == GST_FLOW_NOT_LINKED) {
         sq->srcresult = GST_FLOW_OK;
+        g_cond_signal (&sq->turn);
+      }
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
 
       ret = gst_pad_push_event (sq->sinkpad, event);
