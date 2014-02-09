@@ -508,8 +508,11 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
         gst_data_queue_get_level (q->queue, &size);
 
         /* do not reduce max size below current level if the single queue has grown because of empty queue */
-        if (new_size >= size.visible && size.visible <= mq->max_size.visible)
+        if (new_size == 0) {
           q->max_size.visible = new_size;
+        } else if (new_size > size.visible) {
+          q->max_size.visible = new_size;
+        }
         tmp = g_list_next (tmp);
       };
 
@@ -740,6 +743,9 @@ gst_multi_queue_change_state (GstElement * element, GstStateChange transition)
         sq = (GstSingleQueue *) tmp->data;
         sq->flushing = TRUE;
         g_cond_signal (&sq->turn);
+
+        sq->last_query = FALSE;
+        g_cond_signal (&sq->query_handled);
       }
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mqueue);
       break;
