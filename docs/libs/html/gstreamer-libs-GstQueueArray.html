@@ -142,7 +142,7 @@
 <a name="gstreamer-libs-GstQueueArray.description"></a><h2>Description</h2>
 <p><a class="link" href="gstreamer-libs-GstQueueArray.html#GstQueueArray" title="GstQueueArray"><span class="type">GstQueueArray</span></a> is an object that provides standard queue functionality
 based on an array instead of linked lists. This reduces the overhead
-caused by memory managment by a large factor.</p>
+caused by memory management by a large factor.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstQueueArray.functions_details"></a><h2>Functions</h2>
@@ -173,7 +173,7 @@ queue size of <em class="parameter"><code>initial_size</code></em>
 <p> a new <a class="link" href="gstreamer-libs-GstQueueArray.html#GstQueueArray" title="GstQueueArray"><span class="type">GstQueueArray</span></a> object</p>
 <p></p>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -197,7 +197,7 @@ gst_queue_array_free (<em class="parameter"><code><a class="link" href="gstreame
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -227,7 +227,7 @@ gst_queue_array_get_length (<em class="parameter"><code><a class="link" href="gs
 .</p>
 <p></p>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -235,8 +235,8 @@ gst_queue_array_get_length (<em class="parameter"><code><a class="link" href="gs
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 gst_queue_array_pop_head (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstQueueArray.html#GstQueueArray" title="GstQueueArray"><span class="type">GstQueueArray</span></a> *array</code></em>);</pre>
 <p>Returns and head of the queue <em class="parameter"><code>array</code></em>
- and does not
-remove it from the queue.</p>
+ and removes
+it from the queue.</p>
 <div class="refsect3">
 <a name="id-1.2.4.15.8.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -257,13 +257,37 @@ remove it from the queue.</p>
 <p> The head of the queue</p>
 <p></p>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-queue-array-peek-head"></a><h3>gst_queue_array_peek_head ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 gst_queue_array_peek_head (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstQueueArray.html#GstQueueArray" title="GstQueueArray"><span class="type">GstQueueArray</span></a> *array</code></em>);</pre>
+<p>Returns and head of the queue <em class="parameter"><code>array</code></em>
+ and does not
+remove it from the queue.</p>
+<div class="refsect3">
+<a name="id-1.2.4.15.8.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>array</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstQueueArray.html#GstQueueArray" title="GstQueueArray"><span class="type">GstQueueArray</span></a> object</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.15.8.6.6"></a><h4>Returns</h4>
+<p> The head of the queue</p>
+<p></p>
+</div>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -296,7 +320,7 @@ gst_queue_array_push_tail (<em class="parameter"><code><a class="link" href="gst
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -326,7 +350,7 @@ gst_queue_array_is_empty (<em class="parameter"><code><a class="link" href="gstr
 is empty</p>
 <p></p>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -364,7 +388,7 @@ gst_queue_array_drop_element (<em class="parameter"><code><a class="link" href="
 <p> the dropped element</p>
 <p></p>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -383,7 +407,7 @@ and returning the index of the found element.</p>
 <p>Note that the index is not 0-based, but an internal index number with a
 random offset. The index can be used in connection with
 <a class="link" href="gstreamer-libs-GstQueueArray.html#gst-queue-array-drop-element" title="gst_queue_array_drop_element ()"><code class="function">gst_queue_array_drop_element()</code></a>. FIXME: return index 0-based and make
-<code class="function">_drop_element()</code> take a 0-based index.</p>
+<a class="link" href="gstreamer-libs-GstQueueArray.html#gst-queue-array-drop-element" title="gst_queue_array_drop_element ()"><code class="function">gst_queue_array_drop_element()</code></a> take a 0-based index.</p>
 <div class="refsect3">
 <a name="id-1.2.4.15.8.10.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -417,7 +441,7 @@ by value. </p></td>
 <p> Index of the found element or -1 if nothing was found.</p>
 <p></p>
 </div>
-<p class="since">Since 1.2.0</p>
+<p class="since">Since 1.2</p>
 </div>
 </div>
 <div class="refsect1">

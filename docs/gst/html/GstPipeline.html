@@ -201,7 +201,7 @@ added <a class="link" href="GstElement.html" title="GstElement"><span class="typ
 methods like <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> and <a class="link" href="GstBin.html#gst-bin-remove" title="gst_bin_remove ()"><code class="function">gst_bin_remove()</code></a> (see <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>).</p>
 <p>Before changing the state of the <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> (see <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>) a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>
 can be retrieved with <a class="link" href="GstPipeline.html#gst-pipeline-get-bus" title="gst_pipeline_get_bus ()"><code class="function">gst_pipeline_get_bus()</code></a>. This bus can then be
-used to receive <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> from the elements in the pipeline.</p>
+used to receive <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> from the elements in the pipeline.</p>
 <p>By default, a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> will automatically flush the pending <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>
 messages when going to the NULL state to ensure that no circular
 references exist when no messages are read from the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. This
@@ -228,7 +228,6 @@ to PLAYING again. The effect is that the running time (as the difference
 between the clock time and the base time) will count how much time was spent
 in the PLAYING state. This default behaviour can be changed with the
 <a class="link" href="GstElement.html#gst-element-set-start-time" title="gst_element_set_start_time ()"><code class="function">gst_element_set_start_time()</code></a> method.</p>
-<p>Last reviewed on 2012-03-29 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstPipeline.functions_details"></a><h2>Functions</h2>
@@ -266,7 +265,7 @@ gst_pipeline_new (<em class="parameter"><code>const <a href="http://library.gnom
 gst_pipeline_get_bus (<em class="parameter"><code><a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> *pipeline</code></em>);</pre>
 <p>Gets the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> of <em class="parameter"><code>pipeline</code></em>
 . The bus allows applications to receive
-<a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> packets.</p>
+<a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> packets.</p>
 <div class="refsect3">
 <a name="id-1.3.37.10.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">

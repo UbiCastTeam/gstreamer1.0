@@ -30,11 +30,11 @@
  * #GInitiallyUnowned. It is an abstract class that is not very usable on its own.
  *
  * #GstObject gives us basic refcounting, parenting functionality and locking.
- * Most of the function are just extended for special GStreamer needs and can be
+ * Most of the functions are just extended for special GStreamer needs and can be
  * found under the same name in the base class of #GstObject which is #GObject
  * (e.g. g_object_ref() becomes gst_object_ref()).
  *
- * Since #GstObject dereives from #GInitiallyUnowned, it also inherits the
+ * Since #GstObject derives from #GInitiallyUnowned, it also inherits the
  * floating reference. Be aware that functions such as gst_bin_add() and
  * gst_element_add_pad() take ownership of the floating reference.
  *
@@ -45,10 +45,10 @@
  * <refsect2>
  * <title>controlled properties</title>
  * <para>
- * Controlled properties offers a lightweight way to adjust gobject
- * properties over stream-time. It works by using time-stamped value pairs that
- * are queued for element-properties. At run-time the elements continuously pull
- * values changes for the current stream-time.
+ * Controlled properties offers a lightweight way to adjust gobject properties
+ * over stream-time. It works by using time-stamped value pairs that are queued
+ * for element-properties. At run-time the elements continuously pull value
+ * changes for the current stream-time.
  *
  * What needs to be changed in a #GstElement?
  * Very little - it is just two steps to make a plugin controllable!
@@ -60,7 +60,7 @@
  *   <listitem><para>
  *     when processing data (get, chain, loop function) at the beginning call
  *     gst_object_sync_values(element,timestamp).
- *     This will made the controller to update all gobject properties that are under
+ *     This will make the controller to update all gobject properties that are under
  *     control with the current values based on timestamp.
  *   </para></listitem>
  * </orderedlist>
@@ -88,8 +88,6 @@
  * </orderedlist>
  * </para>
  * </refsect2>
- *
- * Last reviewed on 2012-03-29 (0.11.3)
  */
 
 #include "gst_private.h"
@@ -172,6 +170,15 @@ gst_object_class_init (GstObjectClass * klass)
       g_param_spec_string ("name", "Name", "The name of the object", NULL,
       G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GstObject:parent:
+   *
+   * The parent of the object. Please note, that when changing the 'parent'
+   * property, we don't emit #GObject::notify and #GstObject::deep-notify
+   * signals due to locking issues. In some cases one can use
+   * #GstBin::element-added or #GstBin::element-removed signals on the parent to
+   * achieve a similar effect.
+   */
   properties[PROP_PARENT] =
       g_param_spec_object ("parent", "Parent", "The parent of the object",
       GST_TYPE_OBJECT, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
@@ -691,9 +698,11 @@ gst_object_set_parent (GstObject * object, GstObject * parent)
   gst_object_ref_sink (object);
   GST_OBJECT_UNLOCK (object);
 
-  /* FIXME, this does not work, the deep notify takes the lock from the parent
-   * object and deadlocks when the parent holds its lock when calling this
-   * function (like _element_add_pad()) */
+  /* FIXME-2.0: this does not work, the deep notify takes the lock from the
+   * parent object and deadlocks when the parent holds its lock when calling
+   * this function (like _element_add_pad()), we need to use a GRecMutex
+   * for locking the parent instead.
+   */
   /* g_object_notify_by_pspec ((GObject *)object, properties[PROP_PARENT]); */
 
   return TRUE;
@@ -813,7 +822,7 @@ gst_object_has_ancestor (GstObject * object, GstObject * ancestor)
  * does not do any locking of any kind. You might want to protect the
  * provided list with the lock of the owner of the list. This function
  * will lock each #GstObject in the list to compare the name, so be
- * carefull when passing a list with a locked object.
+ * careful when passing a list with a locked object.
  *
  * Returns: TRUE if a #GstObject named @name does not appear in @list,
  * FALSE if it does.
@@ -921,7 +930,7 @@ gst_object_get_path_string (GstObject * object)
   path = g_strdup ("");
 
   /* first walk the object hierarchy to build a list of the parents,
-   * be carefull here with refcounting. */
+   * be careful here with refcounting. */
   do {
     if (GST_IS_OBJECT (object)) {
       parent = gst_object_get_parent (object);
@@ -1136,8 +1145,8 @@ gst_object_set_control_bindings_disabled (GstObject * object, gboolean disabled)
  * @disabled: boolean that specifies whether to disable the controller
  * or not.
  *
- * This function is used to disable the #GstController on a property for
- * some time, i.e. gst_controller_sync_values() will do nothing for the
+ * This function is used to disable the control bindings on a property for
+ * some time, i.e. gst_object_sync_values() will do nothing for the
  * property.
  */
 void

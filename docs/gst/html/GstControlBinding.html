@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstContext.html" title="GstContext">
+<link rel="prev" href="GstContext.html" title="GstContext">
 <link rel="next" href="GstControlSource.html" title="GstControlSource">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,7 +21,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-GstContext.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstContext.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstControlSource.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -464,7 +464,6 @@ gst_control_binding_is_disabled (<em class="parameter"><code><a class="link" hre
 <pre class="programlisting">struct GstControlBindingClass {
   GstObjectClass parent_class;
 
-  /* virtual methods */
   gboolean (* sync_values) (GstControlBinding *binding, GstObject *object, GstClockTime timestamp, GstClockTime last_sync);
   GValue * (* get_value) (GstControlBinding *binding, GstClockTime timestamp);
   gboolean (* get_value_array) (GstControlBinding *binding, GstClockTime timestamp,GstClockTime interval, guint n_values, gpointer values);
@@ -488,23 +487,24 @@ gst_control_binding_is_disabled (<em class="parameter"><code><a class="link" hre
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstControlBindingClass.sync-values"></a>sync_values</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>implementation for updating the target values</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstControlBindingClass.get-value"></a>get_value</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>implementation to fetch a single control-value</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstControlBindingClass.get-value-array"></a>get_value_array</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>implementation to fetch a series of control-values</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstControlBindingClass.get-g-value-array"></a>get_g_value_array</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>implementation to fetch a series of control-values
+as g_values</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

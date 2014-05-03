@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GStreamer 1.0 Core Reference Manual: GstGlobalDeviceMonitor</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
+<link rel="up" href="gstreamer-device-probing.html" title="GStreamer Device Discovery and Device Probing">
+<link rel="prev" href="GstDeviceMonitorFactory.html" title="GstDeviceMonitorFactory">
+<link rel="next" href="gstreamer-support.html" title="GStreamer Core Support">
+<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
+                  <a href="#gstreamer-GstGlobalDeviceMonitor.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
+                  <a href="#gstreamer-GstGlobalDeviceMonitor.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="gstreamer-device-probing.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="GstDeviceMonitorFactory.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gstreamer-support.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="gstreamer-GstGlobalDeviceMonitor"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="gstreamer-GstGlobalDeviceMonitor.top_of_page"></a>GstGlobalDeviceMonitor</span></h2>
+<p>GstGlobalDeviceMonitor</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR:CAPS" title="GST_GLOBAL_DEVICE_MONITOR()">GST_GLOBAL_DEVICE_MONITOR</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR-CAST:CAPS" title="GST_GLOBAL_DEVICE_MONITOR_CAST()">GST_GLOBAL_DEVICE_MONITOR_CAST</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR-CLASS:CAPS" title="GST_GLOBAL_DEVICE_MONITOR_CLASS()">GST_GLOBAL_DEVICE_MONITOR_CLASS</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR-GET-CLASS:CAPS" title="GST_GLOBAL_DEVICE_MONITOR_GET_CLASS()">GST_GLOBAL_DEVICE_MONITOR_GET_CLASS</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-IS-GLOBAL-DEVICE-MONITOR:CAPS" title="GST_IS_GLOBAL_DEVICE_MONITOR()">GST_IS_GLOBAL_DEVICE_MONITOR</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-IS-GLOBAL-DEVICE-MONITOR-CLASS:CAPS" title="GST_IS_GLOBAL_DEVICE_MONITOR_CLASS()">GST_IS_GLOBAL_DEVICE_MONITOR_CLASS</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GST-TYPE-GLOBAL-DEVICE-MONITOR:CAPS" title="GST_TYPE_GLOBAL_DEVICE_MONITOR">GST_TYPE_GLOBAL_DEVICE_MONITOR</a></td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstBus.html" title="GstBus"><span class="returnvalue">GstBus</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-bus" title="gst_global_device_monitor_get_bus ()">gst_global_device_monitor_get_bus</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-caps-filter" title="gst_global_device_monitor_get_caps_filter ()">gst_global_device_monitor_get_caps_filter</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-classes-filter" title="gst_global_device_monitor_get_classes_filter ()">gst_global_device_monitor_get_classes_filter</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-devices" title="gst_global_device_monitor_get_devices ()">gst_global_device_monitor_get_devices</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-type" title="gst_global_device_monitor_get_type ()">gst_global_device_monitor_get_type</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="returnvalue">GstGlobalDeviceMonitor</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-new" title="gst_global_device_monitor_new ()">gst_global_device_monitor_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-caps-filter" title="gst_global_device_monitor_set_caps_filter ()">gst_global_device_monitor_set_caps_filter</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-classes-filter" title="gst_global_device_monitor_set_classes_filter ()">gst_global_device_monitor_set_classes_filter</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-start" title="gst_global_device_monitor_start ()">gst_global_device_monitor_start</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-stop" title="gst_global_device_monitor_stop ()">gst_global_device_monitor_stop</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor">GstGlobalDeviceMonitor</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitorClass" title="struct GstGlobalDeviceMonitorClass">GstGlobalDeviceMonitorClass</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">
+</pre>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;gst/gst.h&gt;
+</pre>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="GST-GLOBAL-DEVICE-MONITOR:CAPS"></a><h3>GST_GLOBAL_DEVICE_MONITOR()</h3>
+<pre class="programlisting">#define GST_GLOBAL_DEVICE_MONITOR(obj)                 (G_TYPE_CHECK_INSTANCE_CAST ((obj), GST_TYPE_GLOBAL_DEVICE_MONITOR, GstGlobalDeviceMonitor))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GLOBAL-DEVICE-MONITOR-CAST:CAPS"></a><h3>GST_GLOBAL_DEVICE_MONITOR_CAST()</h3>
+<pre class="programlisting">#define GST_GLOBAL_DEVICE_MONITOR_CAST(obj)            ((GstGlobalDeviceMonitor *)(obj))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GLOBAL-DEVICE-MONITOR-CLASS:CAPS"></a><h3>GST_GLOBAL_DEVICE_MONITOR_CLASS()</h3>
+<pre class="programlisting">#define GST_GLOBAL_DEVICE_MONITOR_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST ((klass), GST_TYPE_GLOBAL_DEVICE_MONITOR, GstGlobalDeviceMonitorClass))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GLOBAL-DEVICE-MONITOR-GET-CLASS:CAPS"></a><h3>GST_GLOBAL_DEVICE_MONITOR_GET_CLASS()</h3>
+<pre class="programlisting">#define GST_GLOBAL_DEVICE_MONITOR_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj), GST_TYPE_GLOBAL_DEVICE_MONITOR, GstGlobalDeviceMonitorClass))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-IS-GLOBAL-DEVICE-MONITOR:CAPS"></a><h3>GST_IS_GLOBAL_DEVICE_MONITOR()</h3>
+<pre class="programlisting">#define GST_IS_GLOBAL_DEVICE_MONITOR(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_GLOBAL_DEVICE_MONITOR))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-IS-GLOBAL-DEVICE-MONITOR-CLASS:CAPS"></a><h3>GST_IS_GLOBAL_DEVICE_MONITOR_CLASS()</h3>
+<pre class="programlisting">#define GST_IS_GLOBAL_DEVICE_MONITOR_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GST_TYPE_GLOBAL_DEVICE_MONITOR))
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-TYPE-GLOBAL-DEVICE-MONITOR:CAPS"></a><h3>GST_TYPE_GLOBAL_DEVICE_MONITOR</h3>
+<pre class="programlisting">#define GST_TYPE_GLOBAL_DEVICE_MONITOR                 (gst_global_device_monitor_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-get-bus"></a><h3>gst_global_device_monitor_get_bus ()</h3>
+<pre class="programlisting"><a class="link" href="GstBus.html" title="GstBus"><span class="returnvalue">GstBus</span></a> *
+gst_global_device_monitor_get_bus (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>);</pre>
+<p>Gets the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> of this <a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a></p>
+<div class="refsect3">
+<a name="id-1.4.5.8.9.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>monitor</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.4.5.8.9.6"></a><h4>Returns</h4>
+<p> a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-get-caps-filter"></a><h3>gst_global_device_monitor_get_caps_filter ()</h3>
+<pre class="programlisting"><a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
+gst_global_device_monitor_get_caps_filter
+                               (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-get-classes-filter"></a><h3>gst_global_device_monitor_get_classes_filter ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_global_device_monitor_get_classes_filter
+                               (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-get-devices"></a><h3>gst_global_device_monitor_get_devices ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+gst_global_device_monitor_get_devices (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>);</pre>
+<p>Gets a list of devices from all of the relevant monitors. This may actually
+probe the hardware if the global monitor is not currently started.</p>
+<div class="refsect3">
+<a name="id-1.4.5.8.12.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>monitor</p></td>
+<td class="parameter_description"><p>A <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.4.5.8.12.6"></a><h4>Returns</h4>
+<p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of
+<a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstDevice]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-get-type"></a><h3>gst_global_device_monitor_get_type ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+gst_global_device_monitor_get_type (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-new"></a><h3>gst_global_device_monitor_new ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="returnvalue">GstGlobalDeviceMonitor</span></a> *
+gst_global_device_monitor_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-set-caps-filter"></a><h3>gst_global_device_monitor_set_caps_filter ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_global_device_monitor_set_caps_filter
+                               (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-set-classes-filter"></a><h3>gst_global_device_monitor_set_classes_filter ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_global_device_monitor_set_classes_filter
+                               (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>,
+                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *classes</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-start"></a><h3>gst_global_device_monitor_start ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_global_device_monitor_start (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>);</pre>
+<p>Starts monitoring the devices, one this has succeeded, the
+<span class="type">“added”</span> and <span class="type">“removed”</span>
+signals will be emitted when the list of devices changes.</p>
+<div class="refsect3">
+<a name="id-1.4.5.8.17.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>monitor</p></td>
+<td class="parameter_description"><p>A <a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.4.5.8.17.6"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the device monitoring could be started</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-global-device-monitor-stop"></a><h3>gst_global_device_monitor_stop ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_global_device_monitor_stop (<em class="parameter"><code><a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> *monitor</code></em>);</pre>
+<p>Stops monitoring the devices.</p>
+<div class="refsect3">
+<a name="id-1.4.5.8.18.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>monitor</p></td>
+<td class="parameter_description"><p>A <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstGlobalDeviceMonitor.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="GstGlobalDeviceMonitor"></a><h3>struct GstGlobalDeviceMonitor</h3>
+<pre class="programlisting">struct GstGlobalDeviceMonitor {
+  GstObject                parent;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstGlobalDeviceMonitorClass"></a><h3>struct GstGlobalDeviceMonitorClass</h3>
+<pre class="programlisting">struct GstGlobalDeviceMonitorClass {
+  GstObjectClass           parent_class;
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.20</div>
+</body>
+</html>

@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstTagList.html" title="GstTagList">
+<link rel="prev" href="GstTagList.html" title="GstTagList">
 <link rel="next" href="GstTask.html" title="GstTask">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,7 +21,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-GstTagList.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstTagList.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstTask.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -99,7 +99,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="returnvalue">GstTagList</span></a> *
+<td class="function_type">const <a class="link" href="GstTagList.html" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstTagSetter.html#gst-tag-setter-get-tag-list" title="gst_tag_setter_get_tag_list ()">gst_tag_setter_get_tag_list</a> <span class="c_punctuation">()</span>
@@ -115,7 +115,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="returnvalue">GstTagMergeMode</span></a>
+<a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="returnvalue">GstTagMergeMode</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstTagSetter.html#gst-tag-setter-get-tag-merge-mode" title="gst_tag_setter_get_tag_merge_mode ()">gst_tag_setter_get_tag_merge_mode</a> <span class="c_punctuation">()</span>
@@ -171,7 +171,7 @@ need to do is watch for tag messages on your pipeline's bus. This
 interface is only for setting metadata, not for extracting it. To set tags
 from the application, find tagsetter elements and set tags using e.g.
 <a class="link" href="GstTagSetter.html#gst-tag-setter-merge-tags" title="gst_tag_setter_merge_tags ()"><code class="function">gst_tag_setter_merge_tags()</code></a> or <a class="link" href="GstTagSetter.html#gst-tag-setter-add-tags" title="gst_tag_setter_add_tags ()"><code class="function">gst_tag_setter_add_tags()</code></a>. Also consider
-setting the <a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> that is used for tag events that arrive at the
+setting the <a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> that is used for tag events that arrive at the
 tagsetter element (default mode is to keep existing tags).
 The application should do that before the element goes to <a class="link" href="GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a>.</p>
 <p>Elements implementing the <a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> interface often have to merge
@@ -216,7 +216,7 @@ event_tags <span class="gtkdoc opt">= (</span><span class="gtkdoc kwb">const</sp
 <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;event tags: %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> event_tags<span class="gtkdoc opt">);</span>
 <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;set   tags: %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> application_tags<span class="gtkdoc opt">);</span>
  
-result <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTagList.html#gst-tag-list-merge">gst_tag_list_merge</a></span> <span class="gtkdoc opt">(</span>application_tags<span class="gtkdoc opt">,</span> event_tags<span class="gtkdoc opt">,</span> merge_mode<span class="gtkdoc opt">);</span>
+result <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTagList.html#gst-tag-list-merge">gst_tag_list_merge</a></span> <span class="gtkdoc opt">(</span>application_tags<span class="gtkdoc opt">,</span> event_tags<span class="gtkdoc opt">,</span> merge_mode<span class="gtkdoc opt">);</span>
  
 <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-LOG-OBJECT:CAPS">GST_LOG_OBJECT</a></span> <span class="gtkdoc opt">(</span>tagsetter<span class="gtkdoc opt">,</span> <span class="string">&quot;final tags: %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> result<span class="gtkdoc opt">);</span></pre></td>
       </tr>
@@ -225,7 +225,6 @@ result <span class="gtkdoc opt">=</span> <span class="function"><a href="http://
 </div>
 
 <p></p>
-<p>Last reviewed on 2006-05-18 (0.10.6)</p>
 </div>
 <div class="refsect1">
 <a name="GstTagSetter.functions_details"></a><h2>Functions</h2>
@@ -256,8 +255,8 @@ state-change handler.</p>
 <a name="gst-tag-setter-merge-tags"></a><h3>gst_tag_setter_merge_tags ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_merge_tags (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                           <em class="parameter"><code>const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
-                           <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>);</pre>
+                           <em class="parameter"><code>const <a class="link" href="GstTagList.html" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
+                           <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>);</pre>
 <p>Merges the given list into the setter's list using the given mode.</p>
 <div class="refsect3">
 <a name="id-1.3.48.9.3.5"></a><h4>Parameters</h4>
@@ -292,7 +291,7 @@ gst_tag_setter_merge_tags (<em class="parameter"><code><a class="link" href="Gst
 <a name="gst-tag-setter-add-tags"></a><h3>gst_tag_setter_add_tags ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tags (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                         <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
+                         <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                          <em class="parameter"><code>...</code></em>);</pre>
 <p>Adds the given tag / value pairs on the setter using the given merge mode.
@@ -335,7 +334,7 @@ The list must be terminated with NULL.</p>
 <a name="gst-tag-setter-add-tag-value"></a><h3>gst_tag_setter_add_tag_value ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_value (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                              <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
+                              <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                               <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                               <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Adds the given tag / GValue pair on the setter using the given merge mode.</p>
@@ -377,7 +376,7 @@ gst_tag_setter_add_tag_value (<em class="parameter"><code><a class="link" href="
 <a name="gst-tag-setter-add-tag-values"></a><h3>gst_tag_setter_add_tag_values ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_values (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                               <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
+                               <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                <em class="parameter"><code>...</code></em>);</pre>
 <p>Adds the given tag / GValue pairs on the setter using the given merge mode.
@@ -420,7 +419,7 @@ The list must be terminated with NULL.</p>
 <a name="gst-tag-setter-add-tag-valist"></a><h3>gst_tag_setter_add_tag_valist ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_valist (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                               <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
+                               <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
 <p>Adds the given tag / value pairs on the setter using the given merge mode.
@@ -463,7 +462,7 @@ The list must be terminated with NULL.</p>
 <a name="gst-tag-setter-add-tag-valist-values"></a><h3>gst_tag_setter_add_tag_valist_values ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_valist_values (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                                      <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
+                                      <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                                       <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                       <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
 <p>Adds the given tag / GValue pairs on the setter using the given merge mode.
@@ -504,7 +503,7 @@ The list must be terminated with NULL.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-tag-setter-get-tag-list"></a><h3>gst_tag_setter_get_tag_list ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstTagList.html#GstTagList" title="struct GstTagList"><span class="returnvalue">GstTagList</span></a> *
+<pre class="programlisting">const <a class="link" href="GstTagList.html" title="GstTagList"><span class="returnvalue">GstTagList</span></a> *
 gst_tag_setter_get_tag_list (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>);</pre>
 <p>Returns the current list of tags the setter uses.  The list should not be
 modified or freed.</p>
@@ -536,9 +535,9 @@ setter or NULL if none is used. </p>
 <a name="gst-tag-setter-set-tag-merge-mode"></a><h3>gst_tag_setter_set_tag_merge_mode ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_set_tag_merge_mode (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
-                                   <em class="parameter"><code><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>);</pre>
+                                   <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>);</pre>
 <p>Sets the given merge mode that is used for adding tags from events to tags
-specified by this interface. The default is <a class="link" href="gstreamer-GstTagList.html#GST-TAG-MERGE-KEEP:CAPS"><span class="type">GST_TAG_MERGE_KEEP</span></a>, which keeps
+specified by this interface. The default is <a class="link" href="GstTagList.html#GST-TAG-MERGE-KEEP:CAPS"><span class="type">GST_TAG_MERGE_KEEP</span></a>, which keeps
 the tags set with this interface and discards tags from events.</p>
 <div class="refsect3">
 <a name="id-1.3.48.9.10.5"></a><h4>Parameters</h4>
@@ -566,7 +565,7 @@ the tags set with this interface and discards tags from events.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-tag-setter-get-tag-merge-mode"></a><h3>gst_tag_setter_get_tag_merge_mode ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="returnvalue">GstTagMergeMode</span></a>
+<pre class="programlisting"><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="returnvalue">GstTagMergeMode</span></a>
 gst_tag_setter_get_tag_merge_mode (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagSetter"><span class="type">GstTagSetter</span></a> *setter</code></em>);</pre>
 <p>Queries the mode by which tags inside the setter are overwritten by tags
 from events</p>

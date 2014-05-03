@@ -34,18 +34,12 @@
  * application using the #GstBus.
  *
  * The basic use pattern of posting a message on a #GstBus is as follows:
- *
- * <example>
- * <title>Posting a #GstMessage</title>
- *   <programlisting>
- *    gst_bus_post (bus, gst_message_new_eos());
- *   </programlisting>
- * </example>
+ * |[
+ *   gst_bus_post (bus, gst_message_new_eos());
+ * ]|
  *
  * A #GstElement usually posts messages on the bus provided by the parent
  * container using gst_element_post_message().
- *
- * Last reviewed on 2005-11-09 (0.9.4)
  */
 
 
@@ -109,6 +103,8 @@ static GstMessageQuarks message_quarks[] = {
   {GST_MESSAGE_STREAM_START, "stream-start", 0},
   {GST_MESSAGE_NEED_CONTEXT, "need-context", 0},
   {GST_MESSAGE_HAVE_CONTEXT, "have-context", 0},
+  {GST_MESSAGE_DEVICE_ADDED, "device-added", 0},
+  {GST_MESSAGE_DEVICE_REMOVED, "device-removed", 0},
   {0, NULL, 0}
 };
 
@@ -384,7 +380,7 @@ gst_message_new_eos (GstObject * src)
  *
  * Create a new error message. The message will copy @error and
  * @debug. This message is posted by element when a fatal event
- * occured. The pipeline will probably (partially) stop. The application
+ * occurred. The pipeline will probably (partially) stop. The application
  * receiving this message should stop the pipeline.
  *
  * Returns: (transfer full): the new error message.
@@ -649,7 +645,7 @@ gst_message_new_clock_lost (GstObject * src, GstClock * clock)
  * @clock: (transfer none): the new selected clock
  *
  * Create a new clock message. This message is posted whenever the
- * pipeline selectes a new clock for the pipeline.
+ * pipeline selects a new clock for the pipeline.
  *
  * Returns: (transfer full): The new new clock message.
  *
@@ -912,7 +908,7 @@ gst_message_new_latency (GstObject * src)
  * changed. A typical use case would be an audio server that wants to pause the
  * pipeline because a higher priority stream is being played.
  *
- * Returns: (transfer full): the new requst state message.
+ * Returns: (transfer full): the new request state message.
  *
  * MT safe.
  */
@@ -1684,7 +1680,7 @@ gst_message_parse_step_done (GstMessage * message, GstFormat * format,
  *
  * @active is set to TRUE when the element has activated the step operation and
  * is now ready to start executing the step in the streaming thread. After this
- * message is emited, the application can queue a new step operation in the
+ * message is emitted, the application can queue a new step operation in the
  * element.
  *
  * Returns: (transfer full): The new step_start message. 
@@ -2064,7 +2060,7 @@ gst_message_new_toc (GstObject * src, GstToc * toc, gboolean updated)
  * @toc: (out) (transfer full): return location for the TOC.
  * @updated: (out): return location for the updated flag.
  *
- * Extract thef TOC from the #GstMessage. The TOC returned in the
+ * Extract the TOC from the #GstMessage. The TOC returned in the
  * output argument is a copy; the caller must free it with
  * gst_toc_unref() when done.
  *
@@ -2332,4 +2328,106 @@ gst_message_parse_have_context (GstMessage * message, GstContext ** context)
   if (context)
     gst_structure_id_get (GST_MESSAGE_STRUCTURE (message),
         GST_QUARK (CONTEXT), GST_TYPE_CONTEXT, context, NULL);
+}
+
+/**
+ * gst_message_new_device_added:
+ * @src: The #GstObject that created the message
+ * @device: (transfer none): The new #GstDevice
+ *
+ * Creates a new device-added message. The device-added message is produced by
+ * #GstDeviceMonitor or a #GstGlobalDeviceMonitor. They announce the appearance
+ * of monitored devices.
+ *
+ * Returns: a newly allocated #GstMessage
+ *
+ * Since: 1.4
+ */
+GstMessage *
+gst_message_new_device_added (GstObject * src, GstDevice * device)
+{
+  GstMessage *message;
+  GstStructure *structure;
+
+  g_return_val_if_fail (device != NULL, NULL);
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
+  structure = gst_structure_new_id (GST_QUARK (MESSAGE_DEVICE_ADDED),
+      GST_QUARK (DEVICE), GST_TYPE_DEVICE, device, NULL);
+  message = gst_message_new_custom (GST_MESSAGE_DEVICE_ADDED, src, structure);
+
+  return message;
+}
+
+/**
+ * gst_message_parse_device_added:
+ * @device: (out) (allow-none) (transfer none): A location where to store a
+ *  pointer to the new #GstDevice, or %NULL
+ * 
+ * Parses a device-added message. The device-added message is produced by
+ * #GstDeviceMonitor or a #GstGlobalDeviceMonitor. It announces the appearance
+ * of monitored devices.
+ *
+ * Since: 1.4
+ */
+void
+gst_message_parse_device_added (GstMessage * message, GstDevice ** device)
+{
+  g_return_if_fail (GST_IS_MESSAGE (message));
+  g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_DEVICE_ADDED);
+
+  if (device)
+    gst_structure_id_get (GST_MESSAGE_STRUCTURE (message),
+        GST_QUARK (DEVICE), GST_TYPE_DEVICE, device, NULL);
+}
+
+/**
+ * gst_message_new_device_removed:
+ * @src: The #GstObject that created the message
+ * @device: (transfer none): The removed #GstDevice
+ *
+ * Creates a new device-removed message. The device-removed message is produced
+ * by #GstDeviceMonitor or a #GstGlobalDeviceMonitor. They announce the
+ * disappearance of monitored devices.
+ *
+ * Returns: a newly allocated #GstMessage
+ *
+ * Since: 1.4
+ */
+GstMessage *
+gst_message_new_device_removed (GstObject * src, GstDevice * device)
+{
+  GstMessage *message;
+  GstStructure *structure;
+
+  g_return_val_if_fail (device != NULL, NULL);
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
+  structure = gst_structure_new_id (GST_QUARK (MESSAGE_DEVICE_REMOVED),
+      GST_QUARK (DEVICE), GST_TYPE_DEVICE, device, NULL);
+  message = gst_message_new_custom (GST_MESSAGE_DEVICE_REMOVED, src, structure);
+
+  return message;
+}
+
+/**
+ * gst_message_parse_device_removed:
+ * @device: (out) (allow-none) (transfer none): A location where to store a
+ *  pointer to the removed #GstDevice, or %NULL
+ *
+ * Parses a device-removed message. The device-removed message is produced by
+ * #GstDeviceMonitor or a #GstGlobalDeviceMonitor. It announces the
+ * disappearance of monitored devices.
+ *
+ * Since: 1.4
+ */
+void
+gst_message_parse_device_removed (GstMessage * message, GstDevice ** device)
+{
+  g_return_if_fail (GST_IS_MESSAGE (message));
+  g_return_if_fail (GST_MESSAGE_TYPE (message) == GST_MESSAGE_DEVICE_REMOVED);
+
+  if (device)
+    gst_structure_id_get (GST_MESSAGE_STRUCTURE (message),
+        GST_QUARK (DEVICE), GST_TYPE_DEVICE, device, NULL);
 }

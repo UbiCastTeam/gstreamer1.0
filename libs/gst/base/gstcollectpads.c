@@ -65,19 +65,12 @@
  *     no pad is blocked and the element can finish streaming.
  *   </para></listitem>
  *   <listitem><para>
- *     gst_collect_pads_collect() and gst_collect_pads_collect_range() can be used by
- *     elements that start a #GstTask to drive the collect_pads. This feature is however
- *     not yet implemented.
- *   </para></listitem>
- *   <listitem><para>
  *     gst_collect_pads_set_waiting() sets a pad to waiting or non-waiting mode.
  *     CollectPads element is not waiting for data to be collected on non-waiting pads.
  *     Thus these pads may but need not have data when the callback is called.
  *     All pads are in waiting mode by default.
  *   </para></listitem>
  * </itemizedlist>
- *
- * Last reviewed on 2011-10-28 (0.10.36)
  */
 
 #ifdef HAVE_CONFIG_H
@@ -132,11 +125,17 @@ struct _GstCollectPadsPrivate
   gpointer query_user_data;
   GstCollectPadsClipFunction clip_func;
   gpointer clip_user_data;
+  GstCollectPadsFlushFunction flush_func;
+  gpointer flush_user_data;
 
   /* no other lock needed */
   GMutex evt_lock;              /* these make up sort of poor man's event signaling */
   GCond evt_cond;
   guint32 evt_cookie;
+
+  gboolean seeking;
+  gboolean pending_flush_start;
+  gboolean pending_flush_stop;
 };
 
 static void gst_collect_pads_clear (GstCollectPads * pads,
@@ -260,6 +259,13 @@ gst_collect_pads_init (GstCollectPads * pads)
   g_mutex_init (&pads->priv->evt_lock);
   g_cond_init (&pads->priv->evt_cond);
   pads->priv->evt_cookie = 0;
+
+  pads->priv->seeking = FALSE;
+  pads->priv->pending_flush_start = FALSE;
+  pads->priv->pending_flush_stop = FALSE;
+
+  /* clear floating flag */
+  gst_object_ref_sink (pads);
 }
 
 static void
@@ -522,7 +528,7 @@ gst_collect_pads_clip_running_time (GstCollectPads * pads,
   return GST_FLOW_OK;
 }
 
- /**
+/**
  * gst_collect_pads_set_clip_function:
  * @pads: the collectpads to use
  * @clipfunc: clip function to install
@@ -540,6 +546,29 @@ gst_collect_pads_set_clip_function (GstCollectPads * pads,
 
   pads->priv->clip_func = clipfunc;
   pads->priv->clip_user_data = user_data;
+}
+
+/**
+ * gst_collect_pads_set_flush_function:
+ * @pads: the collectpads to use
+ * @func: flush function to install
+ * @user_data: user data to pass to @func
+ *
+ * Install a flush function that is called when the internal
+ * state of all pads should be flushed as part of flushing seek
+ * handling. See #GstCollectPadsFlushFunction for more info.
+ *
+ * Since: 1.4
+ */
+void
+gst_collect_pads_set_flush_function (GstCollectPads * pads,
+    GstCollectPadsFlushFunction func, gpointer user_data)
+{
+  g_return_if_fail (pads != NULL);
+  g_return_if_fail (GST_IS_COLLECT_PADS (pads));
+
+  pads->priv->flush_func = func;
+  pads->priv->flush_user_data = user_data;
 }
 
 /**
@@ -1285,6 +1314,10 @@ gst_collect_pads_check_collected (GstCollectPads * pads)
     GST_DEBUG_OBJECT (pads, "All active pads (%d) are EOS, calling %s",
         pads->priv->numpads, GST_DEBUG_FUNCPTR_NAME (func));
 
+    if (G_UNLIKELY (g_atomic_int_compare_and_exchange (&pads->priv->seeking,
+                TRUE, FALSE) == TRUE)) {
+      GST_INFO_OBJECT (pads, "finished seeking");
+    }
     do {
       flow_ret = func (pads, user_data);
     } while (flow_ret == GST_FLOW_OK);
@@ -1299,6 +1332,10 @@ gst_collect_pads_check_collected (GstCollectPads * pads)
           pads->priv->queuedpads, pads->priv->eospads, pads->priv->numpads,
           GST_DEBUG_FUNCPTR_NAME (func));
 
+      if (G_UNLIKELY (g_atomic_int_compare_and_exchange (&pads->priv->seeking,
+                  TRUE, FALSE) == TRUE)) {
+        GST_INFO_OBJECT (pads, "finished seeking");
+      }
       flow_ret = func (pads, user_data);
       collected = TRUE;
 
@@ -1625,33 +1662,59 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_FLUSH_START:
     {
-      /* forward event to unblock check_collected */
-      GST_DEBUG_OBJECT (pad, "forwarding flush start");
-      res = gst_pad_event_default (pad, parent, event);
-      event = NULL;
+      if (g_atomic_int_get (&pads->priv->seeking)) {
+        /* drop all but the first FLUSH_STARTs when seeking */
+        if (g_atomic_int_compare_and_exchange (&pads->priv->pending_flush_start,
+                TRUE, FALSE) == FALSE)
+          goto eat;
 
-      /* now unblock the chain function.
-       * no cond per pad, so they all unblock,
-       * non-flushing block again */
-      GST_COLLECT_PADS_STREAM_LOCK (pads);
-      GST_COLLECT_PADS_STATE_SET (data, GST_COLLECT_PADS_STATE_FLUSHING);
-      gst_collect_pads_clear (pads, data);
+        /* unblock collect pads */
+        gst_pad_event_default (pad, parent, event);
+        event = NULL;
 
-      /* cater for possible default muxing functionality */
-      if (buffer_func) {
-        /* restore to initial state */
-        gst_collect_pads_set_waiting (pads, data, TRUE);
-        /* if the current pad is affected, reset state, recalculate later */
-        if (pads->priv->earliest_data == data) {
-          unref_data (data);
-          pads->priv->earliest_data = NULL;
-          pads->priv->earliest_time = GST_CLOCK_TIME_NONE;
+        GST_COLLECT_PADS_STREAM_LOCK (pads);
+        /* Start flushing. We never call gst_collect_pads_set_flushing (FALSE), we
+         * instead wait until each pad gets its FLUSH_STOP and let that reset the pad to
+         * non-flushing (which happens in gst_collect_pads_event_default).
+         */
+        gst_collect_pads_set_flushing (pads, TRUE);
+
+        if (pads->priv->flush_func)
+          pads->priv->flush_func (pads, pads->priv->flush_user_data);
+
+        g_atomic_int_set (&pads->priv->pending_flush_stop, TRUE);
+        GST_COLLECT_PADS_STREAM_UNLOCK (pads);
+
+        goto eat;
+      } else {
+        /* forward event to unblock check_collected */
+        GST_DEBUG_OBJECT (pad, "forwarding flush start");
+        res = gst_pad_event_default (pad, parent, event);
+        event = NULL;
+
+        /* now unblock the chain function.
+         * no cond per pad, so they all unblock,
+         * non-flushing block again */
+        GST_COLLECT_PADS_STREAM_LOCK (pads);
+        GST_COLLECT_PADS_STATE_SET (data, GST_COLLECT_PADS_STATE_FLUSHING);
+        gst_collect_pads_clear (pads, data);
+
+        /* cater for possible default muxing functionality */
+        if (buffer_func) {
+          /* restore to initial state */
+          gst_collect_pads_set_waiting (pads, data, TRUE);
+          /* if the current pad is affected, reset state, recalculate later */
+          if (pads->priv->earliest_data == data) {
+            unref_data (data);
+            pads->priv->earliest_data = NULL;
+            pads->priv->earliest_time = GST_CLOCK_TIME_NONE;
+          }
         }
+
+        GST_COLLECT_PADS_STREAM_UNLOCK (pads);
+
+        goto eat;
       }
-
-      GST_COLLECT_PADS_STREAM_UNLOCK (pads);
-
-      goto eat;
     }
     case GST_EVENT_FLUSH_STOP:
     {
@@ -1669,12 +1732,22 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
         if (!GST_COLLECT_PADS_STATE_IS_SET (data,
                 GST_COLLECT_PADS_STATE_WAITING))
           pads->priv->queuedpads++;
-        pads->priv->eospads--;
+        if (!g_atomic_int_get (&pads->priv->seeking)) {
+          pads->priv->eospads--;
+        }
         GST_COLLECT_PADS_STATE_UNSET (data, GST_COLLECT_PADS_STATE_EOS);
       }
       GST_COLLECT_PADS_STREAM_UNLOCK (pads);
 
-      goto forward;
+      if (g_atomic_int_get (&pads->priv->seeking)) {
+        if (g_atomic_int_compare_and_exchange (&pads->priv->pending_flush_stop,
+                TRUE, FALSE))
+          goto forward;
+        else
+          goto eat;
+      } else {
+        goto forward;
+      }
     }
     case GST_EVENT_EOS:
     {
@@ -1775,6 +1848,99 @@ forward:
     goto eat;
   else
     return gst_pad_event_default (pad, parent, event);
+}
+
+typedef struct
+{
+  GstEvent *event;
+  gboolean result;
+} EventData;
+
+static gboolean
+event_forward_func (GstPad * pad, EventData * data)
+{
+  gboolean ret = TRUE;
+  GstPad *peer = gst_pad_get_peer (pad);
+
+  if (peer) {
+    ret = gst_pad_send_event (peer, gst_event_ref (data->event));
+    gst_object_unref (peer);
+  }
+
+  data->result &= ret;
+  /* Always send to all pads */
+  return FALSE;
+}
+
+static gboolean
+forward_event_to_all_sinkpads (GstPad * srcpad, GstEvent * event)
+{
+  EventData data;
+
+  data.event = event;
+  data.result = TRUE;
+
+  gst_pad_forward (srcpad, (GstPadForwardFunction) event_forward_func, &data);
+
+  gst_event_unref (event);
+
+  return data.result;
+}
+
+/**
+ * gst_collect_pads_src_event_default:
+ * @pads: the collectpads to use
+ * @pad: src #GstPad that received the event
+ * @event: event being processed
+ *
+ * Default GstCollectPads event handling for the src pad of elements.
+ * Elements can chain up to this to let flushing seek event handling
+ * be done by GstCollectPads.
+ *
+ * Since: 1.4
+ */
+gboolean
+gst_collect_pads_src_event_default (GstCollectPads * pads, GstPad * pad,
+    GstEvent * event)
+{
+  GstObject *parent;
+  gboolean res = TRUE;
+
+  parent = GST_OBJECT_PARENT (pad);
+
+  switch (GST_EVENT_TYPE (event)) {
+    case GST_EVENT_SEEK:{
+      GstSeekFlags flags;
+
+      pads->priv->eospads = 0;
+
+      GST_INFO_OBJECT (pads, "starting seek");
+
+      gst_event_parse_seek (event, NULL, NULL, &flags, NULL, NULL, NULL, NULL);
+      if (flags & GST_SEEK_FLAG_FLUSH) {
+        g_atomic_int_set (&pads->priv->seeking, TRUE);
+        g_atomic_int_set (&pads->priv->pending_flush_start, TRUE);
+        /* forward the seek upstream */
+        res = forward_event_to_all_sinkpads (pad, event);
+        event = NULL;
+        if (!res) {
+          g_atomic_int_set (&pads->priv->seeking, FALSE);
+          g_atomic_int_set (&pads->priv->pending_flush_start, FALSE);
+        }
+      }
+
+      GST_INFO_OBJECT (pads, "seek done, result: %d", res);
+
+      break;
+    }
+    default:
+      break;
+  }
+
+  if (event)
+    res = gst_pad_event_default (pad, parent, event);
+
+  return res;
 }
 
 static gboolean

@@ -47,8 +47,6 @@
  *
  * A weak reference can be added and remove with gst_mini_object_weak_ref()
  * and gst_mini_object_weak_unref() respectively.
- *
- * Last reviewed on 2012-06-15 (0.11.93)
  */
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -336,7 +334,7 @@ gst_mini_object_make_writable (GstMiniObject * mini_object)
  *
  * Increase the reference count of the mini-object.
  *
- * Note that the refcount affects the writeability
+ * Note that the refcount affects the writability
  * of @mini-object, see gst_mini_object_is_writable(). It is
  * important to note that keeping additional references to
  * GstMiniObject instances can potentially increase the number
@@ -645,7 +643,7 @@ gst_mini_object_weak_unref (GstMiniObject * object,
  *           needs to be freed
  *
  * This sets an opaque, named pointer on a miniobject.
- * The name is specified through a #GQuark (retrived e.g. via
+ * The name is specified through a #GQuark (retrieved e.g. via
  * g_quark_from_static_string()), and the pointer
  * can be gotten back from the @object with gst_mini_object_get_qdata()
  * until the @object is disposed.

@@ -36,8 +36,6 @@
  * ]| This pipeline will push 5 empty buffers to the fakesink element and then
  * sends an EOS.
  * </refsect2>
- *
- * Last reviewed on 2008-06-20 (0.10.21)
  */
 
 /* FIXME: this ignores basesrc::blocksize property, which could be used as an
@@ -831,9 +829,10 @@ gst_fake_src_create (GstBaseSrc * basesrc, guint64 offset, guint length,
     }
 
     {
-      const char *flag_list[15] = {
+      const char *flag_list[] = {
         "", "", "", "", "live", "decode-only", "discont", "resync", "corrupted",
-        "marker", "header", "gap", "droppable", "delta-unit", "in-caps"
+        "marker", "header", "gap", "droppable", "delta-unit", "tag-memory",
+        "FIXME"
       };
       int i;
       char *end = flag_str;

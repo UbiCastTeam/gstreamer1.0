@@ -1475,6 +1475,26 @@ GST_START_TEST (test_value_subtract_double)
   /*  double_range <-> double_range
    */
 
+  /* Check equality */
+  g_value_init (&src1, GST_TYPE_DOUBLE_RANGE);
+  gst_value_set_double_range (&src1, 10.0, 20.0);
+  g_value_init (&src2, GST_TYPE_DOUBLE_RANGE);
+  gst_value_set_double_range (&src2, 10.0, 15.0);
+  /* They are not equal (higher bound is different */
+  fail_if (gst_value_compare (&src1, &src2) == GST_VALUE_EQUAL);
+  g_value_unset (&src1);
+  /* They are not equal (lower bound is different */
+  g_value_init (&src1, GST_TYPE_DOUBLE_RANGE);
+  gst_value_set_double_range (&src1, 5.0, 15.0);
+  fail_if (gst_value_compare (&src1, &src2) == GST_VALUE_EQUAL);
+  g_value_unset (&src1);
+  /* And finally check equality */
+  g_value_init (&src1, GST_TYPE_DOUBLE_RANGE);
+  gst_value_set_double_range (&src1, 10.0, 15.0);
+  fail_unless (gst_value_compare (&src1, &src2) == GST_VALUE_EQUAL);
+  g_value_unset (&src1);
+  g_value_unset (&src2);
+
   /* same range, empty set */
   g_value_init (&src1, GST_TYPE_DOUBLE_RANGE);
   gst_value_set_double_range (&src1, 10.0, 20.0);
@@ -2379,11 +2399,17 @@ GST_START_TEST (test_serialize_deserialize_caps)
   , value2 = {
   0};
   GstCaps *caps, *caps2;
+  GstCaps *incaps;
   gchar *serialized;
 
+  incaps = gst_caps_new_simple ("caps/internal",
+      "in-field", G_TYPE_INT, 20, "in-field2",
+      G_TYPE_STRING, "some in ternal field", NULL);
   caps = gst_caps_new_simple ("test/caps",
-      "foo", G_TYPE_INT, 10, "bar", G_TYPE_STRING, "test", NULL);
+      "foo", G_TYPE_INT, 10, "bar", G_TYPE_STRING, "test",
+      "int-caps", GST_TYPE_CAPS, incaps, NULL);
   fail_if (GST_CAPS_REFCOUNT_VALUE (caps) != 1);
+  gst_caps_unref (incaps);
 
   /* and assign caps to gvalue */
   g_value_init (&value, GST_TYPE_CAPS);

@@ -123,10 +123,26 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBufferPool.html"><span class="returnvalue">GstBufferPool</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstBaseTransform.html#gst-base-transform-get-buffer-pool" title="gst_base_transform_get_buffer_pool ()">gst_base_transform_get_buffer_pool</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseTransform.html#gst-base-transform-reconfigure-sink" title="gst_base_transform_reconfigure_sink ()">gst_base_transform_reconfigure_sink</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseTransform.html#gst-base-transform-reconfigure-src" title="gst_base_transform_reconfigure_src ()">gst_base_transform_reconfigure_src</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -487,7 +503,7 @@ gst_base_transform_set_prefer_passthrough
 prefer passthrough caps from the list of caps returned by the
 transform_caps vmethod.</p>
 <p>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, the element must order the caps returned from the
-transform_caps function in such a way that the prefered format is
+transform_caps function in such a way that the preferred format is
 first in the list. This can be interesting for transforms that can do
 passthrough transforms but prefer to do something else, like a
 capsfilter.</p>
@@ -759,7 +775,7 @@ used. </p></td>
 <tr>
 <td class="parameter_name"><p>params</p></td>
 <td class="parameter_description"><p> the
-<span class="type">GstAllocatorParams</span> of <em class="parameter"><code>allocator</code></em>
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a> of <em class="parameter"><code>allocator</code></em>
 . </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
@@ -770,7 +786,7 @@ used. </p></td>
 <hr>
 <div class="refsect2">
 <a name="gst-base-transform-get-buffer-pool"></a><h3>gst_base_transform_get_buffer_pool ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBufferPool.html"><span class="returnvalue">GstBufferPool</span></a> *
 gst_base_transform_get_buffer_pool (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.2.4.6.9.12.4"></a><h4>Parameters</h4>
@@ -789,10 +805,60 @@ gst_base_transform_get_buffer_pool (<em class="parameter"><code><a class="link" 
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.6.9.12.5"></a><h4>Returns</h4>
-<p> the instance of the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="type">GstBufferPool</span></a> used
+<p> the instance of the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBufferPool.html"><span class="type">GstBufferPool</span></a> used
 by <em class="parameter"><code>trans</code></em>
 ; free it after use it. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-transform-reconfigure-sink"></a><h3>gst_base_transform_reconfigure_sink ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_base_transform_reconfigure_sink (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>);</pre>
+<p>Instructs <em class="parameter"><code>trans</code></em>
+ to request renegotiation upstream. This function is
+typically called after properties on the transform were set that
+influence the input format.</p>
+<div class="refsect3">
+<a name="id-1.2.4.6.9.13.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>trans</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-transform-reconfigure-src"></a><h3>gst_base_transform_reconfigure_src ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_base_transform_reconfigure_src (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>);</pre>
+<p>Instructs <em class="parameter"><code>trans</code></em>
+ to renegotiate a new downstream transform on the next
+buffer. This function is typically called after properties on the transform
+were set that influence the output format.</p>
+<div class="refsect3">
+<a name="id-1.2.4.6.9.14.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>trans</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
 </div>
 </div>
 <hr>
@@ -802,7 +868,7 @@ by <em class="parameter"><code>trans</code></em>
 </pre>
 <p>Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.6.9.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.6.9.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -824,7 +890,7 @@ by <em class="parameter"><code>trans</code></em>
 </pre>
 <p>Gives the pointer to the source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.6.9.14.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.6.9.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1000,7 +1066,7 @@ buffers. The passed in query contains the result of the
 downstream allocation query. This function is only called
 when not operating in passthrough mode. The default
 implementation will remove all memory dependent metadata.
-If there is ia <em class="parameter"><code>filter_meta</code></em>
+If there is a <em class="parameter"><code>filter_meta</code></em>
 method implementation, it will
 be called for all metadata API in the downstream query,
 otherwise the metadata API is removed.</p></td>

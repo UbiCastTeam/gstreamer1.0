@@ -844,7 +844,7 @@ gst_base_transform_default_decide_allocation (GstBaseTransform * trans,
 
     /* by default we remove all metadata, subclasses should implement a
      * filter_meta function */
-    if (gst_meta_api_type_has_tag (api, GST_META_TAG_MEMORY)) {
+    if (gst_meta_api_type_has_tag (api, _gst_meta_tag_memory)) {
       /* remove all memory dependent metadata because we are going to have to
        * allocate different memory for input and output. */
       GST_LOG_OBJECT (trans, "removing memory specific metadata %s",
@@ -1558,7 +1558,7 @@ default_prepare_output_buffer (GstBaseTransform * trans,
 
   /* figure out how to allocate an output buffer */
   if (priv->passthrough) {
-    /* passthrough, we will not modify the incomming buffer so we can just
+    /* passthrough, we will not modify the incoming buffer so we can just
      * reuse it */
     GST_DEBUG_OBJECT (trans, "passthrough: reusing input buffer");
     *outbuf = inbuf;
@@ -1682,7 +1682,7 @@ foreach_metadata (GstBuffer * inbuf, GstMeta ** meta, gpointer user_data)
     GST_DEBUG_OBJECT (trans, "not copying pooled metadata %s",
         g_type_name (info->api));
     do_copy = FALSE;
-  } else if (gst_meta_api_type_has_tag (info->api, GST_META_TAG_MEMORY)) {
+  } else if (gst_meta_api_type_has_tag (info->api, _gst_meta_tag_memory)) {
     /* never call the transform_meta with memory specific metadata */
     GST_DEBUG_OBJECT (trans, "not copying memory specific metadata %s",
         g_type_name (info->api));
@@ -2642,7 +2642,7 @@ gst_base_transform_set_gap_aware (GstBaseTransform * trans, gboolean gap_aware)
  * transform_caps vmethod.
  *
  * If set to %FALSE, the element must order the caps returned from the
- * transform_caps function in such a way that the prefered format is
+ * transform_caps function in such a way that the preferred format is
  * first in the list. This can be interesting for transforms that can do
  * passthrough transforms but prefer to do something else, like a
  * capsfilter.
@@ -2722,7 +2722,7 @@ gst_base_transform_get_buffer_pool (GstBaseTransform * trans)
  * @allocator: (out) (allow-none) (transfer full): the #GstAllocator
  * used
  * @params: (out) (allow-none) (transfer full): the
- * #GstAllocatorParams of @allocator
+ * #GstAllocationParams of @allocator
  *
  * Lets #GstBaseTransform sub-classes to know the memory @allocator
  * used by the base class and its @params.

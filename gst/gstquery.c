@@ -36,27 +36,20 @@
  * gst_query_parse_*() helpers.
  *
  * The following example shows how to query the duration of a pipeline:
- *
- * <example>
- *  <title>Query duration on a pipeline</title>
- *  <programlisting>
- *  GstQuery *query;
- *  gboolean res;
- *  query = gst_query_new_duration (GST_FORMAT_TIME);
- *  res = gst_element_query (pipeline, query);
- *  if (res) {
- *    gint64 duration;
- *    gst_query_parse_duration (query, NULL, &amp;duration);
- *    g_print ("duration = %"GST_TIME_FORMAT, GST_TIME_ARGS (duration));
- *  }
- *  else {
- *    g_print ("duration query failed...");
- *  }
- *  gst_query_unref (query);
- *  </programlisting>
- * </example>
- *
- * Last reviewed on 2012-03-29 (0.11.3)
+ * |[
+ *   GstQuery *query;
+ *   gboolean res;
+ *   query = gst_query_new_duration (GST_FORMAT_TIME);
+ *   res = gst_element_query (pipeline, query);
+ *   if (res) {
+ *     gint64 duration;
+ *     gst_query_parse_duration (query, NULL, &amp;duration);
+ *     g_print ("duration = %"GST_TIME_FORMAT, GST_TIME_ARGS (duration));
+ *   } else {
+ *     g_print ("duration query failed...");
+ *   }
+ *   gst_query_unref (query);
+ * ]|
  */
 
 
@@ -727,7 +720,7 @@ gst_query_get_structure (GstQuery * query)
  * @query: a #GstQuery
  *
  * Get the structure of a query. This method should be called with a writable
- * @query so that the returned structure is guranteed to be writable.
+ * @query so that the returned structure is guaranteed to be writable.
  *
  * Returns: (transfer none): the #GstStructure of the query. The structure is
  *     still owned by the query and will therefore be freed when the query
@@ -1136,7 +1129,7 @@ gst_query_set_buffering_stats (GstQuery * query, GstBufferingMode mode,
  * @query: A valid #GstQuery of type GST_QUERY_BUFFERING.
  * @mode: (out) (allow-none): a buffering mode, or NULL
  * @avg_in: (out) (allow-none): the average input rate, or NULL
- * @avg_out: (out) (allow-none): the average output rat, or NULLe
+ * @avg_out: (out) (allow-none): the average output rat, or NULL
  * @buffering_left: (out) (allow-none): amount of buffering time left in
  *     milliseconds, or NULL
  *
@@ -1175,7 +1168,7 @@ gst_query_parse_buffering_stats (GstQuery * query,
  * @start: the start to set
  * @stop: the stop to set
  * @estimated_total: estimated total amount of download time remaining in
- *     miliseconds
+ *     milliseconds
  *
  * Set the available query result fields in @query.
  */
@@ -1204,7 +1197,7 @@ gst_query_set_buffering_range (GstQuery * query, GstFormat format,
  * @start: (out) (allow-none): the start to set, or NULL
  * @stop: (out) (allow-none): the stop to set, or NULL
  * @estimated_total: (out) (allow-none): estimated total amount of download
- *     time remaining in miliseconds, or NULL
+ *     time remaining in milliseconds, or NULL
  *
  * Parse an available query, writing the format into @format, and
  * other results into the passed parameters, if the respective parameters
@@ -1465,6 +1458,58 @@ gst_query_parse_uri_redirection (GstQuery * query, gchar ** uri)
     if (!gst_structure_id_get (structure, GST_QUARK (URI_REDIRECTION),
             G_TYPE_STRING, uri, NULL))
       *uri = NULL;
+  }
+}
+
+/**
+ * gst_query_set_uri_redirection_permanent:
+ * @query: a #GstQuery with query type GST_QUERY_URI
+ * @permanent: whether the redirect is permanent or not
+ *
+ * Answer a URI query by setting the requested URI redirection
+ * to permanent or not.
+ *
+ * Since: 1.4
+ */
+void
+gst_query_set_uri_redirection_permanent (GstQuery * query, gboolean permanent)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_URI);
+  g_return_if_fail (gst_query_is_writable (query));
+
+  structure = GST_QUERY_STRUCTURE (query);
+  gst_structure_id_set (structure, GST_QUARK (URI_REDIRECTION_PERMANENT),
+      G_TYPE_BOOLEAN, permanent, NULL);
+}
+
+/**
+ * gst_query_parse_uri_redirection_permanent:
+ * @query: a #GstQuery
+ * @permanent: (out) (allow-none): if the URI redirection is permanent
+ *     (may be NULL)
+ *
+ * Parse an URI query, and set @permanent to %TRUE if there is a redirection
+ * and it should be considered permanent. If a redirection is permanent,
+ * applications should update their internal storage of the URI, otherwise
+ * they should make all future requests to the original URI.
+ *
+ * Since: 1.4
+ */
+void
+gst_query_parse_uri_redirection_permanent (GstQuery * query,
+    gboolean * permanent)
+{
+  GstStructure *structure;
+
+  g_return_if_fail (GST_QUERY_TYPE (query) == GST_QUERY_URI);
+
+  structure = GST_QUERY_STRUCTURE (query);
+  if (permanent) {
+    if (!gst_structure_id_get (structure, GST_QUARK (URI_REDIRECTION_PERMANENT),
+            G_TYPE_BOOLEAN, permanent, NULL))
+      *permanent = FALSE;
   }
 }
 
@@ -1954,7 +1999,7 @@ gst_query_get_n_allocation_params (GstQuery * query)
  * @allocator: (out) (transfer full) (allow-none): variable to hold the result
  * @params: (out) (allow-none): parameters for the allocator
  *
- * Parse an available query and get the alloctor and its params
+ * Parse an available query and get the allocator and its params
  * at @index of the allocator array.
  */
 void
@@ -1988,7 +2033,7 @@ gst_query_parse_nth_allocation_param (GstQuery * query, guint index,
  * @allocator: (transfer none) (allow-none): new allocator to set
  * @params: (transfer none) (allow-none): parameters for the allocator
  *
- * Parse an available query and get the alloctor and its params
+ * Parse an available query and get the allocator and its params
  * at @index of the allocator array.
  */
 void
@@ -2129,7 +2174,7 @@ gst_query_parse_scheduling (GstQuery * query, GstSchedulingFlags * flags,
  * @query: a GST_QUERY_SCHEDULING type query #GstQuery
  * @mode: a #GstPadMode
  *
- * Add @mode as aone of the supported scheduling modes to @query.
+ * Add @mode as one of the supported scheduling modes to @query.
  */
 void
 gst_query_add_scheduling_mode (GstQuery * query, GstPadMode mode)

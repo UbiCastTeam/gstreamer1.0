@@ -412,7 +412,8 @@
             <span class="lineart">├──</span> <a class="link" href="GstControlBinding.html" title="GstControlBinding">GstControlBinding</a>
             <span class="lineart">├──</span> <a class="link" href="GstControlSource.html" title="GstControlSource">GstControlSource</a>
             <span class="lineart">├──</span> <a class="link" href="GstPlugin.html" title="GstPlugin">GstPlugin</a>
-            <span class="lineart">╰──</span> <a class="link" href="GstRegistry.html" title="GstRegistry">GstRegistry</a>
+            <span class="lineart">├──</span> <a class="link" href="GstRegistry.html" title="GstRegistry">GstRegistry</a>
+            <span class="lineart">╰──</span> <a class="link" href="GstBufferPool.html" title="GstBufferPool">GstBufferPool</a>
 </pre>
 </div>
 <div class="refsect1">
@@ -426,10 +427,10 @@
 GStreamer library.  It is currently a thin wrapper on top of
 <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned"><span class="type">GInitiallyUnowned</span></a>. It is an abstract class that is not very usable on its own.</p>
 <p><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> gives us basic refcounting, parenting functionality and locking.
-Most of the function are just extended for special GStreamer needs and can be
+Most of the functions are just extended for special GStreamer needs and can be
 found under the same name in the base class of <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> which is <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>
 (e.g. <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> becomes <a class="link" href="GstObject.html#gst-object-ref" title="gst_object_ref ()"><code class="function">gst_object_ref()</code></a>).</p>
-<p>Since <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> dereives from <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned"><span class="type">GInitiallyUnowned</span></a>, it also inherits the
+<p>Since <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> derives from <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned"><span class="type">GInitiallyUnowned</span></a>, it also inherits the
 floating reference. Be aware that functions such as <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> and
 <a class="link" href="GstElement.html#gst-element-add-pad" title="gst_element_add_pad ()"><code class="function">gst_element_add_pad()</code></a> take ownership of the floating reference.</p>
 <p>In contrast to <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> instances, <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> adds a name property. The functions
@@ -438,10 +439,10 @@ of the object.</p>
 <div class="refsect2">
 <a name="id-1.3.32.9.6"></a><h3>controlled properties</h3>
 <p>
-Controlled properties offers a lightweight way to adjust gobject
-properties over stream-time. It works by using time-stamped value pairs that
-are queued for element-properties. At run-time the elements continuously pull
-values changes for the current stream-time.
+Controlled properties offers a lightweight way to adjust gobject properties
+over stream-time. It works by using time-stamped value pairs that are queued
+for element-properties. At run-time the elements continuously pull value
+changes for the current stream-time.
 
 What needs to be changed in a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>?
 Very little - it is just two steps to make a plugin controllable!
@@ -454,7 +455,7 @@ Very little - it is just two steps to make a plugin controllable!
 <li class="listitem"><p>
     when processing data (get, chain, loop function) at the beginning call
     gst_object_sync_values(element,timestamp).
-    This will made the controller to update all gobject properties that are under
+    This will make the controller to update all gobject properties that are under
     control with the current values based on timestamp.
   </p></li>
 </ol></div>
@@ -485,7 +486,6 @@ Again it's not a lot to change.
 <p>
 </p>
 </div>
-<p>Last reviewed on 2012-03-29 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstObject.functions_details"></a><h2>Functions</h2>
@@ -573,7 +573,7 @@ Again it's not a lot to change.
 <a name="GST-OBJECT-FLAG-UNSET:CAPS"></a><h3>GST_OBJECT_FLAG_UNSET()</h3>
 <pre class="programlisting">#define GST_OBJECT_FLAG_UNSET(obj,flag)        (GST_OBJECT_FLAGS (obj) &amp;= ~(flag))
 </pre>
-<p>This macro usets the given bits.</p>
+<p>This macro unsets the given bits.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1058,7 +1058,7 @@ gst_object_check_uniqueness (<em class="parameter"><code><a href="http://library
 does not do any locking of any kind. You might want to protect the
 provided list with the lock of the owner of the list. This function
 will lock each <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> in the list to compare the name, so be
-carefull when passing a list with a locked object.</p>
+careful when passing a list with a locked object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1446,8 +1446,8 @@ gst_object_set_control_binding_disabled
                                (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
                                 <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> disabled</code></em>);</pre>
-<p>This function is used to disable the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstController.html"><span class="type">GstController</span></a> on a property for
-some time, i.e. <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstController.html#gst-controller-sync-values"><code class="function">gst_controller_sync_values()</code></a> will do nothing for the
+<p>This function is used to disable the control bindings on a property for
+some time, i.e. <a class="link" href="GstObject.html#gst-object-sync-values" title="gst_object_sync_values ()"><code class="function">gst_object_sync_values()</code></a> will do nothing for the
 property.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.32.5"></a><h4>Parameters</h4>
@@ -1967,7 +1967,11 @@ should be up to <em class="parameter"><code>control</code></em>
 <div class="refsect2">
 <a name="GstObject--parent"></a><h3>The <code class="literal">“parent”</code> property</h3>
 <pre class="programlisting">  “parent”                   <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *</pre>
-<p>The parent of the object.</p>
+<p>The parent of the object. Please note, that when changing the 'parent'
+property, we don't emit <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject-notify"><span class="type">“notify”</span></a> and <a class="link" href="GstObject.html#GstObject-deep-notify" title="The “deep-notify” signal"><span class="type">“deep-notify”</span></a>
+signals due to locking issues. In some cases one can use
+<a class="link" href="GstBin.html#GstBin-element-added" title="The “element-added” signal"><span class="type">“element-added”</span></a> or <a class="link" href="GstBin.html#GstBin-element-removed" title="The “element-removed” signal"><span class="type">“element-removed”</span></a> signals on the parent to
+achieve a similar effect.</p>
 <p>Flags: Read / Write</p>
 </div>
 </div>

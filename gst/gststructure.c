@@ -51,9 +51,13 @@
  * gst_structure_remove_fields().
  *
  * Strings in structures must be ASCII or UTF-8 encoded. Other encodings are
- * not allowed. Strings must not be empty either, but may be NULL.
+ * not allowed. Strings may be NULL however.
  *
- * Last reviewed on 2012-03-29 (0.11.3)
+ * Be aware that the current #GstCaps / #GstStructure serialization into string
+ * has limited support for nested #GstCaps / #GstStructure fields. It can only
+ * support one level of nesting. Using more levels will lead to unexpected
+ * behavior when using serialization features, such as gst_caps_to_string() or
+ * gst_value_serialize() and their counterparts.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -1363,6 +1367,82 @@ gst_structure_get_uint (const GstStructure * structure,
 }
 
 /**
+ * gst_structure_get_int64:
+ * @structure: a #GstStructure
+ * @fieldname: the name of a field
+ * @value: (out): a pointer to an int64 to set
+ *
+ * Sets the int64 pointed to by @value corresponding to the value of the
+ * given field. Caller is responsible for making sure the field exists
+ * and has the correct type.
+ *
+ * Returns: %TRUE if the value could be set correctly. If there was no field
+ * with @fieldname or the existing field did not contain an int64, this function
+ * returns %FALSE.
+ *
+ * Since: 1.4
+ */
+gboolean
+gst_structure_get_int64 (const GstStructure * structure,
+    const gchar * fieldname, gint64 * value)
+{
+  GstStructureField *field;
+
+  g_return_val_if_fail (structure != NULL, FALSE);
+  g_return_val_if_fail (fieldname != NULL, FALSE);
+  g_return_val_if_fail (value != NULL, FALSE);
+
+  field = gst_structure_get_field (structure, fieldname);
+
+  if (field == NULL)
+    return FALSE;
+  if (!G_VALUE_HOLDS_INT64 (&field->value))
+    return FALSE;
+
+  *value = gst_g_value_get_int64_unchecked (&field->value);
+
+  return TRUE;
+}
+
+/**
+ * gst_structure_get_uint64:
+ * @structure: a #GstStructure
+ * @fieldname: the name of a field
+ * @value: (out): a pointer to a uint64 to set
+ *
+ * Sets the uint64 pointed to by @value corresponding to the value of the
+ * given field. Caller is responsible for making sure the field exists
+ * and has the correct type.
+ *
+ * Returns: %TRUE if the value could be set correctly. If there was no field
+ * with @fieldname or the existing field did not contain a uint64, this function
+ * returns %FALSE.
+ *
+ * Since: 1.4
+ */
+gboolean
+gst_structure_get_uint64 (const GstStructure * structure,
+    const gchar * fieldname, guint64 * value)
+{
+  GstStructureField *field;
+
+  g_return_val_if_fail (structure != NULL, FALSE);
+  g_return_val_if_fail (fieldname != NULL, FALSE);
+  g_return_val_if_fail (value != NULL, FALSE);
+
+  field = gst_structure_get_field (structure, fieldname);
+
+  if (field == NULL)
+    return FALSE;
+  if (!G_VALUE_HOLDS_UINT64 (&field->value))
+    return FALSE;
+
+  *value = gst_g_value_get_uint64_unchecked (&field->value);
+
+  return TRUE;
+}
+
+/**
  * gst_structure_get_date:
  * @structure: a #GstStructure
  * @fieldname: the name of a field
@@ -1464,22 +1544,7 @@ gboolean
 gst_structure_get_clock_time (const GstStructure * structure,
     const gchar * fieldname, GstClockTime * value)
 {
-  GstStructureField *field;
-
-  g_return_val_if_fail (structure != NULL, FALSE);
-  g_return_val_if_fail (fieldname != NULL, FALSE);
-  g_return_val_if_fail (value != NULL, FALSE);
-
-  field = gst_structure_get_field (structure, fieldname);
-
-  if (field == NULL)
-    return FALSE;
-  if (!G_VALUE_HOLDS_UINT64 (&field->value))
-    return FALSE;
-
-  *value = gst_g_value_get_uint64_unchecked (&field->value);
-
-  return TRUE;
+  return gst_structure_get_uint64 (structure, fieldname, value);
 }
 
 /**
@@ -1815,7 +1880,10 @@ priv_gst_structure_append_to_gstring (const GstStructure * structure,
  * |[
  * GST_LOG ("structure is %" GST_PTR_FORMAT, structure);
  * ]|
- * This prints the structure in human readble form.
+ * This prints the structure in human readable form.
+ *
+ * The current implementation of serialization will lead to unexpected results
+ * when there are nested #GstCaps / #GstStructure deeper than one level.
  *
  * Free-function: g_free
  *
@@ -2314,6 +2382,9 @@ priv_gst_structure_parse_fields (gchar * str, gchar ** end,
  * Creates a #GstStructure from a string representation.
  * If end is not NULL, a pointer to the place inside the given string
  * where parsing ended will be returned.
+ *
+ * The current implementation of serialization will lead to unexpected results
+ * when there are nested #GstCaps / #GstStructure deeper than one level.
  *
  * Free-function: gst_structure_free
  *
@@ -3104,7 +3175,7 @@ gst_structure_intersect_field2 (GQuark id, const GValue * val1, gpointer data)
  * @struct1: a #GstStructure
  * @struct2: a #GstStructure
  *
- * Interesects @struct1 and @struct2 and returns the intersection.
+ * Intersects @struct1 and @struct2 and returns the intersection.
  *
  * Returns: Intersection of @struct1 and @struct2
  */

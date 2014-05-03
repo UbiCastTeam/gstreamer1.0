@@ -79,8 +79,6 @@
  * For elements that need to perform operations on media data in stream_time,
  * gst_segment_to_stream_time() can be used to convert a timestamp and the segment
  * info to stream time (which is always between 0 and the duration of the stream).
- *
- * Last reviewed on 2012-03-29 (0.11.3)
  */
 
 /**
@@ -460,7 +458,7 @@ gst_segment_to_stream_time (const GstSegment * segment, GstFormat format,
  * segment. Position is a value between @segment start and stop time.
  *
  * This function is typically used by elements that need to synchronize to the
- * global clock in a pipeline. The runnning time is a constantly increasing value
+ * global clock in a pipeline. The running time is a constantly increasing value
  * starting from 0. When gst_segment_init() is called, this value will reset to
  * 0.
  *
