@@ -117,7 +117,7 @@ gst_util_set_value_from_string (GValue * value, const gchar * value_str)
  * @name: the name of the argument to set
  * @value: the string value to set
  *
- * Convertes the string value to the type of the objects argument and
+ * Converts the string value to the type of the objects argument and
  * sets the argument with it.
  *
  * Note that this function silently returns if @object has no property named
@@ -2436,12 +2436,12 @@ query_accept_caps_func (GstPad * pad, QueryAcceptCapsData * data)
  * @pad: a #GstPad to proxy.
  * @query: an ACCEPT_CAPS #GstQuery.
  *
- * Calls gst_pad_accept_caps() for all internally linked pads of @pad and
+ * Checks if all internally linked pads of @pad accepts the caps in @query and
  * returns the intersection of the results.
  *
  * This function is useful as a default accept caps query function for an element
  * that can handle any stream format, but requires caps that are acceptable for
- * all oposite pads.
+ * all opposite pads.
  *
  * Returns: TRUE if @query could be executed
  */
@@ -2459,12 +2459,16 @@ gst_pad_proxy_query_accept_caps (GstPad * pad, GstQuery * query)
 
   data.query = query;
   /* value to hold the return, by default it holds TRUE */
+  /* FIXME: TRUE is wrong when there are no pads */
   data.ret = TRUE;
 
   gst_pad_forward (pad, (GstPadForwardFunction) query_accept_caps_func, &data);
   gst_query_set_accept_caps_result (query, data.ret);
 
-  return TRUE;
+  GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "proxying accept caps query: %d",
+      data.ret);
+
+  return data.ret;
 }
 
 typedef struct
@@ -2500,7 +2504,7 @@ query_caps_func (GstPad * pad, QueryCapsData * data)
  * @pad: a #GstPad to proxy.
  * @query: a CAPS #GstQuery.
  *
- * Calls gst_pad_query_caps() for all internally linked pads fof @pad and returns
+ * Calls gst_pad_query_caps() for all internally linked pads of @pad and returns
  * the intersection of the results.
  *
  * This function is useful as a default caps query function for an element
@@ -2538,6 +2542,7 @@ gst_pad_proxy_query_caps (GstPad * pad, GstQuery * query)
   gst_query_set_caps_result (query, result);
   gst_caps_unref (result);
 
+  /* FIXME: return something depending on the processing */
   return TRUE;
 }
 
@@ -2740,7 +2745,7 @@ gst_pad_peer_query_convert (GstPad * pad, GstFormat src_format, gint64 src_val,
  * When called on sinkpads @filter contains the caps that
  * upstream could produce in the order preferred by upstream. When
  * called on srcpads @filter contains the caps accepted by
- * downstream in the preffered order. @filter might be %NULL but
+ * downstream in the preferred order. @filter might be %NULL but
  * if it is not %NULL the returned caps will be a subset of @filter.
  *
  * Note that this function does not return writable #GstCaps, use
@@ -2787,7 +2792,7 @@ gst_pad_query_caps (GstPad * pad, GstCaps * filter)
  * When called on srcpads @filter contains the caps that
  * upstream could produce in the order preferred by upstream. When
  * called on sinkpads @filter contains the caps accepted by
- * downstream in the preffered order. @filter might be %NULL but
+ * downstream in the preferred order. @filter might be %NULL but
  * if it is not %NULL the returned caps will be a subset of @filter.
  *
  * Returns: the caps of the peer pad with incremented ref-count. When there is
@@ -3417,6 +3422,13 @@ gst_util_fraction_multiply (gint a_n, gint a_d, gint b_n, gint b_d,
   g_return_val_if_fail (a_d != 0, FALSE);
   g_return_val_if_fail (b_d != 0, FALSE);
 
+  /* early out if either is 0, as its gcd would be 0 */
+  if (a_n == 0 || b_n == 0) {
+    *res_n = 0;
+    *res_d = 1;
+    return TRUE;
+  }
+
   gcd = gst_util_greatest_common_divisor (a_n, a_d);
   a_n /= gcd;
   a_d /= gcd;
@@ -3562,32 +3574,9 @@ gst_util_fraction_compare (gint a_n, gint a_d, gint b_n, gint b_d)
   g_return_val_if_reached (0);
 }
 
-/**
- * gst_pad_create_stream_id_printf_valist:
- * @pad: A source #GstPad
- * @parent: Parent #GstElement of @pad
- * @stream_id: (allow-none): The stream-id
- * @var_args: parameters for the @stream_id format string
- *
- * Creates a stream-id for the source #GstPad @pad by combining the
- * upstream information with the optional @stream_id of the stream
- * of @pad. @pad must have a parent #GstElement and which must have zero
- * or one sinkpad. @stream_id can only be %NULL if the parent element
- * of @pad has only a single source pad.
- *
- * This function generates an unique stream-id by getting the upstream
- * stream-start event stream ID and appending @stream_id to it. If the
- * element has no sinkpad it will generate an upstream stream-id by
- * doing an URI query on the element and in the worst case just uses
- * a random number. Source elements that don't implement the URI
- * handler interface should ideally generate a unique, deterministic
- * stream-id manually instead.
- *
- * Returns: A stream-id for @pad. g_free() after usage.
- */
-gchar *
-gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent,
-    const gchar * stream_id, va_list var_args)
+static gchar *
+gst_pad_create_stream_id_internal (GstPad * pad, GstElement * parent,
+    const gchar * stream_id)
 {
   GstEvent *upstream_event;
   gchar *upstream_stream_id = NULL, *new_stream_id;
@@ -3655,14 +3644,51 @@ gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent,
   }
 
   if (stream_id) {
-    gchar *expanded = g_strdup_vprintf (stream_id, var_args);
-    new_stream_id = g_strconcat (upstream_stream_id, "/", expanded, NULL);
-    g_free (expanded);
+    new_stream_id = g_strconcat (upstream_stream_id, "/", stream_id, NULL);
   } else {
     new_stream_id = g_strdup (upstream_stream_id);
   }
 
   g_free (upstream_stream_id);
+
+  return new_stream_id;
+}
+
+/**
+ * gst_pad_create_stream_id_printf_valist:
+ * @pad: A source #GstPad
+ * @parent: Parent #GstElement of @pad
+ * @stream_id: (allow-none): The stream-id
+ * @var_args: parameters for the @stream_id format string
+ *
+ * Creates a stream-id for the source #GstPad @pad by combining the
+ * upstream information with the optional @stream_id of the stream
+ * of @pad. @pad must have a parent #GstElement and which must have zero
+ * or one sinkpad. @stream_id can only be %NULL if the parent element
+ * of @pad has only a single source pad.
+ *
+ * This function generates an unique stream-id by getting the upstream
+ * stream-start event stream ID and appending @stream_id to it. If the
+ * element has no sinkpad it will generate an upstream stream-id by
+ * doing an URI query on the element and in the worst case just uses
+ * a random number. Source elements that don't implement the URI
+ * handler interface should ideally generate a unique, deterministic
+ * stream-id manually instead.
+ *
+ * Returns: A stream-id for @pad. g_free() after usage.
+ */
+gchar *
+gst_pad_create_stream_id_printf_valist (GstPad * pad, GstElement * parent,
+    const gchar * stream_id, va_list var_args)
+{
+  gchar *expanded = NULL, *new_stream_id;
+
+  if (stream_id)
+    expanded = g_strdup_vprintf (stream_id, var_args);
+
+  new_stream_id = gst_pad_create_stream_id_internal (pad, parent, expanded);
+
+  g_free (expanded);
 
   return new_stream_id;
 }
@@ -3735,7 +3761,7 @@ gchar *
 gst_pad_create_stream_id (GstPad * pad, GstElement * parent,
     const gchar * stream_id)
 {
-  return gst_pad_create_stream_id_printf (pad, parent, stream_id, NULL);
+  return gst_pad_create_stream_id_internal (pad, parent, stream_id);
 }
 
 /**
@@ -3751,7 +3777,7 @@ gst_pad_create_stream_id (GstPad * pad, GstElement * parent,
  * The returned stream-id string should be treated as an opaque string, its
  * contents should not be interpreted.
  *
- * Returns: a newly-allocated copy of the stream-idfor @pad, or %NULL.
+ * Returns: a newly-allocated copy of the stream-id for @pad, or %NULL.
  *     g_free() the returned string when no longer needed.
  *
  * Since: 1.2

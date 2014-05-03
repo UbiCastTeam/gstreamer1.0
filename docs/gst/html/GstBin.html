@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstAtomicQueue.html" title="GstAtomicQueue">
-<link rel="next" href="gstreamer-GstBuffer.html" title="GstBuffer">
+<link rel="next" href="GstBuffer.html" title="GstBuffer">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -24,7 +24,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-GstAtomicQueue.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-GstBuffer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstBuffer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstBin"></a><div class="titlepage"></div>
@@ -317,7 +317,7 @@ element is removed from the bin.</p>
 <div class="refsect2">
 <a name="id-1.3.6.10.9"></a><h3>Notes</h3>
 <p>
-A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> posted by its children and
+A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> posted by its children and
 implements the following default behaviour for each of them:
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
@@ -388,7 +388,7 @@ implements the following default behaviour for each of them:
 
 
 A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> implements the following default behaviour for answering to a
-<a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>:
+<a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>:
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -429,7 +429,6 @@ returned. If no sinks are in the bin, the event handler will return TRUE.
 
 </p>
 </div>
-<p>Last reviewed on 2012-03-28 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstBin.functions_details"></a><h2>Functions</h2>
@@ -862,7 +861,7 @@ gst_bin_recalculate_latency (<em class="parameter"><code><a class="link" href="G
 <p>Query <em class="parameter"><code>bin</code></em>
  for the current latency using and reconfigures this latency to all the
 elements with a LATENCY event.</p>
-<p>This method is typically called on the pipeline when a <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-LATENCY:CAPS"><span class="type">GST_MESSAGE_LATENCY</span></a>
+<p>This method is typically called on the pipeline when a <a class="link" href="GstMessage.html#GST-MESSAGE-LATENCY:CAPS"><span class="type">GST_MESSAGE_LATENCY</span></a>
 is posted on the bus.</p>
 <p>This function simply emits the 'do-latency' signal so any custom latency
 calculations will be performed.</p>
@@ -1024,7 +1023,7 @@ removed.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.1.1</p>
+<p class="since">Since 1.0.5</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1256,7 +1255,7 @@ and (un)set using <a class="link" href="GstObject.html#GST-OBJECT-FLAG-SET:CAPS"
 <td class="enum_member_name"><p><a name="GST-BIN-FLAG-NO-RESYNC:CAPS"></a>GST_BIN_FLAG_NO_RESYNC</p></td>
 <td class="enum_member_description">
 <p>don't resync a state change when elements are
-            added or linked in the bin.</p>
+            added or linked in the bin (Since 1.0.5)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -1307,7 +1306,7 @@ forwarded message.</p>
 user_function (<a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>  *bin,
                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)</pre>
 <p>Will be emitted when the bin needs to perform latency calculations. This
-signal is only emited for toplevel bins or when async-handling is
+signal is only emitted for toplevel bins or when async-handling is
 enabled.</p>
 <p>Only one signal handler is invoked. If no signals are connected, the
 default handler is invoked, which will query and distribute the lowest

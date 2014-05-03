@@ -256,14 +256,13 @@ not running anymore. Use <a class="link" href="GstTask.html#gst-task-join" title
 stopped and the thread is stopped.</p>
 <p>After creating a <a class="link" href="GstTask.html" title="GstTask"><span class="type">GstTask</span></a>, use <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> to free its resources. This can
 only be done when the task is not running anymore.</p>
-<p>Task functions can send a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> to send out-of-band data to the
+<p>Task functions can send a <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> to send out-of-band data to the
 application. The application can receive messages from the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> in its
 mainloop.</p>
 <p>For debugging purposes, the task will configure its object name as the thread
 name on Linux. Please note that the object name should be configured before the
 task is started; changing the object name after the task has been started, has
 no effect on the thread name.</p>
-<p>Last reviewed on 2012-03-29 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstTask.functions_details"></a><h2>Functions</h2>

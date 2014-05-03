@@ -26,8 +26,6 @@
  *
  * Note that operations on the same #GValue from multiple threads may lead to
  * undefined behaviour.
- *
- * Last reviewed on 2008-03-11 (0.10.18)
  */
 
 #ifdef HAVE_CONFIG_H
@@ -1052,7 +1050,7 @@ gst_value_get_int_range_min (const GValue * value)
  *
  * Gets the maximum of the range specified by @value.
  *
- * Returns: the maxumum of the range
+ * Returns: the maximum of the range
  */
 gint
 gst_value_get_int_range_max (const GValue * value)
@@ -1111,8 +1109,8 @@ gst_value_compare_int_range (const GValue * value1, const GValue * value2)
      and bounds lie on the same value */
   if (n1 > 1) {
     if (INT_RANGE_STEP (value1) == INT_RANGE_STEP (value2) &&
-        INT_RANGE_STEP (value1) == INT_RANGE_STEP (value2) &&
-        INT_RANGE_STEP (value1) == INT_RANGE_STEP (value2)) {
+        INT_RANGE_MIN (value1) == INT_RANGE_MIN (value2) &&
+        INT_RANGE_MAX (value1) == INT_RANGE_MAX (value2)) {
       return GST_VALUE_EQUAL;
     }
     return GST_VALUE_UNORDERED;
@@ -1304,7 +1302,7 @@ gst_value_get_int64_range_min (const GValue * value)
  *
  * Gets the maximum of the range specified by @value.
  *
- * Returns: the maxumum of the range
+ * Returns: the maximum of the range
  */
 gint64
 gst_value_get_int64_range_max (const GValue * value)
@@ -1366,8 +1364,8 @@ gst_value_compare_int64_range (const GValue * value1, const GValue * value2)
      and bounds lie on the same value */
   if (n1 > 1) {
     if (INT64_RANGE_STEP (value1) == INT64_RANGE_STEP (value2) &&
-        INT64_RANGE_STEP (value1) == INT64_RANGE_STEP (value2) &&
-        INT64_RANGE_STEP (value1) == INT64_RANGE_STEP (value2)) {
+        INT64_RANGE_MIN (value1) == INT64_RANGE_MIN (value2) &&
+        INT64_RANGE_MAX (value1) == INT64_RANGE_MAX (value2)) {
       return GST_VALUE_EQUAL;
     }
     return GST_VALUE_UNORDERED;
@@ -1495,7 +1493,7 @@ gst_value_get_double_range_min (const GValue * value)
  *
  * Gets the maximum of the range specified by @value.
  *
- * Returns: the maxumum of the range
+ * Returns: the maximum of the range
  */
 gdouble
 gst_value_get_double_range_max (const GValue * value)
@@ -1522,7 +1520,7 @@ static gint
 gst_value_compare_double_range (const GValue * value1, const GValue * value2)
 {
   if (value2->data[0].v_double == value1->data[0].v_double &&
-      value2->data[0].v_double == value1->data[0].v_double)
+      value2->data[1].v_double == value1->data[1].v_double)
     return GST_VALUE_EQUAL;
   return GST_VALUE_UNORDERED;
 }
@@ -1887,8 +1885,7 @@ static gchar *
 gst_value_serialize_caps (const GValue * value)
 {
   GstCaps *caps = g_value_get_boxed (value);
-
-  return gst_caps_to_string (caps);
+  return gst_string_take_and_wrap (gst_caps_to_string (caps));
 }
 
 static gboolean
@@ -1896,7 +1893,17 @@ gst_value_deserialize_caps (GValue * dest, const gchar * s)
 {
   GstCaps *caps;
 
-  caps = gst_caps_from_string (s);
+  if (*s != '"') {
+    caps = gst_caps_from_string (s);
+  } else {
+    gchar *str = gst_string_unwrap (s);
+
+    if (G_UNLIKELY (!str))
+      return FALSE;
+
+    caps = gst_caps_from_string (str);
+    g_free (str);
+  }
 
   if (caps) {
     g_value_take_boxed (dest, caps);
@@ -2523,7 +2530,7 @@ gst_value_deserialize_int_helper (gint64 * to, const gchar * s,
 {
   gboolean ret = FALSE;
   gchar *end;
-  gint64 mask = -1;
+  guint64 mask = -1;
 
   errno = 0;
   *to = g_ascii_strtoull (s, &end, 0);
@@ -3784,6 +3791,9 @@ gst_value_subtract_int_int_range (GValue * dest, const GValue * minuend,
   gint step = gst_value_get_int_range_step (subtrahend);
   gint val = g_value_get_int (minuend);
 
+  if (step == 0)
+    return FALSE;
+
   /* subtracting a range from an int only works if the int is not in the
    * range */
   if (val < min || val > max || val % step) {
@@ -3861,6 +3871,9 @@ gst_value_subtract_int_range_int (GValue * dest, const GValue * minuend,
 
   g_return_val_if_fail (min < max, FALSE);
 
+  if (step == 0)
+    return FALSE;
+
   /* value is outside of the range, return range unchanged */
   if (val < min || val > max || val % step) {
     if (dest)
@@ -3902,6 +3915,9 @@ gst_value_subtract_int_range_int_range (GValue * dest, const GValue * minuend,
   }
   step = step1;
 
+  if (step == 0)
+    return FALSE;
+
   if (max2 >= max1 && min2 <= min1) {
     return FALSE;
   } else if (max2 >= max1) {
@@ -3925,6 +3941,8 @@ gst_value_subtract_int64_int64_range (GValue * dest, const GValue * minuend,
   gint64 step = gst_value_get_int64_range_step (subtrahend);
   gint64 val = g_value_get_int64 (minuend);
 
+  if (step == 0)
+    return FALSE;
   /* subtracting a range from an int64 only works if the int64 is not in the
    * range */
   if (val < min || val > max || val % step) {
@@ -4002,6 +4020,9 @@ gst_value_subtract_int64_range_int64 (GValue * dest, const GValue * minuend,
 
   g_return_val_if_fail (min < max, FALSE);
 
+  if (step == 0)
+    return FALSE;
+
   /* value is outside of the range, return range unchanged */
   if (val < min || val > max || val % step) {
     if (dest)
@@ -4042,6 +4063,10 @@ gst_value_subtract_int64_range_int64_range (GValue * dest,
     g_assert (FALSE);
     return FALSE;
   }
+
+  if (step1 == 0)
+    return FALSE;
+
   step = step1;
 
   if (max2 >= max1 && min2 <= min1) {
@@ -4399,6 +4424,8 @@ gst_value_list_equals_range (const GValue * list, const GValue * value)
     const gint rmin = gst_value_get_int_range_min (value);
     const gint rmax = gst_value_get_int_range_max (value);
     const gint rstep = gst_value_get_int_range_step (value);
+    if (rstep == 0)
+      return FALSE;
     /* note: this will overflow for min 0 and max INT_MAX, but this
        would only be equal to a list of INT_MAX elements, which seems
        very unlikely */
@@ -4416,6 +4443,8 @@ gst_value_list_equals_range (const GValue * list, const GValue * value)
     const gint64 rmax = gst_value_get_int64_range_max (value);
     const gint64 rstep = gst_value_get_int64_range_step (value);
     GST_DEBUG ("List/range of int64s");
+    if (rstep == 0)
+      return FALSE;
     if (list_size != rmax / rstep - rmin / rstep + 1)
       return FALSE;
     for (n = 0; n < list_size; ++n) {
@@ -4457,24 +4486,51 @@ gst_value_compare (const GValue * value1, const GValue * value2)
      as well as lists and ranges ("{ 1, 2 }" and "[ 1, 2 ]" are equal) */
   ltype = gst_value_list_get_type ();
   if (G_VALUE_HOLDS (value1, ltype) && !G_VALUE_HOLDS (value2, ltype)) {
+    gint i, n, ret;
 
     if (gst_value_list_equals_range (value1, value2)) {
       return GST_VALUE_EQUAL;
-    } else if (gst_value_list_get_size (value1) == 1) {
+    }
+
+    n = gst_value_list_get_size (value1);
+    if (n == 0)
+      return GST_VALUE_UNORDERED;
+
+    for (i = 0; i < n; i++) {
       const GValue *elt;
 
-      elt = gst_value_list_get_value (value1, 0);
-      return gst_value_compare (elt, value2);
+      elt = gst_value_list_get_value (value1, i);
+      ret = gst_value_compare (elt, value2);
+      if (ret != GST_VALUE_EQUAL && n == 1)
+        return ret;
+      else if (ret != GST_VALUE_EQUAL)
+        return GST_VALUE_UNORDERED;
     }
+
+    return GST_VALUE_EQUAL;
   } else if (G_VALUE_HOLDS (value2, ltype) && !G_VALUE_HOLDS (value1, ltype)) {
+    gint i, n, ret;
+
     if (gst_value_list_equals_range (value2, value1)) {
       return GST_VALUE_EQUAL;
-    } else if (gst_value_list_get_size (value2) == 1) {
+    }
+
+    n = gst_value_list_get_size (value2);
+    if (n == 0)
+      return GST_VALUE_UNORDERED;
+
+    for (i = 0; i < n; i++) {
       const GValue *elt;
 
-      elt = gst_value_list_get_value (value2, 0);
-      return gst_value_compare (elt, value1);
+      elt = gst_value_list_get_value (value2, i);
+      ret = gst_value_compare (elt, value1);
+      if (ret != GST_VALUE_EQUAL && n == 1)
+        return ret;
+      else if (ret != GST_VALUE_EQUAL)
+        return GST_VALUE_UNORDERED;
     }
+
+    return GST_VALUE_EQUAL;
   }
 
   if (G_VALUE_TYPE (value1) != G_VALUE_TYPE (value2))
@@ -4564,7 +4620,7 @@ gst_value_can_union (const GValue * value1, const GValue * value2)
  *
  * Creates a GValue corresponding to the union of @value1 and @value2.
  *
- * Returns: TRUE if the union suceeded.
+ * Returns: TRUE if the union succeeded.
  */
 gboolean
 gst_value_union (GValue * dest, const GValue * value1, const GValue * value2)
@@ -4630,8 +4686,7 @@ gst_value_register_union_func (GType type1, GType type2, GstValueUnionFunc func)
  *
  * Determines if intersecting two values will produce a valid result.
  * Two values will produce a valid intersection if they have the same
- * type, or if there is a method (registered by
- * gst_value_register_intersect_func()) to calculate the intersection.
+ * type.
  *
  * Returns: TRUE if the values can intersect
  */

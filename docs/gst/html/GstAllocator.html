@@ -90,7 +90,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *
+<a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()">gst_allocator_alloc</a> <span class="c_punctuation">()</span>
@@ -106,7 +106,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *
+<a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstAllocator.html#gst-memory-new-wrapped" title="gst_memory_new_wrapped ()">gst_memory_new_wrapped</a> <span class="c_punctuation">()</span>
@@ -124,8 +124,16 @@
 </colgroup>
 <tbody>
 <tr>
+<td class="variable_type">extern</td>
+<td class="function_name"><a class="link" href="GstAllocator.html#gst-memory-alignment" title="gst_memory_alignment">gst_memory_alignment</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword"> </td>
 <td class="function_name"><a class="link" href="GstAllocator.html#GstAllocator-struct" title="GstAllocator">GstAllocator</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GstAllocator.html#GstAllocatorClass" title="struct GstAllocatorClass">GstAllocatorClass</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
@@ -166,7 +174,6 @@ Allocators are identified by name and can be retrieved with
 default allocator.</p>
 <p>New memory can be created with <a class="link" href="GstAllocator.html#gst-memory-new-wrapped" title="gst_memory_new_wrapped ()"><code class="function">gst_memory_new_wrapped()</code></a> that wraps the memory
 allocated elsewhere.</p>
-<p>Last reviewed on 2012-07-09 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstAllocator.functions_details"></a><h2>Functions</h2>
@@ -337,7 +344,7 @@ gst_allocation_params_free (<em class="parameter"><code><a class="link" href="Gs
 <hr>
 <div class="refsect2">
 <a name="gst-allocator-alloc"></a><h3>gst_allocator_alloc ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *
+<pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_allocator_alloc (<em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
                      <em class="parameter"><code><span class="type">gsize</span> size</code></em>,
                      <em class="parameter"><code><a class="link" href="GstAllocator.html#GstAllocationParams" title="struct GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
@@ -350,7 +357,7 @@ gst_allocator_alloc (<em class="parameter"><code><a class="link" href="GstAlloca
 NULL is passed, no flags, no extra prefix/padding and a default alignment is
 used.</p>
 <p>The prefix/padding will be filled with 0 if flags contains
-<a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.</p>
+<a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.</p>
 <p>When <em class="parameter"><code>allocator</code></em>
  is NULL, the default allocator will be used.</p>
 <p>The alignment in <em class="parameter"><code>params</code></em>
@@ -387,7 +394,7 @@ use an alignment of 7.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.4.8.8.10"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>. </p>
+<p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -396,7 +403,7 @@ use an alignment of 7.</p>
 <a name="gst-allocator-free"></a><h3>gst_allocator_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_allocator_free (<em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                    <em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);</pre>
+                    <em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);</pre>
 <p>Free <em class="parameter"><code>memory</code></em>
  that was previously allocated with <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>.</p>
 <div class="refsect3">
@@ -425,8 +432,8 @@ gst_allocator_free (<em class="parameter"><code><a class="link" href="GstAllocat
 <hr>
 <div class="refsect2">
 <a name="gst-memory-new-wrapped"></a><h3>gst_memory_new_wrapped ()</h3>
-<pre class="programlisting"><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="returnvalue">GstMemory</span></a> *
-gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
+<pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
+gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                         <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
                         <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
@@ -437,7 +444,7 @@ gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="gstrea
 .</p>
 <p>The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</code></em>
  contains
-<a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="gstreamer-GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.</p>
+<a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.</p>
 <div class="refsect3">
 <a name="id-1.3.4.8.10.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -449,7 +456,7 @@ gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="gstrea
 <tbody>
 <tr>
 <td class="parameter_name"><p>flags</p></td>
-<td class="parameter_description"><p><a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a></p></td>
+<td class="parameter_description"><p><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -491,7 +498,7 @@ when the memory is freed. </p></td>
 </div>
 <div class="refsect3">
 <a name="id-1.3.4.8.10.7"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a>. </p>
+<p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -499,18 +506,100 @@ when the memory is freed. </p></td>
 <div class="refsect1">
 <a name="GstAllocator.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
+<a name="gst-memory-alignment"></a><h3>gst_memory_alignment</h3>
+<pre class="programlisting">GST_EXPORT gsize gst_memory_alignment;
+</pre>
+<p>The default memory alignment in bytes - 1
+an alignment of 7 would be the same as what <code class="function">malloc()</code> guarantees.</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstAllocator-struct"></a><h3>GstAllocator</h3>
-<pre class="programlisting">typedef struct _GstAllocator GstAllocator;</pre>
+<pre class="programlisting">typedef struct {
+  GstMemoryMapFunction      mem_map;
+  GstMemoryUnmapFunction    mem_unmap;
+
+  GstMemoryCopyFunction     mem_copy;
+  GstMemoryShareFunction    mem_share;
+  GstMemoryIsSpanFunction   mem_is_span;
+} GstAllocator;
+</pre>
 <p>The <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> is used to create new memory.</p>
 <div class="refsect3">
-<a name="id-1.3.4.9.2.5"></a><h4>Members</h4>
+<a name="id-1.3.4.9.3.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
 <col width="200px" class="struct_members_annotations">
 </colgroup>
-<tbody></tbody>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryMapFunction" title="GstMemoryMapFunction ()"><span class="type">GstMemoryMapFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-map"></a>mem_map</code></em>;</p></td>
+<td class="struct_member_description"><p>the implementation of the GstMemoryMapFunction</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryUnmapFunction" title="GstMemoryUnmapFunction ()"><span class="type">GstMemoryUnmapFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-unmap"></a>mem_unmap</code></em>;</p></td>
+<td class="struct_member_description"><p>the implementation of the GstMemoryUnmapFunction</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryCopyFunction" title="GstMemoryCopyFunction ()"><span class="type">GstMemoryCopyFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-copy"></a>mem_copy</code></em>;</p></td>
+<td class="struct_member_description"><p>the implementation of the GstMemoryCopyFunction</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryShareFunction" title="GstMemoryShareFunction ()"><span class="type">GstMemoryShareFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-share"></a>mem_share</code></em>;</p></td>
+<td class="struct_member_description"><p>the implementation of the GstMemoryShareFunction</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryIsSpanFunction" title="GstMemoryIsSpanFunction ()"><span class="type">GstMemoryIsSpanFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-is-span"></a>mem_is_span</code></em>;</p></td>
+<td class="struct_member_description"><p>the implementation of the GstMemoryIsSpanFunction</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAllocatorClass"></a><h3>struct GstAllocatorClass</h3>
+<pre class="programlisting">struct GstAllocatorClass {
+  GstObjectClass object_class;
+
+  GstMemory *  (*alloc)      (GstAllocator *allocator, gsize size,
+                              GstAllocationParams *params);
+  void         (*free)       (GstAllocator *allocator, GstMemory *memory);
+};
+</pre>
+<p>The <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> is used to create new memory.</p>
+<div class="refsect3">
+<a name="id-1.3.4.9.4.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="GstAllocatorClass.object-class"></a>object_class</code></em>;</p></td>
+<td class="struct_member_description"><p>Object parent class</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstAllocatorClass.alloc"></a>alloc</code></em> ()</p></td>
+<td class="struct_member_description"><p>implementation that acquires memory</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstAllocatorClass.free"></a>free</code></em> ()</p></td>
+<td class="struct_member_description"><p>implementation that releases memory</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>
@@ -519,7 +608,7 @@ when the memory is freed. </p></td>
 <a name="GstAllocatorFlags"></a><h3>enum GstAllocatorFlags</h3>
 <p>Flags for allocators.</p>
 <div class="refsect3">
-<a name="id-1.3.4.9.3.4"></a><h4>Members</h4>
+<a name="id-1.3.4.9.5.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -557,7 +646,7 @@ when the memory is freed. </p></td>
 </pre>
 <p>Parameters to control the allocation of memory</p>
 <div class="refsect3">
-<a name="id-1.3.4.9.4.5"></a><h4>Members</h4>
+<a name="id-1.3.4.9.6.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -566,7 +655,7 @@ when the memory is freed. </p></td>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gstreamer-GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> <em class="structfield"><code><a name="GstAllocationParams.flags"></a>flags</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> <em class="structfield"><code><a name="GstAllocationParams.flags"></a>flags</code></em>;</p></td>
 <td class="struct_member_description"><p>flags to control allocation</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -599,7 +688,7 @@ when the memory is freed. </p></td>
 </div>
 <div class="refsect1">
 <a name="GstAllocator.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="gstreamer-GstMemory.html#GstMemory" title="struct GstMemory"><span class="type">GstMemory</span></a></p>
+<p><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a></p>
 </div>
 </div>
 <div class="footer">

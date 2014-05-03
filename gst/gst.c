@@ -91,8 +91,6 @@
  * The gst_deinit() call is used to clean up all internal resources used
  * by <application>GStreamer</application>. It is mostly used in unit tests 
  * to check for leaks.
- *
- * Last reviewed on 2006-08-11 (0.10.10)
  */
 
 #include "gst_private.h"
@@ -377,7 +375,7 @@ gst_init_check (int *argc, char **argv[], GError ** err)
  * </para></note>
  *
  * WARNING: This function does not work in the same way as corresponding
- * functions in other glib-style libraries, such as gtk_init().  In
+ * functions in other glib-style libraries, such as gtk_init\(\). In
  * particular, unknown command line options cause this function to
  * abort program execution.
  */
@@ -461,6 +459,7 @@ static gboolean
 init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
     GError ** error)
 {
+  gchar *libdir;
   if (gst_initialized) {
     GST_DEBUG ("already initialized");
     return TRUE;
@@ -471,6 +470,7 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
 
 #ifndef GST_DISABLE_GST_DEBUG
   _priv_gst_debug_init ();
+  priv_gst_dump_dot_dir = g_getenv ("GST_DEBUG_DUMP_DOT_DIR");
 #endif
 
 #ifdef ENABLE_NLS
@@ -478,29 +478,27 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 #endif /* ENABLE_NLS */
 
-#ifndef GST_DISABLE_GST_DEBUG
-  {
-    const gchar *debug_list;
-    const gchar *color_mode;
-
-    if (g_getenv ("GST_DEBUG_NO_COLOR") != NULL)
-      gst_debug_set_color_mode (GST_DEBUG_COLOR_MODE_OFF);
-    color_mode = g_getenv ("GST_DEBUG_COLOR_MODE");
-    if (color_mode)
-      gst_debug_set_color_mode_from_string (color_mode);
-
-    debug_list = g_getenv ("GST_DEBUG");
-    if (debug_list) {
-      gst_debug_set_threshold_from_string (debug_list, FALSE);
-    }
-  }
-
-  priv_gst_dump_dot_dir = g_getenv ("GST_DEBUG_DUMP_DOT_DIR");
-#endif
   /* This is the earliest we can make stuff show up in the logs.
    * So give some useful info about GStreamer here */
+#ifdef G_OS_WIN32
+  {
+    gchar *basedir =
+        g_win32_get_package_installation_directory_of_module
+        (_priv_gst_dll_handle);
+
+    libdir = g_build_filename (basedir,
+#ifdef _DEBUG
+        "debug"
+#endif
+        "lib", NULL);
+    g_free (basedir);
+  }
+#else
+  libdir = g_strdup (LIBDIR);
+#endif
   GST_INFO ("Initializing GStreamer Core Library version %s", VERSION);
-  GST_INFO ("Using library installed in %s", LIBDIR);
+  GST_INFO ("Using library installed in %s", libdir);
+  g_free (libdir);
 
   /* Print some basic system details if possible (OS/architecture) */
 #ifdef HAVE_SYS_UTSNAME_H
@@ -663,6 +661,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_meta_flags_get_type ());
   g_type_class_ref (gst_toc_entry_type_get_type ());
   g_type_class_ref (gst_toc_scope_get_type ());
+  g_type_class_ref (gst_toc_loop_type_get_type ());
   g_type_class_ref (gst_control_binding_get_type ());
   g_type_class_ref (gst_control_source_get_type ());
   g_type_class_ref (gst_lock_flags_get_type ());
@@ -1059,6 +1058,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_control_binding_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_control_source_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_toc_entry_type_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_toc_loop_type_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_lock_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_allocator_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stream_flags_get_type ()));

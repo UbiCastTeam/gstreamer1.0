@@ -47,7 +47,7 @@
  *
  * gst_pad_get_parent() will retrieve the #GstElement that owns the pad.
  *
- * After two pads are retrieved from an element with gst_element_get_pad(),
+ * After two pads are retrieved from an element by gst_element_get_static_pad(),
  * the pads can be linked with gst_pad_link(). (For quick links,
  * you can also use gst_element_link(), which will make the obvious
  * link for you if it's straightforward.). Pads can be unlinked again with
@@ -84,8 +84,6 @@
  * Convenience functions exist to start, pause and stop the task on a pad with
  * gst_pad_start_task(), gst_pad_pause_task() and gst_pad_stop_task()
  * respectively.
- *
- * Last reviewed on 2012-03-29 (0.11.3)
  */
 
 #include "gst_private.h"
@@ -136,6 +134,7 @@ struct _GstPadPrivate
 {
   guint events_cookie;
   GArray *events;
+  guint last_cookie;
 
   gint using;
   guint probe_list_cookie;
@@ -250,6 +249,38 @@ gst_flow_to_quark (GstFlowReturn ret)
   return 0;
 }
 
+/**
+ * gst_pad_link_get_name:
+ * @ret: a #GstPadLinkReturn to get the name of.
+ *
+ * Gets a string representing the given pad-link return.
+ *
+ * Returns: a static string with the name of the pad-link return.
+ *
+ * Since: 1.4
+ */
+const gchar *
+gst_pad_link_get_name (GstPadLinkReturn ret)
+{
+  switch (ret) {
+    case GST_PAD_LINK_OK:
+      return "ok";
+    case GST_PAD_LINK_WRONG_HIERARCHY:
+      return "wrong hierarchy";
+    case GST_PAD_LINK_WAS_LINKED:
+      return "was linked";
+    case GST_PAD_LINK_WRONG_DIRECTION:
+      return "wrong direction";
+    case GST_PAD_LINK_NOFORMAT:
+      return "no common format";
+    case GST_PAD_LINK_NOSCHED:
+      return "incompatible scheduling";
+    case GST_PAD_LINK_REFUSED:
+      return "refused";
+  }
+  g_return_val_if_reached ("unknown");
+}
+
 #define _do_init \
 { \
   gint i; \
@@ -356,6 +387,8 @@ gst_pad_init (GstPad * pad)
   g_hook_list_init (&pad->probes, sizeof (GstProbe));
 
   pad->priv->events = g_array_sized_new (FALSE, TRUE, sizeof (PadEvent), 16);
+  pad->priv->events_cookie = 0;
+  pad->priv->last_cookie = -1;
 }
 
 /* called when setting the pad inactive. It removes all sticky events from
@@ -566,20 +599,35 @@ restart:
 
 /* should be called with LOCK */
 static GstEvent *
-apply_pad_offset (GstPad * pad, GstEvent * event)
+apply_pad_offset (GstPad * pad, GstEvent * event, gboolean upstream)
 {
   /* check if we need to adjust the segment */
   if (pad->offset != 0) {
-    GstSegment segment;
-
-    /* copy segment values */
-    gst_event_copy_segment (event, &segment);
-    gst_event_unref (event);
+    gint64 offset;
 
     GST_DEBUG_OBJECT (pad, "apply pad offset %" GST_TIME_FORMAT,
         GST_TIME_ARGS (pad->offset));
-    gst_segment_offset_running_time (&segment, segment.format, pad->offset);
-    event = gst_event_new_segment (&segment);
+
+    if (GST_EVENT_TYPE (event) == GST_EVENT_SEGMENT) {
+      GstSegment segment;
+
+      g_assert (!upstream);
+
+      /* copy segment values */
+      gst_event_copy_segment (event, &segment);
+      gst_event_unref (event);
+
+      gst_segment_offset_running_time (&segment, segment.format, pad->offset);
+      event = gst_event_new_segment (&segment);
+    }
+
+    event = gst_event_make_writable (event);
+    offset = gst_event_get_running_time_offset (event);
+    if (upstream)
+      offset -= pad->offset;
+    else
+      offset += pad->offset;
+    gst_event_set_running_time_offset (event, offset);
   }
   return event;
 }
@@ -746,7 +794,7 @@ gst_pad_new (const gchar * name, GstPadDirection direction)
  * will be assigned.
  * This function makes a copy of the name so you can safely free the name.
  *
- * Returns: (transfer full): a new #GstPad, or NULL in case of an error.
+ * Returns: (transfer floating): a new #GstPad, or NULL in case of an error.
  */
 GstPad *
 gst_pad_new_from_template (GstPadTemplate * templ, const gchar * name)
@@ -767,7 +815,7 @@ gst_pad_new_from_template (GstPadTemplate * templ, const gchar * name)
  * will be assigned.
  * This function makes a copy of the name so you can safely free the name.
  *
- * Returns: (transfer full): a new #GstPad, or NULL in case of an error.
+ * Returns: (transfer floating): a new #GstPad, or NULL in case of an error.
  */
 GstPad *
 gst_pad_new_from_static_template (GstStaticPadTemplate * templ,
@@ -1219,8 +1267,10 @@ cleanup_hook (GstPad * pad, GHook * hook)
  * Be notified of different states of pads. The provided callback is called for
  * every state that matches @mask.
  *
- * Returns: an id or 0 on error. The id can be used to remove the probe with
- * gst_pad_remove_probe().
+ * Returns: an id or 0 if no probe is pending. The id can be used to remove the
+ * probe with gst_pad_remove_probe(). When using GST_PAD_PROBE_TYPE_IDLE it can
+ * happend that the probe can be run immediately and if the probe returns
+ * GST_PAD_PROBE_REMOVE this functions returns 0.
  *
  * MT safe.
  */
@@ -2037,7 +2087,7 @@ gst_pad_link_check_compatible_unlocked (GstPad * src, GstPad * sink,
 
 done:
   GST_CAT_DEBUG (GST_CAT_CAPS, "caps are %scompatible",
-      (compatible ? "" : "not"));
+      (compatible ? "" : "not "));
 
   return compatible;
 }
@@ -2347,8 +2397,9 @@ concurrent_link:
   }
 link_failed:
   {
-    GST_CAT_INFO (GST_CAT_PADS, "link between %s:%s and %s:%s failed",
-        GST_DEBUG_PAD_NAME (srcpad), GST_DEBUG_PAD_NAME (sinkpad));
+    GST_CAT_INFO (GST_CAT_PADS, "link between %s:%s and %s:%s failed: %s",
+        GST_DEBUG_PAD_NAME (srcpad), GST_DEBUG_PAD_NAME (sinkpad),
+        gst_pad_link_get_name (result));
 
     GST_PAD_PEER (srcpad) = NULL;
     GST_PAD_PEER (sinkpad) = NULL;
@@ -2864,8 +2915,16 @@ gst_pad_query_accept_caps_default (GstPad * pad, GstQuery * query)
   allowed = gst_pad_query_caps (pad, caps);
 
   if (allowed) {
-    GST_DEBUG_OBJECT (pad, "allowed caps %" GST_PTR_FORMAT, allowed);
-    result = gst_caps_is_subset (caps, allowed);
+    if (GST_PAD_IS_ACCEPT_INTERSECT (pad)) {
+      GST_DEBUG_OBJECT (pad,
+          "allowed caps intersect %" GST_PTR_FORMAT ", caps %" GST_PTR_FORMAT,
+          allowed, caps);
+      result = gst_caps_can_intersect (caps, allowed);
+    } else {
+      GST_DEBUG_OBJECT (pad, "allowed caps subset %" GST_PTR_FORMAT ", caps %"
+          GST_PTR_FORMAT, allowed, caps);
+      result = gst_caps_is_subset (caps, allowed);
+    }
     gst_caps_unref (allowed);
   } else {
     GST_DEBUG_OBJECT (pad, "no compatible caps allowed on the pad");
@@ -3293,6 +3352,13 @@ gst_pad_get_offset (GstPad * pad)
   return result;
 }
 
+static gboolean
+mark_event_not_received (GstPad * pad, PadEvent * ev, gpointer user_data)
+{
+  ev->received = FALSE;
+  return TRUE;
+}
+
 /**
  * gst_pad_set_offset:
  * @pad: a #GstPad
@@ -3303,8 +3369,6 @@ gst_pad_get_offset (GstPad * pad)
 void
 gst_pad_set_offset (GstPad * pad, gint64 offset)
 {
-  PadEvent *ev;
-
   g_return_if_fail (GST_IS_PAD (pad));
 
   GST_OBJECT_LOCK (pad);
@@ -3315,16 +3379,9 @@ gst_pad_set_offset (GstPad * pad, gint64 offset)
   pad->offset = offset;
   GST_DEBUG_OBJECT (pad, "changed offset to %" G_GINT64_FORMAT, offset);
 
-  /* sinkpads will apply their offset the next time a segment
-   * event is received. */
-  if (GST_PAD_IS_SINK (pad))
-    goto done;
-
-  /* resend the last segment event on next buffer push */
-  if ((ev = find_event_by_type (pad, GST_EVENT_SEGMENT, 0))) {
-    ev->received = FALSE;
-    GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_PENDING_EVENTS);
-  }
+  /* resend all sticky events with updated offset on next buffer push */
+  events_foreach (pad, mark_event_not_received, NULL);
+  GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_PENDING_EVENTS);
 
 done:
   GST_OBJECT_UNLOCK (pad);
@@ -3624,7 +3681,7 @@ gst_pad_peer_query (GstPad * pad, GstQuery * query)
   if (GST_PAD_IS_SRC (pad) && serialized) {
     /* all serialized queries on the srcpad trigger push of
      * sticky events */
-    if (!check_sticky (pad, NULL) == GST_FLOW_OK)
+    if (check_sticky (pad, NULL) != GST_FLOW_OK)
       goto sticky_failed;
   }
 
@@ -3723,15 +3780,18 @@ gst_pad_chain_data_unchecked (GstPad * pad, GstPadProbeType type, void *data)
     goto wrong_mode;
 
 #ifndef G_DISABLE_ASSERT
-  if (!find_event_by_type (pad, GST_EVENT_STREAM_START, 0)) {
-    g_warning (G_STRLOC
-        ":%s:<%s:%s> Got data flow before stream-start event",
-        G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
-  }
-  if (!find_event_by_type (pad, GST_EVENT_SEGMENT, 0)) {
-    g_warning (G_STRLOC
-        ":%s:<%s:%s> Got data flow before segment event",
-        G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
+  if (G_UNLIKELY (pad->priv->last_cookie != pad->priv->events_cookie)) {
+    if (!find_event_by_type (pad, GST_EVENT_STREAM_START, 0)) {
+      g_warning (G_STRLOC
+          ":%s:<%s:%s> Got data flow before stream-start event",
+          G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
+    }
+    if (!find_event_by_type (pad, GST_EVENT_SEGMENT, 0)) {
+      g_warning (G_STRLOC
+          ":%s:<%s:%s> Got data flow before segment event",
+          G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
+    }
+    pad->priv->last_cookie = pad->priv->events_cookie;
   }
 #endif
 
@@ -3822,7 +3882,7 @@ probe_stopped:
         ret = GST_FLOW_OK;
         break;
       default:
-        GST_DEBUG_OBJECT (pad, "an error occured %s", gst_flow_get_name (ret));
+        GST_DEBUG_OBJECT (pad, "an error occurred %s", gst_flow_get_name (ret));
         break;
     }
     return ret;
@@ -3848,7 +3908,7 @@ no_function:
  * The function returns #GST_FLOW_FLUSHING if the pad was flushing.
  *
  * If the buffer type is not acceptable for @pad (as negotiated with a
- * preceeding GST_EVENT_CAPS event), this function returns
+ * preceding GST_EVENT_CAPS event), this function returns
  * #GST_FLOW_NOT_NEGOTIATED.
  *
  * The function proceeds calling the chain function installed on @pad (see
@@ -3954,15 +4014,18 @@ gst_pad_push_data (GstPad * pad, GstPadProbeType type, void *data)
     goto wrong_mode;
 
 #ifndef G_DISABLE_ASSERT
-  if (!find_event_by_type (pad, GST_EVENT_STREAM_START, 0)) {
-    g_warning (G_STRLOC
-        ":%s:<%s:%s> Got data flow before stream-start event",
-        G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
-  }
-  if (!find_event_by_type (pad, GST_EVENT_SEGMENT, 0)) {
-    g_warning (G_STRLOC
-        ":%s:<%s:%s> Got data flow before segment event",
-        G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
+  if (G_UNLIKELY (pad->priv->last_cookie != pad->priv->events_cookie)) {
+    if (!find_event_by_type (pad, GST_EVENT_STREAM_START, 0)) {
+      g_warning (G_STRLOC
+          ":%s:<%s:%s> Got data flow before stream-start event",
+          G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
+    }
+    if (!find_event_by_type (pad, GST_EVENT_SEGMENT, 0)) {
+      g_warning (G_STRLOC
+          ":%s:<%s:%s> Got data flow before segment event",
+          G_STRFUNC, GST_DEBUG_PAD_NAME (pad));
+    }
+    pad->priv->last_cookie = pad->priv->events_cookie;
   }
 #endif
 
@@ -4046,7 +4109,7 @@ probe_stopped:
         ret = GST_FLOW_OK;
         break;
       default:
-        GST_DEBUG_OBJECT (pad, "an error occured %s", gst_flow_get_name (ret));
+        GST_DEBUG_OBJECT (pad, "an error occurred %s", gst_flow_get_name (ret));
         break;
     }
     return ret;
@@ -4310,7 +4373,7 @@ get_range_failed:
  * When this function returns any other result value than #GST_FLOW_OK, @buffer
  * will be unchanged.
  *
- * This is a lowlevel function. Usualy gst_pad_pull_range() is used.
+ * This is a lowlevel function. Usually gst_pad_pull_range() is used.
  *
  * Returns: a #GstFlowReturn from the pad.
  *
@@ -4505,7 +4568,7 @@ store_sticky_event (GstPad * pad, GstEvent * event)
 
   type = GST_EVENT_TYPE (event);
 
-  /* Store all sticky events except SEGMENT/SEGMENT when we're flushing,
+  /* Store all sticky events except SEGMENT/EOS when we're flushing,
    * otherwise they can be dropped and nothing would ever resend them.
    * Only do that for activated pads though, everything else is a bug!
    */
@@ -4650,6 +4713,10 @@ gst_pad_push_event_unchecked (GstPad * pad, GstEvent * event,
   GstPad *peerpad;
   GstEventType event_type;
 
+  /* pass the adjusted event on. We need to do this even if
+   * there is no peer pad because of the probes. */
+  event = apply_pad_offset (pad, event, GST_PAD_IS_SINK (pad));
+
   /* Two checks to be made:
    * . (un)set the FLUSHING flag for flushing events,
    * . handle pad blocking */
@@ -4683,11 +4750,6 @@ gst_pad_push_event_unchecked (GstPad * pad, GstEvent * event,
        */
 
       switch (GST_EVENT_TYPE (event)) {
-        case GST_EVENT_SEGMENT:
-          /* pass the adjusted segment event on. We need to do this even if
-           * there is no peer pad because of the probes. */
-          event = apply_pad_offset (pad, event);
-          break;
         case GST_EVENT_RECONFIGURE:
           if (GST_PAD_IS_SINK (pad))
             GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_NEED_RECONFIGURE);
@@ -4726,14 +4788,15 @@ gst_pad_push_event_unchecked (GstPad * pad, GstEvent * event,
   GST_OBJECT_UNLOCK (pad);
 
   GST_LOG_OBJECT (pad, "sending event %p (%s) to peerpad %" GST_PTR_FORMAT,
-      event, GST_EVENT_TYPE_NAME (event), peerpad);
+      event, gst_event_type_get_name (event_type), peerpad);
 
   ret = gst_pad_send_event_unchecked (peerpad, event, type);
 
   /* Note: we gave away ownership of the event at this point but we can still
    * print the old pointer */
-  GST_LOG_OBJECT (pad, "sent event %p to peerpad %" GST_PTR_FORMAT ", ret %s",
-      event, peerpad, gst_flow_get_name (ret));
+  GST_LOG_OBJECT (pad,
+      "sent event %p to (%s) peerpad %" GST_PTR_FORMAT ", ret %s", event,
+      gst_event_type_get_name (event_type), peerpad, gst_flow_get_name (ret));
 
   gst_object_unref (peerpad);
 
@@ -4763,7 +4826,7 @@ probe_stopped:
         GST_DEBUG_OBJECT (pad, "dropped event");
         break;
       default:
-        GST_DEBUG_OBJECT (pad, "an error occured %s", gst_flow_get_name (ret));
+        GST_DEBUG_OBJECT (pad, "an error occurred %s", gst_flow_get_name (ret));
         break;
     }
     return ret;
@@ -4797,7 +4860,7 @@ idle_probe_stopped:
  * mainly used by elements to send events to their peer
  * elements.
  *
- * This function takes owership of the provided event so you should
+ * This function takes ownership of the provided event so you should
  * gst_event_ref() it if you want to reuse the event after this call.
  *
  * Returns: TRUE if the event was handled.
@@ -4940,6 +5003,9 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
   GstObject *parent;
 
   GST_OBJECT_LOCK (pad);
+
+  event = apply_pad_offset (pad, event, GST_PAD_IS_SRC (pad));
+
   if (GST_PAD_IS_SINK (pad))
     serialized = GST_EVENT_IS_SERIALIZED (event);
   else
@@ -5001,14 +5067,6 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
 
         if (G_UNLIKELY (GST_PAD_IS_EOS (pad)))
           goto eos;
-      }
-
-      switch (GST_EVENT_TYPE (event)) {
-        case GST_EVENT_SEGMENT:
-          event = apply_pad_offset (pad, event);
-          break;
-        default:
-          break;
       }
       break;
   }
@@ -5107,7 +5165,7 @@ probe_stopped:
         ret = GST_FLOW_OK;
         break;
       default:
-        GST_DEBUG_OBJECT (pad, "an error occured %s", gst_flow_get_name (ret));
+        GST_DEBUG_OBJECT (pad, "an error occurred %s", gst_flow_get_name (ret));
         break;
     }
     return ret;
@@ -5165,7 +5223,7 @@ precheck_failed:
  * plugin doesn't need to bother itself with this information; the core handles
  * all necessary locks and checks.
  *
- * This function takes owership of the provided event so you should
+ * This function takes ownership of the provided event so you should
  * gst_event_ref() it if you want to reuse the event after this call.
  *
  * Returns: TRUE if the event was handled.

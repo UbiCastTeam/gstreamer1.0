@@ -194,7 +194,7 @@ gst_identity_class_init (GstIdentityClass * klass)
    * GstIdentity:signal-handoffs
    *
    * If set to #TRUE, the identity will emit a handoff signal when handling a buffer.
-   * When set to #FALSE, no signal will be emited, which might improve performance.
+   * When set to #FALSE, no signal will be emitted, which might improve performance.
    */
   g_object_class_install_property (gobject_class, PROP_SIGNAL_HANDOFFS,
       g_param_spec_boolean ("signal-handoffs",
@@ -471,9 +471,10 @@ gst_identity_update_last_message_for_buffer (GstIdentity * identity,
   GST_OBJECT_LOCK (identity);
 
   {
-    const char *flag_list[15] = {
+    const char *flag_list[] = {
       "", "", "", "", "live", "decode-only", "discont", "resync", "corrupted",
-      "marker", "header", "gap", "droppable", "delta-unit", "in-caps"
+      "marker", "header", "gap", "droppable", "delta-unit", "tag-memory",
+      "FIXME"
     };
     int i;
     char *end = flag_str;

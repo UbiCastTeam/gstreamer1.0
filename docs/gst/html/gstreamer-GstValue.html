@@ -228,6 +228,14 @@ to GStreamer</p>
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
+<a class="link" href="gstreamer-GstValue.html#gst-value-list-append-and-take-value" title="gst_value_list_append_and_take_value ()">gst_value_list_append_and_take_value</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
 <a class="link" href="gstreamer-GstValue.html#gst-value-list-prepend-value" title="gst_value_list_prepend_value ()">gst_value_list_prepend_value</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -365,7 +373,7 @@ to GStreamer</p>
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *
+<td class="function_type">const <a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstValue.html#gst-value-get-caps" title="gst_value_get_caps ()">gst_value_get_caps</a> <span class="c_punctuation">()</span>
@@ -386,7 +394,7 @@ to GStreamer</p>
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a class="link" href="gstreamer-GstCapsFeatures.html#GstCapsFeatures" title="GstCapsFeatures"><span class="returnvalue">GstCapsFeatures</span></a> *
+<td class="function_type">const <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="returnvalue">GstCapsFeatures</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstValue.html#gst-value-get-caps-features" title="gst_value_get_caps_features ()">gst_value_get_caps_features</a> <span class="c_punctuation">()</span>
@@ -407,7 +415,7 @@ to GStreamer</p>
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *
+<td class="function_type">const <a class="link" href="GstStructure.html" title="GstStructure"><span class="returnvalue">GstStructure</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstValue.html#gst-value-get-structure" title="gst_value_get_structure ()">gst_value_get_structure</a> <span class="c_punctuation">()</span>
@@ -611,6 +619,14 @@ to GStreamer</p>
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstValue.html#gst-value-array-append-and-take-value" title="gst_value_array_append_and_take_value ()">gst_value_array_append_and_take_value</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
@@ -721,7 +737,6 @@ to GStreamer</p>
 <p>GValue implementations specific to GStreamer.</p>
 <p>Note that operations on the same <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> from multiple threads may lead to
 undefined behaviour.</p>
-<p>Last reviewed on 2008-03-11 (0.10.18)</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstValue.functions_details"></a><h2>Functions</h2>
@@ -946,7 +961,7 @@ gst_value_get_int_range_max (<em class="parameter"><code>const <a href="http://l
 </div>
 <div class="refsect3">
 <a name="id-1.3.57.8.8.6"></a><h4>Returns</h4>
-<p> the maxumum of the range</p>
+<p> the maximum of the range</p>
 <p></p>
 </div>
 </div>
@@ -1219,7 +1234,7 @@ gst_value_get_int64_range_max (<em class="parameter"><code>const <a href="http:/
 </div>
 <div class="refsect3">
 <a name="id-1.3.57.8.17.6"></a><h4>Returns</h4>
-<p> the maxumum of the range</p>
+<p> the maximum of the range</p>
 <p></p>
 </div>
 </div>
@@ -1410,7 +1425,7 @@ gst_value_get_double_range_max (<em class="parameter"><code>const <a href="http:
 </div>
 <div class="refsect3">
 <a name="id-1.3.57.8.23.6"></a><h4>Returns</h4>
-<p> the maxumum of the range</p>
+<p> the maximum of the range</p>
 <p></p>
 </div>
 </div>
@@ -1492,6 +1507,39 @@ gst_value_list_append_value (<em class="parameter"><code><a href="http://library
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-value-list-append-and-take-value"></a><h3>gst_value_list_append_and_take_value ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_value_list_append_and_take_value (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
+                                      <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *append_value</code></em>);</pre>
+<p>Appends <em class="parameter"><code>append_value</code></em>
+ to the GstValueList in <em class="parameter"><code>value</code></em>
+.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.27.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>value</p></td>
+<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of type <a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><span class="type">GST_TYPE_LIST</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>append_value</p></td>
+<td class="parameter_description"><p> the value to append. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-value-list-prepend-value"></a><h3>gst_value_list_prepend_value ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_value_list_prepend_value (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
@@ -1500,7 +1548,7 @@ gst_value_list_prepend_value (<em class="parameter"><code><a href="http://librar
  to the GstValueList in <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.27.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.28.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1536,7 +1584,7 @@ of type <a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title=
 <em class="parameter"><code>dest</code></em>
  will be initialized to the type <a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><span class="type">GST_TYPE_LIST</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.28.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.29.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1581,7 +1629,7 @@ contain any duplicates, or a non-list type (if <em class="parameter"><code>value
 
 were equal).</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.29.6"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.30.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1616,7 +1664,7 @@ gst_value_list_get_size (<em class="parameter"><code>const <a href="http://libra
 <p>Gets the number of values contained in <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.30.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.31.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1631,7 +1679,7 @@ gst_value_list_get_size (<em class="parameter"><code>const <a href="http://libra
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.30.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.31.6"></a><h4>Returns</h4>
 <p> the number of values</p>
 <p></p>
 </div>
@@ -1647,7 +1695,7 @@ gst_value_list_get_value (<em class="parameter"><code>const <a href="http://libr
 has the index <em class="parameter"><code>index</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.31.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.32.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1669,7 +1717,7 @@ has the index <em class="parameter"><code>index</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.31.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.32.6"></a><h4>Returns</h4>
 <p> the value at the given index. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -1681,7 +1729,7 @@ has the index <em class="parameter"><code>index</code></em>
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <a class="link" href="gstreamer-GstValue.html#GST-TYPE-FRACTION:CAPS" title="GST_TYPE_FRACTION"><span class="type">GST_TYPE_FRACTION</span></a> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.32.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.33.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1710,7 +1758,7 @@ gst_value_set_fraction (<em class="parameter"><code><a href="http://library.gnom
 The fraction gets reduced to the smallest numerator and denominator,
 and if necessary the sign is moved to the numerator.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.33.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.34.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1745,34 +1793,6 @@ gst_value_get_fraction_numerator (<em class="parameter"><code>const <a href="htt
 <p>Gets the numerator of the fraction specified by <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.34.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>a GValue initialized to <a class="link" href="gstreamer-GstValue.html#GST-TYPE-FRACTION:CAPS" title="GST_TYPE_FRACTION"><span class="type">GST_TYPE_FRACTION</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.57.8.34.6"></a><h4>Returns</h4>
-<p> the numerator of the fraction.</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-value-get-fraction-denominator"></a><h3>gst_value_get_fraction_denominator ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
-gst_value_get_fraction_denominator (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
-<p>Gets the denominator of the fraction specified by <em class="parameter"><code>value</code></em>
-.</p>
-<div class="refsect3">
 <a name="id-1.3.57.8.35.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -1789,6 +1809,34 @@ gst_value_get_fraction_denominator (<em class="parameter"><code>const <a href="h
 </div>
 <div class="refsect3">
 <a name="id-1.3.57.8.35.6"></a><h4>Returns</h4>
+<p> the numerator of the fraction.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-value-get-fraction-denominator"></a><h3>gst_value_get_fraction_denominator ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+gst_value_get_fraction_denominator (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+<p>Gets the denominator of the fraction specified by <em class="parameter"><code>value</code></em>
+.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.36.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>value</p></td>
+<td class="parameter_description"><p>a GValue initialized to <a class="link" href="gstreamer-GstValue.html#GST-TYPE-FRACTION:CAPS" title="GST_TYPE_FRACTION"><span class="type">GST_TYPE_FRACTION</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.57.8.36.6"></a><h4>Returns</h4>
 <p> the denominator of the fraction.</p>
 <p></p>
 </div>
@@ -1804,7 +1852,7 @@ gst_value_fraction_multiply (<em class="parameter"><code><a href="http://library
 <em class="parameter"><code>product</code></em>
  to the product of the two fractions.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.36.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.37.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1831,7 +1879,7 @@ gst_value_fraction_multiply (<em class="parameter"><code><a href="http://library
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.36.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.37.6"></a><h4>Returns</h4>
 <p> FALSE in case of an error (like integer overflow), TRUE otherwise.</p>
 <p></p>
 </div>
@@ -1848,7 +1896,7 @@ gst_value_fraction_subtract (<em class="parameter"><code><a href="http://library
  and sets <em class="parameter"><code>dest</code></em>
  to the result.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.37.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.38.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1875,7 +1923,7 @@ gst_value_fraction_subtract (<em class="parameter"><code><a href="http://library
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.37.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.38.6"></a><h4>Returns</h4>
 <p> FALSE in case of an error (like integer overflow), TRUE otherwise.</p>
 <p></p>
 </div>
@@ -1887,7 +1935,7 @@ gst_value_fraction_subtract (<em class="parameter"><code><a href="http://library
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <a class="link" href="gstreamer-GstValue.html#GST-TYPE-FRACTION-RANGE:CAPS" title="GST_TYPE_FRACTION_RANGE"><span class="type">GST_TYPE_FRACTION_RANGE</span></a> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.38.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.39.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1914,7 +1962,7 @@ gst_value_set_fraction_range (<em class="parameter"><code><a href="http://librar
  and <em class="parameter"><code>end</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.39.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.40.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1949,34 +1997,6 @@ gst_value_get_fraction_range_min (<em class="parameter"><code>const <a href="htt
 <p>Gets the minimum of the range specified by <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.40.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>a GValue initialized to GST_TYPE_FRACTION_RANGE</p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.57.8.40.6"></a><h4>Returns</h4>
-<p> the minimum of the range</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-value-get-fraction-range-max"></a><h3>gst_value_get_fraction_range_max ()</h3>
-<pre class="programlisting">const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
-gst_value_get_fraction_range_max (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
-<p>Gets the maximum of the range specified by <em class="parameter"><code>value</code></em>
-.</p>
-<div class="refsect3">
 <a name="id-1.3.57.8.41.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -1993,6 +2013,34 @@ gst_value_get_fraction_range_max (<em class="parameter"><code>const <a href="htt
 </div>
 <div class="refsect3">
 <a name="id-1.3.57.8.41.6"></a><h4>Returns</h4>
+<p> the minimum of the range</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-value-get-fraction-range-max"></a><h3>gst_value_get_fraction_range_max ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+gst_value_get_fraction_range_max (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+<p>Gets the maximum of the range specified by <em class="parameter"><code>value</code></em>
+.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.42.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>value</p></td>
+<td class="parameter_description"><p>a GValue initialized to GST_TYPE_FRACTION_RANGE</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.57.8.42.6"></a><h4>Returns</h4>
 <p> the maximum of the range</p>
 <p></p>
 </div>
@@ -2014,7 +2062,7 @@ and <em class="parameter"><code>numerator_end</code></em>
 /<em class="parameter"><code>denominator_end</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.42.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.43.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2056,9 +2104,9 @@ and <em class="parameter"><code>numerator_end</code></em>
 <a name="GST-VALUE-HOLDS-DATE-TIME:CAPS"></a><h3>GST_VALUE_HOLDS_DATE_TIME()</h3>
 <pre class="programlisting">#define GST_VALUE_HOLDS_DATE_TIME(x)    (G_VALUE_HOLDS((x), gst_date_time_get_type ()))
 </pre>
-<p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <a class="link" href="gstreamer-GstDateTime.html#GST-TYPE-DATE-TIME:CAPS" title="GST_TYPE_DATE_TIME"><span class="type">GST_TYPE_DATE_TIME</span></a> value.</p>
+<p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <a class="link" href="GstDateTime.html#GST-TYPE-DATE-TIME:CAPS" title="GST_TYPE_DATE_TIME"><span class="type">GST_TYPE_DATE_TIME</span></a> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.43.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.44.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2080,7 +2128,7 @@ and <em class="parameter"><code>numerator_end</code></em>
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <span class="type">GST_TYPE_CAPS</span> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.44.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.45.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2100,7 +2148,7 @@ and <em class="parameter"><code>numerator_end</code></em>
 <a name="gst-value-set-caps"></a><h3>gst_value_set_caps ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_value_set_caps (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
-                    <em class="parameter"><code>const <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+                    <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Sets the contents of <em class="parameter"><code>value</code></em>
  to <em class="parameter"><code>caps</code></em>
 . A reference to the
@@ -2108,7 +2156,7 @@ provided <em class="parameter"><code>caps</code></em>
  will be taken by the <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.45.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.46.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2133,15 +2181,15 @@ provided <em class="parameter"><code>caps</code></em>
 <hr>
 <div class="refsect2">
 <a name="gst-value-get-caps"></a><h3>gst_value_get_caps ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="returnvalue">GstCaps</span></a> *
+<pre class="programlisting">const <a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
 gst_value_get_caps (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Gets the contents of <em class="parameter"><code>value</code></em>
 . The reference count of the returned
-<a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> will not be modified, therefore the caller must take one
+<a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> will not be modified, therefore the caller must take one
 before getting rid of the <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.46.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.47.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2156,7 +2204,7 @@ before getting rid of the <em class="parameter"><code>value</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.46.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.47.6"></a><h4>Returns</h4>
 <p> the contents of <em class="parameter"><code>value</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -2169,7 +2217,7 @@ before getting rid of the <em class="parameter"><code>value</code></em>
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <span class="type">GST_TYPE_CAPS_FEATURES</span> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.47.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.48.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2189,12 +2237,12 @@ before getting rid of the <em class="parameter"><code>value</code></em>
 <a name="gst-value-set-caps-features"></a><h3>gst_value_set_caps_features ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_value_set_caps_features (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
-                             <em class="parameter"><code>const <a class="link" href="gstreamer-GstCapsFeatures.html#GstCapsFeatures" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>);</pre>
+                             <em class="parameter"><code>const <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>);</pre>
 <p>Sets the contents of <em class="parameter"><code>value</code></em>
  to <em class="parameter"><code>features</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.48.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.49.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2219,12 +2267,12 @@ gst_value_set_caps_features (<em class="parameter"><code><a href="http://library
 <hr>
 <div class="refsect2">
 <a name="gst-value-get-caps-features"></a><h3>gst_value_get_caps_features ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstCapsFeatures.html#GstCapsFeatures" title="GstCapsFeatures"><span class="returnvalue">GstCapsFeatures</span></a> *
+<pre class="programlisting">const <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="returnvalue">GstCapsFeatures</span></a> *
 gst_value_get_caps_features (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Gets the contents of <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.49.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.50.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2239,7 +2287,7 @@ gst_value_get_caps_features (<em class="parameter"><code>const <a href="http://l
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.49.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.50.6"></a><h4>Returns</h4>
 <p> the contents of <em class="parameter"><code>value</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -2252,7 +2300,7 @@ gst_value_get_caps_features (<em class="parameter"><code>const <a href="http://l
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <span class="type">GST_TYPE_STRUCTURE</span> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.50.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.51.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2272,12 +2320,12 @@ gst_value_get_caps_features (<em class="parameter"><code>const <a href="http://l
 <a name="gst-value-set-structure"></a><h3>gst_value_set_structure ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_value_set_structure (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
-                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);</pre>
+                         <em class="parameter"><code>const <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);</pre>
 <p>Sets the contents of <em class="parameter"><code>value</code></em>
  to <em class="parameter"><code>structure</code></em>
 .  The actual</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.51.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.52.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2302,12 +2350,12 @@ gst_value_set_structure (<em class="parameter"><code><a href="http://library.gno
 <hr>
 <div class="refsect2">
 <a name="gst-value-get-structure"></a><h3>gst_value_get_structure ()</h3>
-<pre class="programlisting">const <a class="link" href="gstreamer-GstStructure.html#GstStructure" title="struct GstStructure"><span class="returnvalue">GstStructure</span></a> *
+<pre class="programlisting">const <a class="link" href="GstStructure.html" title="GstStructure"><span class="returnvalue">GstStructure</span></a> *
 gst_value_get_structure (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Gets the contents of <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.52.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.53.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2322,7 +2370,7 @@ gst_value_get_structure (<em class="parameter"><code>const <a href="http://libra
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.52.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.53.6"></a><h4>Returns</h4>
 <p> the contents of <em class="parameter"><code>value</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -2335,7 +2383,7 @@ gst_value_get_structure (<em class="parameter"><code>const <a href="http://libra
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <span class="type">GST_TYPE_BUFFER</span> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.53.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.54.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2355,13 +2403,13 @@ gst_value_get_structure (<em class="parameter"><code>const <a href="http://libra
 <a name="gst-value-get-buffer"></a><h3>gst_value_get_buffer()</h3>
 <pre class="programlisting">#define         gst_value_get_buffer(v)         GST_BUFFER_CAST (g_value_get_boxed(v))
 </pre>
-<p>Receives a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> as the value of <em class="parameter"><code>v</code></em>
+<p>Receives a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> as the value of <em class="parameter"><code>v</code></em>
 . Does not return a reference to
 the buffer, so the pointer is only valid for as long as the caller owns
 a reference to <em class="parameter"><code>v</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.54.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.55.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2376,7 +2424,7 @@ a reference to <em class="parameter"><code>v</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.54.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.55.6"></a><h4>Returns</h4>
 <p> buffer. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -2389,37 +2437,6 @@ a reference to <em class="parameter"><code>v</code></em>
 <p>Sets <em class="parameter"><code>b</code></em>
  as the value of <em class="parameter"><code>v</code></em>
 .  Caller retains reference to buffer.</p>
-<div class="refsect3">
-<a name="id-1.3.57.8.55.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>v</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to receive the data</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>b</p></td>
-<td class="parameter_description"><p> a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> to assign to the GstValue. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
-</tr>
-</tbody>
-</table></div>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-value-take-buffer"></a><h3>gst_value_take_buffer()</h3>
-<pre class="programlisting">#define         gst_value_take_buffer(v,b)      g_value_take_boxed(v,(b))
-</pre>
-<p>Sets <em class="parameter"><code>b</code></em>
- as the value of <em class="parameter"><code>v</code></em>
-.  Caller gives away reference to buffer.</p>
 <div class="refsect3">
 <a name="id-1.3.57.8.56.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -2436,7 +2453,38 @@ a reference to <em class="parameter"><code>v</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>b</p></td>
-<td class="parameter_description"><p> a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> to assign to the GstValue. </p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> to assign to the GstValue. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-value-take-buffer"></a><h3>gst_value_take_buffer()</h3>
+<pre class="programlisting">#define         gst_value_take_buffer(v,b)      g_value_take_boxed(v,(b))
+</pre>
+<p>Sets <em class="parameter"><code>b</code></em>
+ as the value of <em class="parameter"><code>v</code></em>
+.  Caller gives away reference to buffer.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.57.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>v</p></td>
+<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to receive the data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>b</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> to assign to the GstValue. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -2450,7 +2498,7 @@ a reference to <em class="parameter"><code>v</code></em>
 </pre>
 <p>Checks if the given <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> contains a <span class="type">GST_TYPE_SAMPLE</span> value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.57.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.58.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2470,13 +2518,13 @@ a reference to <em class="parameter"><code>v</code></em>
 <a name="gst-value-get-sample"></a><h3>gst_value_get_sample()</h3>
 <pre class="programlisting">#define         gst_value_get_sample(v)         GST_SAMPLE_CAST (g_value_get_boxed(v))
 </pre>
-<p>Receives a <a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> as the value of <em class="parameter"><code>v</code></em>
+<p>Receives a <a class="link" href="GstSample.html" title="GstSample"><span class="type">GstSample</span></a> as the value of <em class="parameter"><code>v</code></em>
 . Does not return a reference to
 the sample, so the pointer is only valid for as long as the caller owns
 a reference to <em class="parameter"><code>v</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.58.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.59.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2491,7 +2539,7 @@ a reference to <em class="parameter"><code>v</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.58.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.59.6"></a><h4>Returns</h4>
 <p> sample. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -2504,37 +2552,6 @@ a reference to <em class="parameter"><code>v</code></em>
 <p>Sets <em class="parameter"><code>b</code></em>
  as the value of <em class="parameter"><code>v</code></em>
 .  Caller retains reference to sample.</p>
-<div class="refsect3">
-<a name="id-1.3.57.8.59.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>v</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to receive the data</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>b</p></td>
-<td class="parameter_description"><p> a <a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> to assign to the GstValue. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
-</tr>
-</tbody>
-</table></div>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-value-take-sample"></a><h3>gst_value_take_sample()</h3>
-<pre class="programlisting">#define         gst_value_take_sample(v,b)      g_value_take_boxed(v,(b))
-</pre>
-<p>Sets <em class="parameter"><code>b</code></em>
- as the value of <em class="parameter"><code>v</code></em>
-.  Caller gives away reference to sample.</p>
 <div class="refsect3">
 <a name="id-1.3.57.8.60.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -2551,7 +2568,38 @@ a reference to <em class="parameter"><code>v</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>b</p></td>
-<td class="parameter_description"><p> a <a class="link" href="gstreamer-GstSample.html#GstSample" title="GstSample"><span class="type">GstSample</span></a> to assign to the GstValue. </p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstSample.html" title="GstSample"><span class="type">GstSample</span></a> to assign to the GstValue. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-value-take-sample"></a><h3>gst_value_take_sample()</h3>
+<pre class="programlisting">#define         gst_value_take_sample(v,b)      g_value_take_boxed(v,(b))
+</pre>
+<p>Sets <em class="parameter"><code>b</code></em>
+ as the value of <em class="parameter"><code>v</code></em>
+.  Caller gives away reference to sample.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.61.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>v</p></td>
+<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to receive the data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>b</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstSample.html" title="GstSample"><span class="type">GstSample</span></a> to assign to the GstValue. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -2574,7 +2622,7 @@ a reference to <em class="parameter"><code>v</code></em>
                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value2</code></em>);</pre>
 <p>Used together with <a class="link" href="gstreamer-GstValue.html#gst-value-compare" title="gst_value_compare ()"><code class="function">gst_value_compare()</code></a> to compare <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> items.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.62.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.63.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2596,7 +2644,7 @@ a reference to <em class="parameter"><code>v</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.62.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.63.6"></a><h4>Returns</h4>
 <p> one of GST_VALUE_LESS_THAN, GST_VALUE_EQUAL, GST_VALUE_GREATER_THAN
 or GST_VALUE_UNORDERED</p>
 <p></p>
@@ -2610,7 +2658,7 @@ or GST_VALUE_UNORDERED</p>
 <p>Used by <a class="link" href="gstreamer-GstValue.html#gst-value-serialize" title="gst_value_serialize ()"><code class="function">gst_value_serialize()</code></a> to obtain a non-binary form of the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a>.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.63.6"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.64.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2625,7 +2673,7 @@ or GST_VALUE_UNORDERED</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.63.7"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.64.7"></a><h4>Returns</h4>
 <p> the string representation of the value. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2638,7 +2686,7 @@ or GST_VALUE_UNORDERED</p>
                             <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s</code></em>);</pre>
 <p>Used by <a class="link" href="gstreamer-GstValue.html#gst-value-deserialize" title="gst_value_deserialize ()"><code class="function">gst_value_deserialize()</code></a> to parse a non-binary form into the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.64.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.65.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2660,7 +2708,7 @@ or GST_VALUE_UNORDERED</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.64.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.65.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success</p>
 <p></p>
 </div>
@@ -2675,7 +2723,7 @@ container) contains a "fixed" (which means: one value) or an "unfixed"
 (which means: multiple possible values, such as data lists or data
 ranges) value.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.65.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.66.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2690,7 +2738,7 @@ ranges) value.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.65.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.66.6"></a><h4>Returns</h4>
 <p> true if the value is "fixed".</p>
 <p></p>
 </div>
@@ -2703,7 +2751,7 @@ gst_value_register (<em class="parameter"><code>const <a class="link" href="gstr
 <p>Registers functions to perform calculations on <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> items of a given
 type. Each type can only be added once.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.66.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.67.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2727,7 +2775,7 @@ gst_value_init_and_copy (<em class="parameter"><code><a href="http://library.gno
 <p>Initialises the target value to be of the same type as source and then copies
 the contents from source to target.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.67.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.68.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2759,7 +2807,7 @@ gst_value_serialize (<em class="parameter"><code>const <a href="http://library.g
 getting back this string later on using <a class="link" href="gstreamer-GstValue.html#gst-value-deserialize" title="gst_value_deserialize ()"><code class="function">gst_value_deserialize()</code></a>.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.68.6"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.69.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2774,7 +2822,7 @@ getting back this string later on using <a class="link" href="gstreamer-GstValue
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.68.7"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.69.7"></a><h4>Returns</h4>
 <p> the serialization for <em class="parameter"><code>value</code></em>
 or NULL if none exists. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -2789,7 +2837,7 @@ gst_value_deserialize (<em class="parameter"><code><a href="http://library.gnome
 <p>Tries to deserialize a string into the type specified by the given GValue.
 If the operation succeeds, TRUE is returned, FALSE otherwise.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.69.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.70.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2812,7 +2860,7 @@ deserialization. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.69.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.70.6"></a><h4>Returns</h4>
 <p> TRUE on success</p>
 <p></p>
 </div>
@@ -2837,43 +2885,6 @@ If <em class="parameter"><code>value1</code></em>
 , GST_VALUE_LESS_THAN is returned.
 If the values are equal, GST_VALUE_EQUAL is returned.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.70.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>value1</p></td>
-<td class="parameter_description"><p>a value to compare</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>value2</p></td>
-<td class="parameter_description"><p>another value to compare</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.57.8.70.6"></a><h4>Returns</h4>
-<p> comparison result</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-value-can-compare"></a><h3>gst_value_can_compare ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_value_can_compare (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value1</code></em>,
-                       <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value2</code></em>);</pre>
-<p>Determines if <em class="parameter"><code>value1</code></em>
- and <em class="parameter"><code>value2</code></em>
- can be compared.</p>
-<div class="refsect3">
 <a name="id-1.3.57.8.71.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -2897,6 +2908,43 @@ gst_value_can_compare (<em class="parameter"><code>const <a href="http://library
 </div>
 <div class="refsect3">
 <a name="id-1.3.57.8.71.6"></a><h4>Returns</h4>
+<p> comparison result</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-value-can-compare"></a><h3>gst_value_can_compare ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_value_can_compare (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value1</code></em>,
+                       <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value2</code></em>);</pre>
+<p>Determines if <em class="parameter"><code>value1</code></em>
+ and <em class="parameter"><code>value2</code></em>
+ can be compared.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.72.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>value1</p></td>
+<td class="parameter_description"><p>a value to compare</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>value2</p></td>
+<td class="parameter_description"><p>another value to compare</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.57.8.72.6"></a><h4>Returns</h4>
 <p> TRUE if the values can be compared</p>
 <p></p>
 </div>
@@ -2912,7 +2960,7 @@ gst_value_union (<em class="parameter"><code><a href="http://library.gnome.org/d
  and <em class="parameter"><code>value2</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.72.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.73.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2939,8 +2987,8 @@ gst_value_union (<em class="parameter"><code><a href="http://library.gnome.org/d
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.72.6"></a><h4>Returns</h4>
-<p> TRUE if the union suceeded.</p>
+<a name="id-1.3.57.8.73.6"></a><h4>Returns</h4>
+<p> TRUE if the union succeeded.</p>
 <p></p>
 </div>
 </div>
@@ -2960,7 +3008,7 @@ and an integer can be unioned if the integer is a subset of the
 integer range.  If there is the possibility that two values can
 be unioned, this function returns TRUE.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.73.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.74.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2982,7 +3030,7 @@ be unioned, this function returns TRUE.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.73.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.74.6"></a><h4>Returns</h4>
 <p> TRUE if there is a function allowing the two values to
 be unioned.</p>
 <p></p>
@@ -3001,7 +3049,7 @@ gst_value_subtract (<em class="parameter"><code><a href="http://library.gnome.or
 .
 Note that this means subtraction as in sets, not as in mathematics.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.74.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.75.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3030,7 +3078,7 @@ will not be computed, which can give a fair speedup. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.74.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.75.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the subtraction is not empty</p>
 <p></p>
 </div>
@@ -3045,7 +3093,7 @@ gst_value_can_subtract (<em class="parameter"><code>const <a href="http://librar
  from <em class="parameter"><code>minuend</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.75.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.76.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3067,7 +3115,7 @@ gst_value_can_subtract (<em class="parameter"><code>const <a href="http://librar
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.75.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.76.6"></a><h4>Returns</h4>
 <p> TRUE if a subtraction is possible</p>
 <p></p>
 </div>
@@ -3086,7 +3134,7 @@ is placed in <em class="parameter"><code>dest</code></em>
 <em class="parameter"><code>dest</code></em>
  is not modified.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.76.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.77.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3114,7 +3162,7 @@ intersection value. May be NULL if the resulting set if not needed. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.76.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.77.6"></a><h4>Returns</h4>
 <p> TRUE if the intersection is non-empty</p>
 <p></p>
 </div>
@@ -3127,10 +3175,9 @@ gst_value_can_intersect (<em class="parameter"><code>const <a href="http://libra
                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value2</code></em>);</pre>
 <p>Determines if intersecting two values will produce a valid result.
 Two values will produce a valid intersection if they have the same
-type, or if there is a method (registered by
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstValue.html#gst-value-register-intersect-func"><code class="function">gst_value_register_intersect_func()</code></a>) to calculate the intersection.</p>
+type.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.77.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.78.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3152,7 +3199,7 @@ type, or if there is a method (registered by
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.77.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.78.6"></a><h4>Returns</h4>
 <p> TRUE if the values can intersect</p>
 <p></p>
 </div>
@@ -3170,7 +3217,7 @@ gst_value_is_subset (<em class="parameter"><code>const <a href="http://library.g
  is a subset of <em class="parameter"><code>value2</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.3.57.8.78.6"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.79.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3202,7 +3249,7 @@ gst_value_array_append_value (<em class="parameter"><code><a href="http://librar
  to the GstValueArray in <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.79.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.80.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3226,13 +3273,46 @@ gst_value_array_append_value (<em class="parameter"><code><a href="http://librar
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-value-array-append-and-take-value"></a><h3>gst_value_array_append_and_take_value ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_value_array_append_and_take_value (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
+                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *append_value</code></em>);</pre>
+<p>Appends <em class="parameter"><code>append_value</code></em>
+ to the GstValueArray in <em class="parameter"><code>value</code></em>
+.</p>
+<div class="refsect3">
+<a name="id-1.3.57.8.81.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>value</p></td>
+<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of type <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><span class="type">GST_TYPE_ARRAY</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>append_value</p></td>
+<td class="parameter_description"><p> the value to append. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-value-array-get-size"></a><h3>gst_value_array_get_size ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_value_array_get_size (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Gets the number of values contained in <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.80.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.82.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3247,7 +3327,7 @@ gst_value_array_get_size (<em class="parameter"><code>const <a href="http://libr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.80.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.82.6"></a><h4>Returns</h4>
 <p> the number of values</p>
 <p></p>
 </div>
@@ -3263,7 +3343,7 @@ gst_value_array_get_value (<em class="parameter"><code>const <a href="http://lib
 has the index <em class="parameter"><code>index</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.81.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.83.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3285,7 +3365,7 @@ has the index <em class="parameter"><code>index</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.81.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.83.6"></a><h4>Returns</h4>
 <p> the value at the given index. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -3300,7 +3380,7 @@ gst_value_array_prepend_value (<em class="parameter"><code><a href="http://libra
  to the GstValueArray in <em class="parameter"><code>value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.82.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.84.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3336,7 +3416,7 @@ first item is fixated and returned.
 If <em class="parameter"><code>src</code></em>
  is already fixed, this function returns FALSE.</p>
 <div class="refsect3">
-<a name="id-1.3.57.8.83.5"></a><h4>Parameters</h4>
+<a name="id-1.3.57.8.85.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3358,7 +3438,7 @@ If <em class="parameter"><code>src</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.57.8.83.6"></a><h4>Returns</h4>
+<a name="id-1.3.57.8.85.6"></a><h4>Returns</h4>
 <p> true if <em class="parameter"><code>dest</code></em>
 contains a fixated version of <em class="parameter"><code>src</code></em>
 .</p>
@@ -3427,7 +3507,7 @@ contains a fixated version of <em class="parameter"><code>src</code></em>
 <a name="GST-TYPE-DOUBLE-RANGE:CAPS"></a><h3>GST_TYPE_DOUBLE_RANGE</h3>
 <pre class="programlisting">#define GST_TYPE_DOUBLE_RANGE            gst_double_range_get_type ()
 </pre>
-<p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> type that represents a floating point range with double precission</p>
+<p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> type that represents a floating point range with double precision</p>
 <div class="refsect3">
 <a name="id-1.3.57.9.6.5"></a><h4>Returns</h4>
 <p> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of GstIntRange</p>

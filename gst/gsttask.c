@@ -64,8 +64,6 @@
  * name on Linux. Please note that the object name should be configured before the
  * task is started; changing the object name after the task has been started, has
  * no effect on the thread name.
- *
- * Last reviewed on 2012-03-29 (0.11.3)
  */
 
 #include "gst_private.h"
@@ -197,6 +195,9 @@ gst_task_init (GstTask * task)
   g_mutex_lock (&pool_lock);
   task->priv->pool = gst_object_ref (klass->pool);
   g_mutex_unlock (&pool_lock);
+
+  /* clear floating flag */
+  gst_object_ref_sink (task);
 }
 
 static void

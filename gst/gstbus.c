@@ -63,8 +63,6 @@
  *
  * Note that a #GstPipeline will set its bus into flushing state when changing
  * from READY to NULL state.
- *
- * Last reviewed on 2012-03-28 (0.11.3)
  */
 
 #include "gst_private.h"
@@ -505,13 +503,18 @@ gst_bus_timed_pop_filtered (GstBus * bus, GstClockTime timeout,
           message, GST_MESSAGE_TYPE_NAME (message),
           GST_MESSAGE_SRC_NAME (message), (guint) types);
       if ((GST_MESSAGE_TYPE (message) & types) != 0) {
-        /* exit the loop, we have a message */
-        goto beach;
-      } else {
-        GST_DEBUG_OBJECT (bus, "discarding message, does not match mask");
-        gst_message_unref (message);
-        message = NULL;
+        /* Extra check to ensure extended types don't get matched unless
+         * asked for */
+        if ((GST_MESSAGE_TYPE_IS_EXTENDED (message) == FALSE)
+            || (types & GST_MESSAGE_EXTENDED)) {
+          /* exit the loop, we have a message */
+          goto beach;
+        }
       }
+
+      GST_DEBUG_OBJECT (bus, "discarding message, does not match mask");
+      gst_message_unref (message);
+      message = NULL;
     }
 
     /* no need to wait, exit loop */
@@ -588,7 +591,8 @@ gst_bus_timed_pop (GstBus * bus, GstClockTime timeout)
  * Get a message matching @type from the bus.  Will discard all messages on
  * the bus that do not match @type and that have been posted before the first
  * message that does match @type.  If there is no message matching @type on
- * the bus, all messages will be discarded.
+ * the bus, all messages will be discarded. It is not possible to use message
+ * enums beyond #GST_MESSAGE_EXTENDED in the @events mask.
  *
  * Returns: (transfer full): the next #GstMessage matching @type that is on
  *     the bus, or NULL if the bus is empty or there is no message matching
@@ -1012,7 +1016,7 @@ poll_destroy_timeout (GstBusPollData * poll_data)
  * gst_bus_poll:
  * @bus: a #GstBus
  * @events: a mask of #GstMessageType, representing the set of message types to
- * poll for.
+ * poll for (note special handling of extended message types below)
  * @timeout: the poll timeout, as a #GstClockTime, or #GST_CLOCK_TIME_NONE to poll
  * indefinitely.
  *
@@ -1021,6 +1025,8 @@ poll_destroy_timeout (GstBusPollData * poll_data)
  * @timeout is negative, this function will block indefinitely.
  *
  * All messages not in @events will be popped off the bus and will be ignored.
+ * It is not possible to use message enums beyond #GST_MESSAGE_EXTENDED in the
+ * @events mask
  *
  * Because poll is implemented using the "message" signal enabled by
  * gst_bus_add_signal_watch(), calling gst_bus_poll() will cause the "message"

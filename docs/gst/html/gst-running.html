@@ -51,7 +51,7 @@ plug-ins in the user's home directory, or rather the user's "data home"
 directory according to the xdg base dir specification. Usually this will be
 a directory called
 <code class="filename">plugins</code> inside the
-<code class="filename">.local/share/.gstreamer-1.0</code> directory in
+<code class="filename">.local/share/gstreamer-1.0</code> directory in
 the user's home directory by default, though this search path may change if
 the XDG_DATA_HOME environment variable is set.
     </p></li>
@@ -368,6 +368,20 @@ a stack trace in the usual way.
 Useful GLib environment variable. Set G_SLICE=always-malloc when running
 GStreamer programs in valgrind, or debugging memory leaks with other tools.
 See the GLib API reference for more details.
+  </p>
+<p><a name="GST_TAG_ENCODING"></a><b><code class="envar">GST_TAG_ENCODING</code>. </b>
+Try this character encoding first for tag-related strings where the encoding
+is not defined and which are not UTF-8 already. By defaul the current locale
+will be tried (if not UTF-8).
+  </p>
+<p><a name="GST_TAG_ID3_ENCODING"></a><b><code class="envar">GST_TAG_ID3_ENCODING</code>. </b>
+Try this character encoding first for ID3 tag-related strings where the
+encoding is not defined and which are not UTF-8 already. By defaul the current
+locale will be tried (if not UTF-8).
+  </p>
+<p><a name="GST_TAG_ID3V1_ENCODING"></a><b><code class="envar">GST_TAG_ID3V1_ENCODING</code>. </b>
+Try this character encoding first for ID3v1 tag-related strings where the
+encoding does not look like UTF-8.
   </p>
 </div>
 </div>

@@ -184,7 +184,7 @@
  *      buffer time metadata (which will be taken from upstream as much as
  *      possible). Internally keeping track of frame durations and respective
  *      sizes that have been pushed provides GstBaseParse with an estimated
- *      bitrate. A default @convert (used if not overriden) will then use these
+ *      bitrate. A default @convert (used if not overridden) will then use these
  *      rates to perform obvious conversions.  These rates are also used to
  *      update (estimated) duration at regular frame intervals.
  *   </para></listitem>
@@ -2502,6 +2502,7 @@ gst_base_parse_send_buffers (GstBaseParse * parse)
   GSList *send = NULL;
   GstBuffer *buf;
   GstFlowReturn ret = GST_FLOW_OK;
+  gboolean first = TRUE;
 
   send = parse->priv->buffers_send;
 
@@ -2514,6 +2515,13 @@ gst_base_parse_send_buffers (GstBaseParse * parse)
         GST_TIME_ARGS (GST_BUFFER_DTS (buf)),
         GST_TIME_ARGS (GST_BUFFER_PTS (buf)),
         GST_TIME_ARGS (GST_BUFFER_DURATION (buf)), GST_BUFFER_OFFSET (buf));
+
+    /* Make sure the first buffer is always DISCONT. If we split
+     * GOPs inside the parser this is otherwise not guaranteed */
+    if (first) {
+      GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
+      first = FALSE;
+    }
 
     /* iterate output queue an push downstream */
     ret = gst_pad_push (parse->srcpad, buf);
@@ -2670,8 +2678,10 @@ gst_base_parse_finish_fragment (GstBaseParse * parse, gboolean prev_head)
         parse->priv->buffers_queued);
   }
 
-  /* audio may have all marked as keyframe, so arrange to send here */
-  if (!seen_delta)
+  /* audio may have all marked as keyframe, so arrange to send here. Also
+   * we might have ended the loop above on a keyframe, in which case we
+   * should */
+  if (!seen_delta || seen_key)
     ret = gst_base_parse_send_buffers (parse);
 
   /* any trailing unused no longer usable (ideally none) */
@@ -3591,13 +3601,13 @@ gst_base_parse_set_pts_interpolation (GstBaseParse * parse,
  * By default, the base class might try to infer PTS from DTS and vice
  * versa.  While this is generally correct for audio data, it may not
  * be otherwise. Sub-classes implementing such formats should disable
- * timestamp infering.
+ * timestamp inferring.
  */
 void
 gst_base_parse_set_infer_ts (GstBaseParse * parse, gboolean infer_ts)
 {
   parse->priv->infer_ts = infer_ts;
-  GST_INFO_OBJECT (parse, "TS infering: %s", (infer_ts) ? "yes" : "no");
+  GST_INFO_OBJECT (parse, "TS inferring: %s", (infer_ts) ? "yes" : "no");
 }
 
 /**
@@ -4507,7 +4517,6 @@ gst_base_parse_set_ts_at_offset (GstBaseParse * parse, gsize offset)
   GstClockTime pts, dts;
 
   g_return_if_fail (GST_IS_BASE_PARSE (parse));
-  g_return_if_fail (offset >= 0);
 
   pts = gst_adapter_prev_pts_at_offset (parse->priv->adapter, offset, NULL);
   dts = gst_adapter_prev_dts_at_offset (parse->priv->adapter, offset, NULL);

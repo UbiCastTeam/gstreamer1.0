@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstDateTime.html" title="GstDateTime">
+<link rel="prev" href="GstDateTime.html" title="GstDateTime">
 <link rel="next" href="GstElementFactory.html" title="GstElementFactory">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -22,7 +22,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-GstDateTime.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstDateTime.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstElementFactory.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -796,7 +796,7 @@ guide for more information on creating <a class="link" href="GstElement.html" ti
 core when using the appropriate locking. Do not use this in plug-ins or
 applications in order to retain ABI compatibility.</p>
 <p>Elements can have pads (of the type <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>).  These pads link to pads on
-other elements.  <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> flow between these linked pads.
+other elements.  <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> flow between these linked pads.
 A <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> has a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> structures for all their input (or sink)
 and output (or source) pads.
 Core and plug-in writers can add and remove pads with <a class="link" href="GstElement.html#gst-element-add-pad" title="gst_element_add_pad ()"><code class="function">gst_element_add_pad()</code></a>
@@ -811,7 +811,7 @@ If the link is straightforward, use the <a class="link" href="GstElement.html#gs
 convenience function to link two elements, or <a class="link" href="GstElement.html#gst-element-link-many" title="gst_element_link_many ()"><code class="function">gst_element_link_many()</code></a>
 for more elements in a row.
 Use <a class="link" href="GstElement.html#gst-element-link-filtered" title="gst_element_link_filtered ()"><code class="function">gst_element_link_filtered()</code></a> to link two elements constrained by
-a specified set of <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a>.
+a specified set of <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.
 For finer control, use <a class="link" href="GstElement.html#gst-element-link-pads" title="gst_element_link_pads ()"><code class="function">gst_element_link_pads()</code></a> and
 <a class="link" href="GstElement.html#gst-element-link-pads-filtered" title="gst_element_link_pads_filtered ()"><code class="function">gst_element_link_pads_filtered()</code></a> to specify the pads to link on
 each element by name.</p>
@@ -828,10 +828,9 @@ such an element.
 Not all elements require a clock to operate correctly. If the
 <a class="link" href="GstElement.html#GST-ELEMENT-FLAG-REQUIRE-CLOCK:CAPS"><code class="function">GST_ELEMENT_FLAG_REQUIRE_CLOCK()</code></a> flag is set, a clock should be set on the
 element with <a class="link" href="GstElement.html#gst-element-set-clock" title="gst_element_set_clock ()"><code class="function">gst_element_set_clock()</code></a>.</p>
-<p>Note that clock slection and distribution is normally handled by the
+<p>Note that clock selection and distribution is normally handled by the
 toplevel <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a> so the clock functions are only to be used in very
 specific situations.</p>
-<p>Last reviewed on 2012-03-28 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstElement.functions_details"></a><h2>Functions</h2>
@@ -1781,7 +1780,7 @@ subclasses of <a class="link" href="GstElement.html" title="GstElement"><span cl
 <pre class="programlisting"><a class="link" href="GstPad.html" title="GstPad"><span class="returnvalue">GstPad</span></a> *
 gst_element_get_compatible_pad (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                                 <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+                                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Looks for an unlinked pad to which the given pad can link. It is not
 guaranteed that linking the pads will work, though it should work in most
 cases.</p>
@@ -1810,7 +1809,7 @@ at the templates of <em class="parameter"><code>element</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>caps</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> to use as a filter. </p></td>
+<td class="parameter_description"><p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to use as a filter. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -1950,7 +1949,7 @@ unref after usage.</p>
 gst_element_request_pad (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                          <em class="parameter"><code><a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> *templ</code></em>,
                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                         <em class="parameter"><code>const <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+                         <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Retrieves a request pad from the element according to the provided template.
 Pad templates can be looked up using
 <a class="link" href="GstElementFactory.html#gst-element-factory-get-static-pad-templates" title="gst_element_factory_get_static_pad_templates ()"><code class="function">gst_element_factory_get_static_pad_templates()</code></a>.</p>
@@ -2527,7 +2526,7 @@ gst_element_link_pads_filtered (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *srcpadname</code></em>,
                                 <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *dest</code></em>,
                                 <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *destpadname</code></em>,
-                                <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
+                                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
 <p>Links the two named pads of the source and destination elements. Side effect
 is that if one of the pads has no parent, it becomes a child of the parent of
 the other element. If they have different parents, the link fails. If <em class="parameter"><code>caps</code></em>
@@ -2567,7 +2566,7 @@ or NULL for any pad. </p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>filter</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> to filter the link,
+<td class="parameter_description"><p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to filter the link,
 or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> for no filter. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -2586,7 +2585,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_link_filtered (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *src</code></em>,
                            <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *dest</code></em>,
-                           <em class="parameter"><code><a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
+                           <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
 <p>Links <em class="parameter"><code>src</code></em>
  to <em class="parameter"><code>dest</code></em>
  using the given caps as filtercaps.
@@ -2617,7 +2616,7 @@ If multiple links are possible, only one is established.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>filter</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstCaps.html#GstCaps" title="struct GstCaps"><span class="type">GstCaps</span></a> to filter the link,
+<td class="parameter_description"><p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to filter the link,
 or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> for no filter. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -2866,7 +2865,7 @@ bus for the application.</p>
 <a name="gst-element-set-context"></a><h3>gst_element_set_context ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_element_set_context (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
-                         <em class="parameter"><code><a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
+                         <em class="parameter"><code><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Sets the context of the element. Increases the refcount of the context.</p>
 <p>MT safe.</p>
 <div class="refsect3">
@@ -2885,7 +2884,7 @@ gst_element_set_context (<em class="parameter"><code><a class="link" href="GstEl
 </tr>
 <tr>
 <td class="parameter_name"><p>context</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> to set. </p></td>
+<td class="parameter_description"><p> the <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> to set. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -3152,8 +3151,8 @@ the class's state change function for each.</p>
 element will perform the remainder of the state change asynchronously in
 another thread.
 An application can use <a class="link" href="GstElement.html#gst-element-get-state" title="gst_element_get_state ()"><code class="function">gst_element_get_state()</code></a> to wait for the completion
-of the state change or it can wait for a <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a> or
-<a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-STATE-CHANGED:CAPS"><code class="literal">GST_MESSAGE_STATE_CHANGED</code></a> on the bus.</p>
+of the state change or it can wait for a <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a> or
+<a class="link" href="GstMessage.html#GST-MESSAGE-STATE-CHANGED:CAPS"><code class="literal">GST_MESSAGE_STATE_CHANGED</code></a> on the bus.</p>
 <p>State changes to <a class="link" href="GstElement.html#GST-STATE-READY:CAPS"><code class="literal">GST_STATE_READY</code></a> or <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> never return
 <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><span class="type">GST_STATE_CHANGE_ASYNC</span></a>.</p>
 <div class="refsect3">
@@ -3558,7 +3557,7 @@ internally.</p>
 <a name="gst-element-message-full"></a><h3>gst_element_message_full ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_element_message_full (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
-                          <em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessageType" title="enum GstMessageType"><span class="type">GstMessageType</span></a> type</code></em>,
+                          <em class="parameter"><code><a class="link" href="GstMessage.html#GstMessageType" title="enum GstMessageType"><span class="type">GstMessageType</span></a> type</code></em>,
                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> domain</code></em>,
                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> code</code></em>,
                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
@@ -3568,8 +3567,8 @@ gst_element_message_full (<em class="parameter"><code><a class="link" href="GstE
                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>);</pre>
 <p>Post an error, warning or info message on the bus from inside an element.</p>
 <p><em class="parameter"><code>type</code></em>
- must be of <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ERROR:CAPS"><span class="type">GST_MESSAGE_ERROR</span></a>, <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-WARNING:CAPS"><span class="type">GST_MESSAGE_WARNING</span></a> or
-<a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-INFO:CAPS"><span class="type">GST_MESSAGE_INFO</span></a>.</p>
+ must be of <a class="link" href="GstMessage.html#GST-MESSAGE-ERROR:CAPS"><span class="type">GST_MESSAGE_ERROR</span></a>, <a class="link" href="GstMessage.html#GST-MESSAGE-WARNING:CAPS"><span class="type">GST_MESSAGE_WARNING</span></a> or
+<a class="link" href="GstMessage.html#GST-MESSAGE-INFO:CAPS"><span class="type">GST_MESSAGE_INFO</span></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.79.7"></a><h4>Parameters</h4>
@@ -3587,7 +3586,7 @@ gst_element_message_full (<em class="parameter"><code><a class="link" href="GstE
 </tr>
 <tr>
 <td class="parameter_name"><p>type</p></td>
-<td class="parameter_description"><p>the <a class="link" href="gstreamer-GstMessage.html#GstMessageType" title="enum GstMessageType"><span class="type">GstMessageType</span></a></p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstMessage.html#GstMessageType" title="enum GstMessageType"><span class="type">GstMessageType</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -3638,7 +3637,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <a name="gst-element-post-message"></a><h3>gst_element_post_message ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_post_message (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
-                          <em class="parameter"><code><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
+                          <em class="parameter"><code><a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
 <p>Post a message on the element's <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. This function takes ownership of the
 message; if you want to access the message after this call, you should add an
 additional reference before calling.</p>
@@ -3658,7 +3657,7 @@ additional reference before calling.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>message</p></td>
-<td class="parameter_description"><p> a <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> to post. </p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> to post. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -3677,7 +3676,7 @@ additional reference before calling.</p>
 <a name="gst-element-query"></a><h3>gst_element_query ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_query (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
-                   <em class="parameter"><code><a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
+                   <em class="parameter"><code><a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
 <p>Performs a query on the given element.</p>
 <p>For elements that don't implement a query handler, this function
 forwards the query to a random srcpad or to the peer of a
@@ -3699,7 +3698,7 @@ random linked sinkpad of this element.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>. </p></td>
+<td class="parameter_description"><p> the <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -3869,12 +3868,12 @@ using this function.</p>
 <a name="gst-element-send-event"></a><h3>gst_element_send_event ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_send_event (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
-                        <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
+                        <em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
 <p>Sends an event to an element. If the element doesn't implement an
 event handler, the event will be pushed on a random linked sink pad for
 upstream events or a random linked source pad for downstream events.</p>
-<p>This function takes owership of the provided event so you should
-<a class="link" href="gstreamer-GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.</p>
+<p>This function takes ownership of the provided event so you should
+<a class="link" href="GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.85.7"></a><h4>Parameters</h4>
@@ -3892,7 +3891,7 @@ upstream events or a random linked source pad for downstream events.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>event</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> to send to the element. </p></td>
+<td class="parameter_description"><p> the <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> to send to the element. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -3901,7 +3900,7 @@ upstream events or a random linked source pad for downstream events.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.85.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Events that trigger a preroll (such
-as flushing seeks and steps) will emit <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
+as flushing seeks and steps) will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -3911,7 +3910,7 @@ as flushing seeks and steps) will emit <a class="link" href="gstreamer-GstMessag
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_seek_simple (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
-                         <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstSeekFlags" title="enum GstSeekFlags"><span class="type">GstSeekFlags</span></a> seek_flags</code></em>,
+                         <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekFlags" title="enum GstSeekFlags"><span class="type">GstSeekFlags</span></a> seek_flags</code></em>,
                          <em class="parameter"><code><span class="type">gint64</span> seek_pos</code></em>);</pre>
 <p>Simple API to perform a seek on the given element, meaning it just seeks
 to the given position relative to the start of the stream. For more complex
@@ -3964,7 +3963,7 @@ with <a class="link" href="GstClock.html#GST-MSECOND:CAPS" title="GST_MSECOND"><
 <div class="refsect3">
 <a name="id-1.3.21.10.86.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the seek operation succeeded. Flushing seeks will trigger a
-preroll, which will emit <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
+preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -3975,12 +3974,12 @@ preroll, which will emit <a class="link" href="gstreamer-GstMessage.html#GST-MES
 gst_element_seek (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> rate</code></em>,
                   <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
-                  <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstSeekFlags" title="enum GstSeekFlags"><span class="type">GstSeekFlags</span></a> flags</code></em>,
-                  <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstSeekType" title="enum GstSeekType"><span class="type">GstSeekType</span></a> start_type</code></em>,
+                  <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekFlags" title="enum GstSeekFlags"><span class="type">GstSeekFlags</span></a> flags</code></em>,
+                  <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekType" title="enum GstSeekType"><span class="type">GstSeekType</span></a> start_type</code></em>,
                   <em class="parameter"><code><span class="type">gint64</span> start</code></em>,
-                  <em class="parameter"><code><a class="link" href="gstreamer-GstEvent.html#GstSeekType" title="enum GstSeekType"><span class="type">GstSeekType</span></a> stop_type</code></em>,
+                  <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekType" title="enum GstSeekType"><span class="type">GstSeekType</span></a> stop_type</code></em>,
                   <em class="parameter"><code><span class="type">gint64</span> stop</code></em>);</pre>
-<p>Sends a seek event to an element. See <a class="link" href="gstreamer-GstEvent.html#gst-event-new-seek" title="gst_event_new_seek ()"><code class="function">gst_event_new_seek()</code></a> for the details of
+<p>Sends a seek event to an element. See <a class="link" href="GstEvent.html#gst-event-new-seek" title="gst_event_new_seek ()"><code class="function">gst_event_new_seek()</code></a> for the details of
 the parameters. The seek event is sent to the element using
 <a class="link" href="GstElement.html#gst-element-send-event" title="gst_element_send_event ()"><code class="function">gst_element_send_event()</code></a>.</p>
 <p>MT safe.</p>
@@ -4039,7 +4038,7 @@ the parameters. The seek event is sent to the element using
 <div class="refsect3">
 <a name="id-1.3.21.10.87.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Flushing seeks will trigger a
-preroll, which will emit <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
+preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -4333,12 +4332,12 @@ to perform an incremental state change</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstElementClass.send-event"></a>send_event</code></em> ()</p></td>
-<td class="struct_member_description"><p>send a <a class="link" href="gstreamer-GstEvent.html#GstEvent" title="struct GstEvent"><span class="type">GstEvent</span></a> to the element</p></td>
+<td class="struct_member_description"><p>send a <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> to the element</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstElementClass.query"></a>query</code></em> ()</p></td>
-<td class="struct_member_description"><p>perform a <a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a> on the element</p></td>
+<td class="struct_member_description"><p>perform a <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> on the element</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -4349,7 +4348,7 @@ the parent class' handler to have it posted on the bus.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstElementClass.set-context"></a>set_context</code></em> ()</p></td>
-<td class="struct_member_description"><p>set a <a class="link" href="gstreamer-GstContext.html#GstContext" title="GstContext"><span class="type">GstContext</span></a> on the element</p></td>
+<td class="struct_member_description"><p>set a <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> on the element</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -4523,7 +4522,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
     Some elements might need to return <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> and complete
     the state change when they have enough information. It is a requirement
     for sinks to return <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> and complete the state change
-    when they receive the first buffer or <a class="link" href="gstreamer-GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a> (preroll).
+    when they receive the first buffer or <a class="link" href="GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a> (preroll).
     Sinks also block the dataflow when in PAUSED.
   </p></li>
 <li class="listitem"><p>
@@ -4546,7 +4545,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
   </p></li>
 <li class="listitem"><p>
     The pipeline selects a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and distributes this to all the children
-    before setting them to PLAYING. This means that it is only alowed to
+    before setting them to PLAYING. This means that it is only allowed to
     synchronize on the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> in the PLAYING state.
   </p></li>
 <li class="listitem"><p>
@@ -4559,8 +4558,8 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
     rendering the data.
   </p></li>
 <li class="listitem"><p>
-    Sinks can post <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> in the PLAYING state. It is not allowed
-    to post <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> when not in the PLAYING state.
+    Sinks can post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> in the PLAYING state. It is not allowed
+    to post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> when not in the PLAYING state.
   </p></li>
 <li class="listitem"><p>
     While streaming in PAUSED or PLAYING elements can create and remove
@@ -4592,10 +4591,10 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <li class="listitem"><p>
     When a sink does not have a pending buffer to play, it returns
     <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> from this state change and completes the state
-    change when it receives a new buffer or an <a class="link" href="gstreamer-GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a>.
+    change when it receives a new buffer or an <a class="link" href="GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a>.
   </p></li>
 <li class="listitem"><p>
-    Any queued <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> items are removed since they will be reposted
+    Any queued <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> items are removed since they will be reposted
     when going back to the PLAYING state. The EOS messages are queued in
     <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> containers.
   </p></li>
