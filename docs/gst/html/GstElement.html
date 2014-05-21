@@ -803,8 +803,7 @@ Core and plug-in writers can add and remove pads with <a class="link" href="GstE
 and <a class="link" href="GstElement.html#gst-element-remove-pad" title="gst_element_remove_pad ()"><code class="function">gst_element_remove_pad()</code></a>.</p>
 <p>An existing pad of an element can be retrieved by name with
 <a class="link" href="GstElement.html#gst-element-get-static-pad" title="gst_element_get_static_pad ()"><code class="function">gst_element_get_static_pad()</code></a>. A new dynamic pad can be created using
-<a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a> with a <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> or 
-<a class="link" href="GstElement.html#gst-element-get-request-pad" title="gst_element_get_request_pad ()"><code class="function">gst_element_get_request_pad()</code></a> with the template name such as "src_%u".
+<a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a> with a <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>.
 An iterator of all pads can be retrieved with <a class="link" href="GstElement.html#gst-element-iterate-pads" title="gst_element_iterate_pads ()"><code class="function">gst_element_iterate_pads()</code></a>.</p>
 <p>Elements can be linked through their pads.
 If the link is straightforward, use the <a class="link" href="GstElement.html#gst-element-link" title="gst_element_link ()"><code class="function">gst_element_link()</code></a>
@@ -2030,9 +2029,9 @@ the element is done initializing its pads.</p>
 gst_element_release_request_pad (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                                  <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
 <p>Makes the element free the previously requested pad as obtained
-with <a class="link" href="GstElement.html#gst-element-get-request-pad" title="gst_element_get_request_pad ()"><code class="function">gst_element_get_request_pad()</code></a>.</p>
+with <a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a>.</p>
 <p>This does not unref the pad. If the pad was created by using
-<a class="link" href="GstElement.html#gst-element-get-request-pad" title="gst_element_get_request_pad ()"><code class="function">gst_element_get_request_pad()</code></a>, <a class="link" href="GstElement.html#gst-element-release-request-pad" title="gst_element_release_request_pad ()"><code class="function">gst_element_release_request_pad()</code></a> needs to be
+<a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a>, <a class="link" href="GstElement.html#gst-element-release-request-pad" title="gst_element_release_request_pad ()"><code class="function">gst_element_release_request_pad()</code></a> needs to be
 followed by <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> to free the <em class="parameter"><code>pad</code></em>
 .</p>
 <p>MT safe.</p>
@@ -2072,7 +2071,7 @@ gst_element_remove_pad (<em class="parameter"><code><a class="link" href="GstEle
 referenced elsewhere using <a class="link" href="GstObject.html#gst-object-unparent" title="gst_object_unparent ()"><code class="function">gst_object_unparent()</code></a>.</p>
 <p>This function is used by plugin developers and should not be used
 by applications. Pads that were dynamically requested from elements
-with <a class="link" href="GstElement.html#gst-element-get-request-pad" title="gst_element_get_request_pad ()"><code class="function">gst_element_get_request_pad()</code></a> should be released with the
+with <a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a> should be released with the
 <a class="link" href="GstElement.html#gst-element-release-request-pad" title="gst_element_release_request_pad ()"><code class="function">gst_element_release_request_pad()</code></a> function instead.</p>
 <p>Pads are not automatically deactivated so elements should perform the needed
 steps to deactivate the pad in case this pad is removed in the PAUSED or

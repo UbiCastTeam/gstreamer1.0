@@ -103,8 +103,8 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	libs/bytereader$(EXEEXT) libs/bytewriter$(EXEEXT) \
 	libs/bitreader-noinline$(EXEEXT) \
 	libs/bytereader-noinline$(EXEEXT) \
-	libs/bytewriter-noinline$(EXEEXT) libs/collectpads$(EXEEXT) \
-	libs/gstnetclientclock$(EXEEXT) \
+	libs/bytewriter-noinline$(EXEEXT) libs/sparsefile$(EXEEXT) \
+	libs/collectpads$(EXEEXT) libs/gstnetclientclock$(EXEEXT) \
 	libs/gstnettimeprovider$(EXEEXT) libs/gsttestclock$(EXEEXT) \
 	libs/transform1$(EXEEXT) tools/gstinspect$(EXEEXT)
 noinst_PROGRAMS =
@@ -192,6 +192,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @GST_DISABLE_REGISTRY_FALSE@	libs/baseparse$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesrc$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesink$(EXEEXT) \
+@GST_DISABLE_REGISTRY_FALSE@	libs/sparsefile$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/controller$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/queuearray$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/typefindhelper$(EXEEXT) \
@@ -692,6 +693,12 @@ libs_queuearray_LDADD = $(LDADD)
 libs_queuearray_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+libs_sparsefile_SOURCES = libs/sparsefile.c
+libs_sparsefile_OBJECTS = libs/sparsefile.$(OBJEXT)
+libs_sparsefile_LDADD = $(LDADD)
+libs_sparsefile_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 libs_transform1_SOURCES = libs/transform1.c
 libs_transform1_OBJECTS = libs/transform1.$(OBJEXT)
 libs_transform1_LDADD = $(LDADD)
@@ -832,11 +839,11 @@ SOURCES = elements/capsfilter.c elements/fakesink.c elements/fakesrc.c \
 	libs/controller.c $(libs_gstlibscpp_SOURCES) \
 	libs/gstnetclientclock.c libs/gstnettimeprovider.c \
 	libs/gsttestclock.c libs/libsabi.c libs/queuearray.c \
-	libs/transform1.c libs/typefindhelper.c pipelines/cleanup.c \
-	pipelines/parse-disabled.c pipelines/parse-launch.c \
-	pipelines/queue-error.c pipelines/seek.c \
-	pipelines/simple-launch-lines.c pipelines/stress.c \
-	tools/gstinspect.c
+	libs/sparsefile.c libs/transform1.c libs/typefindhelper.c \
+	pipelines/cleanup.c pipelines/parse-disabled.c \
+	pipelines/parse-launch.c pipelines/queue-error.c \
+	pipelines/seek.c pipelines/simple-launch-lines.c \
+	pipelines/stress.c tools/gstinspect.c
 DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
 	elements/fakesrc.c elements/fdsrc.c elements/filesink.c \
 	elements/filesrc.c elements/funnel.c elements/identity.c \
@@ -864,11 +871,11 @@ DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
 	libs/controller.c $(libs_gstlibscpp_SOURCES) \
 	libs/gstnetclientclock.c libs/gstnettimeprovider.c \
 	libs/gsttestclock.c libs/libsabi.c libs/queuearray.c \
-	libs/transform1.c libs/typefindhelper.c pipelines/cleanup.c \
-	pipelines/parse-disabled.c pipelines/parse-launch.c \
-	pipelines/queue-error.c pipelines/seek.c \
-	pipelines/simple-launch-lines.c pipelines/stress.c \
-	tools/gstinspect.c
+	libs/sparsefile.c libs/transform1.c libs/typefindhelper.c \
+	pipelines/cleanup.c pipelines/parse-disabled.c \
+	pipelines/parse-launch.c pipelines/queue-error.c \
+	pipelines/seek.c pipelines/simple-launch-lines.c \
+	pipelines/stress.c tools/gstinspect.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -1441,6 +1448,7 @@ LIBSABI_CHECKS = libs/libsabi
 @GST_DISABLE_REGISTRY_FALSE@	libs/baseparse				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesrc				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesink				\
+@GST_DISABLE_REGISTRY_FALSE@	libs/sparsefile				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/controller				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/queuearray				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/typefindhelper			\
@@ -2095,6 +2103,12 @@ libs/queuearray.$(OBJEXT): libs/$(am__dirstamp) \
 libs/queuearray$(EXEEXT): $(libs_queuearray_OBJECTS) $(libs_queuearray_DEPENDENCIES) $(EXTRA_libs_queuearray_DEPENDENCIES) libs/$(am__dirstamp)
 	@rm -f libs/queuearray$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(libs_queuearray_OBJECTS) $(libs_queuearray_LDADD) $(LIBS)
+libs/sparsefile.$(OBJEXT): libs/$(am__dirstamp) \
+	libs/$(DEPDIR)/$(am__dirstamp)
+
+libs/sparsefile$(EXEEXT): $(libs_sparsefile_OBJECTS) $(libs_sparsefile_DEPENDENCIES) $(EXTRA_libs_sparsefile_DEPENDENCIES) libs/$(am__dirstamp)
+	@rm -f libs/sparsefile$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(libs_sparsefile_OBJECTS) $(libs_sparsefile_LDADD) $(LIBS)
 libs/transform1.$(OBJEXT): libs/$(am__dirstamp) \
 	libs/$(DEPDIR)/$(am__dirstamp)
 
@@ -2260,6 +2274,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/gsttestclock.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/libsabi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/queuearray.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/sparsefile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/transform1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/typefindhelper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@pipelines/$(DEPDIR)/cleanup.Po@am__quote@
@@ -3038,6 +3053,13 @@ libs/basesrc.log: libs/basesrc$(EXEEXT)
 libs/basesink.log: libs/basesink$(EXEEXT)
 	@p='libs/basesink$(EXEEXT)'; \
 	b='libs/basesink'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+libs/sparsefile.log: libs/sparsefile$(EXEEXT)
+	@p='libs/sparsefile$(EXEEXT)'; \
+	b='libs/sparsefile'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

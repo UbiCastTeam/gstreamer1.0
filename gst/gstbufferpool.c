@@ -575,9 +575,11 @@ wrong_config:
  * @pool: a #GstBufferPool
  * @config: (transfer full): a #GstStructure
  *
- * Set the configuration of the pool. The pool must be inactive and all buffers
- * allocated form this pool must be returned or else this function will do
- * nothing and return FALSE.
+ * Set the configuration of the pool. If the pool is already configured, and
+ * the configuration haven't change, this function will return %TRUE. If the
+ * pool is active, this function will try deactivating it. Buffers allocated
+ * form this pool must be returned or else this function will do nothing and
+ * return FALSE.
  *
  * @config is a #GstStructure that contains the configuration parameters for
  * the pool. A default and mandatory set of parameters can be configured with
@@ -605,9 +607,24 @@ gst_buffer_pool_set_config (GstBufferPool * pool, GstStructure * config)
   priv = pool->priv;
 
   GST_BUFFER_POOL_LOCK (pool);
+
+  /* nothing to do if config is unchanged */
+  if (priv->configured && gst_structure_is_equal (config, priv->config))
+    goto config_unchanged;
+
   /* can't change the settings when active */
-  if (priv->active)
-    goto was_active;
+  if (priv->active) {
+    GST_BUFFER_POOL_UNLOCK (pool);
+    if (!gst_buffer_pool_set_active (pool, FALSE)) {
+      GST_BUFFER_POOL_LOCK (pool);
+      goto was_active;
+    }
+    GST_BUFFER_POOL_LOCK (pool);
+
+    /* not likely but as we released the lock */
+    if (priv->active)
+      goto was_active;
+  }
 
   /* we can't change when outstanding buffers */
   if (g_atomic_int_get (&priv->outstanding) != 0)
@@ -621,20 +638,26 @@ gst_buffer_pool_set_config (GstBufferPool * pool, GstStructure * config)
   else
     result = FALSE;
 
-  if (result) {
-    if (priv->config)
-      gst_structure_free (priv->config);
-    priv->config = config;
+  /* save the config regardless of the result so user can read back the
+   * modified config and evaluate if the changes are acceptable */
+  if (priv->config)
+    gst_structure_free (priv->config);
+  priv->config = config;
 
+  if (result) {
     /* now we are configured */
     priv->configured = TRUE;
-  } else {
-    gst_structure_free (config);
   }
   GST_BUFFER_POOL_UNLOCK (pool);
 
   return result;
 
+config_unchanged:
+  {
+    gst_structure_free (config);
+    GST_BUFFER_POOL_UNLOCK (pool);
+    return TRUE;
+  }
   /* ERRORS */
 was_active:
   {
@@ -981,6 +1004,44 @@ gst_buffer_pool_config_get_allocator (GstStructure * config,
     }
   }
   return TRUE;
+}
+
+/**
+ * gst_buffer_pool_config_validate_params:
+ * @config: (transfer none): a #GstBufferPool configuration
+ * @caps: (transfer none): the excepted caps of buffers
+ * @size: the expected size of each buffer, not including prefix and padding
+ * @min_buffers: the expected minimum amount of buffers to allocate.
+ * @max_buffers: the expect maximum amount of buffers to allocate or 0 for unlimited.
+ *
+ * Validate that changes made to @config are still valid in the context of the
+ * expected parameters. This function is a helper that can be used to validate
+ * changes made by a pool to a config when gst_buffer_pool_set_config()
+ * returns %FALSE. This expects that @caps and @size haven't changed, and that
+ * @min_buffers aren't lower then what we initially expected. This does not check
+ * if options or allocator parameters.
+ *
+ * Since: 1.4
+ *
+ * Returns: %TRUE, if the parameters are valid in this context.
+ */
+gboolean
+gst_buffer_pool_config_validate_params (GstStructure * config, GstCaps * caps,
+    guint size, guint min_buffers, G_GNUC_UNUSED guint max_buffers)
+{
+  GstCaps *newcaps;
+  guint newsize, newmin;
+  gboolean ret = FALSE;
+
+  g_return_val_if_fail (config != NULL, FALSE);
+
+  gst_buffer_pool_config_get_params (config, &newcaps, &newsize, &newmin, NULL);
+
+  if (gst_caps_is_equal (caps, newcaps) && (size == newsize)
+      && (newmin >= min_buffers))
+    ret = TRUE;
+
+  return ret;
 }
 
 static GstFlowReturn
