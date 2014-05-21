@@ -39,10 +39,16 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GstPushSrc.html#GstPushSrc-struct" title="struct GstPushSrc">GstPushSrc</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GstPushSrc.html#GstPushSrcClass" title="struct GstPushSrcClass">GstPushSrcClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -87,6 +93,22 @@ base class.</p>
 <a name="GstPushSrc-struct"></a><h3>struct GstPushSrc</h3>
 <pre class="programlisting">struct GstPushSrc;</pre>
 <p>The opaque <a class="link" href="GstPushSrc.html" title="GstPushSrc"><span class="type">GstPushSrc</span></a> data structure.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstPushSrcClass"></a><h3>struct GstPushSrcClass</h3>
+<pre class="programlisting">struct GstPushSrcClass {
+  GstBaseSrcClass parent_class;
+
+  /* ask the subclass to create a buffer, the default implementation
+   * uses alloc and fill */
+  GstFlowReturn (*create) (GstPushSrc *src, GstBuffer **buf);
+  /* allocate memory for a buffer */
+  GstFlowReturn (*alloc)  (GstPushSrc *src, GstBuffer **buf);
+  /* ask the subclass to fill a buffer */
+  GstFlowReturn (*fill)   (GstPushSrc *src, GstBuffer *buf);
+};
+</pre>
 </div>
 </div>
 <div class="refsect1">

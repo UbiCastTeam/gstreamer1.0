@@ -2530,7 +2530,7 @@ gst_value_deserialize_int_helper (gint64 * to, const gchar * s,
 {
   gboolean ret = FALSE;
   gchar *end;
-  guint64 mask = -1;
+  guint64 mask = ~0;
 
   errno = 0;
   *to = g_ascii_strtoull (s, &end, 0);
@@ -5840,6 +5840,51 @@ gst_value_compare_bitmask (const GValue * value1, const GValue * value2)
   return GST_VALUE_UNORDERED;
 }
 
+
+/***********************
+ * GstAllocationParams *
+ ***********************/
+static gint
+gst_value_compare_allocation_params (const GValue * value1,
+    const GValue * value2)
+{
+  GstAllocationParams *v1, *v2;
+
+  v1 = value1->data[0].v_pointer;
+  v2 = value2->data[0].v_pointer;
+
+  if (v1 == NULL && v1 == v2)
+    return GST_VALUE_EQUAL;
+
+  if (v1 == NULL || v2 == NULL)
+    return GST_VALUE_UNORDERED;
+
+  if (v1->flags == v2->flags && v1->align == v2->align &&
+      v1->prefix == v2->prefix && v1->padding == v2->padding)
+    return GST_VALUE_EQUAL;
+
+  return GST_VALUE_UNORDERED;
+}
+
+
+/************
+ * GObject *
+ ************/
+
+static gint
+gst_value_compare_object (const GValue * value1, const GValue * value2)
+{
+  gpointer v1, v2;
+
+  v1 = value1->data[0].v_pointer;
+  v2 = value2->data[0].v_pointer;
+
+  if (v1 == v2)
+    return GST_VALUE_EQUAL;
+
+  return GST_VALUE_UNORDERED;
+}
+
 static void
 gst_value_transform_object_string (const GValue * src_value,
     GValue * dest_value)
@@ -6236,6 +6281,30 @@ _priv_gst_value_initialize (void)
     };
 
     gst_value.type = gst_bitmask_get_type ();
+    gst_value_register (&gst_value);
+  }
+
+  {
+    static GstValueTable gst_value = {
+      0,
+      gst_value_compare_allocation_params,
+      NULL,
+      NULL,
+    };
+
+    gst_value.type = gst_allocation_params_get_type ();
+    gst_value_register (&gst_value);
+  }
+
+  {
+    static GstValueTable gst_value = {
+      0,
+      gst_value_compare_object,
+      NULL,
+      NULL,
+    };
+
+    gst_value.type = G_TYPE_OBJECT;
     gst_value_register (&gst_value);
   }
 
