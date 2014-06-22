@@ -312,7 +312,7 @@ size does not change during the lifetime of the memory object. The memory
 also has an offset and size property that specifies the valid range of memory
 in the allocated region.</p>
 <p>Memory is usually created by allocators with a <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>
-method call. When NULL is used as the allocator, the default allocator will
+method call. When <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
 be used.</p>
 <p>New allocators can be registered with <a class="link" href="GstAllocator.html#gst-allocator-register" title="gst_allocator_register ()"><code class="function">gst_allocator_register()</code></a>.
 Allocators are identified by name and can be retrieved with
@@ -331,7 +331,7 @@ After the memory access is completed, <a class="link" href="GstMemory.html#gst-m
 copy. <a class="link" href="GstMemory.html#gst-memory-share" title="gst_memory_share ()"><code class="function">gst_memory_share()</code></a> will create a new memory block that shares the
 memory with an existing memory block at a custom offset and with a custom
 size.</p>
-<p>Memory can be efficiently merged when <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()"><code class="function">gst_memory_is_span()</code></a> returns TRUE.</p>
+<p>Memory can be efficiently merged when <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()"><code class="function">gst_memory_is_span()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 </div>
 <div class="refsect1">
 <a name="GstMemory.functions_details"></a><h2>Functions</h2>
@@ -1106,7 +1106,7 @@ mapped copy of <em class="parameter"><code>mem</code></em>
 <div class="refsect3">
 <a name="id-1.3.28.8.27.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> object mapped with <em class="parameter"><code>flags</code></em>
-or NULL when
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
 a mapping is not possible. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>

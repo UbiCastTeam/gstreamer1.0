@@ -429,7 +429,7 @@ _priv_gst_debug_init (void)
  * @function: the function that emitted the message
  * @line: the line from that the message was emitted, usually __LINE__
  * @object: (transfer none) (allow-none): the object this message relates to,
- *     or NULL if none
+ *     or %NULL if none
  * @format: a printf style format string
  * @...: optional arguments for the format
  *
@@ -481,7 +481,7 @@ gst_path_basename (const gchar * file_name)
  * @function: the function that emitted the message
  * @line: the line from that the message was emitted, usually __LINE__
  * @object: (transfer none) (allow-none): the object this message relates to,
- *     or NULL if none
+ *     or %NULL if none
  * @format: a printf style format string
  * @args: optional arguments for the format
  *
@@ -671,16 +671,16 @@ gst_debug_print_object (gpointer ptr)
   if (object == NULL) {
     return g_strdup ("(NULL)");
   }
-  if (*(GType *) ptr == GST_TYPE_CAPS) {
+  if (GST_IS_CAPS (ptr)) {
     return gst_caps_to_string ((const GstCaps *) ptr);
   }
-  if (*(GType *) ptr == GST_TYPE_STRUCTURE) {
+  if (GST_IS_STRUCTURE (ptr)) {
     return gst_info_structure_to_string ((const GstStructure *) ptr);
   }
   if (*(GType *) ptr == GST_TYPE_CAPS_FEATURES) {
     return gst_caps_features_to_string ((const GstCapsFeatures *) ptr);
   }
-  if (*(GType *) ptr == GST_TYPE_TAG_LIST) {
+  if (GST_IS_TAG_LIST (ptr)) {
     gchar *str = gst_tag_list_to_string ((GstTagList *) ptr);
     if (G_UNLIKELY (pretty_tags))
       return prettify_structure_string (str);
@@ -698,15 +698,6 @@ gst_debug_print_object (gpointer ptr)
     return g_strdup_printf ("<poisoned@%p>", ptr);
   }
 #endif
-  if (GST_IS_PAD (object) && GST_OBJECT_NAME (object)) {
-    return g_strdup_printf ("<%s:%s>", GST_DEBUG_PAD_NAME (object));
-  }
-  if (GST_IS_OBJECT (object) && GST_OBJECT_NAME (object)) {
-    return g_strdup_printf ("<%s>", GST_OBJECT_NAME (object));
-  }
-  if (G_IS_OBJECT (object)) {
-    return g_strdup_printf ("<%s@%p>", G_OBJECT_TYPE_NAME (object), object);
-  }
   if (GST_IS_MESSAGE (object)) {
     return gst_info_describe_message (GST_MESSAGE_CAST (object));
   }
@@ -730,6 +721,15 @@ gst_debug_print_object (gpointer ptr)
     ret = g_strdup_printf ("context '%s'='%s'", type, s);
     g_free (s);
     return ret;
+  }
+  if (GST_IS_PAD (object) && GST_OBJECT_NAME (object)) {
+    return g_strdup_printf ("<%s:%s>", GST_DEBUG_PAD_NAME (object));
+  }
+  if (GST_IS_OBJECT (object) && GST_OBJECT_NAME (object)) {
+    return g_strdup_printf ("<%s>", GST_OBJECT_NAME (object));
+  }
+  if (G_IS_OBJECT (object)) {
+    return g_strdup_printf ("<%s@%p>", G_OBJECT_TYPE_NAME (object), object);
   }
 
   return g_strdup_printf ("%p", ptr);
@@ -961,7 +961,7 @@ static const gchar *levelcolormap[GST_LEVEL_COUNT] = {
  * @line: the line from that the message was emitted, usually __LINE__
  * @message: the actual message
  * @object: (transfer none) (allow-none): the object this message relates to,
- *     or NULL if none
+ *     or %NULL if none
  * @unused: an unused variable, reserved for some user_data.
  *
  * The default logging handler used by GStreamer. Logging functions get called
@@ -1318,7 +1318,7 @@ gst_debug_set_color_mode_from_string (const gchar * mode)
  *
  * Checks if the debugging output should be colored.
  *
- * Returns: TRUE, if the debug output should be colored.
+ * Returns: %TRUE, if the debug output should be colored.
  */
 gboolean
 gst_debug_is_colored (void)
@@ -1367,7 +1367,7 @@ gst_debug_set_active (gboolean active)
  *
  * Checks if debugging output is activated.
  *
- * Returns: TRUE, if debugging is activated
+ * Returns: %TRUE, if debugging is activated
  */
 gboolean
 gst_debug_is_active (void)

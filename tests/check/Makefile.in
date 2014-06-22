@@ -103,8 +103,9 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	libs/bytereader$(EXEEXT) libs/bytewriter$(EXEEXT) \
 	libs/bitreader-noinline$(EXEEXT) \
 	libs/bytereader-noinline$(EXEEXT) \
-	libs/bytewriter-noinline$(EXEEXT) libs/sparsefile$(EXEEXT) \
-	libs/collectpads$(EXEEXT) libs/gstnetclientclock$(EXEEXT) \
+	libs/bytewriter-noinline$(EXEEXT) libs/flowcombiner$(EXEEXT) \
+	libs/sparsefile$(EXEEXT) libs/collectpads$(EXEEXT) \
+	libs/gstnetclientclock$(EXEEXT) \
 	libs/gstnettimeprovider$(EXEEXT) libs/gsttestclock$(EXEEXT) \
 	libs/transform1$(EXEEXT) tools/gstinspect$(EXEEXT)
 noinst_PROGRAMS =
@@ -659,6 +660,12 @@ libs_controller_SOURCES = libs/controller.c
 libs_controller_OBJECTS = libs/controller.$(OBJEXT)
 libs_controller_DEPENDENCIES = $(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_2)
+libs_flowcombiner_SOURCES = libs/flowcombiner.c
+libs_flowcombiner_OBJECTS = libs/flowcombiner.$(OBJEXT)
+libs_flowcombiner_LDADD = $(LDADD)
+libs_flowcombiner_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 am_libs_gstlibscpp_OBJECTS = libs/gstlibscpp.$(OBJEXT)
 libs_gstlibscpp_OBJECTS = $(am_libs_gstlibscpp_OBJECTS)
 libs_gstlibscpp_LDADD = $(LDADD)
@@ -836,14 +843,15 @@ SOURCES = elements/capsfilter.c elements/fakesink.c elements/fakesrc.c \
 	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
 	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
-	libs/controller.c $(libs_gstlibscpp_SOURCES) \
-	libs/gstnetclientclock.c libs/gstnettimeprovider.c \
-	libs/gsttestclock.c libs/libsabi.c libs/queuearray.c \
-	libs/sparsefile.c libs/transform1.c libs/typefindhelper.c \
-	pipelines/cleanup.c pipelines/parse-disabled.c \
-	pipelines/parse-launch.c pipelines/queue-error.c \
-	pipelines/seek.c pipelines/simple-launch-lines.c \
-	pipelines/stress.c tools/gstinspect.c
+	libs/controller.c libs/flowcombiner.c \
+	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
+	libs/gstnettimeprovider.c libs/gsttestclock.c libs/libsabi.c \
+	libs/queuearray.c libs/sparsefile.c libs/transform1.c \
+	libs/typefindhelper.c pipelines/cleanup.c \
+	pipelines/parse-disabled.c pipelines/parse-launch.c \
+	pipelines/queue-error.c pipelines/seek.c \
+	pipelines/simple-launch-lines.c pipelines/stress.c \
+	tools/gstinspect.c
 DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
 	elements/fakesrc.c elements/fdsrc.c elements/filesink.c \
 	elements/filesrc.c elements/funnel.c elements/identity.c \
@@ -868,14 +876,15 @@ DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
 	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
 	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
-	libs/controller.c $(libs_gstlibscpp_SOURCES) \
-	libs/gstnetclientclock.c libs/gstnettimeprovider.c \
-	libs/gsttestclock.c libs/libsabi.c libs/queuearray.c \
-	libs/sparsefile.c libs/transform1.c libs/typefindhelper.c \
-	pipelines/cleanup.c pipelines/parse-disabled.c \
-	pipelines/parse-launch.c pipelines/queue-error.c \
-	pipelines/seek.c pipelines/simple-launch-lines.c \
-	pipelines/stress.c tools/gstinspect.c
+	libs/controller.c libs/flowcombiner.c \
+	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
+	libs/gstnettimeprovider.c libs/gsttestclock.c libs/libsabi.c \
+	libs/queuearray.c libs/sparsefile.c libs/transform1.c \
+	libs/typefindhelper.c pipelines/cleanup.c \
+	pipelines/parse-disabled.c pipelines/parse-launch.c \
+	pipelines/queue-error.c pipelines/seek.c \
+	pipelines/simple-launch-lines.c pipelines/stress.c \
+	tools/gstinspect.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -2067,6 +2076,12 @@ libs/controller.$(OBJEXT): libs/$(am__dirstamp) \
 libs/controller$(EXEEXT): $(libs_controller_OBJECTS) $(libs_controller_DEPENDENCIES) $(EXTRA_libs_controller_DEPENDENCIES) libs/$(am__dirstamp)
 	@rm -f libs/controller$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(libs_controller_OBJECTS) $(libs_controller_LDADD) $(LIBS)
+libs/flowcombiner.$(OBJEXT): libs/$(am__dirstamp) \
+	libs/$(DEPDIR)/$(am__dirstamp)
+
+libs/flowcombiner$(EXEEXT): $(libs_flowcombiner_OBJECTS) $(libs_flowcombiner_DEPENDENCIES) $(EXTRA_libs_flowcombiner_DEPENDENCIES) libs/$(am__dirstamp)
+	@rm -f libs/flowcombiner$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(libs_flowcombiner_OBJECTS) $(libs_flowcombiner_LDADD) $(LIBS)
 libs/gstlibscpp.$(OBJEXT): libs/$(am__dirstamp) \
 	libs/$(DEPDIR)/$(am__dirstamp)
 
@@ -2268,6 +2283,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/bytewriter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/collectpads.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/controller.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/flowcombiner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/gstlibscpp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/gstnetclientclock.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/gstnettimeprovider.Po@am__quote@
@@ -3158,6 +3174,13 @@ libs/bytereader-noinline.log: libs/bytereader-noinline$(EXEEXT)
 libs/bytewriter-noinline.log: libs/bytewriter-noinline$(EXEEXT)
 	@p='libs/bytewriter-noinline$(EXEEXT)'; \
 	b='libs/bytewriter-noinline'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+libs/flowcombiner.log: libs/flowcombiner$(EXEEXT)
+	@p='libs/flowcombiner$(EXEEXT)'; \
+	b='libs/flowcombiner'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

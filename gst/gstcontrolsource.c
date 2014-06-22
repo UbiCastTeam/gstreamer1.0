@@ -96,7 +96,7 @@ gst_control_source_constructor (GType type, guint n_construct_params,
  *
  * Gets the value for this #GstControlSource at a given timestamp.
  *
- * Returns: FALSE if the value couldn't be returned, TRUE otherwise.
+ * Returns: %FALSE if the value couldn't be returned, %TRUE otherwise.
  */
 gboolean
 gst_control_source_get_value (GstControlSource * self, GstClockTime timestamp,
@@ -118,7 +118,7 @@ gst_control_source_get_value (GstControlSource * self, GstClockTime timestamp,
  * @timestamp: the first timestamp
  * @interval: the time steps
  * @n_values: the number of values to fetch
- * @values: array to put control-values in
+ * @values: (array length=n_values): array to put control-values in
  *
  * Gets an array of values for for this #GstControlSource. Values that are
  * undefined contain NANs.

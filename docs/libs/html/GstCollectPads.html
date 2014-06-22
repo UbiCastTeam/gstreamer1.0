@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstByteWriter.html" title="GstByteWriter">
-<link rel="next" href="gstreamer-libs-GstTypeFindHelper.html" title="GstTypeFindHelper">
+<link rel="next" href="gstreamer-libs-GstFlowCombiner.html" title="GstFlowCombiner">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-base.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-libs-GstByteWriter.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-libs-GstTypeFindHelper.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gstreamer-libs-GstFlowCombiner.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstCollectPads"></a><div class="titlepage"></div>
@@ -403,8 +403,8 @@ is given to the manager of this object when all pads have data.</p>
 <li class="listitem"><p>
     Data can be dequeued from the pad with the <a class="link" href="GstCollectPads.html#gst-collect-pads-pop" title="gst_collect_pads_pop ()"><code class="function">gst_collect_pads_pop()</code></a> method.
     One can peek at the data with the <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a> function.
-    These functions will return NULL if the pad received an EOS event. When all
-    pads return NULL from a <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a>, the element can emit an EOS
+    These functions will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the pad received an EOS event. When all
+    pads return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> from a <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a>, the element can emit an EOS
     event itself.
   </p></li>
 <li class="listitem"><p>
@@ -460,9 +460,9 @@ memory and resources allocated for it.</p>
                                  <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *buffer</code></em>,
                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called when a (considered oldest) buffer can be muxed.
-If all pads have reached EOS, this function is called with NULL <em class="parameter"><code>buffer</code></em>
+If all pads have reached EOS, this function is called with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> <em class="parameter"><code>buffer</code></em>
 
-and NULL <em class="parameter"><code>data</code></em>
+and <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> <em class="parameter"><code>data</code></em>
 .</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.3.5"></a><h4>Parameters</h4>
@@ -498,7 +498,7 @@ and NULL <em class="parameter"><code>data</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.3.6"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> for success</p>
 <p></p>
 </div>
 </div>
@@ -795,7 +795,7 @@ events downstream (with <a href="http://gstreamer.freedesktop.org/data/doc/gstre
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.9.6"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> for success</p>
 <p></p>
 </div>
 </div>
@@ -989,7 +989,7 @@ gst_collect_pads_new (<em class="parameter"><code><span class="type">void</span>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.17.6"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>, or NULL in case of an error. </p>
+<p> a new <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in case of an error. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -1063,7 +1063,7 @@ structure is freed</p></td>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.18.11"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> to identify the new pad. Or NULL
+<p> a new <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> to identify the new pad. Or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 if wrong parameters are supplied.</p>
 <p></p>
 </div>
@@ -1275,7 +1275,7 @@ handler.</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.24.7"></a><h4>Returns</h4>
 <p> The buffer in <em class="parameter"><code>data</code></em>
-or NULL if no buffer is queued.
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffer is queued.
 should unref the buffer after usage.</p>
 <p></p>
 </div>
@@ -1317,7 +1317,7 @@ handler.</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.25.7"></a><h4>Returns</h4>
 <p> The buffer in <em class="parameter"><code>data</code></em>
-or NULL if no buffer was
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffer was
 queued. You should unref the buffer after usage. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1366,7 +1366,7 @@ callback.</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.26.8"></a><h4>Returns</h4>
 <p> A sub buffer. The size of the buffer can be less that requested.
-A return of NULL signals that the pad is end-of-stream.
+A return of <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> signals that the pad is end-of-stream.
 Unref the buffer after use. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1416,7 +1416,7 @@ callback.</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.27.8"></a><h4>Returns</h4>
 <p> A sub buffer. The size of the buffer can be less that requested.
-A return of NULL signals that the pad is end-of-stream.
+A return of <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> signals that the pad is end-of-stream.
 Unref the buffer after use.</p>
 <p></p>
 </div>
@@ -1478,7 +1478,7 @@ gst_collect_pads_query_default (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstQuery.html"><span class="type">GstQuery</span></a> *query</code></em>,
                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> discard</code></em>);</pre>
-<p>Default GstCollectPads query handling that elements should always
+<p>Default <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> query handling that elements should always
 chain up to to ensure proper operation.  Element might however indicate
 query should not be forwarded downstream.</p>
 <div class="refsect3">
@@ -1522,7 +1522,7 @@ gst_collect_pads_event_default (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>,
                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> discard</code></em>);</pre>
-<p>Default GstCollectPads event handling that elements should always
+<p>Default <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> event handling that elements should always
 chain up to to ensure proper operation.  Element might however indicate
 event should not be forwarded downstream.</p>
 <div class="refsect3">
@@ -1565,7 +1565,7 @@ event should not be forwarded downstream.</p>
 gst_collect_pads_src_event_default (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                                     <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> *pad</code></em>,
                                     <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
-<p>Default GstCollectPads event handling for the src pad of elements.
+<p>Default <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> event handling for the src pad of elements.
 Elements can chain up to this to let flushing seek event handling
 be done by GstCollectPads.</p>
 <div class="refsect3">
@@ -1605,7 +1605,7 @@ gst_collect_pads_set_buffer_function (<em class="parameter"><code><a class="link
                                       <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectPadsBufferFunction" title="GstCollectPadsBufferFunction ()"><span class="type">GstCollectPadsBufferFunction</span></a> func</code></em>,
                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Set the callback function and user data that will be called with
-the oldest buffer when all pads have been collected, or NULL on EOS.
+the oldest buffer when all pads have been collected, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on EOS.
 If a buffer is passed, the callback owns a reference and must unref
 it.</p>
 <p>MT safe.</p>

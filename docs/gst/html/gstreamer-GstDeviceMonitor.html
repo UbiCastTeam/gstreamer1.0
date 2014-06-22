@@ -28,7 +28,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-GstDeviceMonitor.top_of_page"></a>GstDeviceMonitor</span></h2>
-<p>GstDeviceMonitor</p>
+<p>GstDeviceMonitor — A device monitor and prober</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -40,46 +40,6 @@
 <col class="functions_name">
 </colgroup>
 <tbody>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR:CAPS" title="GST_DEVICE_MONITOR()">GST_DEVICE_MONITOR</a><span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR-CAST:CAPS" title="GST_DEVICE_MONITOR_CAST()">GST_DEVICE_MONITOR_CAST</a><span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR-CLASS:CAPS" title="GST_DEVICE_MONITOR_CLASS()">GST_DEVICE_MONITOR_CLASS</a><span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR-GET-CLASS:CAPS" title="GST_DEVICE_MONITOR_GET_CLASS()">GST_DEVICE_MONITOR_GET_CLASS</a><span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#GST-IS-DEVICE-MONITOR:CAPS" title="GST_IS_DEVICE_MONITOR()">GST_IS_DEVICE_MONITOR</a><span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#GST-IS-DEVICE-MONITOR-CLASS:CAPS" title="GST_IS_DEVICE_MONITOR_CLASS()">GST_IS_DEVICE_MONITOR_CLASS</a><span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name"><a class="link" href="gstreamer-GstDeviceMonitor.html#GST-TYPE-DEVICE-MONITOR:CAPS" title="GST_TYPE_DEVICE_MONITOR">GST_TYPE_DEVICE_MONITOR</a></td>
-</tr>
 <tr>
 <td class="function_type">
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
@@ -169,14 +129,6 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
-</td>
-<td class="function_name">
-<a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-type" title="gst_device_monitor_get_type ()">gst_device_monitor_get_type</a> <span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="function_type">
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -233,51 +185,16 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstDeviceMonitor.description"></a><h2>Description</h2>
+<p>A <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> subclass is provided by a plugin that handles devices
+if there is a way to programatically list connected devices. It can also
+optionally provide updates to the list of connected devices.</p>
+<p>Each <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> subclass is a singleton, a plugin should
+normally provide a single subclass for all devices.</p>
+<p>Applications would normally use a <a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a> to monitor devices
+from all revelant monitors.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstDeviceMonitor.functions_details"></a><h2>Functions</h2>
-<div class="refsect2">
-<a name="GST-DEVICE-MONITOR:CAPS"></a><h3>GST_DEVICE_MONITOR()</h3>
-<pre class="programlisting">#define GST_DEVICE_MONITOR(obj)                 (G_TYPE_CHECK_INSTANCE_CAST ((obj), GST_TYPE_DEVICE_MONITOR, GstDeviceMonitor))
-</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-DEVICE-MONITOR-CAST:CAPS"></a><h3>GST_DEVICE_MONITOR_CAST()</h3>
-<pre class="programlisting">#define GST_DEVICE_MONITOR_CAST(obj)            ((GstDeviceMonitor *)(obj))
-</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-DEVICE-MONITOR-CLASS:CAPS"></a><h3>GST_DEVICE_MONITOR_CLASS()</h3>
-<pre class="programlisting">#define GST_DEVICE_MONITOR_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST ((klass), GST_TYPE_DEVICE_MONITOR, GstDeviceMonitorClass))
-</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-DEVICE-MONITOR-GET-CLASS:CAPS"></a><h3>GST_DEVICE_MONITOR_GET_CLASS()</h3>
-<pre class="programlisting">#define GST_DEVICE_MONITOR_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj), GST_TYPE_DEVICE_MONITOR, GstDeviceMonitorClass))
-</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-IS-DEVICE-MONITOR:CAPS"></a><h3>GST_IS_DEVICE_MONITOR()</h3>
-<pre class="programlisting">#define GST_IS_DEVICE_MONITOR(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_DEVICE_MONITOR))
-</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-IS-DEVICE-MONITOR-CLASS:CAPS"></a><h3>GST_IS_DEVICE_MONITOR_CLASS()</h3>
-<pre class="programlisting">#define GST_IS_DEVICE_MONITOR_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GST_TYPE_DEVICE_MONITOR))
-</pre>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-TYPE-DEVICE-MONITOR:CAPS"></a><h3>GST_TYPE_DEVICE_MONITOR</h3>
-<pre class="programlisting">#define GST_TYPE_DEVICE_MONITOR                 (gst_device_monitor_get_type())
-</pre>
-</div>
-<hr>
 <div class="refsect2">
 <a name="gst-device-monitor-can-monitor"></a><h3>gst_device_monitor_can_monitor ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
@@ -285,7 +202,7 @@ gst_device_monitor_can_monitor (<em class="parameter"><code><a class="link" href
 <p>If this function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, then the device monitor can monitor if
 devices are added or removed. Otherwise, it can only do static probing.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -300,7 +217,7 @@ devices are added or removed. Otherwise, it can only do static probing.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.9.6"></a><h4>Returns</h4>
+<a name="id-1.4.3.8.2.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> support monitoring, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
@@ -317,7 +234,7 @@ gst_device_monitor_class_add_metadata (<em class="parameter"><code><a class="lin
  as metadata in <em class="parameter"><code>klass</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -362,7 +279,7 @@ or an inlined string, as it will not be copied. (GStreamer plugins will
 be made resident once loaded, so this function can be used even from
 dynamically loaded plugins.)</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.11.6"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -400,7 +317,7 @@ gst_device_monitor_class_get_metadata (<em class="parameter"><code><a class="lin
  in <em class="parameter"><code>klass</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -422,7 +339,7 @@ gst_device_monitor_class_get_metadata (<em class="parameter"><code><a class="lin
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.12.6"></a><h4>Returns</h4>
+<a name="id-1.4.3.8.5.6"></a><h4>Returns</h4>
 <p> the metadata for <em class="parameter"><code>key</code></em>
 .</p>
 <p></p>
@@ -441,7 +358,7 @@ gst_device_monitor_class_set_metadata (<em class="parameter"><code><a class="lin
 <p>Sets the detailed information for a <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitorClass" title="struct GstDeviceMonitorClass"><span class="type">GstDeviceMonitorClass</span></a>.</p>
 <div class="note">This function is for use in _class_init functions only.</div>
 <div class="refsect3">
-<a name="id-1.4.3.8.13.6"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -504,7 +421,7 @@ gst_device_monitor_class_set_static_metadata
 they will not be copied. (GStreamer plugins will be made resident once
 loaded, so this function can be used even from dynamically loaded plugins.)</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.14.7"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -556,7 +473,7 @@ gst_device_monitor_device_add (<em class="parameter"><code><a class="link" href=
 a new device has been added.</p>
 <p>This is for use by subclasses.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.15.6"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -589,7 +506,7 @@ gst_device_monitor_device_remove (<em class="parameter"><code><a class="link" hr
 a device has been removed.</p>
 <p>This is for use by subclasses.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.16.6"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -619,7 +536,7 @@ a device has been removed.</p>
 gst_device_monitor_get_bus (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> *monitor</code></em>);</pre>
 <p>Gets the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> of this <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a></p>
 <div class="refsect3">
-<a name="id-1.4.3.8.17.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -634,7 +551,7 @@ gst_device_monitor_get_bus (<em class="parameter"><code><a class="link" href="gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.17.6"></a><h4>Returns</h4>
+<a name="id-1.4.3.8.10.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -648,7 +565,7 @@ gst_device_monitor_get_devices (<em class="parameter"><code><a class="link" href
 <p>Gets a list of devices that this monitor understands. This may actually
 probe the hardware if the monitor is not currently started.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.18.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -663,7 +580,7 @@ probe the hardware if the monitor is not currently started.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.18.6"></a><h4>Returns</h4>
+<a name="id-1.4.3.8.11.6"></a><h4>Returns</h4>
 <p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of
 <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstDevice]</span></p>
@@ -677,7 +594,7 @@ probe the hardware if the monitor is not currently started.</p>
 gst_device_monitor_get_factory (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> *monitor</code></em>);</pre>
 <p>Retrieves the factory that was used to create this device monitor.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.19.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -692,18 +609,12 @@ gst_device_monitor_get_factory (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.19.6"></a><h4>Returns</h4>
+<a name="id-1.4.3.8.12.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstDeviceMonitorFactory.html" title="GstDeviceMonitorFactory"><span class="type">GstDeviceMonitorFactory</span></a> used for creating this
 device monitor. no refcounting is needed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 1.4</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-device-monitor-get-type"></a><h3>gst_device_monitor_get_type ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
-gst_device_monitor_get_type (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -718,7 +629,7 @@ gst_device_monitor_register (<em class="parameter"><code><a class="link" href="G
  and add the factory to <em class="parameter"><code>plugin</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.21.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -728,7 +639,7 @@ gst_device_monitor_register (<em class="parameter"><code><a class="link" href="G
 <tbody>
 <tr>
 <td class="parameter_name"><p>plugin</p></td>
-<td class="parameter_description"><p> <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> to register the device monitor with, or NULL for
+<td class="parameter_description"><p> <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> to register the device monitor with, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for
 a static device monitor. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -751,8 +662,8 @@ a static device monitor. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.21.6"></a><h4>Returns</h4>
-<p> TRUE, if the registering succeeded, FALSE on error</p>
+<a name="id-1.4.3.8.13.6"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the registering succeeded, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error</p>
 <p></p>
 </div>
 <p class="since">Since 1.4</p>
@@ -770,7 +681,7 @@ the system.</p>
 user of the object, <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-stop" title="gst_device_monitor_stop ()"><code class="function">gst_device_monitor_stop()</code></a> needs to be called the same
 number of times.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.22.6"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.14.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -785,7 +696,7 @@ number of times.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.4.3.8.22.7"></a><h4>Returns</h4>
+<a name="id-1.4.3.8.14.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the device monitoring could be started</p>
 <p></p>
 </div>
@@ -800,7 +711,7 @@ gst_device_monitor_stop (<em class="parameter"><code><a class="link" href="gstre
 <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> will stop monitoring the devices. This needs to be
 called the same number of times that <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-start" title="gst_device_monitor_start ()"><code class="function">gst_device_monitor_start()</code></a> was called.</p>
 <div class="refsect3">
-<a name="id-1.4.3.8.23.5"></a><h4>Parameters</h4>
+<a name="id-1.4.3.8.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -823,8 +734,35 @@ called the same number of times that <a class="link" href="gstreamer-GstDeviceMo
 <a name="GstDeviceMonitor"></a><h3>struct GstDeviceMonitor</h3>
 <pre class="programlisting">struct GstDeviceMonitor {
   GstObject         parent;
+
+  /* Protected by the Object lock */
+  GList *devices;
 };
 </pre>
+<p>The structure of the base <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a></p>
+<div class="refsect3">
+<a name="id-1.4.3.9.2.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> <em class="structfield"><code><a name="GstDeviceMonitor.parent"></a>parent</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstDeviceMonitor.devices"></a>devices</code></em>;</p></td>
+<td class="struct_member_description"><p>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of the <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> objects</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -838,9 +776,6 @@ called the same number of times that <a class="link" href="gstreamer-GstDeviceMo
 
   gboolean    (*start) (GstDeviceMonitor * monitor);
   void        (*stop)  (GstDeviceMonitor * monitor);
-
-
-  gpointer metadata;
 };
 </pre>
 <p>The structure of the base <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitorClass" title="struct GstDeviceMonitorClass"><span class="type">GstDeviceMonitorClass</span></a></p>
@@ -855,8 +790,8 @@ called the same number of times that <a class="link" href="gstreamer-GstDeviceMo
 <tbody>
 <tr>
 <td class="struct_member_name"><p><a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> <em class="structfield"><code><a name="GstDeviceMonitorClass.parent-class"></a>parent_class</code></em>;</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>the parent <a class="link" href="GstObject.html#GstObjectClass" title="struct GstObjectClass"><span class="type">GstObjectClass</span></a> structure</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a class="link" href="GstDeviceMonitorFactory.html" title="GstDeviceMonitorFactory"><span class="type">GstDeviceMonitorFactory</span></a> *<em class="structfield"><code><a name="GstDeviceMonitorClass.factory"></a>factory</code></em>;</p></td>
@@ -866,29 +801,31 @@ monitor</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstDeviceMonitorClass.probe"></a>probe</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>Returns a list of devices that are currently available.
+This should never block.</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstDeviceMonitorClass.start"></a>start</code></em> ()</p></td>
-<td class="struct_member_description"><p>Starts monitoring for new devices.</p></td>
+<td class="struct_member_description"><p>Starts monitoring for new devices. Only subclasses that can know
+that devices have been added or remove need to implement this method.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstDeviceMonitorClass.stop"></a>stop</code></em> ()</p></td>
-<td class="struct_member_description"><p>Stops monitoring for new devices</p></td>
+<td class="struct_member_description"><p>Stops monitoring for new devices. Only subclasses that implement
+the <code class="function">start()</code> method need to implement this method.</p></td>
 <td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="GstDeviceMonitorClass.metadata"></a>metadata</code></em>;</p></td>
-<td> </td>
-<td> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <p class="since">Since 1.4</p>
 </div>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstDeviceMonitor.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a>, <a class="link" href="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" title="struct GstGlobalDeviceMonitor"><span class="type">GstGlobalDeviceMonitor</span></a></p>
 </div>
 </div>
 <div class="footer">

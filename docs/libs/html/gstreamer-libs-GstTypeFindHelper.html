@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
-<link rel="prev" href="GstCollectPads.html" title="GstCollectPads">
+<link rel="prev" href="gstreamer-libs-GstFlowCombiner.html" title="GstFlowCombiner">
 <link rel="next" href="gstreamer-libs-GstDataQueue.html" title="GstDataQueue">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -20,7 +20,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-base.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GstCollectPads.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-libs-GstFlowCombiner.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gstreamer-libs-GstDataQueue.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -118,7 +118,7 @@ gst_type_find_helper (<em class="parameter"><code><a href="http://gstreamer.free
 <p>Tries to find what type of data is flowing from the given source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a>.</p>
 <p>Free-function: gst_caps_unref</p>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.2.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.14.7.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -140,9 +140,9 @@ gst_type_find_helper (<em class="parameter"><code><a href="http://gstreamer.free
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.2.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.14.7.2.7"></a><h4>Returns</h4>
 <p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to the data stream.
-Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if no <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> matches the data stream. </p>
+Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> matches the data stream. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -157,14 +157,14 @@ gst_type_find_helper_for_buffer (<em class="parameter"><code><a href="http://gst
 assumption being that the buffer represents the beginning of the stream or
 file.</p>
 <p>All available typefinders will be called on the data in order of rank. If
-a typefinding function returns a probability of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTypeFind.html#GST-TYPE-FIND-MAXIMUM:CAPS"><span class="type">GST_TYPE_FIND_MAXIMUM</span></a>,
+a typefinding function returns a probability of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTypeFind.html#GST-TYPE-FIND-MAXIMUM:CAPS"><code class="literal">GST_TYPE_FIND_MAXIMUM</code></a>,
 typefinding is stopped immediately and the found caps will be returned
 right away. Otherwise, all available typefind functions will the tried,
-and the caps with the highest probability will be returned, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if
+and the caps with the highest probability will be returned, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
 the content of the buffer could not be identified.</p>
 <p>Free-function: gst_caps_unref</p>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.3.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.14.7.3.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -174,7 +174,7 @@ the content of the buffer could not be identified.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p> object doing the typefinding, or NULL (used for logging). </p></td>
+<td class="parameter_description"><p> object doing the typefinding, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (used for logging). </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -185,15 +185,15 @@ the content of the buffer could not be identified.</p>
 <tr>
 <td class="parameter_name"><p>prob</p></td>
 <td class="parameter_description"><p> location to store the probability of the found
-caps, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. </p></td>
+caps, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.3.8"></a><h4>Returns</h4>
-<p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to the data, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>
+<a name="id-1.2.4.14.7.3.8"></a><h4>Returns</h4>
+<p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to the data, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 if no type could be found. The caller should free the caps returned
 with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#gst-caps-unref"><code class="function">gst_caps_unref()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -213,7 +213,7 @@ of rank. The caps of the first typefinder that can handle <em class="parameter">
 returned.</p>
 <p>Free-function: gst_caps_unref</p>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.4.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.14.7.4.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -223,7 +223,7 @@ returned.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p> object doing the typefinding, or NULL (used for logging). </p></td>
+<td class="parameter_description"><p> object doing the typefinding, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (used for logging). </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -235,10 +235,10 @@ returned.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.4.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.14.7.4.8"></a><h4>Returns</h4>
 <p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to <em class="parameter"><code>extension</code></em>
 , or
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if no type could be found. The caller should free the caps
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no type could be found. The caller should free the caps
 returned with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#gst-caps-unref"><code class="function">gst_caps_unref()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -256,15 +256,15 @@ gst_type_find_helper_for_data (<em class="parameter"><code><a href="http://gstre
 assumption being that the data represents the beginning of the stream or
 file.</p>
 <p>All available typefinders will be called on the data in order of rank. If
-a typefinding function returns a probability of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTypeFind.html#GST-TYPE-FIND-MAXIMUM:CAPS"><span class="type">GST_TYPE_FIND_MAXIMUM</span></a>,
+a typefinding function returns a probability of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstTypeFind.html#GST-TYPE-FIND-MAXIMUM:CAPS"><code class="literal">GST_TYPE_FIND_MAXIMUM</code></a>,
 typefinding is stopped immediately and the found caps will be returned
 right away. Otherwise, all available typefind functions will the tried,
-and the caps with the highest probability will be returned, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if
+and the caps with the highest probability will be returned, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
 the content of <em class="parameter"><code>data</code></em>
  could not be identified.</p>
 <p>Free-function: gst_caps_unref</p>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.5.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.14.7.5.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -274,7 +274,7 @@ the content of <em class="parameter"><code>data</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p> object doing the typefinding, or NULL (used for logging). </p></td>
+<td class="parameter_description"><p> object doing the typefinding, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (used for logging). </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -291,15 +291,15 @@ the content of <em class="parameter"><code>data</code></em>
 <tr>
 <td class="parameter_name"><p>prob</p></td>
 <td class="parameter_description"><p> location to store the probability of the found
-caps, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. </p></td>
+caps, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.5.8"></a><h4>Returns</h4>
-<p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to the data, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>
+<a name="id-1.2.4.14.7.5.8"></a><h4>Returns</h4>
+<p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to the data, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 if no type could be found. The caller should free the caps returned
 with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#gst-caps-unref"><code class="function">gst_caps_unref()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -323,7 +323,7 @@ stored in <em class="parameter"><code>buffer</code></em>
 return value.</p>
 <p>This function is supposed to behave exactly like a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstPadGetRangeFunction"><span class="type">GstPadGetRangeFunction</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.14.7.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -339,7 +339,7 @@ return value.</p>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
 <td class="parameter_description"><p> the parent of <em class="parameter"><code>obj</code></em>
-or NULL. </p></td>
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -361,7 +361,7 @@ or NULL. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.6.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.14.7.6.7"></a><h4>Returns</h4>
 <p> GST_FLOW_OK for success</p>
 <p></p>
 </div>
@@ -386,12 +386,12 @@ the stripped data stream before adding their own source pad (the specified
 callback can then call the upstream peer pad with offsets adjusted for the
 tag size, for example).</p>
 <p>When <em class="parameter"><code>extension</code></em>
- is not NULL, this function will first try the typefind
+ is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, this function will first try the typefind
 functions for the given extension, which might speed up the typefinding
 in many cases.</p>
 <p>Free-function: gst_caps_unref</p>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.7.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.14.7.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -408,7 +408,7 @@ in many cases.</p>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
 <td class="parameter_description"><p> the parent of <em class="parameter"><code>obj</code></em>
-or NULL. </p></td>
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -430,16 +430,16 @@ be used to access data at random offsets when doing the typefinding. </p></td>
 <tr>
 <td class="parameter_name"><p>prob</p></td>
 <td class="parameter_description"><p> location to store the probability of the found
-caps, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. </p></td>
+caps, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.13.7.7.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.14.7.7.8"></a><h4>Returns</h4>
 <p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> corresponding to the data stream.
-Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if no <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> matches the data stream. </p>
+Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> matches the data stream. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>

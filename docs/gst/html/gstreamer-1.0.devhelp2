@@ -249,6 +249,7 @@
     <keyword type="function" name="gst_buffer_pool_set_config ()" link="GstBufferPool.html#gst-buffer-pool-set-config"/>
     <keyword type="function" name="gst_buffer_pool_set_active ()" link="GstBufferPool.html#gst-buffer-pool-set-active"/>
     <keyword type="function" name="gst_buffer_pool_is_active ()" link="GstBufferPool.html#gst-buffer-pool-is-active"/>
+    <keyword type="function" name="gst_buffer_pool_set_flushing ()" link="GstBufferPool.html#gst-buffer-pool-set-flushing" since="1.4"/>
     <keyword type="function" name="gst_buffer_pool_acquire_buffer ()" link="GstBufferPool.html#gst-buffer-pool-acquire-buffer"/>
     <keyword type="function" name="gst_buffer_pool_release_buffer ()" link="GstBufferPool.html#gst-buffer-pool-release-buffer"/>
     <keyword type="struct" name="GstBufferPool" link="GstBufferPool.html#GstBufferPool-struct"/>
@@ -498,6 +499,7 @@
     <keyword type="struct" name="struct GstControlSource" link="GstControlSource.html#GstControlSource-struct"/>
     <keyword type="struct" name="struct GstControlSourceClass" link="GstControlSource.html#GstControlSourceClass"/>
     <keyword type="struct" name="struct GstTimedValue" link="GstControlSource.html#GstTimedValue"/>
+    <keyword type="macro" name="GST_TYPE_DATE_TIME" link="GstDateTime.html#GST-TYPE-DATE-TIME:CAPS"/>
     <keyword type="function" name="gst_date_time_get_day ()" link="GstDateTime.html#gst-date-time-get-day"/>
     <keyword type="function" name="gst_date_time_get_month ()" link="GstDateTime.html#gst-date-time-get-month"/>
     <keyword type="function" name="gst_date_time_get_hour ()" link="GstDateTime.html#gst-date-time-get-hour"/>
@@ -527,7 +529,6 @@
     <keyword type="function" name="gst_date_time_new_from_g_date_time ()" link="GstDateTime.html#gst-date-time-new-from-g-date-time"/>
     <keyword type="function" name="gst_date_time_to_g_date_time ()" link="GstDateTime.html#gst-date-time-to-g-date-time"/>
     <keyword type="struct" name="GstDateTime" link="GstDateTime.html#GstDateTime-struct"/>
-    <keyword type="macro" name="GST_TYPE_DATE_TIME" link="GstDateTime.html#GST-TYPE-DATE-TIME:CAPS"/>
     <keyword type="macro" name="GST_STATE()" link="GstElement.html#GST-STATE:CAPS"/>
     <keyword type="macro" name="GST_STATE_GET_NEXT()" link="GstElement.html#GST-STATE-GET-NEXT:CAPS"/>
     <keyword type="macro" name="GST_STATE_NEXT()" link="GstElement.html#GST-STATE-NEXT:CAPS"/>
@@ -929,6 +930,10 @@
     <keyword type="function" name="gst_message_parse_context_type ()" link="GstMessage.html#gst-message-parse-context-type" since="1.2"/>
     <keyword type="function" name="gst_message_new_have_context ()" link="GstMessage.html#gst-message-new-have-context" since="1.2"/>
     <keyword type="function" name="gst_message_parse_have_context ()" link="GstMessage.html#gst-message-parse-have-context" since="1.2"/>
+    <keyword type="function" name="gst_message_new_device_added ()" link="GstMessage.html#gst-message-new-device-added" since="1.4"/>
+    <keyword type="function" name="gst_message_new_device_removed ()" link="GstMessage.html#gst-message-new-device-removed" since="1.4"/>
+    <keyword type="function" name="gst_message_parse_device_added ()" link="GstMessage.html#gst-message-parse-device-added" since="1.4"/>
+    <keyword type="function" name="gst_message_parse_device_removed ()" link="GstMessage.html#gst-message-parse-device-removed" since="1.4"/>
     <keyword type="struct" name="struct GstMessage" link="GstMessage.html#GstMessage-struct"/>
     <keyword type="enum" name="enum GstMessageType" link="GstMessage.html#GstMessageType"/>
     <keyword type="enum" name="enum GstStructureChangeType" link="GstMessage.html#GstStructureChangeType"/>
@@ -1920,26 +1925,32 @@
     <keyword type="macro" name="GST_STR_FOURCC()" link="gstreamer-GstValue.html#GST-STR-FOURCC:CAPS"/>
     <keyword type="macro" name="GST_FOURCC_ARGS()" link="gstreamer-GstValue.html#GST-FOURCC-ARGS:CAPS"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_INT_RANGE()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-INT-RANGE:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_INT_RANGE" link="gstreamer-GstValue.html#GST-TYPE-INT-RANGE:CAPS"/>
     <keyword type="function" name="gst_value_set_int_range ()" link="gstreamer-GstValue.html#gst-value-set-int-range"/>
     <keyword type="function" name="gst_value_get_int_range_min ()" link="gstreamer-GstValue.html#gst-value-get-int-range-min"/>
     <keyword type="function" name="gst_value_get_int_range_max ()" link="gstreamer-GstValue.html#gst-value-get-int-range-max"/>
     <keyword type="function" name="gst_value_set_int_range_step ()" link="gstreamer-GstValue.html#gst-value-set-int-range-step"/>
     <keyword type="function" name="gst_value_get_int_range_step ()" link="gstreamer-GstValue.html#gst-value-get-int-range-step"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_BITMASK()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-BITMASK:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_BITMASK" link="gstreamer-GstValue.html#GST-TYPE-BITMASK:CAPS"/>
     <keyword type="function" name="gst_value_set_bitmask ()" link="gstreamer-GstValue.html#gst-value-set-bitmask"/>
     <keyword type="function" name="gst_value_get_bitmask ()" link="gstreamer-GstValue.html#gst-value-get-bitmask"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_INT64_RANGE()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-INT64-RANGE:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_INT64_RANGE" link="gstreamer-GstValue.html#GST-TYPE-INT64-RANGE:CAPS"/>
     <keyword type="function" name="gst_value_set_int64_range ()" link="gstreamer-GstValue.html#gst-value-set-int64-range"/>
     <keyword type="function" name="gst_value_get_int64_range_min ()" link="gstreamer-GstValue.html#gst-value-get-int64-range-min"/>
     <keyword type="function" name="gst_value_get_int64_range_max ()" link="gstreamer-GstValue.html#gst-value-get-int64-range-max"/>
     <keyword type="function" name="gst_value_set_int64_range_step ()" link="gstreamer-GstValue.html#gst-value-set-int64-range-step"/>
     <keyword type="function" name="gst_value_get_int64_range_step ()" link="gstreamer-GstValue.html#gst-value-get-int64-range-step"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_DOUBLE_RANGE()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-DOUBLE-RANGE:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_DOUBLE_RANGE" link="gstreamer-GstValue.html#GST-TYPE-DOUBLE-RANGE:CAPS"/>
     <keyword type="function" name="gst_value_set_double_range ()" link="gstreamer-GstValue.html#gst-value-set-double-range"/>
     <keyword type="function" name="gst_value_get_double_range_min ()" link="gstreamer-GstValue.html#gst-value-get-double-range-min"/>
     <keyword type="function" name="gst_value_get_double_range_max ()" link="gstreamer-GstValue.html#gst-value-get-double-range-max"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_LIST()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-LIST:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_LIST" link="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_ARRAY()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-ARRAY:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_ARRAY" link="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS"/>
     <keyword type="function" name="gst_value_list_append_value ()" link="gstreamer-GstValue.html#gst-value-list-append-value"/>
     <keyword type="function" name="gst_value_list_append_and_take_value ()" link="gstreamer-GstValue.html#gst-value-list-append-and-take-value" since="1.2"/>
     <keyword type="function" name="gst_value_list_prepend_value ()" link="gstreamer-GstValue.html#gst-value-list-prepend-value"/>
@@ -1948,12 +1959,14 @@
     <keyword type="function" name="gst_value_list_get_size ()" link="gstreamer-GstValue.html#gst-value-list-get-size"/>
     <keyword type="function" name="gst_value_list_get_value ()" link="gstreamer-GstValue.html#gst-value-list-get-value"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_FRACTION()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-FRACTION:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_FRACTION" link="gstreamer-GstValue.html#GST-TYPE-FRACTION:CAPS"/>
     <keyword type="function" name="gst_value_set_fraction ()" link="gstreamer-GstValue.html#gst-value-set-fraction"/>
     <keyword type="function" name="gst_value_get_fraction_numerator ()" link="gstreamer-GstValue.html#gst-value-get-fraction-numerator"/>
     <keyword type="function" name="gst_value_get_fraction_denominator ()" link="gstreamer-GstValue.html#gst-value-get-fraction-denominator"/>
     <keyword type="function" name="gst_value_fraction_multiply ()" link="gstreamer-GstValue.html#gst-value-fraction-multiply"/>
     <keyword type="function" name="gst_value_fraction_subtract ()" link="gstreamer-GstValue.html#gst-value-fraction-subtract"/>
     <keyword type="macro" name="GST_VALUE_HOLDS_FRACTION_RANGE()" link="gstreamer-GstValue.html#GST-VALUE-HOLDS-FRACTION-RANGE:CAPS"/>
+    <keyword type="macro" name="GST_TYPE_FRACTION_RANGE" link="gstreamer-GstValue.html#GST-TYPE-FRACTION-RANGE:CAPS"/>
     <keyword type="function" name="gst_value_set_fraction_range ()" link="gstreamer-GstValue.html#gst-value-set-fraction-range"/>
     <keyword type="function" name="gst_value_get_fraction_range_min ()" link="gstreamer-GstValue.html#gst-value-get-fraction-range-min"/>
     <keyword type="function" name="gst_value_get_fraction_range_max ()" link="gstreamer-GstValue.html#gst-value-get-fraction-range-max"/>
@@ -2001,14 +2014,6 @@
     <keyword type="function" name="gst_value_array_prepend_value ()" link="gstreamer-GstValue.html#gst-value-array-prepend-value"/>
     <keyword type="function" name="gst_value_fixate ()" link="gstreamer-GstValue.html#gst-value-fixate"/>
     <keyword type="macro" name="GST_FOURCC_FORMAT" link="gstreamer-GstValue.html#GST-FOURCC-FORMAT:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_INT_RANGE" link="gstreamer-GstValue.html#GST-TYPE-INT-RANGE:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_BITMASK" link="gstreamer-GstValue.html#GST-TYPE-BITMASK:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_INT64_RANGE" link="gstreamer-GstValue.html#GST-TYPE-INT64-RANGE:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_DOUBLE_RANGE" link="gstreamer-GstValue.html#GST-TYPE-DOUBLE-RANGE:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_LIST" link="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_ARRAY" link="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_FRACTION" link="gstreamer-GstValue.html#GST-TYPE-FRACTION:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_FRACTION_RANGE" link="gstreamer-GstValue.html#GST-TYPE-FRACTION-RANGE:CAPS"/>
     <keyword type="macro" name="GST_VALUE_EQUAL" link="gstreamer-GstValue.html#GST-VALUE-EQUAL:CAPS"/>
     <keyword type="macro" name="GST_VALUE_GREATER_THAN" link="gstreamer-GstValue.html#GST-VALUE-GREATER-THAN:CAPS"/>
     <keyword type="macro" name="GST_VALUE_UNORDERED" link="gstreamer-GstValue.html#GST-VALUE-UNORDERED:CAPS"/>
@@ -2018,30 +2023,14 @@
     <keyword type="macro" name="GST_VERSION_MICRO" link="gstreamer-GstVersion.html#GST-VERSION-MICRO:CAPS"/>
     <keyword type="macro" name="GST_VERSION_NANO" link="gstreamer-GstVersion.html#GST-VERSION-NANO:CAPS"/>
     <keyword type="macro" name="GST_CHECK_VERSION()" link="gstreamer-GstVersion.html#GST-CHECK-VERSION:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE()" link="gstreamer-GstDevice.html#GST-DEVICE:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_CAST()" link="gstreamer-GstDevice.html#GST-DEVICE-CAST:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_CLASS()" link="gstreamer-GstDevice.html#GST-DEVICE-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_GET_CLASS()" link="gstreamer-GstDevice.html#GST-DEVICE-GET-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_IS_DEVICE()" link="gstreamer-GstDevice.html#GST-IS-DEVICE:CAPS"/>
-    <keyword type="macro" name="GST_IS_DEVICE_CLASS()" link="gstreamer-GstDevice.html#GST-IS-DEVICE-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_DEVICE" link="gstreamer-GstDevice.html#GST-TYPE-DEVICE:CAPS"/>
     <keyword type="function" name="gst_device_create_element ()" link="gstreamer-GstDevice.html#gst-device-create-element" since="1.4"/>
     <keyword type="function" name="gst_device_get_caps ()" link="gstreamer-GstDevice.html#gst-device-get-caps" since="1.4"/>
     <keyword type="function" name="gst_device_get_display_name ()" link="gstreamer-GstDevice.html#gst-device-get-display-name" since="1.4"/>
-    <keyword type="function" name="gst_device_get_klass ()" link="gstreamer-GstDevice.html#gst-device-get-klass" since="1.4"/>
-    <keyword type="function" name="gst_device_get_type ()" link="gstreamer-GstDevice.html#gst-device-get-type"/>
     <keyword type="function" name="gst_device_has_classes ()" link="gstreamer-GstDevice.html#gst-device-has-classes" since="1.4"/>
     <keyword type="function" name="gst_device_has_classesv ()" link="gstreamer-GstDevice.html#gst-device-has-classesv" since="1.4"/>
     <keyword type="function" name="gst_device_reconfigure_element ()" link="gstreamer-GstDevice.html#gst-device-reconfigure-element" since="1.4"/>
-    <keyword type="struct" name="struct GstDevice" link="gstreamer-GstDevice.html#GstDevice"/>
-    <keyword type="struct" name="struct GstDeviceClass" link="gstreamer-GstDevice.html#GstDeviceClass"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR()" link="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR_CAST()" link="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR-CAST:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR_CLASS()" link="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR_GET_CLASS()" link="gstreamer-GstDeviceMonitor.html#GST-DEVICE-MONITOR-GET-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_IS_DEVICE_MONITOR()" link="gstreamer-GstDeviceMonitor.html#GST-IS-DEVICE-MONITOR:CAPS"/>
-    <keyword type="macro" name="GST_IS_DEVICE_MONITOR_CLASS()" link="gstreamer-GstDeviceMonitor.html#GST-IS-DEVICE-MONITOR-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_DEVICE_MONITOR" link="gstreamer-GstDeviceMonitor.html#GST-TYPE-DEVICE-MONITOR:CAPS"/>
+    <keyword type="struct" name="struct GstDevice" link="gstreamer-GstDevice.html#GstDevice" since="1.4"/>
+    <keyword type="struct" name="struct GstDeviceClass" link="gstreamer-GstDevice.html#GstDeviceClass" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_can_monitor ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-can-monitor"/>
     <keyword type="function" name="gst_device_monitor_class_add_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-add-metadata"/>
     <keyword type="function" name="gst_device_monitor_class_add_static_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-add-static-metadata" since="1.4"/>
@@ -2053,47 +2042,33 @@
     <keyword type="function" name="gst_device_monitor_get_bus ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-bus" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_get_devices ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-devices" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_get_factory ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-factory" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_get_type ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-type"/>
     <keyword type="function" name="gst_device_monitor_register ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-register" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_start ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-start" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_stop ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-stop" since="1.4"/>
-    <keyword type="struct" name="struct GstDeviceMonitor" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor"/>
+    <keyword type="struct" name="struct GstDeviceMonitor" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" since="1.4"/>
     <keyword type="struct" name="struct GstDeviceMonitorClass" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitorClass" since="1.4"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR_FACTORY()" link="GstDeviceMonitorFactory.html#GST-DEVICE-MONITOR-FACTORY:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR_FACTORY_CAST()" link="GstDeviceMonitorFactory.html#GST-DEVICE-MONITOR-FACTORY-CAST:CAPS"/>
-    <keyword type="macro" name="GST_DEVICE_MONITOR_FACTORY_CLASS()" link="GstDeviceMonitorFactory.html#GST-DEVICE-MONITOR-FACTORY-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_DEVICE_MONITOR_FACTORY" link="GstDeviceMonitorFactory.html#GST-TYPE-DEVICE-MONITOR-FACTORY:CAPS"/>
     <keyword type="function" name="gst_device_monitor_factory_find ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-find" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_get ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_get_by_name ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-by-name" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_get_device_monitor_type ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-device-monitor-type" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_get_metadata ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-metadata" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_get_metadata_keys ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-metadata-keys" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_get_type ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-type"/>
     <keyword type="function" name="gst_device_monitor_factory_has_classes ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-has-classes" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_has_classesv ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-has-classesv" since="1.4"/>
     <keyword type="function" name="gst_device_monitor_factory_list_get_device_monitors ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-list-get-device-monitors" since="1.4"/>
     <keyword type="struct" name="GstDeviceMonitorFactory" link="GstDeviceMonitorFactory.html#GstDeviceMonitorFactory-struct"/>
-    <keyword type="struct" name="GstDeviceMonitorFactoryClass" link="GstDeviceMonitorFactory.html#GstDeviceMonitorFactoryClass"/>
-    <keyword type="macro" name="GST_GLOBAL_DEVICE_MONITOR()" link="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR:CAPS"/>
-    <keyword type="macro" name="GST_GLOBAL_DEVICE_MONITOR_CAST()" link="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR-CAST:CAPS"/>
-    <keyword type="macro" name="GST_GLOBAL_DEVICE_MONITOR_CLASS()" link="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_GLOBAL_DEVICE_MONITOR_GET_CLASS()" link="gstreamer-GstGlobalDeviceMonitor.html#GST-GLOBAL-DEVICE-MONITOR-GET-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_IS_GLOBAL_DEVICE_MONITOR()" link="gstreamer-GstGlobalDeviceMonitor.html#GST-IS-GLOBAL-DEVICE-MONITOR:CAPS"/>
-    <keyword type="macro" name="GST_IS_GLOBAL_DEVICE_MONITOR_CLASS()" link="gstreamer-GstGlobalDeviceMonitor.html#GST-IS-GLOBAL-DEVICE-MONITOR-CLASS:CAPS"/>
-    <keyword type="macro" name="GST_TYPE_GLOBAL_DEVICE_MONITOR" link="gstreamer-GstGlobalDeviceMonitor.html#GST-TYPE-GLOBAL-DEVICE-MONITOR:CAPS"/>
-    <keyword type="function" name="gst_global_device_monitor_get_bus ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-bus"/>
-    <keyword type="function" name="gst_global_device_monitor_get_caps_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-caps-filter"/>
-    <keyword type="function" name="gst_global_device_monitor_get_classes_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-classes-filter"/>
-    <keyword type="function" name="gst_global_device_monitor_get_devices ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-devices"/>
-    <keyword type="function" name="gst_global_device_monitor_get_type ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-type"/>
-    <keyword type="function" name="gst_global_device_monitor_new ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-new"/>
-    <keyword type="function" name="gst_global_device_monitor_set_caps_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-caps-filter"/>
-    <keyword type="function" name="gst_global_device_monitor_set_classes_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-classes-filter"/>
-    <keyword type="function" name="gst_global_device_monitor_start ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-start"/>
-    <keyword type="function" name="gst_global_device_monitor_stop ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-stop"/>
-    <keyword type="struct" name="struct GstGlobalDeviceMonitor" link="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor"/>
-    <keyword type="struct" name="struct GstGlobalDeviceMonitorClass" link="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitorClass"/>
+    <keyword type="struct" name="GstDeviceMonitorFactoryClass" link="GstDeviceMonitorFactory.html#GstDeviceMonitorFactoryClass" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_get_bus ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-bus" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_get_caps_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-caps-filter" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_get_classes_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-classes-filter" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_get_devices ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-devices" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_new ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-new" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_set_caps_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-caps-filter" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_set_classes_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-classes-filter" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_start ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-start" since="1.4"/>
+    <keyword type="function" name="gst_global_device_monitor_stop ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-stop" since="1.4"/>
+    <keyword type="struct" name="struct GstGlobalDeviceMonitor" link="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" since="1.4"/>
+    <keyword type="struct" name="struct GstGlobalDeviceMonitorClass" link="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitorClass" since="1.4"/>
     <keyword type="macro" name="GST_STR_NULL()" link="gstreamer-GstInfo.html#GST-STR-NULL:CAPS"/>
     <keyword type="macro" name="GST_DEBUG_PAD_NAME()" link="gstreamer-GstInfo.html#GST-DEBUG-PAD-NAME:CAPS"/>
     <keyword type="macro" name="GST_FUNCTION" link="gstreamer-GstInfo.html#GST-FUNCTION:CAPS"/>

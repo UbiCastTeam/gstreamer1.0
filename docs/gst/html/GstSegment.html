@@ -230,14 +230,14 @@ in <em class="parameter"><code>segment</code></em>
  are compared and clipped to <em class="parameter"><code>segment</code></em>
 
 start and stop values.</p>
-<p>If the function returns FALSE, <em class="parameter"><code>start</code></em>
+<p>If the function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, <em class="parameter"><code>start</code></em>
  and <em class="parameter"><code>stop</code></em>
  are known to fall
 outside of <em class="parameter"><code>segment</code></em>
  and <em class="parameter"><code>clip_start</code></em>
  and <em class="parameter"><code>clip_stop</code></em>
  are not updated.</p>
-<p>When the function returns TRUE, <em class="parameter"><code>clip_start</code></em>
+<p>When the function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, <em class="parameter"><code>clip_start</code></em>
  and <em class="parameter"><code>clip_stop</code></em>
  will be
 updated. If <em class="parameter"><code>clip_start</code></em>
@@ -294,11 +294,11 @@ segment. Depending on the use case, this may or may not be what you want.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.44.8.2.9"></a><h4>Returns</h4>
-<p> TRUE if the given <em class="parameter"><code>start</code></em>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the given <em class="parameter"><code>start</code></em>
 and <em class="parameter"><code>stop</code></em>
 times fall partially or
 completely in <em class="parameter"><code>segment</code></em>
-, FALSE if the values are completely outside
+, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the values are completely outside
 of the segment.</p>
 <p></p>
 </div>
@@ -452,8 +452,8 @@ If the caller can apply a rate change, it should update <em class="parameter"><c
 
 rate and applied_rate after calling this function.</p>
 <p><em class="parameter"><code>update</code></em>
- will be set to TRUE if a seek should be performed to the segment
-position field. This field can be FALSE if, for example, only the <em class="parameter"><code>rate</code></em>
+ will be set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a seek should be performed to the segment
+position field. This field can be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if, for example, only the <em class="parameter"><code>rate</code></em>
 
 has been changed but not the playback position.</p>
 <div class="refsect3">

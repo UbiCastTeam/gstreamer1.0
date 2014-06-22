@@ -620,7 +620,7 @@ convenient gst_structure_get_*() functions.</p>
 <p>Fields can be removed with <a class="link" href="GstStructure.html#gst-structure-remove-field" title="gst_structure_remove_field ()"><code class="function">gst_structure_remove_field()</code></a> or
 <a class="link" href="GstStructure.html#gst-structure-remove-fields" title="gst_structure_remove_fields ()"><code class="function">gst_structure_remove_fields()</code></a>.</p>
 <p>Strings in structures must be ASCII or UTF-8 encoded. Other encodings are
-not allowed. Strings may be NULL however.</p>
+not allowed. Strings may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> however.</p>
 <p>Be aware that the current <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> / <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> serialization into string
 has limited support for nested <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> / <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> fields. It can only
 support one level of nesting. Using more levels will lead to unexpected
@@ -667,8 +667,8 @@ not modify <em class="parameter"><code>value</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.2.6"></a><h4>Returns</h4>
-<p> TRUE if the foreach operation should continue, FALSE if
-the foreach operation should stop with FALSE.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the foreach operation should continue, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
+the foreach operation should stop with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -711,8 +711,8 @@ may modify <em class="parameter"><code>value</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.3.6"></a><h4>Returns</h4>
-<p> TRUE if the map operation should continue, FALSE if
-the map operation should stop with FALSE.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation should continue, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
+the map operation should stop with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -785,7 +785,7 @@ gst_structure_new (<em class="parameter"><code>const <a href="http://library.gno
 <p>Creates a new <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> with the given name.  Parses the
 list of variable arguments and sets fields to the values listed.
 Variable arguments should be passed as field name, field type,
-and value.  Last variable argument should be NULL.</p>
+and value.  Last variable argument should be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <p>Free-function: gst_structure_free</p>
 <div class="refsect3">
 <a name="id-1.3.45.8.6.6"></a><h4>Parameters</h4>
@@ -878,7 +878,7 @@ gst_structure_new_id (<em class="parameter"><code><a href="http://library.gnome.
 fieldname quark, GType, argument(s) "triplets" in the same format as
 <a class="link" href="GstStructure.html#gst-structure-id-set" title="gst_structure_id_set ()"><code class="function">gst_structure_id_set()</code></a>. Basically a convenience wrapper around
 <a class="link" href="GstStructure.html#gst-structure-new-id-empty" title="gst_structure_new_id_empty ()"><code class="function">gst_structure_new_id_empty()</code></a> and <a class="link" href="GstStructure.html#gst-structure-id-set" title="gst_structure_id_set ()"><code class="function">gst_structure_id_set()</code></a>.</p>
-<p>The last variable argument must be NULL (or 0).</p>
+<p>The last variable argument must be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (or 0).</p>
 <p>Free-function: gst_structure_free</p>
 <div class="refsect3">
 <a name="id-1.3.45.8.8.7"></a><h4>Parameters</h4>
@@ -919,7 +919,7 @@ fieldname quark, GType, argument(s) "triplets" in the same format as
 <pre class="programlisting"><a class="link" href="GstStructure.html" title="GstStructure"><span class="returnvalue">GstStructure</span></a> *
 gst_structure_new_from_string (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);</pre>
 <p>Creates a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> from a string representation.
-If end is not NULL, a pointer to the place inside the given string
+If end is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, a pointer to the place inside the given string
 where parsing ended will be returned.</p>
 <p>The current implementation of serialization will lead to unexpected results
 when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> / <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> deeper than one level.</p>
@@ -941,7 +941,7 @@ when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span 
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.9.8"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> or NULL when the string could
+<p> a new <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the string could
 not be parsed. Free with <a class="link" href="GstStructure.html#gst-structure-free" title="gst_structure_free ()"><code class="function">gst_structure_free()</code></a> after use. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1057,7 +1057,7 @@ gst_structure_has_name (<em class="parameter"><code>const <a class="link" href="
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.13.6"></a><h4>Returns</h4>
-<p> TRUE if <em class="parameter"><code>name</code></em>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>name</code></em>
 matches the name of the structure.</p>
 <p></p>
 </div>
@@ -1134,9 +1134,9 @@ gst_structure_id_get (<em class="parameter"><code>const <a class="link" href="Gs
  accordingly.
 Variable arguments should be in the form field id quark, field type
 (as a GType), pointer(s) to a variable(s) to hold the return value(s).
-The last variable argument should be NULL (technically it should be a
-0 quark, but we require NULL so compilers that support it can check for
-the NULL terminator and warn if it's not there).</p>
+The last variable argument should be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (technically it should be a
+0 quark, but we require <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> so compilers that support it can check for
+the <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminator and warn if it's not there).</p>
 <p>This function is just like <a class="link" href="GstStructure.html#gst-structure-get" title="gst_structure_get ()"><code class="function">gst_structure_get()</code></a> only that it is slightly
 more efficient since it saves the string-to-quark lookup in the global
 quark hashtable.</p>
@@ -1173,9 +1173,9 @@ release with either <a href="http://library.gnome.org/devel/glib/unstable/glib-M
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.16.8"></a><h4>Returns</h4>
-<p> FALSE if there was a problem reading any of the fields (e.g.
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if there was a problem reading any of the fields (e.g.
 because the field requested did not exist, or was of a type other
-than the type specified), otherwise TRUE.</p>
+than the type specified), otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -1219,7 +1219,7 @@ valist-variant of <a class="link" href="GstStructure.html#gst-structure-id-get" 
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.17.6"></a><h4>Returns</h4>
-<p> TRUE, or FALSE if there was a problem reading any of the fields</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if there was a problem reading any of the fields</p>
 <p></p>
 </div>
 </div>
@@ -1351,7 +1351,7 @@ gst_structure_get (<em class="parameter"><code>const <a class="link" href="GstSt
  accordingly.
 Variable arguments should be in the form field name, field type
 (as a GType), pointer(s) to a variable(s) to hold the return value(s).
-The last variable argument should be NULL.</p>
+The last variable argument should be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <p>For refcounted (mini)objects you will receive a new reference which
 you must release with a suitable <code class="function">_unref()</code> when no longer needed. For
 strings and boxed types you will receive a copy which you will need to
@@ -1385,9 +1385,9 @@ release with either <a href="http://library.gnome.org/devel/glib/unstable/glib-M
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.21.7"></a><h4>Returns</h4>
-<p> FALSE if there was a problem reading any of the fields (e.g.
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if there was a problem reading any of the fields (e.g.
 because the field requested did not exist, or was of a type other
-than the type specified), otherwise TRUE.</p>
+than the type specified), otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -1431,7 +1431,7 @@ valist-variant of <a class="link" href="GstStructure.html#gst-structure-get" tit
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.22.6"></a><h4>Returns</h4>
-<p> TRUE, or FALSE if there was a problem reading any of the fields</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if there was a problem reading any of the fields</p>
 <p></p>
 </div>
 </div>
@@ -1561,7 +1561,7 @@ gst_structure_set (<em class="parameter"><code><a class="link" href="GstStructur
                    <em class="parameter"><code>...</code></em>);</pre>
 <p>Parses the variable arguments and sets fields accordingly.
 Variable arguments should be in the form field name, field type
-(as a GType), value(s).  The last variable argument should be NULL.</p>
+(as a GType), value(s).  The last variable argument should be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.45.8.26.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1637,7 +1637,7 @@ gst_structure_id_set (<em class="parameter"><code><a class="link" href="GstStruc
 passed using the GQuark for the field name. This allows more efficient
 setting of the structure if the caller already knows the associated
 quark values.
-The last variable argument must be NULL.</p>
+The last variable argument must be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.45.8.28.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1763,7 +1763,7 @@ argument is ignored.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>...</p></td>
-<td class="parameter_description"><p>NULL-terminated list of more fieldnames to remove</p></td>
+<td class="parameter_description"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated list of more fieldnames to remove</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1799,7 +1799,7 @@ gst_structure_remove_fields_valist (<em class="parameter"><code><a class="link" 
 </tr>
 <tr>
 <td class="parameter_name"><p>varargs</p></td>
-<td class="parameter_description"><p>NULL-terminated list of more fieldnames to remove</p></td>
+<td class="parameter_description"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated list of more fieldnames to remove</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1903,8 +1903,8 @@ function must not modify the fields. Also see <a class="link" href="GstStructure
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.35.6"></a><h4>Returns</h4>
-<p> TRUE if the supplied function returns TRUE For each of the fields,
-FALSE otherwise.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the supplied function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> For each of the fields,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
 </div>
@@ -1968,7 +1968,7 @@ gst_structure_has_field (<em class="parameter"><code>const <a class="link" href=
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.37.6"></a><h4>Returns</h4>
-<p> TRUE if the structure contains a field with the given name</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure contains a field with the given name</p>
 <p></p>
 </div>
 </div>
@@ -2012,7 +2012,7 @@ gst_structure_has_field_typed (<em class="parameter"><code>const <a class="link"
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.38.6"></a><h4>Returns</h4>
-<p> TRUE if the structure contains a field with the given name and type</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure contains a field with the given name and type</p>
 <p></p>
 </div>
 </div>
@@ -2047,7 +2047,7 @@ gst_structure_is_equal (<em class="parameter"><code>const <a class="link" href="
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.39.6"></a><h4>Returns</h4>
-<p> TRUE if the two structures have the same name and field.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the two structures have the same name and field.</p>
 <p></p>
 </div>
 </div>
@@ -2205,7 +2205,7 @@ gst_structure_id_has_field (<em class="parameter"><code>const <a class="link" hr
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.43.6"></a><h4>Returns</h4>
-<p> TRUE if the structure contains a field with the given name</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure contains a field with the given name</p>
 <p></p>
 </div>
 </div>
@@ -2249,7 +2249,7 @@ gst_structure_id_has_field_typed (<em class="parameter"><code>const <a class="li
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.44.6"></a><h4>Returns</h4>
-<p> TRUE if the structure contains a field with the given name and type</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure contains a field with the given name and type</p>
 <p></p>
 </div>
 </div>
@@ -2293,10 +2293,10 @@ and has the correct type.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.45.6"></a><h4>Returns</h4>
-<p> TRUE if the value could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a boolean, this
-function returns FALSE.</p>
+function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2530,10 +2530,10 @@ and has the correct type.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.50.6"></a><h4>Returns</h4>
-<p> TRUE if the value could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a double, this
-function returns FALSE.</p>
+function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2573,7 +2573,7 @@ call to a gst_structure_*() function with the given structure.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.51.7"></a><h4>Returns</h4>
-<p> a pointer to the string or NULL when the field did not exist
+<p> a pointer to the string or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the field did not exist
 or did not contain a string.</p>
 <p></p>
 </div>
@@ -2623,10 +2623,10 @@ copy of the string).</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.52.7"></a><h4>Returns</h4>
-<p> TRUE if the value could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a data, this function
-returns FALSE.</p>
+returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2675,10 +2675,10 @@ which doesn't return a copy of the string).</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.53.7"></a><h4>Returns</h4>
-<p> TRUE if the value could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a data, this function
-returns FALSE.</p>
+returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2722,10 +2722,10 @@ and has the correct type.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.54.6"></a><h4>Returns</h4>
-<p> TRUE if the value could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a>, this
-function returns FALSE.</p>
+function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2775,10 +2775,10 @@ has the correct type and that the enumtype is correct.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.55.6"></a><h4>Returns</h4>
-<p> TRUE if the value could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain an enum of the given
-type, this function returns FALSE.</p>
+type, this function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2829,10 +2829,10 @@ for making sure the field exists and has the correct type.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.56.6"></a><h4>Returns</h4>
-<p> TRUE if the values could be set correctly. If there was no field
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the values could be set correctly. If there was no field
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a GstFraction, this
-function returns FALSE.</p>
+function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>
@@ -2875,8 +2875,8 @@ fields. The structure must be mutable.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.57.6"></a><h4>Returns</h4>
-<p> TRUE if the supplied function returns TRUE For each of the fields,
-FALSE otherwise.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the supplied function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> For each of the fields,
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
 </div>
@@ -3006,7 +3006,7 @@ when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span 
 gst_structure_from_string (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>,
                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **end</code></em>);</pre>
 <p>Creates a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> from a string representation.
-If end is not NULL, a pointer to the place inside the given string
+If end is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, a pointer to the place inside the given string
 where parsing ended will be returned.</p>
 <p>Free-function: gst_structure_free</p>
 <div class="refsect3">
@@ -3033,7 +3033,7 @@ where parsing ended will be returned.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.61.7"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> or NULL when the string could
+<p> a new <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the string could
 not be parsed. Free with <a class="link" href="GstStructure.html#gst-structure-free" title="gst_structure_free ()"><code class="function">gst_structure_free()</code></a> after use. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -3095,7 +3095,7 @@ gst_structure_fixate_field (<em class="parameter"><code><a class="link" href="Gs
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.63.6"></a><h4>Returns</h4>
-<p> TRUE if the structure field could be fixated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure field could be fixated</p>
 <p></p>
 </div>
 </div>
@@ -3140,7 +3140,7 @@ integer to <em class="parameter"><code>target</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.64.6"></a><h4>Returns</h4>
-<p> TRUE if the structure could be fixated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure could be fixated</p>
 <p></p>
 </div>
 </div>
@@ -3185,7 +3185,7 @@ double to <em class="parameter"><code>target</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.65.6"></a><h4>Returns</h4>
-<p> TRUE if the structure could be fixated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure could be fixated</p>
 <p></p>
 </div>
 </div>
@@ -3238,7 +3238,7 @@ of the existing field.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.66.6"></a><h4>Returns</h4>
-<p> TRUE if the structure could be fixated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure could be fixated</p>
 <p></p>
 </div>
 </div>
@@ -3283,7 +3283,7 @@ gst_structure_fixate_field_boolean (<em class="parameter"><code><a class="link" 
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.67.6"></a><h4>Returns</h4>
-<p> TRUE if the structure could be fixated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure could be fixated</p>
 <p></p>
 </div>
 </div>
@@ -3328,7 +3328,7 @@ gst_structure_fixate_field_string (<em class="parameter"><code><a class="link" h
 </div>
 <div class="refsect3">
 <a name="id-1.3.45.8.68.6"></a><h4>Returns</h4>
-<p> TRUE if the structure could be fixated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the structure could be fixated</p>
 <p></p>
 </div>
 </div>

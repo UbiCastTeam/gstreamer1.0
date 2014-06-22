@@ -455,8 +455,8 @@ Very little - it is just two steps to make a plugin controllable!
 <li class="listitem"><p>
     when processing data (get, chain, loop function) at the beginning call
     gst_object_sync_values(element,timestamp).
-    This will make the controller to update all gobject properties that are under
-    control with the current values based on timestamp.
+    This will make the controller update all GObject properties that are
+    under its control with the current values based on the timestamp.
   </p></li>
 </ol></div>
 <p>
@@ -714,7 +714,7 @@ It blocks until the lock can be obtained.</p>
 <pre class="programlisting">#define GST_OBJECT_TRYLOCK(obj)                g_mutex_trylock(GST_OBJECT_GET_LOCK(obj))
 </pre>
 <p>This macro will try to obtain a lock on the object, but will return with
-FALSE if it can't get it immediately.</p>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it can't get it immediately.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -785,7 +785,7 @@ gst_object_set_name (<em class="parameter"><code><a class="link" href="GstObject
 , or gives <em class="parameter"><code>object</code></em>
  a guaranteed unique
 name (if <em class="parameter"><code>name</code></em>
- is NULL).
+ is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>).
 This function makes a copy of the provided name, so the caller
 retains ownership of the name it sent.</p>
 <div class="refsect3">
@@ -812,8 +812,8 @@ retains ownership of the name it sent.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.32.10.14.6"></a><h4>Returns</h4>
-<p> TRUE if the name could be set. Since Objects that have
-a parent cannot be renamed, this function returns FALSE in those
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the name could be set. Since Objects that have
+a parent cannot be renamed, this function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> in those
 cases.</p>
 <p>MT safe.  This function grabs and releases <em class="parameter"><code>object</code></em>
 's LOCK.</p>
@@ -828,7 +828,7 @@ gst_object_get_name (<em class="parameter"><code><a class="link" href="GstObject
 <p>Returns a copy of the name of <em class="parameter"><code>object</code></em>
 .
 Caller should <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> the return value after usage.
-For a nameless object, this returns NULL, which you can safely <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
+For a nameless object, this returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, which you can safely <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
 as well.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
@@ -889,8 +889,8 @@ be incremented, and any floating reference will be removed (see <a class="link" 
 </div>
 <div class="refsect3">
 <a name="id-1.3.32.10.16.6"></a><h4>Returns</h4>
-<p> TRUE if <em class="parameter"><code>parent</code></em>
-could be set or FALSE when <em class="parameter"><code>object</code></em>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>parent</code></em>
+could be set or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <em class="parameter"><code>object</code></em>
 already had a parent or <em class="parameter"><code>object</code></em>
 and <em class="parameter"><code>parent</code></em>
 are the same.</p>
@@ -925,7 +925,7 @@ of the parent object so you should <a class="link" href="GstObject.html#gst-obje
 <div class="refsect3">
 <a name="id-1.3.32.10.17.6"></a><h4>Returns</h4>
 <p> parent of <em class="parameter"><code>object</code></em>
-, this can be NULL if <em class="parameter"><code>object</code></em>
+, this can be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if <em class="parameter"><code>object</code></em>
 has no parent. unref after usage.</p>
 <p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
 's LOCK. </p>
@@ -1000,7 +1000,7 @@ using g_print.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>excluded_props</p></td>
-<td class="parameter_description"><p>    a set of user-specified properties to exclude or NULL to show
+<td class="parameter_description"><p>    a set of user-specified properties to exclude or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to show
 all changes. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar*][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -1039,7 +1039,7 @@ and the optional debug sting..</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>debug</p></td>
-<td class="parameter_description"><p> an additional debug information string, or NULL. </p></td>
+<td class="parameter_description"><p> an additional debug information string, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -1084,10 +1084,10 @@ check through. </p></td>
 </div>
 <div class="refsect3">
 <a name="id-1.3.32.10.21.6"></a><h4>Returns</h4>
-<p> TRUE if a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> named <em class="parameter"><code>name</code></em>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> named <em class="parameter"><code>name</code></em>
 does not appear in <em class="parameter"><code>list</code></em>
 ,
-FALSE if it does.</p>
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it does.</p>
 <p>MT safe. Grabs and releases the LOCK of each object in the list.</p>
 <p></p>
 </div>
@@ -1126,7 +1126,7 @@ the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" ti
 </div>
 <div class="refsect3">
 <a name="id-1.3.32.10.22.6"></a><h4>Returns</h4>
-<p> TRUE if <em class="parameter"><code>ancestor</code></em>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>ancestor</code></em>
 is an ancestor of <em class="parameter"><code>object</code></em>
 .</p>
 <p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
@@ -1241,7 +1241,7 @@ The reference count of <em class="parameter"><code>oldobj</code></em>
  is increased.</p>
 <p>Either <em class="parameter"><code>newobj</code></em>
  and the value pointed to by <em class="parameter"><code>oldobj</code></em>
- may be NULL.</p>
+ may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.26.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1267,7 +1267,7 @@ replace. </p></td>
 </div>
 <div class="refsect3">
 <a name="id-1.3.32.10.26.7"></a><h4>Returns</h4>
-<p> TRUE if <em class="parameter"><code>newobj</code></em>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>newobj</code></em>
 was different from <em class="parameter"><code>oldobj</code></em>
 </p>
 <p></p>
