@@ -159,6 +159,7 @@ am_libgstcoreelements_la_OBJECTS =  \
 	libgstcoreelements_la-gstcapsfilter.lo \
 	libgstcoreelements_la-gstdownloadbuffer.lo \
 	libgstcoreelements_la-gstelements.lo \
+	libgstcoreelements_la-gstelements_private.lo \
 	libgstcoreelements_la-gstfakesrc.lo \
 	libgstcoreelements_la-gstfakesink.lo \
 	libgstcoreelements_la-gstfdsrc.lo \
@@ -529,6 +530,7 @@ libgstcoreelements_la_SOURCES = \
 	gstcapsfilter.c		\
 	gstdownloadbuffer.c     \
 	gstelements.c		\
+	gstelements_private.c	\
 	gstfakesrc.c		\
 	gstfakesink.c		\
 	gstfdsrc.c		\
@@ -557,6 +559,7 @@ libgstcoreelements_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 noinst_HEADERS = \
 	gstcapsfilter.h		\
 	gstdownloadbuffer.h	\
+	gstelements_private.h	\
 	gstfakesink.h		\
 	gstfakesrc.h		\
 	gstfdsrc.h		\
@@ -661,6 +664,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstcapsfilter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstdownloadbuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstelements.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstelements_private.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstfakesink.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstfakesrc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstfdsink.Plo@am__quote@
@@ -723,6 +727,13 @@ libgstcoreelements_la-gstelements.lo: gstelements.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstelements.c' object='libgstcoreelements_la-gstelements.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -c -o libgstcoreelements_la-gstelements.lo `test -f 'gstelements.c' || echo '$(srcdir)/'`gstelements.c
+
+libgstcoreelements_la-gstelements_private.lo: gstelements_private.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -MT libgstcoreelements_la-gstelements_private.lo -MD -MP -MF $(DEPDIR)/libgstcoreelements_la-gstelements_private.Tpo -c -o libgstcoreelements_la-gstelements_private.lo `test -f 'gstelements_private.c' || echo '$(srcdir)/'`gstelements_private.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoreelements_la-gstelements_private.Tpo $(DEPDIR)/libgstcoreelements_la-gstelements_private.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstelements_private.c' object='libgstcoreelements_la-gstelements_private.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -c -o libgstcoreelements_la-gstelements_private.lo `test -f 'gstelements_private.c' || echo '$(srcdir)/'`gstelements_private.c
 
 libgstcoreelements_la-gstfakesrc.lo: gstfakesrc.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -MT libgstcoreelements_la-gstfakesrc.lo -MD -MP -MF $(DEPDIR)/libgstcoreelements_la-gstfakesrc.Tpo -c -o libgstcoreelements_la-gstfakesrc.lo `test -f 'gstfakesrc.c' || echo '$(srcdir)/'`gstfakesrc.c

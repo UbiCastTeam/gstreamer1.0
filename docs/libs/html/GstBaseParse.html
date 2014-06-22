@@ -304,22 +304,22 @@ a parser and share a lot of rather complex code.</p>
 <p class="title"><b>Set-up phase</b></p>
 <ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
-    GstBaseParse calls <em class="parameter"><code>start</code></em> to inform subclass that data processing is
+    <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> calls <em class="parameter"><code>start</code></em> to inform subclass that data processing is
     about to start now.
   </p></li>
 <li class="listitem"><p>
-    GstBaseParse class calls <em class="parameter"><code>set_sink_caps</code></em> to inform the subclass about
+    <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> class calls <em class="parameter"><code>set_sink_caps</code></em> to inform the subclass about
     incoming sinkpad caps. Subclass could already set the srcpad caps
     accordingly, but this might be delayed until calling
     <a class="link" href="GstBaseParse.html#gst-base-parse-finish-frame" title="gst_base_parse_finish_frame ()"><code class="function">gst_base_parse_finish_frame()</code></a> with a non-queued frame.
   </p></li>
 <li class="listitem"><p>
-     At least at this point subclass needs to tell the GstBaseParse class
+     At least at this point subclass needs to tell the <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> class
      how big data chunks it wants to receive (min_frame_size). It can do
      this with <a class="link" href="GstBaseParse.html#gst-base-parse-set-min-frame-size" title="gst_base_parse_set_min_frame_size ()"><code class="function">gst_base_parse_set_min_frame_size()</code></a>.
   </p></li>
 <li class="listitem"><p>
-     GstBaseParse class sets up appropriate data passing mode (pull/push)
+     <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> class sets up appropriate data passing mode (pull/push)
      and starts to process the data.
   </p></li>
 </ul>
@@ -328,7 +328,7 @@ a parser and share a lot of rather complex code.</p>
 <p class="title"><b>Parsing phase</b></p>
 <ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
-      GstBaseParse gathers at least min_frame_size bytes of data either
+      <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> gathers at least min_frame_size bytes of data either
       by pulling it from upstream or collecting buffers in an internal
       <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a>.
     </p></li>
@@ -357,7 +357,7 @@ a parser and share a lot of rather complex code.</p>
 <p>
       Subclass is also responsible for setting the buffer metadata
       (e.g. buffer timestamp and duration, or keyframe if applicable).
-      (although the latter can also be done by GstBaseParse if it is
+      (although the latter can also be done by <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> if it is
       appropriately configured, see below).  Frame is provided with
       timestamp derived from upstream (as much as generally possible),
       duration obtained from configuration (see below), and offset
@@ -376,7 +376,7 @@ a parser and share a lot of rather complex code.</p>
       events, or to perform custom (segment) filtering.
     </p></li>
 <li class="listitem"><p>
-      During the parsing process GstBaseParseClass will handle both srcpad
+      During the parsing process <a class="link" href="GstBaseParse.html#GstBaseParseClass" title="struct GstBaseParseClass"><span class="type">GstBaseParseClass</span></a> will handle both srcpad
       and sinkpad events. They will be passed to subclass if <em class="parameter"><code>event</code></em> or
       <em class="parameter"><code>src_event</code></em> callbacks have been provided.
     </p></li>
@@ -385,7 +385,7 @@ a parser and share a lot of rather complex code.</p>
 <li class="listitem"><div class="itemizedlist">
 <p class="title"><b>Shutdown phase</b></p>
 <ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
-    GstBaseParse class calls <em class="parameter"><code>stop</code></em> to inform the subclass that data
+    <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> class calls <em class="parameter"><code>stop</code></em> to inform the subclass that data
     parsing will be stopped.
   </p></li></ul>
 </div></li>
@@ -395,11 +395,11 @@ source and sink pads. The pads need to be named "sink" and "src". It also
 needs to set the fixed caps on srcpad, when the format is ensured (e.g.
 when base class calls subclass' <em class="parameter"><code>set_sink_caps</code></em>
  function).</p>
-<p>This base class uses <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-DEFAULT:CAPS"><span class="type">GST_FORMAT_DEFAULT</span></a> as a meaning of frames. So,
+<p>This base class uses <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-DEFAULT:CAPS"><code class="literal">GST_FORMAT_DEFAULT</code></a> as a meaning of frames. So,
 subclass conversion routine needs to know that conversion from
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-TIME:CAPS"><span class="type">GST_FORMAT_TIME</span></a> to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-DEFAULT:CAPS"><span class="type">GST_FORMAT_DEFAULT</span></a> must return the
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-TIME:CAPS"><code class="literal">GST_FORMAT_TIME</code></a> to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-DEFAULT:CAPS"><code class="literal">GST_FORMAT_DEFAULT</code></a> must return the
 frame number that can be found from the given byte position.</p>
-<p>GstBaseParse uses subclasses conversion methods also for seeking (or
+<p><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> uses subclasses conversion methods also for seeking (or
 otherwise uses its own default one, see also below).</p>
 <p>Subclass <em class="parameter"><code>start</code></em>
  and <em class="parameter"><code>stop</code></em>
@@ -435,10 +435,10 @@ and end of data processing.</p>
 <li class="listitem"><p>
      In particular, if subclass is unable to determine a duration, but
      parsing (or specs) yields a frames per seconds rate, then this can be
-     provided to GstBaseParse to enable it to cater for
+     provided to <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> to enable it to cater for
      buffer time metadata (which will be taken from upstream as much as
      possible). Internally keeping track of frame durations and respective
-     sizes that have been pushed provides GstBaseParse with an estimated
+     sizes that have been pushed provides <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> with an estimated
      bitrate. A default <em class="parameter"><code>convert</code></em> (used if not overridden) will then use these
      rates to perform obvious conversions.  These rates are also used to
      update (estimated) duration at regular frame intervals.
@@ -831,7 +831,7 @@ gst_base_parse_set_ts_at_offset (<em class="parameter"><code><a class="link" hre
                                  <em class="parameter"><code><span class="type">gsize</span> offset</code></em>);</pre>
 <p>This function should only be called from a <em class="parameter"><code>handle_frame</code></em>
  implementation.</p>
-<p>GstBaseParse creates initial timestamps for frames by using the last
+<p><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> creates initial timestamps for frames by using the last
 timestamp seen in the stream before the frame starts.  In certain
 cases, the correct timestamps will occur in the stream after the
 start of the frame, but before the start of the actual picture data.
@@ -910,7 +910,7 @@ gst_base_parse_convert_default (<em class="parameter"><code><a class="link" href
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.3.9.13.6"></a><h4>Returns</h4>
-<p> TRUE if conversion was successful.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if conversion was successful.</p>
 <p></p>
 </div>
 </div>
@@ -1574,11 +1574,11 @@ to forego pushing buffer.</p>
 <div class="refsect2">
 <a name="GstBaseParse--disable-passthrough"></a><h3>The <code class="literal">“disable-passthrough”</code> property</h3>
 <pre class="programlisting">  “disable-passthrough”      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>, baseparse will unconditionally force parsing of the
+<p>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, baseparse will unconditionally force parsing of the
 incoming data. This can be required in the rare cases where the incoming
 side-data (caps, pts, dts, ...) is not trusted by the user and wants to
 force validation and parsing of the incoming data.
-If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>, decision of whether to parse the data or not is up to
+If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, decision of whether to parse the data or not is up to
 the implementation (standard behaviour).</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>

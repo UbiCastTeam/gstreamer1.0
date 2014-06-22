@@ -53,7 +53,7 @@
  * </programlisting>
  * </example>
  *
- * It's allowed to pass two NULL pointers to gst_init() in case you don't want
+ * It's allowed to pass two %NULL pointers to gst_init() in case you don't want
  * to pass the command line args to GStreamer.
  *
  * You can also use GOption to initialize your own parameters as shown in
@@ -400,7 +400,7 @@ gst_init (int *argc, char **argv[])
  * Use this function to check if GStreamer has been initialized with gst_init()
  * or gst_init_check().
  *
- * Returns: TRUE if initialization has been done, FALSE otherwise.
+ * Returns: %TRUE if initialization has been done, %FALSE otherwise.
  */
 gboolean
 gst_is_initialized (void)
@@ -566,6 +566,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
 
   _priv_gst_mini_object_initialize ();
   _priv_gst_quarks_initialize ();
+  _priv_gst_allocator_initialize ();
   _priv_gst_memory_initialize ();
   _priv_gst_format_initialize ();
   _priv_gst_query_initialize ();
@@ -573,6 +574,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   _priv_gst_caps_initialize ();
   _priv_gst_caps_features_initialize ();
   _priv_gst_meta_initialize ();
+  _priv_gst_message_initialize ();
 
   g_type_class_ref (gst_object_get_type ());
   g_type_class_ref (gst_pad_get_type ());
@@ -670,11 +672,12 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
-  _priv_gst_message_initialize ();
   _priv_gst_buffer_list_initialize ();
   _priv_gst_sample_initialize ();
-  _priv_gst_value_initialize ();
   _priv_gst_context_initialize ();
+  _priv_gst_date_time_initialize ();
+  _priv_gst_toc_initialize ();
+  _priv_gst_value_initialize ();
 
   g_type_class_ref (gst_param_spec_fraction_get_type ());
   _priv_gst_tag_initialize ();
@@ -693,7 +696,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
    * gstreamer as being initialized, since it is the case from a plugin point of
    * view.
    *
-   * If anything fails, it will be put back to FALSE in gst_init_check().
+   * If anything fails, it will be put back to %FALSE in gst_init_check().
    * This allows some special plugins that would call gst_init() to not cause a
    * looping effect (i.e. initializing GStreamer twice).
    */

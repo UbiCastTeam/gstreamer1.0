@@ -716,9 +716,9 @@ categories. These are explained at <a class="link" href="gstreamer-GstInfo.html#
 <a name="GST-STR-NULL:CAPS"></a><h3>GST_STR_NULL()</h3>
 <pre class="programlisting">#define GST_STR_NULL(str) ((str) ? (str) : "(NULL)")
 </pre>
-<p>Macro to use when a string must not be NULL, but may be NULL. If the string
-is NULL, "(NULL)" is printed instead.
-In GStreamer printf string arguments may not be NULL, because on some
+<p>Macro to use when a string must not be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, but may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. If the string
+is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, "(NULL)" is printed instead.
+In GStreamer printf string arguments may not be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, because on some
 platforms (ie Solaris) the libc crashes in that case. This includes debugging
 strings.</p>
 <div class="refsect3">
@@ -889,7 +889,7 @@ gst_debug_log (<em class="parameter"><code><a class="link" href="gstreamer-GstIn
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
-or NULL if none. </p></td>
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -956,7 +956,7 @@ gst_debug_log_valist (<em class="parameter"><code><a class="link" href="gstreame
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
-or NULL if none. </p></td>
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1062,7 +1062,7 @@ gst_debug_remove_log_function(gst_debug_log_default);</p>
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
-or NULL if none. </p></td>
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1227,7 +1227,7 @@ gst_debug_is_active (<em class="parameter"><code><span class="type">void</span><
 <p>Checks if debugging output is activated.</p>
 <div class="refsect3">
 <a name="id-1.5.3.8.15.5"></a><h4>Returns</h4>
-<p> TRUE, if debugging is activated</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if debugging is activated</p>
 <p></p>
 </div>
 </div>
@@ -1314,7 +1314,7 @@ gst_debug_is_colored (<em class="parameter"><code><span class="type">void</span>
 <p>Checks if the debugging output should be colored.</p>
 <div class="refsect3">
 <a name="id-1.5.3.8.19.5"></a><h4>Returns</h4>
-<p> TRUE, if the debug output should be colored.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the debug output should be colored.</p>
 <p></p>
 </div>
 </div>
@@ -1601,7 +1601,7 @@ to include uppercase letters.
 category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 <em class="parameter"><code>cat</code></em>
 . Otherwise <em class="parameter"><code>cat</code></em>
- will be NULL.</p>
+ will be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -1944,7 +1944,7 @@ below.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>object</p></td>
-<td class="parameter_description"><p> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to or NULL if none. </p></td>
+<td class="parameter_description"><p> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>

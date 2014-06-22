@@ -116,6 +116,9 @@ static void gst_toc_free (GstToc * toc);
 static GstTocEntry *gst_toc_entry_copy (const GstTocEntry * toc);
 static void gst_toc_entry_free (GstTocEntry * toc);
 
+GType _gst_toc_type = 0;
+GType _gst_toc_entry_type = 0;
+
 GST_DEFINE_MINI_OBJECT_TYPE (GstToc, gst_toc);
 GST_DEFINE_MINI_OBJECT_TYPE (GstTocEntry, gst_toc_entry);
 
@@ -357,7 +360,7 @@ gst_toc_entry_find_sub_entry (const GstTocEntry * entry, const gchar * uid)
  *
  * Find #GstTocEntry with given @uid in the @toc.
  *
- * Returns: (transfer none): #GstTocEntry with specified @uid from the @toc, or NULL if not found.
+ * Returns: (transfer none): #GstTocEntry with specified @uid from the @toc, or %NULL if not found.
  */
 GstTocEntry *
 gst_toc_find_entry (const GstToc * toc, const gchar * uid)
@@ -390,7 +393,7 @@ gst_toc_find_entry (const GstToc * toc, const gchar * uid)
  *
  * Copy #GstTocEntry with all subentries (deep copy).
  *
- * Returns: newly allocated #GstTocEntry in case of success, NULL otherwise;
+ * Returns: newly allocated #GstTocEntry in case of success, %NULL otherwise;
  * free it when done with gst_toc_entry_unref().
  */
 static GstTocEntry *
@@ -434,7 +437,7 @@ gst_toc_entry_copy (const GstTocEntry * entry)
  *
  * Copy #GstToc with all subentries (deep copy).
  *
- * Returns: newly allocated #GstToc in case of success, NULL otherwise;
+ * Returns: newly allocated #GstToc in case of success, %NULL otherwise;
  * free it when done with gst_toc_unref().
  */
 static GstToc *
@@ -819,4 +822,11 @@ gst_toc_dump (GstToc * toc)
       (toc->scope == GST_TOC_SCOPE_GLOBAL) ? "global" : "current", toc->tags);
   gst_toc_dump_entries (toc->entries, 2);
 #endif
+}
+
+void
+_priv_gst_toc_initialize (void)
+{
+  _gst_toc_type = gst_toc_get_type ();
+  _gst_toc_entry_type = gst_toc_entry_get_type ();
 }

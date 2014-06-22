@@ -165,7 +165,9 @@ typedef enum
 #include <gst/gsttoc.h>
 #include <gst/gstdevice.h>
 
-#define GST_TYPE_MESSAGE                         (gst_message_get_type())
+GST_EXPORT GType _gst_message_type;
+
+#define GST_TYPE_MESSAGE                         (_gst_message_type)
 #define GST_IS_MESSAGE(obj)                      (GST_IS_MINI_OBJECT_TYPE (obj, GST_TYPE_MESSAGE))
 #define GST_MESSAGE_CAST(obj)                    ((GstMessage*)(obj))
 #define GST_MESSAGE(obj)                         (GST_MESSAGE_CAST(obj))
@@ -412,9 +414,9 @@ gst_message_copy (const GstMessage * msg)
  * in some cases), and the reference counts are updated appropriately (the old
  * message is unreffed, the new one is reffed).
  *
- * Either @new_message or the #GstMessage pointed to by @old_message may be NULL.
+ * Either @new_message or the #GstMessage pointed to by @old_message may be %NULL.
  *
- * Returns: TRUE if @new_message was different from @old_message
+ * Returns: %TRUE if @new_message was different from @old_message
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gboolean gst_message_replace (GstMessage **old_message, GstMessage *new_message);

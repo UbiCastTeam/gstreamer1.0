@@ -872,7 +872,8 @@ noinst_HEADERS = \
 @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
 @HAVE_INTROSPECTION_TRUE@	$(libgstreamer_@GST_API_VERSION@include_HEADERS)) \
 @HAVE_INTROSPECTION_TRUE@	$(patsubst %,$(builddir)/%, \
-@HAVE_INTROSPECTION_TRUE@	$(built_header_make))
+@HAVE_INTROSPECTION_TRUE@	$(built_header_make)) $(patsubst \
+@HAVE_INTROSPECTION_TRUE@	%,$(builddir)/%, gstversion.h)
 @HAVE_INTROSPECTION_TRUE@gir_sources = $(patsubst %,$(srcdir)/%, \
 @HAVE_INTROSPECTION_TRUE@	$(libgstreamer_@GST_API_VERSION@_la_SOURCES)) \
 @HAVE_INTROSPECTION_TRUE@	$(patsubst %,$(builddir)/%, \
