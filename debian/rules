@@ -10,9 +10,6 @@ export HOME=$(CURDIR)/fake-home
 
 DEB_DH_AUTORECONF_ARGS += --as-needed
 
-# make autoreconf not call autopoint since we ship a patch for po/Makefile.in.in
-export AUTOPOINT=true
-
 CFLAGS += -Wno-error
 CXXFLAGS += -Wno-error
 LDFLAGS += -Wl,-z,defs -Wl,-O1 -Wl,--as-needed
