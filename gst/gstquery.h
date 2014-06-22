@@ -132,7 +132,9 @@ typedef enum {
 } GstQueryType;
 #undef FLAG
 
-#define GST_TYPE_QUERY                         (gst_query_get_type())
+GST_EXPORT GType _gst_query_type;
+
+#define GST_TYPE_QUERY                         (_gst_query_type)
 #define GST_IS_QUERY(obj)                      (GST_IS_MINI_OBJECT_TYPE (obj, GST_TYPE_QUERY))
 #define GST_QUERY_CAST(obj)                    ((GstQuery*)(obj))
 #define GST_QUERY(obj)                         (GST_QUERY_CAST(obj))
@@ -284,9 +286,9 @@ gst_query_copy (const GstQuery * q)
  * in some cases), and the reference counts are updated appropriately (the old
  * query is unreffed, the new one is reffed).
  *
- * Either @new_query or the #GstQuery pointed to by @old_query may be NULL.
+ * Either @new_query or the #GstQuery pointed to by @old_query may be %NULL.
  *
- * Returns: TRUE if @new_query was different from @old_query
+ * Returns: %TRUE if @new_query was different from @old_query
  */
 #ifdef _FOOL_GTK_DOC_
 G_INLINE_FUNC gboolean gst_query_replace (GstQuery **old_query, GstQuery *new_query);
@@ -399,6 +401,8 @@ void            gst_query_parse_uri                  (GstQuery *query, gchar **u
 void            gst_query_set_uri                    (GstQuery *query, const gchar *uri);
 void            gst_query_parse_uri_redirection      (GstQuery *query, gchar **uri);
 void            gst_query_set_uri_redirection        (GstQuery *query, const gchar *uri);
+void            gst_query_parse_uri_redirection_permanent (GstQuery *query, gboolean * permanent);
+void            gst_query_set_uri_redirection_permanent (GstQuery *query, gboolean permanent);
 
 /* allocation query */
 GstQuery *      gst_query_new_allocation             (GstCaps *caps, gboolean need_pool) G_GNUC_MALLOC;

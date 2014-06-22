@@ -1,22 +1,22 @@
 
-Release notes for GStreamer 1.2.4
+Release notes for GStreamer 1.3.3
 
 
-The GStreamer team is proud to announce a new bug-fix release
-in the 1.x stable series of the
-core of the GStreamer streaming media framework.
+The GStreamer team is pleased to announce the third release of the unstable
+1.3 release series. The 1.3 release series is adding new features on top of
+the 1.0 and 1.2 series and is part of the API and ABI-stable 1.x release
+series of the GStreamer multimedia framework. The unstable 1.3 release series
+will lead to the stable 1.4 release series in the next weeks, and newly added
+API can still change until that point.
 
 
-The 1.x series is a stable series targeted at end users.
-It is not API or ABI compatible with the stable 0.10.x series.
-It is, however, parallel installable with the 0.10.x series and
-will not affect an existing 0.10.x installation.
+This is hopefully the last 1.3 development release and will be followed by
+the first 1.4.0 release candidate (1.3.90) in 1-2 weeks. Which then hopefully
+is followed by 1.4.0 soonish in early July.
 
 
-The 1.x series has been reworked for more flexible memory handling, improved
-caps negotiation and re-negotiation, better handling of dynamic pipelines,
-and increased performance in general. It also features countless other feature
-additions and enhancements.
+Binaries for Android, iOS, Mac OS X and Windows will be provided separately
+during the unstable 1.3 release series.
 
 
 This module, gstreamer, only contains core functionality.
@@ -42,11 +42,25 @@ contains a set of codecs plugins based on libav (formerly gst-ffmpeg)
 
 Bugs fixed in this release
      
-      * 724373 : Queue2 truncates its temp file when pipeline is paused
-      * 725517 : docs: Fix typos and remove unknown annotations
-      * 725809 : ghostpad: rare crash because of missing reference count on its target pad
-      * 727253 : parse: Bison generated file included in the release tarballs causes compile errors
-      * 727883 : baseparse: Memory leak of queue frames
+      * 732007 : Rename GstGlobalDeviceMonitor
+      * 703021 : Missing Gst.VERSION_MAJOR, Gst.VERSION_MINOR
+      * 709224 : audio/videodecoder: Not returning GST_FLOW_EOS when after segment
+      * 710268 : basetransform: cannot answer GST_QUERY_ALLOCATION if its src has ANY caps
+      * 727746 : Factor buffer flags-to-string code
+      * 729440 : docs: DeviceMonitor missing in generated doc
+      * 729701 : baseparse: rate parameter from segment event could not pass to downstream
+      * 730718 : POTFILES.in is out of date
+      * 730982 : Minor annotation fixes
+      * 731302 : gst_data_queue_new documentation is misleading
+      * 731349 : queuearray: doesn't expand with initial size of 1, resulting in invalid memory access
+      * 731355 : GstFlowCombiner not introspection-friendly
+      * 731442 : bytereader: optimize _scan_for_start_code() using pointer access
+      * 731541 : minor introspection fixes
+      * 731704 : gst_caps_is_any() returns FALSE or flag value, not TRUE or FALSE
+      * 731716 : funnel: fix eos handling and unit test case
+      * 731756 : gstvalue: Speed up gst_value_intersect/_subtract
+      * 731892 : gstvalue: Avoid expensive g_type_check_value_holds calls when dealing with fundamental GType
+      * 727611 : bufferpool: Add _set_flushing() and new (active,flushing) state
 
 ==== Download ====
 
@@ -84,11 +98,17 @@ subscribe to the gstreamer-devel list.
 Contributors to this release
     
       * Edward Hervey
-      * George Kiagiadakis
-      * Jose Antonio Santos Cadenas
+      * Evan Nemerson
+      * Nicolas Dufresne
+      * Olivier Crête
+      * Philip Withnall
+      * Piotr Drąg
       * Sebastian Dröge
-      * Sebastian Rasmussen
+      * Srimanta Panda
+      * Sungho Bae
+      * Thiago Santos
       * Tim-Philipp Müller
       * Vincent Penquerc'h
       * Wim Taymans
+      * zhouming
  

@@ -49,7 +49,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><span class="type">GstOutputSelectorPadNegotiationMode</span></td>
+<td class="property_type"><a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelectorPadNegotiationMode" title="enum GstOutputSelectorPadNegotiationMode"><span class="type">GstOutputSelectorPadNegotiationMode</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--pad-negotiation-mode" title="The “pad-negotiation-mode” property">pad-negotiation-mode</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -68,10 +68,16 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector-struct" title="struct GstOutputSelector">GstOutputSelector</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelectorPadNegotiationMode" title="enum GstOutputSelectorPadNegotiationMode">GstOutputSelectorPadNegotiationMode</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -89,7 +95,7 @@
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.13.7.2.1.1"></a><h3>Element Information</h3>
+<a name="id-1.2.14.7.2.1.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -115,7 +121,7 @@
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.13.7.2.1.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.14.7.2.1.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -180,6 +186,48 @@
 <p>
 </p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstOutputSelectorPadNegotiationMode"></a><h3>enum GstOutputSelectorPadNegotiationMode</h3>
+<p>To what output pad the input stream should be directed.</p>
+<div class="refsect3">
+<a name="id-1.2.14.9.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-OUTPUT-SELECTOR-PAD-NEGOTIATION-MODE-NONE:CAPS"></a>GST_OUTPUT_SELECTOR_PAD_NEGOTIATION_MODE_NONE</p></td>
+<td class="enum_member_description">
+<p>don't propagate the input
+stream.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-OUTPUT-SELECTOR-PAD-NEGOTIATION-MODE-ALL:CAPS"></a>GST_OUTPUT_SELECTOR_PAD_NEGOTIATION_MODE_ALL</p></td>
+<td class="enum_member_description">
+<p>direct input stream to all
+output pads.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-OUTPUT-SELECTOR-PAD-NEGOTIATION-MODE-ACTIVE:CAPS"></a>GST_OUTPUT_SELECTOR_PAD_NEGOTIATION_MODE_ACTIVE</p></td>
+<td class="enum_member_description">
+<p>direct input stream to the
+currently active output pad as described by the <a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector--active-pad" title="The “active-pad” property"><span class="type">“active-pad”</span></a>
+property.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-output-selector.property-details"></a><h2>Property Details</h2>
@@ -192,7 +240,7 @@
 <hr>
 <div class="refsect2">
 <a name="GstOutputSelector--pad-negotiation-mode"></a><h3>The <code class="literal">“pad-negotiation-mode”</code> property</h3>
-<pre class="programlisting">  “pad-negotiation-mode”     <span class="type">GstOutputSelectorPadNegotiationMode</span></pre>
+<pre class="programlisting">  “pad-negotiation-mode”     <a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelectorPadNegotiationMode" title="enum GstOutputSelectorPadNegotiationMode"><span class="type">GstOutputSelectorPadNegotiationMode</span></a></pre>
 <p>The mode to be used for pad negotiation.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: All</p>

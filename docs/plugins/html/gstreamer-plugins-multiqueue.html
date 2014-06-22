@@ -143,7 +143,7 @@
 <div class="refsect1">
 <a name="gstreamer-plugins-multiqueue.description"></a><h2>Description</h2>
 <div class="refsect2">
-<a name="id-1.2.12.8.2"></a><p>
+<a name="id-1.2.13.8.2"></a><p>
 Multiqueue is similar to a normal <a class="link" href="gstreamer-plugins-queue.html#GstQueue"><span class="type">GstQueue</span></a> with the following additional
 features:
 </p>
@@ -157,7 +157,7 @@ features:
     'sometimes' src pads (src%u).
   </p>
 <p>
-    When requesting a given sinkpad with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-get-request-pad"><code class="function">gst_element_get_request_pad()</code></a>,
+    When requesting a given sinkpad with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-request-pad"><code class="function">gst_element_request_pad()</code></a>,
     the associated srcpad for that stream will be created.
     Example: requesting sink1 will generate src1.
   </p>
@@ -225,11 +225,10 @@ features:
   Both signals are emitted from the context of the streaming thread.
 </p>
 </div>
-<p>Last reviewed on 2008-01-25 (0.10.17)</p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.12.8.3.1.1"></a><h3>Element Information</h3>
+<a name="id-1.2.13.8.3.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -255,7 +254,7 @@ features:
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.12.8.3.1.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.13.8.3.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -404,7 +403,7 @@ to active and linked streams.</p>
 <a name="GstMultiQueue--use-buffering"></a><h3>The <code class="literal">“use-buffering”</code> property</h3>
 <pre class="programlisting">  “use-buffering”            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Enable the buffering option in multiqueue so that BUFFERING messages are
-emited based on low-/high-percent thresholds.</p>
+emitted based on low-/high-percent thresholds.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
 </div>
@@ -422,7 +421,7 @@ size) is higher than the boundary values which can be set through the
 GObject properties.</p>
 <p>This can be used as an indicator of pre-roll.</p>
 <div class="refsect3">
-<a name="id-1.2.12.12.2.6"></a><h4>Parameters</h4>
+<a name="id-1.2.13.12.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -455,7 +454,7 @@ user_function (<a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQ
 no data in any of the queues inside the multiqueue instance (underrun).</p>
 <p>This indicates either starvation or EOS from the upstream data sources.</p>
 <div class="refsect3">
-<a name="id-1.2.12.12.3.6"></a><h4>Parameters</h4>
+<a name="id-1.2.13.12.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -465,7 +464,7 @@ no data in any of the queues inside the multiqueue instance (underrun).</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>multiqueue</p></td>
-<td class="parameter_description"><p>the multqueue instance</p></td>
+<td class="parameter_description"><p>the multiqueue instance</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>

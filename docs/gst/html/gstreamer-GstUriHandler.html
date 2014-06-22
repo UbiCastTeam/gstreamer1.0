@@ -206,7 +206,6 @@
 that handles the given URI for reading or writing
 (<a class="link" href="gstreamer-GstUriHandler.html#gst-element-make-from-uri" title="gst_element_make_from_uri ()"><code class="function">gst_element_make_from_uri()</code></a>).</p>
 <p>Source and Sink plugins should implement this interface when possible.</p>
-<p>Last reviewed on 2005-11-09 (0.9.4)</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstUriHandler.functions_details"></a><h2>Functions</h2>
@@ -262,7 +261,7 @@ start with a alphabetic character. See RFC 3986 Section 3.1.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.4.6"></a><h4>Returns</h4>
-<p> TRUE if the string is a valid protocol identifier, FALSE otherwise.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the string is a valid protocol identifier, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
 </div>
@@ -299,7 +298,7 @@ that a positive return value does not imply that a subsequent call to
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.5.6"></a><h4>Returns</h4>
-<p> TRUE</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a></p>
 <p></p>
 </div>
 </div>
@@ -327,7 +326,7 @@ scheme followed by ":" and maybe a string identifying the location.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.6.6"></a><h4>Returns</h4>
-<p> TRUE if the string is a valid URI</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the string is a valid URI</p>
 <p></p>
 </div>
 </div>
@@ -422,7 +421,7 @@ the hostname if one is specified. The returned string must be freed using
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.9.7"></a><h4>Returns</h4>
-<p> the location for this URI. Returns NULL if the
+<p> the location for this URI. Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
 URI isn't valid. If the URI does not contain a location, an empty
 string is returned. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -460,8 +459,8 @@ gst_uri_construct (<em class="parameter"><code>const <a href="http://library.gno
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.10.7"></a><h4>Returns</h4>
-<p> a new string for this URI. Returns NULL if the
-given URI protocol is not valid, or the given location is NULL. </p>
+<p> a new string for this URI. Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
+given URI protocol is not valid, or the given location is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -493,7 +492,7 @@ will be canonicalised so that it doesn't contain any './' or '../' segments.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>pointer to error, or NULL</p></td>
+<td class="parameter_description"><p>pointer to error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -530,12 +529,12 @@ gst_element_make_from_uri (<em class="parameter"><code>const <a class="link" hre
 </tr>
 <tr>
 <td class="parameter_name"><p>elementname</p></td>
-<td class="parameter_description"><p> Name of created element, can be NULL. </p></td>
+<td class="parameter_description"><p> Name of created element, can be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p> address where to store error information, or NULL. </p></td>
+<td class="parameter_description"><p> address where to store error information, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -543,7 +542,7 @@ gst_element_make_from_uri (<em class="parameter"><code>const <a class="link" hre
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.12.6"></a><h4>Returns</h4>
-<p> a new element or NULL if none could be created. </p>
+<p> a new element or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none could be created. </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
 </div>
 </div>
@@ -602,7 +601,7 @@ modified.</p>
 <div class="refsect3">
 <a name="id-1.3.55.9.14.6"></a><h4>Returns</h4>
 <p> the supported protocols.
-Returns NULL if the <em class="parameter"><code>handler</code></em>
+Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the <em class="parameter"><code>handler</code></em>
 isn't implemented properly, or the <em class="parameter"><code>handler</code></em>
 doesn't support any protocols. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8]</span></p>
@@ -633,7 +632,7 @@ gst_uri_handler_get_uri (<em class="parameter"><code><a class="link" href="gstre
 <a name="id-1.3.55.9.15.6"></a><h4>Returns</h4>
 <p> the URI currently handled by the <em class="parameter"><code>handler</code></em>
 .
-Returns NULL if there are no URI currently handled. The
+Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there are no URI currently handled. The
 returned string must be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when no longer needed. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -668,7 +667,7 @@ gst_uri_handler_set_uri (<em class="parameter"><code><a class="link" href="gstre
 <tr>
 <td class="parameter_name"><p>error</p></td>
 <td class="parameter_description"><p> address where to store a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> in case of
-an error, or NULL. </p></td>
+an error, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -676,7 +675,7 @@ an error, or NULL. </p></td>
 </div>
 <div class="refsect3">
 <a name="id-1.3.55.9.16.6"></a><h4>Returns</h4>
-<p> TRUE if the URI was set successfully, else FALSE.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the URI was set successfully, else <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
 </div>

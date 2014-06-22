@@ -191,7 +191,7 @@ options, as shown in the following example.</p>
 </div>
 
 </div>
-<br class="example-break"><p>It's allowed to pass two NULL pointers to <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a> in case you don't want
+<br class="example-break"><p>It's allowed to pass two <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> pointers to <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a> in case you don't want
 to pass the command line args to GStreamer.</p>
 <p>You can also use GOption to initialize your own parameters as shown in
 the next code fragment:</p>
@@ -253,7 +253,6 @@ GST_VERSION_* macros to find the version at compile time. Optionally
 <p>The <a class="link" href="gstreamer-Gst.html#gst-deinit" title="gst_deinit ()"><code class="function">gst_deinit()</code></a> call is used to clean up all internal resources used
 by <span class="application">GStreamer</span>. It is mostly used in unit tests 
 to check for leaks.</p>
-<p>Last reviewed on 2006-08-11 (0.10.10)</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-Gst.functions_details"></a><h2>Functions</h2>
@@ -275,7 +274,7 @@ GStreamer for some reason.  If you want your program to fall back,
 use <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_check ()"><code class="function">gst_init_check()</code></a> instead.
 </p></div>
 <p>WARNING: This function does not work in the same way as corresponding
-functions in other glib-style libraries, such as <a href="http://developer.gnome.org/gtk2/gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>.  In
+functions in other glib-style libraries, such as <a href="http://developer.gnome.org/gtk2/gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>. In
 particular, unknown command line options cause this function to
 abort program execution.</p>
 <div class="refsect3">
@@ -375,7 +374,7 @@ gst_is_initialized (<em class="parameter"><code><span class="type">void</span></
 or <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_check ()"><code class="function">gst_init_check()</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.3.7.5.5"></a><h4>Returns</h4>
-<p> TRUE if initialization has been done, FALSE otherwise.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if initialization has been done, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
 </div>

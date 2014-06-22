@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
-<link rel="prev" href="gstreamer-libs-GstBaseParse.html" title="GstBaseParse">
+<link rel="prev" href="GstBaseParse.html" title="GstBaseParse">
 <link rel="next" href="GstBaseSink.html" title="GstBaseSink">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,7 +21,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-base.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-libs-GstBaseParse.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstBaseParse.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstBaseSink.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -47,6 +47,22 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstBaseSrc.html#gst-base-src-wait-playing" title="gst_base_src_wait_playing ()">gst_base_src_wait_playing</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#gst-base-src-start-wait" title="gst_base_src_start_wait ()">gst_base_src_start_wait</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#gst-base-src-start-complete" title="gst_base_src_start_complete ()">gst_base_src_start_complete</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -123,6 +139,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#gst-base-src-set-automatic-eos" title="gst_base_src_set_automatic_eos ()">gst_base_src_set_automatic_eos</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -147,16 +171,44 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBufferPool.html"><span class="returnvalue">GstBufferPool</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstBaseSrc.html#gst-base-src-get-buffer-pool" title="gst_base_src_get_buffer_pool ()">gst_base_src_get_buffer_pool</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#gst-base-src-is-async" title="gst_base_src_is_async ()">gst_base_src_is_async</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#gst-base-src-set-async" title="gst_base_src_set_async ()">gst_base_src_set_async</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstBaseSrc.html#GST-BASE-SRC-PAD:CAPS" title="GST_BASE_SRC_PAD()">GST_BASE_SRC_PAD</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#GST-BASE-SRC-IS-STARTED:CAPS" title="GST_BASE_SRC_IS_STARTED()">GST_BASE_SRC_IS_STARTED</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstBaseSrc.html#GST-BASE-SRC-IS-STARTING:CAPS" title="GST_BASE_SRC_IS_STARTING()">GST_BASE_SRC_IS_STARTING</a><span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -234,7 +286,7 @@
 </div>
 <div class="refsect1">
 <a name="GstBaseSrc.description"></a><h2>Description</h2>
-<p>This is a generice base class for source elements. The following
+<p>This is a generic base class for source elements. The following
 types of sources are supported:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>random access sources like files</p></li>
@@ -243,18 +295,18 @@ types of sources are supported:</p>
 </ul></div>
 <p>The source can be configured to operate in any <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a> with the
 <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" title="gst_base_src_set_format ()"><code class="function">gst_base_src_set_format()</code></a> method. The currently set format determines
-the format of the internal <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstSegment.html#GstSegment"><span class="type">GstSegment</span></a> and any <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstEvent.html#GST-EVENT-SEGMENT:CAPS"><span class="type">GST_EVENT_SEGMENT</span></a>
-events. The default format for <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> is <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><span class="type">GST_FORMAT_BYTES</span></a>.</p>
+the format of the internal <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSegment.html"><span class="type">GstSegment</span></a> and any <code class="literal">GST_EVENT_SEGMENT</code>
+events. The default format for <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> is <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><code class="literal">GST_FORMAT_BYTES</code></a>.</p>
 <p><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> always supports push mode scheduling. If the following
 conditions are met, it also supports pull mode scheduling:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>The format is set to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><span class="type">GST_FORMAT_BYTES</span></a> (default).</p></li>
+<li class="listitem"><p>The format is set to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><code class="literal">GST_FORMAT_BYTES</code></a> (default).</p></li>
 <li class="listitem"><p><a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p></li>
 </ul></div>
 <p>If all the conditions are met for operating in pull mode, <a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> is
 automatically seekable in push mode as well. The following conditions must
 be met to make the element seekable in push mode when the format is not
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><span class="type">GST_FORMAT_BYTES</span></a>:</p>
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><code class="literal">GST_FORMAT_BYTES</code></a>:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>
     <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
@@ -283,7 +335,7 @@ Use <a class="link" href="GstBaseSrc.html#gst-base-src-set-live" title="gst_base
 <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.create"><code class="function">GstBaseSrcClass.create()</code></a> method will not be called in PAUSED but only in
 PLAYING. To signal the pipeline that the element will not produce data, the
 return value from the READY to PAUSED state will be
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><span class="type">GST_STATE_CHANGE_NO_PREROLL</span></a>.</p>
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a>.</p>
 <p>A typical live source will timestamp the buffers it creates with the
 current running time of the pipeline. This is one reason why a live source
 can only produce data in the PLAYING state, when the clock is actually
@@ -332,7 +384,7 @@ should install a pad template in its class_init function, like so:</p>
 <span class="gtkdoc opt">{</span>
   GstElementClass <span class="gtkdoc opt">*</span>gstelement_class <span class="gtkdoc opt">=</span> <span class="function">GST_ELEMENT_CLASS</span> <span class="gtkdoc opt">(</span>klass<span class="gtkdoc opt">);</span>
   <span class="gtkdoc slc">// srctemplate should be a #GstStaticPadTemplate with direction</span>
-  <span class="gtkdoc slc">// #GST_PAD_SRC and name &quot;src&quot;</span>
+  <span class="gtkdoc slc">// %GST_PAD_SRC and name &quot;src&quot;</span>
   <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-class-add-pad-template">gst_element_class_add_pad_template</a></span> <span class="gtkdoc opt">(</span>gstelement_class<span class="gtkdoc opt">,</span>
       <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#gst-static-pad-template-get">gst_static_pad_template_get</a></span> <span class="gtkdoc opt">(&amp;</span>srctemplate<span class="gtkdoc opt">));</span>
 
@@ -362,14 +414,12 @@ been processed and the pipeline can safely be stopped.
 
 An application may send an EOS event to a source element to make it
 perform the EOS logic (send EOS event downstream or post a
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-SEGMENT-DONE:CAPS"><span class="type">GST_MESSAGE_SEGMENT_DONE</span></a> on the bus). This can typically be done
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMessage.html#GST-MESSAGE-SEGMENT-DONE:CAPS"><code class="literal">GST_MESSAGE_SEGMENT_DONE</code></a> on the bus). This can typically be done
 with the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-send-event"><code class="function">gst_element_send_event()</code></a> function on the element or its parent bin.
 
 After the EOS has been sent to the element, the application should wait for
 an EOS message to be posted on the pipeline's bus. Once this EOS message is
 received, it may safely shut down the entire pipeline.
-
-Last reviewed on 2007-12-19 (0.10.16)
 </p>
 </div>
 </div>
@@ -383,9 +433,9 @@ gst_base_src_wait_playing (<em class="parameter"><code><a class="link" href="Gst
 against the clock it must unblock when going from PLAYING to the PAUSED state
 and call this method before continuing to produce the remaining data.</p>
 <p>This function will block until a state change to PLAYING happens (in which
-case this function returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a>) or the processing must be stopped due
+case this function returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>) or the processing must be stopped due
 to a state change to READY or a FLUSH event (in which case this function
-returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a>).</p>
+returns <code class="literal">GST_FLOW_FLUSHING</code>).</p>
 <div class="refsect3">
 <a name="id-1.2.4.4.9.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -403,10 +453,70 @@ returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstrea
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.4.9.2.7"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> if <em class="parameter"><code>src</code></em>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> if <em class="parameter"><code>src</code></em>
 is PLAYING and processing can
 continue. Any other return value should be returned from the create vmethod.</p>
 <p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-src-start-wait"></a><h3>gst_base_src_start_wait ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+gst_base_src_start_wait (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *basesrc</code></em>);</pre>
+<p>Wait until the start operation completes.</p>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>basesrc</p></td>
+<td class="parameter_description"><p>base source instance</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.3.6"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a>.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-src-start-complete"></a><h3>gst_base_src_start_complete ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_base_src_start_complete (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *basesrc</code></em>,
+                             <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> ret</code></em>);</pre>
+<p>Complete an asynchronous start operation. When the subclass overrides the
+start method, it should call <a class="link" href="GstBaseSrc.html#gst-base-src-start-complete" title="gst_base_src_start_complete ()"><code class="function">gst_base_src_start_complete()</code></a> when the start
+operation completes either from the same thread or from an asynchronous
+helper thread.</p>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>basesrc</p></td>
+<td class="parameter_description"><p>base source instance</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>ret</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 </div>
 <hr>
@@ -416,7 +526,7 @@ continue. Any other return value should be returned from the create vmethod.</p>
 gst_base_src_is_live (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>);</pre>
 <p>Check if an element is in live mode.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.3.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -431,7 +541,7 @@ gst_base_src_is_live (<em class="parameter"><code><a class="link" href="GstBaseS
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.3.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.4.9.5.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if element is in live mode.</p>
 <p></p>
 </div>
@@ -451,7 +561,7 @@ of a pipeline. To signal this fact to the application and the
 pipeline, the state change return value of the live source will
 be GST_STATE_CHANGE_NO_PREROLL.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.4.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -482,10 +592,10 @@ gst_base_src_set_format (<em class="parameter"><code><a class="link" href="GstBa
 <p>Sets the default format of the source. This will be the format used
 for sending SEGMENT events and for performing seeks.</p>
 <p>If a format of GST_FORMAT_BYTES is set, the element will be able to
-operate in pull mode if the <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns TRUE.</p>
+operate in pull mode if the <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 <p>This function must only be called in states &lt; <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.5.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -516,7 +626,7 @@ gst_base_src_query_latency (<em class="parameter"><code><a class="link" href="Gs
                             <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> *min_latency</code></em>,
                             <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> *max_latency</code></em>);</pre>
 <p>Query the source for the latency parameters. <em class="parameter"><code>live</code></em>
- will be TRUE when <em class="parameter"><code>src</code></em>
+ will be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>src</code></em>
  is
 configured as a live source. <em class="parameter"><code>min_latency</code></em>
  will be set to the difference
@@ -525,7 +635,7 @@ between the running time and the timestamp of the first buffer.
  is always the undefined value of -1.</p>
 <p>This function is mostly used by subclasses.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -557,8 +667,8 @@ between the running time and the timestamp of the first buffer.
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.6.7"></a><h4>Returns</h4>
-<p> TRUE if the query succeeded.</p>
+<a name="id-1.2.4.4.9.8.7"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query succeeded.</p>
 <p></p>
 </div>
 </div>
@@ -570,7 +680,7 @@ gst_base_src_get_blocksize (<em class="parameter"><code><a class="link" href="Gs
 <p>Get the number of bytes that <em class="parameter"><code>src</code></em>
  will push out with each buffer.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -585,7 +695,7 @@ gst_base_src_get_blocksize (<em class="parameter"><code><a class="link" href="Gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.7.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.4.9.9.6"></a><h4>Returns</h4>
 <p> the number of bytes pushed with each buffer.</p>
 <p></p>
 </div>
@@ -601,7 +711,7 @@ gst_base_src_set_blocksize (<em class="parameter"><code><a class="link" href="Gs
 <em class="parameter"><code>blocksize</code></em>
  is set to -1, a default length will be used.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -631,7 +741,7 @@ gst_base_src_get_do_timestamp (<em class="parameter"><code><a class="link" href=
 <p>Query if <em class="parameter"><code>src</code></em>
  timestamps outgoing buffers based on the current running_time.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -646,7 +756,7 @@ gst_base_src_get_do_timestamp (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.9.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.4.9.11.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the base class will automatically timestamp outgoing buffers.</p>
 <p></p>
 </div>
@@ -662,7 +772,7 @@ gst_base_src_set_do_timestamp (<em class="parameter"><code><a class="link" href=
 current running_time of the pipeline. This property is mostly useful for live
 sources.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -695,7 +805,7 @@ gst_base_src_set_dynamic_size (<em class="parameter"><code><a class="link" href=
 read past current tracked size.  Otherwise, size is checked for upon each
 read.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -719,6 +829,41 @@ read.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-base-src-set-automatic-eos"></a><h3>gst_base_src_set_automatic_eos ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_base_src_set_automatic_eos (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
+                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> automatic_eos</code></em>);</pre>
+<p>If <em class="parameter"><code>automatic_eos</code></em>
+ is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, basesrc will automatically go EOS if a buffer
+after the total size is returned. By default this is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> but sources
+that can't return an authoritative size and only know that they're EOS
+when trying to read more should set this to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.14.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>src</p></td>
+<td class="parameter_description"><p>base source instance</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>automatic_eos</p></td>
+<td class="parameter_description"><p>automatic eos</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.4</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-base-src-new-seamless-segment"></a><h3>gst_base_src_new_seamless_segment ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_base_src_new_seamless_segment (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
@@ -731,7 +876,7 @@ as the stream-lock needs to be held.</p>
 <p>The format for the new segment will be the current format of the source, as
 configured with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" title="gst_base_src_set_format ()"><code class="function">gst_base_src_set_format()</code></a></p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.12.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.15.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -756,14 +901,14 @@ configured with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" t
 </tr>
 <tr>
 <td class="parameter_name"><p>time</p></td>
-<td class="parameter_description"><p>The new time value for the start of the new segent</p></td>
+<td class="parameter_description"><p>The new time value for the start of the new segment</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.12.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.4.9.15.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if preparation of the seamless segment succeeded.</p>
 <p></p>
 </div>
@@ -773,10 +918,10 @@ configured with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" t
 <a name="gst-base-src-set-caps"></a><h3>gst_base_src_set_caps ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_base_src_set_caps (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
-                       <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+                       <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Set new caps on the basesrc source pad.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -791,14 +936,14 @@ gst_base_src_set_caps (<em class="parameter"><code><a class="link" href="GstBase
 </tr>
 <tr>
 <td class="parameter_name"><p>caps</p></td>
-<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a></p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.13.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.4.9.16.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the caps could be set</p>
 <p></p>
 </div>
@@ -817,7 +962,7 @@ used by the base class and its <em class="parameter"><code>params</code></em>
 <p>Unref the <em class="parameter"><code>allocator</code></em>
  after use it.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.14.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.17.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -839,7 +984,7 @@ used. </p></td>
 <tr>
 <td class="parameter_name"><p>params</p></td>
 <td class="parameter_description"><p> the
-<span class="type">GstAllocatorParams</span> of <em class="parameter"><code>allocator</code></em>
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a> of <em class="parameter"><code>allocator</code></em>
 . </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
@@ -850,10 +995,10 @@ used. </p></td>
 <hr>
 <div class="refsect2">
 <a name="gst-base-src-get-buffer-pool"></a><h3>gst_base_src_get_buffer_pool ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="returnvalue">GstBufferPool</span></a> *
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBufferPool.html"><span class="returnvalue">GstBufferPool</span></a> *
 gst_base_src_get_buffer_pool (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.15.4"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.18.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -868,10 +1013,73 @@ gst_base_src_get_buffer_pool (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.15.5"></a><h4>Returns</h4>
-<p> the instance of the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBufferPool.html#GstBufferPool"><span class="type">GstBufferPool</span></a> used
+<a name="id-1.2.4.4.9.18.5"></a><h4>Returns</h4>
+<p> the instance of the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBufferPool.html"><span class="type">GstBufferPool</span></a> used
 by the src; free it after use it. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-src-is-async"></a><h3>gst_base_src_is_async ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_base_src_is_async (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>);</pre>
+<p>Get the current async behaviour of <em class="parameter"><code>src</code></em>
+. See also <a class="link" href="GstBaseSrc.html#gst-base-src-set-async" title="gst_base_src_set_async ()"><code class="function">gst_base_src_set_async()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.19.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>src</p></td>
+<td class="parameter_description"><p>base source instance</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.19.6"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>src</code></em>
+is operating in async mode.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-base-src-set-async"></a><h3>gst_base_src_set_async ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_base_src_set_async (<em class="parameter"><code><a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a> *src</code></em>,
+                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> async</code></em>);</pre>
+<p>Configure async behaviour in <em class="parameter"><code>src</code></em>
+, no state change will block. The open,
+close, start, stop, play and pause virtual methods will be executed in a
+different thread and are thus allowed to perform blocking operations. Any
+blocking operation should be unblocked with the unlock vmethod.</p>
+<div class="refsect3">
+<a name="id-1.2.4.4.9.20.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>src</p></td>
+<td class="parameter_description"><p>base source instance</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>async</p></td>
+<td class="parameter_description"><p>new async mode</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 </div>
 <hr>
@@ -881,7 +1089,7 @@ by the src; free it after use it. </p>
 </pre>
 <p>Gives the pointer to the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.4.9.16.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.4.9.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -895,6 +1103,18 @@ by the src; free it after use it. </p>
 </tr></tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-BASE-SRC-IS-STARTED:CAPS"></a><h3>GST_BASE_SRC_IS_STARTED()</h3>
+<pre class="programlisting">#define GST_BASE_SRC_IS_STARTED(obj)  GST_OBJECT_FLAG_IS_SET ((obj), GST_BASE_SRC_FLAG_STARTED)
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-BASE-SRC-IS-STARTING:CAPS"></a><h3>GST_BASE_SRC_IS_STARTING()</h3>
+<pre class="programlisting">#define GST_BASE_SRC_IS_STARTING(obj) GST_OBJECT_FLAG_IS_SET ((obj), GST_BASE_SRC_FLAG_STARTING)
+</pre>
 </div>
 </div>
 <div class="refsect1">
@@ -1018,7 +1238,7 @@ setting a fixate function on the source pad.</p></td>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSrcClass.start"></a>start</code></em> ()</p></td>
 <td class="struct_member_description"><p>Start processing. Subclasses should open resources and prepare
-to produce data. Implementation should call <code class="function">gst_base_src_start_complete()</code>
+to produce data. Implementation should call <a class="link" href="GstBaseSrc.html#gst-base-src-start-complete" title="gst_base_src_start_complete ()"><code class="function">gst_base_src_start_complete()</code></a>
 when the operation completes, either from the current thread or any other
 thread that finishes the start operation asynchronously.</p></td>
 <td class="struct_member_annotations"> </td>
@@ -1047,11 +1267,12 @@ these times.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSrcClass.prepare-seek-segment"></a>prepare_seek_segment</code></em> ()</p></td>
-<td class="struct_member_description"><p>Prepare the GstSegment that will be passed to the
-do_seek vmethod for executing a seek request. Sub-classes should override
-this if they support seeking in formats other than the configured native
-format. By default, it tries to convert the seek arguments to the
-configured native format and prepare a segment in that format.</p></td>
+<td class="struct_member_description"><p>Prepare the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSegment.html"><span class="type">GstSegment</span></a> that will be passed to the
+<a class="link" href="GstBaseSrc.html#GstBaseSrcClass.do-seek"><code class="function">GstBaseSrcClass.do_seek()</code></a> vmethod for executing a seek
+request. Sub-classes should override this if they support seeking in
+formats other than the configured native format. By default, it tries to
+convert the seek arguments to the configured native format and prepare a
+segment in that format.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1061,19 +1282,19 @@ configured native format and prepare a segment in that format.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSrcClass.unlock"></a>unlock</code></em> ()</p></td>
-<td class="struct_member_description"><p>Unlock any pending access to the resource. Subclasses should
-unblock any blocked function ASAP. In particular, any <code class="function">create()</code> function in
+<td class="struct_member_description"><p>Unlock any pending access to the resource. Subclasses should unblock
+any blocked function ASAP. In particular, any <code class="function">create()</code> function in
 progress should be unblocked and should return GST_FLOW_FLUSHING. Any
-future <em class="parameter"><code>create</code></em>
-() function call should also return GST_FLOW_FLUSHING
-until the <em class="parameter"><code>unlock_stop</code></em>
-() function has been called.</p></td>
+future <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.create"><code class="function">GstBaseSrcClass.create()</code></a> function call should also return
+GST_FLOW_FLUSHING until the <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.unlock-stop"><code class="function">GstBaseSrcClass.unlock_stop()</code></a> function has
+been called.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSrcClass.unlock-stop"></a>unlock_stop</code></em> ()</p></td>
-<td class="struct_member_description"><p>Clear the previous unlock request. Subclasses should clear
-any state they set during <code class="function">unlock()</code>, such as clearing command queues.</p></td>
+<td class="struct_member_description"><p>Clear the previous unlock request. Subclasses should clear any
+state they set during <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.unlock"><code class="function">GstBaseSrcClass.unlock()</code></a>, such as clearing command
+queues.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1088,15 +1309,13 @@ any state they set during <code class="function">unlock()</code>, such as cleari
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSrcClass.create"></a>create</code></em> ()</p></td>
-<td class="struct_member_description"><p>Ask the subclass to create a buffer with offset and size.
-When the subclass returns GST_FLOW_OK, it MUST return a buffer of the
-requested size unless fewer bytes are available because an EOS condition
-is near. No buffer should be returned when the return value is different
-from GST_FLOW_OK. A return value of GST_FLOW_EOS signifies that the
-end of stream is reached. The default implementation will call <em class="parameter"><code>alloc</code></em>
-and
-then call <em class="parameter"><code>fill</code></em>
-.</p></td>
+<td class="struct_member_description"><p>Ask the subclass to create a buffer with offset and size.  When the
+subclass returns GST_FLOW_OK, it MUST return a buffer of the requested size
+unless fewer bytes are available because an EOS condition is near. No
+buffer should be returned when the return value is different from
+GST_FLOW_OK. A return value of GST_FLOW_EOS signifies that the end of
+stream is reached. The default implementation will call
+<a class="link" href="GstBaseSrc.html#GstBaseSrcClass.alloc"><code class="function">GstBaseSrcClass.alloc()</code></a> and then call <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.fill"><code class="function">GstBaseSrcClass.fill()</code></a>.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>

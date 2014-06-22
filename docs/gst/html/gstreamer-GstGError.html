@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstElementFactory.html" title="GstElementFactory">
-<link rel="next" href="gstreamer-GstEvent.html" title="GstEvent">
+<link rel="next" href="GstEvent.html" title="GstEvent">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GstElementFactory.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-GstEvent.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstEvent.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gstreamer-GstGError"></a><div class="titlepage"></div>
@@ -111,7 +111,7 @@
 <div class="refsect1">
 <a name="gstreamer-GstGError.description"></a><h2>Description</h2>
 <p>GStreamer elements can throw non-fatal warnings and fatal errors.
-Higher-level elements and applications can programatically filter
+Higher-level elements and applications can programmatically filter
 the ones they are interested in or can recover from,
 and have a default handler handle the rest of them.</p>
 <p>The rest of this section will use the term <span class="quote">“<span class="quote">error</span>”</span>
@@ -131,8 +131,8 @@ errors.  As such, they should only inform about errors, and stop their
 processing.  In short, an element doesn't know what it is being used for.</p>
 <p>It is the application or compound element using the given element that
 has more context about the use of the element. Errors can be received by
-listening to the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> of the element/pipeline for <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> objects with
-the type <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-ERROR:CAPS"><code class="literal">GST_MESSAGE_ERROR</code></a> or <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-WARNING:CAPS"><code class="literal">GST_MESSAGE_WARNING</code></a>. The thrown errors should
+listening to the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> of the element/pipeline for <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> objects with
+the type <a class="link" href="GstMessage.html#GST-MESSAGE-ERROR:CAPS"><code class="literal">GST_MESSAGE_ERROR</code></a> or <a class="link" href="GstMessage.html#GST-MESSAGE-WARNING:CAPS"><code class="literal">GST_MESSAGE_WARNING</code></a>. The thrown errors should
 be inspected, and filtered if appropriate.</p>
 <p>An application is expected to, by default, present the user with a
 dialog box (or an equivalent) showing the error message.  The dialog
@@ -140,7 +140,7 @@ should also allow a way to get at the additional debug information,
 so the user can provide bug reporting information.</p>
 <p>A compound element is expected to forward errors by default higher up
 the hierarchy; this is done by default in the same way as for other types
-of <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a>.</p>
+of <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a>.</p>
 <p>When applications or compound elements trigger errors that they can
 recover from, they can filter out these errors and take appropriate action.
 For example, an application that gets an error from xvimagesink
@@ -148,7 +148,7 @@ that indicates all XVideo ports are taken, the application can attempt
 to use another sink instead.</p>
 <p>Elements throw errors using the <a class="link" href="GstElement.html#GST-ELEMENT-ERROR:CAPS" title="GST_ELEMENT_ERROR()"><span class="type">GST_ELEMENT_ERROR</span></a> convenience macro:</p>
 <div class="example">
-<a name="id-1.3.23.7.12"></a><p class="title"><b>Example 7. Throwing an error</b></p>
+<a name="id-1.3.23.7.12"></a><p class="title"><b>Example 5. Throwing an error</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -169,7 +169,7 @@ to use another sink instead.</p>
     currently provided should be enough.  If you find your type of error
     does not fit the current codes, you should use FAILED.</p></li>
 <li class="listitem"><p>Don't provide a message if the default one suffices.
-    this keeps messages more uniform.  Use (NULL) - not forgetting the
+    this keeps messages more uniform.  Use (<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>) - not forgetting the
     parentheses.</p></li>
 <li class="listitem"><p>If you do supply a custom message, it should be
     marked for translation.  The message should start with a capital
@@ -178,12 +178,11 @@ to use another sink instead.</p>
     A user interface will present this message as the first thing a user
     sees.  Details, technical info, ... should go in the debug string.
   </p></li>
-<li class="listitem"><p>The debug string can be as you like.  Again, use (NULL)
+<li class="listitem"><p>The debug string can be as you like.  Again, use (<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>)
     if there's nothing to add - file and line number will still be
     passed.  <a class="link" href="gstreamer-GstGError.html#GST-ERROR-SYSTEM:CAPS" title="GST_ERROR_SYSTEM"><span class="type">GST_ERROR_SYSTEM</span></a> can be used as a shortcut to give
     debug information on a system call error.</p></li>
 </ul></div>
-<p>Last reviewed on 2006-09-15 (0.10.10)</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstGError.functions_details"></a><h2>Functions</h2>
@@ -728,7 +727,7 @@ See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.h
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstGError.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a></p>
+<p><a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a></p>
 </div>
 </div>
 <div class="footer">

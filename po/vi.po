@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer-1.2.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-04-18 11:15+0200\n"
+"POT-Creation-Date: 2014-06-22 17:12+0200\n"
 "PO-Revision-Date: 2013-12-11 08:08+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
@@ -817,6 +817,12 @@ msgstr "biên-dịch-bởi"
 msgid "Information about the people behind a remix and similar interpretations"
 msgstr "Thông tin về người đứng sau phối và biên tập lại"
 
+msgid "midi-base-note"
+msgstr ""
+
+msgid "Midi note number of the audio track."
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -841,12 +847,12 @@ msgstr ""
 "%s\n"
 
 #, c-format
-msgid "specified empty bin \"%s\", not allowed"
-msgstr "không cho phép nhị phân trống được ghi rõ “%s”"
+msgid "link has no source [sink=%s@%p]"
+msgstr ""
 
 #, c-format
-msgid "no bin \"%s\", skipping"
-msgstr "không có nhị phân “%s” nên bỏ qua"
+msgid "link has no sink [source=%s@%p]"
+msgstr ""
 
 #, c-format
 msgid "no property \"%s\" in element \"%s\""
@@ -865,23 +871,16 @@ msgid "no element \"%s\""
 msgstr "không có phần tử “%s”"
 
 #, c-format
+msgid "unexpected reference \"%s\" - ignoring"
+msgstr ""
+
+#, c-format
+msgid "unexpected pad-reference \"%s\" - ignoring"
+msgstr ""
+
+#, c-format
 msgid "could not parse caps \"%s\""
 msgstr "không thể phân tách caps “%s”"
-
-msgid "link without source element"
-msgstr "liên kết không có phần tử nguồn"
-
-msgid "link without sink element"
-msgstr ""
-"liên kết không có phần tử quản lý việc phân phối dữ liệu vào đệm khác nhau"
-
-#, c-format
-msgid "no source element for URI \"%s\""
-msgstr "không có phần tử nguồn cho URI “%s”"
-
-#, c-format
-msgid "no element to link URI \"%s\" to"
-msgstr "không có phần tử đến đó cần liên kết URI “%s”"
 
 #, c-format
 msgid "no sink element for URI \"%s\""
@@ -890,10 +889,22 @@ msgstr ""
 "điểm “%s”"
 
 #, c-format
-msgid "could not link sink element for URI \"%s\""
+msgid "no source element for URI \"%s\""
+msgstr "không có phần tử nguồn cho URI “%s”"
+
+msgid "syntax error"
 msgstr ""
-"không thể kết hợp phần tử quản lý việc phân phối dữ liệu vào đệm khác nhau, "
-"cho URI “%s”"
+
+msgid "bin"
+msgstr ""
+
+#, c-format
+msgid "specified empty bin \"%s\", not allowed"
+msgstr "không cho phép nhị phân trống được ghi rõ “%s”"
+
+#, fuzzy, c-format
+msgid "no bin \"%s\", unpacking elements"
+msgstr "không có nhị phân “%s” nên bỏ qua"
 
 msgid "empty pipeline not allowed"
 msgstr "không cho phép đường ống trống"
@@ -927,6 +938,20 @@ msgstr ""
 "Đặt thuộc tính này thì chấp nhận tham chiếu đến đối tượng GstCaps đã cung "
 "cấp."
 
+msgid "No Temp directory specified."
+msgstr "Chưa xác định thư mục tạm thời."
+
+#, c-format
+msgid "Could not create temp file \"%s\"."
+msgstr "Không thể tạo tập tin tạm thời “%s”."
+
+#, c-format
+msgid "Could not open file \"%s\" for reading."
+msgstr "Không thể mở tập tin “%s” để đọc."
+
+msgid "Error while writing to download file."
+msgstr "Gặp lỗi khi ghi vào tập tin tải về."
+
 msgid "No file name specified for writing."
 msgstr "Chưa ghi rõ tên tập tin để ghi vào."
 
@@ -950,10 +975,6 @@ msgid "No file name specified for reading."
 msgstr "Chưa ghi rõ tên tập tin để đọc."
 
 #, c-format
-msgid "Could not open file \"%s\" for reading."
-msgstr "Không thể mở tập tin “%s” để đọc."
-
-#, c-format
 msgid "Could not get info on \"%s\"."
 msgstr "Không thể lấy thông tin về “%s”."
 
@@ -967,16 +988,6 @@ msgstr "Tập tin “%s” là ổ cắm."
 
 msgid "Failed after iterations as requested."
 msgstr "Lỗi sau số lần lặp lại được chọn."
-
-msgid "No Temp directory specified."
-msgstr "Chưa xác định thư mục tạm thời."
-
-#, c-format
-msgid "Could not create temp file \"%s\"."
-msgstr "Không thể tạo tập tin tạm thời “%s”."
-
-msgid "Error while writing to download file."
-msgstr "Gặp lỗi khi ghi vào tập tin tải về."
 
 msgid "caps"
 msgstr "khả năng"
@@ -1280,6 +1291,21 @@ msgstr "Đang đặt đường ống thành VÔ GIÁ TRỊ ...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Đang giải phóng đường ống ...\n"
+
+#~ msgid "link without source element"
+#~ msgstr "liên kết không có phần tử nguồn"
+
+#~ msgid "link without sink element"
+#~ msgstr ""
+#~ "liên kết không có phần tử quản lý việc phân phối dữ liệu vào đệm khác nhau"
+
+#~ msgid "no element to link URI \"%s\" to"
+#~ msgstr "không có phần tử đến đó cần liên kết URI “%s”"
+
+#~ msgid "could not link sink element for URI \"%s\""
+#~ msgstr ""
+#~ "không thể kết hợp phần tử quản lý việc phân phối dữ liệu vào đệm khác "
+#~ "nhau, cho URI “%s”"
 
 #~ msgid "maximum"
 #~ msgstr "tối đa"

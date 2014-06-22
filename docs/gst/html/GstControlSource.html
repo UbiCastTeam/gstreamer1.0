@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstControlBinding.html" title="GstControlBinding">
-<link rel="next" href="gstreamer-GstDateTime.html" title="GstDateTime">
+<link rel="next" href="GstDateTime.html" title="GstDateTime">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GstControlBinding.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-GstDateTime.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstDateTime.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstControlSource"></a><div class="titlepage"></div>
@@ -118,8 +118,8 @@
 <div class="refsect1">
 <a name="GstControlSource.description"></a><h2>Description</h2>
 <p>The <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a> is a base class for control value sources that could
-be used by <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstController.html"><span class="type">GstController</span></a> to get timestamp-value pairs. A control source
-essentially is a function over time, returning gloat values between 0.0 and 1.0.</p>
+be used to get timestamp-value pairs. A control source essentially is a
+function over time, returning float values between 0.0 and 1.0.</p>
 <p>A <a class="link" href="GstControlSource.html" title="GstControlSource"><span class="type">GstControlSource</span></a> is used by first getting an instance of a specific
 control-source, creating a binding for the control-source to the target property
 of the element and then adding the binding to the element. The binding will
@@ -261,7 +261,7 @@ gst_control_source_get_value (<em class="parameter"><code><a class="link" href="
 </div>
 <div class="refsect3">
 <a name="id-1.3.19.8.4.6"></a><h4>Returns</h4>
-<p> FALSE if the value couldn't be returned, TRUE otherwise.</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the value couldn't be returned, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> otherwise.</p>
 <p></p>
 </div>
 </div>
@@ -307,8 +307,8 @@ undefined contain NANs.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>values</p></td>
-<td class="parameter_description"><p>array to put control-values in</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> array to put control-values in. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_values]</span></td>
 </tr>
 </tbody>
 </table></div>

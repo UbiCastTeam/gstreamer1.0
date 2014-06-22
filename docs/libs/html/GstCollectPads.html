@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstByteWriter.html" title="GstByteWriter">
-<link rel="next" href="gstreamer-libs-GstTypeFindHelper.html" title="GstTypeFindHelper">
+<link rel="next" href="gstreamer-libs-GstFlowCombiner.html" title="GstFlowCombiner">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-base.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-libs-GstByteWriter.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-libs-GstTypeFindHelper.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gstreamer-libs-GstFlowCombiner.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstCollectPads"></a><div class="titlepage"></div>
@@ -58,6 +58,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()">*GstCollectPadsClipFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
@@ -74,10 +82,18 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+<span class="returnvalue">void</span>
 </td>
 <td class="function_name">
-<span class="c_punctuation">(</span><a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()">*GstCollectPadsClipFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+<span class="c_punctuation">(</span><a class="link" href="GstCollectPads.html#GstCollectPadsFlushFunction" title="GstCollectPadsFlushFunction ()">*GstCollectPadsFlushFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstCollectPads.html#GstCollectPadsQueryFunction" title="GstCollectPadsQueryFunction ()">*GstCollectPadsQueryFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -188,7 +204,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()">gst_collect_pads_peek</a> <span class="c_punctuation">()</span>
@@ -196,7 +212,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstCollectPads.html#gst-collect-pads-pop" title="gst_collect_pads_pop ()">gst_collect_pads_pop</a> <span class="c_punctuation">()</span>
@@ -204,7 +220,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstCollectPads.html#gst-collect-pads-read-buffer" title="gst_collect_pads_read_buffer ()">gst_collect_pads_read_buffer</a> <span class="c_punctuation">()</span>
@@ -212,10 +228,42 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstCollectPads.html#gst-collect-pads-take-buffer" title="gst_collect_pads_take_buffer ()">gst_collect_pads_take_buffer</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstCollectPads.html#gst-collect-pads-clip-running-time" title="gst_collect_pads_clip_running_time ()">gst_collect_pads_clip_running_time</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstCollectPads.html#gst-collect-pads-query-default" title="gst_collect_pads_query_default ()">gst_collect_pads_query_default</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstCollectPads.html#gst-collect-pads-event-default" title="gst_collect_pads_event_default ()">gst_collect_pads_event_default</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstCollectPads.html#gst-collect-pads-src-event-default" title="gst_collect_pads_src_event_default ()">gst_collect_pads_src_event_default</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -224,6 +272,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstCollectPads.html#gst-collect-pads-set-buffer-function" title="gst_collect_pads_set_buffer_function ()">gst_collect_pads_set_buffer_function</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstCollectPads.html#gst-collect-pads-set-clip-function" title="gst_collect_pads_set_clip_function ()">gst_collect_pads_set_clip_function</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -247,7 +303,15 @@
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
-<a class="link" href="GstCollectPads.html#gst-collect-pads-set-clip-function" title="gst_collect_pads_set_clip_function ()">gst_collect_pads_set_clip_function</a> <span class="c_punctuation">()</span>
+<a class="link" href="GstCollectPads.html#gst-collect-pads-set-flush-function" title="gst_collect_pads_set_flush_function ()">gst_collect_pads_set_flush_function</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstCollectPads.html#gst-collect-pads-set-query-function" title="gst_collect_pads_set_query_function ()">gst_collect_pads_set_query_function</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -339,8 +403,8 @@ is given to the manager of this object when all pads have data.</p>
 <li class="listitem"><p>
     Data can be dequeued from the pad with the <a class="link" href="GstCollectPads.html#gst-collect-pads-pop" title="gst_collect_pads_pop ()"><code class="function">gst_collect_pads_pop()</code></a> method.
     One can peek at the data with the <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a> function.
-    These functions will return NULL if the pad received an EOS event. When all
-    pads return NULL from a <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a>, the element can emit an EOS
+    These functions will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the pad received an EOS event. When all
+    pads return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> from a <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a>, the element can emit an EOS
     event itself.
   </p></li>
 <li class="listitem"><p>
@@ -355,18 +419,12 @@ is given to the manager of this object when all pads have data.</p>
     no pad is blocked and the element can finish streaming.
   </p></li>
 <li class="listitem"><p>
-    <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstCollectPads.html#gst-collect-pads-collect"><code class="function">gst_collect_pads_collect()</code></a> and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstCollectPads.html#gst-collect-pads-collect-range"><code class="function">gst_collect_pads_collect_range()</code></a> can be used by
-    elements that start a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTask.html"><span class="type">GstTask</span></a> to drive the collect_pads. This feature is however
-    not yet implemented.
-  </p></li>
-<li class="listitem"><p>
     <a class="link" href="GstCollectPads.html#gst-collect-pads-set-waiting" title="gst_collect_pads_set_waiting ()"><code class="function">gst_collect_pads_set_waiting()</code></a> sets a pad to waiting or non-waiting mode.
     CollectPads element is not waiting for data to be collected on non-waiting pads.
     Thus these pads may but need not have data when the callback is called.
     All pads are in waiting mode by default.
   </p></li>
 </ul></div>
-<p>Last reviewed on 2011-10-28 (0.10.36)</p>
 </div>
 <div class="refsect1">
 <a name="GstCollectPads.functions_details"></a><h2>Functions</h2>
@@ -399,12 +457,12 @@ memory and resources allocated for it.</p>
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 <span class="c_punctuation">(</span>*GstCollectPadsBufferFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                                  <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
-                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *buffer</code></em>,
                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called when a (considered oldest) buffer can be muxed.
-If all pads have reached EOS, this function is called with NULL <em class="parameter"><code>buffer</code></em>
+If all pads have reached EOS, this function is called with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> <em class="parameter"><code>buffer</code></em>
 
-and NULL <em class="parameter"><code>data</code></em>
+and <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> <em class="parameter"><code>data</code></em>
 .</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.3.5"></a><h4>Parameters</h4>
@@ -417,7 +475,7 @@ and NULL <em class="parameter"><code>data</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>pads</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that trigered the callback</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that triggered the callback</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -427,7 +485,7 @@ and NULL <em class="parameter"><code>data</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>. </p></td>
+<td class="parameter_description"><p> the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -440,7 +498,73 @@ and NULL <em class="parameter"><code>data</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.3.6"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> for success</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstCollectPadsClipFunction"></a><h3>GstCollectPadsClipFunction ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+<span class="c_punctuation">(</span>*GstCollectPadsClipFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                               <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
+                               <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *inbuffer</code></em>,
+                               <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> **outbuffer</code></em>,
+                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function that will be called when <em class="parameter"><code>inbuffer</code></em>
+ is received on the pad managed
+by <em class="parameter"><code>data</code></em>
+ in the collectpad object <em class="parameter"><code>pads</code></em>
+.</p>
+<p>The function should use the segment of <em class="parameter"><code>data</code></em>
+ and the negotiated media type on
+the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
+.</p>
+<p>This function takes ownership of <em class="parameter"><code>inbuffer</code></em>
+ and should output a buffer in
+<em class="parameter"><code>outbuffer</code></em>
+ or return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in <em class="parameter"><code>outbuffer</code></em>
+ if the buffer should be dropped.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.4.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>inbuffer</p></td>
+<td class="parameter_description"><p> the input <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>outbuffer</p></td>
+<td class="parameter_description"><p>the output <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.4.8"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> that corresponds to the result of clipping.</p>
 <p></p>
 </div>
 </div>
@@ -456,7 +580,7 @@ and NULL <em class="parameter"><code>data</code></em>
                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function for comparing two timestamps of buffers or newsegments collected on one pad.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.4.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -498,10 +622,10 @@ and NULL <em class="parameter"><code>data</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.4.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.5.6"></a><h4>Returns</h4>
 <p> Integer less than zero when first timestamp is deemed older than the second one.
 Zero if the timestamps are deemed equally old.
-Integer greate than zero when second timestamp is deemed older than the first one.</p>
+Integer greater than zero when second timestamp is deemed older than the first one.</p>
 <p></p>
 </div>
 </div>
@@ -511,14 +635,14 @@ Integer greate than zero when second timestamp is deemed older than the first on
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstCollectPadsEventFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                                 <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *pad</code></em>,
-                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstEvent.html#GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>,
                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called while processing an event. It takes
 ownership of the event and is responsible for chaining up (to
-<code class="function">gst_collect_pads_event_default()</code>) or dropping events (such typical cases
+<a class="link" href="GstCollectPads.html#gst-collect-pads-event-default" title="gst_collect_pads_event_default ()"><code class="function">gst_collect_pads_event_default()</code></a>) or dropping events (such typical cases
 being handled by the default handler).</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -528,7 +652,7 @@ being handled by the default handler).</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>pads</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that trigered the callback</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that triggered the callback</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -538,7 +662,7 @@ being handled by the default handler).</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>event</p></td>
-<td class="parameter_description"><p>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstEvent.html#GstEvent"><span class="type">GstEvent</span></a> received</p></td>
+<td class="parameter_description"><p>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> received</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -550,36 +674,25 @@ being handled by the default handler).</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.5.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.6.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could handle the event</p>
 <p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstCollectPadsClipFunction"></a><h3>GstCollectPadsClipFunction ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
-<span class="c_punctuation">(</span>*GstCollectPadsClipFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
-                               <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
-                               <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *inbuffer</code></em>,
-                               <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> **outbuffer</code></em>,
-                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
-<p>A function that will be called when <em class="parameter"><code>inbuffer</code></em>
- is received on the pad managed
-by <em class="parameter"><code>data</code></em>
- in the collecpad object <em class="parameter"><code>pads</code></em>
-.</p>
-<p>The function should use the segment of <em class="parameter"><code>data</code></em>
- and the negotiated media type on
-the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
-.</p>
-<p>This function takes ownership of <em class="parameter"><code>inbuffer</code></em>
- and should output a buffer in
-<em class="parameter"><code>outbuffer</code></em>
- or return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in <em class="parameter"><code>outbuffer</code></em>
- if the buffer should be dropped.</p>
+<a name="GstCollectPadsFlushFunction"></a><h3>GstCollectPadsFlushFunction ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+<span class="c_punctuation">(</span>*GstCollectPadsFlushFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function that will be called while processing a flushing seek event.</p>
+<p>The function should flush any internal state of the element and the state of
+all the pads. It should clear only the state not directly managed by the
+<em class="parameter"><code>pads</code></em>
+ object. It is therefore not necessary to call
+gst_collect_pads_set_flushing nor gst_collect_pads_clear from this function.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.6.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.7.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -593,21 +706,6 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>data</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>inbuffer</p></td>
-<td class="parameter_description"><p> the input <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
-</tr>
-<tr>
-<td class="parameter_name"><p>outbuffer</p></td>
-<td class="parameter_description"><p>the output <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
 <td class="parameter_name"><p>user_data</p></td>
 <td class="parameter_description"><p>user data</p></td>
 <td class="parameter_annotations"> </td>
@@ -615,9 +713,54 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 </tbody>
 </table></div>
 </div>
+<p class="since">Since 1.4</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstCollectPadsQueryFunction"></a><h3>GstCollectPadsQueryFunction ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstCollectPadsQueryFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *pad</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstQuery.html"><span class="type">GstQuery</span></a> *query</code></em>,
+                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function that will be called while processing a query. It takes
+ownership of the query and is responsible for chaining up (to
+events downstream (with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-event-default"><code class="function">gst_pad_event_default()</code></a>).</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.6.8"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> that corresponds to the result of clipping.</p>
+<a name="id-1.2.4.12.8.8.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that triggered the callback</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> that received an event</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>query</p></td>
+<td class="parameter_description"><p>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> received</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to <a class="link" href="GstCollectPads.html#gst-collect-pads-set-query-function" title="gst_collect_pads_set_query_function ()"><code class="function">gst_collect_pads_set_query_function()</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.8.6"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could handle the event</p>
 <p></p>
 </div>
 </div>
@@ -629,7 +772,7 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called when all pads have received data.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -639,7 +782,7 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>pads</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that trigered the callback</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> that triggered the callback</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -651,8 +794,8 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.7.6"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
+<a name="id-1.2.4.12.8.9.6"></a><h4>Returns</h4>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> for success</p>
 <p></p>
 </div>
 </div>
@@ -664,7 +807,7 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 <p>A flags word containing <a class="link" href="GstCollectPads.html#GstCollectPadsStateFlags" title="enum GstCollectPadsStateFlags"><span class="type">GstCollectPadsStateFlags</span></a> flags set
 on this collected pad.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -686,7 +829,7 @@ on this collected pad.</p>
 </pre>
 <p>Gives the status of a specific flag on a collected pad.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -715,7 +858,7 @@ on this collected pad.</p>
 </pre>
 <p>Sets a state flag on a collected pad.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -744,7 +887,7 @@ on this collected pad.</p>
 </pre>
 <p>Clears a state flag on a collected pad.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -776,7 +919,7 @@ on this collected pad.</p>
 serialize execution among the various streams being collected, and in
 protecting the resources used to accomplish this.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -799,7 +942,7 @@ protecting the resources used to accomplish this.</p>
 <p>Lock the stream lock of <em class="parameter"><code>pads</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -822,7 +965,7 @@ protecting the resources used to accomplish this.</p>
 <p>Unlock the stream lock of <em class="parameter"><code>pads</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.14.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -845,8 +988,8 @@ gst_collect_pads_new (<em class="parameter"><code><span class="type">void</span>
 <p>Create a new instance of <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.15.6"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>, or NULL in case of an error. </p>
+<a name="id-1.2.4.12.8.17.6"></a><h4>Returns</h4>
+<p> a new <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in case of an error. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -881,7 +1024,7 @@ when initial headers have to be written.</p>
 started.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.16.10"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.18.10"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -919,8 +1062,8 @@ structure is freed</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.16.11"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> to identify the new pad. Or NULL
+<a name="id-1.2.4.12.8.18.11"></a><h4>Returns</h4>
+<p> a new <a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> to identify the new pad. Or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 if wrong parameters are supplied.</p>
 <p></p>
 </div>
@@ -938,7 +1081,7 @@ free the <a class="link" href="GstCollectPads.html#GstCollectData" title="struct
  is stopped.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.17.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.19.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -960,7 +1103,7 @@ free the <a class="link" href="GstCollectPads.html#GstCollectData" title="struct
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.17.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.19.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be removed.</p>
 <p></p>
 </div>
@@ -973,7 +1116,7 @@ gst_collect_pads_start (<em class="parameter"><code><a class="link" href="GstCol
 <p>Starts the processing of data in the collect_pads.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.18.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.20.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -997,7 +1140,7 @@ gst_collect_pads_stop (<em class="parameter"><code><a class="link" href="GstColl
 will also unblock any blocking operations.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.19.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.21.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1025,7 +1168,7 @@ be read from each of the pads.</p>
 in the callback.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.20.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.22.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1040,7 +1183,7 @@ in the callback.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.20.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.22.8"></a><h4>Returns</h4>
 <p> The maximum number of bytes queued on all pads. This function
 returns 0 if a pad has no queued buffer.</p>
 <p></p>
@@ -1061,7 +1204,7 @@ gst_collect_pads_flush (<em class="parameter"><code><a class="link" href="GstCol
 in the callback.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.21.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.23.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1088,7 +1231,7 @@ in the callback.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.21.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.23.8"></a><h4>Returns</h4>
 <p> The number of bytes flushed This can be less than <em class="parameter"><code>size</code></em>
 and
 is 0 if the pad was end-of-stream.</p>
@@ -1098,7 +1241,7 @@ is 0 if the pad was end-of-stream.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-collect-pads-peek"></a><h3>gst_collect_pads_peek ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 gst_collect_pads_peek (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                        <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>);</pre>
 <p>Peek at the buffer currently queued in <em class="parameter"><code>data</code></em>
@@ -1108,7 +1251,7 @@ should be called with the <em class="parameter"><code>pads</code></em>
 handler.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.22.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.24.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1130,9 +1273,9 @@ handler.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.22.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.24.7"></a><h4>Returns</h4>
 <p> The buffer in <em class="parameter"><code>data</code></em>
-or NULL if no buffer is queued.
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffer is queued.
 should unref the buffer after usage.</p>
 <p></p>
 </div>
@@ -1140,7 +1283,7 @@ should unref the buffer after usage.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-collect-pads-pop"></a><h3>gst_collect_pads_pop ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 gst_collect_pads_pop (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                       <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>);</pre>
 <p>Pop the buffer currently queued in <em class="parameter"><code>data</code></em>
@@ -1150,7 +1293,7 @@ should be called with the <em class="parameter"><code>pads</code></em>
 handler.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.23.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.25.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1172,9 +1315,9 @@ handler.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.23.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.25.7"></a><h4>Returns</h4>
 <p> The buffer in <em class="parameter"><code>data</code></em>
-or NULL if no buffer was
+or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffer was
 queued. You should unref the buffer after usage. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1182,7 +1325,7 @@ queued. You should unref the buffer after usage. </p>
 <hr>
 <div class="refsect2">
 <a name="gst-collect-pads-read-buffer"></a><h3>gst_collect_pads_read_buffer ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 gst_collect_pads_read_buffer (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                               <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);</pre>
@@ -1194,7 +1337,7 @@ gst_collect_pads_read_buffer (<em class="parameter"><code><a class="link" href="
 callback.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.24.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.26.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1221,9 +1364,9 @@ callback.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.24.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.26.8"></a><h4>Returns</h4>
 <p> A sub buffer. The size of the buffer can be less that requested.
-A return of NULL signals that the pad is end-of-stream.
+A return of <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> signals that the pad is end-of-stream.
 Unref the buffer after use. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1231,7 +1374,7 @@ Unref the buffer after use. </p>
 <hr>
 <div class="refsect2">
 <a name="gst-collect-pads-take-buffer"></a><h3>gst_collect_pads_take_buffer ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
 gst_collect_pads_take_buffer (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
                               <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>);</pre>
@@ -1244,7 +1387,7 @@ of read bytes.</p>
 callback.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.25.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.27.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1271,12 +1414,188 @@ callback.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.25.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.12.8.27.8"></a><h4>Returns</h4>
 <p> A sub buffer. The size of the buffer can be less that requested.
-A return of NULL signals that the pad is end-of-stream.
+A return of <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> signals that the pad is end-of-stream.
 Unref the buffer after use.</p>
 <p></p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-collect-pads-clip-running-time"></a><h3>gst_collect_pads_clip_running_time ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+gst_collect_pads_clip_running_time (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                    <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *cdata</code></em>,
+                                    <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *buf</code></em>,
+                                    <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> **outbuf</code></em>,
+                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Convenience clipping function that converts incoming buffer's timestamp
+to running time, or clips the buffer if outside configured segment.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.28.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the collectpads to use</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>cdata</p></td>
+<td class="parameter_description"><p>collect data of corresponding pad</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>buf</p></td>
+<td class="parameter_description"><p>buffer being clipped</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>outbuf</p></td>
+<td class="parameter_description"><p> output buffer with running time, or NULL if clipped. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data (unused)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-collect-pads-query-default"></a><h3>gst_collect_pads_query_default ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_collect_pads_query_default (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstQuery.html"><span class="type">GstQuery</span></a> *query</code></em>,
+                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> discard</code></em>);</pre>
+<p>Default <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> query handling that elements should always
+chain up to to ensure proper operation.  Element might however indicate
+query should not be forwarded downstream.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.29.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the collectpads to use</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>collect data of corresponding pad</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>query</p></td>
+<td class="parameter_description"><p>query being processed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>discard</p></td>
+<td class="parameter_description"><p>process but do not send event downstream</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-collect-pads-event-default"></a><h3>gst_collect_pads_event_default ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_collect_pads_event_default (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectData" title="struct GstCollectData"><span class="type">GstCollectData</span></a> *data</code></em>,
+                                <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>,
+                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> discard</code></em>);</pre>
+<p>Default <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> event handling that elements should always
+chain up to to ensure proper operation.  Element might however indicate
+event should not be forwarded downstream.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.30.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the collectpads to use</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>collect data of corresponding pad</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>event being processed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>discard</p></td>
+<td class="parameter_description"><p>process but do not send event downstream</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-collect-pads-src-event-default"></a><h3>gst_collect_pads_src_event_default ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_collect_pads_src_event_default (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                    <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> *pad</code></em>,
+                                    <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
+<p>Default <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> event handling for the src pad of elements.
+Elements can chain up to this to let flushing seek event handling
+be done by GstCollectPads.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.31.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the collectpads to use</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>src <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> that received the event</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>event being processed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1286,12 +1605,12 @@ gst_collect_pads_set_buffer_function (<em class="parameter"><code><a class="link
                                       <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectPadsBufferFunction" title="GstCollectPadsBufferFunction ()"><span class="type">GstCollectPadsBufferFunction</span></a> func</code></em>,
                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Set the callback function and user data that will be called with
-the oldest buffer when all pads have been collected, or NULL on EOS.
+the oldest buffer when all pads have been collected, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on EOS.
 If a buffer is passed, the callback owns a reference and must unref
 it.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.26.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.32.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1320,6 +1639,45 @@ it.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-collect-pads-set-clip-function"></a><h3>gst_collect_pads_set_clip_function ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_collect_pads_set_clip_function (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                    <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()"><span class="type">GstCollectPadsClipFunction</span></a> clipfunc</code></em>,
+                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Install a clipping function that is called right after a buffer is received
+on a pad managed by <em class="parameter"><code>pads</code></em>
+. See <a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()"><span class="type">GstCollectPadsClipFunction</span></a> for more info.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.33.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the collectpads to use</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>clipfunc</p></td>
+<td class="parameter_description"><p>clip function to install</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data to pass to <em class="parameter"><code>clip_func</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-collect-pads-set-compare-function"></a><h3>gst_collect_pads_set_compare_function ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_collect_pads_set_compare_function (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
@@ -1328,7 +1686,7 @@ gst_collect_pads_set_compare_function (<em class="parameter"><code><a class="lin
 <p>Set the timestamp comparison function.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.27.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.34.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1371,7 +1729,7 @@ held when calling a number of CollectPads functions, it should be acquired
 if so (unusually) needed.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.28.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.35.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1400,16 +1758,16 @@ if so (unusually) needed.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-collect-pads-set-clip-function"></a><h3>gst_collect_pads_set_clip_function ()</h3>
+<a name="gst-collect-pads-set-flush-function"></a><h3>gst_collect_pads_set_flush_function ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_collect_pads_set_clip_function (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
-                                    <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()"><span class="type">GstCollectPadsClipFunction</span></a> clipfunc</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
-<p>Install a clipping function that is called right after a buffer is received
-on a pad managed by <em class="parameter"><code>pads</code></em>
-. See <a class="link" href="GstCollectPads.html#GstCollectPadsClipFunction" title="GstCollectPadsClipFunction ()"><span class="type">GstCollectPadsClipFunction</span></a> for more info.</p>
+gst_collect_pads_set_flush_function (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                     <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectPadsFlushFunction" title="GstCollectPadsFlushFunction ()"><span class="type">GstCollectPadsFlushFunction</span></a> func</code></em>,
+                                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Install a flush function that is called when the internal
+state of all pads should be flushed as part of flushing seek
+handling. See <a class="link" href="GstCollectPads.html#GstCollectPadsFlushFunction" title="GstCollectPadsFlushFunction ()"><span class="type">GstCollectPadsFlushFunction</span></a> for more info.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.29.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1423,14 +1781,58 @@ on a pad managed by <em class="parameter"><code>pads</code></em>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>clipfunc</p></td>
-<td class="parameter_description"><p>clip function to install</p></td>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>flush function to install</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
-<td class="parameter_description"><p>user data to pass to <em class="parameter"><code>clip_func</code></em>
+<td class="parameter_description"><p>user data to pass to <em class="parameter"><code>func</code></em>
 </p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.4</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-collect-pads-set-query-function"></a><h3>gst_collect_pads_set_query_function ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_collect_pads_set_query_function (<em class="parameter"><code><a class="link" href="GstCollectPads.html" title="GstCollectPads"><span class="type">GstCollectPads</span></a> *pads</code></em>,
+                                     <em class="parameter"><code><a class="link" href="GstCollectPads.html#GstCollectPadsQueryFunction" title="GstCollectPadsQueryFunction ()"><span class="type">GstCollectPadsQueryFunction</span></a> func</code></em>,
+                                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Set the query callback function and user data that will be called after
+collectpads has received a query originating from one of the collected
+pads.  If the query being processed is a serialized one, this callback is
+called with <em class="parameter"><code>pads</code></em>
+ STREAM_LOCK held, otherwise not.  As this lock should be
+held when calling a number of CollectPads functions, it should be acquired
+if so (unusually) needed.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.4.12.8.37.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pads</p></td>
+<td class="parameter_description"><p>the collectpads to use</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>the function to set</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to the function</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1453,7 +1855,7 @@ Caller must ensure that downstream streaming (thread) is not blocked,
 e.g. by sending a FLUSH_START downstream.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.30.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.38.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1493,7 +1895,7 @@ Evidently, this callback is not compatible with
 If this callback is set, the former will be unset.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.31.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.39.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1535,7 +1937,7 @@ in which case nothing happens.</p>
 in the callback.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.4.12.8.32.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.12.8.40.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1622,7 +2024,7 @@ in waiting or non-waiting mode</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="GstCollectData.buffer"></a>buffer</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="GstCollectData.buffer"></a>buffer</code></em>;</p></td>
 <td class="struct_member_description"><p>currently queued buffer.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -1632,7 +2034,7 @@ in waiting or non-waiting mode</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstSegment.html#GstSegment"><span class="type">GstSegment</span></a> <em class="structfield"><code><a name="GstCollectData.segment"></a>segment</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSegment.html"><span class="type">GstSegment</span></a> <em class="structfield"><code><a name="GstCollectData.segment"></a>segment</code></em>;</p></td>
 <td class="struct_member_description"><p>last segment received.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>

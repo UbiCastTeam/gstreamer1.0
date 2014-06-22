@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstAtomicQueue.html" title="GstAtomicQueue">
-<link rel="next" href="gstreamer-GstBuffer.html" title="GstBuffer">
+<link rel="next" href="GstBuffer.html" title="GstBuffer">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -24,7 +24,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-GstAtomicQueue.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-GstBuffer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstBuffer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstBin"></a><div class="titlepage"></div>
@@ -317,7 +317,7 @@ element is removed from the bin.</p>
 <div class="refsect2">
 <a name="id-1.3.6.10.9"></a><h3>Notes</h3>
 <p>
-A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="gstreamer-GstMessage.html#GstMessage" title="struct GstMessage"><span class="type">GstMessage</span></a> posted by its children and
+A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> posted by its children and
 implements the following default behaviour for each of them:
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
@@ -388,7 +388,7 @@ implements the following default behaviour for each of them:
 
 
 A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> implements the following default behaviour for answering to a
-<a class="link" href="gstreamer-GstQuery.html#GstQuery" title="struct GstQuery"><span class="type">GstQuery</span></a>:
+<a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>:
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -424,12 +424,11 @@ A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</s
 <p>
 
 A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> will by default forward any event sent to it to all sink elements.
-If all the sinks return TRUE, the bin will also return TRUE, else FALSE is
-returned. If no sinks are in the bin, the event handler will return TRUE.
+If all the sinks return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the bin will also return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, else <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is
+returned. If no sinks are in the bin, the event handler will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
 
 </p>
 </div>
-<p>Last reviewed on 2012-03-28 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="GstBin.functions_details"></a><h2>Functions</h2>
@@ -501,7 +500,7 @@ The bin or pipeline will not take care of this for you.
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.3.9"></a><h4>Returns</h4>
-<p> TRUE if the element could be added, FALSE if
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the element could be added, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
 the bin does not want to accept the element.</p>
 <p></p>
 </div>
@@ -545,7 +544,7 @@ before the element is removed from the bin.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.4.8"></a><h4>Returns</h4>
-<p> TRUE if the element could be removed, FALSE if
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the element could be removed, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
 the bin does not want to remove the element.</p>
 <p></p>
 </div>
@@ -558,7 +557,7 @@ gst_bin_get_by_name (<em class="parameter"><code><a class="link" href="GstBin.ht
                      <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Gets the element with the given name from a bin. This
 function recurses into child bins.</p>
-<p>Returns NULL if no element with the given name is found in the bin.</p>
+<p>Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no element with the given name is found in the bin.</p>
 <p>MT safe.  Caller owns returned reference.</p>
 <div class="refsect3">
 <a name="id-1.3.6.11.5.7"></a><h4>Parameters</h4>
@@ -584,7 +583,7 @@ function recurses into child bins.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.5.8"></a><h4>Returns</h4>
-<p> the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> with the given name, or NULL. </p>
+<p> the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> with the given name, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -596,7 +595,7 @@ gst_bin_get_by_name_recurse_up (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Gets the element with the given name from this bin. If the
 element is not found, a recursion is performed on the parent bin.</p>
-<p>Returns NULL if:</p>
+<p>Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>no element with the given name is found in the bin</p></li></ul></div>
 <p>MT safe.  Caller owns returned reference.</p>
 <div class="refsect3">
@@ -623,7 +622,7 @@ element is not found, a recursion is performed on the parent bin.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.6.9"></a><h4>Returns</h4>
-<p> the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> with the given name, or NULL. </p>
+<p> the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> with the given name, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -691,7 +690,7 @@ gst_bin_iterate_elements (<em class="parameter"><code><a class="link" href="GstB
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.8.7"></a><h4>Returns</h4>
-<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or NULL. </p>
+<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -720,7 +719,7 @@ This iterator recurses into GstBin children.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.9.7"></a><h4>Returns</h4>
-<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or NULL. </p>
+<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -749,7 +748,7 @@ gst_bin_iterate_sinks (<em class="parameter"><code><a class="link" href="GstBin.
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.10.7"></a><h4>Returns</h4>
-<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or NULL. </p>
+<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -781,7 +780,7 @@ of the bin elements and for clock selection.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.11.8"></a><h4>Returns</h4>
-<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or NULL. </p>
+<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -810,7 +809,7 @@ gst_bin_iterate_sources (<em class="parameter"><code><a class="link" href="GstBi
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.12.7"></a><h4>Returns</h4>
-<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or NULL. </p>
+<p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -850,7 +849,7 @@ of <a class="link" href="GstElement.html" title="GstElement"><span class="type">
 <div class="refsect3">
 <a name="id-1.3.6.11.13.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> for all elements
-in the bin implementing the given interface, or NULL. </p>
+in the bin implementing the given interface, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -862,7 +861,7 @@ gst_bin_recalculate_latency (<em class="parameter"><code><a class="link" href="G
 <p>Query <em class="parameter"><code>bin</code></em>
  for the current latency using and reconfigures this latency to all the
 elements with a LATENCY event.</p>
-<p>This method is typically called on the pipeline when a <a class="link" href="gstreamer-GstMessage.html#GST-MESSAGE-LATENCY:CAPS"><span class="type">GST_MESSAGE_LATENCY</span></a>
+<p>This method is typically called on the pipeline when a <a class="link" href="GstMessage.html#GST-MESSAGE-LATENCY:CAPS"><span class="type">GST_MESSAGE_LATENCY</span></a>
 is posted on the bus.</p>
 <p>This function simply emits the 'do-latency' signal so any custom latency
 calculations will be performed.</p>
@@ -894,7 +893,7 @@ calculations will be performed.</p>
 gst_bin_add_many (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
                   <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element_1</code></em>,
                   <em class="parameter"><code>...</code></em>);</pre>
-<p>Adds a NULL-terminated list of elements to a bin.  This function is
+<p>Adds a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated list of elements to a bin.  This function is
 equivalent to calling <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> for each member of the list. The return
 value of each <a class="link" href="GstBin.html#gst-bin-add" title="gst_bin_add ()"><code class="function">gst_bin_add()</code></a> is ignored.</p>
 <div class="refsect3">
@@ -955,7 +954,7 @@ to calling <a class="link" href="GstBin.html#gst-bin-remove" title="gst_bin_remo
 </tr>
 <tr>
 <td class="parameter_name"><p>...</p></td>
-<td class="parameter_description"><p> NULL-terminated list of elements to remove from the bin. </p></td>
+<td class="parameter_description"><p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated list of elements to remove from the bin. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -970,7 +969,7 @@ gst_bin_find_unlinked_pad (<em class="parameter"><code><a class="link" href="Gst
                            <em class="parameter"><code><a class="link" href="GstPad.html#GstPadDirection" title="enum GstPadDirection"><span class="type">GstPadDirection</span></a> direction</code></em>);</pre>
 <p>Recursively looks for elements with an unlinked pad of the given
 direction within the specified bin and returns an unlinked pad
-if one is found, or NULL otherwise. If a pad is found, the caller
+if one is found, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> otherwise. If a pad is found, the caller
 owns a reference to it and should use <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> on the
 pad when it is not needed any longer.</p>
 <div class="refsect3">
@@ -997,7 +996,7 @@ pad when it is not needed any longer.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.6.11.17.6"></a><h4>Returns</h4>
-<p> unlinked pad of the given direction, or NULL. </p>
+<p> unlinked pad of the given direction, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -1024,7 +1023,7 @@ removed.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.1.1</p>
+<p class="since">Since 1.0.5</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1256,7 +1255,7 @@ and (un)set using <a class="link" href="GstObject.html#GST-OBJECT-FLAG-SET:CAPS"
 <td class="enum_member_name"><p><a name="GST-BIN-FLAG-NO-RESYNC:CAPS"></a>GST_BIN_FLAG_NO_RESYNC</p></td>
 <td class="enum_member_description">
 <p>don't resync a state change when elements are
-            added or linked in the bin.</p>
+            added or linked in the bin (Since 1.0.5)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -1278,7 +1277,7 @@ Derived classes can use this as first value in a list of flags.</p>
 <div class="refsect2">
 <a name="GstBin--async-handling"></a><h3>The <code class="literal">“async-handling”</code> property</h3>
 <pre class="programlisting">  “async-handling”           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>, the bin will handle asynchronous state changes.
+<p>If set to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the bin will handle asynchronous state changes.
 This should be used only if the bin subclass is modifying the state
 of its children on its own.</p>
 <p>Flags: Read / Write</p>
@@ -1307,7 +1306,7 @@ forwarded message.</p>
 user_function (<a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>  *bin,
                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)</pre>
 <p>Will be emitted when the bin needs to perform latency calculations. This
-signal is only emited for toplevel bins or when async-handling is
+signal is only emitted for toplevel bins or when async-handling is
 enabled.</p>
 <p>Only one signal handler is invoked. If no signals are connected, the
 default handler is invoked, which will query and distribute the lowest

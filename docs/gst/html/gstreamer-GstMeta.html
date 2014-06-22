@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstMessage.html" title="GstMessage">
+<link rel="prev" href="GstMessage.html" title="GstMessage">
 <link rel="next" href="gstreamer-GstMiniObject.html" title="GstMiniObject">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -20,7 +20,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-GstMessage.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstMessage.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gstreamer-GstMiniObject.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -111,6 +111,13 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> * const*
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstMeta.html#gst-meta-api-type-get-tags" title="gst_meta_api_type_get_tags ()">gst_meta_api_type_get_tags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstMeta.html#GST-META-TAG-MEMORY:CAPS" title="GST_META_TAG_MEMORY">GST_META_TAG_MEMORY</a></td>
 </tr>
@@ -174,7 +181,7 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstMeta.description"></a><h2>Description</h2>
-<p>The <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> structure should be included as the first member of a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a>
+<p>The <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> structure should be included as the first member of a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>
 metadata structure. The structure defines the API of the metadata and should
 be accessible to all elements using the metadata.</p>
 <p>A metadata API is registered with <a class="link" href="gstreamer-GstMeta.html#gst-meta-api-type-register" title="gst_meta_api_type_register ()"><code class="function">gst_meta_api_type_register()</code></a> which takes a
@@ -187,9 +194,8 @@ function takes all parameters needed to create, free and transform metadata
 along with the size of the metadata. The function returns a <a class="link" href="gstreamer-GstMeta.html#GstMetaInfo" title="struct GstMetaInfo"><span class="type">GstMetaInfo</span></a>
 structure that contains the information for the implementation of the API.</p>
 <p>A specific implementation can be retrieved by name with <a class="link" href="gstreamer-GstMeta.html#gst-meta-get-info" title="gst_meta_get_info ()"><code class="function">gst_meta_get_info()</code></a>.</p>
-<p>See <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> for how the metadata can be added, retrieved and removed from
+<p>See <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> for how the metadata can be added, retrieved and removed from
 buffers.</p>
-<p>Last reviewed on 2012-03-28 (0.11.3)</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstMeta.functions_details"></a><h2>Functions</h2>
@@ -308,7 +314,7 @@ buffers.</p>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstMetaInitFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> *meta</code></em>,
                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> params</code></em>,
-                        <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
+                        <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
 <p>Function called when <em class="parameter"><code>meta</code></em>
  is initialized in <em class="parameter"><code>buffer</code></em>
 .</p>
@@ -333,7 +339,7 @@ buffers.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -345,7 +351,7 @@ buffers.</p>
 <a name="GstMetaFreeFunction"></a><h3>GstMetaFreeFunction ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 <span class="c_punctuation">(</span>*GstMetaFreeFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> *meta</code></em>,
-                        <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
+                        <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
 <p>Function called when <em class="parameter"><code>meta</code></em>
  is freed in <em class="parameter"><code>buffer</code></em>
 .</p>
@@ -365,7 +371,7 @@ buffers.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -376,9 +382,9 @@ buffers.</p>
 <div class="refsect2">
 <a name="GstMetaTransformFunction"></a><h3>GstMetaTransformFunction ()</h3>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-<span class="c_punctuation">(</span>*GstMetaTransformFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *transbuf</code></em>,
+<span class="c_punctuation">(</span>*GstMetaTransformFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *transbuf</code></em>,
                              <em class="parameter"><code><a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> *meta</code></em>,
-                             <em class="parameter"><code><a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> type</code></em>,
                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>Function called for each <em class="parameter"><code>meta</code></em>
@@ -406,7 +412,7 @@ the metadata on <em class="parameter"><code>transbuf</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>transbuf</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -416,7 +422,7 @@ the metadata on <em class="parameter"><code>transbuf</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstBuffer.html#GstBuffer" title="struct GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -541,6 +547,33 @@ was registered with <em class="parameter"><code>tag</code></em>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-meta-api-type-get-tags"></a><h3>gst_meta_api_type_get_tags ()</h3>
+<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> * const*
+gst_meta_api_type_get_tags (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api</code></em>);</pre>
+<div class="refsect3">
+<a name="id-1.3.30.8.12.4"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>api</p></td>
+<td class="parameter_description"><p>an API</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.30.8.12.5"></a><h4>Returns</h4>
+<p> an array of tags as strings. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8]</span></p>
+</div>
+<p class="since">Since 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GST-META-TAG-MEMORY:CAPS"></a><h3>GST_META_TAG_MEMORY</h3>
 <pre class="programlisting">#define GST_META_TAG_MEMORY (_gst_meta_tag_memory)
 </pre>
@@ -568,7 +601,7 @@ gst_meta_register (<em class="parameter"><code><a href="http://library.gnome.org
 <em class="parameter"><code>impl</code></em>
  as the key.</p>
 <div class="refsect3">
-<a name="id-1.3.30.8.13.6"></a><h4>Parameters</h4>
+<a name="id-1.3.30.8.14.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -610,7 +643,7 @@ gst_meta_register (<em class="parameter"><code><a href="http://library.gnome.org
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.30.8.13.7"></a><h4>Returns</h4>
+<a name="id-1.3.30.8.14.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-GstMeta.html#GstMetaInfo" title="struct GstMetaInfo"><span class="type">GstMetaInfo</span></a> that can be used to access metadata. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -624,7 +657,7 @@ gst_meta_get_info (<em class="parameter"><code>const <a href="http://library.gno
 <em class="parameter"><code>impl</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.30.8.14.5"></a><h4>Parameters</h4>
+<a name="id-1.3.30.8.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -639,9 +672,9 @@ gst_meta_get_info (<em class="parameter"><code>const <a href="http://library.gno
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.30.8.14.6"></a><h4>Returns</h4>
+<a name="id-1.3.30.8.15.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-GstMeta.html#GstMetaInfo" title="struct GstMetaInfo"><span class="type">GstMetaInfo</span></a> with <em class="parameter"><code>impl</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> when no such
+, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when no such
 metainfo exists. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -759,12 +792,12 @@ structure.</p>
 <tbody>
 <tr>
 <td class="struct_member_name"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> <em class="structfield"><code><a name="GstMetaInfo.api"></a>api</code></em>;</p></td>
-<td class="struct_member_description"><p>tag indentifying the metadata structure and api</p></td>
+<td class="struct_member_description"><p>tag identifying the metadata structure and api</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> <em class="structfield"><code><a name="GstMetaInfo.type"></a>type</code></em>;</p></td>
-<td class="struct_member_description"><p>type indentifying the implementor of the api</p></td>
+<td class="struct_member_description"><p>type identifying the implementor of the api</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -836,6 +869,7 @@ is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <a name="GST-META-TAG-MEMORY-STR:CAPS"></a><h3>GST_META_TAG_MEMORY_STR</h3>
 <pre class="programlisting">#define GST_META_TAG_MEMORY_STR "memory"
 </pre>
+<p>This metadata stays relevant as long as memory layout is unchanged.</p>
 <p class="since">Since 1.2</p>
 </div>
 </div>

@@ -209,12 +209,13 @@ gst_data_queue_init (GstDataQueue * queue)
 }
 
 /**
- * gst_data_queue_new:
+ * gst_data_queue_new: (skip)
  * @checkfull: the callback used to tell if the element considers the queue full
  * or not.
  * @fullcallback: the callback which will be called when the queue is considered full.
  * @emptycallback: the callback which will be called when the queue is considered empty.
- * @checkdata: a #gpointer that will be given in the @checkfull callback.
+ * @checkdata: a #gpointer that will be passed to the @checkfull, @fullcallback,
+ *   and @emptycallback callbacks.
  *
  * Creates a new #GstDataQueue. The difference with @gst_data_queue_new is that it will
  * not emit the 'full' and 'empty' signals, but instead calling directly @fullcallback
@@ -222,7 +223,7 @@ gst_data_queue_init (GstDataQueue * queue)
  *
  * Returns: a new #GstDataQueue.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 GstDataQueue *
 gst_data_queue_new (GstDataQueueCheckFullFunction checkfull,
@@ -318,7 +319,7 @@ gst_data_queue_locked_is_full (GstDataQueue * queue)
  * #gst_data_queue_pop will be released.
  * MT safe.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 void
 gst_data_queue_flush (GstDataQueue * queue)
@@ -336,9 +337,9 @@ gst_data_queue_flush (GstDataQueue * queue)
  * Queries if there are any items in the @queue.
  * MT safe.
  *
- * Returns: #TRUE if @queue is empty.
+ * Returns: %TRUE if @queue is empty.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_is_empty (GstDataQueue * queue)
@@ -360,9 +361,9 @@ gst_data_queue_is_empty (GstDataQueue * queue)
  * #GstDataQueueCheckFullFunction registered with @queue.
  * MT safe.
  *
- * Returns: #TRUE if @queue is full.
+ * Returns: %TRUE if @queue is full.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_is_full (GstDataQueue * queue)
@@ -381,15 +382,15 @@ gst_data_queue_is_full (GstDataQueue * queue)
  * @queue: a #GstDataQueue.
  * @flushing: a #gboolean stating if the queue will be flushing or not.
  *
- * Sets the queue to flushing state if @flushing is #TRUE. If set to flushing
+ * Sets the queue to flushing state if @flushing is %TRUE. If set to flushing
  * state, any incoming data on the @queue will be discarded. Any call currently
  * blocking on #gst_data_queue_push or #gst_data_queue_pop will return straight
- * away with a return value of #FALSE. While the @queue is in flushing state, 
- * all calls to those two functions will return #FALSE.
+ * away with a return value of %FALSE. While the @queue is in flushing state, 
+ * all calls to those two functions will return %FALSE.
  *
  * MT Safe.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 void
 gst_data_queue_set_flushing (GstDataQueue * queue, gboolean flushing)
@@ -436,12 +437,12 @@ gst_data_queue_push_force_unlocked (GstDataQueue * queue,
  *
  * Note that this function has slightly different semantics than gst_pad_push()
  * and gst_pad_push_event(): this function only takes ownership of @item and
- * the #GstMiniObject contained in @item if the push was successful. If FALSE
+ * the #GstMiniObject contained in @item if the push was successful. If %FALSE
  * is returned, the caller is responsible for freeing @item and its contents.
  *
- * Returns: #TRUE if the @item was successfully pushed on the @queue.
+ * Returns: %TRUE if the @item was successfully pushed on the @queue.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_push_force (GstDataQueue * queue, GstDataQueueItem * item)
@@ -484,12 +485,12 @@ flushing:
  *
  * Note that this function has slightly different semantics than gst_pad_push()
  * and gst_pad_push_event(): this function only takes ownership of @item and
- * the #GstMiniObject contained in @item if the push was successful. If FALSE
+ * the #GstMiniObject contained in @item if the push was successful. If %FALSE
  * is returned, the caller is responsible for freeing @item and its contents.
  *
- * Returns: #TRUE if the @item was successfully pushed on the @queue.
+ * Returns: %TRUE if the @item was successfully pushed on the @queue.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_push (GstDataQueue * queue, GstDataQueueItem * item)
@@ -566,9 +567,9 @@ _gst_data_queue_wait_non_empty (GstDataQueue * queue)
  * @queue is set to the flushing state.
  * MT safe.
  *
- * Returns: #TRUE if an @item was successfully retrieved from the @queue.
+ * Returns: %TRUE if an @item was successfully retrieved from the @queue.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_pop (GstDataQueue * queue, GstDataQueueItem ** item)
@@ -636,9 +637,9 @@ is_of_type (gconstpointer a, gconstpointer b)
  * one item is available, OR the @queue is set to the flushing state.
  * MT safe.
  *
- * Returns: #TRUE if an @item was successfully retrieved from the @queue.
+ * Returns: %TRUE if an @item was successfully retrieved from the @queue.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_peek (GstDataQueue * queue, GstDataQueueItem ** item)
@@ -688,9 +689,9 @@ flushing:
  *
  * Pop and unref the head-most #GstMiniObject with the given #GType.
  *
- * Returns: TRUE if an element was removed.
+ * Returns: %TRUE if an element was removed.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 gboolean
 gst_data_queue_drop_head (GstDataQueue * queue, GType type)
@@ -731,12 +732,12 @@ done:
 
 /**
  * gst_data_queue_limits_changed:
- * @queue: The #GstDataQueue 
+ * @queue: The #GstDataQueue
  *
  * Inform the queue that the limits for the fullness check have changed and that
- * any blocking gst_data_queue_push() should be unblocked to recheck the limts.
+ * any blocking gst_data_queue_push() should be unblocked to recheck the limits.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 void
 gst_data_queue_limits_changed (GstDataQueue * queue)
@@ -760,7 +761,7 @@ gst_data_queue_limits_changed (GstDataQueue * queue)
  *
  * Get the current level of the queue.
  *
- * Since: 1.2.0
+ * Since: 1.2
  */
 void
 gst_data_queue_get_level (GstDataQueue * queue, GstDataQueueSize * level)

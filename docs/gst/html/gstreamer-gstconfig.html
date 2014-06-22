@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstClock.html" title="GstClock">
-<link rel="next" href="gstreamer-GstContext.html" title="GstContext">
+<link rel="next" href="GstContext.html" title="GstContext">
 <meta name="generator" content="GTK-Doc V1.20 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GstClock.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-GstContext.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstContext.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gstreamer-gstconfig"></a><div class="titlepage"></div>
@@ -87,11 +87,11 @@ systems.</p>
 <p>If a subsystem is disabled, most of this changes are done in an API
 compatible way, so you don't need to adapt your code in most cases. It is
 never done in an ABI compatible way though. So if you want to disable a
-suybsystem, you have to rebuild all programs depending on GStreamer, too.</p>
+subsystem, you have to rebuild all programs depending on GStreamer, too.</p>
 <p>If a subsystem is disabled in GStreamer, a value is defined in
 &lt;gst/gst.h&gt;. You can check this if you do subsystem-specific stuff.</p>
 <div class="example">
-<a name="example-gstconfig"></a><p class="title"><b>Example 5. Doing subsystem specific things</b></p>
+<a name="example-gstconfig"></a><p class="title"><b>Example 3. Doing subsystem specific things</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -126,14 +126,14 @@ suybsystem, you have to rebuild all programs depending on GStreamer, too.</p>
 <a name="GST-DISABLE-PARSE:CAPS"></a><h3>GST_DISABLE_PARSE</h3>
 <pre class="programlisting">#define GST_DISABLE_PARSE 1
 </pre>
-<p>Configures the inclusion of the gst-lauch parser</p>
+<p>Configures the inclusion of the gst-launch parser</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-DISABLE-TRACE:CAPS"></a><h3>GST_DISABLE_TRACE</h3>
 <pre class="programlisting">#define GST_DISABLE_TRACE 1
 </pre>
-<p>Configures the inclusion of a resource tracing facillity
+<p>Configures the inclusion of a resource tracing facility
 (seems to be unused)</p>
 </div>
 <hr>
