@@ -360,7 +360,8 @@ gst_toc_entry_find_sub_entry (const GstTocEntry * entry, const gchar * uid)
  *
  * Find #GstTocEntry with given @uid in the @toc.
  *
- * Returns: (transfer none): #GstTocEntry with specified @uid from the @toc, or %NULL if not found.
+ * Returns: (transfer none) (nullable): #GstTocEntry with specified
+ * @uid from the @toc, or %NULL if not found.
  */
 GstTocEntry *
 gst_toc_find_entry (const GstToc * toc, const gchar * uid)
@@ -393,8 +394,9 @@ gst_toc_find_entry (const GstToc * toc, const gchar * uid)
  *
  * Copy #GstTocEntry with all subentries (deep copy).
  *
- * Returns: newly allocated #GstTocEntry in case of success, %NULL otherwise;
- * free it when done with gst_toc_entry_unref().
+ * Returns: (nullable): newly allocated #GstTocEntry in case of
+ * success, %NULL otherwise; free it when done with
+ * gst_toc_entry_unref().
  */
 static GstTocEntry *
 gst_toc_entry_copy (const GstTocEntry * entry)
@@ -437,8 +439,8 @@ gst_toc_entry_copy (const GstTocEntry * entry)
  *
  * Copy #GstToc with all subentries (deep copy).
  *
- * Returns: newly allocated #GstToc in case of success, %NULL otherwise;
- * free it when done with gst_toc_unref().
+ * Returns: (nullable): newly allocated #GstToc in case of success,
+ * %NULL otherwise; free it when done with gst_toc_unref().
  */
 static GstToc *
 gst_toc_copy (const GstToc * toc)
@@ -492,8 +494,10 @@ gst_toc_entry_set_start_stop_times (GstTocEntry * entry, gint64 start,
 /**
  * gst_toc_entry_get_start_stop_times:
  * @entry: #GstTocEntry to get values from.
- * @start: (out): the storage for the start value, leave %NULL if not need.
- * @stop: (out): the storage for the stop value, leave %NULL if not need.
+ * @start: (out) (allow-none): the storage for the start value, leave
+ *   %NULL if not need.
+ * @stop: (out) (allow-none): the storage for the stop value, leave
+ *   %NULL if not need.
  *
  * Get @start and @stop values from the @entry and write them into appropriate
  * storages.
@@ -538,10 +542,10 @@ gst_toc_entry_set_loop (GstTocEntry * entry, GstTocLoopType loop_type,
 /**
  * gst_toc_entry_get_loop:
  * @entry: #GstTocEntry to get values from.
- * @loop_type: (out): the storage for the loop_type value, leave %NULL if not
- *                    need.
- * @repeat_count: (out): the storage for the repeat_count value, leave %NULL if
- *                       not need.
+ * @loop_type: (out) (allow-none): the storage for the loop_type
+ *             value, leave %NULL if not need.
+ * @repeat_count: (out) (allow-none): the storage for the repeat_count
+ *                value, leave %NULL if not need.
  *
  * Get @loop_type and @repeat_count values from the @entry and write them into
  * appropriate storages. Loops are e.g. used by sampled instruments. GStreamer

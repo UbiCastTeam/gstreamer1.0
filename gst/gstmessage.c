@@ -256,8 +256,8 @@ gst_message_init (GstMessageImpl * message, GstMessageType type,
  * gst_message_new_custom:
  * @type: The #GstMessageType to distinguish messages
  * @src: The object originating the message.
- * @structure: (transfer full): the structure for the message. The message
- *     will take ownership of the structure.
+ * @structure: (transfer full) (allow-none): the structure for the
+ *     message. The message will take ownership of the structure.
  *
  * Create a new custom-typed message. This can be used for anything not
  * handled by other message-specific functions to pass a message to the
@@ -779,14 +779,16 @@ gst_message_new_segment_done (GstObject * src, GstFormat format,
 GstMessage *
 gst_message_new_application (GstObject * src, GstStructure * structure)
 {
+  g_return_val_if_fail (structure != NULL, NULL);
+
   return gst_message_new_custom (GST_MESSAGE_APPLICATION, src, structure);
 }
 
 /**
  * gst_message_new_element:
  * @src: (transfer none): The object originating the message.
- * @structure: (transfer full): The structure for the message. The message
- *     will take ownership of the structure.
+ * @structure: (transfer full): The structure for the
+ *     message. The message will take ownership of the structure.
  *
  * Create a new element-specific message. This is meant as a generic way of
  * allowing one-way communication from an element to an application, for example
@@ -800,6 +802,8 @@ gst_message_new_application (GstObject * src, GstStructure * structure)
 GstMessage *
 gst_message_new_element (GstObject * src, GstStructure * structure)
 {
+  g_return_val_if_fail (structure != NULL, NULL);
+
   return gst_message_new_custom (GST_MESSAGE_ELEMENT, src, structure);
 }
 
@@ -2336,7 +2340,7 @@ gst_message_parse_have_context (GstMessage * message, GstContext ** context)
  * @device: (transfer none): The new #GstDevice
  *
  * Creates a new device-added message. The device-added message is produced by
- * #GstDeviceMonitor or a #GstGlobalDeviceMonitor. They announce the appearance
+ * #GstDeviceProvider or a #GstlDeviceMonitor. They announce the appearance
  * of monitored devices.
  *
  * Returns: a newly allocated #GstMessage
@@ -2366,7 +2370,7 @@ gst_message_new_device_added (GstObject * src, GstDevice * device)
  *  pointer to the new #GstDevice, or %NULL
  * 
  * Parses a device-added message. The device-added message is produced by
- * #GstDeviceMonitor or a #GstGlobalDeviceMonitor. It announces the appearance
+ * #GstDeviceProvider or a #GstDeviceMonitor. It announces the appearance
  * of monitored devices.
  *
  * Since: 1.4
@@ -2388,7 +2392,7 @@ gst_message_parse_device_added (GstMessage * message, GstDevice ** device)
  * @device: (transfer none): The removed #GstDevice
  *
  * Creates a new device-removed message. The device-removed message is produced
- * by #GstDeviceMonitor or a #GstGlobalDeviceMonitor. They announce the
+ * by #GstDeviceProvider or a #GstDeviceMonitor. They announce the
  * disappearance of monitored devices.
  *
  * Returns: a newly allocated #GstMessage
@@ -2418,7 +2422,7 @@ gst_message_new_device_removed (GstObject * src, GstDevice * device)
  *  pointer to the removed #GstDevice, or %NULL
  *
  * Parses a device-removed message. The device-removed message is produced by
- * #GstDeviceMonitor or a #GstGlobalDeviceMonitor. It announces the
+ * #GstDeviceProvider or a #GstDeviceMonitor. It announces the
  * disappearance of monitored devices.
  *
  * Since: 1.4

@@ -1110,8 +1110,9 @@ gst_mini_object_get_qdata (<em class="parameter"><code><a class="link" href="gst
 </div>
 <div class="refsect3">
 <a name="id-1.3.31.8.27.6"></a><h4>Returns</h4>
-<p> The user data pointer set, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p> The user data pointer set, or
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][nullable]</span></p>
 </div>
 </div>
 <hr>
@@ -1148,8 +1149,9 @@ any was set).</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.31.8.28.6"></a><h4>Returns</h4>
-<p> The user data pointer set, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p> The user data pointer set, or
+<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][nullable]</span></p>
 </div>
 </div>
 <hr>
@@ -1177,14 +1179,14 @@ The reference count of <em class="parameter"><code>olddata</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>olddata</p></td>
-<td class="parameter_description"><p> pointer to a pointer to a mini-object to
-be replaced. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_description"><p> pointer to a pointer to a
+mini-object to be replaced. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][nullable]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>newdata</p></td>
-<td class="parameter_description"><p>pointer to new mini-object</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> pointer to new mini-object. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>

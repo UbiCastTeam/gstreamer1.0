@@ -65,10 +65,10 @@
       <sub name="GstVersion" link="gstreamer-GstVersion.html"/>
     </sub>
     <sub name="GStreamer Device Discovery and Device Probing" link="gstreamer-device-probing.html">
-      <sub name="GstDevice" link="gstreamer-GstDevice.html"/>
       <sub name="GstDeviceMonitor" link="gstreamer-GstDeviceMonitor.html"/>
-      <sub name="GstDeviceMonitorFactory" link="GstDeviceMonitorFactory.html"/>
-      <sub name="GstGlobalDeviceMonitor" link="gstreamer-GstGlobalDeviceMonitor.html"/>
+      <sub name="GstDevice" link="gstreamer-GstDevice.html"/>
+      <sub name="GstDeviceProvider" link="gstreamer-GstDeviceProvider.html"/>
+      <sub name="GstDeviceProviderFactory" link="GstDeviceProviderFactory.html"/>
     </sub>
     <sub name="GStreamer Core Support" link="gstreamer-support.html">
       <sub name="GstInfo" link="gstreamer-GstInfo.html"/>
@@ -2023,6 +2023,15 @@
     <keyword type="macro" name="GST_VERSION_MICRO" link="gstreamer-GstVersion.html#GST-VERSION-MICRO:CAPS"/>
     <keyword type="macro" name="GST_VERSION_NANO" link="gstreamer-GstVersion.html#GST-VERSION-NANO:CAPS"/>
     <keyword type="macro" name="GST_CHECK_VERSION()" link="gstreamer-GstVersion.html#GST-CHECK-VERSION:CAPS"/>
+    <keyword type="function" name="gst_device_monitor_new ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-new" since="1.4"/>
+    <keyword type="function" name="gst_device_monitor_get_bus ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-bus" since="1.4"/>
+    <keyword type="function" name="gst_device_monitor_add_filter ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-add-filter" since="1.4"/>
+    <keyword type="function" name="gst_device_monitor_remove_filter ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-remove-filter" since="1.4"/>
+    <keyword type="function" name="gst_device_monitor_start ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-start" since="1.4"/>
+    <keyword type="function" name="gst_device_monitor_stop ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-stop" since="1.4"/>
+    <keyword type="function" name="gst_device_monitor_get_devices ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-devices" since="1.4"/>
+    <keyword type="struct" name="struct GstDeviceMonitor" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" since="1.4"/>
+    <keyword type="struct" name="struct GstDeviceMonitorClass" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitorClass" since="1.4"/>
     <keyword type="function" name="gst_device_create_element ()" link="gstreamer-GstDevice.html#gst-device-create-element" since="1.4"/>
     <keyword type="function" name="gst_device_get_caps ()" link="gstreamer-GstDevice.html#gst-device-get-caps" since="1.4"/>
     <keyword type="function" name="gst_device_get_display_name ()" link="gstreamer-GstDevice.html#gst-device-get-display-name" since="1.4"/>
@@ -2031,44 +2040,33 @@
     <keyword type="function" name="gst_device_reconfigure_element ()" link="gstreamer-GstDevice.html#gst-device-reconfigure-element" since="1.4"/>
     <keyword type="struct" name="struct GstDevice" link="gstreamer-GstDevice.html#GstDevice" since="1.4"/>
     <keyword type="struct" name="struct GstDeviceClass" link="gstreamer-GstDevice.html#GstDeviceClass" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_can_monitor ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-can-monitor"/>
-    <keyword type="function" name="gst_device_monitor_class_add_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-add-metadata"/>
-    <keyword type="function" name="gst_device_monitor_class_add_static_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-add-static-metadata" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_class_get_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-get-metadata" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_class_set_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-set-metadata" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_class_set_static_metadata ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-class-set-static-metadata" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_device_add ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-device-add" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_device_remove ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-device-remove" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_get_bus ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-bus" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_get_devices ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-devices" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_get_factory ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-factory" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_register ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-register" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_start ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-start" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_stop ()" link="gstreamer-GstDeviceMonitor.html#gst-device-monitor-stop" since="1.4"/>
-    <keyword type="struct" name="struct GstDeviceMonitor" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" since="1.4"/>
-    <keyword type="struct" name="struct GstDeviceMonitorClass" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitorClass" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_find ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-find" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_get ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_get_by_name ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-by-name" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_get_device_monitor_type ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-device-monitor-type" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_get_metadata ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-metadata" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_get_metadata_keys ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-get-metadata-keys" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_has_classes ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-has-classes" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_has_classesv ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-has-classesv" since="1.4"/>
-    <keyword type="function" name="gst_device_monitor_factory_list_get_device_monitors ()" link="GstDeviceMonitorFactory.html#gst-device-monitor-factory-list-get-device-monitors" since="1.4"/>
-    <keyword type="struct" name="GstDeviceMonitorFactory" link="GstDeviceMonitorFactory.html#GstDeviceMonitorFactory-struct"/>
-    <keyword type="struct" name="GstDeviceMonitorFactoryClass" link="GstDeviceMonitorFactory.html#GstDeviceMonitorFactoryClass" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_get_bus ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-bus" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_get_caps_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-caps-filter" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_get_classes_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-classes-filter" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_get_devices ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-get-devices" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_new ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-new" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_set_caps_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-caps-filter" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_set_classes_filter ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-set-classes-filter" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_start ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-start" since="1.4"/>
-    <keyword type="function" name="gst_global_device_monitor_stop ()" link="gstreamer-GstGlobalDeviceMonitor.html#gst-global-device-monitor-stop" since="1.4"/>
-    <keyword type="struct" name="struct GstGlobalDeviceMonitor" link="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitor" since="1.4"/>
-    <keyword type="struct" name="struct GstGlobalDeviceMonitorClass" link="gstreamer-GstGlobalDeviceMonitor.html#GstGlobalDeviceMonitorClass" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_can_monitor ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-can-monitor"/>
+    <keyword type="function" name="gst_device_provider_class_add_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-add-metadata"/>
+    <keyword type="function" name="gst_device_provider_class_add_static_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-add-static-metadata" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_class_get_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-get-metadata" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_class_set_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-set-metadata" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_class_set_static_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-set-static-metadata" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_device_add ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-device-add" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_device_remove ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-device-remove" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_get_bus ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-get-bus" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_get_devices ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-get-devices" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_get_factory ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-get-factory" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_register ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-register" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_start ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-start" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_stop ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-stop" since="1.4"/>
+    <keyword type="struct" name="struct GstDeviceProvider" link="gstreamer-GstDeviceProvider.html#GstDeviceProvider" since="1.4"/>
+    <keyword type="struct" name="struct GstDeviceProviderClass" link="gstreamer-GstDeviceProvider.html#GstDeviceProviderClass" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_find ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-find" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_get ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-get" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_get_by_name ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-get-by-name" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_get_device_provider_type ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-get-device-provider-type" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_get_metadata ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-get-metadata" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_get_metadata_keys ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-get-metadata-keys" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_has_classes ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-has-classes" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_has_classesv ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-has-classesv" since="1.4"/>
+    <keyword type="function" name="gst_device_provider_factory_list_get_device_providers ()" link="GstDeviceProviderFactory.html#gst-device-provider-factory-list-get-device-providers" since="1.4"/>
+    <keyword type="struct" name="GstDeviceProviderFactory" link="GstDeviceProviderFactory.html#GstDeviceProviderFactory-struct"/>
+    <keyword type="struct" name="GstDeviceProviderFactoryClass" link="GstDeviceProviderFactory.html#GstDeviceProviderFactoryClass" since="1.4"/>
     <keyword type="macro" name="GST_STR_NULL()" link="gstreamer-GstInfo.html#GST-STR-NULL:CAPS"/>
     <keyword type="macro" name="GST_DEBUG_PAD_NAME()" link="gstreamer-GstInfo.html#GST-DEBUG-PAD-NAME:CAPS"/>
     <keyword type="macro" name="GST_FUNCTION" link="gstreamer-GstInfo.html#GST-FUNCTION:CAPS"/>
