@@ -1,7 +1,7 @@
 /* GStreamer
- * Copyright (C) 2012 Olivier Crete <olivier.crete@collabora.com>
+ * Copyright (C) 2013 Olivier Crete <olivier.crete@collabora.com>
  *
- * gstdevicemonitor.h: Device probing and monitoring
+ * gstdevicemonitor.c: Device monitor
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,19 +19,20 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gst/gstdevicemonitorfactory.h>
-
 
 #ifndef __GST_DEVICE_MONITOR_H__
 #define __GST_DEVICE_MONITOR_H__
 
-#include <gst/gstelement.h>
+#include <gst/gstobject.h>
+#include <gst/gstdevice.h>
+#include <gst/gstdeviceprovider.h>
+#include <gst/gstdeviceproviderfactory.h>
 
 G_BEGIN_DECLS
 
 typedef struct _GstDeviceMonitor GstDeviceMonitor;
-typedef struct _GstDeviceMonitorClass GstDeviceMonitorClass;
 typedef struct _GstDeviceMonitorPrivate GstDeviceMonitorPrivate;
+typedef struct _GstDeviceMonitorClass GstDeviceMonitorClass;
 
 #define GST_TYPE_DEVICE_MONITOR                 (gst_device_monitor_get_type())
 #define GST_IS_DEVICE_MONITOR(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_DEVICE_MONITOR))
@@ -41,21 +42,16 @@ typedef struct _GstDeviceMonitorPrivate GstDeviceMonitorPrivate;
 #define GST_DEVICE_MONITOR_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST ((klass), GST_TYPE_DEVICE_MONITOR, GstDeviceMonitorClass))
 #define GST_DEVICE_MONITOR_CAST(obj)            ((GstDeviceMonitor *)(obj))
 
-
 /**
  * GstDeviceMonitor:
- * @parent: The parent #GstObject
- * @devices: a #GList of the #GstDevice objects
+ * @parent: the parent #GstObject structure
  *
- * The structure of the base #GstDeviceMonitor
+ * Opaque device monitor object structure.
  *
  * Since: 1.4
  */
 struct _GstDeviceMonitor {
-  GstObject         parent;
-
-  /* Protected by the Object lock */
-  GList *devices;
+  GstObject                parent;
 
   /*< private >*/
 
@@ -67,75 +63,37 @@ struct _GstDeviceMonitor {
 /**
  * GstDeviceMonitorClass:
  * @parent_class: the parent #GstObjectClass structure
- * @factory: a pointer to the #GstDeviceMonitorFactory that creates this
- *  monitor
- * @probe: Returns a list of devices that are currently available.
- *  This should never block.
- * @start: Starts monitoring for new devices. Only subclasses that can know
- *  that devices have been added or remove need to implement this method.
- * @stop: Stops monitoring for new devices. Only subclasses that implement
- *  the start() method need to implement this method.
  *
- * The structure of the base #GstDeviceMonitorClass
+ * Opaque device monitor class structure.
  *
  * Since: 1.4
  */
-
 struct _GstDeviceMonitorClass {
-  GstObjectClass    parent_class;
-
-  GstDeviceMonitorFactory     *factory;
-
-  GList*      (*probe) (GstDeviceMonitor * monitor);
-
-  gboolean    (*start) (GstDeviceMonitor * monitor);
-  void        (*stop)  (GstDeviceMonitor * monitor);
-
-  /*< private >*/
-  gpointer metadata;
+  GstObjectClass           parent_class;
 
   /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
 };
 
-GType       gst_device_monitor_get_type (void);
+GType     gst_device_monitor_get_type (void);
+
+GstDeviceMonitor * gst_device_monitor_new  (void);
+
+GstBus *  gst_device_monitor_get_bus (GstDeviceMonitor * monitor);
+
+GList *   gst_device_monitor_get_devices (GstDeviceMonitor * monitor);
 
 
-GList *     gst_device_monitor_get_devices    (GstDeviceMonitor * monitor);
+gboolean  gst_device_monitor_start (GstDeviceMonitor * monitor);
 
-gboolean    gst_device_monitor_start          (GstDeviceMonitor * monitor);
-void        gst_device_monitor_stop           (GstDeviceMonitor * monitor);
-
-gboolean    gst_device_monitor_can_monitor    (GstDeviceMonitor * monitor);
-
-GstBus *    gst_device_monitor_get_bus        (GstDeviceMonitor * monitor);
-
-void        gst_device_monitor_device_add     (GstDeviceMonitor * monitor,
-                                               GstDevice * device);
-void        gst_device_monitor_device_remove  (GstDeviceMonitor * monitor,
-                                               GstDevice * device);
+void      gst_device_monitor_stop  (GstDeviceMonitor * monitor);
 
 
-/* device monitor class meta data */
-void        gst_device_monitor_class_set_metadata          (GstDeviceMonitorClass *klass,
-                                                            const gchar     *longname,
-                                                            const gchar     *classification,
-                                                            const gchar     *description,
-                                                            const gchar     *author);
-void        gst_device_monitor_class_set_static_metadata   (GstDeviceMonitorClass *klass,
-                                                            const gchar     *longname,
-                                                            const gchar     *classification,
-                                                            const gchar     *description,
-                                                            const gchar     *author);
-void        gst_device_monitor_class_add_metadata          (GstDeviceMonitorClass * klass,
-                                                            const gchar * key, const gchar * value);
-void        gst_device_monitor_class_add_static_metadata   (GstDeviceMonitorClass * klass,
-                                                            const gchar * key, const gchar * value);
-const gchar * gst_device_monitor_class_get_metadata        (GstDeviceMonitorClass * klass,
-                                                              const gchar * key);
-
-/* factory management */
-GstDeviceMonitorFactory * gst_device_monitor_get_factory   (GstDeviceMonitor * monitor);
+guint     gst_device_monitor_add_filter (GstDeviceMonitor * monitor,
+                                         const gchar      * classes,
+                                         GstCaps          * caps);
+gboolean  gst_device_monitor_remove_filter (GstDeviceMonitor * monitor,
+                                            guint filter_id);
 
 G_END_DECLS
 

@@ -116,9 +116,9 @@ static gboolean gst_preset_default_save_presets_file (GstPreset * preset);
 /*
  * preset_get_paths:
  * @preset: a #GObject that implements #GstPreset
- * @preset_user_path: location for path or %NULL
- * @preset_app_path: location for path or %NULL
- * @preset_system_path: location for path or %NULL
+ * @preset_user_path: (out) (allow-none): location for path or %NULL
+ * @preset_app_path: (out) (allow-none): location for path or %NULL
+ * @preset_system_path: (out) (allow-none): location for path or %NULL
  *
  * Fetch the preset_path for user local, application specific and system wide
  * settings. Don't free after use.
@@ -1069,7 +1069,7 @@ gst_preset_delete_preset (GstPreset * preset, const gchar * name)
  * @preset: a #GObject that implements #GstPreset
  * @name: preset name
  * @tag: meta data item name
- * @value: new value
+ * @value: (allow-none): new value
  *
  * Sets a new @value for an existing meta data item or adds a new item. Meta
  * data @tag names can be something like e.g. "comment". Supplying %NULL for the
@@ -1141,7 +1141,8 @@ gst_preset_set_app_dir (const gchar * app_dir)
  * Gets the directory for application specific presets if set by the
  * application.
  *
- * Returns: the directory or %NULL, don't free or modify the string
+ * Returns: (nullable): the directory or %NULL, don't free or modify
+ * the string
  */
 const gchar *
 gst_preset_get_app_dir (void)
