@@ -153,8 +153,8 @@
 GstDeviceProviderfactory can be added to a <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> as it is also a
 <a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>.</p>
 <p>Use the <a class="link" href="GstDeviceProviderFactory.html#gst-device-provider-factory-find" title="gst_device_provider_factory_find ()"><code class="function">gst_device_provider_factory_find()</code></a> and
-<code class="function">gst_device_provider_factory_create()</code> functions to create device
-provider instances or use <code class="function">gst_device_provider_factory_make()</code> as a
+<a class="link" href="GstDeviceProviderFactory.html#gst-device-provider-factory-get" title="gst_device_provider_factory_get ()"><code class="function">gst_device_provider_factory_get()</code></a> functions to create device
+provider instances or use <a class="link" href="GstDeviceProviderFactory.html#gst-device-provider-factory-get-by-name" title="gst_device_provider_factory_get_by_name ()"><code class="function">gst_device_provider_factory_get_by_name()</code></a> as a
 convenient shortcut.</p>
 </div>
 <div class="refsect1">
@@ -275,8 +275,7 @@ assured with <a class="link" href="GstPluginFeature.html#gst-plugin-feature-load
 </div>
 <div class="refsect3">
 <a name="id-1.4.5.8.5.6"></a><h4>Returns</h4>
-<p> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> for device providers managed by this factory or 0 if
-the factory is not loaded.</p>
+<p> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> for device providers managed by this factory.</p>
 <p></p>
 </div>
 <p class="since">Since 1.4</p>
@@ -381,7 +380,7 @@ gst_device_provider_factory_has_classes
 </tr>
 <tr>
 <td class="parameter_name"><p>classes</p></td>
-<td class="parameter_description"><p> a "/" separate list of klasses to match, only match
+<td class="parameter_description"><p> a "/" separate list of classes to match, only match
 if all classes are matched. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -423,7 +422,7 @@ gst_device_provider_factory_has_classesv
 <tr>
 <td class="parameter_name"><p>classes</p></td>
 <td class="parameter_description"><p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array
-of klasses to match, only match if all classes are matched. </p></td>
+of classes to match, only match if all classes are matched. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>

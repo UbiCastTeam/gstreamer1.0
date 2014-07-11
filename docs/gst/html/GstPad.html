@@ -249,6 +249,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#gst-pad-get-last-flow-return" title="gst_pad_get_last_flow_return ()">gst_pad_get_last_flow_return</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-TYPE:CAPS" title="GST_PAD_PROBE_INFO_TYPE()">GST_PAD_PROBE_INFO_TYPE</a><span class="c_punctuation">()</span>
@@ -1022,6 +1030,12 @@
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstPad.html#GST-PAD-DIRECTION:CAPS" title="GST_PAD_DIRECTION()">GST_PAD_DIRECTION</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-LAST-FLOW-RETURN:CAPS" title="GST_PAD_LAST_FLOW_RETURN()">GST_PAD_LAST_FLOW_RETURN</a><span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -2307,6 +2321,29 @@ gst_pad_is_active (<em class="parameter"><code><a class="link" href="GstPad.html
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-pad-get-last-flow-return"></a><h3>gst_pad_get_last_flow_return ()</h3>
+<pre class="programlisting"><a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+gst_pad_get_last_flow_return (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Gets the <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> return from the last data passed by this pad.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.29.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since 1.4</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GST-PAD-PROBE-INFO-TYPE:CAPS"></a><h3>GST_PAD_PROBE_INFO_TYPE()</h3>
 <pre class="programlisting">#define GST_PAD_PROBE_INFO_TYPE(d)         ((d)-&gt;type)
 </pre>
@@ -2353,7 +2390,7 @@ gst_pad_is_active (<em class="parameter"><code><a class="link" href="GstPad.html
 <pre class="programlisting"><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
 gst_pad_probe_info_get_buffer (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.3.33.10.36.4"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.37.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2368,7 +2405,7 @@ gst_pad_probe_info_get_buffer (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.36.5"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.37.5"></a><h4>Returns</h4>
 <p> The <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> from the probe. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -2384,32 +2421,6 @@ gst_pad_probe_info_get_buffer_list (<em class="parameter"><code><a class="link" 
 <a name="gst-pad-probe-info-get-event"></a><h3>gst_pad_probe_info_get_event ()</h3>
 <pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
 gst_pad_probe_info_get_event (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
-<div class="refsect3">
-<a name="id-1.3.33.10.38.4"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.33.10.38.5"></a><h4>Returns</h4>
-<p> The <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> from the probe. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-pad-probe-info-get-query"></a><h3>gst_pad_probe_info_get_query ()</h3>
-<pre class="programlisting"><a class="link" href="GstQuery.html" title="GstQuery"><span class="returnvalue">GstQuery</span></a> *
-gst_pad_probe_info_get_query (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.3.33.10.39.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -2427,6 +2438,32 @@ gst_pad_probe_info_get_query (<em class="parameter"><code><a class="link" href="
 </div>
 <div class="refsect3">
 <a name="id-1.3.33.10.39.5"></a><h4>Returns</h4>
+<p> The <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> from the probe. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-probe-info-get-query"></a><h3>gst_pad_probe_info_get_query ()</h3>
+<pre class="programlisting"><a class="link" href="GstQuery.html" title="GstQuery"><span class="returnvalue">GstQuery</span></a> *
+gst_pad_probe_info_get_query (<em class="parameter"><code><a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a> *info</code></em>);</pre>
+<div class="refsect3">
+<a name="id-1.3.33.10.40.4"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>info</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html#GstPadProbeInfo" title="struct GstPadProbeInfo"><span class="type">GstPadProbeInfo</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.33.10.40.5"></a><h4>Returns</h4>
 <p> The <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> from the probe. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -2455,7 +2492,7 @@ blocking type.</p>
 <p>The callback is allowed to modify the data pointer in <em class="parameter"><code>info</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.42.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.43.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2482,7 +2519,7 @@ blocking type.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.42.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.43.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstPadProbeReturn" title="enum GstPadProbeReturn"><span class="type">GstPadProbeReturn</span></a></p>
 <p></p>
 </div>
@@ -2500,7 +2537,7 @@ gst_pad_add_probe (<em class="parameter"><code><a class="link" href="GstPad.html
 every state that matches <em class="parameter"><code>mask</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.43.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.44.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2538,7 +2575,7 @@ the pad state</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.43.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.44.6"></a><h4>Returns</h4>
 <p> an id or 0 if no probe is pending. The id can be used to remove the
 probe with <a class="link" href="GstPad.html#gst-pad-remove-probe" title="gst_pad_remove_probe ()"><code class="function">gst_pad_remove_probe()</code></a>. When using GST_PAD_PROBE_TYPE_IDLE it can
 happend that the probe can be run immediately and if the probe returns
@@ -2558,7 +2595,7 @@ gst_pad_remove_probe (<em class="parameter"><code><a class="link" href="GstPad.h
 .</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.44.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.45.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2589,35 +2626,6 @@ gst_pad_is_blocked (<em class="parameter"><code><a class="link" href="GstPad.htm
 last requested state of the pad. It is not certain that the pad
 is actually blocking at this point (see <a class="link" href="GstPad.html#gst-pad-is-blocking" title="gst_pad_is_blocking ()"><code class="function">gst_pad_is_blocking()</code></a>).</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.45.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>pad</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to query</p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.33.10.45.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is blocked.</p>
-<p>MT safe.</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-pad-is-blocking"></a><h3>gst_pad_is_blocking ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_pad_is_blocking (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
-<p>Checks if the pad is blocking or not. This is a guaranteed state
-of whether the pad is actually blocking on a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> or a <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>.</p>
-<div class="refsect3">
 <a name="id-1.3.33.10.46.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -2634,6 +2642,35 @@ of whether the pad is actually blocking on a <a class="link" href="GstBuffer.htm
 </div>
 <div class="refsect3">
 <a name="id-1.3.33.10.46.6"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is blocked.</p>
+<p>MT safe.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-is-blocking"></a><h3>gst_pad_is_blocking ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_pad_is_blocking (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Checks if the pad is blocking or not. This is a guaranteed state
+of whether the pad is actually blocking on a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> or a <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.47.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to query</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.33.10.47.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is blocking.</p>
 <p>MT safe.</p>
 <p></p>
@@ -2649,7 +2686,7 @@ gst_pad_get_offset (<em class="parameter"><code><a class="link" href="GstPad.htm
  has to be a source
 pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.47.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.48.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2664,7 +2701,7 @@ pad.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.47.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.48.6"></a><h4>Returns</h4>
 <p> the offset.</p>
 <p></p>
 </div>
@@ -2678,7 +2715,7 @@ gst_pad_set_offset (<em class="parameter"><code><a class="link" href="GstPad.htm
 <p>Set the offset that will be applied to the running time of <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.48.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.49.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2711,7 +2748,7 @@ If name is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-M
 will be assigned.
 This function makes a copy of the name so you can safely free the name.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.49.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.50.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2733,7 +2770,7 @@ This function makes a copy of the name so you can safely free the name.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.49.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.50.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in
 case of an error.</p>
 <p>MT safe. </p>
@@ -2751,7 +2788,7 @@ If name is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-M
 will be assigned.
 This function makes a copy of the name so you can safely free the name.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.50.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.51.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2773,7 +2810,7 @@ This function makes a copy of the name so you can safely free the name.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.50.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.51.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in
 case of an error. </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][nullable]</span></p>
@@ -2790,7 +2827,7 @@ If name is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-M
 will be assigned.
 This function makes a copy of the name so you can safely free the name.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.51.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.52.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2812,7 +2849,7 @@ This function makes a copy of the name so you can safely free the name.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.51.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.52.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in
 case of an error. </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][nullable]</span></p>
@@ -2826,7 +2863,7 @@ case of an error. </p>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-chain-function-full" title="gst_pad_set_chain_function_full ()"><code class="function">gst_pad_set_chain_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.52.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.53.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2859,7 +2896,7 @@ gst_pad_set_chain_function_full (<em class="parameter"><code><a class="link" hre
 <p>Sets the given chain function for the pad. The chain function is called to
 process a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> input buffer. see <a class="link" href="GstPad.html#GstPadChainFunction" title="GstPadChainFunction ()"><span class="type">GstPadChainFunction</span></a> for more details.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.53.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.54.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2909,7 +2946,7 @@ either consumes the data or passes it on to the internally linked pad(s).</p>
 <p>When a chain function detects an error in the data stream, it must post an
 error on the bus and return an appropriate <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.54.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.55.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2940,7 +2977,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.54.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.55.8"></a><h4>Returns</h4>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
 <p></p>
 </div>
@@ -2953,7 +2990,7 @@ during the execution of this function. </p></td>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-chain-list-function-full" title="gst_pad_set_chain_list_function_full ()"><code class="function">gst_pad_set_chain_list_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.55.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.56.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2987,7 +3024,7 @@ gst_pad_set_chain_list_function_full (<em class="parameter"><code><a class="link
 called to process a <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a> input buffer list. See
 <a class="link" href="GstPad.html#GstPadChainListFunction" title="GstPadChainListFunction ()"><span class="type">GstPadChainListFunction</span></a> for more details.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.56.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.57.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3037,7 +3074,7 @@ should <a class="link" href="GstBufferList.html#gst-buffer-list-unref" title="gs
 <p>When a chainlist function detects an error in the data stream, it must
 post an error on the bus and return an appropriate <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.57.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.58.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3068,7 +3105,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.57.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.58.8"></a><h4>Returns</h4>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
 <p></p>
 </div>
@@ -3117,7 +3154,7 @@ bytes. The caller should check the result buffer size to get the result size.</p
 will be unchanged.</p>
 <p>This is a lowlevel function. Usually <a class="link" href="GstPad.html#gst-pad-pull-range" title="gst_pad_pull_range ()"><code class="function">gst_pad_pull_range()</code></a> is used.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.58.12"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.59.12"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3149,7 +3186,7 @@ will be unchanged.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.58.13"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.59.13"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the pad.</p>
 <p>MT safe.</p>
 <p></p>
@@ -3163,7 +3200,7 @@ will be unchanged.</p>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-getrange-function-full" title="gst_pad_set_getrange_function_full ()"><code class="function">gst_pad_set_getrange_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.59.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.60.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3197,7 +3234,7 @@ gst_pad_set_getrange_function_full (<em class="parameter"><code><a class="link" 
 called to produce a new <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> to start the processing pipeline. see
 <a class="link" href="GstPad.html#GstPadGetRangeFunction" title="GstPadGetRangeFunction ()"><span class="type">GstPadGetRangeFunction</span></a> for a description of the getrange function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.60.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.61.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3289,7 +3326,7 @@ optimal length is returned in <em class="parameter"><code>buffer</code></em>
 of <em class="parameter"><code>offset</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.61.12"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.62.12"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3330,7 +3367,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.61.13"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.62.13"></a><h4>Returns</h4>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success and a valid buffer in <em class="parameter"><code>buffer</code></em>
 . Any other
 return value leaves <em class="parameter"><code>buffer</code></em>
@@ -3346,7 +3383,7 @@ undefined.</p>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-event-function-full" title="gst_pad_set_event_function_full ()"><code class="function">gst_pad_set_event_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.62.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.63.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3378,7 +3415,7 @@ gst_pad_set_event_function_full (<em class="parameter"><code><a class="link" hre
                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Sets the given event handler for the pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.63.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.64.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3421,7 +3458,7 @@ will not be used anymore.</p></td>
                         <em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
 <p>Function signature to handle an event for the pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.64.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.65.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3452,7 +3489,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.64.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.65.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could handle the event.</p>
 <p></p>
 </div>
@@ -3465,7 +3502,7 @@ during the execution of this function. </p></td>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-link-function-full" title="gst_pad_set_link_function_full ()"><code class="function">gst_pad_set_link_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 for the user_data and notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.65.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.66.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3505,7 +3542,7 @@ cannot be made for some reason.</p>
  is installed on a source pad, it should call the <a class="link" href="GstPad.html#GstPadLinkFunction" title="GstPadLinkFunction ()"><span class="type">GstPadLinkFunction</span></a>
 of the peer sink pad, if present.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.66.8"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.67.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3548,7 +3585,7 @@ will not be used anymore.</p></td>
                        <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *peer</code></em>);</pre>
 <p>Function signature to handle a new link on the pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.67.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.68.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3579,7 +3616,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.67.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.68.6"></a><h4>Returns</h4>
 <p> the result of the link with the specified peer.</p>
 <p></p>
 </div>
@@ -3592,7 +3629,7 @@ during the execution of this function. </p></td>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-unlink-function-full" title="gst_pad_set_unlink_function_full ()"><code class="function">gst_pad_set_unlink_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 for the user_data and notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.68.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.69.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3625,7 +3662,7 @@ gst_pad_set_unlink_function_full (<em class="parameter"><code><a class="link" hr
 <p>Sets the given unlink function for the pad. It will be called
 when the pad is unlinked.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.69.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.70.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3667,7 +3704,7 @@ will not be used anymore.</p></td>
                          <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>);</pre>
 <p>Function signature to handle a unlinking the pad prom its peer.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.70.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.71.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3706,7 +3743,7 @@ the intersection of the results.</p>
 that can handle any stream format, but requires all its pads to have
 the same caps.  Two such elements are tee and adder.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.71.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.72.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3728,7 +3765,7 @@ the same caps.  Two such elements are tee and adder.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.71.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.72.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>query</code></em>
 could be executed</p>
 <p></p>
@@ -3748,7 +3785,7 @@ returns the intersection of the results.</p>
 that can handle any stream format, but requires caps that are acceptable for
 all opposite pads.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.72.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.73.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3770,7 +3807,7 @@ all opposite pads.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.72.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.73.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>query</code></em>
 could be executed</p>
 <p></p>
@@ -3784,7 +3821,7 @@ could be executed</p>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-activate-function-full" title="gst_pad_set_activate_function_full ()"><code class="function">gst_pad_set_activate_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.73.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.74.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3820,7 +3857,7 @@ dispatch to <a class="link" href="GstPad.html#gst-pad-activate-mode" title="gst_
 Only makes sense to set on sink pads.</p>
 <p>Call this function if your sink pad can start a pull-based task.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.74.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.75.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3865,7 +3902,7 @@ READY to PAUSED state change. By default this function will call the
 activate function that puts the pad in push mode but elements can
 override this function to activate the pad in pull mode if they wish.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.75.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.76.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3888,7 +3925,7 @@ override this function to activate the pad in pull mode if they wish.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.75.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.76.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be activated.</p>
 <p></p>
 </div>
@@ -3901,7 +3938,7 @@ override this function to activate the pad in pull mode if they wish.</p>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-activatemode-function-full" title="gst_pad_set_activatemode_function_full ()"><code class="function">gst_pad_set_activatemode_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.76.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.77.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3935,7 +3972,7 @@ gst_pad_set_activatemode_function_full
 <p>Sets the given activate_mode function for the pad. An activate_mode function
 prepares the element for data passing.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.77.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.78.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3979,7 +4016,7 @@ will not be used anymore.</p></td>
                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
 <p>The prototype of the push and pull activate functions.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.78.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.79.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4013,7 +4050,7 @@ will not be used anymore.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.78.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.79.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be activated or deactivated.</p>
 <p></p>
 </div>
@@ -4024,36 +4061,6 @@ will not be used anymore.</p></td>
 <pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_pad_needs_reconfigure (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
 <p>Check the <a class="link" href="GstPad.html#GST-PAD-FLAG-NEED-RECONFIGURE:CAPS"><span class="type">GST_PAD_FLAG_NEED_RECONFIGURE</span></a> flag on <em class="parameter"><code>pad</code></em>
- and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
-if the flag was set.</p>
-<div class="refsect3">
-<a name="id-1.3.33.10.79.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>pad</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to check</p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.33.10.79.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the GST_PAD_FLAG_NEED_RECONFIGURE flag is set on <em class="parameter"><code>pad</code></em>
-.</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-pad-check-reconfigure"></a><h3>gst_pad_check_reconfigure ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_pad_check_reconfigure (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
-<p>Check and clear the <a class="link" href="GstPad.html#GST-PAD-FLAG-NEED-RECONFIGURE:CAPS"><span class="type">GST_PAD_FLAG_NEED_RECONFIGURE</span></a> flag on <em class="parameter"><code>pad</code></em>
  and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
 if the flag was set.</p>
 <div class="refsect3">
@@ -4073,6 +4080,36 @@ if the flag was set.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.33.10.80.6"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the GST_PAD_FLAG_NEED_RECONFIGURE flag is set on <em class="parameter"><code>pad</code></em>
+.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-check-reconfigure"></a><h3>gst_pad_check_reconfigure ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_pad_check_reconfigure (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Check and clear the <a class="link" href="GstPad.html#GST-PAD-FLAG-NEED-RECONFIGURE:CAPS"><span class="type">GST_PAD_FLAG_NEED_RECONFIGURE</span></a> flag on <em class="parameter"><code>pad</code></em>
+ and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
+if the flag was set.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.81.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to check</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.33.10.81.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the GST_PAD_FLAG_NEED_RECONFIGURE flag was set on <em class="parameter"><code>pad</code></em>
 .</p>
 <p></p>
@@ -4086,7 +4123,7 @@ gst_pad_mark_reconfigure (<em class="parameter"><code><a class="link" href="GstP
 <p>Mark a pad for needing reconfiguration. The next call to
 <a class="link" href="GstPad.html#gst-pad-check-reconfigure" title="gst_pad_check_reconfigure ()"><code class="function">gst_pad_check_reconfigure()</code></a> will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> after this call.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.81.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.82.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4119,7 +4156,7 @@ be returned.</p>
 
 after calling this function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.82.8"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.83.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4142,7 +4179,7 @@ if not. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.82.9"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.83.9"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the peer pad.</p>
 <p>MT safe.</p>
 <p></p>
@@ -4160,7 +4197,7 @@ elements.</p>
 <p>This function takes ownership of the provided event so you should
 <a class="link" href="GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.83.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.84.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4182,7 +4219,7 @@ elements.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.83.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.84.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled.</p>
 <p>MT safe.</p>
 <p></p>
@@ -4208,7 +4245,7 @@ chained via <a class="link" href="GstPad.html#gst-pad-chain" title="gst_pad_chai
 
 after calling this function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.84.8"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.85.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4231,7 +4268,7 @@ if not. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.84.9"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.85.9"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the peer pad.</p>
 <p>MT safe.</p>
 <p></p>
@@ -4279,7 +4316,7 @@ an EOS condition is near or when <em class="parameter"><code>buffer</code></em>
 
 bytes. The caller should check the result buffer size to get the result size.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.85.10"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.86.10"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4312,7 +4349,7 @@ GST_FLOW_ERROR if <a href="http://library.gnome.org/devel/glib/unstable/glib-Sta
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.85.11"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.86.11"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the peer pad.</p>
 <p>MT safe.</p>
 <p></p>
@@ -4330,7 +4367,7 @@ gst_pad_activate_mode (<em class="parameter"><code><a class="link" href="GstPad.
 pad's activatemodefunc. For use from within pad activation functions only.</p>
 <p>If you don't know what this is, you probably don't want to call it.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.86.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.87.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4357,7 +4394,7 @@ pad's activatemodefunc. For use from within pad activation functions only.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.86.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.87.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the operation was successful.</p>
 <p>MT safe.</p>
 <p></p>
@@ -4391,7 +4428,7 @@ all necessary locks and checks.</p>
 <p>This function takes ownership of the provided event so you should
 <a class="link" href="GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.87.8"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.88.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4413,7 +4450,7 @@ all necessary locks and checks.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.87.9"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.88.9"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled.</p>
 <p></p>
 </div>
@@ -4434,7 +4471,7 @@ to all internally linked pads,</p>
 takes ownership of <em class="parameter"><code>event</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.88.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.89.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4462,7 +4499,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.88.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.89.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was sent successfully.</p>
 <p></p>
 </div>
@@ -4482,7 +4519,7 @@ function.</p>
 the query structure.</p>
 <p>Please also note that some queries might need a running pipeline to work.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.89.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.90.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4504,7 +4541,7 @@ the query structure.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.89.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.90.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4520,7 +4557,7 @@ gst_pad_peer_query (<em class="parameter"><code><a class="link" href="GstPad.htm
 <p>The caller is responsible for both the allocation and deallocation of
 the query structure.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.90.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.91.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4542,7 +4579,7 @@ the query structure.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.90.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.91.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed. This function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
 if <em class="parameter"><code>pad</code></em>
 has no peer.</p>
@@ -4564,7 +4601,7 @@ if there are many possible sink pads that are internally linked to
 , only one will be sent the query.
 Multi-sinkpad elements should implement custom query handlers.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.91.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.92.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4592,7 +4629,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.91.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.92.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query was performed successfully.</p>
 <p></p>
 </div>
@@ -4606,7 +4643,7 @@ gst_pad_query_position (<em class="parameter"><code><a class="link" href="GstPad
                         <em class="parameter"><code><span class="type">gint64</span> *cur</code></em>);</pre>
 <p>Queries a pad for the stream position.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.92.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.93.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4633,7 +4670,7 @@ gst_pad_query_position (<em class="parameter"><code><a class="link" href="GstPad
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.92.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.93.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4647,7 +4684,7 @@ gst_pad_query_duration (<em class="parameter"><code><a class="link" href="GstPad
                         <em class="parameter"><code><span class="type">gint64</span> *duration</code></em>);</pre>
 <p>Queries a pad for the total stream duration.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.93.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.94.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4675,7 +4712,7 @@ duration, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.93.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.94.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4694,7 +4731,7 @@ gst_pad_query_convert (<em class="parameter"><code><a class="link" href="GstPad.
  to <em class="parameter"><code>dest_format</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.94.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.95.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4731,7 +4768,7 @@ gst_pad_query_convert (<em class="parameter"><code><a class="link" href="GstPad.
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.94.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.95.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4744,7 +4781,7 @@ gst_pad_query_accept_caps (<em class="parameter"><code><a class="link" href="Gst
                            <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Check if the given pad accepts the caps.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.95.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.96.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4766,7 +4803,7 @@ gst_pad_query_accept_caps (<em class="parameter"><code><a class="link" href="Gst
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.95.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.96.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad can accept the caps.</p>
 <p></p>
 </div>
@@ -4796,7 +4833,7 @@ if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 <p>Note that this function does not return writable <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>, use
 <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a> before modifying the caps.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.96.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.97.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4818,7 +4855,7 @@ if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.96.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.97.8"></a><h4>Returns</h4>
 <p> the caps of the pad with incremented ref-count. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -4832,7 +4869,7 @@ gst_pad_peer_query_position (<em class="parameter"><code><a class="link" href="G
                              <em class="parameter"><code><span class="type">gint64</span> *cur</code></em>);</pre>
 <p>Queries the peer of a given sink pad for the stream position.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.97.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.98.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4861,7 +4898,7 @@ position, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.97.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.98.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4875,7 +4912,7 @@ gst_pad_peer_query_duration (<em class="parameter"><code><a class="link" href="G
                              <em class="parameter"><code><span class="type">gint64</span> *duration</code></em>);</pre>
 <p>Queries the peer pad of a given sink pad for the total stream duration.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.98.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.99.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4904,7 +4941,7 @@ duration, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.98.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.99.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4924,7 +4961,7 @@ gst_pad_peer_query_convert (<em class="parameter"><code><a class="link" href="Gs
 to <em class="parameter"><code>dest_format</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.99.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.100.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4962,7 +4999,7 @@ Must be a sink pad.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.99.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.100.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -4979,7 +5016,7 @@ gst_pad_peer_query_accept_caps (<em class="parameter"><code><a class="link" href
  has no peer, this function
 returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.100.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.101.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5001,7 +5038,7 @@ returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.100.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.101.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the peer of <em class="parameter"><code>pad</code></em>
 can accept the caps or <em class="parameter"><code>pad</code></em>
 has no peer.</p>
@@ -5026,7 +5063,7 @@ downstream in the preferred order. <em class="parameter"><code>filter</code></em
 if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> the returned caps will be a subset of <em class="parameter"><code>filter</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.101.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.102.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5048,7 +5085,7 @@ if it is not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.101.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.102.7"></a><h4>Returns</h4>
 <p> the caps of the peer pad with incremented ref-count. When there is
 no peer pad, this function returns <em class="parameter"><code>filter</code></em>
 or, when <em class="parameter"><code>filter</code></em>
@@ -5065,7 +5102,7 @@ caps.</p>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-query-function-full" title="gst_pad_set_query_function_full ()"><code class="function">gst_pad_set_query_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for the user_data and
 notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.102.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.103.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5097,7 +5134,7 @@ gst_pad_set_query_function_full (<em class="parameter"><code><a class="link" hre
                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Set the given query function for the pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.103.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.104.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5140,7 +5177,7 @@ will not be used anymore.</p></td>
                         <em class="parameter"><code><a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
 <p>The signature of the query function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.104.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.105.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5171,7 +5208,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.104.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.105.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p></p>
 </div>
@@ -5184,7 +5221,7 @@ during the execution of this function. </p></td>
 <p>Calls <a class="link" href="GstPad.html#gst-pad-set-iterate-internal-links-function-full" title="gst_pad_set_iterate_internal_links_function_full ()"><code class="function">gst_pad_set_iterate_internal_links_function_full()</code></a> with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 for the user_data and notify.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.105.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.106.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5217,7 +5254,7 @@ gst_pad_set_iterate_internal_links_function_full
                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Sets the given internal link iterator function for the pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.106.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.107.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5259,7 +5296,7 @@ will not be used anymore.</p></td>
                               <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>);</pre>
 <p>The signature of the internal pad link iterator function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.107.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.108.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5285,7 +5322,7 @@ during the execution of this function. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.107.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.108.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> that will iterate over all pads that are
 linked to the given pad on the inside of the parent element.</p>
 <p>the caller must call <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a> after usage.</p>
@@ -5303,7 +5340,7 @@ of the parent element.</p>
 so unref after use.</p>
 <p>Free-function: gst_iterator_free</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.108.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.109.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5318,7 +5355,7 @@ so unref after use.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.108.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.109.8"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>
 or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the pad does not have an iterator function
 configured. Use <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a> after usage. </p>
@@ -5338,7 +5375,7 @@ This is the default handler, and thus returns an iterator of all of the
 pads inside the parent element with opposite direction.</p>
 <p>The caller must free this iterator after use with <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.109.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.110.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5361,7 +5398,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.109.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.110.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> of <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if <em class="parameter"><code>pad</code></em>
 has no parent. Unref each returned pad with <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a>. </p>
 <p><span class="annotation">[nullable]</span></p>
@@ -5377,7 +5414,7 @@ gst_pad_set_element_private (<em class="parameter"><code><a class="link" href="G
 This function can only be used by the element that owns the pad.
 No locking is performed in this function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.110.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.111.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5407,7 +5444,7 @@ gst_pad_get_element_private (<em class="parameter"><code><a class="link" href="G
 <p>Gets the private data of a pad.
 No locking is performed in this function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.111.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.112.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5422,7 +5459,7 @@ No locking is performed in this function.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.111.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.112.6"></a><h4>Returns</h4>
 <p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> to the private data. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -5457,7 +5494,7 @@ stream-id manually instead.</p>
 stream ID should be printed with a fixed number of characters,
 preceded by 0's, such as by using the format %03u instead of %u.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.112.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.113.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5485,7 +5522,7 @@ preceded by 0's, such as by using the format %03u instead of %u.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.112.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.113.8"></a><h4>Returns</h4>
 <p> A stream-id for <em class="parameter"><code>pad</code></em>
 . <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
 <p></p>
@@ -5499,75 +5536,6 @@ gst_pad_create_stream_id_printf (<em class="parameter"><code><a class="link" hre
                                  <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *parent</code></em>,
                                  <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>,
                                  <em class="parameter"><code>...</code></em>);</pre>
-<p>Creates a stream-id for the source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> <em class="parameter"><code>pad</code></em>
- by combining the
-upstream information with the optional <em class="parameter"><code>stream_id</code></em>
- of the stream
-of <em class="parameter"><code>pad</code></em>
-. <em class="parameter"><code>pad</code></em>
- must have a parent <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> and which must have zero
-or one sinkpad. <em class="parameter"><code>stream_id</code></em>
- can only be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the parent element
-of <em class="parameter"><code>pad</code></em>
- has only a single source pad.</p>
-<p>This function generates an unique stream-id by getting the upstream
-stream-start event stream ID and appending <em class="parameter"><code>stream_id</code></em>
- to it. If the
-element has no sinkpad it will generate an upstream stream-id by
-doing an URI query on the element and in the worst case just uses
-a random number. Source elements that don't implement the URI
-handler interface should ideally generate a unique, deterministic
-stream-id manually instead.</p>
-<div class="refsect3">
-<a name="id-1.3.33.10.113.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>pad</p></td>
-<td class="parameter_description"><p>A source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p>Parent <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> of <em class="parameter"><code>pad</code></em>
-</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>stream_id</p></td>
-<td class="parameter_description"><p> The stream-id. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
-</tr>
-<tr>
-<td class="parameter_name"><p>...</p></td>
-<td class="parameter_description"><p>parameters for the <em class="parameter"><code>stream_id</code></em>
-format string</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.33.10.113.7"></a><h4>Returns</h4>
-<p> A stream-id for <em class="parameter"><code>pad</code></em>
-. <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-pad-create-stream-id-printf-valist"></a><h3>gst_pad_create_stream_id_printf_valist ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
-gst_pad_create_stream_id_printf_valist
-                               (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
-                                <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *parent</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>,
-                                <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
 <p>Creates a stream-id for the source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> <em class="parameter"><code>pad</code></em>
  by combining the
 upstream information with the optional <em class="parameter"><code>stream_id</code></em>
@@ -5613,7 +5581,7 @@ stream-id manually instead.</p>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
-<td class="parameter_name"><p>var_args</p></td>
+<td class="parameter_name"><p>...</p></td>
 <td class="parameter_description"><p>parameters for the <em class="parameter"><code>stream_id</code></em>
 format string</p></td>
 <td class="parameter_annotations"> </td>
@@ -5623,6 +5591,75 @@ format string</p></td>
 </div>
 <div class="refsect3">
 <a name="id-1.3.33.10.114.7"></a><h4>Returns</h4>
+<p> A stream-id for <em class="parameter"><code>pad</code></em>
+. <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-create-stream-id-printf-valist"></a><h3>gst_pad_create_stream_id_printf_valist ()</h3>
+<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_pad_create_stream_id_printf_valist
+                               (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *parent</code></em>,
+                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stream_id</code></em>,
+                                <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
+<p>Creates a stream-id for the source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> <em class="parameter"><code>pad</code></em>
+ by combining the
+upstream information with the optional <em class="parameter"><code>stream_id</code></em>
+ of the stream
+of <em class="parameter"><code>pad</code></em>
+. <em class="parameter"><code>pad</code></em>
+ must have a parent <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> and which must have zero
+or one sinkpad. <em class="parameter"><code>stream_id</code></em>
+ can only be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the parent element
+of <em class="parameter"><code>pad</code></em>
+ has only a single source pad.</p>
+<p>This function generates an unique stream-id by getting the upstream
+stream-start event stream ID and appending <em class="parameter"><code>stream_id</code></em>
+ to it. If the
+element has no sinkpad it will generate an upstream stream-id by
+doing an URI query on the element and in the worst case just uses
+a random number. Source elements that don't implement the URI
+handler interface should ideally generate a unique, deterministic
+stream-id manually instead.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.115.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>A source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>parent</p></td>
+<td class="parameter_description"><p>Parent <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> of <em class="parameter"><code>pad</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>stream_id</p></td>
+<td class="parameter_description"><p> The stream-id. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>var_args</p></td>
+<td class="parameter_description"><p>parameters for the <em class="parameter"><code>stream_id</code></em>
+format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.33.10.115.7"></a><h4>Returns</h4>
 <p> A stream-id for <em class="parameter"><code>pad</code></em>
 . <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
 <p></p>
@@ -5641,7 +5678,7 @@ set yet, i.e. the pad has not received a stream-start event yet.</p>
 <p>The returned stream-id string should be treated as an opaque string, its
 contents should not be interpreted.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.115.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.116.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5656,7 +5693,7 @@ contents should not be interpreted.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.115.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.116.8"></a><h4>Returns</h4>
 <p> a newly-allocated copy of the stream-id for
 <em class="parameter"><code>pad</code></em>
 , or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.  <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> the returned string when no longer
@@ -5674,7 +5711,7 @@ needed. </p>
 <p>A forward function is called for all internally linked pads, see
 <a class="link" href="GstPad.html#gst-pad-forward" title="gst_pad_forward ()"><code class="function">gst_pad_forward()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.116.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.117.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5696,7 +5733,7 @@ needed. </p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.116.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.117.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the dispatching procedure has to be stopped.</p>
 <p></p>
 </div>
@@ -5717,7 +5754,7 @@ function is only called once for each pad.</p>
 <p>When <em class="parameter"><code>forward</code></em>
  returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, no further pads will be processed.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.117.6"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.118.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5745,7 +5782,7 @@ function is only called once for each pad.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.117.7"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.118.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if one of the dispatcher functions returned <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 <p></p>
 </div>
@@ -5773,7 +5810,7 @@ chain function.</p>
 
 after calling this function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.118.9"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.119.9"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5796,7 +5833,7 @@ if not. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.118.10"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.119.10"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the pad.</p>
 <p>MT safe.</p>
 <p></p>
@@ -5825,7 +5862,7 @@ chainlist function.</p>
 after calling this function.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.119.10"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.120.10"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5848,7 +5885,7 @@ if not. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.119.11"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.120.11"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the pad.</p>
 <p></p>
 </div>
@@ -5870,7 +5907,7 @@ The <a class="link" href="GstPad.html#GST-PAD-STREAM-LOCK:CAPS" title="GST_PAD_S
 before <em class="parameter"><code>func</code></em>
  is called.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.120.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.121.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5903,7 +5940,7 @@ is no longer referenced</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.120.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.121.6"></a><h4>Returns</h4>
 <p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the task could be started.</p>
 <p></p>
 </div>
@@ -5918,7 +5955,7 @@ gst_pad_pause_task (<em class="parameter"><code><a class="link" href="GstPad.htm
 function executed by the task is finished if this function is not
 called from the task function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.121.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.122.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5933,7 +5970,7 @@ called from the task function.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.121.6"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.122.6"></a><h4>Returns</h4>
 <p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the task could be paused or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when the pad
 has no task.</p>
 <p></p>
@@ -5953,7 +5990,7 @@ the task. Use <a class="link" href="GstTask.html#gst-task-pause" title="gst_task
 <p>Regardless of whether the pad has a task, the stream lock is acquired and
 released so as to ensure that streaming through this pad has finished.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.122.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.123.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -5968,7 +6005,7 @@ released so as to ensure that streaming through this pad has finished.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.122.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.123.8"></a><h4>Returns</h4>
 <p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the task could be stopped or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error.</p>
 <p></p>
 </div>
@@ -5989,7 +6026,7 @@ function to perform the actual activation.</p>
 , calls <a class="link" href="GstPad.html#gst-pad-activate-mode" title="gst_pad_activate_mode ()"><code class="function">gst_pad_activate_mode()</code></a> with the pad's current mode
 and a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> argument.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.123.7"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.124.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6011,7 +6048,7 @@ and a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.33.10.123.8"></a><h4>Returns</h4>
+<a name="id-1.3.33.10.124.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the operation was successful.</p>
 <p>MT safe.</p>
 <p></p>
@@ -6029,7 +6066,7 @@ resources used in the data processing functions of <em class="parameter"><code>p
 macro, use <a class="link" href="GstPad.html#GST-PAD-STREAM-LOCK:CAPS" title="GST_PAD_STREAM_LOCK()"><code class="function">GST_PAD_STREAM_LOCK()</code></a> and <a class="link" href="GstPad.html#GST-PAD-STREAM-UNLOCK:CAPS" title="GST_PAD_STREAM_UNLOCK()"><code class="function">GST_PAD_STREAM_UNLOCK()</code></a> instead
 to take/release the pad's stream lock.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.124.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.125.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6052,7 +6089,7 @@ to take/release the pad's stream lock.</p>
 <p>Take the pad's stream lock. The stream lock is recursive and will be taken
 when buffers or serialized downstream events are pushed on a pad.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.125.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.126.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6075,7 +6112,7 @@ when buffers or serialized downstream events are pushed on a pad.</p>
 <p>Try to take the pad's stream lock, and return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the lock could be
 taken, and otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.126.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.127.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6097,7 +6134,7 @@ taken, and otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-
 </pre>
 <p>Release the pad's stream lock.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.127.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.128.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6120,7 +6157,7 @@ taken, and otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-
 <p>Get name of the given pad.
 No locking is performed in this function, use <a class="link" href="GstPad.html#gst-pad-get-name" title="gst_pad_get_name()"><code class="function">gst_pad_get_name()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.128.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.129.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6144,7 +6181,7 @@ No locking is performed in this function, use <a class="link" href="GstPad.html#
  parent.
 No locking is performed in this function, use <a class="link" href="GstPad.html#gst-pad-get-parent" title="gst_pad_get_parent()"><code class="function">gst_pad_get_parent()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.129.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.130.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6169,7 +6206,7 @@ No locking is performed in this function, use <a class="link" href="GstPad.html#
 structure created by the element and set on the pad when creating it.
 No locking is performed in this function.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.130.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.131.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6194,7 +6231,7 @@ No locking is performed in this function.</p>
 a <em class="parameter"><code>pad</code></em>
  or an element factory can handle.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.131.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.132.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6218,7 +6255,7 @@ a <em class="parameter"><code>pad</code></em>
 . Accessor macro, use
 <a class="link" href="GstPad.html#gst-pad-get-direction" title="gst_pad_get_direction ()"><code class="function">gst_pad_get_direction()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.132.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.133.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6235,6 +6272,29 @@ a <em class="parameter"><code>pad</code></em>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-PAD-LAST-FLOW-RETURN:CAPS"></a><h3>GST_PAD_LAST_FLOW_RETURN()</h3>
+<pre class="programlisting">#define GST_PAD_LAST_FLOW_RETURN(pad)   (GST_PAD_CAST(pad)-&gt;ABI.abi.last_flowret)
+</pre>
+<p>Gets the last flow return on this pad</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.134.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since 1.4</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GST-PAD-TASK:CAPS"></a><h3>GST_PAD_TASK()</h3>
 <pre class="programlisting">#define GST_PAD_TASK(pad)		(GST_PAD_CAST(pad)-&gt;task)
 </pre>
@@ -6243,7 +6303,7 @@ a <em class="parameter"><code>pad</code></em>
 <a class="link" href="GstPad.html#gst-pad-start-task" title="gst_pad_start_task ()"><code class="function">gst_pad_start_task()</code></a>, <a class="link" href="GstPad.html#gst-pad-stop-task" title="gst_pad_stop_task ()"><code class="function">gst_pad_stop_task()</code></a> and <a class="link" href="GstPad.html#gst-pad-pause-task" title="gst_pad_pause_task ()"><code class="function">gst_pad_pause_task()</code></a>
 functions instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.133.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.135.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6267,7 +6327,7 @@ functions instead.</p>
 has not been activated yet, and otherwise either GST_PAD_MODE_PUSH or
 GST_PAD_MODE_PULL depending on which mode the pad was activated in.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.134.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.136.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6290,7 +6350,7 @@ GST_PAD_MODE_PULL depending on which mode the pad was activated in.</p>
 <p>Get the <a class="link" href="GstPad.html#GstPadActivateFunction" title="GstPadActivateFunction ()"><span class="type">GstPadActivateFunction</span></a> from <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.135.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.137.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6313,7 +6373,7 @@ GST_PAD_MODE_PULL depending on which mode the pad was activated in.</p>
 <p>Get the <a class="link" href="GstPad.html#GstPadActivateModeFunction" title="GstPadActivateModeFunction ()"><span class="type">GstPadActivateModeFunction</span></a> from the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.136.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.138.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6336,7 +6396,7 @@ GST_PAD_MODE_PULL depending on which mode the pad was activated in.</p>
 <p>Get the <a class="link" href="GstPad.html#GstPadChainFunction" title="GstPadChainFunction ()"><span class="type">GstPadChainFunction</span></a> from the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.137.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.139.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6359,7 +6419,7 @@ GST_PAD_MODE_PULL depending on which mode the pad was activated in.</p>
 <p>Get the <a class="link" href="GstPad.html#GstPadChainListFunction" title="GstPadChainListFunction ()"><span class="type">GstPadChainListFunction</span></a> from the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.138.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.140.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6386,7 +6446,7 @@ use this to set your own event handling function on a pad
 after you create it.  If your element derives from a base
 class, use the base class's virtual functions instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.139.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.141.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6409,7 +6469,7 @@ class, use the base class's virtual functions instead.</p>
 <p>Get the <a class="link" href="GstPad.html#GstPadGetRangeFunction" title="GstPadGetRangeFunction ()"><span class="type">GstPadGetRangeFunction</span></a> from the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.140.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.142.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6436,7 +6496,7 @@ own query handling function on a pad after you create it. If your
 element derives from a base class, use the base class's virtual
 functions instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.141.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.143.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6459,7 +6519,7 @@ functions instead.</p>
 <p>Get the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstPadIterIntLinkFunction ()"><span class="type">GstPadIterIntLinkFunction</span></a> from the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.142.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.144.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6483,7 +6543,7 @@ functions instead.</p>
 .
 No locking is performed in this function, use <a class="link" href="GstPad.html#gst-pad-get-peer" title="gst_pad_get_peer ()"><code class="function">gst_pad_get_peer()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.143.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.145.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6506,7 +6566,7 @@ No locking is performed in this function, use <a class="link" href="GstPad.html#
 <p>Get the <a class="link" href="GstPad.html#GstPadLinkFunction" title="GstPadLinkFunction ()"><span class="type">GstPadLinkFunction</span></a> for the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.144.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.146.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6529,7 +6589,7 @@ No locking is performed in this function, use <a class="link" href="GstPad.html#
 <p>Get the <a class="link" href="GstPad.html#GstPadUnlinkFunction" title="GstPadUnlinkFunction ()"><span class="type">GstPadUnlinkFunction</span></a> from the given <em class="parameter"><code>pad</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.145.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.147.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6550,59 +6610,6 @@ No locking is performed in this function, use <a class="link" href="GstPad.html#
 <pre class="programlisting">#define GST_PAD_IS_LINKED(pad)		(GST_PAD_PEER(pad) != NULL)
 </pre>
 <div class="refsect3">
-<a name="id-1.3.33.10.146.4"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>pad</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.33.10.146.5"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is linked to another pad. Use <a class="link" href="GstPad.html#gst-pad-is-linked" title="gst_pad_is_linked ()"><code class="function">gst_pad_is_linked()</code></a>
-instead.</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-PAD-IS-SRC:CAPS"></a><h3>GST_PAD_IS_SRC()</h3>
-<pre class="programlisting">#define GST_PAD_IS_SRC(pad)		(GST_PAD_DIRECTION(pad) == GST_PAD_SRC)
-</pre>
-<div class="refsect3">
-<a name="id-1.3.33.10.147.4"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>pad</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.3.33.10.147.5"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is a source pad (i.e. produces data).</p>
-<p></p>
-</div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-PAD-IS-SINK:CAPS"></a><h3>GST_PAD_IS_SINK()</h3>
-<pre class="programlisting">#define GST_PAD_IS_SINK(pad)		(GST_PAD_DIRECTION(pad) == GST_PAD_SINK)
-</pre>
-<div class="refsect3">
 <a name="id-1.3.33.10.148.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -6619,14 +6626,15 @@ instead.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.33.10.148.5"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is a sink pad (i.e. consumes data).</p>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is linked to another pad. Use <a class="link" href="GstPad.html#gst-pad-is-linked" title="gst_pad_is_linked ()"><code class="function">gst_pad_is_linked()</code></a>
+instead.</p>
 <p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="GST-PAD-IS-ACTIVE:CAPS"></a><h3>GST_PAD_IS_ACTIVE()</h3>
-<pre class="programlisting">#define GST_PAD_IS_ACTIVE(pad)          (GST_PAD_MODE(pad) != GST_PAD_MODE_NONE)
+<a name="GST-PAD-IS-SRC:CAPS"></a><h3>GST_PAD_IS_SRC()</h3>
+<pre class="programlisting">#define GST_PAD_IS_SRC(pad)		(GST_PAD_DIRECTION(pad) == GST_PAD_SRC)
 </pre>
 <div class="refsect3">
 <a name="id-1.3.33.10.149.4"></a><h4>Parameters</h4>
@@ -6645,6 +6653,58 @@ instead.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.33.10.149.5"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is a source pad (i.e. produces data).</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-IS-SINK:CAPS"></a><h3>GST_PAD_IS_SINK()</h3>
+<pre class="programlisting">#define GST_PAD_IS_SINK(pad)		(GST_PAD_DIRECTION(pad) == GST_PAD_SINK)
+</pre>
+<div class="refsect3">
+<a name="id-1.3.33.10.150.4"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.33.10.150.5"></a><h4>Returns</h4>
+<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is a sink pad (i.e. consumes data).</p>
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-IS-ACTIVE:CAPS"></a><h3>GST_PAD_IS_ACTIVE()</h3>
+<pre class="programlisting">#define GST_PAD_IS_ACTIVE(pad)          (GST_PAD_MODE(pad) != GST_PAD_MODE_NONE)
+</pre>
+<div class="refsect3">
+<a name="id-1.3.33.10.151.4"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.33.10.151.5"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad has been activated.</p>
 <p></p>
 </div>
@@ -6657,7 +6717,7 @@ instead.</p>
 <p>Check if the dataflow on a <em class="parameter"><code>pad</code></em>
  is blocked. Use <a class="link" href="GstPad.html#gst-pad-is-blocked" title="gst_pad_is_blocked ()"><code class="function">gst_pad_is_blocked()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.150.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.152.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6681,7 +6741,7 @@ instead.</p>
  is currently blocking on a buffer or event. Use
 <a class="link" href="GstPad.html#gst-pad-is-blocking" title="gst_pad_is_blocking ()"><code class="function">gst_pad_is_blocking()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.151.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.153.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6704,7 +6764,7 @@ instead.</p>
 <p>Check if the given <em class="parameter"><code>pad</code></em>
  is flushing.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.152.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.154.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6732,7 +6792,7 @@ a flushing seek happens. This is used inside GStreamer when flush start/stop
 events pass through pads, or when an element state is changed and pads are
 activated or deactivated.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.153.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.155.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6754,7 +6814,7 @@ activated or deactivated.</p>
 </pre>
 <p>Unset the flushing flag.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.154.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.156.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6777,7 +6837,7 @@ activated or deactivated.</p>
 <p>Check if the <em class="parameter"><code>pad</code></em>
  is in EOS state.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.155.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.157.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6802,7 +6862,7 @@ activated or deactivated.</p>
 The flag has to be unset manually after reconfiguration happened.
 Use <a class="link" href="GstPad.html#gst-pad-needs-reconfigure" title="gst_pad_needs_reconfigure ()"><code class="function">gst_pad_needs_reconfigure()</code></a> or <a class="link" href="GstPad.html#gst-pad-check-reconfigure" title="gst_pad_check_reconfigure ()"><code class="function">gst_pad_check_reconfigure()</code></a> instead.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.156.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.158.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6826,7 +6886,7 @@ Use <a class="link" href="GstPad.html#gst-pad-needs-reconfigure" title="gst_pad_
  has pending events. This is used internally by
 GStreamer.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.157.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.159.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6852,7 +6912,7 @@ once the caps are set on the <em class="parameter"><code>pad</code></em>
 , the caps query function will
 only return those caps. See <a class="link" href="GstPad.html#gst-pad-use-fixed-caps" title="gst_pad_use_fixed_caps ()"><code class="function">gst_pad_use_fixed_caps()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.158.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.160.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6876,7 +6936,7 @@ only return those caps. See <a class="link" href="GstPad.html#gst-pad-use-fixed-
  callbacks.
 This is used internally by GStreamer.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.159.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.161.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6902,7 +6962,7 @@ event and query handler will forward all events and queries to the
 internally linked <em class="parameter"><code>pads</code></em>
  instead of discarding them.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.160.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.162.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6929,7 +6989,7 @@ Set this if the element always outputs data in the exact same format as it
 receives as input. This is just for convenience to avoid implementing some
 standard event and query handling code in an element.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.161.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.163.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6951,7 +7011,7 @@ standard event and query handling code in an element.</p>
 </pre>
 <p>Unset proxy caps flag.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.162.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.164.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -6977,7 +7037,7 @@ that the default query handler will forward allocation queries to the
 internally linked <em class="parameter"><code>pads</code></em>
  instead of discarding them.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.163.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.165.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7006,7 +7066,7 @@ Set this if the element always outputs data in the exact same format as it
 receives as input. This is just for convenience to avoid implementing some
 standard query handling code in an element.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.164.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.166.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7028,7 +7088,7 @@ standard query handling code in an element.</p>
 </pre>
 <p>Unset proxy allocation flag.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.165.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.167.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7055,7 +7115,7 @@ handler will forward scheduling queries to the internally linked <em class="para
 instead of discarding them. You will usually want to handle scheduling
 queries explicitly if your element supports multiple scheduling modes.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.166.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.168.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7077,7 +7137,7 @@ queries explicitly if your element supports multiple scheduling modes.</p>
 </pre>
 <p>Unset proxy scheduling flag.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.167.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.169.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7103,7 +7163,7 @@ the default query handler will forward scheduling queries to the internally
 linked <em class="parameter"><code>pads</code></em>
  instead of discarding them.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.168.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.170.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7128,7 +7188,7 @@ handler will check it the caps intersect the query-caps result instead of
 checking for a subset. This is interesting for parser elements that can
 accept incompletely specified caps.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.169.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.171.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7153,7 +7213,7 @@ accept incompletely specified caps.</p>
 checking for a subset. This is interesting for parser elements that can
 accept incompletely specified caps.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.170.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.172.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -7175,7 +7235,7 @@ accept incompletely specified caps.</p>
 </pre>
 <p>Unset accept intersect flag.</p>
 <div class="refsect3">
-<a name="id-1.3.33.10.171.5"></a><h4>Parameters</h4>
+<a name="id-1.3.33.10.173.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">

@@ -141,7 +141,7 @@ caller is responsible for ensuring that <em class="parameter"><code>buffer</code
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a>.</p>
 <p>MT safe. Caller owns return value (gst_net_time_packet_free to free).</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.2.7"></a><h4>Parameters</h4>
+<a name="id-1.2.6.5.8.2.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -156,7 +156,7 @@ caller is responsible for ensuring that <em class="parameter"><code>buffer</code
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.2.8"></a><h4>Returns</h4>
+<a name="id-1.2.6.5.8.2.8"></a><h4>Returns</h4>
 <p> The new <a class="link" href="gstreamer-libs-GstNetTimePacket.html#GstNetTimePacket" title="struct GstNetTimePacket"><span class="type">GstNetTimePacket</span></a>.</p>
 <p></p>
 </div>
@@ -169,7 +169,7 @@ gst_net_time_packet_copy (<em class="parameter"><code>const <a class="link" href
 <p>Make a copy of <em class="parameter"><code>packet</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.3.5"></a><h4>Parameters</h4>
+<a name="id-1.2.6.5.8.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -184,7 +184,7 @@ gst_net_time_packet_copy (<em class="parameter"><code>const <a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.3.6"></a><h4>Returns</h4>
+<a name="id-1.2.6.5.8.3.6"></a><h4>Returns</h4>
 <p> a copy of <em class="parameter"><code>packet</code></em>
 , free with <a class="link" href="gstreamer-libs-GstNetTimePacket.html#gst-net-time-packet-free" title="gst_net_time_packet_free ()"><code class="function">gst_net_time_packet_free()</code></a>.</p>
 <p></p>
@@ -198,7 +198,7 @@ gst_net_time_packet_free (<em class="parameter"><code><a class="link" href="gstr
 <p>Free <em class="parameter"><code>packet</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.4.5"></a><h4>Parameters</h4>
+<a name="id-1.2.6.5.8.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -223,7 +223,7 @@ gst_net_time_packet_receive (<em class="parameter"><code><a href="http://library
 <p>Receives a <a class="link" href="gstreamer-libs-GstNetTimePacket.html#GstNetTimePacket" title="struct GstNetTimePacket"><span class="type">GstNetTimePacket</span></a> over a socket. Handles interrupted system
 calls, but otherwise returns NULL on error.</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.6.5.8.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -250,7 +250,7 @@ calls, but otherwise returns NULL on error.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.5.6"></a><h4>Returns</h4>
+<a name="id-1.2.6.5.8.5.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gstreamer-libs-GstNetTimePacket.html#GstNetTimePacket" title="struct GstNetTimePacket"><span class="type">GstNetTimePacket</span></a>, or NULL on error. Free
 with <a class="link" href="gstreamer-libs-GstNetTimePacket.html#gst-net-time-packet-free" title="gst_net_time_packet_free ()"><code class="function">gst_net_time_packet_free()</code></a> when done. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -267,7 +267,7 @@ gst_net_time_packet_send (<em class="parameter"><code>const <a class="link" href
 <p>Sends a <a class="link" href="gstreamer-libs-GstNetTimePacket.html#GstNetTimePacket" title="struct GstNetTimePacket"><span class="type">GstNetTimePacket</span></a> over a socket.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.6.5.8.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -299,7 +299,7 @@ gst_net_time_packet_send (<em class="parameter"><code>const <a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.6.7"></a><h4>Returns</h4>
+<a name="id-1.2.6.5.8.6.7"></a><h4>Returns</h4>
 <p> TRUE if successful, FALSE in case an error occurred.</p>
 <p></p>
 </div>
@@ -315,7 +315,7 @@ suitable for passing to write(2) or sendto(2) for communication over the
 network.</p>
 <p>MT safe. Caller owns return value (g_free to free).</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.7.6"></a><h4>Parameters</h4>
+<a name="id-1.2.6.5.8.7.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -330,7 +330,7 @@ network.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.4.8.7.7"></a><h4>Returns</h4>
+<a name="id-1.2.6.5.8.7.7"></a><h4>Returns</h4>
 <p> A newly allocated sequence of <a class="link" href="gstreamer-libs-GstNetTimePacket.html#GST-NET-TIME-PACKET-SIZE:CAPS" title="GST_NET_TIME_PACKET_SIZE"><span class="type">GST_NET_TIME_PACKET_SIZE</span></a> bytes.</p>
 <p></p>
 </div>
@@ -347,7 +347,7 @@ network.</p>
 </pre>
 <p>Content of a <a class="link" href="gstreamer-libs-GstNetTimePacket.html#GstNetTimePacket" title="struct GstNetTimePacket"><span class="type">GstNetTimePacket</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.6.4.9.2.5"></a><h4>Members</h4>
+<a name="id-1.2.6.5.9.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">

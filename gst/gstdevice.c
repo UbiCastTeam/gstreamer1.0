@@ -29,7 +29,7 @@
  * representing the media types it can produce or handle.
  *
  * #GstDevice are created by #GstDeviceProvider objects which can be
- * aggregated by #GstGlobalDeviceMonitor objects.
+ * aggregated by #GstDeviceMonitor objects.
  *
  * Since: 1.4
  */
@@ -295,7 +295,7 @@ gst_device_reconfigure_element (GstDevice * device, GstElement * element)
 /**
  * gst_device_has_classesv:
  * @device: a #GstDevice
- * @classes: (array zero-terminated=1): a %NULL terminated array of klasses to match, only match if all
+ * @classes: (array zero-terminated=1): a %NULL terminated array of classes to match, only match if all
  *   classes are matched
  *
  * Check if @factory matches all of the given classes

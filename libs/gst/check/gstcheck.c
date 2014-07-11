@@ -280,6 +280,8 @@ gst_check_setup_src_pad_by_name (GstElement * element,
  * @tmpl: pad template
  *
  * Returns: (transfer full): a new pad
+ *
+ * Since: 1.4
  */
 GstPad *
 gst_check_setup_src_pad_from_template (GstElement * element,
@@ -295,6 +297,8 @@ gst_check_setup_src_pad_from_template (GstElement * element,
  * @name: name
  *
  * Returns: (transfer full): a new pad
+ *
+ * Since: 1.4
  */
 GstPad *
 gst_check_setup_src_pad_by_name_from_template (GstElement * element,
@@ -403,6 +407,8 @@ gst_check_setup_sink_pad_by_name (GstElement * element,
  * @tmpl: pad template
  *
  * Returns: (transfer full): a new pad
+ *
+ * Since: 1.4
  */
 GstPad *
 gst_check_setup_sink_pad_from_template (GstElement * element,
@@ -418,6 +424,8 @@ gst_check_setup_sink_pad_from_template (GstElement * element,
  * @name: name
  *
  * Returns: (transfer full): a new pad
+ *
+ * Since: 1.4
  */
 GstPad *
 gst_check_setup_sink_pad_by_name_from_template (GstElement * element,
@@ -539,14 +547,16 @@ buffer_event_function (GstPad * pad, GstObject * noparent, GstEvent * event)
  * @element_name: name of the element that needs to be created
  * @buffer_in: (element-type GstBuffer) (transfer full): a list of buffers that needs to be
  *  pushed to the element
+ * @caps_in: the #GstCaps expected of the sinkpad of the element
  * @buffer_out: (element-type GstBuffer) (transfer full): a list of buffers that we expect from
  * the element
+ * @caps_out: the #GstCaps expected of the srcpad of the element
  * @last_flow_return: the last buffer push needs to give this GstFlowReturn
  *
- * Create an @element with the factory with the name and push the buffers in
- * @buffer_in to this element. The element should create the buffers equal to
- * the buffers in @buffer_out. We only check the caps, size and the data of the
- * buffers. This function unrefs the buffers in the two lists.
+ * Create an element using the factory providing the @element_name and push the
+ * buffers in @buffer_in to this element. The element should create the buffers
+ * equal to the buffers in @buffer_out. We only check the size and the data of
+ * the buffers. This function unrefs the buffers in the two lists.
  * The last_flow_return parameter indicates the expected flow return value from
  * pushing the final buffer in the list.
  * This can be used to set up a test which pushes some buffers and then an
@@ -686,10 +696,12 @@ gst_check_element_push_buffer_list (const gchar * element_name,
  * gst_check_element_push_buffer:
  * @element_name: name of the element that needs to be created
  * @buffer_in: push this buffer to the element
+ * @caps_in: the #GstCaps expected of the sinkpad of the element
  * @buffer_out: compare the result with this buffer
+ * @caps_out: the #GstCaps expected of the srcpad of the element
  *
- * Create an @element with the factory with the name and push the
- * @buffer_in to this element. The element should create one buffer
+ * Create an element using the factory providing the @element_name and
+ * push the @buffer_in to this element. The element should create one buffer
  * and this will be compared with @buffer_out. We only check the caps
  * and the data of the buffers. This function unrefs the buffers.
  */

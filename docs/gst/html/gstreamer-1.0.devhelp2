@@ -852,6 +852,7 @@
     <keyword type="macro" name="GST_MESSAGE_TIMESTAMP()" link="GstMessage.html#GST-MESSAGE-TIMESTAMP:CAPS"/>
     <keyword type="macro" name="GST_MESSAGE_SEQNUM()" link="GstMessage.html#GST-MESSAGE-SEQNUM:CAPS"/>
     <keyword type="macro" name="GST_MESSAGE_TYPE()" link="GstMessage.html#GST-MESSAGE-TYPE:CAPS"/>
+    <keyword type="macro" name="GST_MESSAGE_TYPE_IS_EXTENDED()" link="GstMessage.html#GST-MESSAGE-TYPE-IS-EXTENDED:CAPS"/>
     <keyword type="macro" name="GST_MESSAGE_TYPE_NAME()" link="GstMessage.html#GST-MESSAGE-TYPE-NAME:CAPS"/>
     <keyword type="function" name="gst_message_type_to_quark ()" link="GstMessage.html#gst-message-type-to-quark"/>
     <keyword type="function" name="gst_message_type_get_name ()" link="GstMessage.html#gst-message-type-get-name"/>
@@ -1064,6 +1065,7 @@
     <keyword type="function" name="GstPadStickyEventsForeachFunction ()" link="GstPad.html#GstPadStickyEventsForeachFunction"/>
     <keyword type="function" name="gst_pad_sticky_events_foreach ()" link="GstPad.html#gst-pad-sticky-events-foreach"/>
     <keyword type="function" name="gst_pad_is_active ()" link="GstPad.html#gst-pad-is-active"/>
+    <keyword type="function" name="gst_pad_get_last_flow_return ()" link="GstPad.html#gst-pad-get-last-flow-return" since="1.4"/>
     <keyword type="macro" name="GST_PAD_PROBE_INFO_TYPE()" link="GstPad.html#GST-PAD-PROBE-INFO-TYPE:CAPS"/>
     <keyword type="macro" name="GST_PAD_PROBE_INFO_ID()" link="GstPad.html#GST-PAD-PROBE-INFO-ID:CAPS"/>
     <keyword type="macro" name="GST_PAD_PROBE_INFO_DATA()" link="GstPad.html#GST-PAD-PROBE-INFO-DATA:CAPS"/>
@@ -1168,6 +1170,7 @@
     <keyword type="macro" name="GST_PAD_ELEMENT_PRIVATE()" link="GstPad.html#GST-PAD-ELEMENT-PRIVATE:CAPS"/>
     <keyword type="macro" name="GST_PAD_PAD_TEMPLATE()" link="GstPad.html#GST-PAD-PAD-TEMPLATE:CAPS"/>
     <keyword type="macro" name="GST_PAD_DIRECTION()" link="GstPad.html#GST-PAD-DIRECTION:CAPS"/>
+    <keyword type="macro" name="GST_PAD_LAST_FLOW_RETURN()" link="GstPad.html#GST-PAD-LAST-FLOW-RETURN:CAPS" since="1.4"/>
     <keyword type="macro" name="GST_PAD_TASK()" link="GstPad.html#GST-PAD-TASK:CAPS"/>
     <keyword type="macro" name="GST_PAD_MODE()" link="GstPad.html#GST-PAD-MODE:CAPS"/>
     <keyword type="macro" name="GST_PAD_ACTIVATEFUNC()" link="GstPad.html#GST-PAD-ACTIVATEFUNC:CAPS"/>
@@ -1790,6 +1793,8 @@
     <keyword type="function" name="gst_toc_entry_get_parent ()" link="GstToc.html#gst-toc-entry-get-parent"/>
     <keyword type="function" name="gst_toc_entry_get_sub_entries ()" link="GstToc.html#gst-toc-entry-get-sub-entries"/>
     <keyword type="function" name="gst_toc_entry_append_sub_entry ()" link="GstToc.html#gst-toc-entry-append-sub-entry"/>
+    <keyword type="function" name="gst_toc_entry_get_loop ()" link="GstToc.html#gst-toc-entry-get-loop" since="1.4"/>
+    <keyword type="function" name="gst_toc_entry_set_loop ()" link="GstToc.html#gst-toc-entry-set-loop" since="1.4"/>
     <keyword type="function" name="gst_toc_entry_get_start_stop_times ()" link="GstToc.html#gst-toc-entry-get-start-stop-times"/>
     <keyword type="function" name="gst_toc_entry_set_start_stop_times ()" link="GstToc.html#gst-toc-entry-set-start-stop-times"/>
     <keyword type="function" name="gst_toc_entry_get_tags ()" link="GstToc.html#gst-toc-entry-get-tags"/>
@@ -1801,10 +1806,12 @@
     <keyword type="function" name="gst_toc_entry_is_sequence ()" link="GstToc.html#gst-toc-entry-is-sequence"/>
     <keyword type="macro" name="GST_TOC_ENTRY_TYPE_IS_ALTERNATIVE()" link="GstToc.html#GST-TOC-ENTRY-TYPE-IS-ALTERNATIVE:CAPS"/>
     <keyword type="macro" name="GST_TOC_ENTRY_TYPE_IS_SEQUENCE()" link="GstToc.html#GST-TOC-ENTRY-TYPE-IS-SEQUENCE:CAPS"/>
+    <keyword type="macro" name="GST_TOC_REPEAT_COUNT_INFINITE" link="GstToc.html#GST-TOC-REPEAT-COUNT-INFINITE:CAPS" since="1.4"/>
     <keyword type="struct" name="GstToc" link="GstToc.html#GstToc-struct"/>
     <keyword type="enum" name="enum GstTocScope" link="GstToc.html#GstTocScope"/>
     <keyword type="struct" name="GstTocEntry" link="GstToc.html#GstTocEntry-struct"/>
     <keyword type="enum" name="enum GstTocEntryType" link="GstToc.html#GstTocEntryType"/>
+    <keyword type="enum" name="enum GstTocLoopType" link="GstToc.html#GstTocLoopType" since="1.4"/>
     <keyword type="function" name="gst_toc_setter_set_toc ()" link="gstreamer-GstTocSetter.html#gst-toc-setter-set-toc"/>
     <keyword type="function" name="gst_toc_setter_get_toc ()" link="gstreamer-GstTocSetter.html#gst-toc-setter-get-toc"/>
     <keyword type="function" name="gst_toc_setter_reset ()" link="gstreamer-GstTocSetter.html#gst-toc-setter-reset"/>
@@ -2034,6 +2041,7 @@
     <keyword type="struct" name="struct GstDeviceMonitorClass" link="gstreamer-GstDeviceMonitor.html#GstDeviceMonitorClass" since="1.4"/>
     <keyword type="function" name="gst_device_create_element ()" link="gstreamer-GstDevice.html#gst-device-create-element" since="1.4"/>
     <keyword type="function" name="gst_device_get_caps ()" link="gstreamer-GstDevice.html#gst-device-get-caps" since="1.4"/>
+    <keyword type="function" name="gst_device_get_device_class ()" link="gstreamer-GstDevice.html#gst-device-get-device-class" since="1.4"/>
     <keyword type="function" name="gst_device_get_display_name ()" link="gstreamer-GstDevice.html#gst-device-get-display-name" since="1.4"/>
     <keyword type="function" name="gst_device_has_classes ()" link="gstreamer-GstDevice.html#gst-device-has-classes" since="1.4"/>
     <keyword type="function" name="gst_device_has_classesv ()" link="gstreamer-GstDevice.html#gst-device-has-classesv" since="1.4"/>
@@ -2041,7 +2049,7 @@
     <keyword type="struct" name="struct GstDevice" link="gstreamer-GstDevice.html#GstDevice" since="1.4"/>
     <keyword type="struct" name="struct GstDeviceClass" link="gstreamer-GstDevice.html#GstDeviceClass" since="1.4"/>
     <keyword type="function" name="gst_device_provider_can_monitor ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-can-monitor"/>
-    <keyword type="function" name="gst_device_provider_class_add_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-add-metadata"/>
+    <keyword type="function" name="gst_device_provider_class_add_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-add-metadata" since="1.4"/>
     <keyword type="function" name="gst_device_provider_class_add_static_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-add-static-metadata" since="1.4"/>
     <keyword type="function" name="gst_device_provider_class_get_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-get-metadata" since="1.4"/>
     <keyword type="function" name="gst_device_provider_class_set_metadata ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-class-set-metadata" since="1.4"/>
@@ -2154,6 +2162,7 @@
     <keyword type="enum" name="enum GstDebugColorMode" link="gstreamer-GstInfo.html#GstDebugColorMode"/>
     <keyword type="struct" name="struct GstDebugCategory" link="gstreamer-GstInfo.html#GstDebugCategory"/>
     <keyword type="enum" name="enum GstDebugGraphDetails" link="gstreamer-GstInfo.html#GstDebugGraphDetails"/>
+    <keyword type="variable" name="GST_CAT_DEFAULT" link="gstreamer-GstInfo.html#GST-CAT-DEFAULT:CAPS"/>
     <keyword type="macro" name="GST_TIME_FORMAT" link="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS"/>
   </functions>
 </book>
