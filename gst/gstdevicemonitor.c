@@ -232,7 +232,10 @@ gst_device_monitor_dispose (GObject * object)
     self->priv->providers = NULL;
   }
 
-  g_clear_pointer (&self->priv->filters, (GDestroyNotify) g_ptr_array_unref);
+  if (self->priv->filters) {
+    g_ptr_array_unref (self->priv->filters);
+    self->priv->filters = NULL;
+  }
 
   gst_object_replace ((GstObject **) & self->priv->bus, NULL);
 
@@ -419,7 +422,7 @@ gst_device_monitor_stop (GstDeviceMonitor * monitor)
 /**
  * gst_device_monitor_add_filter:
  * @monitor: a device monitor
- * @classes: device classes to use as filter or %NULL for any class
+ * @classes: (allow-none): device classes to use as filter or %NULL for any class
  * @caps: (allow-none): the #GstCaps to filter or %NULL for ANY
  *
  * Adds a filter for which #GstDevice will be monitored, any device that matches
