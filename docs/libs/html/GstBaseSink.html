@@ -8,15 +8,15 @@
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseSrc.html" title="GstBaseSrc">
 <link rel="next" href="GstBaseTransform.html" title="GstBaseTransform">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#GstBaseSink.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#GstBaseSink.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties"> <span class="dim">|</span> 
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#GstBaseSink.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#GstBaseSink.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
                   <a href="#GstBaseSink.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
@@ -477,7 +477,7 @@ install a pad template in its class_init function, like so:</p>
 
 <p></p>
 <p><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> will handle the prerolling correctly. This means that it will
-return <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> from a state change to PAUSED until the first
+return <code class="literal">GST_STATE_CHANGE_ASYNC</code> from a state change to PAUSED until the first
 buffer arrives in this element. The base class will call the
 <a class="link" href="GstBaseSink.html#GstBaseSinkClass.preroll"><code class="function">GstBaseSinkClass.preroll()</code></a> vmethod with this preroll buffer and will then
 commit the state change to the next asynchronously pending state.</p>
@@ -505,7 +505,7 @@ of the current segment are dropped. Buffers that fall partially in the
 segment are rendered (and prerolled). Subclasses should do any subbuffer
 clipping themselves when needed.</p>
 <p><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> will by default report the current playback position in
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-TIME:CAPS"><code class="literal">GST_FORMAT_TIME</code></a> based on the current clock time and segment information.
+<code class="literal">GST_FORMAT_TIME</code> based on the current clock time and segment information.
 If no clock has been set on the element, the query will be forwarded
 upstream.</p>
 <p>The <a class="link" href="GstBaseSink.html#GstBaseSinkClass.set-caps"><code class="function">GstBaseSinkClass.set_caps()</code></a> function will be called when the subclass
@@ -587,22 +587,22 @@ for the latency introduced by the upstream elements by setting the
 <tr>
 <td class="parameter_name"><p>live</p></td>
 <td class="parameter_description"><p> if the sink is live. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>upstream_live</p></td>
 <td class="parameter_description"><p> if an upstream element is live. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>min_latency</p></td>
 <td class="parameter_description"><p> the min latency of the upstream elements. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>max_latency</p></td>
 <td class="parameter_description"><p> the max latency of the upstream elements. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -676,7 +676,7 @@ until the element state is changed.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.4.7"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> if the preroll completed and processing can
+<p> <code class="literal">GST_FLOW_OK</code> if the preroll completed and processing can
 continue. Any other return value should be returned from the render vmethod.</p>
 <p></p>
 </div>
@@ -721,7 +721,7 @@ and will be adjusted with any latency and offset configured in the sink.</p>
 <tr>
 <td class="parameter_name"><p>jitter</p></td>
 <td class="parameter_description"><p> the jitter to be filled with time diff, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -741,7 +741,7 @@ gst_base_sink_wait_preroll (<em class="parameter"><code><a class="link" href="Gs
 against the clock it must unblock when going from PLAYING to the PAUSED state
 and call this method before continuing to render the remaining data.</p>
 <p>This function will block until a state change to PLAYING happens (in which
-case this function returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>) or the processing must be stopped due
+case this function returns <code class="literal">GST_FLOW_OK</code>) or the processing must be stopped due
 to a state change to READY or a FLUSH event (in which case this function
 returns <code class="literal">GST_FLOW_FLUSHING</code>).</p>
 <p>This function should only be called with the PREROLL_LOCK held, like in the
@@ -763,7 +763,7 @@ render function.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.6.8"></a><h4>Returns</h4>
-<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> if the preroll completed and processing can
+<p> <code class="literal">GST_FLOW_OK</code> if the preroll completed and processing can
 continue. Any other return value should be returned from the render vmethod.</p>
 <p></p>
 </div>
@@ -779,9 +779,9 @@ gst_base_sink_wait_clock (<em class="parameter"><code><a class="link" href="GstB
  is reached. It is usually called by
 subclasses that use their own internal synchronisation.</p>
 <p>If <em class="parameter"><code>time</code></em>
- is not valid, no synchronisation is done and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-BADTIME:CAPS"><code class="literal">GST_CLOCK_BADTIME</code></a> is
+ is not valid, no synchronisation is done and <code class="literal">GST_CLOCK_BADTIME</code> is
 returned. Likewise, if synchronisation is disabled in the element or there
-is no clock, no synchronisation is done and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-BADTIME:CAPS"><code class="literal">GST_CLOCK_BADTIME</code></a> is returned.</p>
+is no clock, no synchronisation is done and <code class="literal">GST_CLOCK_BADTIME</code> is returned.</p>
 <p>This function should only be called with the PREROLL_LOCK held, like when
 receiving an EOS event in the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.event"><code class="function">GstBaseSinkClass.event()</code></a> vmethod or when
 receiving a buffer in
@@ -812,7 +812,7 @@ sink.</p>
 <tr>
 <td class="parameter_name"><p>jitter</p></td>
 <td class="parameter_description"><p> the jitter to be filled with time diff, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1237,7 +1237,7 @@ rendering. This property can be used to generate thumbnails.</p>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSample.html"><span class="type">GstSample</span></a>. <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSample.html#gst-sample-unref"><code class="function">gst_sample_unref()</code></a> after
 usage.  This function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when no buffer has arrived in the
 sink yet or when the sink is not in PAUSED or PLAYING. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][nullable]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1863,6 +1863,6 @@ used to fix synchronisation in bad files.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

@@ -8,15 +8,14 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstMeta.html" title="GstMeta">
 <link rel="next" href="GstObject.html" title="GstObject">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstMiniObject.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstMiniObject.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gstreamer-GstMiniObject.description" class="shortcut">Description</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -285,11 +284,6 @@
 </table></div>
 </div>
 <div class="refsect1">
-<a name="gstreamer-GstMiniObject.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">
-</pre>
-</div>
-<div class="refsect1">
 <a name="gstreamer-GstMiniObject.includes"></a><h2>Includes</h2>
 <pre class="synopsis">#include &lt;gst/gst.h&gt;
 </pre>
@@ -324,7 +318,7 @@ and <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-weak-unre
 <span class="c_punctuation">(</span>*GstMiniObjectCopyFunction<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> *obj</code></em>);</pre>
 <p>Function prototype for methods to create copies of instances.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -339,7 +333,7 @@ and <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-weak-unre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.2.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.2.6"></a><h4>Returns</h4>
 <p> reference to cloned instance.</p>
 <p></p>
 </div>
@@ -355,7 +349,7 @@ passed object by doing a <a class="link" href="gstreamer-GstMiniObject.html#gst-
 revived after the dispose function, the function should return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
 and the memory associated with the object is freed.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -370,7 +364,7 @@ and the memory associated with the object is freed.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.3.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.3.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the object should be cleaned up.</p>
 <p></p>
 </div>
@@ -383,7 +377,7 @@ and the memory associated with the object is freed.</p>
 <p>Virtual function prototype for methods to free resources used by
 mini-objects.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -409,7 +403,7 @@ callback that gets triggered when <a class="link" href="gstreamer-GstMiniObject.
 last ref and <em class="parameter"><code>obj</code></em>
  is about to be freed.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -438,7 +432,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>This macro returns the type of the mini-object.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -460,7 +454,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>This macro returns the entire set of flags for the mini-object.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -482,7 +476,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>This macro checks to see if the given flag is set.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -511,7 +505,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>This macro sets the given bits.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -540,7 +534,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>This macro unsets the given bits.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -571,7 +565,7 @@ last ref and <em class="parameter"><code>obj</code></em>
  is lockable. A lockable object can be locked and unlocked with
 <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-lock" title="gst_mini_object_lock ()"><code class="function">gst_mini_object_lock()</code></a> and <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-unlock" title="gst_mini_object_unlock ()"><code class="function">gst_mini_object_unlock()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -600,7 +594,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>Get access to the reference count field of the mini-object.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.13.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -622,7 +616,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 </pre>
 <p>Get the reference count value of the mini-object.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.14.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -643,7 +637,7 @@ last ref and <em class="parameter"><code>obj</code></em>
 <pre class="programlisting">#define             GST_DEFINE_MINI_OBJECT_TYPE(TypeName,type_name)</pre>
 <p>Define a new mini-object type with the given name</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.15.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -678,7 +672,7 @@ gst_mini_object_init (<em class="parameter"><code><a class="link" href="gstreame
 <p>Initializes a mini-object with the desired type and copy/dispose/free
 functions.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.16.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -704,17 +698,17 @@ functions.</p>
 <tr>
 <td class="parameter_name"><p>copy_func</p></td>
 <td class="parameter_description"><p> the copy function, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>dispose_func</p></td>
 <td class="parameter_description"><p> the dispose function, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>free_func</p></td>
 <td class="parameter_description"><p> the free function or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -734,7 +728,7 @@ GstMiniObject instances can potentially increase the number
 of memcpy operations in a pipeline, especially if the miniobject
 is a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.17.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.17.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -749,7 +743,7 @@ is a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.17.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.17.7"></a><h4>Returns</h4>
 <p> the mini-object. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -762,7 +756,7 @@ gst_mini_object_unref (<em class="parameter"><code><a class="link" href="gstream
 <p>Decreases the reference count of the mini-object, possibly freeing
 the mini-object.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.18.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.18.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -791,7 +785,7 @@ to the mini object without calling <a class="link" href="gstreamer-GstMiniObject
 (<a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-ref" title="gst_mini_object_ref ()"><code class="function">gst_mini_object_ref()</code></a> adds a strong reference, that is, forces the object
 to stay alive).</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.19.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.19.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -827,7 +821,7 @@ gst_mini_object_weak_unref (<em class="parameter"><code><a class="link" href="gs
                             <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>Removes a weak reference callback from a mini object.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.20.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.20.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -863,7 +857,7 @@ gst_mini_object_lock (<em class="parameter"><code><a class="link" href="gstreame
 <p>Lock the mini-object with the specified access mode in <em class="parameter"><code>flags</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.21.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -885,7 +879,7 @@ gst_mini_object_lock (<em class="parameter"><code><a class="link" href="gstreame
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.21.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.21.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>object</code></em>
 could be locked.</p>
 <p></p>
@@ -900,7 +894,7 @@ gst_mini_object_unlock (<em class="parameter"><code><a class="link" href="gstrea
 <p>Unlock the mini-object with the specified access mode in <em class="parameter"><code>flags</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.22.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.22.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -939,7 +933,7 @@ object is therefore writable.</p>
 <p>Modification of a mini-object should only be done after verifying that it
 is writable.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.23.7"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.23.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -954,7 +948,7 @@ is writable.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.23.8"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.23.8"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the object is writable.</p>
 <p></p>
 </div>
@@ -969,7 +963,7 @@ returned.  This gives away the reference to the original mini object,
 and returns a reference to the new object.</p>
 <p>MT safe</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.24.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.24.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -984,7 +978,7 @@ and returns a reference to the new object.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.24.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.24.7"></a><h4>Returns</h4>
 <p> a mini-object (possibly the same pointer) that
 is writable. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -998,7 +992,7 @@ gst_mini_object_copy (<em class="parameter"><code>const <a class="link" href="gs
 <p>Creates a copy of the mini-object.</p>
 <p>MT safe</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.25.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.25.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1013,7 +1007,7 @@ gst_mini_object_copy (<em class="parameter"><code>const <a class="link" href="gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.25.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.25.7"></a><h4>Returns</h4>
 <p> the new mini-object. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1044,7 +1038,7 @@ when the <em class="parameter"><code>object</code></em>
 a call to <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-set-qdata" title="gst_mini_object_set_qdata ()"><code class="function">gst_mini_object_set_qdata()</code></a> with the same <em class="parameter"><code>quark</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.26.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.26.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1087,7 +1081,7 @@ gst_mini_object_get_qdata (<em class="parameter"><code><a class="link" href="gst
 <p>This function gets back user data pointers stored via
 <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-set-qdata" title="gst_mini_object_set_qdata ()"><code class="function">gst_mini_object_set_qdata()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.27.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.27.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1109,10 +1103,10 @@ gst_mini_object_get_qdata (<em class="parameter"><code><a class="link" href="gst
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.27.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.27.6"></a><h4>Returns</h4>
 <p> The user data pointer set, or
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][nullable]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1126,7 +1120,7 @@ and removes the data from <em class="parameter"><code>object</code></em>
  without invoking its <code class="function">destroy()</code> function (if
 any was set).</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.28.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.28.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1148,10 +1142,10 @@ any was set).</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.28.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.28.6"></a><h4>Returns</h4>
 <p> The user data pointer set, or
 <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][nullable]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1169,7 +1163,7 @@ The reference count of <em class="parameter"><code>olddata</code></em>
  and the value pointed to by <em class="parameter"><code>olddata</code></em>
  may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.29.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.29.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1181,18 +1175,18 @@ The reference count of <em class="parameter"><code>olddata</code></em>
 <td class="parameter_name"><p>olddata</p></td>
 <td class="parameter_description"><p> pointer to a pointer to a
 mini-object to be replaced. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][nullable]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>newdata</p></td>
 <td class="parameter_description"><p> pointer to new mini-object. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.29.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.29.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>newdata</code></em>
 was different from <em class="parameter"><code>olddata</code></em>
 </p>
@@ -1215,7 +1209,7 @@ takes ownership of <em class="parameter"><code>newdata</code></em>
  and the value pointed to by <em class="parameter"><code>olddata</code></em>
  may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.30.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.30.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1238,7 +1232,7 @@ be replaced. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.30.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.30.7"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>newdata</code></em>
 was different from <em class="parameter"><code>olddata</code></em>
 </p>
@@ -1254,7 +1248,7 @@ gst_mini_object_steal (<em class="parameter"><code><a class="link" href="gstream
  with <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> and
 return the old value.</p>
 <div class="refsect3">
-<a name="id-1.3.31.8.31.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.31.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1270,7 +1264,7 @@ be stolen. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.8.31.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.31.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> at <em class="parameter"><code>oldata</code></em>
 </p>
 <p></p>
@@ -1299,7 +1293,7 @@ Unref Func: gst_mini_object_unref
 Set Value Func: g_value_set_boxed
 Get Value Func: g_value_get_boxed</p>
 <div class="refsect3">
-<a name="id-1.3.31.9.2.5"></a><h4>Members</h4>
+<a name="id-1.3.31.8.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -1351,7 +1345,7 @@ Get Value Func: g_value_get_boxed</p>
 <a name="GstMiniObjectFlags"></a><h3>enum GstMiniObjectFlags</h3>
 <p>Flags for the mini object</p>
 <div class="refsect3">
-<a name="id-1.3.31.9.3.4"></a><h4>Members</h4>
+<a name="id-1.3.31.8.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -1391,7 +1385,7 @@ READONLY mode. Only read locks can be performed on the object.</p>
 <a name="GstLockFlags"></a><h3>enum GstLockFlags</h3>
 <p>Flags used when locking miniobjects</p>
 <div class="refsect3">
-<a name="id-1.3.31.9.4.4"></a><h4>Members</h4>
+<a name="id-1.3.31.8.4.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -1435,6 +1429,6 @@ READONLY mode. Only read locks can be performed on the object.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>
