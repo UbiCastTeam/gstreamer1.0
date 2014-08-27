@@ -514,9 +514,16 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
         GstSingleQueue *q = (GstSingleQueue *) tmp->data;
         gst_data_queue_get_level (q->queue, &size);
 
-        /* do not reduce max size below current level if the single queue has grown because of empty queue */
+        GST_DEBUG_OBJECT (mq, "Queue %d: Requested buffers size: %d,"
+            " current: %d, current max %d", q->id, new_size, size.visible,
+            q->max_size.visible);
+
+        /* do not reduce max size below current level if the single queue
+         * has grown because of empty queue */
         if (new_size == 0) {
           q->max_size.visible = new_size;
+        } else if (q->max_size.visible == 0) {
+          q->max_size.visible = MAX (new_size, size.visible);
         } else if (new_size > size.visible) {
           q->max_size.visible = new_size;
         }
@@ -1458,7 +1465,19 @@ out_flushing:
     wake_up_next_non_linked (mq);
     sq->last_query = FALSE;
     g_cond_signal (&sq->query_handled);
-    GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+
+    /* Post an error message if we got EOS while downstream
+     * has returned an error flow return. After EOS there
+     * will be no further buffer which could propagate the
+     * error upstream */
+    if (sq->is_eos && sq->srcresult < GST_FLOW_EOS) {
+      GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+      GST_ELEMENT_ERROR (mq, STREAM, FAILED,
+          ("Internal data stream error."),
+          ("streaming stopped, reason %s", gst_flow_get_name (sq->srcresult)));
+    } else {
+      GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+    }
 
     /* upstream needs to see fatal result ASAP to shut things down,
      * but might be stuck in one of our other full queues;
@@ -1658,12 +1677,26 @@ gst_multi_queue_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
     goto flushing;
 
   /* mark EOS when we received one, we must do that after putting the
-   * buffer in the queue because EOS marks the buffer as filled. No need to take
-   * a lock, the _check_full happens from this thread only, right before pushing
-   * into dataqueue. */
+   * buffer in the queue because EOS marks the buffer as filled. */
   switch (type) {
     case GST_EVENT_EOS:
+      GST_MULTI_QUEUE_MUTEX_LOCK (mq);
       sq->is_eos = TRUE;
+
+      /* Post an error message if we got EOS while downstream
+       * has returned an error flow return. After EOS there
+       * will be no further buffer which could propagate the
+       * error upstream */
+      if (sq->srcresult < GST_FLOW_EOS) {
+        GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+        GST_ELEMENT_ERROR (mq, STREAM, FAILED,
+            ("Internal data stream error."),
+            ("streaming stopped, reason %s",
+                gst_flow_get_name (sq->srcresult)));
+      } else {
+        GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+      }
+
       /* EOS affects the buffering state */
       update_buffering (mq, sq);
       single_queue_overrun_cb (sq->queue, sq);

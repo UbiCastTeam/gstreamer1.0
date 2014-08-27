@@ -8,15 +8,14 @@
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstInfo.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstInfo.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gstreamer-GstInfo.description" class="shortcut">Description</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-support.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -635,11 +634,6 @@
 </table></div>
 </div>
 <div class="refsect1">
-<a name="gstreamer-GstInfo.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">
-</pre>
-</div>
-<div class="refsect1">
 <a name="gstreamer-GstInfo.includes"></a><h2>Includes</h2>
 <pre class="synopsis">#include &lt;gst/gst.h&gt;
 </pre>
@@ -726,7 +720,7 @@ In GStreamer printf string arguments may not be <a href="http://library.gnome.or
 platforms (ie Solaris) the libc crashes in that case. This includes debugging
 strings.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.2.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -736,7 +730,7 @@ strings.</p>
 <tbody><tr>
 <td class="parameter_name"><p>str</p></td>
 <td class="parameter_description"><p> The string to check. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -748,7 +742,7 @@ strings.</p>
 <p>Evaluates to 2 strings, that describe the pad. Often used in debugging
 statements.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.3.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -791,7 +785,7 @@ function signature in C++ code.</p>
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
 Use G_GNUC_NO_INSTRUMENT on that function.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -857,7 +851,7 @@ gst_debug_log (<em class="parameter"><code><a class="link" href="gstreamer-GstIn
                <em class="parameter"><code>...</code></em>);</pre>
 <p>Logs the given message using the currently registered debugging handlers.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.6.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -894,7 +888,7 @@ gst_debug_log (<em class="parameter"><code><a class="link" href="gstreamer-GstIn
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
 or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>format</p></td>
@@ -924,7 +918,7 @@ gst_debug_log_valist (<em class="parameter"><code><a class="link" href="gstreame
                       <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
 <p>Logs the given message using the currently registered debugging handlers.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -961,7 +955,7 @@ gst_debug_log_valist (<em class="parameter"><code><a class="link" href="gstreame
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
 or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>format</p></td>
@@ -985,7 +979,7 @@ gst_debug_message_get (<em class="parameter"><code><span class="type">GstDebugMe
 <p>Gets the string representation of a <span class="type">GstDebugMessage</span>. This function is used
 in debug handlers to extract the message.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1000,7 +994,7 @@ in debug handlers to extract the message.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.8.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.8.6"></a><h4>Returns</h4>
 <p> the string representation of a <span class="type">GstDebugMessage</span>.</p>
 <p></p>
 </div>
@@ -1025,7 +1019,7 @@ GST_DEBUG_FILE environment variable).</p>
 And you can remove this handler by calling
 gst_debug_remove_log_function(gst_debug_log_default);</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.9.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1067,7 +1061,7 @@ gst_debug_remove_log_function(gst_debug_log_default);</p>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
 or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>unused</p></td>
@@ -1085,7 +1079,7 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 gst_debug_level_get_name (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);</pre>
 <p>Get the string representation of a debugging level</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1100,7 +1094,7 @@ gst_debug_level_get_name (<em class="parameter"><code><a class="link" href="gstr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.10.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.10.6"></a><h4>Returns</h4>
 <p> the name</p>
 <p></p>
 </div>
@@ -1115,7 +1109,7 @@ gst_debug_add_log_function (<em class="parameter"><code><a class="link" href="gs
 <p>Adds the logging function to the list of logging functions.
 Be sure to use <a href="http://library.gnome.org/devel/glib/unstable/glib-Miscellaneous-Macros.html#G-GNUC-NO-INSTRUMENT:CAPS"><span class="type">G_GNUC_NO_INSTRUMENT</span></a> on that function, it is needed.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1150,7 +1144,7 @@ is not used anymore</p></td>
 gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstLogFunction" title="GstLogFunction ()"><span class="type">GstLogFunction</span></a> func</code></em>);</pre>
 <p>Removes all registered instances of the given logging functions.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1165,7 +1159,7 @@ gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.12.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.12.6"></a><h4>Returns</h4>
 <p> How many instances of the function were removed</p>
 <p></p>
 </div>
@@ -1177,7 +1171,7 @@ gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href=
 gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>Removes all registered instances of log functions with the given user data.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.13.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1192,7 +1186,7 @@ gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="http
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.13.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.13.6"></a><h4>Returns</h4>
 <p> How many instances of the function were removed</p>
 <p></p>
 </div>
@@ -1208,7 +1202,7 @@ It makes sense to deactivate it for speed issues.</p>
 <div class="note"><p>This function is not threadsafe. It makes sense to only call it
 during initialization.</p></div>
 <div class="refsect3">
-<a name="id-1.5.3.8.14.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.14.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1230,7 +1224,7 @@ during initialization.</p></div>
 gst_debug_is_active (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Checks if debugging output is activated.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.15.5"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.15.5"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if debugging is activated</p>
 <p></p>
 </div>
@@ -1245,7 +1239,7 @@ Same as <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode" t
 being GST_DEBUG_COLOR_MODE_ON or GST_DEBUG_COLOR_MODE_OFF.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.16.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.16.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1268,7 +1262,7 @@ gst_debug_set_color_mode (<em class="parameter"><code><a class="link" href="gstr
 <p>Changes the coloring mode for debug output.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.17.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.17.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1293,7 +1287,7 @@ gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href=
 <p>Changes the coloring mode for debug output.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.18.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.18.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1317,7 +1311,7 @@ gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href=
 gst_debug_is_colored (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Checks if the debugging output should be colored.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.19.5"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.19.5"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the debug output should be colored.</p>
 <p></p>
 </div>
@@ -1329,7 +1323,7 @@ gst_debug_is_colored (<em class="parameter"><code><span class="type">void</span>
 gst_debug_get_color_mode (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Changes the coloring mode for debug output.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.20.5"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.20.5"></a><h4>Returns</h4>
 <p> see <em class="parameter"><code>GstDebugColorMode</code></em>
 for possible values.</p>
 <p></p>
@@ -1345,7 +1339,7 @@ gst_debug_set_default_threshold (<em class="parameter"><code><a class="link" hre
 use this threshold.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.21.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.21.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1371,7 +1365,7 @@ environment variable. You can use wildcards such as '*', but note that
 the order matters when you use wild cards, e.g. "foosrc:6,*src:3,*:2" sets
 everything to log level 2.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.22.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.22.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1405,7 +1399,7 @@ to the one already set.</p></td>
 gst_debug_get_default_threshold (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Returns the default threshold that is used for new categories.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.23.5"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.23.5"></a><h4>Returns</h4>
 <p> the default threshold level</p>
 <p></p>
 </div>
@@ -1419,7 +1413,7 @@ gst_debug_set_threshold_for_name (<em class="parameter"><code>const <a href="htt
 <p>Sets all categories which match the given glob style pattern to the given
 level.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.24.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.24.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1448,7 +1442,7 @@ level.</p>
 gst_debug_unset_threshold_for_name (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Resets all categories with the given name back to the default level.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.25.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.25.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1471,7 +1465,7 @@ gst_debug_unset_threshold_for_name (<em class="parameter"><code>const <a href="h
 <p>Defines a GstDebugCategory variable.
 This macro expands to nothing if debugging is disabled.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.26.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.26.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1494,7 +1488,7 @@ This macro expands to nothing if debugging is disabled.</p>
 <p>Declares a GstDebugCategory variable as extern. Use in header files.
 This macro expands to nothing if debugging is disabled.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.27.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.27.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1517,7 +1511,7 @@ This macro expands to nothing if debugging is disabled.</p>
 <p>Defines a static GstDebugCategory variable.
 This macro expands to nothing if debugging is disabled.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.28.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.28.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1563,7 +1557,7 @@ to include uppercase letters.
 </p>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.29.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.29.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1629,7 +1623,7 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 
 <p></p>
 <div class="refsect3">
-<a name="id-1.5.3.8.30.7"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.30.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1658,7 +1652,7 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 gst_debug_category_free (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Removes and frees the category and all associated resources.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.31.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.31.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1688,7 +1682,7 @@ change the threshold of categories as side effect. It is however a nice
 function to use when debugging (even from gdb).
 </p></div>
 <div class="refsect3">
-<a name="id-1.5.3.8.32.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.32.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1721,7 +1715,7 @@ debugging message.
 Use this function to set the threshold back to where it was after using
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-category-set-threshold" title="gst_debug_category_set_threshold ()"><code class="function">gst_debug_category_set_threshold()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.33.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.33.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1743,7 +1737,7 @@ Use this function to set the threshold back to where it was after using
 gst_debug_category_get_threshold (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the threshold of a <a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.34.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.34.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1758,7 +1752,7 @@ gst_debug_category_get_threshold (<em class="parameter"><code><a class="link" hr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.34.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.34.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> that is used as threshold.</p>
 <p></p>
 </div>
@@ -1770,7 +1764,7 @@ gst_debug_category_get_threshold (<em class="parameter"><code><a class="link" hr
 gst_debug_category_get_name (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the name of a debug category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.35.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.35.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1785,7 +1779,7 @@ gst_debug_category_get_name (<em class="parameter"><code><a class="link" href="g
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.35.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.35.6"></a><h4>Returns</h4>
 <p> the name of the category.</p>
 <p></p>
 </div>
@@ -1798,7 +1792,7 @@ gst_debug_category_get_color (<em class="parameter"><code><a class="link" href="
 <p>Returns the color of a debug category used when printing output in this
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.36.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1813,7 +1807,7 @@ category.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.36.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.36.6"></a><h4>Returns</h4>
 <p> the color of the category.</p>
 <p></p>
 </div>
@@ -1825,7 +1819,7 @@ category.</p>
 gst_debug_category_get_description (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the description of a debug category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.37.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.37.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1840,7 +1834,7 @@ gst_debug_category_get_description (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.37.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.37.6"></a><h4>Returns</h4>
 <p> the description of the category.</p>
 <p></p>
 </div>
@@ -1854,7 +1848,7 @@ gst_debug_get_all_categories (<em class="parameter"><code><span class="type">voi
 may change anytime.
 The caller has to free the list after use.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.38.5"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.38.5"></a><h4>Returns</h4>
 <p> the list of
 debug categories. </p>
 <p><span class="annotation">[<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.DebugCategory]</span></p>
@@ -1869,7 +1863,7 @@ gst_debug_construct_term_color (<em class="parameter"><code><a href="http://libr
 terminals.
 You need to free the string after use.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.39.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.39.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1884,7 +1878,7 @@ You need to free the string after use.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.39.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.39.6"></a><h4>Returns</h4>
 <p> a string containing the color
 definition. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> gchar*]</span></p>
@@ -1900,7 +1894,7 @@ windows' terminals (cmd.exe). As there is no mean to underline, we simply
 ignore this attribute.</p>
 <p>This function returns 0 on non-windows machines.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.40.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.40.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1915,7 +1909,7 @@ ignore this attribute.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.40.7"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.40.7"></a><h4>Returns</h4>
 <p> an integer containing the color definition</p>
 <p></p>
 </div>
@@ -1928,7 +1922,7 @@ ignore this attribute.</p>
 debugging messages. You will probably want to use one of the ones described
 below.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.41.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.41.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1949,7 +1943,7 @@ below.</p>
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>...</p></td>
@@ -1967,7 +1961,7 @@ below.</p>
 </pre>
 <p>Output an error message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.42.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.42.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2001,7 +1995,7 @@ below.</p>
 </pre>
 <p>Output a warning message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.43.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.43.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2036,7 +2030,7 @@ below.</p>
 <p>Output an informational message belonging to the given object in the given
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.44.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.44.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2070,7 +2064,7 @@ category.</p>
 </pre>
 <p>Output an debugging message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.45.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.45.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2104,7 +2098,7 @@ category.</p>
 </pre>
 <p>Output an logging message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.46.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.46.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2138,7 +2132,7 @@ category.</p>
 </pre>
 <p>Output a fixme message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.47.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.47.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2173,7 +2167,7 @@ category.</p>
 <p>Output a tracing message belonging to the given object in the given
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.48.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.48.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2208,7 +2202,7 @@ category.</p>
  relating to the given object in the given
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.49.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.49.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2252,7 +2246,7 @@ category.</p>
 </pre>
 <p>Output an error message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.50.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.50.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2281,7 +2275,7 @@ category.</p>
 </pre>
 <p>Output an warning message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.51.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.51.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2310,7 +2304,7 @@ category.</p>
 </pre>
 <p>Output an informational message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.52.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.52.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2339,7 +2333,7 @@ category.</p>
 </pre>
 <p>Output an debugging message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.53.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.53.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2368,7 +2362,7 @@ category.</p>
 </pre>
 <p>Output an logging message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.54.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.54.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2397,7 +2391,7 @@ category.</p>
 </pre>
 <p>Output an fixme message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.55.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.55.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2426,7 +2420,7 @@ category.</p>
 </pre>
 <p>Output a tracing message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.56.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.56.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2455,7 +2449,7 @@ category.</p>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
  in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.57.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.57.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2494,7 +2488,7 @@ category.</p>
 </pre>
 <p>Output an error message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.58.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.58.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2523,7 +2517,7 @@ category.</p>
 </pre>
 <p>Output a warning message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.59.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.59.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2553,7 +2547,7 @@ category.</p>
 <p>Output an informational message belonging to the given object in the default
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.60.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.60.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2583,7 +2577,7 @@ category.</p>
 <p>Output a debugging message belonging to the given object in the default
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.61.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.61.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2612,7 +2606,7 @@ category.</p>
 </pre>
 <p>Output a logging message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.62.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.62.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2641,7 +2635,7 @@ category.</p>
 </pre>
 <p>Output a fixme message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.63.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.63.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2670,7 +2664,7 @@ category.</p>
 </pre>
 <p>Output a tracing message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.64.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.64.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2698,7 +2692,7 @@ category.</p>
 <pre class="programlisting">#define             GST_MEMDUMP_OBJECT(obj,msg,data,length)</pre>
 <p>Output a logging message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.65.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.65.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2737,7 +2731,7 @@ category.</p>
 </pre>
 <p>Output an error message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.66.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.66.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2759,7 +2753,7 @@ category.</p>
 </pre>
 <p>Output a warning message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.67.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.67.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2781,7 +2775,7 @@ category.</p>
 </pre>
 <p>Output an informational message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.68.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.68.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2803,7 +2797,7 @@ category.</p>
 </pre>
 <p>Output a debugging message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.69.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.69.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2825,7 +2819,7 @@ category.</p>
 </pre>
 <p>Output a logging message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.70.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.70.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2847,7 +2841,7 @@ category.</p>
 </pre>
 <p>Output a fixme message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.71.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.71.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2869,7 +2863,7 @@ category.</p>
 </pre>
 <p>Output a tracing message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.72.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.72.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2891,7 +2885,7 @@ category.</p>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.73.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.73.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2927,7 +2921,7 @@ category.</p>
 <p>Use this variant of <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCPTR:CAPS" title="GST_DEBUG_FUNCPTR()"><span class="type">GST_DEBUG_FUNCPTR</span></a> if you do not need to use <em class="parameter"><code>ptr</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.74.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.74.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2949,7 +2943,7 @@ category.</p>
 <p>Register a pointer to a function with its name, so it can later be used by
 <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCPTR-NAME:CAPS" title="GST_DEBUG_FUNCPTR_NAME()"><code class="function">GST_DEBUG_FUNCPTR_NAME()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.75.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.75.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2964,7 +2958,7 @@ category.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.8.75.6"></a><h4>Returns</h4>
+<a name="id-1.5.3.7.75.6"></a><h4>Returns</h4>
 <p> the value passed to <em class="parameter"><code>ptr</code></em>
 .</p>
 <p></p>
@@ -2979,7 +2973,7 @@ category.</p>
 <p>This macro returns a constant string which must not be modified or
 freed by the caller.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.76.6"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.76.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3017,7 +3011,7 @@ This file can be processed with graphviz to get an image.</p>
 "--gst-enable-gst-debug" and the environment variable
 GST_DEBUG_DUMP_DOT_DIR is set to a basepath (e.g. /tmp).</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.77.7"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.77.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3053,7 +3047,7 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 <p>This works like <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>, but adds the current timestamp
 to the filename, so that it can be used to take multiple snapshots.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.78.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.78.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3098,7 +3092,7 @@ gstreamer code, which can be printed with this function.</p>
  will be
 evaluated more than once.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.80.5"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.80.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3137,7 +3131,7 @@ gst_debug_bin_to_dot_file_with_ts (<em class="parameter"><code><a class="link" h
 <p>The level defines the importance of a debugging message. The more important a
 message is, the greater the probability that the debugging system outputs it.</p>
 <div class="refsect3">
-<a name="id-1.5.3.9.2.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.2.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3264,7 +3258,7 @@ reset the debugging output to default behaviour.</p>
 <p>These are some terminal style flags you can use when creating your
 debugging categories to make them stand out in debugging output.</p>
 <div class="refsect3">
-<a name="id-1.5.3.9.4.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.4.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3406,7 +3400,7 @@ debugging categories to make them stand out in debugging output.</p>
 <div class="refsect2">
 <a name="GstDebugColorMode"></a><h3>enum GstDebugColorMode</h3>
 <div class="refsect3">
-<a name="id-1.5.3.9.5.3"></a><h4>Members</h4>
+<a name="id-1.5.3.8.5.3"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3455,7 +3449,7 @@ debugging categories to make them stand out in debugging output.</p>
 <p>Available details for pipeline graphs produced by <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>
 and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.9.7.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.7.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3540,6 +3534,6 @@ and environment variables that affect the debugging output.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

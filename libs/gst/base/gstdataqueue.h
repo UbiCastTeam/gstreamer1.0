@@ -106,7 +106,7 @@ typedef void (*GstDataQueueFullCallback) (GstDataQueue * queue, gpointer checkda
 typedef void (*GstDataQueueEmptyCallback) (GstDataQueue * queue, gpointer checkdata);
 
 /**
- * GstDataQueue: (skip)
+ * GstDataQueue:
  * @object: the parent structure
  *
  * Opaque #GstDataQueue structure.
@@ -121,7 +121,7 @@ struct _GstDataQueue
 };
 
 /**
- * GstDataQueueClass: (skip)
+ * GstDataQueueClass:
  */
 struct _GstDataQueueClass
 {

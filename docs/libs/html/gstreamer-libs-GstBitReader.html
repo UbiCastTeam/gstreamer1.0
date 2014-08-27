@@ -8,15 +8,14 @@
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstAdapter.html" title="GstAdapter">
 <link rel="next" href="gstreamer-libs-GstByteReader.html" title="GstByteReader">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#gstreamer-libs-GstBitReader.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#gstreamer-libs-GstBitReader.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gstreamer-libs-GstBitReader.description" class="shortcut">Description</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-base.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -279,11 +278,6 @@
 </table></div>
 </div>
 <div class="refsect1">
-<a name="gstreamer-libs-GstBitReader.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">
-</pre>
-</div>
-<div class="refsect1">
 <a name="gstreamer-libs-GstBitReader.includes"></a><h2>Includes</h2>
 <pre class="synopsis">#include &lt;gst/base/gstbitreader.h&gt;
 </pre>
@@ -305,7 +299,7 @@ used. This macro can used be to initialize a variable, but it cannot
 be assigned to a variable. In that case you have to use
 <a class="link" href="gstreamer-libs-GstBitReader.html#gst-bit-reader-init" title="gst_bit_reader_init ()"><code class="function">gst_bit_reader_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.2.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -338,7 +332,7 @@ gst_bit_reader_new (<em class="parameter"><code>const <span class="type">guint8<
 .</p>
 <p>Free-function: gst_bit_reader_free</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.3.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -362,7 +356,7 @@ in bytes</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.3.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.3.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -375,7 +369,7 @@ gst_bit_reader_free (<em class="parameter"><code><a class="link" href="gstreamer
 <p>Frees a <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance, which was previously allocated by
 <a class="link" href="gstreamer-libs-GstBitReader.html#gst-bit-reader-new" title="gst_bit_reader_new ()"><code class="function">gst_bit_reader_new()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.4.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -401,7 +395,7 @@ gst_bit_reader_init (<em class="parameter"><code><a class="link" href="gstreamer
 . This function
 can be called on already initialized instances.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -436,7 +430,7 @@ in bytes</p></td>
 gst_bit_reader_get_pos (<em class="parameter"><code>const <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> *reader</code></em>);</pre>
 <p>Returns the current position of a <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance in bits.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.6.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -451,7 +445,7 @@ gst_bit_reader_get_pos (<em class="parameter"><code>const <a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.6.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.6.6"></a><h4>Returns</h4>
 <p> The current position of <em class="parameter"><code>reader</code></em>
 in bits.</p>
 <p></p>
@@ -464,7 +458,7 @@ in bits.</p>
 gst_bit_reader_get_remaining (<em class="parameter"><code>const <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> *reader</code></em>);</pre>
 <p>Returns the remaining number of bits of a <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -479,7 +473,7 @@ gst_bit_reader_get_remaining (<em class="parameter"><code>const <a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.7.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.7.6"></a><h4>Returns</h4>
 <p> The remaining number of bits of <em class="parameter"><code>reader</code></em>
 instance.</p>
 <p></p>
@@ -494,7 +488,7 @@ gst_bit_reader_set_pos (<em class="parameter"><code><a class="link" href="gstrea
 <p>Sets the new position of a <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance to <em class="parameter"><code>pos</code></em>
  in bits.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -516,7 +510,7 @@ gst_bit_reader_set_pos (<em class="parameter"><code><a class="link" href="gstrea
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.8.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.8.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the position could be set successfully, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
 otherwise.</p>
 <p></p>
@@ -529,7 +523,7 @@ otherwise.</p>
 gst_bit_reader_get_size (<em class="parameter"><code>const <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> *reader</code></em>);</pre>
 <p>Returns the total number of bits of a <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -544,7 +538,7 @@ gst_bit_reader_get_size (<em class="parameter"><code>const <a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.9.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.9.6"></a><h4>Returns</h4>
 <p> The total number of bits of <em class="parameter"><code>reader</code></em>
 instance.</p>
 <p></p>
@@ -559,7 +553,7 @@ gst_bit_reader_skip (<em class="parameter"><code><a class="link" href="gstreamer
 <p>Skips <em class="parameter"><code>nbits</code></em>
  bits of the <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -581,7 +575,7 @@ gst_bit_reader_skip (<em class="parameter"><code><a class="link" href="gstreamer
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.10.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.10.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>nbits</code></em>
 bits could be skipped, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
@@ -594,7 +588,7 @@ bits could be skipped, <a href="http://library.gnome.org/devel/glib/unstable/gli
 gst_bit_reader_skip_to_byte (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> *reader</code></em>);</pre>
 <p>Skips until the next byte.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -609,7 +603,7 @@ gst_bit_reader_skip_to_byte (<em class="parameter"><code><a class="link" href="g
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.11.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.11.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -625,7 +619,7 @@ gst_bit_reader_get_bits_uint16 (<em class="parameter"><code><a class="link" href
  bits into <em class="parameter"><code>val</code></em>
  and update the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -652,7 +646,7 @@ gst_bit_reader_get_bits_uint16 (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.12.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.12.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -668,7 +662,7 @@ gst_bit_reader_get_bits_uint32 (<em class="parameter"><code><a class="link" href
  bits into <em class="parameter"><code>val</code></em>
  and update the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -695,7 +689,7 @@ gst_bit_reader_get_bits_uint32 (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.13.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.13.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -711,7 +705,7 @@ gst_bit_reader_get_bits_uint64 (<em class="parameter"><code><a class="link" href
  bits into <em class="parameter"><code>val</code></em>
  and update the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.14.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -738,7 +732,7 @@ gst_bit_reader_get_bits_uint64 (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.14.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.14.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -754,7 +748,7 @@ gst_bit_reader_get_bits_uint8 (<em class="parameter"><code><a class="link" href=
  bits into <em class="parameter"><code>val</code></em>
  and update the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.15.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -781,7 +775,7 @@ gst_bit_reader_get_bits_uint8 (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.15.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.15.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -797,7 +791,7 @@ gst_bit_reader_peek_bits_uint16 (<em class="parameter"><code>const <a class="lin
  bits into <em class="parameter"><code>val</code></em>
  but keep the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.16.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -824,7 +818,7 @@ gst_bit_reader_peek_bits_uint16 (<em class="parameter"><code>const <a class="lin
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.16.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.16.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -840,7 +834,7 @@ gst_bit_reader_peek_bits_uint32 (<em class="parameter"><code>const <a class="lin
  bits into <em class="parameter"><code>val</code></em>
  but keep the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.17.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.17.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -867,7 +861,7 @@ gst_bit_reader_peek_bits_uint32 (<em class="parameter"><code>const <a class="lin
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.17.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.17.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -883,7 +877,7 @@ gst_bit_reader_peek_bits_uint64 (<em class="parameter"><code>const <a class="lin
  bits into <em class="parameter"><code>val</code></em>
  but keep the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.18.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.18.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -910,7 +904,7 @@ gst_bit_reader_peek_bits_uint64 (<em class="parameter"><code>const <a class="lin
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.18.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.18.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -926,7 +920,7 @@ gst_bit_reader_peek_bits_uint8 (<em class="parameter"><code>const <a class="link
  bits into <em class="parameter"><code>val</code></em>
  but keep the current position.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.19.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.19.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -953,7 +947,7 @@ gst_bit_reader_peek_bits_uint8 (<em class="parameter"><code>const <a class="link
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.19.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.19.6"></a><h4>Returns</h4>
 <p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -968,7 +962,7 @@ gst_bit_reader_skip_unchecked (<em class="parameter"><code><a class="link" href=
  bits of the <a class="link" href="gstreamer-libs-GstBitReader.html#GstBitReader" title="GstBitReader"><span class="type">GstBitReader</span></a> instance without checking if there
 are enough bits available in the bit reader.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.20.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.20.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -998,7 +992,7 @@ gst_bit_reader_skip_to_byte_unchecked (<em class="parameter"><code><a class="lin
 <p>Skips until the next byte without checking if there are enough bits
 available in the bit reader.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.21.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1025,7 +1019,7 @@ gst_bit_reader_get_bits_uint16_unchecked
  and update the current position without
 checking if there are enough bits available in the bit reader.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.22.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.22.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1047,7 +1041,7 @@ checking if there are enough bits available in the bit reader.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.22.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.22.6"></a><h4>Returns</h4>
 <p> unsigned 16 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1064,7 +1058,7 @@ gst_bit_reader_get_bits_uint32_unchecked
  and update the current position without
 checking if there are enough bits available in the bit reader.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.23.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.23.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1086,7 +1080,7 @@ checking if there are enough bits available in the bit reader.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.23.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.23.6"></a><h4>Returns</h4>
 <p> unsigned 32 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1103,7 +1097,7 @@ gst_bit_reader_get_bits_uint64_unchecked
  and update the current position without
 checking if there are enough bits available in the bit reader.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.24.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.24.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1125,7 +1119,7 @@ checking if there are enough bits available in the bit reader.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.24.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.24.6"></a><h4>Returns</h4>
 <p> unsigned 64 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1142,7 +1136,7 @@ gst_bit_reader_get_bits_uint8_unchecked
  and update the current position without
 checking if there are enough bits available in the bit reader.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.25.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.25.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1164,7 +1158,7 @@ checking if there are enough bits available in the bit reader.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.25.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.25.6"></a><h4>Returns</h4>
 <p> unsigned 8 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1181,7 +1175,7 @@ gst_bit_reader_peek_bits_uint16_unchecked
  but keep the current position without
 checking if there are enough bits available in the bit reader</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.26.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.26.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1203,7 +1197,7 @@ checking if there are enough bits available in the bit reader</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.26.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.26.6"></a><h4>Returns</h4>
 <p> unsigned 16 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1220,7 +1214,7 @@ gst_bit_reader_peek_bits_uint32_unchecked
  but keep the current position without
 checking if there are enough bits available in the bit reader</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.27.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.27.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1242,7 +1236,7 @@ checking if there are enough bits available in the bit reader</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.27.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.27.6"></a><h4>Returns</h4>
 <p> unsigned 32 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1259,7 +1253,7 @@ gst_bit_reader_peek_bits_uint64_unchecked
  but keep the current position without
 checking if there are enough bits available in the bit reader</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.28.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.28.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1281,7 +1275,7 @@ checking if there are enough bits available in the bit reader</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.28.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.28.6"></a><h4>Returns</h4>
 <p> unsigned 64 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1298,7 +1292,7 @@ gst_bit_reader_peek_bits_uint8_unchecked
  but keep the current position without
 checking if there are enough bits available in the bit reader</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.29.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.9.7.29.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1320,7 +1314,7 @@ checking if there are enough bits available in the bit reader</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.9.8.29.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.9.7.29.6"></a><h4>Returns</h4>
 <p> unsigned 8 bit integer with the bits.</p>
 <p></p>
 </div>
@@ -1340,7 +1334,7 @@ checking if there are enough bits available in the bit reader</p>
 </pre>
 <p>A bit reader instance.</p>
 <div class="refsect3">
-<a name="id-1.2.4.9.9.2.5"></a><h4>Members</h4>
+<a name="id-1.2.4.9.8.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -1378,6 +1372,6 @@ in bytes</p></td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

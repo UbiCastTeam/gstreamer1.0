@@ -792,8 +792,13 @@ gst_queue_handle_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
       queue->srcresult = GST_FLOW_OK;
       queue->eos = FALSE;
       queue->unexpected = FALSE;
-      gst_pad_start_task (queue->srcpad, (GstTaskFunction) gst_queue_loop,
-          queue->srcpad, NULL);
+      if (gst_pad_is_active (queue->srcpad)) {
+        gst_pad_start_task (queue->srcpad, (GstTaskFunction) gst_queue_loop,
+            queue->srcpad, NULL);
+      } else {
+        GST_INFO_OBJECT (queue->srcpad, "not re-starting task on srcpad, "
+            "pad not active any longer");
+      }
       GST_QUEUE_MUTEX_UNLOCK (queue);
 
       STATUS (queue, pad, "after flush");
@@ -806,11 +811,20 @@ gst_queue_handle_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
           /* Errors in sticky event pushing are no problem and ignored here
            * as they will cause more meaningful errors during data flow.
            * For EOS events, that are not followed by data flow, we still
-           * return FALSE here though.
+           * return FALSE here though and report an error.
            */
-          if (!GST_EVENT_IS_STICKY (event) ||
-              GST_EVENT_TYPE (event) == GST_EVENT_EOS)
+          if (!GST_EVENT_IS_STICKY (event)) {
             goto out_flow_error;
+          } else if (GST_EVENT_TYPE (event) == GST_EVENT_EOS) {
+            if (queue->srcresult == GST_FLOW_NOT_LINKED
+                || queue->srcresult < GST_FLOW_EOS) {
+              GST_ELEMENT_ERROR (queue, STREAM, FAILED,
+                  (_("Internal data flow error.")),
+                  ("streaming task paused, reason %s (%d)",
+                      gst_flow_get_name (queue->srcresult), queue->srcresult));
+            }
+            goto out_flow_error;
+          }
         }
         /* refuse more events on EOS */
         if (queue->eos)
