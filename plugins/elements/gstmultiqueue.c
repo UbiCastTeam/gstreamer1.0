@@ -200,6 +200,7 @@ static void single_queue_overrun_cb (GstDataQueue * dq, GstSingleQueue * sq);
 static void single_queue_underrun_cb (GstDataQueue * dq, GstSingleQueue * sq);
 
 static void update_buffering (GstMultiQueue * mq, GstSingleQueue * sq);
+static void gst_multi_queue_post_buffering (GstMultiQueue * mq);
 
 static void gst_single_queue_flush_queue (GstSingleQueue * sq, gboolean full);
 
@@ -269,6 +270,14 @@ enum
 
 #define GST_MULTI_QUEUE_MUTEX_UNLOCK(q) G_STMT_START {                        \
   g_mutex_unlock (&q->qlock);                                            \
+} G_STMT_END
+
+#define SET_PERCENT(mq, perc) G_STMT_START {                             \
+  if (perc != mq->percent) {                                             \
+    mq->percent = perc;                                                  \
+    mq->percent_changed = TRUE;                                          \
+    GST_DEBUG_OBJECT (mq, "buffering %d percent", perc);                 \
+  }                                                                      \
 } G_STMT_END
 
 static void gst_multi_queue_finalize (GObject * object);
@@ -457,6 +466,7 @@ gst_multi_queue_init (GstMultiQueue * mqueue)
   mqueue->high_time = GST_CLOCK_TIME_NONE;
 
   g_mutex_init (&mqueue->qlock);
+  g_mutex_init (&mqueue->buffering_post_lock);
 }
 
 static void
@@ -471,6 +481,7 @@ gst_multi_queue_finalize (GObject * object)
 
   /* free/unref instance data */
   g_mutex_clear (&mqueue->qlock);
+  g_mutex_clear (&mqueue->buffering_post_lock);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -498,6 +509,7 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
       mq->max_size.bytes = g_value_get_uint (value);
       SET_CHILD_PROPERTY (mq, bytes);
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+      gst_multi_queue_post_buffering (mq);
       break;
     case PROP_MAX_SIZE_BUFFERS:
     {
@@ -533,6 +545,7 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
       }
 
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+      gst_multi_queue_post_buffering (mq);
 
       break;
     }
@@ -541,6 +554,7 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
       mq->max_size.time = g_value_get_uint64 (value);
       SET_CHILD_PROPERTY (mq, time);
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+      gst_multi_queue_post_buffering (mq);
       break;
     case PROP_EXTRA_SIZE_BYTES:
       mq->extra_size.bytes = g_value_get_uint (value);
@@ -554,13 +568,11 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
     case PROP_USE_BUFFERING:
       mq->use_buffering = g_value_get_boolean (value);
       if (!mq->use_buffering && mq->buffering) {
-        GstMessage *message;
-
+        GST_MULTI_QUEUE_MUTEX_LOCK (mq);
         mq->buffering = FALSE;
         GST_DEBUG_OBJECT (mq, "buffering 100 percent");
-        message = gst_message_new_buffering (GST_OBJECT_CAST (mq), 100);
-
-        gst_element_post_message (GST_ELEMENT_CAST (mq), message);
+        SET_PERCENT (mq, 100);
+        GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
       }
 
       if (mq->use_buffering) {
@@ -579,6 +591,7 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
 
         GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
       }
+      gst_multi_queue_post_buffering (mq);
       break;
     case PROP_LOW_PERCENT:
       mq->low_percent = g_value_get_int (value);
@@ -771,6 +784,7 @@ gst_multi_queue_change_state (GstElement * element, GstStateChange transition)
       SET_CHILD_PROPERTY (mqueue, visible);
 
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mqueue);
+      gst_multi_queue_post_buffering (mqueue);
 
       break;
     }
@@ -832,8 +846,9 @@ gst_single_queue_flush (GstMultiQueue * mq, GstSingleQueue * sq, gboolean flush,
     result = gst_pad_pause_task (sq->srcpad);
     sq->sink_tainted = sq->src_tainted = TRUE;
   } else {
-    GST_MULTI_QUEUE_MUTEX_LOCK (mq);
     gst_single_queue_flush_queue (sq, full);
+
+    GST_MULTI_QUEUE_MUTEX_LOCK (mq);
     gst_segment_init (&sq->sink_segment, GST_FORMAT_TIME);
     gst_segment_init (&sq->src_segment, GST_FORMAT_TIME);
     sq->has_src_segment = FALSE;
@@ -864,20 +879,16 @@ gst_single_queue_flush (GstMultiQueue * mq, GstSingleQueue * sq, gboolean flush,
   return result;
 }
 
-static void
-update_buffering (GstMultiQueue * mq, GstSingleQueue * sq)
+/* WITH LOCK TAKEN */
+static gint
+get_percentage (GstSingleQueue * sq)
 {
   GstDataQueueSize size;
   gint percent, tmp;
-  gboolean post = FALSE;
-
-  /* nothing to dowhen we are not in buffering mode */
-  if (!mq->use_buffering)
-    return;
 
   gst_data_queue_get_level (sq->queue, &size);
 
-  GST_DEBUG_OBJECT (mq,
+  GST_DEBUG_OBJECT (sq->mqueue,
       "queue %d: visible %u/%u, bytes %u/%u, time %" G_GUINT64_FORMAT "/%"
       G_GUINT64_FORMAT, sq->id, size.visible, sq->max_size.visible,
       size.bytes, sq->max_size.bytes, sq->cur_time, sq->max_size.time);
@@ -897,43 +908,76 @@ update_buffering (GstMultiQueue * mq, GstSingleQueue * sq)
     }
   }
 
+  return percent;
+}
+
+/* WITH LOCK TAKEN */
+static void
+update_buffering (GstMultiQueue * mq, GstSingleQueue * sq)
+{
+  gint percent;
+
+  /* nothing to dowhen we are not in buffering mode */
+  if (!mq->use_buffering)
+    return;
+
+  percent = get_percentage (sq);
+
   if (mq->buffering) {
-    post = TRUE;
     if (percent >= mq->high_percent) {
       mq->buffering = FALSE;
     }
     /* make sure it increases */
     percent = MAX (mq->percent, percent);
 
-    if (percent == mq->percent)
-      /* don't post if nothing changed */
-      post = FALSE;
-    else
-      /* else keep last value we posted */
-      mq->percent = percent;
+    SET_PERCENT (mq, percent);
   } else {
-    if (percent < mq->low_percent) {
+    GList *iter;
+    gboolean is_buffering = TRUE;
+
+    for (iter = mq->queues; iter; iter = g_list_next (iter)) {
+      GstSingleQueue *oq = (GstSingleQueue *) iter->data;
+
+      if (get_percentage (oq) >= 100) {
+        is_buffering = FALSE;
+
+        break;
+      }
+    }
+
+    if (is_buffering && percent < mq->low_percent) {
       mq->buffering = TRUE;
-      mq->percent = percent;
-      post = TRUE;
+      SET_PERCENT (mq, percent);
     }
   }
-  if (post) {
-    GstMessage *message;
+}
 
-    /* scale to high percent so that it becomes the 100% mark */
+static void
+gst_multi_queue_post_buffering (GstMultiQueue * mq)
+{
+  GstMessage *msg = NULL;
+
+  g_mutex_lock (&mq->buffering_post_lock);
+  GST_MULTI_QUEUE_MUTEX_LOCK (mq);
+  if (mq->percent_changed) {
+    gint percent = mq->percent;
+
+    mq->percent_changed = FALSE;
+
     percent = percent * 100 / mq->high_percent;
     /* clip */
     if (percent > 100)
       percent = 100;
 
-    GST_DEBUG_OBJECT (mq, "buffering %d percent", percent);
-    message = gst_message_new_buffering (GST_OBJECT_CAST (mq), percent);
-
-    gst_element_post_message (GST_ELEMENT_CAST (mq), message);
-  } else {
-    GST_DEBUG_OBJECT (mq, "filled %d percent", percent);
+    GST_DEBUG_OBJECT (mq, "Going to post buffering: %d%%", percent);
+    msg = gst_message_new_buffering (GST_OBJECT_CAST (mq), percent);
   }
+  GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+
+  if (msg != NULL)
+    gst_element_post_message (GST_ELEMENT_CAST (mq), msg);
+
+  g_mutex_unlock (&mq->buffering_post_lock);
 }
 
 /* calculate the diff between running time on the sink and src of the queue.
@@ -1034,6 +1078,7 @@ apply_segment (GstMultiQueue * mq, GstSingleQueue * sq, GstEvent * event,
   update_time_level (mq, sq);
 
   GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+  gst_multi_queue_post_buffering (mq);
 }
 
 /* take a buffer and update segment, updating the time level of the queue. */
@@ -1065,6 +1110,7 @@ apply_buffer (GstMultiQueue * mq, GstSingleQueue * sq, GstClockTime timestamp,
   /* calc diff with other end */
   update_time_level (mq, sq);
   GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+  gst_multi_queue_post_buffering (mq);
 }
 
 static GstClockTime
@@ -1443,6 +1489,7 @@ gst_multi_queue_loop (GstPad * pad)
     update_buffering (mq, sq);
 
   GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+  gst_multi_queue_post_buffering (mq);
 
   if (result != GST_FLOW_OK && result != GST_FLOW_NOT_LINKED
       && result != GST_FLOW_EOS)
@@ -1698,8 +1745,11 @@ gst_multi_queue_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
       }
 
       /* EOS affects the buffering state */
+      GST_MULTI_QUEUE_MUTEX_LOCK (mq);
       update_buffering (mq, sq);
+      GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
       single_queue_overrun_cb (sq->queue, sq);
+      gst_multi_queue_post_buffering (mq);
       break;
     case GST_EVENT_SEGMENT:
       apply_segment (mq, sq, sref, &sq->sink_segment);
@@ -2165,7 +2215,10 @@ gst_single_queue_flush_queue (GstSingleQueue * sq, gboolean full)
   if (was_flushing)
     gst_data_queue_set_flushing (sq->queue, TRUE);
 
+  GST_MULTI_QUEUE_MUTEX_LOCK (sq->mqueue);
   update_buffering (sq->mqueue, sq);
+  GST_MULTI_QUEUE_MUTEX_UNLOCK (sq->mqueue);
+  gst_multi_queue_post_buffering (sq->mqueue);
 }
 
 static void
