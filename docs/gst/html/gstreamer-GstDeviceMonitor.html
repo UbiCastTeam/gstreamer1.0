@@ -57,7 +57,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-add-filter" title="gst_device_monitor_add_filter ()">gst_device_monitor_add_filter</a> <span class="c_punctuation">()</span>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-remove-filter" title="gst_device_monitor_remove_filter ()">gst_device_monitor_remove_filter</a> <span class="c_punctuation">()</span>
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-start" title="gst_device_monitor_start ()">gst_device_monitor_start</a> <span class="c_punctuation">()</span>
@@ -89,7 +89,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-get-devices" title="gst_device_monitor_get_devices ()">gst_device_monitor_get_devices</a> <span class="c_punctuation">()</span>
@@ -193,14 +193,14 @@ the application has set.</p>
      <span class="keyword">case</span> GST_MESSAGE_DEVICE_ADDED<span class="gtkdoc opt">:</span>
        <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html#gst-message-parse-device-added">gst_message_parse_device_added</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">, &amp;</span>device<span class="gtkdoc opt">);</span>
        name <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstDevice.html#gst-device-get-display-name">gst_device_get_display_name</a></span> <span class="gtkdoc opt">(</span>device<span class="gtkdoc opt">);</span>
-       <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;Device added: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> name<span class="gtkdoc opt">);</span>
-       <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>name<span class="gtkdoc opt">);</span>
+       <span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;Device added: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> name<span class="gtkdoc opt">);</span>
+       <span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>name<span class="gtkdoc opt">);</span>
        <span class="keyword">break</span><span class="gtkdoc opt">;</span>
      <span class="keyword">case</span> GST_MESSAGE_DEVICE_REMOVED<span class="gtkdoc opt">:</span>
        <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstMessage.html#gst-message-parse-device-removed">gst_message_parse_device_removed</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">, &amp;</span>device<span class="gtkdoc opt">);</span>
        name <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstDevice.html#gst-device-get-display-name">gst_device_get_display_name</a></span> <span class="gtkdoc opt">(</span>device<span class="gtkdoc opt">);</span>
-       <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;Device removed: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> name<span class="gtkdoc opt">);</span>
-       <span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>name<span class="gtkdoc opt">);</span>
+       <span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;Device removed: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> name<span class="gtkdoc opt">);</span>
+       <span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>name<span class="gtkdoc opt">);</span>
        <span class="keyword">break</span><span class="gtkdoc opt">;</span>
      <span class="keyword">default</span><span class="gtkdoc opt">:</span>
        <span class="keyword">break</span><span class="gtkdoc opt">;</span>
@@ -281,9 +281,9 @@ gst_device_monitor_get_bus (<em class="parameter"><code><a class="link" href="gs
 <hr>
 <div class="refsect2">
 <a name="gst-device-monitor-add-filter"></a><h3>gst_device_monitor_add_filter ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_device_monitor_add_filter (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> *monitor</code></em>,
-                               <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *classes</code></em>,
+                               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *classes</code></em>,
                                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Adds a filter for which <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> will be monitored, any device that matches
 all classes and the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> will be returned.</p>
@@ -304,12 +304,12 @@ all classes and the <a class="link" href="GstCaps.html" title="GstCaps"><span cl
 </tr>
 <tr>
 <td class="parameter_name"><p>classes</p></td>
-<td class="parameter_description"><p> device classes to use as filter or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for any class. </p></td>
+<td class="parameter_description"><p> device classes to use as filter or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for any class. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>caps</p></td>
-<td class="parameter_description"><p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to filter or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for ANY. </p></td>
+<td class="parameter_description"><p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to filter or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for ANY. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -326,9 +326,9 @@ classes.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-device-monitor-remove-filter"></a><h3>gst_device_monitor_remove_filter ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_device_monitor_remove_filter (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> *monitor</code></em>,
-                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> filter_id</code></em>);</pre>
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> filter_id</code></em>);</pre>
 <p>Removes a filter from the <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> using the id that was returned
 by <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-add-filter" title="gst_device_monitor_add_filter ()"><code class="function">gst_device_monitor_add_filter()</code></a>.</p>
 <div class="refsect3">
@@ -355,7 +355,7 @@ by <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-add-
 </div>
 <div class="refsect3">
 <a name="id-1.4.2.7.5.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> of the filter id was valid, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> of the filter id was valid, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 <p class="since">Since 1.4</p>
@@ -363,7 +363,7 @@ by <a class="link" href="gstreamer-GstDeviceMonitor.html#gst-device-monitor-add-
 <hr>
 <div class="refsect2">
 <a name="gst-device-monitor-start"></a><h3>gst_device_monitor_start ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_device_monitor_start (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> *monitor</code></em>);</pre>
 <p>Starts monitoring the devices, one this has succeeded, the
 <a class="link" href="GstMessage.html#GST-MESSAGE-DEVICE-ADDED:CAPS"><code class="literal">GST_MESSAGE_DEVICE_ADDED</code></a> and <a class="link" href="GstMessage.html#GST-MESSAGE-DEVICE-REMOVED:CAPS"><code class="literal">GST_MESSAGE_DEVICE_REMOVED</code></a> messages
@@ -385,7 +385,7 @@ will be emitted on the bus when the list of devices changes.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.4.2.7.6.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the device monitoring could be started</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the device monitoring could be started</p>
 <p></p>
 </div>
 <p class="since">Since 1.4</p>
@@ -416,7 +416,7 @@ gst_device_monitor_stop (<em class="parameter"><code><a class="link" href="gstre
 <hr>
 <div class="refsect2">
 <a name="gst-device-monitor-get-devices"></a><h3>gst_device_monitor_get_devices ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 gst_device_monitor_get_devices (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> *monitor</code></em>);</pre>
 <p>Gets a list of devices from all of the relevant monitors. This may actually
 probe the hardware if the monitor is not currently started.</p>
@@ -437,7 +437,7 @@ probe the hardware if the monitor is not currently started.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.4.2.7.8.6"></a><h4>Returns</h4>
-<p> a <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of
 <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstDevice]</span></p>
 </div>

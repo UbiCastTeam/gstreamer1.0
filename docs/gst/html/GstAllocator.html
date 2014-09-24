@@ -152,10 +152,10 @@
 </div>
 <div class="refsect1">
 <a name="GstAllocator.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Boxed-Types.html">GBoxed</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-Boxed-Types.html">GBoxed</a>
     <span class="lineart">╰──</span> GstAllocationParams
-    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GstObject.html" title="GstObject">GstObject</a>
             <span class="lineart">╰──</span> GstAllocator
 </pre>
@@ -168,7 +168,7 @@
 <div class="refsect1">
 <a name="GstAllocator.description"></a><h2>Description</h2>
 <p>Memory is usually created by allocators with a <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>
-method call. When <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
+method call. When <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
 be used.</p>
 <p>New allocators can be registered with <a class="link" href="GstAllocator.html#gst-allocator-register" title="gst_allocator_register ()"><code class="function">gst_allocator_register()</code></a>.
 Allocators are identified by name and can be retrieved with
@@ -182,10 +182,10 @@ allocated elsewhere.</p>
 <div class="refsect2">
 <a name="gst-allocator-find"></a><h3>gst_allocator_find ()</h3>
 <pre class="programlisting"><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="returnvalue">GstAllocator</span></a> *
-gst_allocator_find (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+gst_allocator_find (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Find a previously registered allocator with <em class="parameter"><code>name</code></em>
 . When <em class="parameter"><code>name</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the
 default allocator will be returned.</p>
 <div class="refsect3">
 <a name="id-1.3.4.9.2.5"></a><h4>Parameters</h4>
@@ -204,7 +204,7 @@ default allocator will be returned.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.4.9.2.6"></a><h4>Returns</h4>
-<p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
+<p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
 the allocator with <em class="parameter"><code>name</code></em>
 was not registered. Use <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a>
 to release the allocator after usage. </p>
@@ -215,7 +215,7 @@ to release the allocator after usage. </p>
 <div class="refsect2">
 <a name="gst-allocator-register"></a><h3>gst_allocator_register ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_allocator_register (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+gst_allocator_register (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>);</pre>
 <p>Registers the memory <em class="parameter"><code>allocator</code></em>
  with <em class="parameter"><code>name</code></em>
@@ -357,12 +357,12 @@ gst_allocator_alloc (<em class="parameter"><code><a class="link" href="GstAlloca
  big.</p>
 <p>The optional <em class="parameter"><code>params</code></em>
  can specify the prefix and padding for the memory. If
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is passed, no flags, no extra prefix/padding and a default alignment is
+<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is passed, no flags, no extra prefix/padding and a default alignment is
 used.</p>
 <p>The prefix/padding will be filled with 0 if flags contains
 <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.</p>
 <p>When <em class="parameter"><code>allocator</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the default allocator will be used.</p>
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the default allocator will be used.</p>
 <p>The alignment in <em class="parameter"><code>params</code></em>
  is given as a bitmask so that <em class="parameter"><code>align</code></em>
  + 1 equals
@@ -437,12 +437,12 @@ gst_allocator_free (<em class="parameter"><code><a class="link" href="GstAllocat
 <a name="gst-memory-new-wrapped"></a><h3>gst_memory_new_wrapped ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                         <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
                         <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
                         <em class="parameter"><code><span class="type">gsize</span> size</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Allocate a new memory block that wraps the given <em class="parameter"><code>data</code></em>
 .</p>
 <p>The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</code></em>
