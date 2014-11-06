@@ -171,6 +171,7 @@ struct _GstSingleQueue
   /* for serialized queries */
   GCond query_handled;
   gboolean last_query;
+  GstQuery *last_handled_query;
 };
 
 
@@ -1113,6 +1114,38 @@ apply_buffer (GstMultiQueue * mq, GstSingleQueue * sq, GstClockTime timestamp,
   gst_multi_queue_post_buffering (mq);
 }
 
+static void
+apply_gap (GstMultiQueue * mq, GstSingleQueue * sq, GstEvent * event,
+    GstSegment * segment)
+{
+  GstClockTime timestamp;
+  GstClockTime duration;
+
+  GST_MULTI_QUEUE_MUTEX_LOCK (mq);
+
+  gst_event_parse_gap (event, &timestamp, &duration);
+
+  if (GST_CLOCK_TIME_IS_VALID (timestamp)) {
+
+    if (GST_CLOCK_TIME_IS_VALID (duration)) {
+      timestamp += duration;
+    }
+
+    segment->position = timestamp;
+
+    if (segment == &sq->sink_segment)
+      sq->sink_tainted = TRUE;
+    else
+      sq->src_tainted = TRUE;
+
+    /* calc diff with other end */
+    update_time_level (mq, sq);
+  }
+
+  GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+  gst_multi_queue_post_buffering (mq);
+}
+
 static GstClockTime
 get_running_time (GstSegment * segment, GstMiniObject * object, gboolean end)
 {
@@ -1208,6 +1241,11 @@ gst_single_queue_push_one (GstMultiQueue * mq, GstSingleQueue * sq,
         /* Applying the segment may have made the queue non-full again, unblock it if needed */
         gst_data_queue_limits_changed (sq->queue);
         break;
+      case GST_EVENT_GAP:
+        apply_gap (mq, sq, event, &sq->src_segment);
+        /* Applying the gap may have made the queue non-full again, unblock it if needed */
+        gst_data_queue_limits_changed (sq->queue);
+        break;
       default:
         break;
     }
@@ -1227,6 +1265,7 @@ gst_single_queue_push_one (GstMultiQueue * mq, GstSingleQueue * sq,
 
     GST_MULTI_QUEUE_MUTEX_LOCK (mq);
     sq->last_query = res;
+    sq->last_handled_query = query;
     g_cond_signal (&sq->query_handled);
     GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
   } else {
@@ -1498,6 +1537,14 @@ gst_multi_queue_loop (GstPad * pad)
   GST_LOG_OBJECT (mq, "AFTER PUSHING sq->srcresult: %s",
       gst_flow_get_name (sq->srcresult));
 
+  GST_MULTI_QUEUE_MUTEX_LOCK (mq);
+  if (mq->numwaiting > 0 && sq->srcresult == GST_FLOW_EOS) {
+    compute_high_time (mq);
+    compute_high_id (mq);
+    wake_up_next_non_linked (mq);
+  }
+  GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+
   return;
 
 out_flushing:
@@ -1693,7 +1740,9 @@ gst_multi_queue_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
 
       gst_single_queue_flush (mq, sq, FALSE, FALSE);
       goto done;
+
     case GST_EVENT_SEGMENT:
+    case GST_EVENT_GAP:
       /* take ref because the queue will take ownership and we need the event
        * afterwards to update the segment */
       sref = gst_event_ref (event);
@@ -1755,6 +1804,9 @@ gst_multi_queue_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
       apply_segment (mq, sq, sref, &sq->sink_segment);
       gst_event_unref (sref);
       break;
+    case GST_EVENT_GAP:
+      apply_gap (mq, sq, sref, &sq->sink_segment);
+      gst_event_unref (sref);
     default:
       break;
   }
@@ -1815,9 +1867,19 @@ gst_multi_queue_sink_query (GstPad * pad, GstObject * parent, GstQuery * query)
           GST_DEBUG_OBJECT (mq,
               "SingleQueue %d : Enqueuing query %p of type %s with id %d",
               sq->id, query, GST_QUERY_TYPE_NAME (query), curid);
+          GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
           res = gst_data_queue_push (sq->queue, (GstDataQueueItem *) item);
-          g_cond_wait (&sq->query_handled, &mq->qlock);
+          GST_MULTI_QUEUE_MUTEX_LOCK (mq);
+          /* it might be that the query has been taken out of the queue
+           * while we were unlocked. So, we need to check if the last
+           * handled query is the same one than the one we just
+           * pushed. If it is, we don't need to wait for the condition
+           * variable, otherwise we wait for the condition variable to
+           * be signaled. */
+          if (sq->last_handled_query != query)
+            g_cond_wait (&sq->query_handled, &mq->qlock);
           res = sq->last_query;
+          sq->last_handled_query = NULL;
         } else {
           GST_DEBUG_OBJECT (mq, "refusing query, we are buffering and the "
               "queue is not empty");
