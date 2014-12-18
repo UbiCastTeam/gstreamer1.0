@@ -3875,7 +3875,7 @@ gst_element_send_event (<em class="parameter"><code><a class="link" href="GstEle
                         <em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
 <p>Sends an event to an element. If the element doesn't implement an
 event handler, the event will be pushed on a random linked sink pad for
-upstream events or a random linked source pad for downstream events.</p>
+downstream events or a random linked source pad for upstream events.</p>
 <p>This function takes ownership of the provided event so you should
 <a class="link" href="GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.</p>
 <p>MT safe.</p>
