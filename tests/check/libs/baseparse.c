@@ -68,7 +68,6 @@ static gboolean
 gst_parser_tester_set_sink_caps (GstBaseParse * parse, GstCaps * caps)
 {
   gst_pad_set_caps (GST_BASE_PARSE_SRC_PAD (parse), caps);
-  gst_caps_unref (caps);
   return TRUE;
 }
 
@@ -181,6 +180,7 @@ send_startup_events (void)
       TEST_VIDEO_WIDTH, "height", G_TYPE_INT, TEST_VIDEO_HEIGHT, "framerate",
       GST_TYPE_FRACTION, TEST_VIDEO_FPS_N, TEST_VIDEO_FPS_D, NULL);
   fail_unless (gst_pad_push_event (mysrcpad, gst_event_new_caps (caps)));
+  gst_caps_unref (caps);
 }
 
 static void

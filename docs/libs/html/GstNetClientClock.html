@@ -6,22 +6,22 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-net.html" title="GStreamer Network Classes">
-<link rel="prev" href="gstreamer-net.html" title="GStreamer Network Classes">
+<link rel="prev" href="gstreamer-libs-GstNetAddressMeta.html" title="GstNetAddressMeta">
 <link rel="next" href="gstreamer-libs-GstNetTimePacket.html" title="GstNetTimePacket">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#GstNetClientClock.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#GstNetClientClock.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties"> <span class="dim">|</span> 
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#GstNetClientClock.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#GstNetClientClock.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
                   <a href="#GstNetClientClock.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-net.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-net.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-libs-GstNetAddressMeta.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gstreamer-libs-GstNetTimePacket.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -62,12 +62,23 @@
 <tbody>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--address" title="The “address” property">address</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> *</td>
+<td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--bus" title="The “bus” property">bus</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><span class="type">guint64</span></td>
+<td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--minimum-update-interval" title="The “minimum-update-interval” property">minimum-update-interval</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--port" title="The “port” property">port</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -94,8 +105,8 @@
 </div>
 <div class="refsect1">
 <a name="GstNetClientClock.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
             <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html">GstClock</a>
                 <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSystemClock.html">GstSystemClock</a>
@@ -121,15 +132,19 @@ parameters based on the local and remote observations.</p>
 "timeout", "window-size" and "window-threshold" object properties.</p>
 <p>A <a class="link" href="GstNetClientClock.html" title="GstNetClientClock"><span class="type">GstNetClientClock</span></a> is typically set on a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPipeline.html"><span class="type">GstPipeline</span></a> with 
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPipeline.html#gst-pipeline-use-clock"><code class="function">gst_pipeline_use_clock()</code></a>.</p>
+<p>If you set a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> on the clock via the "bus" object property, it will
+send <em class="parameter"><code>GST_MESSAGE_ELEMENT</code></em>
+ messages with an attached <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> containing
+statistics about clock accuracy and network traffic.</p>
 </div>
 <div class="refsect1">
 <a name="GstNetClientClock.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="gst-net-client-clock-new"></a><h3>gst_net_client_clock_new ()</h3>
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="returnvalue">GstClock</span></a> *
-gst_net_client_clock_new (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *remote_address</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> remote_port</code></em>,
+gst_net_client_clock_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                          <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *remote_address</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> remote_port</code></em>,
                           <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> base_time</code></em>);</pre>
 <p>Create a new <a class="link" href="GstNetClientClock.html" title="GstNetClientClock"><span class="type">GstNetClientClock</span></a> that will report the time
 provided by the <a class="link" href="GstNetTimeProvider.html" title="GstNetTimeProvider"><span class="type">GstNetTimeProvider</span></a> on <em class="parameter"><code>remote_address</code></em>
@@ -137,7 +152,7 @@ provided by the <a class="link" href="GstNetTimeProvider.html" title="GstNetTime
 <em class="parameter"><code>remote_port</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.6.3.9.2.5"></a><h4>Parameters</h4>
+<a name="id-1.2.6.4.9.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -169,7 +184,7 @@ provided by the <a class="link" href="GstNetTimeProvider.html" title="GstNetTime
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.3.9.2.6"></a><h4>Returns</h4>
+<a name="id-1.2.6.4.9.2.6"></a><h4>Returns</h4>
 <p> a new <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="type">GstClock</span></a> that receives a time from the remote
 clock.</p>
 <p></p>
@@ -188,15 +203,30 @@ clock.</p>
 <a name="GstNetClientClock.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GstNetClientClock--address"></a><h3>The <code class="literal">“address”</code> property</h3>
-<pre class="programlisting">  “address”                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “address”                  <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The IP address of the machine providing a time server.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: "127.0.0.1"</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GstNetClientClock--bus"></a><h3>The <code class="literal">“bus”</code> property</h3>
+<pre class="programlisting">  “bus”                      <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> *</pre>
+<p>A GstBus on which to send clock status information.</p>
+<p>Flags: Read / Write</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstNetClientClock--minimum-update-interval"></a><h3>The <code class="literal">“minimum-update-interval”</code> property</h3>
+<pre class="programlisting">  “minimum-update-interval”  <span class="type">guint64</span></pre>
+<p>Minimum polling interval for packets, in nanoseconds(0 = no limit).</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 50000000</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstNetClientClock--port"></a><h3>The <code class="literal">“port”</code> property</h3>
-<pre class="programlisting">  “port”                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “port”                     <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The port on which the remote server is listening.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: [0,65535]</p>
@@ -218,6 +248,6 @@ clock.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

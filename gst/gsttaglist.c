@@ -844,8 +844,9 @@ gst_tag_list_get_scope (const GstTagList * list)
  *
  * Serializes a tag list to a string.
  *
- * Returns: a newly-allocated string, or %NULL in case of an error. The
- *    string must be freed with g_free() when no longer needed.
+ * Returns: (nullable): a newly-allocated string, or %NULL in case of
+ *     an error. The string must be freed with g_free() when no longer
+ *     needed.
  */
 gchar *
 gst_tag_list_to_string (const GstTagList * list)
@@ -861,7 +862,8 @@ gst_tag_list_to_string (const GstTagList * list)
  *
  * Deserializes a tag list.
  *
- * Returns: a new #GstTagList, or %NULL in case of an error.
+ * Returns: (nullable): a new #GstTagList, or %NULL in case of an
+ * error.
  */
 GstTagList *
 gst_tag_list_new_from_string (const gchar * str)
@@ -1131,8 +1133,8 @@ gst_tag_list_insert (GstTagList * into, const GstTagList * from,
 
 /**
  * gst_tag_list_merge:
- * @list1: first list to merge
- * @list2: second list to merge
+ * @list1: (allow-none): first list to merge
+ * @list2: (allow-none): second list to merge
  * @mode: the mode to use
  *
  * Merges the two given lists into a new list. If one of the lists is %NULL, a
@@ -1140,7 +1142,7 @@ gst_tag_list_insert (GstTagList * into, const GstTagList * from,
  *
  * Free-function: gst_tag_list_unref
  *
- * Returns: (transfer full): the new list
+ * Returns: (transfer full) (nullable): the new list
  */
 GstTagList *
 gst_tag_list_merge (const GstTagList * list1, const GstTagList * list2,
@@ -1424,8 +1426,9 @@ gst_tag_list_foreach (const GstTagList * list, GstTagForeachFunc func,
  * Gets the value that is at the given index for the given tag in the given
  * list.
  *
- * Returns: (transfer none): The GValue for the specified entry or %NULL if the
- *          tag wasn't available or the tag doesn't have as many entries
+ * Returns: (transfer none) (nullable): The GValue for the specified
+ *          entry or %NULL if the tag wasn't available or the tag
+ *          doesn't have as many entries
  */
 const GValue *
 gst_tag_list_get_value_index (const GstTagList * list, const gchar * tag,
@@ -1496,7 +1499,7 @@ gst_tag_list_copy_value (GValue * dest, const GstTagList * list,
   return TRUE;
 }
 
-/* FIXME 0.11: this whole merge function business is overdesigned, and the
+/* FIXME 2.0: this whole merge function business is overdesigned, and the
  * _get_foo() API is misleading as well - how many application developers will
  * expect gst_tag_list_get_string (list, GST_TAG_ARTIST, &val) might return a
  * string with multiple comma-separated artists? _get_foo() should just be
@@ -1795,7 +1798,7 @@ _gst_strdup0 (const gchar * s)
 TAG_MERGE_FUNCS (string, gchar *, (*value != NULL));
 
 /*
- *FIXME 0.11: Instead of _peek (non-copy) and _get (copy), we could have
+ *FIXME 2.0: Instead of _peek (non-copy) and _get (copy), we could have
  *            _get (non-copy) and _dup (copy) for strings, seems more
  *            widely used
  */

@@ -360,7 +360,8 @@ gst_toc_entry_find_sub_entry (const GstTocEntry * entry, const gchar * uid)
  *
  * Find #GstTocEntry with given @uid in the @toc.
  *
- * Returns: (transfer none): #GstTocEntry with specified @uid from the @toc, or %NULL if not found.
+ * Returns: (transfer none) (nullable): #GstTocEntry with specified
+ * @uid from the @toc, or %NULL if not found.
  */
 GstTocEntry *
 gst_toc_find_entry (const GstToc * toc, const gchar * uid)
@@ -387,21 +388,33 @@ gst_toc_find_entry (const GstToc * toc, const gchar * uid)
   return NULL;
 }
 
+static GList *
+gst_toc_deep_copy_toc_entries (GList * entry_list)
+{
+  GQueue new_entries = G_QUEUE_INIT;
+  GList *l;
+
+  for (l = entry_list; l != NULL; l = l->next)
+    g_queue_push_tail (&new_entries, gst_toc_entry_copy (l->data));
+
+  return new_entries.head;
+}
+
 /**
  * gst_toc_entry_copy:
  * @entry: #GstTocEntry to copy.
  *
  * Copy #GstTocEntry with all subentries (deep copy).
  *
- * Returns: newly allocated #GstTocEntry in case of success, %NULL otherwise;
- * free it when done with gst_toc_entry_unref().
+ * Returns: (nullable): newly allocated #GstTocEntry in case of
+ * success, %NULL otherwise; free it when done with
+ * gst_toc_entry_unref().
  */
 static GstTocEntry *
 gst_toc_entry_copy (const GstTocEntry * entry)
 {
-  GstTocEntry *ret, *sub;
+  GstTocEntry *ret;
   GstTagList *list;
-  GList *cur;
 
   g_return_val_if_fail (entry != NULL, NULL);
 
@@ -417,16 +430,7 @@ gst_toc_entry_copy (const GstTocEntry * entry)
     ret->tags = list;
   }
 
-  cur = entry->subentries;
-  while (cur != NULL) {
-    sub = gst_toc_entry_copy (cur->data);
-
-    if (sub != NULL)
-      ret->subentries = g_list_prepend (ret->subentries, sub);
-
-    cur = cur->next;
-  }
-  ret->subentries = g_list_reverse (ret->subentries);
+  ret->subentries = gst_toc_deep_copy_toc_entries (entry->subentries);
 
   return ret;
 }
@@ -437,15 +441,13 @@ gst_toc_entry_copy (const GstTocEntry * entry)
  *
  * Copy #GstToc with all subentries (deep copy).
  *
- * Returns: newly allocated #GstToc in case of success, %NULL otherwise;
- * free it when done with gst_toc_unref().
+ * Returns: (nullable): newly allocated #GstToc in case of success,
+ * %NULL otherwise; free it when done with gst_toc_unref().
  */
 static GstToc *
 gst_toc_copy (const GstToc * toc)
 {
   GstToc *ret;
-  GstTocEntry *entry;
-  GList *cur;
   GstTagList *list;
 
   g_return_val_if_fail (toc != NULL, NULL);
@@ -458,16 +460,8 @@ gst_toc_copy (const GstToc * toc)
     ret->tags = list;
   }
 
-  cur = toc->entries;
-  while (cur != NULL) {
-    entry = gst_toc_entry_copy (cur->data);
+  ret->entries = gst_toc_deep_copy_toc_entries (toc->entries);
 
-    if (entry != NULL)
-      ret->entries = g_list_prepend (ret->entries, entry);
-
-    cur = cur->next;
-  }
-  ret->entries = g_list_reverse (ret->entries);
   return ret;
 }
 
@@ -492,8 +486,10 @@ gst_toc_entry_set_start_stop_times (GstTocEntry * entry, gint64 start,
 /**
  * gst_toc_entry_get_start_stop_times:
  * @entry: #GstTocEntry to get values from.
- * @start: (out): the storage for the start value, leave %NULL if not need.
- * @stop: (out): the storage for the stop value, leave %NULL if not need.
+ * @start: (out) (allow-none): the storage for the start value, leave
+ *   %NULL if not need.
+ * @stop: (out) (allow-none): the storage for the stop value, leave
+ *   %NULL if not need.
  *
  * Get @start and @stop values from the @entry and write them into appropriate
  * storages.
@@ -538,10 +534,10 @@ gst_toc_entry_set_loop (GstTocEntry * entry, GstTocLoopType loop_type,
 /**
  * gst_toc_entry_get_loop:
  * @entry: #GstTocEntry to get values from.
- * @loop_type: (out): the storage for the loop_type value, leave %NULL if not
- *                    need.
- * @repeat_count: (out): the storage for the repeat_count value, leave %NULL if
- *                       not need.
+ * @loop_type: (out) (allow-none): the storage for the loop_type
+ *             value, leave %NULL if not need.
+ * @repeat_count: (out) (allow-none): the storage for the repeat_count
+ *                value, leave %NULL if not need.
  *
  * Get @loop_type and @repeat_count values from the @entry and write them into
  * appropriate storages. Loops are e.g. used by sampled instruments. GStreamer

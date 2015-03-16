@@ -123,10 +123,9 @@ _AM_IF_OPTION([no-dependencies],, [_AM_DEPENDENCIES([CCAS])])dnl
 # configured tree to be moved without reconfiguration.
 
 AC_DEFUN([AM_AUX_DIR_EXPAND],
-[dnl Rely on autoconf to set up CDPATH properly.
-AC_PREREQ([2.50])dnl
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+[AC_REQUIRE([AC_CONFIG_AUX_DIR_DEFAULT])dnl
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 ])
 
 # AM_CONDITIONAL                                            -*- Autoconf -*-
@@ -1478,6 +1477,7 @@ m4_include([common/m4/as-docbook.m4])
 m4_include([common/m4/as-libtool.m4])
 m4_include([common/m4/as-version.m4])
 m4_include([common/m4/ax_create_stdint_h.m4])
+m4_include([common/m4/ax_pthread.m4])
 m4_include([common/m4/gst-arch.m4])
 m4_include([common/m4/gst-args.m4])
 m4_include([common/m4/gst-check.m4])
@@ -1496,7 +1496,6 @@ m4_include([common/m4/gst.m4])
 m4_include([common/m4/gtk-doc.m4])
 m4_include([common/m4/introspection.m4])
 m4_include([common/m4/pkg.m4])
-m4_include([m4/ax_pthread.m4])
 m4_include([m4/check-checks.m4])
 m4_include([m4/gettext.m4])
 m4_include([m4/iconv.m4])

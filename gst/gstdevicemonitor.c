@@ -1,7 +1,7 @@
 /* GStreamer
- * Copyright (C) 2012 Olivier Crete <olivier.crete@collabora.com>
+ * Copyright (C) 2013 Olivier Crete <olivier.crete@collabora.com>
  *
- * gstdevicemonitor.c: Device probing and monitoring
+ * gstdevicemonitor.c: device monitor
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,321 +22,231 @@
 /**
  * SECTION:gstdevicemonitor
  * @short_description: A device monitor and prober
- * @see_also: #GstDevice, #GstGlobalDeviceMonitor
+ * @see_also: #GstDevice, #GstDeviceProvider
  *
- * A #GstDeviceMonitor subclass is provided by a plugin that handles devices
- * if there is a way to programatically list connected devices. It can also
- * optionally provide updates to the list of connected devices.
+ * Applications should create a #GstDeviceMonitor when they want
+ * to probe, list and monitor devices of a specific type. The
+ * #GstDeviceMonitor will create the appropriate
+ * #GstDeviceProvider objects and manage them. It will then post
+ * messages on its #GstBus for devices that have been added and
+ * removed.
  *
- * Each #GstDeviceMonitor subclass is a singleton, a plugin should
- * normally provide a single subclass for all devices.
+ * The device monitor will monitor all devices matching the filters that
+ * the application has set.
  *
- * Applications would normally use a #GstGlobalDeviceMonitor to monitor devices
- * from all revelant monitors.
+ *
+ * The basic use pattern of a device monitor is as follows:
+ * |[
+ *   static gboolean
+ *   my_bus_func (GstBus * bus, GstMessage * message, gpointer user_data)
+ *   {
+ *      GstDevice *device;
+ *      gchar *name;
+ *
+ *      switch (GST_MESSAGE_TYPE (message)) {
+ *        case GST_MESSAGE_DEVICE_ADDED:
+ *          gst_message_parse_device_added (message, &device);
+ *          name = gst_device_get_display_name (device);
+ *          g_print("Device added: %s\n", name);
+ *          g_free (name);
+ *          break;
+ *        case GST_MESSAGE_DEVICE_REMOVED:
+ *          gst_message_parse_device_removed (message, &device);
+ *          name = gst_device_get_display_name (device);
+ *          g_print("Device removed: %s\n", name);
+ *          g_free (name);
+ *          break;
+ *        default:
+ *          break;
+ *      }
+ *
+ *      return G_SOURCE_CONTINUE;
+ *   }
+ *
+ *   GstDeviceMonitor *
+ *   setup_raw_video_source_device_monitor (void) {
+ *      GstDeviceMonitor *monitor;
+ *      GstBus *bus;
+ *      GstCaps *caps;
+ *
+ *      monitor = gst_device_monitor_new ();
+ *
+ *      bus = gst_device_monitor_get_bus (monitor);
+ *      gst_bus_add_watch (bus, my_bus_func, NULL);
+ *      gst_object_unref (bus);
+ *
+ *      caps = gst_caps_new_empty_simple ("video/x-raw");
+ *      gst_device_monitor_add_filter (monitor, "Video/Source", caps);
+ *      gst_caps_unref (caps);
+ *
+ *      gst_device_monitor_start (monitor);
+ *
+ *      return monitor;
+ *   }
+ * ]|
  *
  * Since: 1.4
  */
+
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
 #include "gst_private.h"
-
 #include "gstdevicemonitor.h"
-
-#include "gstelementmetadata.h"
-#include "gstquark.h"
 
 struct _GstDeviceMonitorPrivate
 {
+  gboolean started;
+
   GstBus *bus;
 
-  GMutex start_lock;
+  GPtrArray *providers;
+  guint cookie;
 
-  gboolean started_count;
+  GPtrArray *filters;
+
+  guint last_id;
 };
 
-/* this is used in gstelementfactory.c:gst_element_register() */
-GQuark __gst_devicemonitorclass_factory = 0;
 
-static void gst_device_monitor_class_init (GstDeviceMonitorClass * klass);
-static void gst_device_monitor_init (GstDeviceMonitor * element);
-static void gst_device_monitor_base_class_init (gpointer g_class);
-static void gst_device_monitor_base_class_finalize (gpointer g_class);
+G_DEFINE_TYPE (GstDeviceMonitor, gst_device_monitor, GST_TYPE_OBJECT);
+
 static void gst_device_monitor_dispose (GObject * object);
-static void gst_device_monitor_finalize (GObject * object);
 
-static gpointer gst_device_monitor_parent_class = NULL;
-
-GType
-gst_device_monitor_get_type (void)
+struct DeviceFilter
 {
-  static volatile gsize gst_device_monitor_type = 0;
+  guint id;
 
-  if (g_once_init_enter (&gst_device_monitor_type)) {
-    GType _type;
-    static const GTypeInfo element_info = {
-      sizeof (GstDeviceMonitorClass),
-      gst_device_monitor_base_class_init,
-      gst_device_monitor_base_class_finalize,
-      (GClassInitFunc) gst_device_monitor_class_init,
-      NULL,
-      NULL,
-      sizeof (GstDeviceMonitor),
-      0,
-      (GInstanceInitFunc) gst_device_monitor_init,
-      NULL
-    };
-
-    _type = g_type_register_static (GST_TYPE_OBJECT, "GstDeviceMonitor",
-        &element_info, G_TYPE_FLAG_ABSTRACT);
-
-    __gst_devicemonitorclass_factory =
-        g_quark_from_static_string ("GST_DEVICEMONITORCLASS_FACTORY");
-    g_once_init_leave (&gst_device_monitor_type, _type);
-  }
-  return gst_device_monitor_type;
-}
+  gchar **classesv;
+  GstCaps *caps;
+};
 
 static void
-gst_device_monitor_base_class_init (gpointer g_class)
+device_filter_free (struct DeviceFilter *filter)
 {
-  GstDeviceMonitorClass *klass = GST_DEVICE_MONITOR_CLASS (g_class);
+  g_strfreev (filter->classesv);
+  gst_caps_unref (filter->caps);
 
-  /* Copy the element details here so elements can inherit the
-   * details from their base class and classes only need to set
-   * the details in class_init instead of base_init */
-  klass->metadata =
-      klass->metadata ? gst_structure_copy (klass->metadata) :
-      gst_structure_new_empty ("metadata");
-
-  klass->factory = g_type_get_qdata (G_TYPE_FROM_CLASS (klass),
-      __gst_devicemonitorclass_factory);
-}
-
-static void
-gst_device_monitor_base_class_finalize (gpointer g_class)
-{
-  GstDeviceMonitorClass *klass = GST_DEVICE_MONITOR_CLASS (g_class);
-
-  gst_structure_free (klass->metadata);
+  g_slice_free (struct DeviceFilter, filter);
 }
 
 static void
 gst_device_monitor_class_init (GstDeviceMonitorClass * klass)
 {
-  GObjectClass *gobject_class = (GObjectClass *) klass;
-
-  gst_device_monitor_parent_class = g_type_class_peek_parent (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (GstDeviceMonitorPrivate));
 
-  gobject_class->dispose = gst_device_monitor_dispose;
-  gobject_class->finalize = gst_device_monitor_finalize;
+  object_class->dispose = gst_device_monitor_dispose;
 }
 
 static void
-gst_device_monitor_init (GstDeviceMonitor * monitor)
+bus_sync_message (GstBus * bus, GstMessage * message,
+    GstDeviceMonitor * monitor)
 {
-  monitor->priv = G_TYPE_INSTANCE_GET_PRIVATE (monitor,
-      GST_TYPE_DEVICE_MONITOR, GstDeviceMonitorPrivate);
+  GstMessageType type = GST_MESSAGE_TYPE (message);
 
-  g_mutex_init (&monitor->priv->start_lock);
+  if (type == GST_MESSAGE_DEVICE_ADDED || type == GST_MESSAGE_DEVICE_REMOVED) {
+    gboolean matches;
+    GstDevice *device;
 
-  monitor->priv->bus = gst_bus_new ();
-  gst_bus_set_flushing (monitor->priv->bus, TRUE);
+    if (type == GST_MESSAGE_DEVICE_ADDED)
+      gst_message_parse_device_added (message, &device);
+    else
+      gst_message_parse_device_removed (message, &device);
+
+    GST_OBJECT_LOCK (monitor);
+    if (monitor->priv->filters->len) {
+      guint i;
+
+      for (i = 0; i < monitor->priv->filters->len; i++) {
+        struct DeviceFilter *filter =
+            g_ptr_array_index (monitor->priv->filters, i);
+        GstCaps *caps;
+
+        caps = gst_device_get_caps (device);
+        matches = gst_caps_can_intersect (filter->caps, caps) &&
+            gst_device_has_classesv (device, filter->classesv);
+        gst_caps_unref (caps);
+        if (matches)
+          break;
+      }
+    } else {
+      matches = TRUE;
+    }
+    GST_OBJECT_UNLOCK (monitor);
+
+    gst_object_unref (device);
+
+    if (matches)
+      gst_bus_post (monitor->priv->bus, gst_message_ref (message));
+  }
 }
 
+
+static void
+gst_device_monitor_init (GstDeviceMonitor * self)
+{
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
+      GST_TYPE_DEVICE_MONITOR, GstDeviceMonitorPrivate);
+
+  self->priv->bus = gst_bus_new ();
+  gst_bus_set_flushing (self->priv->bus, TRUE);
+
+  self->priv->providers = g_ptr_array_new ();
+  self->priv->filters = g_ptr_array_new_with_free_func (
+      (GDestroyNotify) device_filter_free);
+
+  self->priv->last_id = 1;
+}
+
+
+static void
+gst_device_monitor_remove (GstDeviceMonitor * self, guint i)
+{
+  GstDeviceProvider *provider = g_ptr_array_index (self->priv->providers, i);
+  GstBus *bus;
+
+  g_ptr_array_remove_index_fast (self->priv->providers, i);
+
+  bus = gst_device_provider_get_bus (provider);
+  g_signal_handlers_disconnect_by_func (bus, bus_sync_message, self);
+  gst_object_unref (bus);
+
+  gst_object_unref (provider);
+}
 
 static void
 gst_device_monitor_dispose (GObject * object)
 {
-  GstDeviceMonitor *monitor = GST_DEVICE_MONITOR (object);
+  GstDeviceMonitor *self = GST_DEVICE_MONITOR (object);
 
-  gst_object_replace ((GstObject **) & monitor->priv->bus, NULL);
+  g_return_if_fail (!self->priv->started);
 
-  GST_OBJECT_LOCK (monitor);
-  g_list_free_full (monitor->devices, (GDestroyNotify) gst_object_unparent);
-  monitor->devices = NULL;
-  GST_OBJECT_UNLOCK (monitor);
+  if (self->priv->providers) {
+    while (self->priv->providers->len)
+      gst_device_monitor_remove (self, self->priv->providers->len - 1);
+    g_ptr_array_unref (self->priv->providers);
+    self->priv->providers = NULL;
+  }
+
+  if (self->priv->filters) {
+    g_ptr_array_unref (self->priv->filters);
+    self->priv->filters = NULL;
+  }
+
+  gst_object_replace ((GstObject **) & self->priv->bus, NULL);
 
   G_OBJECT_CLASS (gst_device_monitor_parent_class)->dispose (object);
 }
 
-static void
-gst_device_monitor_finalize (GObject * object)
-{
-  GstDeviceMonitor *monitor = GST_DEVICE_MONITOR (object);
-
-  g_mutex_clear (&monitor->priv->start_lock);
-
-  G_OBJECT_CLASS (gst_device_monitor_parent_class)->finalize (object);
-}
-
-/**
- * gst_device_monitor_class_add_metadata:
- * @klass: class to set metadata for
- * @key: the key to set
- * @value: the value to set
- *
- * Set @key with @value as metadata in @klass.
- */
-void
-gst_device_monitor_class_add_metadata (GstDeviceMonitorClass * klass,
-    const gchar * key, const gchar * value)
-{
-  g_return_if_fail (GST_IS_DEVICE_MONITOR_CLASS (klass));
-  g_return_if_fail (key != NULL);
-  g_return_if_fail (value != NULL);
-
-  gst_structure_set ((GstStructure *) klass->metadata,
-      key, G_TYPE_STRING, value, NULL);
-}
-
-/**
- * gst_device_monitor_class_add_static_metadata:
- * @klass: class to set metadata for
- * @key: the key to set
- * @value: the value to set
- *
- * Set @key with @value as metadata in @klass.
- *
- * Same as gst_device_monitor_class_add_metadata(), but @value must be a static string
- * or an inlined string, as it will not be copied. (GStreamer plugins will
- * be made resident once loaded, so this function can be used even from
- * dynamically loaded plugins.)
- *
- * Since: 1.4
- */
-void
-gst_device_monitor_class_add_static_metadata (GstDeviceMonitorClass * klass,
-    const gchar * key, const gchar * value)
-{
-  GValue val = G_VALUE_INIT;
-
-  g_return_if_fail (GST_IS_DEVICE_MONITOR_CLASS (klass));
-  g_return_if_fail (key != NULL);
-  g_return_if_fail (value != NULL);
-
-  g_value_init (&val, G_TYPE_STRING);
-  g_value_set_static_string (&val, value);
-  gst_structure_take_value ((GstStructure *) klass->metadata, key, &val);
-}
-
-/**
- * gst_device_monitor_class_set_metadata:
- * @klass: class to set metadata for
- * @longname: The long English name of the device monitor. E.g. "File Sink"
- * @classification: String describing the type of device monitor, as an unordered list
- * separated with slashes ('/'). See draft-klass.txt of the design docs
- * for more details and common types. E.g: "Sink/File"
- * @description: Sentence describing the purpose of the device monitor.
- * E.g: "Write stream to a file"
- * @author: Name and contact details of the author(s). Use \n to separate
- * multiple author metadata. E.g: "Joe Bloggs &lt;joe.blogs at foo.com&gt;"
- *
- * Sets the detailed information for a #GstDeviceMonitorClass.
- * <note>This function is for use in _class_init functions only.</note>
- *
- * Since: 1.4
- */
-void
-gst_device_monitor_class_set_metadata (GstDeviceMonitorClass * klass,
-    const gchar * longname, const gchar * classification,
-    const gchar * description, const gchar * author)
-{
-  g_return_if_fail (GST_IS_DEVICE_MONITOR_CLASS (klass));
-  g_return_if_fail (longname != NULL && *longname != '\0');
-  g_return_if_fail (classification != NULL && *classification != '\0');
-  g_return_if_fail (description != NULL && *description != '\0');
-  g_return_if_fail (author != NULL && *author != '\0');
-
-  gst_structure_id_set ((GstStructure *) klass->metadata,
-      GST_QUARK (ELEMENT_METADATA_LONGNAME), G_TYPE_STRING, longname,
-      GST_QUARK (ELEMENT_METADATA_KLASS), G_TYPE_STRING, classification,
-      GST_QUARK (ELEMENT_METADATA_DESCRIPTION), G_TYPE_STRING, description,
-      GST_QUARK (ELEMENT_METADATA_AUTHOR), G_TYPE_STRING, author, NULL);
-}
-
-/**
- * gst_device_monitor_class_set_static_metadata:
- * @klass: class to set metadata for
- * @longname: The long English name of the element. E.g. "File Sink"
- * @classification: String describing the type of element, as an unordered list
- * separated with slashes ('/'). See draft-klass.txt of the design docs
- * for more details and common types. E.g: "Sink/File"
- * @description: Sentence describing the purpose of the element.
- * E.g: "Write stream to a file"
- * @author: Name and contact details of the author(s). Use \n to separate
- * multiple author metadata. E.g: "Joe Bloggs &lt;joe.blogs at foo.com&gt;"
- *
- * Sets the detailed information for a #GstDeviceMonitorClass.
- * <note>This function is for use in _class_init functions only.</note>
- *
- * Same as gst_device_monitor_class_set_metadata(), but @longname, @classification,
- * @description, and @author must be static strings or inlined strings, as
- * they will not be copied. (GStreamer plugins will be made resident once
- * loaded, so this function can be used even from dynamically loaded plugins.)
- *
- * Since: 1.4
- */
-void
-gst_device_monitor_class_set_static_metadata (GstDeviceMonitorClass * klass,
-    const gchar * longname, const gchar * classification,
-    const gchar * description, const gchar * author)
-{
-  GstStructure *s = (GstStructure *) klass->metadata;
-  GValue val = G_VALUE_INIT;
-
-  g_return_if_fail (GST_IS_DEVICE_MONITOR_CLASS (klass));
-  g_return_if_fail (longname != NULL && *longname != '\0');
-  g_return_if_fail (classification != NULL && *classification != '\0');
-  g_return_if_fail (description != NULL && *description != '\0');
-  g_return_if_fail (author != NULL && *author != '\0');
-
-  g_value_init (&val, G_TYPE_STRING);
-
-  g_value_set_static_string (&val, longname);
-  gst_structure_id_set_value (s, GST_QUARK (ELEMENT_METADATA_LONGNAME), &val);
-
-  g_value_set_static_string (&val, classification);
-  gst_structure_id_set_value (s, GST_QUARK (ELEMENT_METADATA_KLASS), &val);
-
-  g_value_set_static_string (&val, description);
-  gst_structure_id_set_value (s, GST_QUARK (ELEMENT_METADATA_DESCRIPTION),
-      &val);
-
-  g_value_set_static_string (&val, author);
-  gst_structure_id_take_value (s, GST_QUARK (ELEMENT_METADATA_AUTHOR), &val);
-}
-
-/**
- * gst_device_monitor_class_get_metadata:
- * @klass: class to get metadata for
- * @key: the key to get
- *
- * Get metadata with @key in @klass.
- *
- * Returns: the metadata for @key.
- *
- * Since: 1.4
- */
-const gchar *
-gst_device_monitor_class_get_metadata (GstDeviceMonitorClass * klass,
-    const gchar * key)
-{
-  g_return_val_if_fail (GST_IS_DEVICE_MONITOR_CLASS (klass), NULL);
-  g_return_val_if_fail (key != NULL, NULL);
-
-  return gst_structure_get_string ((GstStructure *) klass->metadata, key);
-}
-
 /**
  * gst_device_monitor_get_devices:
- * @monitor: A #GstDeviceMonitor
+ * @monitor: A #GstDeviceProvider
  *
- * Gets a list of devices that this monitor understands. This may actually
+ * Gets a list of devices from all of the relevant monitors. This may actually
  * probe the hardware if the monitor is not currently started.
  *
  * Returns: (transfer full) (element-type GstDevice): a #GList of
@@ -348,26 +258,71 @@ gst_device_monitor_class_get_metadata (GstDeviceMonitorClass * klass,
 GList *
 gst_device_monitor_get_devices (GstDeviceMonitor * monitor)
 {
-  GstDeviceMonitorClass *klass;
   GList *devices = NULL;
-  gboolean started;
-  GList *item;
+  guint i;
+  guint cookie;
 
   g_return_val_if_fail (GST_IS_DEVICE_MONITOR (monitor), NULL);
-  klass = GST_DEVICE_MONITOR_GET_CLASS (monitor);
 
-  g_mutex_lock (&monitor->priv->start_lock);
-  started = (monitor->priv->started_count > 0);
+  GST_OBJECT_LOCK (monitor);
 
-  if (started) {
-    GST_OBJECT_LOCK (monitor);
-    for (item = monitor->devices; item; item = item->next)
-      devices = g_list_prepend (devices, gst_object_ref (item->data));
+  if (monitor->priv->filters->len == 0) {
     GST_OBJECT_UNLOCK (monitor);
-  } else if (klass->probe)
-    devices = klass->probe (monitor);
+    GST_WARNING_OBJECT (monitor, "No filters have been set");
+    return FALSE;
+  }
 
-  g_mutex_unlock (&monitor->priv->start_lock);
+  if (monitor->priv->providers->len == 0) {
+    GST_OBJECT_UNLOCK (monitor);
+    GST_WARNING_OBJECT (monitor, "No providers match the current filters");
+    return FALSE;
+  }
+
+again:
+
+  g_list_free_full (devices, gst_object_unref);
+  devices = NULL;
+
+  cookie = monitor->priv->cookie;
+
+  for (i = 0; i < monitor->priv->providers->len; i++) {
+    GList *tmpdev;
+    GstDeviceProvider *provider =
+        gst_object_ref (g_ptr_array_index (monitor->priv->providers, i));
+    GList *item;
+
+    GST_OBJECT_UNLOCK (monitor);
+
+    tmpdev = gst_device_provider_get_devices (provider);
+
+    GST_OBJECT_LOCK (monitor);
+
+    for (item = tmpdev; item; item = item->next) {
+      GstDevice *dev = GST_DEVICE (item->data);
+      GstCaps *caps = gst_device_get_caps (dev);
+      guint j;
+
+      for (j = 0; j < monitor->priv->filters->len; j++) {
+        struct DeviceFilter *filter =
+            g_ptr_array_index (monitor->priv->filters, j);
+        if (gst_caps_can_intersect (filter->caps, caps) &&
+            gst_device_has_classesv (dev, filter->classesv)) {
+          devices = g_list_prepend (devices, gst_object_ref (dev));
+          break;
+        }
+      }
+      gst_caps_unref (caps);
+    }
+
+    g_list_free_full (tmpdev, gst_object_unref);
+    gst_object_unref (provider);
+
+
+    if (monitor->priv->cookie != cookie)
+      goto again;
+  }
+
+  GST_OBJECT_UNLOCK (monitor);
 
   return devices;
 }
@@ -376,14 +331,9 @@ gst_device_monitor_get_devices (GstDeviceMonitor * monitor)
  * gst_device_monitor_start:
  * @monitor: A #GstDeviceMonitor
  *
- * Starts monitoring the devices. This will cause #GST_MESSAGE_DEVICE messages
- * to be posted on the monitor's bus when devices are added or removed from
- * the system.
- *
- * Since the #GstDeviceMonitor is a singleton,
- * gst_device_monitor_start() may already have been called by another
- * user of the object, gst_device_monitor_stop() needs to be called the same
- * number of times.
+ * Starts monitoring the devices, one this has succeeded, the
+ * %GST_MESSAGE_DEVICE_ADDED and %GST_MESSAGE_DEVICE_REMOVED messages
+ * will be emitted on the bus when the list of devices changes.
  *
  * Returns: %TRUE if the device monitoring could be started
  *
@@ -393,118 +343,262 @@ gst_device_monitor_get_devices (GstDeviceMonitor * monitor)
 gboolean
 gst_device_monitor_start (GstDeviceMonitor * monitor)
 {
-  GstDeviceMonitorClass *klass;
-  gboolean ret = FALSE;
+  guint i;
 
   g_return_val_if_fail (GST_IS_DEVICE_MONITOR (monitor), FALSE);
-  klass = GST_DEVICE_MONITOR_GET_CLASS (monitor);
 
-  g_mutex_lock (&monitor->priv->start_lock);
+  GST_OBJECT_LOCK (monitor);
 
-  if (monitor->priv->started_count > 0) {
-    ret = TRUE;
-    goto started;
+  if (monitor->priv->filters->len == 0) {
+    GST_OBJECT_UNLOCK (monitor);
+    GST_WARNING_OBJECT (monitor, "No filters have been set, will expose all "
+        "devices found");
+    gst_device_monitor_add_filter (monitor, NULL, NULL);
+    GST_OBJECT_LOCK (monitor);
   }
 
-  if (klass->start)
-    ret = klass->start (monitor);
-
-  if (ret) {
-    monitor->priv->started_count++;
-    gst_bus_set_flushing (monitor->priv->bus, FALSE);
+  if (monitor->priv->providers->len == 0) {
+    GST_OBJECT_UNLOCK (monitor);
+    GST_WARNING_OBJECT (monitor, "No providers match the current filters");
+    return FALSE;
   }
 
-started:
+  gst_bus_set_flushing (monitor->priv->bus, FALSE);
 
-  g_mutex_unlock (&monitor->priv->start_lock);
+  for (i = 0; i < monitor->priv->providers->len; i++) {
+    GstDeviceProvider *provider =
+        g_ptr_array_index (monitor->priv->providers, i);
 
-  return ret;
+    if (gst_device_provider_can_monitor (provider)) {
+      if (!gst_device_provider_start (provider)) {
+        gst_bus_set_flushing (monitor->priv->bus, TRUE);
+
+        for (; i != 0; i--)
+          gst_device_provider_stop (g_ptr_array_index (monitor->priv->providers,
+                  i - 1));
+
+        GST_OBJECT_UNLOCK (monitor);
+        return FALSE;
+      }
+    }
+  }
+
+  monitor->priv->started = TRUE;
+  GST_OBJECT_UNLOCK (monitor);
+
+  return TRUE;
 }
 
 /**
  * gst_device_monitor_stop:
- * @monitor: A #GstDeviceMonitor
+ * @monitor: A #GstDeviceProvider
  *
- * Decreases the use-count by one. If the use count reaches zero, this
- * #GstDeviceMonitor will stop monitoring the devices. This needs to be
- * called the same number of times that gst_device_monitor_start() was called.
+ * Stops monitoring the devices.
  *
  * Since: 1.4
  */
-
 void
 gst_device_monitor_stop (GstDeviceMonitor * monitor)
 {
-  GstDeviceMonitorClass *klass;
+  guint i;
 
   g_return_if_fail (GST_IS_DEVICE_MONITOR (monitor));
-  klass = GST_DEVICE_MONITOR_GET_CLASS (monitor);
 
-  g_mutex_lock (&monitor->priv->start_lock);
+  gst_bus_set_flushing (monitor->priv->bus, TRUE);
 
-  if (monitor->priv->started_count == 1) {
-    gst_bus_set_flushing (monitor->priv->bus, TRUE);
-    if (klass->stop)
-      klass->stop (monitor);
-    GST_OBJECT_LOCK (monitor);
-    g_list_free_full (monitor->devices, (GDestroyNotify) gst_object_unparent);
-    monitor->devices = NULL;
-    GST_OBJECT_UNLOCK (monitor);
-  } else if (monitor->priv->started_count < 1) {
-    g_critical ("Trying to stop a GstDeviceMonitor %s which is already stopped",
-        GST_OBJECT_NAME (monitor));
+  GST_OBJECT_LOCK (monitor);
+  for (i = 0; i < monitor->priv->providers->len; i++) {
+    GstDeviceProvider *provider =
+        g_ptr_array_index (monitor->priv->providers, i);
+
+    if (gst_device_provider_can_monitor (provider))
+      gst_device_provider_stop (provider);
   }
+  monitor->priv->started = FALSE;
+  GST_OBJECT_UNLOCK (monitor);
 
-  monitor->priv->started_count--;
-  g_mutex_unlock (&monitor->priv->start_lock);
 }
 
-
 /**
- * gst_device_monitor_get_factory:
- * @monitor: a #GstDeviceMonitor to request the device monitor factory of.
+ * gst_device_monitor_add_filter:
+ * @monitor: a device monitor
+ * @classes: (allow-none): device classes to use as filter or %NULL for any class
+ * @caps: (allow-none): the #GstCaps to filter or %NULL for ANY
  *
- * Retrieves the factory that was used to create this device monitor.
+ * Adds a filter for which #GstDevice will be monitored, any device that matches
+ * all classes and the #GstCaps will be returned.
  *
- * Returns: (transfer none): the #GstDeviceMonitorFactory used for creating this
- *     device monitor. no refcounting is needed.
+ * Filters must be added before the #GstDeviceMonitor is started.
+ *
+ * Returns: The id of the new filter or %0 if no provider matched the filter's
+ *  classes.
  *
  * Since: 1.4
  */
-GstDeviceMonitorFactory *
-gst_device_monitor_get_factory (GstDeviceMonitor * monitor)
+guint
+gst_device_monitor_add_filter (GstDeviceMonitor * monitor,
+    const gchar * classes, GstCaps * caps)
 {
-  g_return_val_if_fail (GST_IS_DEVICE_MONITOR (monitor), NULL);
+  GList *factories = NULL;
+  struct DeviceFilter *filter;
+  guint id = 0;
+  gboolean matched = FALSE;
 
-  return GST_DEVICE_MONITOR_GET_CLASS (monitor)->factory;
+  g_return_val_if_fail (GST_IS_DEVICE_MONITOR (monitor), 0);
+  g_return_val_if_fail (!monitor->priv->started, 0);
+
+  GST_OBJECT_LOCK (monitor);
+
+  filter = g_slice_new0 (struct DeviceFilter);
+  filter->id = monitor->priv->last_id++;
+  if (caps)
+    filter->caps = gst_caps_ref (caps);
+  else
+    filter->caps = gst_caps_new_any ();
+  if (classes)
+    filter->classesv = g_strsplit (classes, "/", 0);
+
+  factories = gst_device_provider_factory_list_get_device_providers (1);
+
+  while (factories) {
+    GstDeviceProviderFactory *factory = factories->data;
+
+
+    if (gst_device_provider_factory_has_classesv (factory, filter->classesv)) {
+      GstDeviceProvider *provider;
+
+      provider = gst_device_provider_factory_get (factory);
+
+      if (provider) {
+        guint i;
+
+        for (i = 0; i < monitor->priv->providers->len; i++) {
+          if (g_ptr_array_index (monitor->priv->providers, i) == provider) {
+            gst_object_unref (provider);
+            provider = NULL;
+            matched = TRUE;
+            break;
+          }
+        }
+      }
+
+      if (provider) {
+        GstBus *bus = gst_device_provider_get_bus (provider);
+
+        matched = TRUE;
+        gst_bus_enable_sync_message_emission (bus);
+        g_signal_connect (bus, "sync-message",
+            G_CALLBACK (bus_sync_message), monitor);
+        gst_object_unref (bus);
+        g_ptr_array_add (monitor->priv->providers, provider);
+        monitor->priv->cookie++;
+      }
+    }
+
+    factories = g_list_remove (factories, factory);
+    gst_object_unref (factory);
+  }
+
+  /* Ensure there is no leak here */
+  g_assert (factories == NULL);
+
+  if (matched) {
+    id = filter->id;
+    g_ptr_array_add (monitor->priv->filters, filter);
+  } else {
+    device_filter_free (filter);
+  }
+
+  GST_OBJECT_UNLOCK (monitor);
+
+  return id;
 }
 
 /**
- * gst_device_monitor_can_monitor:
- * @monitor: a #GstDeviceMonitor
+ * gst_device_monitor_remove_filter:
+ * @monitor: a device monitor
+ * @filter_id: the id of the filter
  *
- * If this function returns %TRUE, then the device monitor can monitor if
- * devices are added or removed. Otherwise, it can only do static probing.
+ * Removes a filter from the #GstDeviceMonitor using the id that was returned
+ * by gst_device_monitor_add_filter().
  *
- * Returns: %TRUE if the #GstDeviceMonitor support monitoring, %FALSE otherwise
+ * Returns: %TRUE of the filter id was valid, %FALSE otherwise
+ *
+ * Since: 1.4
  */
 gboolean
-gst_device_monitor_can_monitor (GstDeviceMonitor * monitor)
+gst_device_monitor_remove_filter (GstDeviceMonitor * monitor, guint filter_id)
 {
-  GstDeviceMonitorClass *klass;
+  guint i, j;
+  gboolean removed = FALSE;
 
   g_return_val_if_fail (GST_IS_DEVICE_MONITOR (monitor), FALSE);
-  klass = GST_DEVICE_MONITOR_GET_CLASS (monitor);
+  g_return_val_if_fail (!monitor->priv->started, FALSE);
+  g_return_val_if_fail (filter_id > 0, FALSE);
 
-  if (klass->start)
-    return TRUE;
-  else
-    return FALSE;
+  GST_OBJECT_LOCK (monitor);
+  for (i = 0; i < monitor->priv->filters->len; i++) {
+    struct DeviceFilter *filter = g_ptr_array_index (monitor->priv->filters, i);
+
+    if (filter->id == filter_id) {
+      g_ptr_array_remove_index (monitor->priv->filters, i);
+      removed = TRUE;
+      break;
+    }
+  }
+
+  if (removed) {
+    for (i = 0; i < monitor->priv->providers->len; i++) {
+      GstDeviceProvider *provider =
+          g_ptr_array_index (monitor->priv->providers, i);
+      GstDeviceProviderFactory *factory =
+          gst_device_provider_get_factory (provider);
+      gboolean valid = FALSE;
+
+      for (j = 0; j < monitor->priv->filters->len; j++) {
+        struct DeviceFilter *filter =
+            g_ptr_array_index (monitor->priv->filters, j);
+
+        if (gst_device_provider_factory_has_classesv (factory,
+                filter->classesv)) {
+          valid = TRUE;
+          break;
+        }
+      }
+
+      if (!valid) {
+        monitor->priv->cookie++;
+        gst_device_monitor_remove (monitor, i);
+        i--;
+      }
+    }
+  }
+
+  GST_OBJECT_UNLOCK (monitor);
+
+  return removed;
+}
+
+
+
+/**
+ * gst_device_monitor_new:
+ *
+ * Create a new #GstDeviceMonitor
+ *
+ * Returns: (transfer full): a new device monitor.
+ *
+ * Since: 1.4
+ */
+GstDeviceMonitor *
+gst_device_monitor_new (void)
+{
+  return g_object_new (GST_TYPE_DEVICE_MONITOR, NULL);
 }
 
 /**
  * gst_device_monitor_get_bus:
- * @monitor: a #GstDeviceMonitor
+ * @monitor: a #GstDeviceProvider
  *
  * Gets the #GstBus of this #GstDeviceMonitor
  *
@@ -518,70 +612,4 @@ gst_device_monitor_get_bus (GstDeviceMonitor * monitor)
   g_return_val_if_fail (GST_IS_DEVICE_MONITOR (monitor), NULL);
 
   return gst_object_ref (monitor->priv->bus);
-}
-
-/**
- * gst_device_monitor_device_add:
- * @monitor: a #GstDeviceMonitor
- * @device: (transfer full): a #GstDevice that has been added
- *
- * Posts a message on the monitor's #GstBus to inform applications that
- * a new device has been added.
- *
- * This is for use by subclasses.
- *
- * Since: 1.4
- */
-void
-gst_device_monitor_device_add (GstDeviceMonitor * monitor, GstDevice * device)
-{
-  GstMessage *message;
-
-  if (!gst_object_set_parent (GST_OBJECT (device), GST_OBJECT (monitor))) {
-    GST_WARNING_OBJECT (monitor, "Could not parent device %p to monitor,"
-        " it already has a parent", device);
-    return;
-  }
-
-  GST_OBJECT_LOCK (monitor);
-  monitor->devices = g_list_prepend (monitor->devices, gst_object_ref (device));
-  GST_OBJECT_UNLOCK (monitor);
-
-  message = gst_message_new_device_added (GST_OBJECT (monitor), device);
-  gst_bus_post (monitor->priv->bus, message);
-  gst_object_unref (device);
-}
-
-
-/**
- * gst_device_monitor_device_remove:
- * @monitor: a #GstDeviceMonitor
- * @device: a #GstDevice that has been removed
- *
- * Posts a message on the monitor's #GstBus to inform applications that
- * a device has been removed.
- *
- * This is for use by subclasses.
- *
- * Since: 1.4
- */
-void
-gst_device_monitor_device_remove (GstDeviceMonitor * monitor,
-    GstDevice * device)
-{
-  GstMessage *message;
-  GList *item;
-
-  GST_OBJECT_LOCK (monitor);
-  item = g_list_find (monitor->devices, device);
-  if (item) {
-    monitor->devices = g_list_delete_link (monitor->devices, item);
-  }
-  GST_OBJECT_UNLOCK (monitor);
-
-  message = gst_message_new_device_removed (GST_OBJECT (monitor), device);
-  g_signal_emit_by_name (device, "removed");
-  gst_bus_post (monitor->priv->bus, message);
-  if (item)
-    gst_object_unparent (GST_OBJECT (device));
 }

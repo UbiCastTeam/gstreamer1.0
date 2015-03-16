@@ -259,8 +259,8 @@ gst_control_binding_sync_values (GstControlBinding * binding,
  *
  * Gets the value for the given controlled property at the requested time.
  *
- * Returns: the GValue of the property at the given time, or %NULL if the
- * property isn't controlled.
+ * Returns: (nullable): the GValue of the property at the given time,
+ * or %NULL if the property isn't controlled.
  */
 GValue *
 gst_control_binding_get_value (GstControlBinding * binding,
@@ -468,5 +468,5 @@ gboolean
 gst_control_binding_is_disabled (GstControlBinding * binding)
 {
   g_return_val_if_fail (GST_IS_CONTROL_BINDING (binding), TRUE);
-  return (binding->disabled == TRUE);
+  return ! !binding->disabled;
 }

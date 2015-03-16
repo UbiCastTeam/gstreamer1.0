@@ -365,8 +365,11 @@ gst_buffer_unref (GstBuffer * buf)
  * gst_buffer_copy:
  * @buf: a #GstBuffer.
  *
- * Create a copy of the given buffer. This will also make a newly allocated
- * copy of the data the source buffer contains.
+ * Create a copy of the given buffer. This will only copy the buffer's
+ * data to a newly allocated memory if needed (if the type of memory
+ * requires it), otherwise the underlying data is just referenced.
+ * Check gst_buffer_copy_deep() if you want to force the data
+ * to be copied to newly allocated memory.
  *
  * Returns: (transfer full): a new copy of @buf.
  */
@@ -380,6 +383,7 @@ gst_buffer_copy (const GstBuffer * buf)
   return GST_BUFFER (gst_mini_object_copy (GST_MINI_OBJECT_CONST_CAST (buf)));
 }
 
+GstBuffer * gst_buffer_copy_deep (const GstBuffer * buf);
 
 /**
  * GstBufferCopyFlags:
@@ -457,8 +461,8 @@ gboolean        gst_buffer_copy_into            (GstBuffer *dest, GstBuffer *src
 
 /**
  * gst_buffer_replace:
- * @obuf: (inout) (transfer full): pointer to a pointer to a #GstBuffer to be
- *     replaced.
+ * @obuf: (inout) (transfer full) (nullable): pointer to a pointer to
+ *     a #GstBuffer to be replaced.
  * @nbuf: (transfer none) (allow-none): pointer to a #GstBuffer that will
  *     replace the buffer pointed to by @obuf.
  *
@@ -496,7 +500,7 @@ GstBuffer*      gst_buffer_append               (GstBuffer *buf1, GstBuffer *buf
 /**
  * GstBufferForeachMetaFunc:
  * @buffer: a #GstBuffer
- * @meta: a pointer to a #GstMeta
+ * @meta: (out) (nullable): a pointer to a #GstMeta
  * @user_data: user data passed to gst_buffer_foreach_meta()
  *
  * A function that will be called from gst_buffer_foreach_meta(). The @meta

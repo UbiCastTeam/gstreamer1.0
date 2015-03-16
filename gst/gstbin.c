@@ -537,7 +537,7 @@ gst_bin_dispose (GObject * object)
 
 /**
  * gst_bin_new:
- * @name: the name of the new bin
+ * @name: (allow-none): the name of the new bin
  *
  * Creates a new bin with the given name.
  *
@@ -1633,7 +1633,8 @@ no_function:
  *
  * MT safe.  Caller owns returned value.
  *
- * Returns: (transfer full): a #GstIterator of #GstElement, or %NULL
+ * Returns: (transfer full) (nullable): a #GstIterator of #GstElement,
+ * or %NULL
  */
 GstIterator *
 gst_bin_iterate_elements (GstBin * bin)
@@ -1673,7 +1674,8 @@ iterate_child_recurse (GstIterator * it, const GValue * item)
  *
  * MT safe.  Caller owns returned value.
  *
- * Returns: (transfer full): a #GstIterator of #GstElement, or %NULL
+ * Returns: (transfer full) (nullable): a #GstIterator of #GstElement,
+ * or %NULL
  */
 GstIterator *
 gst_bin_iterate_recurse (GstBin * bin)
@@ -1730,7 +1732,8 @@ sink_iterator_filter (const GValue * vchild, GValue * vbin)
  *
  * MT safe.  Caller owns returned value.
  *
- * Returns: (transfer full): a #GstIterator of #GstElement, or %NULL
+ * Returns: (transfer full) (nullable): a #GstIterator of #GstElement,
+ * or %NULL
  */
 GstIterator *
 gst_bin_iterate_sinks (GstBin * bin)
@@ -1790,7 +1793,8 @@ src_iterator_filter (const GValue * vchild, GValue * vbin)
  *
  * MT safe.  Caller owns returned value.
  *
- * Returns: (transfer full): a #GstIterator of #GstElement, or %NULL
+ * Returns: (transfer full) (nullable): a #GstIterator of #GstElement,
+ * or %NULL
  */
 GstIterator *
 gst_bin_iterate_sources (GstBin * bin)
@@ -2166,7 +2170,8 @@ gst_bin_sort_iterator_new (GstBin * bin)
  *
  * MT safe.  Caller owns returned value.
  *
- * Returns: (transfer full): a #GstIterator of #GstElement, or %NULL
+ * Returns: (transfer full) (nullable): a #GstIterator of #GstElement,
+ * or %NULL
  */
 GstIterator *
 gst_bin_iterate_sorted (GstBin * bin)
@@ -3883,7 +3888,7 @@ bin_query_latency_fold (const GValue * vitem, GValue * ret, QueryFold * fold)
         fold->max = max;
       else if (max < fold->max)
         fold->max = max;
-      if (fold->live == FALSE)
+      if (!fold->live)
         fold->live = live;
     }
   } else {
@@ -3931,7 +3936,7 @@ bin_query_generic_fold (const GValue * vitem, GValue * ret, QueryFold * fold)
 static gboolean
 bin_iterate_fold (GstBin * bin, GstIterator * iter, QueryInitFunction fold_init,
     QueryDoneFunction fold_done, GstIteratorFoldFunction fold_func,
-    QueryFold fold_data, gboolean default_return)
+    QueryFold * fold_data, gboolean default_return)
 {
   gboolean res = default_return;
   GValue ret = { 0 };
@@ -3942,20 +3947,20 @@ bin_iterate_fold (GstBin * bin, GstIterator * iter, QueryInitFunction fold_init,
   while (TRUE) {
     GstIteratorResult ires;
 
-    ires = gst_iterator_fold (iter, fold_func, &ret, &fold_data);
+    ires = gst_iterator_fold (iter, fold_func, &ret, fold_data);
 
     switch (ires) {
       case GST_ITERATOR_RESYNC:
         gst_iterator_resync (iter);
         if (fold_init)
-          fold_init (bin, &fold_data);
+          fold_init (bin, fold_data);
         g_value_set_boolean (&ret, res);
         break;
       case GST_ITERATOR_OK:
       case GST_ITERATOR_DONE:
         res = g_value_get_boolean (&ret);
         if (fold_done != NULL && res)
-          fold_done (bin, &fold_data);
+          fold_done (bin, fold_data);
         goto done;
       default:
         res = FALSE;
@@ -4053,7 +4058,7 @@ gst_bin_query (GstElement * element, GstQuery * query)
     fold_init (bin, &fold_data);
 
   res =
-      bin_iterate_fold (bin, iter, fold_init, fold_done, fold_func, fold_data,
+      bin_iterate_fold (bin, iter, fold_init, fold_done, fold_func, &fold_data,
       default_return);
   gst_iterator_free (iter);
 
@@ -4062,7 +4067,7 @@ gst_bin_query (GstElement * element, GstQuery * query)
     iter = gst_element_iterate_src_pads (element);
     src_pads_query_result =
         bin_iterate_fold (bin, iter, fold_init, fold_done, fold_func,
-        fold_data, default_return);
+        &fold_data, default_return);
     gst_iterator_free (iter);
 
     if (src_pads_query_result)
@@ -4126,7 +4131,8 @@ compare_name (const GValue * velement, const gchar * name)
  *
  * MT safe.  Caller owns returned reference.
  *
- * Returns: (transfer full): the #GstElement with the given name, or %NULL
+ * Returns: (transfer full) (nullable): the #GstElement with the given
+ * name, or %NULL
  */
 GstElement *
 gst_bin_get_by_name (GstBin * bin, const gchar * name)
@@ -4169,7 +4175,8 @@ gst_bin_get_by_name (GstBin * bin, const gchar * name)
  *
  * MT safe.  Caller owns returned reference.
  *
- * Returns: (transfer full): the #GstElement with the given name, or %NULL
+ * Returns: (transfer full) (nullable): the #GstElement with the given
+ * name, or %NULL
  */
 GstElement *
 gst_bin_get_by_name_recurse_up (GstBin * bin, const gchar * name)
@@ -4269,8 +4276,9 @@ gst_bin_get_by_interface (GstBin * bin, GType iface)
  *
  * MT safe.  Caller owns returned value.
  *
- * Returns: (transfer full): a #GstIterator of #GstElement for all elements
- *          in the bin implementing the given interface, or %NULL
+ * Returns: (transfer full) (nullable): a #GstIterator of #GstElement
+ *     for all elements in the bin implementing the given interface,
+ *     or %NULL
  */
 GstIterator *
 gst_bin_iterate_all_by_interface (GstBin * bin, GType iface)

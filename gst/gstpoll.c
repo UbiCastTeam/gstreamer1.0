@@ -170,7 +170,7 @@ static gboolean gst_poll_add_fd_unlocked (GstPoll * set, GstPollFD * fd);
 #define WAKE_EVENT(s)       (write ((s)->control_write_fd.fd, "W", 1) == 1)
 #define RELEASE_EVENT(s)    (read ((s)->control_read_fd.fd, (s)->buf, 1) == 1)
 #else
-#define WAKE_EVENT(s)       (SetEvent ((s)->wakeup_event), errno = GetLastError () == NO_ERROR ? 0 : EACCES, errno == 0 ? 1 : 0)
+#define WAKE_EVENT(s)       (SetLastError (0), SetEvent ((s)->wakeup_event), errno = GetLastError () == NO_ERROR ? 0 : EACCES, errno == 0 ? 1 : 0)
 #define RELEASE_EVENT(s)    (ResetEvent ((s)->wakeup_event))
 #endif
 
@@ -545,8 +545,8 @@ gst_poll_collect_winsock_events (GstPoll * set)
  *
  * Free-function: gst_poll_free
  *
- * Returns: (transfer full): a new #GstPoll, or %NULL in case of an error.
- *     Free with gst_poll_free().
+ * Returns: (transfer full) (nullable): a new #GstPoll, or %NULL in
+ *     case of an error.  Free with gst_poll_free().
  */
 GstPoll *
 gst_poll_new (gboolean controllable)
@@ -617,8 +617,8 @@ no_socket_pair:
  *
  * Free-function: gst_poll_free
  *
- * Returns: (transfer full): a new #GstPoll, or %NULL in case of an error.
- *     Free with gst_poll_free().
+ * Returns: (transfer full) (nullable): a new #GstPoll, or %NULL in
+ *     case of an error.  Free with gst_poll_free().
  */
 GstPoll *
 gst_poll_new_timer (void)

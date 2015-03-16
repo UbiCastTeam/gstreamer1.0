@@ -45,6 +45,10 @@
  *
  * A #GstNetClientClock is typically set on a #GstPipeline with 
  * gst_pipeline_use_clock().
+ *
+ * If you set a #GstBus on the clock via the "bus" object property, it will
+ * send @GST_MESSAGE_ELEMENT messages with an attached #GstStructure containing
+ * statistics about clock accuracy and network traffic.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -63,13 +67,21 @@ GST_DEBUG_CATEGORY_STATIC (ncc_debug);
 #define DEFAULT_PORT            5637
 #define DEFAULT_TIMEOUT         GST_SECOND
 #define DEFAULT_ROUNDTRIP_LIMIT GST_SECOND
+/* Minimum timeout will be immediately (ie, as fast as one RTT), but no
+ * more often than 1/20th second (arbitrarily, to spread observations a little) */
+#define DEFAULT_MINIMUM_UPDATE_INTERVAL (GST_SECOND / 20)
+
+/* Maximum number of clock updates we can skip before updating */
+#define MAX_SKIPPED_UPDATES 5
 
 enum
 {
   PROP_0,
   PROP_ADDRESS,
   PROP_PORT,
-  PROP_ROUNDTRIP_LIMIT
+  PROP_ROUNDTRIP_LIMIT,
+  PROP_MINIMUM_UPDATE_INTERVAL,
+  PROP_BUS
 };
 
 #define GST_NET_CLIENT_CLOCK_GET_PRIVATE(obj)  \
@@ -86,9 +98,13 @@ struct _GstNetClientClockPrivate
   GstClockTime timeout_expiration;
   GstClockTime roundtrip_limit;
   GstClockTime rtt_avg;
+  GstClockTime minimum_update_interval;
+  guint skipped_updates;
 
   gchar *address;
   gint port;
+
+  GstBus *bus;
 };
 
 #define _do_init \
@@ -126,6 +142,10 @@ gst_net_client_clock_class_init (GstNetClientClockClass * klass)
       g_param_spec_int ("port", "port",
           "The port on which the remote server is listening", 0, G_MAXUINT16,
           DEFAULT_PORT, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property (gobject_class, PROP_BUS,
+      g_param_spec_object ("bus", "bus",
+          "A GstBus on which to send clock status information", GST_TYPE_BUS,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
    * GstNetClientClock::round-trip-limit:
@@ -145,6 +165,12 @@ gst_net_client_clock_class_init (GstNetClientClockClass * klass)
       g_param_spec_uint64 ("round-trip-limit", "round-trip limit",
           "Maximum tolerable round-trip interval for packets, in nanoseconds "
           "(0 = no limit)", 0, G_MAXUINT64, DEFAULT_ROUNDTRIP_LIMIT,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_MINIMUM_UPDATE_INTERVAL,
+      g_param_spec_uint64 ("minimum-update-interval", "minimum update interval",
+          "Minimum polling interval for packets, in nanoseconds"
+          "(0 = no limit)", 0, G_MAXUINT64, DEFAULT_MINIMUM_UPDATE_INTERVAL,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
@@ -166,6 +192,8 @@ gst_net_client_clock_init (GstNetClientClock * self)
   priv->servaddr = NULL;
   priv->rtt_avg = GST_CLOCK_TIME_NONE;
   priv->roundtrip_limit = DEFAULT_ROUNDTRIP_LIMIT;
+  priv->minimum_update_interval = DEFAULT_MINIMUM_UPDATE_INTERVAL;
+  priv->skipped_updates = 0;
 }
 
 static void
@@ -191,6 +219,11 @@ gst_net_client_clock_finalize (GObject * object)
     self->priv->socket = NULL;
   }
 
+  if (self->priv->bus != NULL) {
+    gst_object_unref (self->priv->bus);
+    self->priv->bus = NULL;
+  }
+
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -202,16 +235,34 @@ gst_net_client_clock_set_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_ADDRESS:
+      GST_OBJECT_LOCK (self);
       g_free (self->priv->address);
       self->priv->address = g_value_dup_string (value);
       if (self->priv->address == NULL)
         self->priv->address = g_strdup (DEFAULT_ADDRESS);
+      GST_OBJECT_UNLOCK (self);
       break;
     case PROP_PORT:
+      GST_OBJECT_LOCK (self);
       self->priv->port = g_value_get_int (value);
+      GST_OBJECT_UNLOCK (self);
       break;
     case PROP_ROUNDTRIP_LIMIT:
+      GST_OBJECT_LOCK (self);
       self->priv->roundtrip_limit = g_value_get_uint64 (value);
+      GST_OBJECT_UNLOCK (self);
+      break;
+    case PROP_MINIMUM_UPDATE_INTERVAL:
+      GST_OBJECT_LOCK (self);
+      self->priv->minimum_update_interval = g_value_get_uint64 (value);
+      GST_OBJECT_UNLOCK (self);
+      break;
+    case PROP_BUS:
+      GST_OBJECT_LOCK (self);
+      if (self->priv->bus)
+        gst_object_unref (self->priv->bus);
+      self->priv->bus = g_value_dup_object (value);
+      GST_OBJECT_UNLOCK (self);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -227,13 +278,27 @@ gst_net_client_clock_get_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_ADDRESS:
+      GST_OBJECT_LOCK (self);
       g_value_set_string (value, self->priv->address);
+      GST_OBJECT_UNLOCK (self);
       break;
     case PROP_PORT:
       g_value_set_int (value, self->priv->port);
       break;
     case PROP_ROUNDTRIP_LIMIT:
+      GST_OBJECT_LOCK (self);
       g_value_set_uint64 (value, self->priv->roundtrip_limit);
+      GST_OBJECT_UNLOCK (self);
+      break;
+    case PROP_MINIMUM_UPDATE_INTERVAL:
+      GST_OBJECT_LOCK (self);
+      g_value_set_uint64 (value, self->priv->minimum_update_interval);
+      GST_OBJECT_UNLOCK (self);
+      break;
+    case PROP_BUS:
+      GST_OBJECT_LOCK (self);
+      g_value_set_object (value, self->priv->bus);
+      GST_OBJECT_UNLOCK (self);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -246,11 +311,28 @@ gst_net_client_clock_observe_times (GstNetClientClock * self,
     GstClockTime local_1, GstClockTime remote, GstClockTime local_2)
 {
   GstNetClientClockPrivate *priv = self->priv;
-  GstClockTime current_timeout;
+  GstClockTime current_timeout = 0;
   GstClockTime local_avg;
   gdouble r_squared;
   GstClock *clock;
-  GstClockTime rtt;
+  GstClockTime rtt, rtt_limit, min_update_interval;
+  GstBus *bus = NULL;
+  /* Use for discont tracking */
+  GstClockTime time_before = 0;
+  GstClockTime min_guess = 0;
+  GstClockTimeDiff time_discont = 0;
+  gboolean synched, now_synched;
+  GstClockTime internal_time, external_time, rate_num, rate_den;
+  GstClockTime orig_internal_time, orig_external_time, orig_rate_num,
+      orig_rate_den;
+  GstClockTime max_discont;
+
+  GST_OBJECT_LOCK (self);
+  rtt_limit = self->priv->roundtrip_limit;
+  min_update_interval = self->priv->minimum_update_interval;
+  if (self->priv->bus)
+    bus = gst_object_ref (self->priv->bus);
+  GST_OBJECT_UNLOCK (self);
 
   if (local_2 < local_1) {
     GST_LOG_OBJECT (self, "Dropping observation: receive time %" GST_TIME_FORMAT
@@ -261,11 +343,10 @@ gst_net_client_clock_observe_times (GstNetClientClock * self,
 
   rtt = GST_CLOCK_DIFF (local_1, local_2);
 
-  if ((self->priv->roundtrip_limit > 0) && (rtt > self->priv->roundtrip_limit)) {
+  if ((rtt_limit > 0) && (rtt > rtt_limit)) {
     GST_LOG_OBJECT (self,
         "Dropping observation: RTT %" GST_TIME_FORMAT " > limit %"
-        GST_TIME_FORMAT, GST_TIME_ARGS (rtt),
-        GST_TIME_ARGS (self->priv->roundtrip_limit));
+        GST_TIME_FORMAT, GST_TIME_ARGS (rtt), GST_TIME_ARGS (rtt_limit));
     goto bogus_observation;
   }
 
@@ -277,7 +358,7 @@ gst_net_client_clock_observe_times (GstNetClientClock * self,
   else if (rtt < priv->rtt_avg) /* Shorter RTTs carry more weight than longer */
     priv->rtt_avg = (3 * priv->rtt_avg + rtt) / 4;
   else
-    priv->rtt_avg = (7 * priv->rtt_avg + rtt) / 8;
+    priv->rtt_avg = (15 * priv->rtt_avg + rtt) / 16;
 
   if (rtt > 2 * priv->rtt_avg) {
     GST_LOG_OBJECT (self,
@@ -294,21 +375,136 @@ gst_net_client_clock_observe_times (GstNetClientClock * self,
 
   clock = GST_CLOCK_CAST (self);
 
-  if (gst_clock_add_observation (GST_CLOCK (self), local_avg, remote,
-          &r_squared)) {
-    /* ghetto formula - shorter timeout for bad correlations */
-    current_timeout = (1e-3 / (1 - MIN (r_squared, 0.99999))) * GST_SECOND;
-    current_timeout = MIN (current_timeout, gst_clock_get_timeout (clock));
-  } else {
-    current_timeout = 0;
+  /* Store what the clock produced as 'now' before this update */
+  gst_clock_get_calibration (GST_CLOCK (self), &orig_internal_time,
+      &orig_external_time, &orig_rate_num, &orig_rate_den);
+  internal_time = orig_internal_time;
+  external_time = orig_external_time;
+  rate_num = orig_rate_num;
+  rate_den = orig_rate_den;
+
+  min_guess =
+      gst_clock_adjust_with_calibration (GST_CLOCK (self), local_1,
+      internal_time, external_time, rate_num, rate_den);
+  time_before =
+      gst_clock_adjust_with_calibration (GST_CLOCK (self), local_2,
+      internal_time, external_time, rate_num, rate_den);
+
+  /* Maximum discontinuity, when we're synched with the master. Could make this a property,
+   * but this value seems to work fine */
+  max_discont = priv->rtt_avg / 4;
+
+  /* If the remote observation was within a max_discont window around our min/max estimates, we're synched */
+  synched =
+      (GST_CLOCK_DIFF (remote, min_guess) < (GstClockTimeDiff) (max_discont)
+      && GST_CLOCK_DIFF (time_before,
+          remote) < (GstClockTimeDiff) (max_discont));
+
+  if (gst_clock_add_observation_unapplied (GST_CLOCK (self), local_avg, remote,
+          &r_squared, &internal_time, &external_time, &rate_num, &rate_den)) {
+
+    /* Now compare the difference (discont) in the clock
+     * after this observation */
+    time_discont = GST_CLOCK_DIFF (time_before,
+        gst_clock_adjust_with_calibration (GST_CLOCK (self), local_2,
+            internal_time, external_time, rate_num, rate_den));
+
+    /* If we were in sync with the remote clock, clamp the allowed
+     * discontinuity to within quarter of one RTT. In sync means our send/receive estimates
+     * of remote time correctly windowed the actual remote time observation */
+    if (synched && ABS (time_discont) > max_discont) {
+      GstClockTimeDiff offset;
+      GST_DEBUG_OBJECT (clock,
+          "Too large a discont, clamping to 1/4 average RTT = %"
+          GST_TIME_FORMAT, GST_TIME_ARGS (max_discont));
+      if (time_discont > 0) {   /* Too large a forward step - add a -ve offset */
+        offset = max_discont - time_discont;
+        if (-offset > external_time)
+          external_time = 0;
+        else
+          external_time += offset;
+      } else {                  /* Too large a backward step - add a +ve offset */
+        offset = -(max_discont + time_discont);
+        external_time += offset;
+      }
+
+      time_discont += offset;
+    }
+
+    /* Check if the new clock params would have made our observation within range */
+    now_synched =
+        (GST_CLOCK_DIFF (remote,
+            gst_clock_adjust_with_calibration (GST_CLOCK (self), local_1,
+                internal_time, external_time, rate_num,
+                rate_den)) < (GstClockTimeDiff) (max_discont))
+        && (GST_CLOCK_DIFF (gst_clock_adjust_with_calibration (GST_CLOCK (self),
+                local_2, internal_time, external_time, rate_num, rate_den),
+            remote) < (GstClockTimeDiff) (max_discont));
+
+    /* Only update the clock if we had synch or just gained it */
+    if (synched || now_synched || priv->skipped_updates > MAX_SKIPPED_UPDATES) {
+      gst_clock_set_calibration (GST_CLOCK (self), internal_time, external_time,
+          rate_num, rate_den);
+      /* ghetto formula - shorter timeout for bad correlations */
+      current_timeout = (1e-3 / (1 - MIN (r_squared, 0.99999))) * GST_SECOND;
+      current_timeout = MIN (current_timeout, gst_clock_get_timeout (clock));
+      priv->skipped_updates = 0;
+    } else {
+      /* Restore original calibration vars for the report, we're not changing the clock */
+      internal_time = orig_internal_time;
+      external_time = orig_external_time;
+      rate_num = orig_rate_num;
+      rate_den = orig_rate_den;
+      time_discont = 0;
+      priv->skipped_updates++;
+    }
+  }
+
+  /* Limit the polling to at most one per minimum_update_interval */
+  if (rtt < min_update_interval)
+    current_timeout = MAX (min_update_interval - rtt, current_timeout);
+
+  if (bus) {
+    GstStructure *s;
+    GstMessage *msg;
+
+    /* Output a stats message, whether we updated the clock or not */
+    s = gst_structure_new ("gst-netclock-statistics",
+        "synchronised", G_TYPE_BOOLEAN, synched,
+        "rtt", G_TYPE_UINT64, rtt,
+        "rtt-average", G_TYPE_UINT64, priv->rtt_avg,
+        "local", G_TYPE_UINT64, local_avg,
+        "remote", G_TYPE_UINT64, remote,
+        "discontinuity", G_TYPE_INT64, time_discont,
+        "remote-min-estimate", G_TYPE_UINT64, min_guess,
+        "remote-max-estimate", G_TYPE_UINT64, time_before,
+        "remote-min-error", G_TYPE_INT64, GST_CLOCK_DIFF (remote, min_guess),
+        "remote-max-error", G_TYPE_INT64, GST_CLOCK_DIFF (remote, time_before),
+        "request-send", G_TYPE_UINT64, local_1,
+        "request-receive", G_TYPE_UINT64, local_2,
+        "r-squared", G_TYPE_DOUBLE, r_squared,
+        "timeout", G_TYPE_UINT64, current_timeout,
+        "internal-time", G_TYPE_UINT64, internal_time,
+        "external-time", G_TYPE_UINT64, external_time,
+        "rate-num", G_TYPE_UINT64, rate_num,
+        "rate-den", G_TYPE_UINT64, rate_den,
+        "rate", G_TYPE_DOUBLE, (gdouble) (rate_num) / rate_den,
+        "local-clock-offset", G_TYPE_INT64, GST_CLOCK_DIFF (internal_time,
+            external_time), NULL);
+    msg = gst_message_new_element (GST_OBJECT (self), s);
+    gst_bus_post (bus, msg);
   }
 
   GST_INFO ("next timeout: %" GST_TIME_FORMAT, GST_TIME_ARGS (current_timeout));
   self->priv->timeout_expiration = gst_util_get_timestamp () + current_timeout;
 
+  if (bus)
+    gst_object_unref (bus);
   return;
 
 bogus_observation:
+  if (bus)
+    gst_object_unref (bus);
   /* Schedule a new packet again soon */
   self->priv->timeout_expiration = gst_util_get_timestamp () + (GST_SECOND / 4);
   return;
@@ -402,7 +598,6 @@ gst_net_client_clock_thread (gpointer data)
       }
     }
   }
-
   GST_INFO_OBJECT (self, "shutting down net client clock thread");
   return NULL;
 }

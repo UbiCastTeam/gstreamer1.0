@@ -56,14 +56,14 @@
 
 extern const gchar *priv_gst_dump_dot_dir;      /* NULL *//* set from gst.c */
 
+#define PARAM_MAX_LENGTH 80
+
 const gchar spaces[] = {
   "                                "    /* 32 */
       "                                "        /* 64 */
       "                                "        /* 96 */
       "                                "        /* 128 */
 };
-
-extern GstClockTime _priv_gst_info_start_time;
 
 static gchar *
 debug_dump_make_object_name (GstObject * obj)
@@ -92,13 +92,15 @@ debug_dump_get_element_state (GstElement * element)
 }
 
 static gchar *
-debug_dump_get_element_params (GstElement * element)
+debug_dump_get_element_params (GstElement * element,
+    GstDebugGraphDetails details)
 {
   gchar *param_name = NULL;
   GParamSpec **properties, *property;
   GValue value = { 0, };
   guint i, number_of_properties;
   gchar *tmp, *value_str;
+  const gchar *ellipses;
 
   /* get paramspecs and show non-default properties */
   properties =
@@ -108,7 +110,7 @@ debug_dump_get_element_params (GstElement * element)
     for (i = 0; i < number_of_properties; i++) {
       property = properties[i];
 
-      /* ski some properties */
+      /* skip some properties */
       if (!(property->flags & G_PARAM_READABLE))
         continue;
       if (!strcmp (property->name, "name"))
@@ -120,14 +122,31 @@ debug_dump_get_element_params (GstElement * element)
         tmp = g_strdup_value_contents (&value);
         value_str = g_strescape (tmp, NULL);
         g_free (tmp);
-        if (param_name) {
+
+        /* too long, ellipsize */
+        if (!(details & GST_DEBUG_GRAPH_SHOW_FULL_PARAMS) &&
+            strlen (value_str) > PARAM_MAX_LENGTH)
+          ellipses = "…";
+        else
+          ellipses = "";
+
+        if (param_name)
           tmp = param_name;
-          param_name = g_strdup_printf ("%s\\n%s=%s",
-              tmp, property->name, value_str);
-          g_free (tmp);
+        else
+          tmp = (char *) "";
+
+        if (details & GST_DEBUG_GRAPH_SHOW_FULL_PARAMS) {
+          param_name = g_strdup_printf ("%s\\n%s=%s", tmp, property->name,
+              value_str);
         } else {
-          param_name = g_strdup_printf ("\\n%s=%s", property->name, value_str);
+          param_name = g_strdup_printf ("%s\\n%s=%."
+              G_STRINGIFY (PARAM_MAX_LENGTH) "s%s", tmp, property->name,
+              value_str, ellipses);
         }
+
+        if (tmp[0] != '\0')
+          g_free (tmp);
+
         g_free (value_str);
       }
       g_value_unset (&value);
@@ -139,7 +158,7 @@ debug_dump_get_element_params (GstElement * element)
 
 static void
 debug_dump_pad (GstPad * pad, const gchar * color_name,
-    const gchar * element_name, GstDebugGraphDetails details, FILE * out,
+    const gchar * element_name, GstDebugGraphDetails details, GString * str,
     const gint indent)
 {
   GstPadTemplate *pad_templ;
@@ -154,6 +173,7 @@ debug_dump_pad (GstPad * pad, const gchar * color_name,
   style_name = "filled,solid";
   if ((pad_templ = gst_pad_get_pad_template (pad))) {
     presence = GST_PAD_TEMPLATE_PRESENCE (pad_templ);
+    gst_object_unref (pad_templ);
     if (presence == GST_PAD_SOMETIMES) {
       style_name = "filled,dotted";
     } else if (presence == GST_PAD_REQUEST) {
@@ -192,12 +212,12 @@ debug_dump_pad (GstPad * pad, const gchar * color_name,
         GST_OBJECT_FLAG_IS_SET (pad, GST_PAD_FLAG_BLOCKING) ? 'B' : 'b';
     pad_flags[3] = '\0';
 
-    fprintf (out,
+    g_string_append_printf (str,
         "%s  %s_%s [color=black, fillcolor=\"%s\", label=\"%s\\n[%c][%s]%s\", height=\"0.2\", style=\"%s\"];\n",
         spc, element_name, pad_name, color_name, GST_OBJECT_NAME (pad),
         activation_mode[pad->mode], pad_flags, task_mode, style_name);
   } else {
-    fprintf (out,
+    g_string_append_printf (str,
         "%s  %s_%s [color=black, fillcolor=\"%s\", label=\"%s\", height=\"0.2\", style=\"%s\"];\n",
         spc, element_name, pad_name, color_name, GST_OBJECT_NAME (pad),
         style_name);
@@ -208,7 +228,7 @@ debug_dump_pad (GstPad * pad, const gchar * color_name,
 
 static void
 debug_dump_element_pad (GstPad * pad, GstElement * element,
-    GstDebugGraphDetails details, FILE * out, const gint indent)
+    GstDebugGraphDetails details, GString * str, const gint indent)
 {
   GstElement *target_element;
   GstPad *target_pad, *tmp_pad;
@@ -236,15 +256,17 @@ debug_dump_element_pad (GstPad * pad, GstElement * element,
           target_element_name = g_strdup ("");
         }
         debug_dump_pad (target_pad, color_name, target_element_name, details,
-            out, indent);
+            str, indent);
         /* src ghostpad relationship */
         pad_name = debug_dump_make_object_name (GST_OBJECT (pad));
         target_pad_name = debug_dump_make_object_name (GST_OBJECT (target_pad));
         if (dir == GST_PAD_SRC) {
-          fprintf (out, "%s%s_%s -> %s_%s [style=dashed, minlen=0]\n", spc,
+          g_string_append_printf (str,
+              "%s%s_%s -> %s_%s [style=dashed, minlen=0]\n", spc,
               target_element_name, target_pad_name, element_name, pad_name);
         } else {
-          fprintf (out, "%s%s_%s -> %s_%s [style=dashed, minlen=0]\n", spc,
+          g_string_append_printf (str,
+              "%s%s_%s -> %s_%s [style=dashed, minlen=0]\n", spc,
               element_name, pad_name, target_element_name, target_pad_name);
         }
         g_free (target_pad_name);
@@ -262,7 +284,7 @@ debug_dump_element_pad (GstPad * pad, GstElement * element,
             GST_PAD_SINK) ? "#aaaaff" : "#cccccc");
   }
   /* pads */
-  debug_dump_pad (pad, color_name, element_name, details, out, indent);
+  debug_dump_pad (pad, color_name, element_name, details, str, indent);
   g_free (element_name);
 }
 
@@ -358,7 +380,7 @@ debug_dump_describe_caps (GstCaps * caps, GstDebugGraphDetails details)
 
 static void
 debug_dump_element_pad_link (GstPad * pad, GstElement * element,
-    GstDebugGraphDetails details, FILE * out, const gint indent)
+    GstDebugGraphDetails details, GString * str, const gint indent)
 {
   GstElement *peer_element;
   GstPad *peer_pad;
@@ -415,13 +437,14 @@ debug_dump_element_pad_link (GstPad * pad, GstElement * element,
 
     /* pad link */
     if (media) {
-      fprintf (out, "%s%s_%s -> %s_%s [label=\"%s\"]\n", spc,
+      g_string_append_printf (str, "%s%s_%s -> %s_%s [label=\"%s\"]\n", spc,
           element_name, pad_name, peer_element_name, peer_pad_name, media);
       g_free (media);
     } else if (media_src && media_sink) {
       /* dot has some issues with placement of head and taillabels,
        * we need an empty label to make space */
-      fprintf (out, "%s%s_%s -> %s_%s [labeldistance=\"10\", labelangle=\"0\", "
+      g_string_append_printf (str,
+          "%s%s_%s -> %s_%s [labeldistance=\"10\", labelangle=\"0\", "
           "label=\"                                                  \", "
           "taillabel=\"%s\", headlabel=\"%s\"]\n",
           spc, element_name, pad_name, peer_element_name, peer_pad_name,
@@ -429,7 +452,7 @@ debug_dump_element_pad_link (GstPad * pad, GstElement * element,
       g_free (media_src);
       g_free (media_sink);
     } else {
-      fprintf (out, "%s%s_%s -> %s_%s\n", spc,
+      g_string_append_printf (str, "%s%s_%s -> %s_%s\n", spc,
           element_name, pad_name, peer_element_name, peer_pad_name);
     }
 
@@ -445,7 +468,7 @@ debug_dump_element_pad_link (GstPad * pad, GstElement * element,
 
 static void
 debug_dump_element_pads (GstIterator * pad_iter, GstPad * pad,
-    GstElement * element, GstDebugGraphDetails details, FILE * out,
+    GstElement * element, GstDebugGraphDetails details, GString * str,
     const gint indent, guint * src_pads, guint * sink_pads)
 {
   GValue item = { 0, };
@@ -457,7 +480,7 @@ debug_dump_element_pads (GstIterator * pad_iter, GstPad * pad,
     switch (gst_iterator_next (pad_iter, &item)) {
       case GST_ITERATOR_OK:
         pad = g_value_get_object (&item);
-        debug_dump_element_pad (pad, element, details, out, indent);
+        debug_dump_element_pad (pad, element, details, str, indent);
         dir = gst_pad_get_direction (pad);
         if (dir == GST_PAD_SRC)
           (*src_pads)++;
@@ -485,8 +508,8 @@ debug_dump_element_pads (GstIterator * pad_iter, GstPad * pad,
  * Helper for gst_debug_bin_to_dot_file() to recursively dump a pipeline.
  */
 static void
-debug_dump_element (GstBin * bin, GstDebugGraphDetails details, FILE * out,
-    const gint indent)
+debug_dump_element (GstBin * bin, GstDebugGraphDetails details,
+    GString * str, const gint indent)
 {
   GstIterator *element_iter, *pad_iter;
   gboolean elements_done, pads_done;
@@ -512,15 +535,18 @@ debug_dump_element (GstBin * bin, GstDebugGraphDetails details, FILE * out,
           state_name = debug_dump_get_element_state (GST_ELEMENT (element));
         }
         if (details & GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS) {
-          param_name = debug_dump_get_element_params (GST_ELEMENT (element));
+          param_name = debug_dump_get_element_params (GST_ELEMENT (element),
+              details);
         }
         /* elements */
-        fprintf (out, "%ssubgraph cluster_%s {\n", spc, element_name);
-        fprintf (out, "%s  fontname=\"Bitstream Vera Sans\";\n", spc);
-        fprintf (out, "%s  fontsize=\"8\";\n", spc);
-        fprintf (out, "%s  style=filled;\n", spc);
-        fprintf (out, "%s  color=black;\n\n", spc);
-        fprintf (out, "%s  label=\"%s\\n%s%s%s\";\n", spc,
+        g_string_append_printf (str, "%ssubgraph cluster_%s {\n", spc,
+            element_name);
+        g_string_append_printf (str, "%s  fontname=\"Bitstream Vera Sans\";\n",
+            spc);
+        g_string_append_printf (str, "%s  fontsize=\"8\";\n", spc);
+        g_string_append_printf (str, "%s  style=filled;\n", spc);
+        g_string_append_printf (str, "%s  color=black;\n\n", spc);
+        g_string_append_printf (str, "%s  label=\"%s\\n%s%s%s\";\n", spc,
             G_OBJECT_TYPE_NAME (element), GST_OBJECT_NAME (element),
             (state_name ? state_name : ""), (param_name ? param_name : "")
             );
@@ -536,30 +562,30 @@ debug_dump_element (GstBin * bin, GstDebugGraphDetails details, FILE * out,
 
         src_pads = sink_pads = 0;
         if ((pad_iter = gst_element_iterate_sink_pads (element))) {
-          debug_dump_element_pads (pad_iter, pad, element, details, out, indent,
-              &src_pads, &sink_pads);
+          debug_dump_element_pads (pad_iter, pad, element, details, str,
+              indent, &src_pads, &sink_pads);
           gst_iterator_free (pad_iter);
         }
         if ((pad_iter = gst_element_iterate_src_pads (element))) {
-          debug_dump_element_pads (pad_iter, pad, element, details, out, indent,
-              &src_pads, &sink_pads);
+          debug_dump_element_pads (pad_iter, pad, element, details, str,
+              indent, &src_pads, &sink_pads);
           gst_iterator_free (pad_iter);
         }
         if (GST_IS_BIN (element)) {
-          fprintf (out, "%s  fillcolor=\"#ffffff\";\n", spc);
+          g_string_append_printf (str, "%s  fillcolor=\"#ffffff\";\n", spc);
           /* recurse */
-          debug_dump_element (GST_BIN (element), details, out, indent + 1);
+          debug_dump_element (GST_BIN (element), details, str, indent + 1);
         } else {
           if (src_pads && !sink_pads)
-            fprintf (out, "%s  fillcolor=\"#ffaaaa\";\n", spc);
+            g_string_append_printf (str, "%s  fillcolor=\"#ffaaaa\";\n", spc);
           else if (!src_pads && sink_pads)
-            fprintf (out, "%s  fillcolor=\"#aaaaff\";\n", spc);
+            g_string_append_printf (str, "%s  fillcolor=\"#aaaaff\";\n", spc);
           else if (src_pads && sink_pads)
-            fprintf (out, "%s  fillcolor=\"#aaffaa\";\n", spc);
+            g_string_append_printf (str, "%s  fillcolor=\"#aaffaa\";\n", spc);
           else
-            fprintf (out, "%s  fillcolor=\"#ffffff\";\n", spc);
+            g_string_append_printf (str, "%s  fillcolor=\"#ffffff\";\n", spc);
         }
-        fprintf (out, "%s}\n\n", spc);
+        g_string_append_printf (str, "%s}\n\n", spc);
         if ((pad_iter = gst_element_iterate_pads (element))) {
           pads_done = FALSE;
           while (!pads_done) {
@@ -568,7 +594,7 @@ debug_dump_element (GstBin * bin, GstDebugGraphDetails details, FILE * out,
                 pad = g_value_get_object (&item2);
                 if (gst_pad_is_linked (pad)) {
                   if (gst_pad_get_direction (pad) == GST_PAD_SRC) {
-                    debug_dump_element_pad_link (pad, element, details, out,
+                    debug_dump_element_pad_link (pad, element, details, str,
                         indent);
                   } else {
                     GstPad *peer_pad = gst_pad_get_peer (pad);
@@ -577,7 +603,7 @@ debug_dump_element (GstBin * bin, GstDebugGraphDetails details, FILE * out,
                       if (!GST_IS_GHOST_PAD (peer_pad)
                           && GST_IS_PROXY_PAD (peer_pad)) {
                         debug_dump_element_pad_link (peer_pad, NULL, details,
-                            out, indent);
+                            str, indent);
                       }
                       gst_object_unref (peer_pad);
                     }
@@ -611,6 +637,80 @@ debug_dump_element (GstBin * bin, GstDebugGraphDetails details, FILE * out,
 
   g_value_unset (&item);
   gst_iterator_free (element_iter);
+}
+
+static void
+debug_dump_header (GstBin * bin, GstDebugGraphDetails details, GString * str)
+{
+  gchar *state_name = NULL;
+  gchar *param_name = NULL;
+
+  if (details & GST_DEBUG_GRAPH_SHOW_STATES) {
+    state_name = debug_dump_get_element_state (GST_ELEMENT (bin));
+  }
+  if (details & GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS) {
+    param_name = debug_dump_get_element_params (GST_ELEMENT (bin), details);
+  }
+
+  /* write header */
+  g_string_append_printf (str,
+      "digraph pipeline {\n"
+      "  rankdir=LR;\n"
+      "  fontname=\"sans\";\n"
+      "  fontsize=\"10\";\n"
+      "  labelloc=t;\n"
+      "  nodesep=.1;\n"
+      "  ranksep=.2;\n"
+      "  label=\"<%s>\\n%s%s%s\";\n"
+      "  node [style=filled, shape=box, fontsize=\"9\", fontname=\"sans\", margin=\"0.0,0.0\"];\n"
+      "  edge [labelfontsize=\"6\", fontsize=\"9\", fontname=\"monospace\"];\n"
+      "  \n"
+      "  legend [\n"
+      "    pos=\"0,0!\",\n"
+      "    margin=\"0.05,0.05\",\n"
+      "    label=\"Legend\\lElement-States: [~] void-pending, [0] null, [-] ready, [=] paused, [>] playing\\lPad-Activation: [-] none, [>] push, [<] pull\\lPad-Flags: [b]locked, [f]lushing, [b]locking; upper-case is set\\lPad-Task: [T] has started task, [t] has paused task\\l\"\n,"
+      "  ];"
+      "\n", G_OBJECT_TYPE_NAME (bin), GST_OBJECT_NAME (bin),
+      (state_name ? state_name : ""), (param_name ? param_name : "")
+      );
+
+  if (state_name)
+    g_free (state_name);
+  if (param_name)
+    g_free (param_name);
+}
+
+static void
+debug_dump_footer (GString * str)
+{
+  g_string_append_printf (str, "}\n");
+}
+
+/*
+ * gst_debug_bin_to_dot_data:
+ * @bin: the top-level pipeline that should be analyzed
+ *
+ * To aid debugging applications one can use this method to obtain the whole
+ * network of gstreamer elements that form the pipeline into an dot file.
+ * This data can be processed with graphviz to get an image.
+ *
+ * Returns: (transfer full): a string containing the pipeline in graphviz
+ * dot format.
+ */
+gchar *
+gst_debug_bin_to_dot_data (GstBin * bin, GstDebugGraphDetails details)
+{
+  GString *str;
+
+  g_return_val_if_fail (GST_IS_BIN (bin), NULL);
+
+  str = g_string_new (NULL);
+
+  debug_dump_header (bin, details, str);
+  debug_dump_element (bin, details, str, 1);
+  debug_dump_footer (str);
+
+  return g_string_free (str, FALSE);
 }
 
 /*
@@ -647,47 +747,14 @@ gst_debug_bin_to_dot_file (GstBin * bin, GstDebugGraphDetails details,
       priv_gst_dump_dot_dir, file_name);
 
   if ((out = fopen (full_file_name, "wb"))) {
-    gchar *state_name = NULL;
-    gchar *param_name = NULL;
+    gchar *buf;
 
-    if (details & GST_DEBUG_GRAPH_SHOW_STATES) {
-      state_name = debug_dump_get_element_state (GST_ELEMENT (bin));
-    }
-    if (details & GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS) {
-      param_name = debug_dump_get_element_params (GST_ELEMENT (bin));
-    }
+    buf = gst_debug_bin_to_dot_data (bin, details);
+    fputs (buf, out);
 
-    /* write header */
-    fprintf (out,
-        "digraph pipeline {\n"
-        "  rankdir=LR;\n"
-        "  fontname=\"sans\";\n"
-        "  fontsize=\"10\";\n"
-        "  labelloc=t;\n"
-        "  nodesep=.1;\n"
-        "  ranksep=.2;\n"
-        "  label=\"<%s>\\n%s%s%s\";\n"
-        "  node [style=filled, shape=box, fontsize=\"9\", fontname=\"sans\", margin=\"0.0,0.0\"];\n"
-        "  edge [labelfontsize=\"6\", fontsize=\"9\", fontname=\"monospace\"];\n"
-        "  \n"
-        "  legend [\n"
-        "    pos=\"0,0!\",\n"
-        "    margin=\"0.05,0.05\",\n"
-        "    label=\"Legend\\lElement-States: [~] void-pending, [0] null, [-] ready, [=] paused, [>] playing\\lPad-Activation: [-] none, [>] push, [<] pull\\lPad-Flags: [b]locked, [f]lushing, [b]locking; upper-case is set\\lPad-Task: [T] has started task, [t] has paused task\\l\"\n,"
-        "  ];"
-        "\n", G_OBJECT_TYPE_NAME (bin), GST_OBJECT_NAME (bin),
-        (state_name ? state_name : ""), (param_name ? param_name : "")
-        );
-    if (state_name)
-      g_free (state_name);
-    if (param_name)
-      g_free (param_name);
-
-    debug_dump_element (bin, details, out, 1);
-
-    /* write footer */
-    fprintf (out, "}\n");
+    g_free (buf);
     fclose (out);
+
     GST_INFO ("wrote bin graph to : '%s'", full_file_name);
   } else {
     GST_WARNING ("Failed to open file '%s' for writing: %s", full_file_name,

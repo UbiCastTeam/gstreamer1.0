@@ -665,15 +665,9 @@ gst_structure_id_set_valist_internal (GstStructure * structure,
     GstStructureField field = { 0 };
 
     field.name = fieldname;
-
     type = va_arg (varargs, GType);
 
-#ifndef G_VALUE_COLLECT_INIT
-    g_value_init (&field.value, type);
-    G_VALUE_COLLECT (&field.value, varargs, 0, &err);
-#else
     G_VALUE_COLLECT_INIT (&field.value, type, varargs, 0, &err);
-#endif
     if (G_UNLIKELY (err)) {
       g_critical ("%s", err);
       return;
@@ -1106,7 +1100,8 @@ gst_structure_nth_field_name (const GstStructure * structure, guint index)
  * @user_data: (closure): private data
  *
  * Calls the provided function once for each field in the #GstStructure. The
- * function must not modify the fields. Also see gst_structure_map_in_place().
+ * function must not modify the fields. Also see gst_structure_map_in_place()
+ * and gst_structure_filter_and_map_in_place().
  *
  * Returns: %TRUE if the supplied function returns %TRUE For each of the fields,
  * %FALSE otherwise.
@@ -1170,6 +1165,51 @@ gst_structure_map_in_place (GstStructure * structure,
   }
 
   return TRUE;
+}
+
+/**
+ * gst_structure_filter_and_map_in_place:
+ * @structure: a #GstStructure
+ * @func: (scope call): a function to call for each field
+ * @user_data: (closure): private data
+ *
+ * Calls the provided function once for each field in the #GstStructure. In
+ * contrast to gst_structure_foreach(), the function may modify the fields.
+ * In contrast to gst_structure_map_in_place(), the field is removed from
+ * the structure if %FALSE is returned from the function.
+ * The structure must be mutable.
+ *
+ * Since: 1.6
+ */
+void
+gst_structure_filter_and_map_in_place (GstStructure * structure,
+    GstStructureFilterMapFunc func, gpointer user_data)
+{
+  guint i, len;
+  GstStructureField *field;
+  gboolean ret;
+
+  g_return_if_fail (structure != NULL);
+  g_return_if_fail (IS_MUTABLE (structure));
+  g_return_if_fail (func != NULL);
+  len = GST_STRUCTURE_FIELDS (structure)->len;
+
+  for (i = 0; i < len;) {
+    field = GST_STRUCTURE_FIELD (structure, i);
+
+    ret = func (field->name, &field->value, user_data);
+
+    if (!ret) {
+      if (G_IS_VALUE (&field->value)) {
+        g_value_unset (&field->value);
+      }
+      GST_STRUCTURE_FIELDS (structure) =
+          g_array_remove_index (GST_STRUCTURE_FIELDS (structure), i);
+      len = GST_STRUCTURE_FIELDS (structure)->len;
+    } else {
+      i++;
+    }
+  }
 }
 
 /**
@@ -1368,14 +1408,14 @@ gst_structure_get_uint (const GstStructure * structure,
  * gst_structure_get_int64:
  * @structure: a #GstStructure
  * @fieldname: the name of a field
- * @value: (out): a pointer to an int64 to set
+ * @value: (out): a pointer to a #gint64 to set
  *
- * Sets the int64 pointed to by @value corresponding to the value of the
+ * Sets the #gint64 pointed to by @value corresponding to the value of the
  * given field. Caller is responsible for making sure the field exists
  * and has the correct type.
  *
  * Returns: %TRUE if the value could be set correctly. If there was no field
- * with @fieldname or the existing field did not contain an int64, this function
+ * with @fieldname or the existing field did not contain a #gint64, this function
  * returns %FALSE.
  *
  * Since: 1.4
@@ -1404,14 +1444,14 @@ gst_structure_get_int64 (const GstStructure * structure,
  * gst_structure_get_uint64:
  * @structure: a #GstStructure
  * @fieldname: the name of a field
- * @value: (out): a pointer to a uint64 to set
+ * @value: (out): a pointer to a #guint64 to set
  *
- * Sets the uint64 pointed to by @value corresponding to the value of the
+ * Sets the #guint64 pointed to by @value corresponding to the value of the
  * given field. Caller is responsible for making sure the field exists
  * and has the correct type.
  *
  * Returns: %TRUE if the value could be set correctly. If there was no field
- * with @fieldname or the existing field did not contain a uint64, this function
+ * with @fieldname or the existing field did not contain a #guint64, this function
  * returns %FALSE.
  *
  * Since: 1.4
@@ -1512,7 +1552,7 @@ gst_structure_get_date_time (const GstStructure * structure,
   if (!GST_VALUE_HOLDS_DATE_TIME (&field->value))
     return FALSE;
 
-  /* FIXME: 0.11 g_value_dup_boxed() -> g_value_get_boxed() */
+  /* FIXME 2.0: g_value_dup_boxed() -> g_value_get_boxed() */
   *value = g_value_dup_boxed (&field->value);
 
   return TRUE;
@@ -1585,8 +1625,8 @@ gst_structure_get_double (const GstStructure * structure,
  * The string should not be modified, and remains valid until the next
  * call to a gst_structure_*() function with the given structure.
  *
- * Returns: a pointer to the string or %NULL when the field did not exist
- * or did not contain a string.
+ * Returns: (nullable): a pointer to the string or %NULL when the
+ * field did not exist or did not contain a string.
  */
 const gchar *
 gst_structure_get_string (const GstStructure * structure,
@@ -1928,8 +1968,11 @@ gst_structure_parse_string (gchar * s, gchar ** end, gchar ** next,
     while (*s != '"') {
       if (G_UNLIKELY (*s == 0))
         return FALSE;
-      if (G_UNLIKELY (*s == '\\'))
+      if (G_UNLIKELY (*s == '\\')) {
         s++;
+        if (G_UNLIKELY (*s == 0))
+          return FALSE;
+      }
       *w = *s;
       w++;
       s++;
@@ -1941,8 +1984,11 @@ gst_structure_parse_string (gchar * s, gchar ** end, gchar ** next,
     while (*s != '"') {
       if (G_UNLIKELY (*s == 0))
         return FALSE;
-      if (G_UNLIKELY (*s == '\\'))
+      if (G_UNLIKELY (*s == '\\')) {
         s++;
+        if (G_UNLIKELY (*s == 0))
+          return FALSE;
+      }
       s++;
     }
     s++;
@@ -1970,7 +2016,7 @@ gst_structure_parse_range (gchar * s, gchar ** after, GValue * value,
   s++;
 
   ret = gst_structure_parse_value (s, &s, &value1, type);
-  if (ret == FALSE)
+  if (!ret)
     return FALSE;
 
   while (g_ascii_isspace (*s))
@@ -1984,7 +2030,7 @@ gst_structure_parse_range (gchar * s, gchar ** after, GValue * value,
     s++;
 
   ret = gst_structure_parse_value (s, &s, &value2, type);
-  if (ret == FALSE)
+  if (!ret)
     return FALSE;
 
   while (g_ascii_isspace (*s))
@@ -2000,7 +2046,7 @@ gst_structure_parse_range (gchar * s, gchar ** after, GValue * value,
         s++;
 
       ret = gst_structure_parse_value (s, &s, &value3, type);
-      if (ret == FALSE)
+      if (!ret)
         return FALSE;
 
       while (g_ascii_isspace (*s))
@@ -2084,7 +2130,7 @@ gst_structure_parse_any_list (gchar * s, gchar ** after, GValue * value,
   }
 
   ret = gst_structure_parse_value (s, &s, &list_value, type);
-  if (ret == FALSE)
+  if (!ret)
     return FALSE;
 
   g_array_append_val (array, list_value);
@@ -2102,7 +2148,7 @@ gst_structure_parse_any_list (gchar * s, gchar ** after, GValue * value,
 
     memset (&list_value, 0, sizeof (list_value));
     ret = gst_structure_parse_value (s, &s, &list_value, type);
-    if (ret == FALSE)
+    if (!ret)
       return FALSE;
 
     g_array_append_val (array, list_value);
@@ -2374,8 +2420,9 @@ priv_gst_structure_parse_fields (gchar * str, gchar ** end,
  *
  * Free-function: gst_structure_free
  *
- * Returns: (transfer full): a new #GstStructure or %NULL when the string could
- *     not be parsed. Free with gst_structure_free() after use.
+ * Returns: (transfer full) (nullable): a new #GstStructure or %NULL
+ *     when the string could not be parsed. Free with
+ *     gst_structure_free() after use.
  *
  * Since: 1.2
  */
@@ -2396,8 +2443,9 @@ gst_structure_new_from_string (const gchar * string)
  *
  * Free-function: gst_structure_free
  *
- * Returns: (transfer full): a new #GstStructure or %NULL when the string could
- *     not be parsed. Free with gst_structure_free() after use.
+ * Returns: (transfer full) (nullable): a new #GstStructure or %NULL
+ *     when the string could not be parsed. Free with
+ *     gst_structure_free() after use.
  */
 GstStructure *
 gst_structure_from_string (const gchar * string, gchar ** end)

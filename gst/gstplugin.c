@@ -480,16 +480,18 @@ gst_plugin_register_func (GstPlugin * plugin, const GstPluginDesc * desc,
 {
   if (!gst_plugin_check_version (desc->major_version, desc->minor_version)) {
     if (GST_CAT_DEFAULT)
-      GST_WARNING ("plugin \"%s\" has incompatible version, not loading",
-          GST_STR_NULL (plugin->filename));
+      GST_WARNING ("plugin \"%s\" has incompatible version "
+          "(plugin: %d.%d, gst: %d,%d), not loading",
+          GST_STR_NULL (plugin->filename), desc->major_version,
+          desc->minor_version, GST_VERSION_MAJOR, GST_VERSION_MINOR);
     return NULL;
   }
 
   if (!desc->license || !desc->description || !desc->source ||
       !desc->package || !desc->origin) {
     if (GST_CAT_DEFAULT)
-      GST_WARNING ("plugin \"%s\" has incorrect GstPluginDesc, not loading",
-          GST_STR_NULL (plugin->filename));
+      GST_WARNING ("plugin \"%s\" has missing detail in GstPluginDesc, not "
+          "loading", GST_STR_NULL (plugin->filename));
     return NULL;
   }
 
@@ -706,7 +708,7 @@ gst_plugin_load_file (const gchar * filename, GError ** error)
   GST_CAT_DEBUG (GST_CAT_PLUGIN_LOADING, "attempt to load plugin \"%s\"",
       filename);
 
-  if (g_module_supported () == FALSE) {
+  if (!g_module_supported ()) {
     GST_CAT_DEBUG (GST_CAT_PLUGIN_LOADING, "module loading not supported");
     g_set_error (error,
         GST_PLUGIN_ERROR,
@@ -1006,7 +1008,8 @@ gst_plugin_get_origin (GstPlugin * plugin)
  *
  * There may be plugins that do not have a valid release date set on them.
  *
- * Returns: the date string of the plugin, or %NULL if not available.
+ * Returns: (nullable): the date string of the plugin, or %NULL if not
+ * available.
  */
 const gchar *
 gst_plugin_get_release_date_string (GstPlugin * plugin)
@@ -1039,7 +1042,8 @@ gst_plugin_is_loaded (GstPlugin * plugin)
  * Gets the plugin specific data cache. If it is %NULL there is no cached data
  * stored. This is the case when the registry is getting rebuilt.
  *
- * Returns: (transfer none): The cached data as a #GstStructure or %NULL.
+ * Returns: (transfer none) (nullable): The cached data as a
+ * #GstStructure or %NULL.
  */
 const GstStructure *
 gst_plugin_get_cache_data (GstPlugin * plugin)

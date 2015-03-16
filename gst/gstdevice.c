@@ -22,14 +22,14 @@
 /**
  * SECTION:gstdevice
  * @short_description: Object representing a device
- * @see_also: #GstDeviceMonitor
+ * @see_also: #GstDeviceProvider
  *
  * #GstDevice are objects representing a device, they contain
  * relevant metadata about the device, such as its class and the #GstCaps
  * representing the media types it can produce or handle.
  *
- * #GstDevice are created by #GstDeviceMonitor objects which can be
- * aggregated by #GstGlobalDeviceMonitor objects.
+ * #GstDevice are created by #GstDeviceProvider objects which can be
+ * aggregated by #GstDeviceMonitor objects.
  *
  * Since: 1.4
  */
@@ -190,6 +190,8 @@ gst_device_create_element (GstDevice * device, const gchar * name)
 {
   GstDeviceClass *klass = GST_DEVICE_GET_CLASS (device);
 
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
   if (klass->create_element)
     return klass->create_element (device, name);
   else
@@ -210,6 +212,8 @@ gst_device_create_element (GstDevice * device, const gchar * name)
 GstCaps *
 gst_device_get_caps (GstDevice * device)
 {
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
   if (device->priv->caps)
     return gst_caps_ref (device->priv->caps);
   else
@@ -229,6 +233,8 @@ gst_device_get_caps (GstDevice * device)
 gchar *
 gst_device_get_display_name (GstDevice * device)
 {
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
   return
       g_strdup (device->priv->display_name ? device->priv->display_name : "");
 }
@@ -239,7 +245,7 @@ gst_device_get_display_name (GstDevice * device)
  *
  * Gets the "class" of a device. This is a "/" separated list of
  * classes that represent this device. They are a subset of the
- * classes of the #GstDeviceMonitor that produced this device.
+ * classes of the #GstDeviceProvider that produced this device.
  *
  * Returns: The device class. Free with g_free() after use.
  *
@@ -248,6 +254,8 @@ gst_device_get_display_name (GstDevice * device)
 gchar *
 gst_device_get_device_class (GstDevice * device)
 {
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
   if (device->priv->device_class != NULL)
     return g_strdup (device->priv->device_class);
   else
@@ -276,6 +284,8 @@ gst_device_reconfigure_element (GstDevice * device, GstElement * element)
 {
   GstDeviceClass *klass = GST_DEVICE_GET_CLASS (device);
 
+  g_return_val_if_fail (GST_IS_DEVICE (device), FALSE);
+
   if (klass->reconfigure_element)
     return klass->reconfigure_element (device, element);
   else
@@ -285,7 +295,7 @@ gst_device_reconfigure_element (GstDevice * device, GstElement * element)
 /**
  * gst_device_has_classesv:
  * @device: a #GstDevice
- * @classes: (array zero-terminated=1): a %NULL terminated array of klasses to match, only match if all
+ * @classes: (array zero-terminated=1): a %NULL terminated array of classes to match, only match if all
  *   classes are matched
  *
  * Check if @factory matches all of the given classes
@@ -299,6 +309,8 @@ gst_device_has_classesv (GstDevice * device, gchar ** classes)
 {
   g_return_val_if_fail (GST_IS_DEVICE (device), FALSE);
 
+  if (!classes)
+    return TRUE;
 
   for (; classes[0]; classes++) {
     const gchar *found;
@@ -339,6 +351,11 @@ gst_device_has_classes (GstDevice * device, const gchar * classes)
 {
   gchar **classesv;
   gboolean res;
+
+  g_return_val_if_fail (GST_IS_DEVICE (device), FALSE);
+
+  if (!classes)
+    return TRUE;
 
   classesv = g_strsplit (classes, "/", 0);
 

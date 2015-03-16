@@ -8,15 +8,14 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstGhostPad.html" title="GstGhostPad">
 <link rel="next" href="GstMemory.html" title="GstMemory">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstIterator.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstIterator.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gstreamer-GstIterator.description" class="shortcut">Description</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -91,7 +90,7 @@ way.</p>
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="gstreamer-GstIterator.html#GstIteratorFoldFunction" title="GstIteratorFoldFunction ()">*GstIteratorFoldFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -211,7 +210,7 @@ way.</p>
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstIterator.html#gst-iterator-find-custom" title="gst_iterator_find_custom ()">gst_iterator_find_custom</a> <span class="c_punctuation">()</span>
@@ -244,11 +243,6 @@ way.</p>
 </table></div>
 </div>
 <div class="refsect1">
-<a name="gstreamer-GstIterator.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">
-</pre>
-</div>
-<div class="refsect1">
 <a name="gstreamer-GstIterator.includes"></a><h2>Includes</h2>
 <pre class="synopsis">#include &lt;gst/gst.h&gt;
 </pre>
@@ -259,9 +253,10 @@ way.</p>
 a threadsafe way.</p>
 <p>Various GStreamer objects provide access to their internal structures using
 an iterator.</p>
-<p>In general, whenever calling a GstIterator function results in your code
-receiving a refcounted object, the refcount for that object will have been
-increased.  Your code is responsible for unreffing that object after use.</p>
+<p>Note that if calling a GstIterator function results in your code receiving
+a refcounted object (with, say, <a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-get-object"><code class="function">g_value_get_object()</code></a>), the refcount for that
+object will not be increased. Your code is responsible for taking a reference
+if it wants to continue using it later.</p>
 <p>The basic use pattern of an iterator is as follows:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -289,14 +284,16 @@ increased.  Your code is responsible for unreffing that object after use.</p>
 20
 21
 22
-23</pre></td>
+23
+24</pre></td>
         <td class="listing_code"><pre class="programlisting">GstIterator <span class="gtkdoc opt">*</span>it <span class="gtkdoc opt">=</span> <span class="function">_get_iterator</span><span class="gtkdoc opt">(</span>object<span class="gtkdoc opt">);</span>
+GValue item <span class="gtkdoc opt">=</span> G_VALUE_INIT<span class="gtkdoc opt">;</span>
 done <span class="gtkdoc opt">=</span> FALSE<span class="gtkdoc opt">;</span>
 <span class="keyword">while</span> <span class="gtkdoc opt">(!</span>done<span class="gtkdoc opt">) {</span>
   <span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstIterator.html#gst-iterator-next">gst_iterator_next</a></span> <span class="gtkdoc opt">(</span>it<span class="gtkdoc opt">, &amp;</span>item<span class="gtkdoc opt">)) {</span>
     <span class="keyword">case</span> GST_ITERATOR_OK<span class="gtkdoc opt">:</span>
-      <span class="gtkdoc opt">...</span> use<span class="gtkdoc opt">/</span>change item here<span class="gtkdoc opt">...</span>
-      <span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-reset">g_value_reset</a></span> <span class="gtkdoc opt">(&amp;</span>item<span class="gtkdoc opt">);</span>
+      <span class="gtkdoc opt">...</span>get<span class="gtkdoc opt">/</span>use<span class="gtkdoc opt">/</span>change item here<span class="gtkdoc opt">...</span>
+      <span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#g-value-reset">g_value_reset</a></span> <span class="gtkdoc opt">(&amp;</span>item<span class="gtkdoc opt">);</span>
       <span class="keyword">break</span><span class="gtkdoc opt">;</span>
     <span class="keyword">case</span> GST_ITERATOR_RESYNC<span class="gtkdoc opt">:</span>
       <span class="gtkdoc opt">...</span>rollback changes to items<span class="gtkdoc opt">...</span>
@@ -311,7 +308,7 @@ done <span class="gtkdoc opt">=</span> FALSE<span class="gtkdoc opt">;</span>
       <span class="keyword">break</span><span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
 <span class="gtkdoc opt">}</span>
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-unset">g_value_unset</a></span> <span class="gtkdoc opt">(&amp;</span>item<span class="gtkdoc opt">);</span>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#g-value-unset">g_value_unset</a></span> <span class="gtkdoc opt">(&amp;</span>item<span class="gtkdoc opt">);</span>
 <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstIterator.html#gst-iterator-free">gst_iterator_free</a></span> <span class="gtkdoc opt">(</span>it<span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
@@ -332,7 +329,7 @@ done <span class="gtkdoc opt">=</span> FALSE<span class="gtkdoc opt">;</span>
 create a copy of all custom iterator fields or increase their
 reference counts.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -359,14 +356,14 @@ reference counts.</p>
 <a name="GstIteratorNextFunction"></a><h3>GstIteratorNextFunction ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIteratorResult" title="enum GstIteratorResult"><span class="returnvalue">GstIteratorResult</span></a>
 <span class="c_punctuation">(</span>*GstIteratorNextFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *result</code></em>);</pre>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *result</code></em>);</pre>
 <p>The function that will be called when the next element of the iterator
 should be retrieved.</p>
 <p>Implementors of a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> should implement this
 function and pass it to the constructor of the custom iterator.
 The function will be called with the iterator lock held.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.3.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -388,7 +385,7 @@ The function will be called with the iterator lock held.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.3.7"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.3.7"></a><h4>Returns</h4>
 <p> the result of the operation.</p>
 <p></p>
 </div>
@@ -398,13 +395,13 @@ The function will be called with the iterator lock held.</p>
 <a name="GstIteratorItemFunction"></a><h3>GstIteratorItemFunction ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIteratorItem" title="enum GstIteratorItem"><span class="returnvalue">GstIteratorItem</span></a>
 <span class="c_punctuation">(</span>*GstIteratorItemFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
-                            <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *item</code></em>);</pre>
+                            <em class="parameter"><code>const <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *item</code></em>);</pre>
 <p>The function that will be called after the next item of the iterator
 has been retrieved. This function can be used to skip items or stop
 the iterator.</p>
 <p>The function will be called with the iterator lock held.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.4.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -426,7 +423,7 @@ the iterator.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.4.7"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.4.7"></a><h4>Returns</h4>
 <p> the result of the operation.</p>
 <p></p>
 </div>
@@ -444,7 +441,7 @@ have.</p>
 function and pass it to the constructor of the custom iterator.
 The function will be called with the iterator lock held.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.5.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -469,7 +466,7 @@ The function will be called with the iterator lock held.</p>
 function and pass it to the constructor of the custom iterator.
 The function will be called with the iterator lock held.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.6.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -488,11 +485,11 @@ The function will be called with the iterator lock held.</p>
 <div class="refsect2">
 <a name="GstIteratorForeachFunction"></a><h3>GstIteratorForeachFunction ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-<span class="c_punctuation">(</span>*GstIteratorForeachFunction<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *item</code></em>,
-                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<span class="c_punctuation">(</span>*GstIteratorForeachFunction<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *item</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that is called by <a class="link" href="gstreamer-GstIterator.html#gst-iterator-foreach" title="gst_iterator_foreach ()"><code class="function">gst_iterator_foreach()</code></a> for every element.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -517,13 +514,13 @@ The function will be called with the iterator lock held.</p>
 <hr>
 <div class="refsect2">
 <a name="GstIteratorFoldFunction"></a><h3>GstIteratorFoldFunction ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-<span class="c_punctuation">(</span>*GstIteratorFoldFunction<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *item</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *ret</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstIteratorFoldFunction<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *item</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *ret</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function to be passed to <a class="link" href="gstreamer-GstIterator.html#gst-iterator-fold" title="gst_iterator_fold ()"><code class="function">gst_iterator_fold()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -538,7 +535,7 @@ The function will be called with the iterator lock held.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>ret</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> collecting the result</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> collecting the result</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -550,8 +547,8 @@ The function will be called with the iterator lock held.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.8.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the fold should continue, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it should stop.</p>
+<a name="id-1.3.27.7.8.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the fold should continue, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it should stop.</p>
 <p></p>
 </div>
 </div>
@@ -562,7 +559,7 @@ The function will be called with the iterator lock held.</p>
 </pre>
 <p>Macro to cast to a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a></p>
 <div class="refsect3">
-<a name="id-1.3.27.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -584,7 +581,7 @@ The function will be called with the iterator lock held.</p>
 </pre>
 <p>Macro to get the lock protecting the datastructure being iterated.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -611,7 +608,7 @@ Whenever the iterator is iterated, the value is compared to the
 value of the master cookie. If they are different, a concurrent
 modification happened to the iterator and a resync is needed.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -635,7 +632,7 @@ modification happened to the iterator and a resync is needed.</p>
 master cookie protects the structure being iterated and gets updated
 whenever the datastructure changes.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -654,9 +651,9 @@ whenever the datastructure changes.</p>
 <div class="refsect2">
 <a name="gst-iterator-new"></a><h3>gst_iterator_new ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *
-gst_iterator_new (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
-                  <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>,
-                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> *lock</code></em>,
+gst_iterator_new (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
+                  <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>,
+                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> *lock</code></em>,
                   <em class="parameter"><code><span class="type">guint32</span> *master_cookie</code></em>,
                   <em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIteratorCopyFunction" title="GstIteratorCopyFunction ()"><span class="type">GstIteratorCopyFunction</span></a> copy</code></em>,
                   <em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIteratorNextFunction" title="GstIteratorNextFunction ()"><span class="type">GstIteratorNextFunction</span></a> next</code></em>,
@@ -670,7 +667,7 @@ implementing the next/resync/free function to iterate a data structure.</p>
 held. The <em class="parameter"><code>free</code></em>
  function is called when the iterator is freed.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.13.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.13.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -685,12 +682,12 @@ held. The <em class="parameter"><code>free</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>type</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of children</p></td>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of children</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>lock</p></td>
-<td class="parameter_description"><p>pointer to a <a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a>.</p></td>
+<td class="parameter_description"><p>pointer to a <a href="https://developer.gnome.org/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -728,7 +725,7 @@ iterator changed.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.13.7"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.13.7"></a><h4>Returns</h4>
 <p> the new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a>.</p>
 <p>MT safe.</p>
 <p></p>
@@ -738,11 +735,11 @@ iterator changed.</p></td>
 <div class="refsect2">
 <a name="gst-iterator-new-list"></a><h3>gst_iterator_new_list ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *
-gst_iterator_new_list (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> *lock</code></em>,
+gst_iterator_new_list (<em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> *lock</code></em>,
                        <em class="parameter"><code><span class="type">guint32</span> *master_cookie</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> **list</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *owner</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> **list</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *owner</code></em>,
                        <em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIteratorItemFunction" title="GstIteratorItemFunction ()"><span class="type">GstIteratorItemFunction</span></a> item</code></em>);</pre>
 <p>Create a new iterator designed for iterating <em class="parameter"><code>list</code></em>
 .</p>
@@ -763,7 +760,7 @@ holding <em class="parameter"><code>lock</code></em>
 will notice the update of the cookie and will return <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-RESYNC:CAPS"><code class="literal">GST_ITERATOR_RESYNC</code></a> to
 the user of the iterator in the next call to <a class="link" href="gstreamer-GstIterator.html#gst-iterator-next" title="gst_iterator_next ()"><code class="function">gst_iterator_next()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.14.8"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.14.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -773,12 +770,12 @@ the user of the iterator in the next call to <a class="link" href="gstreamer-Gst
 <tbody>
 <tr>
 <td class="parameter_name"><p>type</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of elements</p></td>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of elements</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>lock</p></td>
-<td class="parameter_description"><p>pointer to a <a href="http://library.gnome.org/devel/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> protecting the list.</p></td>
+<td class="parameter_description"><p>pointer to a <a href="https://developer.gnome.org/glib/unstable/glib-Threads.html#GMutex"><span class="type">GMutex</span></a> protecting the list.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -806,7 +803,7 @@ is changed.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.14.9"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.14.9"></a><h4>Returns</h4>
 <p> the new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> for <em class="parameter"><code>list</code></em>
 .</p>
 <p>MT safe.</p>
@@ -817,14 +814,14 @@ is changed.</p></td>
 <div class="refsect2">
 <a name="gst-iterator-new-single"></a><h3>gst_iterator_new_single ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *
-gst_iterator_new_single (<em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>,
-                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *object</code></em>);</pre>
+gst_iterator_new_single (<em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>,
+                         <em class="parameter"><code>const <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *object</code></em>);</pre>
 <p>This <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> is a convenient iterator for the common
 case where a <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> needs to be returned but only
 a single object has to be considered. This happens often
 for the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstPadIterIntLinkFunction ()"><span class="type">GstPadIterIntLinkFunction</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.15.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -834,7 +831,7 @@ for the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstP
 <tbody>
 <tr>
 <td class="parameter_name"><p>type</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the passed object</p></td>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the passed object</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -846,7 +843,7 @@ for the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstP
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.15.6"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.15.6"></a><h4>Returns</h4>
 <p> the new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> for <em class="parameter"><code>object</code></em>
 .</p>
 <p></p>
@@ -859,7 +856,7 @@ for the <a class="link" href="GstPad.html#GstPadIterIntLinkFunction" title="GstP
 gst_iterator_copy (<em class="parameter"><code>const <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>);</pre>
 <p>Copy the iterator and its state.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.16.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -874,7 +871,7 @@ gst_iterator_copy (<em class="parameter"><code>const <a class="link" href="gstre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.16.6"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.16.6"></a><h4>Returns</h4>
 <p> a new copy of <em class="parameter"><code>it</code></em>
 .</p>
 <p></p>
@@ -888,7 +885,7 @@ gst_iterator_free (<em class="parameter"><code><a class="link" href="gstreamer-G
 <p>Free the iterator.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.17.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.17.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -908,16 +905,16 @@ gst_iterator_free (<em class="parameter"><code><a class="link" href="gstreamer-G
 <a name="gst-iterator-next"></a><h3>gst_iterator_next ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIteratorResult" title="enum GstIteratorResult"><span class="returnvalue">GstIteratorResult</span></a>
 gst_iterator_next (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
-                   <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *elem</code></em>);</pre>
+                   <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *elem</code></em>);</pre>
 <p>Get the next item from the iterator in <em class="parameter"><code>elem</code></em>
 . </p>
 <p>Only when this function returns <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-OK:CAPS"><code class="literal">GST_ITERATOR_OK</code></a>, <em class="parameter"><code>elem</code></em>
  will contain a valid
 value. <em class="parameter"><code>elem</code></em>
  must have been initialized to the type of the iterator or
-initialized to zeroes with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-unset"><code class="function">g_value_unset()</code></a>. The caller is responsible for
+initialized to zeroes with <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#g-value-unset"><code class="function">g_value_unset()</code></a>. The caller is responsible for
 unsetting or resetting <em class="parameter"><code>elem</code></em>
- with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-unset"><code class="function">g_value_unset()</code></a> or <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#g-value-reset"><code class="function">g_value_reset()</code></a>
+ with <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#g-value-unset"><code class="function">g_value_unset()</code></a> or <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#g-value-reset"><code class="function">g_value_reset()</code></a>
 after usage.</p>
 <p>When this function returns <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-DONE:CAPS"><code class="literal">GST_ITERATOR_DONE</code></a>, no more elements can be
 retrieved from <em class="parameter"><code>it</code></em>
@@ -928,7 +925,7 @@ concurrently updated. The user of <em class="parameter"><code>it</code></em>
 get the newly updated list. </p>
 <p>A return value of <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-ERROR:CAPS"><code class="literal">GST_ITERATOR_ERROR</code></a> indicates an unrecoverable fatal error.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.18.9"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.18.9"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -950,7 +947,7 @@ get the newly updated list. </p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.18.10"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.18.10"></a><h4>Returns</h4>
 <p> The result of the iteration. Unset <em class="parameter"><code>elem</code></em>
 after usage.</p>
 <p>MT safe.</p>
@@ -969,7 +966,7 @@ after <a class="link" href="gstreamer-GstIterator.html#gst-iterator-next" title=
 with this function.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.19.7"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.19.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1007,7 +1004,7 @@ next function to recurse into substructures.</p>
 popped.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.20.8"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.20.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1034,13 +1031,13 @@ popped.</p>
 <a name="gst-iterator-filter"></a><h3>gst_iterator_filter ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *
 gst_iterator_filter (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
-                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GCompareFunc"><span class="type">GCompareFunc</span></a> func</code></em>,
-                     <em class="parameter"><code>const <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *user_data</code></em>);</pre>
+                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GCompareFunc"><span class="type">GCompareFunc</span></a> func</code></em>,
+                     <em class="parameter"><code>const <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *user_data</code></em>);</pre>
 <p>Create a new iterator from an existing iterator. The new iterator
 will only return those elements that match the given compare function <em class="parameter"><code>func</code></em>
 .
 The first parameter that is passed to <em class="parameter"><code>func</code></em>
- is the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of the current
+ is the <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of the current
 iterator element and the second parameter is <em class="parameter"><code>user_data</code></em>
 . <em class="parameter"><code>func</code></em>
  should
@@ -1048,7 +1045,7 @@ return 0 for elements that should be included in the filtered iterator.</p>
 <p>When this iterator is freed, <em class="parameter"><code>it</code></em>
  will also be freed.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.21.6"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.21.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1075,7 +1072,7 @@ return 0 for elements that should be included in the filtered iterator.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.21.7"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.21.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a>.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1087,8 +1084,8 @@ return 0 for elements that should be included in the filtered iterator.</p>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIteratorResult" title="enum GstIteratorResult"><span class="returnvalue">GstIteratorResult</span></a>
 gst_iterator_fold (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
                    <em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIteratorFoldFunction" title="GstIteratorFoldFunction ()"><span class="type">GstIteratorFoldFunction</span></a> func</code></em>,
-                   <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *ret</code></em>,
-                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                   <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *ret</code></em>,
+                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Folds <em class="parameter"><code>func</code></em>
  over the elements of <em class="parameter"><code>iter</code></em>
 . That is to say, <em class="parameter"><code>func</code></em>
@@ -1104,15 +1101,15 @@ of this procedure is to accumulate the results of operating on the objects in
 <p>This procedure can be used (and is used internally) to implement the
 <a class="link" href="gstreamer-GstIterator.html#gst-iterator-foreach" title="gst_iterator_foreach ()"><code class="function">gst_iterator_foreach()</code></a> and <a class="link" href="gstreamer-GstIterator.html#gst-iterator-find-custom" title="gst_iterator_find_custom ()"><code class="function">gst_iterator_find_custom()</code></a> operations.</p>
 <p>The fold will proceed as long as <em class="parameter"><code>func</code></em>
- returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. When the iterator has no
+ returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. When the iterator has no
 more arguments, <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-DONE:CAPS"><code class="literal">GST_ITERATOR_DONE</code></a> will be returned. If <em class="parameter"><code>func</code></em>
- returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>,
+ returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>,
 the fold will stop, and <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-OK:CAPS"><code class="literal">GST_ITERATOR_OK</code></a> will be returned. Errors or resyncs
 will cause fold to return <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-ERROR:CAPS"><code class="literal">GST_ITERATOR_ERROR</code></a> or <a class="link" href="gstreamer-GstIterator.html#GST-ITERATOR-RESYNC:CAPS"><code class="literal">GST_ITERATOR_RESYNC</code></a> as
 appropriate.</p>
 <p>The iterator will not be freed.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.22.8"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.22.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1144,7 +1141,7 @@ appropriate.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.22.9"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.22.9"></a><h4>Returns</h4>
 <p> A <a class="link" href="gstreamer-GstIterator.html#GstIteratorResult" title="enum GstIteratorResult"><span class="type">GstIteratorResult</span></a>, as described above.</p>
 <p>MT safe.</p>
 <p></p>
@@ -1156,13 +1153,13 @@ appropriate.</p>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIteratorResult" title="enum GstIteratorResult"><span class="returnvalue">GstIteratorResult</span></a>
 gst_iterator_foreach (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
                       <em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIteratorForeachFunction" title="GstIteratorForeachFunction ()"><span class="type">GstIteratorForeachFunction</span></a> func</code></em>,
-                      <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Iterate over all element of <em class="parameter"><code>it</code></em>
  and call the given function <em class="parameter"><code>func</code></em>
  for
 each element.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.23.5"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.23.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1189,7 +1186,7 @@ each element.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.23.6"></a><h4>Returns</h4>
+<a name="id-1.3.27.7.23.6"></a><h4>Returns</h4>
 <p> the result call to <a class="link" href="gstreamer-GstIterator.html#gst-iterator-fold" title="gst_iterator_fold ()"><code class="function">gst_iterator_fold()</code></a>. The iterator will not be
 freed.</p>
 <p>MT safe.</p>
@@ -1199,11 +1196,11 @@ freed.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-iterator-find-custom"></a><h3>gst_iterator_find_custom ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_iterator_find_custom (<em class="parameter"><code><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> *it</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GCompareFunc"><span class="type">GCompareFunc</span></a> func</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *elem</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GCompareFunc"><span class="type">GCompareFunc</span></a> func</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *elem</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Find the first element in <em class="parameter"><code>it</code></em>
  that matches the compare function <em class="parameter"><code>func</code></em>
 .
@@ -1216,10 +1213,10 @@ second parameter will be <em class="parameter"><code>user_data</code></em>
 The result will be stored in <em class="parameter"><code>elem</code></em>
  if a result is found.</p>
 <p>The iterator will not be freed.</p>
-<p>This function will return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if an error happened to the iterator
+<p>This function will return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if an error happened to the iterator
 or if the element wasn't found.</p>
 <div class="refsect3">
-<a name="id-1.3.27.8.24.7"></a><h4>Parameters</h4>
+<a name="id-1.3.27.7.24.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1239,7 +1236,7 @@ or if the element wasn't found.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>elem</p></td>
-<td class="parameter_description"><p> pointer to a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> where to store the result. </p></td>
+<td class="parameter_description"><p> pointer to a <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> where to store the result. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1251,8 +1248,8 @@ or if the element wasn't found.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.27.8.24.8"></a><h4>Returns</h4>
-<p> Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the element was found, else <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+<a name="id-1.3.27.7.24.8"></a><h4>Returns</h4>
+<p> Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the element was found, else <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p>MT safe.</p>
 <p></p>
 </div>
@@ -1268,7 +1265,7 @@ or if the element wasn't found.</p>
 <p><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> base structure. The values of this structure are
 protected for subclasses, use the methods to use the <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.27.9.2.5"></a><h4>Members</h4>
+<a name="id-1.3.27.8.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -1284,7 +1281,7 @@ protected for subclasses, use the methods to use the <a class="link" href="gstre
 <a name="GstIteratorItem"></a><h3>enum GstIteratorItem</h3>
 <p>The result of a <a class="link" href="gstreamer-GstIterator.html#GstIteratorItemFunction" title="GstIteratorItemFunction ()"><span class="type">GstIteratorItemFunction</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.27.9.3.4"></a><h4>Members</h4>
+<a name="id-1.3.27.8.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -1322,7 +1319,7 @@ protected for subclasses, use the methods to use the <a class="link" href="gstre
 <a name="GstIteratorResult"></a><h3>enum GstIteratorResult</h3>
 <p>The result of <a class="link" href="gstreamer-GstIterator.html#gst-iterator-next" title="gst_iterator_next ()"><code class="function">gst_iterator_next()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.27.9.4.4"></a><h4>Members</h4>
+<a name="id-1.3.27.8.4.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -1370,6 +1367,6 @@ protected for subclasses, use the methods to use the <a class="link" href="gstre
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

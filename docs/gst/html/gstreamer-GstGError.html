@@ -8,15 +8,14 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstElementFactory.html" title="GstElementFactory">
 <link rel="next" href="GstEvent.html" title="GstEvent">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstGError.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#gstreamer-GstGError.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gstreamer-GstGError.description" class="shortcut">Description</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -46,7 +45,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstGError.html#gst-error-get-message" title="gst_error_get_message ()">gst_error_get_message</a> <span class="c_punctuation">()</span>
@@ -99,11 +98,6 @@
 </table></div>
 </div>
 <div class="refsect1">
-<a name="gstreamer-GstGError.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">
-</pre>
-</div>
-<div class="refsect1">
 <a name="gstreamer-GstGError.includes"></a><h2>Includes</h2>
 <pre class="synopsis">#include &lt;gst/gst.h&gt;
 </pre>
@@ -117,8 +111,8 @@ and have a default handler handle the rest of them.</p>
 <p>The rest of this section will use the term <span class="quote">“<span class="quote">error</span>”</span>
 to mean both (non-fatal) warnings and (fatal) errors; they are treated
 similarly.</p>
-<p>Errors from elements are the combination of a <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> and a debug string.
-The <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> contains:</p>
+<p>Errors from elements are the combination of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> and a debug string.
+The <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> contains:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>a domain type: CORE, LIBRARY, RESOURCE or STREAM</p></li>
 <li class="listitem"><p>a code: an enum value specific to the domain</p></li>
@@ -148,7 +142,7 @@ that indicates all XVideo ports are taken, the application can attempt
 to use another sink instead.</p>
 <p>Elements throw errors using the <a class="link" href="GstElement.html#GST-ELEMENT-ERROR:CAPS" title="GST_ELEMENT_ERROR()"><span class="type">GST_ELEMENT_ERROR</span></a> convenience macro:</p>
 <div class="example">
-<a name="id-1.3.23.7.12"></a><p class="title"><b>Example 5. Throwing an error</b></p>
+<a name="id-1.3.23.6.12"></a><p class="title"><b>Example 5. Throwing an error</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -156,7 +150,7 @@ to use another sink instead.</p>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-ELEMENT-ERROR:CAPS">GST_ELEMENT_ERROR</a></span> <span class="gtkdoc opt">(</span>src<span class="gtkdoc opt">,</span> RESOURCE<span class="gtkdoc opt">,</span> NOT_FOUND<span class="gtkdoc opt">,</span>
-  <span class="gtkdoc opt">(</span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#gettext-macro">_</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;No file name specified for reading.&quot;</span><span class="gtkdoc opt">)), (</span>NULL<span class="gtkdoc opt">));</span></pre></td>
+  <span class="gtkdoc opt">(</span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#gettext-macro">_</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;No file name specified for reading.&quot;</span><span class="gtkdoc opt">)), (</span>NULL<span class="gtkdoc opt">));</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -169,7 +163,7 @@ to use another sink instead.</p>
     currently provided should be enough.  If you find your type of error
     does not fit the current codes, you should use FAILED.</p></li>
 <li class="listitem"><p>Don't provide a message if the default one suffices.
-    this keeps messages more uniform.  Use (<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>) - not forgetting the
+    this keeps messages more uniform.  Use (<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>) - not forgetting the
     parentheses.</p></li>
 <li class="listitem"><p>If you do supply a custom message, it should be
     marked for translation.  The message should start with a capital
@@ -178,7 +172,7 @@ to use another sink instead.</p>
     A user interface will present this message as the first thing a user
     sees.  Details, technical info, ... should go in the debug string.
   </p></li>
-<li class="listitem"><p>The debug string can be as you like.  Again, use (<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>)
+<li class="listitem"><p>The debug string can be as you like.  Again, use (<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>)
     if there's nothing to add - file and line number will still be
     passed.  <a class="link" href="gstreamer-GstGError.html#GST-ERROR-SYSTEM:CAPS" title="GST_ERROR_SYSTEM"><span class="type">GST_ERROR_SYSTEM</span></a> can be used as a shortcut to give
     debug information on a system call error.</p></li>
@@ -196,12 +190,12 @@ call.  To be used as the debug argument in <a class="link" href="GstElement.html
 <hr>
 <div class="refsect2">
 <a name="gst-error-get-message"></a><h3>gst_error_get_message ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
-gst_error_get_message (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> domain</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> code</code></em>);</pre>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_error_get_message (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> domain</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> code</code></em>);</pre>
 <p>Get a string describing the error message in the current locale.</p>
 <div class="refsect3">
-<a name="id-1.3.23.8.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.23.7.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -223,7 +217,7 @@ gst_error_get_message (<em class="parameter"><code><a href="http://library.gnome
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.23.8.3.6"></a><h4>Returns</h4>
+<a name="id-1.3.23.7.3.6"></a><h4>Returns</h4>
 <p> a newly allocated string describing
 the error message (in UTF-8 encoding). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -236,7 +230,7 @@ the error message (in UTF-8 encoding). </p>
 <a name="GstCoreError"></a><h3>enum GstCoreError</h3>
 <p>Core errors are errors inside the core GStreamer library.</p>
 <div class="refsect3">
-<a name="id-1.3.23.9.2.4"></a><h4>Members</h4>
+<a name="id-1.3.23.8.2.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -363,7 +357,7 @@ this functionality yet.</p>
 <p>Library errors are for errors from the library being used by elements
 (initializing, finalizing, settings, ...)</p>
 <div class="refsect3">
-<a name="id-1.3.23.9.3.4"></a><h4>Members</h4>
+<a name="id-1.3.23.8.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -433,7 +427,7 @@ deciding where to go while developing code.</p>
 memory, files, network connections, process space, ...
 They're typically used by source and sink elements.</p>
 <div class="refsect3">
-<a name="id-1.3.23.9.4.4"></a><h4>Members</h4>
+<a name="id-1.3.23.8.4.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -569,7 +563,7 @@ both reading and writing, or either (but unspecified which).</p>
 format errors, media type errors, ...
 They're typically used by decoders, demuxers, converters, ...</p>
 <div class="refsect3">
-<a name="id-1.3.23.9.5.4"></a><h4>Members</h4>
+<a name="id-1.3.23.8.5.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -695,7 +689,7 @@ can't be decrypted because no suitable key is available.</p>
 </pre>
 <p>Error domain for core system. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstCoreError" title="enum GstCoreError"><span class="type">GstCoreError</span></a> enumeration.
-See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -704,7 +698,7 @@ See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.h
 </pre>
 <p>Error domain for library loading. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstLibraryError" title="enum GstLibraryError"><span class="type">GstLibraryError</span></a> enumeration.
-See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -713,7 +707,7 @@ See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.h
 </pre>
 <p>Error domain for resource handling. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstResourceError" title="enum GstResourceError"><span class="type">GstResourceError</span></a> enumeration.
-See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -722,7 +716,7 @@ See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.h
 </pre>
 <p>Error domain for media stream processing. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstStreamError" title="enum GstStreamError"><span class="type">GstStreamError</span></a> enumeration.
-See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -732,6 +726,6 @@ See <a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.h
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

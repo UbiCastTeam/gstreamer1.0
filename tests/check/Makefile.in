@@ -88,18 +88,19 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	gst/gstbufferpool$(EXEEXT) gst/gstmeta$(EXEEXT) \
 	gst/gstmemory$(EXEEXT) gst/gstbus$(EXEEXT) \
 	gst/gstcaps$(EXEEXT) gst/gstcapsfeatures$(EXEEXT) \
-	$(am__EXEEXT_2) gst/gstdatetime$(EXEEXT) gst/gstinfo$(EXEEXT) \
+	$(am__EXEEXT_2) gst/gstdatetime$(EXEEXT) \
+	gst/gstdevice$(EXEEXT) gst/gstinfo$(EXEEXT) \
 	gst/gstiterator$(EXEEXT) gst/gstmessage$(EXEEXT) \
 	gst/gstminiobject$(EXEEXT) gst/gstobject$(EXEEXT) \
 	gst/gstpad$(EXEEXT) gst/gstparamspecs$(EXEEXT) \
-	gst/gstpipeline$(EXEEXT) gst/gstpoll$(EXEEXT) \
+	gst/gstpipeline$(EXEEXT) gst/gstpoll$(EXEEXT) $(am__EXEEXT_3) \
 	gst/gstsegment$(EXEEXT) gst/gstsystemclock$(EXEEXT) \
 	gst/gstclock$(EXEEXT) gst/gststructure$(EXEEXT) \
 	gst/gsttag$(EXEEXT) gst/gsttagsetter$(EXEEXT) \
 	gst/gsttask$(EXEEXT) gst/gsttoc$(EXEEXT) \
 	gst/gsttocsetter$(EXEEXT) gst/gstvalue$(EXEEXT) \
-	generic/states$(EXEEXT) $(am__EXEEXT_3) $(am__EXEEXT_4) \
-	$(am__EXEEXT_5) libs/adapter$(EXEEXT) libs/bitreader$(EXEEXT) \
+	generic/states$(EXEEXT) $(am__EXEEXT_4) $(am__EXEEXT_5) \
+	$(am__EXEEXT_6) libs/adapter$(EXEEXT) libs/bitreader$(EXEEXT) \
 	libs/bytereader$(EXEEXT) libs/bytewriter$(EXEEXT) \
 	libs/bitreader-noinline$(EXEEXT) \
 	libs/bytereader-noinline$(EXEEXT) \
@@ -118,6 +119,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -135,7 +137,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/introspection.m4 \
-	$(top_srcdir)/common/m4/pkg.m4 $(top_srcdir)/m4/ax_pthread.m4 \
+	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/check-checks.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
 	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -155,12 +157,13 @@ CONFIG_CLEAN_VPATH_FILES =
 @GST_DISABLE_REGISTRY_FALSE@@GST_DISABLE_TRACE_FALSE@am__EXEEXT_1 = gst/gstabi$(EXEEXT)
 @HAVE_CXX_TRUE@am__EXEEXT_2 = gst/gstcpp$(EXEEXT) \
 @HAVE_CXX_TRUE@	libs/gstlibscpp$(EXEEXT)
-@GST_DISABLE_PARSE_FALSE@am__EXEEXT_3 = pipelines/simple-launch-lines$(EXEEXT) \
+@GST_DISABLE_GST_DEBUG_FALSE@am__EXEEXT_3 = gst/gstprintf$(EXEEXT)
+@GST_DISABLE_PARSE_FALSE@am__EXEEXT_4 = pipelines/simple-launch-lines$(EXEEXT) \
 @GST_DISABLE_PARSE_FALSE@	pipelines/cleanup$(EXEEXT) \
 @GST_DISABLE_PARSE_FALSE@	pipelines/parse-launch$(EXEEXT)
-@GST_DISABLE_PARSE_TRUE@am__EXEEXT_3 =  \
+@GST_DISABLE_PARSE_TRUE@am__EXEEXT_4 =  \
 @GST_DISABLE_PARSE_TRUE@	pipelines/parse-disabled$(EXEEXT)
-@GST_DISABLE_REGISTRY_FALSE@am__EXEEXT_4 = gst/gst$(EXEEXT) \
+@GST_DISABLE_REGISTRY_FALSE@am__EXEEXT_5 = gst/gst$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	gst/gstbin$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	gst/gstchildproxy$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	gst/gstcontext$(EXEEXT) \
@@ -177,6 +180,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @GST_DISABLE_REGISTRY_FALSE@	gst/gstutils$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	generic/sinks$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/capsfilter$(EXEEXT) \
+@GST_DISABLE_REGISTRY_FALSE@	elements/concat$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesink$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesrc$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/fdsrc$(EXEEXT) \
@@ -190,6 +194,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @GST_DISABLE_REGISTRY_FALSE@	elements/queue$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/queue2$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/valve$(EXEEXT) \
+@GST_DISABLE_REGISTRY_FALSE@	elements/streamiddemux$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/baseparse$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesrc$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesink$(EXEEXT) \
@@ -200,7 +205,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @GST_DISABLE_REGISTRY_FALSE@	pipelines/seek$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	pipelines/stress$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	pipelines/queue-error$(EXEEXT)
-am__EXEEXT_5 = libs/libsabi$(EXEEXT)
+am__EXEEXT_6 = libs/libsabi$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 elements_capsfilter_SOURCES = elements/capsfilter.c
 am__dirstamp = $(am__leading_dot)dirstamp
@@ -214,6 +219,12 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+elements_concat_SOURCES = elements/concat.c
+elements_concat_OBJECTS = elements/concat.$(OBJEXT)
+elements_concat_LDADD = $(LDADD)
+elements_concat_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 elements_fakesink_SOURCES = elements/fakesink.c
 elements_fakesink_OBJECTS = elements/fakesink.$(OBJEXT)
 elements_fakesink_LDADD = $(LDADD)
@@ -287,6 +298,12 @@ elements_selector_SOURCES = elements/selector.c
 elements_selector_OBJECTS = elements/selector.$(OBJEXT)
 elements_selector_LDADD = $(LDADD)
 elements_selector_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
+elements_streamiddemux_SOURCES = elements/streamiddemux.c
+elements_streamiddemux_OBJECTS = elements/streamiddemux.$(OBJEXT)
+elements_streamiddemux_LDADD = $(LDADD)
+elements_streamiddemux_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
 elements_tee_SOURCES = elements/tee.c
@@ -409,6 +426,12 @@ gst_gstdatetime_LDADD = $(LDADD)
 gst_gstdatetime_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+gst_gstdevice_SOURCES = gst/gstdevice.c
+gst_gstdevice_OBJECTS = gst/gstdevice.$(OBJEXT)
+gst_gstdevice_LDADD = $(LDADD)
+gst_gstdevice_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 gst_gstelement_SOURCES = gst/gstelement.c
 gst_gstelement_OBJECTS = gst/gstelement.$(OBJEXT)
 gst_gstelement_LDADD = $(LDADD)
@@ -511,6 +534,14 @@ gst_gstpreset_LDADD = $(LDADD)
 gst_gstpreset_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+gst_gstprintf_SOURCES = gst/gstprintf.c
+gst_gstprintf_OBJECTS = gst/gstprintf.$(OBJEXT)
+am__DEPENDENCIES_2 = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
+gst_gstprintf_DEPENDENCIES =  \
+	$(top_builddir)/gst/printf/libgstprintf.la \
+	$(am__DEPENDENCIES_2)
 gst_gstquery_SOURCES = gst/gstquery.c
 gst_gstquery_OBJECTS = gst/gstquery.$(OBJEXT)
 gst_gstquery_LDADD = $(LDADD)
@@ -579,9 +610,6 @@ gst_gsturi_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VE
 	$(am__DEPENDENCIES_1)
 gst_gstutils_SOURCES = gst/gstutils.c
 gst_gstutils_OBJECTS = gst/gstutils.$(OBJEXT)
-am__DEPENDENCIES_2 = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
-	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
-	$(am__DEPENDENCIES_1)
 gst_gstutils_DEPENDENCIES = $(am__DEPENDENCIES_2) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 gst_gstvalue_SOURCES = gst/gstvalue.c
@@ -820,27 +848,29 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = elements/capsfilter.c elements/fakesink.c elements/fakesrc.c \
-	elements/fdsrc.c elements/filesink.c elements/filesrc.c \
-	elements/funnel.c elements/identity.c elements/multiqueue.c \
-	elements/queue.c elements/queue2.c elements/selector.c \
-	elements/tee.c elements/valve.c generic/sinks.c \
-	generic/states.c gst/gst.c gst/gstabi.c gst/gstatomicqueue.c \
-	gst/gstbin.c gst/gstbuffer.c gst/gstbufferlist.c \
-	gst/gstbufferpool.c gst/gstbus.c gst/gstcaps.c \
-	gst/gstcapsfeatures.c gst/gstchildproxy.c gst/gstclock.c \
-	gst/gstcontext.c gst/gstcontroller.c $(gst_gstcpp_SOURCES) \
-	gst/gstdatetime.c gst/gstelement.c gst/gstelementfactory.c \
-	gst/gstevent.c gst/gstghostpad.c gst/gstinfo.c \
-	gst/gstiterator.c gst/gstmemory.c gst/gstmessage.c \
-	gst/gstmeta.c gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
+SOURCES = elements/capsfilter.c elements/concat.c elements/fakesink.c \
+	elements/fakesrc.c elements/fdsrc.c elements/filesink.c \
+	elements/filesrc.c elements/funnel.c elements/identity.c \
+	elements/multiqueue.c elements/queue.c elements/queue2.c \
+	elements/selector.c elements/streamiddemux.c elements/tee.c \
+	elements/valve.c generic/sinks.c generic/states.c gst/gst.c \
+	gst/gstabi.c gst/gstatomicqueue.c gst/gstbin.c gst/gstbuffer.c \
+	gst/gstbufferlist.c gst/gstbufferpool.c gst/gstbus.c \
+	gst/gstcaps.c gst/gstcapsfeatures.c gst/gstchildproxy.c \
+	gst/gstclock.c gst/gstcontext.c gst/gstcontroller.c \
+	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstdevice.c \
+	gst/gstelement.c gst/gstelementfactory.c gst/gstevent.c \
+	gst/gstghostpad.c gst/gstinfo.c gst/gstiterator.c \
+	gst/gstmemory.c gst/gstmessage.c gst/gstmeta.c \
+	gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
 	gst/gstparamspecs.c gst/gstpipeline.c gst/gstplugin.c \
-	gst/gstpoll.c gst/gstpreset.c gst/gstquery.c gst/gstregistry.c \
-	gst/gstsegment.c gst/gststructure.c gst/gstsystemclock.c \
-	gst/gsttag.c gst/gsttagsetter.c gst/gsttask.c gst/gsttoc.c \
-	gst/gsttocsetter.c gst/gsturi.c gst/gstutils.c gst/gstvalue.c \
-	libs/adapter.c libs/baseparse.c libs/basesink.c libs/basesrc.c \
-	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
+	gst/gstpoll.c gst/gstpreset.c gst/gstprintf.c gst/gstquery.c \
+	gst/gstregistry.c gst/gstsegment.c gst/gststructure.c \
+	gst/gstsystemclock.c gst/gsttag.c gst/gsttagsetter.c \
+	gst/gsttask.c gst/gsttoc.c gst/gsttocsetter.c gst/gsturi.c \
+	gst/gstutils.c gst/gstvalue.c libs/adapter.c libs/baseparse.c \
+	libs/basesink.c libs/basesrc.c libs/bitreader.c \
+	libs/bitreader-noinline.c libs/bytereader.c \
 	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c \
@@ -852,28 +882,30 @@ SOURCES = elements/capsfilter.c elements/fakesink.c elements/fakesrc.c \
 	pipelines/queue-error.c pipelines/seek.c \
 	pipelines/simple-launch-lines.c pipelines/stress.c \
 	tools/gstinspect.c
-DIST_SOURCES = elements/capsfilter.c elements/fakesink.c \
-	elements/fakesrc.c elements/fdsrc.c elements/filesink.c \
-	elements/filesrc.c elements/funnel.c elements/identity.c \
-	elements/multiqueue.c elements/queue.c elements/queue2.c \
-	elements/selector.c elements/tee.c elements/valve.c \
-	generic/sinks.c generic/states.c gst/gst.c gst/gstabi.c \
-	gst/gstatomicqueue.c gst/gstbin.c gst/gstbuffer.c \
-	gst/gstbufferlist.c gst/gstbufferpool.c gst/gstbus.c \
-	gst/gstcaps.c gst/gstcapsfeatures.c gst/gstchildproxy.c \
-	gst/gstclock.c gst/gstcontext.c gst/gstcontroller.c \
-	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstelement.c \
+DIST_SOURCES = elements/capsfilter.c elements/concat.c \
+	elements/fakesink.c elements/fakesrc.c elements/fdsrc.c \
+	elements/filesink.c elements/filesrc.c elements/funnel.c \
+	elements/identity.c elements/multiqueue.c elements/queue.c \
+	elements/queue2.c elements/selector.c elements/streamiddemux.c \
+	elements/tee.c elements/valve.c generic/sinks.c \
+	generic/states.c gst/gst.c gst/gstabi.c gst/gstatomicqueue.c \
+	gst/gstbin.c gst/gstbuffer.c gst/gstbufferlist.c \
+	gst/gstbufferpool.c gst/gstbus.c gst/gstcaps.c \
+	gst/gstcapsfeatures.c gst/gstchildproxy.c gst/gstclock.c \
+	gst/gstcontext.c gst/gstcontroller.c $(gst_gstcpp_SOURCES) \
+	gst/gstdatetime.c gst/gstdevice.c gst/gstelement.c \
 	gst/gstelementfactory.c gst/gstevent.c gst/gstghostpad.c \
 	gst/gstinfo.c gst/gstiterator.c gst/gstmemory.c \
 	gst/gstmessage.c gst/gstmeta.c gst/gstminiobject.c \
 	gst/gstobject.c gst/gstpad.c gst/gstparamspecs.c \
 	gst/gstpipeline.c gst/gstplugin.c gst/gstpoll.c \
-	gst/gstpreset.c gst/gstquery.c gst/gstregistry.c \
-	gst/gstsegment.c gst/gststructure.c gst/gstsystemclock.c \
-	gst/gsttag.c gst/gsttagsetter.c gst/gsttask.c gst/gsttoc.c \
-	gst/gsttocsetter.c gst/gsturi.c gst/gstutils.c gst/gstvalue.c \
-	libs/adapter.c libs/baseparse.c libs/basesink.c libs/basesrc.c \
-	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
+	gst/gstpreset.c gst/gstprintf.c gst/gstquery.c \
+	gst/gstregistry.c gst/gstsegment.c gst/gststructure.c \
+	gst/gstsystemclock.c gst/gsttag.c gst/gsttagsetter.c \
+	gst/gsttask.c gst/gsttoc.c gst/gsttocsetter.c gst/gsturi.c \
+	gst/gstutils.c gst/gstvalue.c libs/adapter.c libs/baseparse.c \
+	libs/basesink.c libs/basesrc.c libs/bitreader.c \
+	libs/bitreader-noinline.c libs/bytereader.c \
 	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c \
@@ -1125,6 +1157,10 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
+BASH_COMPLETION_DIR = @BASH_COMPLETION_DIR@
+BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
+BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAT_ENTRY_END = @CAT_ENTRY_END@
 CAT_ENTRY_START = @CAT_ENTRY_START@
@@ -1230,6 +1266,7 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
 HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
+HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
 HAVE_JADETEX = @HAVE_JADETEX@
@@ -1420,6 +1457,8 @@ SUPPRESSIONS = $(top_srcdir)/common/gst.supp
 # Do not run the abi test in case any option which causes the API to change has
 # been used
 @GST_DISABLE_REGISTRY_FALSE@@GST_DISABLE_TRACE_FALSE@ABI_CHECKS = gst/gstabi
+@GST_DISABLE_GST_DEBUG_FALSE@PRINTF_CHECKS = gst/gstprintf
+@GST_DISABLE_GST_DEBUG_TRUE@PRINTF_CHECKS = 
 LIBSABI_CHECKS = libs/libsabi
 @HAVE_CXX_FALSE@CXX_CHECKS = 
 @HAVE_CXX_TRUE@CXX_CHECKS = gst/gstcpp libs/gstlibscpp
@@ -1441,6 +1480,7 @@ LIBSABI_CHECKS = libs/libsabi
 @GST_DISABLE_REGISTRY_FALSE@	gst/gstutils				\
 @GST_DISABLE_REGISTRY_FALSE@	generic/sinks				\
 @GST_DISABLE_REGISTRY_FALSE@	elements/capsfilter			\
+@GST_DISABLE_REGISTRY_FALSE@	elements/concat				\
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesink			\
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesrc			\
 @GST_DISABLE_REGISTRY_FALSE@	elements/fdsrc			  	\
@@ -1454,6 +1494,7 @@ LIBSABI_CHECKS = libs/libsabi
 @GST_DISABLE_REGISTRY_FALSE@	elements/queue                          \
 @GST_DISABLE_REGISTRY_FALSE@	elements/queue2                         \
 @GST_DISABLE_REGISTRY_FALSE@	elements/valve                          \
+@GST_DISABLE_REGISTRY_FALSE@	elements/streamiddemux			\
 @GST_DISABLE_REGISTRY_FALSE@	libs/baseparse				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesrc				\
 @GST_DISABLE_REGISTRY_FALSE@	libs/basesink				\
@@ -1502,6 +1543,10 @@ LDADD = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 gst_gstcpp_SOURCES = gst/gstcpp.cc
 libs_gstlibscpp_SOURCES = libs/gstlibscpp.cc
 gst_gstutils_LDADD = $(LDADD) $(GSL_LIBS) $(GMP_LIBS)
+gst_gstprintf_LDADD = \
+	$(top_builddir)/gst/printf/libgstprintf.la \
+	$(LDADD)
+
 elements_fdsrc_CFLAGS = $(GST_OBJ_CFLAGS) $(AM_CFLAGS) \
 	-DTESTFILE=\"$(top_srcdir)/configure.ac\"
 
@@ -1621,6 +1666,12 @@ elements/capsfilter.$(OBJEXT): elements/$(am__dirstamp) \
 elements/capsfilter$(EXEEXT): $(elements_capsfilter_OBJECTS) $(elements_capsfilter_DEPENDENCIES) $(EXTRA_elements_capsfilter_DEPENDENCIES) elements/$(am__dirstamp)
 	@rm -f elements/capsfilter$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(elements_capsfilter_OBJECTS) $(elements_capsfilter_LDADD) $(LIBS)
+elements/concat.$(OBJEXT): elements/$(am__dirstamp) \
+	elements/$(DEPDIR)/$(am__dirstamp)
+
+elements/concat$(EXEEXT): $(elements_concat_OBJECTS) $(elements_concat_DEPENDENCIES) $(EXTRA_elements_concat_DEPENDENCIES) elements/$(am__dirstamp)
+	@rm -f elements/concat$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(elements_concat_OBJECTS) $(elements_concat_LDADD) $(LIBS)
 elements/fakesink.$(OBJEXT): elements/$(am__dirstamp) \
 	elements/$(DEPDIR)/$(am__dirstamp)
 
@@ -1687,6 +1738,12 @@ elements/selector.$(OBJEXT): elements/$(am__dirstamp) \
 elements/selector$(EXEEXT): $(elements_selector_OBJECTS) $(elements_selector_DEPENDENCIES) $(EXTRA_elements_selector_DEPENDENCIES) elements/$(am__dirstamp)
 	@rm -f elements/selector$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(elements_selector_OBJECTS) $(elements_selector_LDADD) $(LIBS)
+elements/streamiddemux.$(OBJEXT): elements/$(am__dirstamp) \
+	elements/$(DEPDIR)/$(am__dirstamp)
+
+elements/streamiddemux$(EXEEXT): $(elements_streamiddemux_OBJECTS) $(elements_streamiddemux_DEPENDENCIES) $(EXTRA_elements_streamiddemux_DEPENDENCIES) elements/$(am__dirstamp)
+	@rm -f elements/streamiddemux$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(elements_streamiddemux_OBJECTS) $(elements_streamiddemux_LDADD) $(LIBS)
 elements/tee.$(OBJEXT): elements/$(am__dirstamp) \
 	elements/$(DEPDIR)/$(am__dirstamp)
 
@@ -1818,6 +1875,12 @@ gst/gstdatetime.$(OBJEXT): gst/$(am__dirstamp) \
 gst/gstdatetime$(EXEEXT): $(gst_gstdatetime_OBJECTS) $(gst_gstdatetime_DEPENDENCIES) $(EXTRA_gst_gstdatetime_DEPENDENCIES) gst/$(am__dirstamp)
 	@rm -f gst/gstdatetime$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(gst_gstdatetime_OBJECTS) $(gst_gstdatetime_LDADD) $(LIBS)
+gst/gstdevice.$(OBJEXT): gst/$(am__dirstamp) \
+	gst/$(DEPDIR)/$(am__dirstamp)
+
+gst/gstdevice$(EXEEXT): $(gst_gstdevice_OBJECTS) $(gst_gstdevice_DEPENDENCIES) $(EXTRA_gst_gstdevice_DEPENDENCIES) gst/$(am__dirstamp)
+	@rm -f gst/gstdevice$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(gst_gstdevice_OBJECTS) $(gst_gstdevice_LDADD) $(LIBS)
 gst/gstelement.$(OBJEXT): gst/$(am__dirstamp) \
 	gst/$(DEPDIR)/$(am__dirstamp)
 
@@ -1920,6 +1983,12 @@ gst/gstpreset.$(OBJEXT): gst/$(am__dirstamp) \
 gst/gstpreset$(EXEEXT): $(gst_gstpreset_OBJECTS) $(gst_gstpreset_DEPENDENCIES) $(EXTRA_gst_gstpreset_DEPENDENCIES) gst/$(am__dirstamp)
 	@rm -f gst/gstpreset$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(gst_gstpreset_OBJECTS) $(gst_gstpreset_LDADD) $(LIBS)
+gst/gstprintf.$(OBJEXT): gst/$(am__dirstamp) \
+	gst/$(DEPDIR)/$(am__dirstamp)
+
+gst/gstprintf$(EXEEXT): $(gst_gstprintf_OBJECTS) $(gst_gstprintf_DEPENDENCIES) $(EXTRA_gst_gstprintf_DEPENDENCIES) gst/$(am__dirstamp)
+	@rm -f gst/gstprintf$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(gst_gstprintf_OBJECTS) $(gst_gstprintf_LDADD) $(LIBS)
 gst/gstquery.$(OBJEXT): gst/$(am__dirstamp) \
 	gst/$(DEPDIR)/$(am__dirstamp)
 
@@ -2210,6 +2279,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/capsfilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/concat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/elements_fdsrc-fdsrc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/elements_filesrc-filesrc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/fakesink.Po@am__quote@
@@ -2221,6 +2291,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/queue2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/selector.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/streamiddemux.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/tee.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/valve.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@generic/$(DEPDIR)/sinks.Po@am__quote@
@@ -2241,6 +2312,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstcontroller.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstcpp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstdatetime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstdevice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstelement.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstelementfactory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstevent.Po@am__quote@
@@ -2258,6 +2330,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstplugin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstpoll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstpreset.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstquery.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstregistry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstsegment.Po@am__quote@
@@ -2674,6 +2747,13 @@ gst/gstdatetime.log: gst/gstdatetime$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+gst/gstdevice.log: gst/gstdevice$(EXEEXT)
+	@p='gst/gstdevice$(EXEEXT)'; \
+	b='gst/gstdevice'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 gst/gstinfo.log: gst/gstinfo$(EXEEXT)
 	@p='gst/gstinfo$(EXEEXT)'; \
 	b='gst/gstinfo'; \
@@ -2733,6 +2813,13 @@ gst/gstpipeline.log: gst/gstpipeline$(EXEEXT)
 gst/gstpoll.log: gst/gstpoll$(EXEEXT)
 	@p='gst/gstpoll$(EXEEXT)'; \
 	b='gst/gstpoll'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+gst/gstprintf.log: gst/gstprintf$(EXEEXT)
+	@p='gst/gstprintf$(EXEEXT)'; \
+	b='gst/gstprintf'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -2961,6 +3048,13 @@ elements/capsfilter.log: elements/capsfilter$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+elements/concat.log: elements/concat$(EXEEXT)
+	@p='elements/concat$(EXEEXT)'; \
+	b='elements/concat'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 elements/fakesink.log: elements/fakesink$(EXEEXT)
 	@p='elements/fakesink$(EXEEXT)'; \
 	b='elements/fakesink'; \
@@ -3048,6 +3142,13 @@ elements/queue2.log: elements/queue2$(EXEEXT)
 elements/valve.log: elements/valve$(EXEEXT)
 	@p='elements/valve$(EXEEXT)'; \
 	b='elements/valve'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+elements/streamiddemux.log: elements/streamiddemux$(EXEEXT)
+	@p='elements/streamiddemux$(EXEEXT)'; \
+	b='elements/streamiddemux'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -3458,7 +3559,8 @@ LOOPS ?= 10
 
 # valgrind any given test by running make test.valgrind
 %.valgrind: %
-	@$(TESTS_ENVIRONMENT)					\
+	@valgrind_log=$(subst /,-,$*-valgrind.log);		\
+	$(TESTS_ENVIRONMENT)					\
 	CK_DEFAULT_TIMEOUT=360					\
 	G_SLICE=always-malloc					\
 	$(LIBTOOL) --mode=execute				\
@@ -3467,12 +3569,12 @@ LOOPS ?= 10
 	--tool=memcheck --leak-check=full --trace-children=yes	\
 	--show-possibly-lost=no                                 \
 	--leak-resolution=high --num-callers=20			\
-	./$* 2>&1 | tee valgrind.log
-	@if grep "==" valgrind.log > /dev/null 2>&1; then	\
-	    rm valgrind.log;					\
+	./$* 2>&1 | tee $$valgrind_log ;			\
+	if grep "==" $$valgrind_log > /dev/null 2>&1; then	\
+	    rm $$valgrind_log;					\
 	    exit 1;						\
-	fi
-	@rm valgrind.log
+	fi ;							\
+	rm $$valgrind_log
 
 # valgrind any given test and generate suppressions for it
 %.valgrind.gen-suppressions: %
@@ -3559,19 +3661,13 @@ forever: $(TESTS)
 # valgrind all tests
 valgrind: $(TESTS)
 	@echo "Valgrinding tests ..."
-	@failed=0;							\
+	@failed=0; valgrind_targets="";					\
 	for t in $(filter-out $(VALGRIND_TESTS_DISABLE),$(TESTS)); do	\
-		$(MAKE) $$t.valgrind;					\
-		if test "$$?" -ne 0; then                               \
-			echo "Valgrind error for test $$t";		\
-			failed=`expr $$failed + 1`;			\
-			whicht="$$whicht $$t";				\
-		fi;							\
+	  valgrind_targets="$$valgrind_targets $$t.valgrind";		\
 	done;								\
-	if test "$$failed" -ne 0; then					\
-		echo "$$failed tests had leaks or errors under valgrind:";	\
-		echo "$$whicht";					\
-		false;							\
+	if ! $(MAKE) $$valgrind_targets ; then				\
+	  echo "Some tests had leaks or errors under valgrind";		\
+	  false;							\
 	fi
 
 # valgrind all tests until failure
@@ -3621,6 +3717,9 @@ inspect:
 	  do echo Inspecting $$e;					\
 	     $(GST_INSPECT) $$e > /dev/null 2>&1; done
 
+# build all tests
+build-checks: $(TESTS)
+
 help:
 	@echo
 	@echo "make check                         -- run all checks"
@@ -3643,6 +3742,7 @@ help:
 	@echo "make (dir)/(test).valgrind.gen-suppressions -- generate suppressions"
 	@echo "                                               and save to suppressions.log"
 	@echo "make inspect                       -- inspect all plugin features"
+	@echo "make build-checks                  -- build all checks (but don't run them)"
 	@echo
 	@echo
 	@echo "Additionally, you can use the GST_CHECKS environment variable to"

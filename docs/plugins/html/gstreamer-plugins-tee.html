@@ -8,15 +8,15 @@
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-queue2.html" title="queue2">
 <link rel="next" href="gstreamer-plugins-typefind.html" title="typefind">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#gstreamer-plugins-tee.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
-                  <a href="#gstreamer-plugins-tee.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties"> <span class="dim">|</span> 
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gstreamer-plugins-tee.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gstreamer-plugins-tee.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
                   <a href="#gstreamer-plugins-tee.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
@@ -49,18 +49,18 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-tee.html#GstTee--has-chain" title="The “has-chain” property">has-chain</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-tee.html#GstTee--last-message" title="The “last-message” property">last-message</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-tee.html#GstTee--num-src-pads" title="The “num-src-pads” property">num-src-pads</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -70,7 +70,7 @@
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-tee.html#GstTee--silent" title="The “silent” property">silent</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
@@ -98,8 +98,8 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-tee.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
             <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
                 <span class="lineart">╰──</span> GstTee
@@ -121,7 +121,7 @@ branch would stall the other branches.</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin2 <span class="gtkdoc opt">!</span> tee name<span class="gtkdoc opt">=</span>t <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> autoaudiosink t<span class="gtkdoc opt">. !</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> goom <span class="gtkdoc opt">!</span> videoconvert <span class="gtkdoc opt">!</span> autovideosink</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin <span class="gtkdoc opt">!</span> tee name<span class="gtkdoc opt">=</span>t <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> autoaudiosink t<span class="gtkdoc opt">. !</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> goom <span class="gtkdoc opt">!</span> videoconvert <span class="gtkdoc opt">!</span> autovideosink</pre></td>
       </tr>
     </tbody>
   </table>
@@ -267,7 +267,7 @@ disables pull mode.</p>
 <hr>
 <div class="refsect2">
 <a name="GstTee--has-chain"></a><h3>The <code class="literal">“has-chain”</code> property</h3>
-<pre class="programlisting">  “has-chain”                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “has-chain”                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>If the element can operate in push mode.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: TRUE</p>
@@ -275,7 +275,7 @@ disables pull mode.</p>
 <hr>
 <div class="refsect2">
 <a name="GstTee--last-message"></a><h3>The <code class="literal">“last-message”</code> property</h3>
-<pre class="programlisting">  “last-message”             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “last-message”             <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The message describing current status.</p>
 <p>Flags: Read</p>
 <p>Default value: NULL</p>
@@ -283,7 +283,7 @@ disables pull mode.</p>
 <hr>
 <div class="refsect2">
 <a name="GstTee--num-src-pads"></a><h3>The <code class="literal">“num-src-pads”</code> property</h3>
-<pre class="programlisting">  “num-src-pads”             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “num-src-pads”             <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The number of source pads.</p>
 <p>Flags: Read</p>
 <p>Allowed values: &gt;= 0</p>
@@ -300,7 +300,7 @@ disables pull mode.</p>
 <hr>
 <div class="refsect2">
 <a name="GstTee--silent"></a><h3>The <code class="literal">“silent”</code> property</h3>
-<pre class="programlisting">  “silent”                   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “silent”                   <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Don't produce last_message events.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: TRUE</p>
@@ -313,6 +313,6 @@ disables pull mode.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

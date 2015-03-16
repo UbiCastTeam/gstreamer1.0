@@ -28,6 +28,7 @@
         <sub name="GstTriggerControlSource" link="GstTriggerControlSource.html"/>
       </sub>
       <sub name="GStreamer Network Classes" link="gstreamer-net.html">
+        <sub name="GstNetAddressMeta" link="gstreamer-libs-GstNetAddressMeta.html"/>
         <sub name="GstNetClientClock" link="GstNetClientClock.html"/>
         <sub name="GstNetTimePacket" link="gstreamer-libs-GstNetTimePacket.html"/>
         <sub name="GstNetTimeProvider" link="GstNetTimeProvider.html"/>
@@ -194,6 +195,7 @@
     <keyword type="function" name="gst_adapter_take_buffer ()" link="GstAdapter.html#gst-adapter-take-buffer"/>
     <keyword type="function" name="gst_adapter_take_buffer_fast ()" link="GstAdapter.html#gst-adapter-take-buffer-fast" since="1.2"/>
     <keyword type="function" name="gst_adapter_take_list ()" link="GstAdapter.html#gst-adapter-take-list"/>
+    <keyword type="function" name="gst_adapter_take_buffer_list ()" link="GstAdapter.html#gst-adapter-take-buffer-list" since="1.6"/>
     <keyword type="function" name="gst_adapter_prev_pts ()" link="GstAdapter.html#gst-adapter-prev-pts"/>
     <keyword type="function" name="gst_adapter_prev_dts ()" link="GstAdapter.html#gst-adapter-prev-dts"/>
     <keyword type="function" name="gst_adapter_prev_pts_at_offset ()" link="GstAdapter.html#gst-adapter-prev-pts-at-offset" since="1.2"/>
@@ -234,6 +236,8 @@
     <keyword type="function" name="gst_byte_reader_new ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-new"/>
     <keyword type="function" name="gst_byte_reader_free ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-free"/>
     <keyword type="function" name="gst_byte_reader_init ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-init"/>
+    <keyword type="function" name="gst_byte_reader_peek_sub_reader ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-peek-sub-reader" since="1.6"/>
+    <keyword type="function" name="gst_byte_reader_get_sub_reader ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-get-sub-reader" since="1.6"/>
     <keyword type="function" name="gst_byte_reader_get_pos ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-get-pos"/>
     <keyword type="function" name="gst_byte_reader_get_remaining ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-get-remaining"/>
     <keyword type="function" name="gst_byte_reader_set_pos ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-set-pos"/>
@@ -287,6 +291,7 @@
     <keyword type="function" name="gst_byte_reader_dup_data ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-dup-data"/>
     <keyword type="function" name="gst_byte_reader_peek_data ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-peek-data"/>
     <keyword type="function" name="gst_byte_reader_masked_scan_uint32 ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-masked-scan-uint32"/>
+    <keyword type="function" name="gst_byte_reader_masked_scan_uint32_peek ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-masked-scan-uint32-peek" since="1.6"/>
     <keyword type="macro" name="gst_byte_reader_get_string()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-get-string"/>
     <keyword type="function" name="gst_byte_reader_get_string_utf8 ()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-get-string-utf8"/>
     <keyword type="macro" name="gst_byte_reader_peek_string()" link="gstreamer-libs-GstByteReader.html#gst-byte-reader-peek-string"/>
@@ -467,6 +472,7 @@
     <keyword type="function" name="gst_flow_combiner_update_flow ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-update-flow" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_add_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-add-pad" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_remove_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-remove-pad" since="1.4"/>
+    <keyword type="function" name="gst_flow_combiner_clear ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-clear" since="1.6"/>
     <keyword type="function" name="gst_type_find_helper ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper"/>
     <keyword type="function" name="gst_type_find_helper_for_buffer ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-buffer"/>
     <keyword type="function" name="gst_type_find_helper_for_extension ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-extension"/>
@@ -517,6 +523,9 @@
     <keyword type="function" name="gst_timed_value_control_source_get_count ()" link="GstTimedValueControlSource.html#gst-timed-value-control-source-get-count"/>
     <keyword type="function" name="gst_timed_value_control_invalidate_cache ()" link="GstTimedValueControlSource.html#gst-timed-value-control-invalidate-cache"/>
     <keyword type="struct" name="struct GstTimedValueControlSource" link="GstTimedValueControlSource.html#GstTimedValueControlSource-struct"/>
+    <keyword type="signal" name="The “value-added” signal" link="GstTimedValueControlSource.html#GstTimedValueControlSource-value-added"/>
+    <keyword type="signal" name="The “value-changed” signal" link="GstTimedValueControlSource.html#GstTimedValueControlSource-value-changed"/>
+    <keyword type="signal" name="The “value-removed” signal" link="GstTimedValueControlSource.html#GstTimedValueControlSource-value-removed"/>
     <keyword type="function" name="gst_interpolation_control_source_new ()" link="GstInterpolationControlSource.html#gst-interpolation-control-source-new"/>
     <keyword type="struct" name="struct GstInterpolationControlSource" link="GstInterpolationControlSource.html#GstInterpolationControlSource-struct"/>
     <keyword type="enum" name="enum GstInterpolationMode" link="GstInterpolationControlSource.html#GstInterpolationMode"/>
@@ -533,9 +542,15 @@
     <keyword type="macro" name="GST_TYPE_TRIGGER_WAVEFORM" link="GstTriggerControlSource.html#GST-TYPE-TRIGGER-WAVEFORM:CAPS"/>
     <keyword type="struct" name="struct GstTriggerControlSource" link="GstTriggerControlSource.html#GstTriggerControlSource-struct"/>
     <keyword type="property" name="The “tolerance” property" link="GstTriggerControlSource.html#GstTriggerControlSource--tolerance"/>
+    <keyword type="function" name="gst_buffer_add_net_address_meta ()" link="gstreamer-libs-GstNetAddressMeta.html#gst-buffer-add-net-address-meta"/>
+    <keyword type="macro" name="gst_buffer_get_net_address_meta()" link="gstreamer-libs-GstNetAddressMeta.html#gst-buffer-get-net-address-meta"/>
+    <keyword type="function" name="gst_net_address_meta_get_info ()" link="gstreamer-libs-GstNetAddressMeta.html#gst-net-address-meta-get-info"/>
+    <keyword type="struct" name="struct GstNetAddressMeta" link="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta"/>
     <keyword type="function" name="gst_net_client_clock_new ()" link="GstNetClientClock.html#gst-net-client-clock-new"/>
     <keyword type="struct" name="struct GstNetClientClock" link="GstNetClientClock.html#GstNetClientClock-struct"/>
     <keyword type="property" name="The “address” property" link="GstNetClientClock.html#GstNetClientClock--address"/>
+    <keyword type="property" name="The “bus” property" link="GstNetClientClock.html#GstNetClientClock--bus"/>
+    <keyword type="property" name="The “minimum-update-interval” property" link="GstNetClientClock.html#GstNetClientClock--minimum-update-interval"/>
     <keyword type="property" name="The “port” property" link="GstNetClientClock.html#GstNetClientClock--port"/>
     <keyword type="property" name="The “round-trip-limit” property" link="GstNetClientClock.html#GstNetClientClock--round-trip-limit"/>
     <keyword type="function" name="gst_net_time_packet_new ()" link="gstreamer-libs-GstNetTimePacket.html#gst-net-time-packet-new"/>
@@ -600,6 +615,12 @@
     <keyword type="function" name="gst_check_run_suite ()" link="gstreamer-libs-GstCheck.html#gst-check-run-suite"/>
     <keyword type="function" name="gst_check_setup_events ()" link="gstreamer-libs-GstCheck.html#gst-check-setup-events"/>
     <keyword type="function" name="gst_check_setup_events_with_stream_id ()" link="gstreamer-libs-GstCheck.html#gst-check-setup-events-with-stream-id"/>
+    <keyword type="function" name="gst_check_setup_sink_pad_by_name_from_template ()" link="gstreamer-libs-GstCheck.html#gst-check-setup-sink-pad-by-name-from-template" since="1.4"/>
+    <keyword type="function" name="gst_check_setup_sink_pad_from_template ()" link="gstreamer-libs-GstCheck.html#gst-check-setup-sink-pad-from-template" since="1.4"/>
+    <keyword type="function" name="gst_check_setup_src_pad_by_name_from_template ()" link="gstreamer-libs-GstCheck.html#gst-check-setup-src-pad-by-name-from-template" since="1.4"/>
+    <keyword type="function" name="gst_check_setup_src_pad_from_template ()" link="gstreamer-libs-GstCheck.html#gst-check-setup-src-pad-from-template" since="1.4"/>
+    <keyword type="function" name="gst_check_objects_destroyed_on_unref ()" link="gstreamer-libs-GstCheck.html#gst-check-objects-destroyed-on-unref" since="1.6"/>
+    <keyword type="function" name="gst_check_object_destroyed_on_unref ()" link="gstreamer-libs-GstCheck.html#gst-check-object-destroyed-on-unref" since="1.6"/>
     <keyword type="macro" name="GST_END_TEST" link="gstreamer-libs-GstCheck.html#GST-END-TEST:CAPS"/>
     <keyword type="function" name="gst_buffer_straw_start_pipeline ()" link="gstreamer-libs-GstBufferStraw.html#gst-buffer-straw-start-pipeline"/>
     <keyword type="function" name="gst_buffer_straw_get_buffer ()" link="gstreamer-libs-GstBufferStraw.html#gst-buffer-straw-get-buffer"/>
@@ -620,6 +641,9 @@
     <keyword type="function" name="gst_test_clock_wait_for_pending_id_count ()" link="GstTestClock.html#gst-test-clock-wait-for-pending-id-count" deprecated="use gst_test_clock_wait_for_multiple_pending_ids() instead." since="1.2"/>
     <keyword type="function" name="gst_test_clock_process_next_clock_id ()" link="GstTestClock.html#gst-test-clock-process-next-clock-id" since="1.2"/>
     <keyword type="function" name="gst_test_clock_get_next_entry_time ()" link="GstTestClock.html#gst-test-clock-get-next-entry-time" since="1.2"/>
+    <keyword type="function" name="gst_test_clock_wait_for_multiple_pending_ids ()" link="GstTestClock.html#gst-test-clock-wait-for-multiple-pending-ids" since="1.4"/>
+    <keyword type="function" name="gst_test_clock_id_list_get_latest_time ()" link="GstTestClock.html#gst-test-clock-id-list-get-latest-time" since="1.4"/>
+    <keyword type="function" name="gst_test_clock_process_id_list ()" link="GstTestClock.html#gst-test-clock-process-id-list" since="1.4"/>
     <keyword type="struct" name="struct GstTestClock" link="GstTestClock.html#GstTestClock-struct"/>
     <keyword type="struct" name="struct GstTestClockClass" link="GstTestClock.html#GstTestClockClass" since="1.2"/>
     <keyword type="property" name="The “start-time” property" link="GstTestClock.html#GstTestClock--start-time"/>

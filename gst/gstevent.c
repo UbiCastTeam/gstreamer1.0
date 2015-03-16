@@ -715,7 +715,7 @@ gst_event_parse_caps (GstEvent * event, GstCaps ** caps)
  * downstream synchronized with the buffer flow and contains timing information
  * and playback properties for the buffers that will follow.
  *
- * The newsegment event marks the range of buffers to be processed. All
+ * The segment event marks the range of buffers to be processed. All
  * data not within the segment range is not to be processed. This can be
  * used intelligently by plugins to apply more efficient methods of skipping
  * unneeded data. The valid range is expressed with the @start and @stop
@@ -736,10 +736,10 @@ gst_event_parse_caps (GstEvent * event, GstCaps ** caps)
  * stream. (@rate * @applied_rate) should always equal the rate that has been
  * requested for playback. For example, if an element has an input segment
  * with intended playback @rate of 2.0 and applied_rate of 1.0, it can adjust
- * incoming timestamps and buffer content by half and output a newsegment event
+ * incoming timestamps and buffer content by half and output a segment event
  * with @rate of 1.0 and @applied_rate of 2.0
  *
- * After a newsegment event, the buffer stream time is calculated with:
+ * After a segment event, the buffer stream time is calculated with:
  *
  *   time + (TIMESTAMP(buf) - start) * ABS (rate * applied_rate)
  *
@@ -1390,7 +1390,7 @@ gst_event_new_reconfigure (void)
  *
  * Returns: (transfer full): a new #GstEvent
  */
-/* FIXME 0.11: take ownership of msg for consistency? */
+/* FIXME 2.0: take ownership of msg for consistency? */
 GstEvent *
 gst_event_new_sink_message (const gchar * name, GstMessage * msg)
 {
@@ -1440,7 +1440,7 @@ gst_event_parse_sink_message (GstEvent * event, GstMessage ** msg)
  *
  * Source elements, demuxers and other elements that create new streams
  * are supposed to send this event as the first event of a new stream. It
- * should not be send after a flushing seek or in similar situations
+ * should not be sent after a flushing seek or in similar situations
  * and is used to mark the beginning of a new logical stream. Elements
  * combining multiple streams must ensure that this event is only forwarded
  * downstream once and not for every single input stream.
@@ -1669,7 +1669,7 @@ gst_event_new_toc_select (const gchar * uid)
 /**
  * gst_event_parse_toc_select:
  * @event: a TOC select event.
- * @uid: (out): storage for the selection UID.
+ * @uid: (out) (transfer full) (allow-none): storage for the selection UID.
  *
  * Parse a TOC select @event and store the results in the given @uid location.
  */

@@ -139,7 +139,7 @@
  *   g_assert_cmpint (GST_BUFFER_TIMESTAMP (buf), ==, latency);
  *   gst_buffer_unref (buf);
  *   GST_INFO ("Check that element does not wait for any clock notification\n");
- *   g_assert (gst_test_clock_peek_next_pending_id (test_clock, NULL) == FALSE);
+ *   g_assert (!gst_test_clock_peek_next_pending_id (test_clock, NULL));
  *
  *   GST_INFO ("Set time, create and push the second buffer\n");
  *   gst_test_clock_advance_time (test_clock, 10 * GST_SECOND);
@@ -164,7 +164,7 @@
  *       10 * GST_SECOND + latency + 7 * GST_MSECOND);
  *   gst_buffer_unref (buf);
  *   GST_INFO ("Check that element does not wait for any clock notification\n");
- *   g_assert (gst_test_clock_peek_next_pending_id (test_clock, NULL) == FALSE);
+ *   g_assert (!gst_test_clock_peek_next_pending_id (test_clock, NULL));
  *   ...
  *   </programlisting>
  * </example>
@@ -985,7 +985,7 @@ gst_test_clock_get_next_entry_time (GstTestClock * test_clock)
  * @count: the number of pending clock notifications to wait for
  * @pending_list: (out) (element-type Gst.ClockID) (transfer full) (allow-none): Address
  *     of a #GList pointer variable to store the list of pending #GstClockIDs
- *     that expired, or NULL
+ *     that expired, or %NULL
  *
  * Blocks until at least @count clock notifications have been requested from
  * @test_clock. There is no timeout for this wait, see the main description of

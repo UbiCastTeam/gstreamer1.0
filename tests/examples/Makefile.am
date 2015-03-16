@@ -17,8 +17,10 @@ always_dirs = \
 	manual     \
 	memory   \
 	metadata   \
+	netclock \
 	queue      \
 	stepping \
+	streamiddemux \
 	streams \
 	typefind
 

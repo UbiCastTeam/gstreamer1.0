@@ -94,6 +94,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -111,7 +112,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/introspection.m4 \
-	$(top_srcdir)/common/m4/pkg.m4 $(top_srcdir)/m4/ax_pthread.m4 \
+	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/check-checks.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
 	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -165,6 +166,7 @@ libgstnet_@GST_API_VERSION@_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 am_libgstnet_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstnet_@GST_API_VERSION@_la-gstnetaddressmeta.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnetclientclock.lo \
+	libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnettimepacket.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo
 libgstnet_@GST_API_VERSION@_la_OBJECTS =  \
@@ -232,6 +234,10 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
+BASH_COMPLETION_DIR = @BASH_COMPLETION_DIR@
+BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
+BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAT_ENTRY_END = @CAT_ENTRY_END@
 CAT_ENTRY_START = @CAT_ENTRY_START@
@@ -337,6 +343,7 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
 HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
+HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
 HAVE_JADETEX = @HAVE_JADETEX@
@@ -505,12 +512,14 @@ libgstnet_@GST_API_VERSION@_include_HEADERS = \
     gstnet.h \
     gstnetaddressmeta.h \
     gstnetclientclock.h \
+    gstnetcontrolmessagemeta.h \
     gstnettimepacket.h \
     gstnettimeprovider.h
 
 libgstnet_@GST_API_VERSION@_la_SOURCES = \
     gstnetaddressmeta.c \
     gstnetclientclock.c \
+    gstnetcontrolmessagemeta.c \
     gstnettimepacket.c \
     gstnettimeprovider.c
 
@@ -610,6 +619,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetaddressmeta.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetclientclock.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimepacket.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.Plo@am__quote@
 
@@ -650,6 +660,13 @@ libgstnet_@GST_API_VERSION@_la-gstnetclientclock.lo: gstnetclientclock.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstnetclientclock.c' object='libgstnet_@GST_API_VERSION@_la-gstnetclientclock.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstnetclientclock.lo `test -f 'gstnetclientclock.c' || echo '$(srcdir)/'`gstnetclientclock.c
+
+libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo: gstnetcontrolmessagemeta.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo -MD -MP -MF $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.Tpo -c -o libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo `test -f 'gstnetcontrolmessagemeta.c' || echo '$(srcdir)/'`gstnetcontrolmessagemeta.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.Tpo $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstnetcontrolmessagemeta.c' object='libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo `test -f 'gstnetcontrolmessagemeta.c' || echo '$(srcdir)/'`gstnetcontrolmessagemeta.c
 
 libgstnet_@GST_API_VERSION@_la-gstnettimepacket.lo: gstnettimepacket.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstnet_@GST_API_VERSION@_la-gstnettimepacket.lo -MD -MP -MF $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimepacket.Tpo -c -o libgstnet_@GST_API_VERSION@_la-gstnettimepacket.lo `test -f 'gstnettimepacket.c' || echo '$(srcdir)/'`gstnettimepacket.c

@@ -677,7 +677,7 @@ gst_base_transform_query_caps (GstBaseTransform * trans, GstPad * pad,
     GstCaps * filter)
 {
   GstPad *otherpad;
-  GstCaps *peercaps, *caps, *temp, *peerfilter = NULL;
+  GstCaps *peercaps = NULL, *caps, *temp, *peerfilter = NULL;
   GstCaps *templ, *otempl;
 
   otherpad = (pad == trans->srcpad) ? trans->sinkpad : trans->srcpad;
@@ -701,14 +701,26 @@ gst_base_transform_query_caps (GstBaseTransform * trans, GstPad * pad,
     GST_DEBUG_OBJECT (pad, "transformed  %" GST_PTR_FORMAT, peerfilter);
     gst_caps_unref (temp);
 
-    /* and filter against the template of the other pad */
-    GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, otempl);
-    /* We keep the caps sorted like the returned caps */
-    temp =
-        gst_caps_intersect_full (peerfilter, otempl, GST_CAPS_INTERSECT_FIRST);
-    GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
-    gst_caps_unref (peerfilter);
-    peerfilter = temp;
+    if (!gst_caps_is_empty (peerfilter)) {
+      /* and filter against the template of the other pad */
+      GST_DEBUG_OBJECT (pad, "our template  %" GST_PTR_FORMAT, otempl);
+      /* We keep the caps sorted like the returned caps */
+      temp =
+          gst_caps_intersect_full (peerfilter, otempl,
+          GST_CAPS_INTERSECT_FIRST);
+      GST_DEBUG_OBJECT (pad, "intersected %" GST_PTR_FORMAT, temp);
+      gst_caps_unref (peerfilter);
+      peerfilter = temp;
+    }
+  }
+
+  GST_DEBUG_OBJECT (pad, "peer filter caps %" GST_PTR_FORMAT, peerfilter);
+
+  if (peerfilter && gst_caps_is_empty (peerfilter)) {
+    GST_DEBUG_OBJECT (pad, "peer filter caps are empty");
+    caps = peerfilter;
+    peerfilter = NULL;
+    goto done;
   }
 
   /* query the peer with the transformed filter */
@@ -733,7 +745,7 @@ gst_base_transform_query_caps (GstBaseTransform * trans, GstPad * pad,
       GST_PAD_DIRECTION (otherpad), temp, filter);
   GST_DEBUG_OBJECT (pad, "transformed  %" GST_PTR_FORMAT, caps);
   gst_caps_unref (temp);
-  if (caps == NULL)
+  if (caps == NULL || gst_caps_is_empty (caps))
     goto done;
 
   if (peercaps) {
@@ -1109,7 +1121,7 @@ gst_base_transform_find_transform (GstBaseTransform * trans, GstPad * pad,
 
   /* The caps we can actually output is the intersection of the transformed
    * caps with the pad template for the pad */
-  if (othercaps) {
+  if (othercaps && !gst_caps_is_empty (othercaps)) {
     GstCaps *intersect, *templ_caps;
 
     templ_caps = gst_pad_get_pad_template_caps (otherpad);
@@ -1342,7 +1354,7 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
     GstCaps * incaps)
 {
   GstBaseTransformPrivate *priv = trans->priv;
-  GstCaps *outcaps, *prevcaps;
+  GstCaps *outcaps, *prev_incaps = NULL, *prev_outcaps = NULL;
   gboolean ret = TRUE;
 
   GST_DEBUG_OBJECT (pad, "have new caps %p %" GST_PTR_FORMAT, incaps, incaps);
@@ -1361,18 +1373,23 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
     outcaps = gst_caps_ref (incaps);
   }
 
-  /* call configure now */
-  if (!(ret = gst_base_transform_configure_caps (trans, incaps, outcaps)))
-    goto failed_configure;
+  prev_incaps = gst_pad_get_current_caps (trans->sinkpad);
+  prev_outcaps = gst_pad_get_current_caps (trans->srcpad);
+  if (prev_incaps && prev_outcaps && gst_caps_is_equal (prev_incaps, incaps)
+      && gst_caps_is_equal (prev_outcaps, outcaps)) {
+    GST_DEBUG_OBJECT (trans,
+        "New caps equal to old ones: %" GST_PTR_FORMAT " -> %" GST_PTR_FORMAT,
+        incaps, outcaps);
+    ret = TRUE;
+  } else {
+    /* call configure now */
+    if (!(ret = gst_base_transform_configure_caps (trans, incaps, outcaps)))
+      goto failed_configure;
 
-  prevcaps = gst_pad_get_current_caps (trans->srcpad);
-
-  if (!prevcaps || !gst_caps_is_equal (outcaps, prevcaps))
-    /* let downstream know about our caps */
-    ret = gst_pad_set_caps (trans->srcpad, outcaps);
-
-  if (prevcaps)
-    gst_caps_unref (prevcaps);
+    if (!prev_outcaps || !gst_caps_is_equal (outcaps, prev_outcaps))
+      /* let downstream know about our caps */
+      ret = gst_pad_set_caps (trans->srcpad, outcaps);
+  }
 
   if (ret) {
     /* try to get a pool when needed */
@@ -1382,6 +1399,10 @@ gst_base_transform_setcaps (GstBaseTransform * trans, GstPad * pad,
 done:
   if (outcaps)
     gst_caps_unref (outcaps);
+  if (prev_incaps)
+    gst_caps_unref (prev_incaps);
+  if (prev_outcaps)
+    gst_caps_unref (prev_outcaps);
 
   GST_OBJECT_LOCK (trans);
   priv->negotiated = ret;
@@ -2455,7 +2476,7 @@ gst_base_transform_set_passthrough (GstBaseTransform * trans,
   bclass = GST_BASE_TRANSFORM_GET_CLASS (trans);
 
   GST_OBJECT_LOCK (trans);
-  if (passthrough == FALSE) {
+  if (!passthrough) {
     if (bclass->transform_ip || bclass->transform)
       trans->priv->passthrough = FALSE;
   } else {

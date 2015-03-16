@@ -8,14 +8,14 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstIterator.html" title="GstIterator">
 <link rel="next" href="GstMessage.html" title="GstMessage">
-<meta name="generator" content="GTK-Doc V1.20 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
-<a href="#" class="shortcut">Top</a><span id="nav_description"> <span class="dim">|</span> 
-                  <a href="#GstMemory.description" class="shortcut">Description</a></span><span id="nav_hierarchy"> <span class="dim">|</span> 
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#GstMemory.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
                   <a href="#GstMemory.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
@@ -100,7 +100,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryMapFunction" title="GstMemoryMapFunction ()">*GstMemoryMapFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -132,7 +132,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryIsSpanFunction" title="GstMemoryIsSpanFunction ()">*GstMemoryIsSpanFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -148,7 +148,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-is-type" title="gst_memory_is_type ()">gst_memory_is_type</a> <span class="c_punctuation">()</span>
@@ -220,7 +220,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()">gst_memory_map</a> <span class="c_punctuation">()</span>
@@ -252,7 +252,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()">gst_memory_is_span</a> <span class="c_punctuation">()</span>
@@ -294,7 +294,7 @@
 </div>
 <div class="refsect1">
 <a name="GstMemory.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    GBoxed
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-Boxed-Types.html">GBoxed</a>
     <span class="lineart">╰──</span> GstMemory
 </pre>
 </div>
@@ -312,7 +312,7 @@ size does not change during the lifetime of the memory object. The memory
 also has an offset and size property that specifies the valid range of memory
 in the allocated region.</p>
 <p>Memory is usually created by allocators with a <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>
-method call. When <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
+method call. When <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
 be used.</p>
 <p>New allocators can be registered with <a class="link" href="GstAllocator.html#gst-allocator-register" title="gst_allocator_register ()"><code class="function">gst_allocator_register()</code></a>.
 Allocators are identified by name and can be retrieved with
@@ -331,7 +331,7 @@ After the memory access is completed, <a class="link" href="GstMemory.html#gst-m
 copy. <a class="link" href="GstMemory.html#gst-memory-share" title="gst_memory_share ()"><code class="function">gst_memory_share()</code></a> will create a new memory block that shares the
 memory with an existing memory block at a custom offset and with a custom
 size.</p>
-<p>Memory can be efficiently merged when <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()"><code class="function">gst_memory_is_span()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
+<p>Memory can be efficiently merged when <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()"><code class="function">gst_memory_is_span()</code></a> returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 </div>
 <div class="refsect1">
 <a name="GstMemory.functions_details"></a><h2>Functions</h2>
@@ -567,7 +567,7 @@ size.</p>
 <hr>
 <div class="refsect2">
 <a name="GstMemoryMapFunction"></a><h3>GstMemoryMapFunction ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 <span class="c_punctuation">(</span>*GstMemoryMapFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                          <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
                          <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapFlags" title="enum GstMapFlags"><span class="type">GstMapFlags</span></a> flags</code></em>);</pre>
@@ -636,7 +636,7 @@ accessed according to the access pattern in <em class="parameter"><code>flags</c
 </div>
 <div class="refsect3">
 <a name="id-1.3.28.8.13.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success.</p>
 <p></p>
 </div>
 </div>
@@ -743,7 +743,7 @@ shared. This function does not make a copy of the bytes in <em class="parameter"
 <hr>
 <div class="refsect2">
 <a name="GstMemoryIsSpanFunction"></a><h3>GstMemoryIsSpanFunction ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstMemoryIsSpanFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem1</code></em>,
                             <em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem2</code></em>,
                             <em class="parameter"><code><span class="type">gsize</span> *offset</code></em>);</pre>
@@ -782,7 +782,7 @@ shared. This function does not make a copy of the bytes in <em class="parameter"
 </div>
 <div class="refsect3">
 <a name="id-1.3.28.8.16.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem1</code></em>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem1</code></em>
 and <em class="parameter"><code>mem2</code></em>
 are in contiguous memory.</p>
 <p></p>
@@ -860,9 +860,9 @@ will call <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-ini
 <hr>
 <div class="refsect2">
 <a name="gst-memory-is-type"></a><h3>gst_memory_is_type ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_memory_is_type (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                    <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mem_type</code></em>);</pre>
+                    <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mem_type</code></em>);</pre>
 <p>Check if <em class="parameter"><code>mem</code></em>
  if allocated with an allocator for <em class="parameter"><code>mem_type</code></em>
 .</p>
@@ -890,7 +890,7 @@ gst_memory_is_type (<em class="parameter"><code><a class="link" href="GstMemory.
 </div>
 <div class="refsect3">
 <a name="id-1.3.28.8.18.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem</code></em>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem</code></em>
 was allocated from an allocator for <em class="parameter"><code>mem_type</code></em>
 .</p>
 <p></p>
@@ -1105,16 +1105,16 @@ mapped copy of <em class="parameter"><code>mem</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.3.28.8.27.7"></a><h4>Returns</h4>
-<p> a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> object mapped with <em class="parameter"><code>flags</code></em>
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
-a mapping is not possible. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p> a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> object mapped
+with <em class="parameter"><code>flags</code></em>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when a mapping is not possible. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-memory-map"></a><h3>gst_memory_map ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_memory_map (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                 <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>,
                 <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapFlags" title="enum GstMapFlags"><span class="type">GstMapFlags</span></a> flags</code></em>);</pre>
@@ -1123,7 +1123,7 @@ gst_memory_map (<em class="parameter"><code><a class="link" href="GstMemory.html
  that can be
 accessed according to <em class="parameter"><code>flags</code></em>
 .</p>
-<p>This function can return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for various reasons:</p>
+<p>This function can return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for various reasons:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>the memory backed by <em class="parameter"><code>mem</code></em>
  is not accessible with the given <em class="parameter"><code>flags</code></em>
@@ -1165,7 +1165,7 @@ should be done.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.28.8.28.10"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation was successful.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation was successful.</p>
 <p></p>
 </div>
 </div>
@@ -1299,7 +1299,7 @@ all bytes from <em class="parameter"><code>offset</code></em>
 <hr>
 <div class="refsect2">
 <a name="gst-memory-is-span"></a><h3>gst_memory_is_span ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_memory_is_span (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem1</code></em>,
                     <em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem2</code></em>,
                     <em class="parameter"><code><span class="type">gsize</span> *offset</code></em>);</pre>
@@ -1341,7 +1341,7 @@ the returned <em class="parameter"><code>offset</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.3.28.8.32.7"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory is contiguous and of a common parent.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory is contiguous and of a common parent.</p>
 <p></p>
 </div>
 </div>
@@ -1586,6 +1586,6 @@ as the first member of their structure.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20</div>
+          Generated by GTK-Doc V1.21</div>
 </body>
 </html>

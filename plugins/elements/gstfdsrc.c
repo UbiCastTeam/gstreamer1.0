@@ -631,21 +631,28 @@ gst_fd_src_uri_set_uri (GstURIHandler * handler, const gchar * uri,
 
   protocol = gst_uri_get_protocol (uri);
   if (strcmp (protocol, "fd") != 0) {
+    g_set_error (err, GST_URI_ERROR, GST_URI_ERROR_BAD_URI,
+        "Wrong protocol for fdsrc in uri: '%s'", uri);
     g_free (protocol);
     return FALSE;
   }
   g_free (protocol);
 
-  if (sscanf (uri, "fd://%d", &fd) != 1 || fd < 0)
+  if (sscanf (uri, "fd://%d", &fd) != 1 || fd < 0) {
+    g_set_error (err, GST_URI_ERROR, GST_URI_ERROR_BAD_URI,
+        "Bad file descriptor number in uri: '%s'", uri);
     return FALSE;
+  }
 
   if ((q = g_strstr_len (uri, -1, "?"))) {
-    gchar *sp;
+    gchar *sp, *end = NULL;
 
     GST_INFO_OBJECT (src, "found ?");
 
     if ((sp = g_strstr_len (q, -1, "size="))) {
-      if (sscanf (sp, "size=%" G_GUINT64_FORMAT, &size) != 1) {
+      sp += strlen ("size=");
+      size = g_ascii_strtoull (sp, &end, 10);
+      if ((size == 0 && errno == EINVAL) || size == G_MAXUINT64 || end == sp) {
         GST_INFO_OBJECT (src, "parsing size failed");
         size = -1;
       } else {

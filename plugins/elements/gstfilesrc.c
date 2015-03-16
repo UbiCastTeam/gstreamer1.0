@@ -28,7 +28,7 @@
  * <refsect2>
  * <title>Example launch line</title>
  * |[
- * gst-launch filesrc location=song.ogg ! decodebin2 ! autoaudiosink
+ * gst-launch filesrc location=song.ogg ! decodebin ! autoaudiosink
  * ]| Play a song.ogg from local dir.
  * </refsect2>
  */
@@ -75,7 +75,6 @@ static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src",
     GST_PAD_ALWAYS,
     GST_STATIC_CAPS_ANY);
 
-/* FIXME we should be using glib for this */
 #ifndef S_ISREG
 #define S_ISREG(mode) ((mode)&_S_IFREG)
 #endif
@@ -254,7 +253,7 @@ gst_file_src_set_location (GstFileSrc * src, const gchar * location)
     GST_INFO ("uri      : %s", src->uri);
   }
   g_object_notify (G_OBJECT (src), "location");
-  /* FIXME 0.11: notify "uri" property once there is one */
+  /* FIXME 2.0: notify "uri" property once there is one */
 
   return TRUE;
 
@@ -480,13 +479,15 @@ gst_file_src_start (GstBaseSrc * basesrc)
           g_strerror (errno));
       src->seekable = FALSE;
     } else {
+      res = lseek (src->fd, 0, SEEK_SET);
+
+      if (res < 0) {
+        /* We really don't like not being able to go back to 0 */
+        src->seekable = FALSE;
+        goto lseek_wonky;
+      }
+
       src->seekable = TRUE;
-    }
-    res = lseek (src->fd, 0, SEEK_SET);
-    if (res < 0) {
-      /* We really don't like not being able to go back to 0 */
-      src->seekable = FALSE;
-      goto lseek_wonky;
     }
   }
 

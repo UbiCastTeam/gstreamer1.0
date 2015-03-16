@@ -105,9 +105,9 @@ typedef struct _GstMessage GstMessage;
  *     filter for GST_MESSAGE_EXTENDED and then check the result for the
  *     specific type. (Since 1.4)
  * @GST_MESSAGE_DEVICE_ADDED: Message indicating a #GstDevice was added to
- *     a #GstDeviceMonitor (Since 1.4)
+ *     a #GstDeviceProvider (Since 1.4)
  * @GST_MESSAGE_DEVICE_REMOVED: Message indicating a #GstDevice was removed
- *     from a #GstDeviceMonitor (Since 1.4)
+ *     from a #GstDeviceProvider (Since 1.4)
  * @GST_MESSAGE_ANY: mask for all of the above messages.
  *
  * The different message types that are available.
@@ -116,6 +116,9 @@ typedef struct _GstMessage GstMessage;
  * NOTE: keep GST_MESSAGE_ANY a valid gint to avoid compiler warnings.
  */
 /* FIXME: 2.0: Make it NOT flags, just a regular 1,2,3,4.. enumeration */
+/* FIXME: For GST_MESSAGE_ANY ~0 -> 0xffffffff see
+ *        https://bugzilla.gnome.org/show_bug.cgi?id=732633
+ */
 typedef enum
 {
   GST_MESSAGE_UNKNOWN           = 0,
@@ -153,7 +156,7 @@ typedef enum
   GST_MESSAGE_EXTENDED          = (1 << 31),
   GST_MESSAGE_DEVICE_ADDED      = GST_MESSAGE_EXTENDED + 1,
   GST_MESSAGE_DEVICE_REMOVED    = GST_MESSAGE_EXTENDED + 2,
-  GST_MESSAGE_ANY               = ~0
+  GST_MESSAGE_ANY               = (gint) (0xffffffff)
 } GstMessageType;
 
 #include <gst/gstminiobject.h>
@@ -404,8 +407,8 @@ gst_message_copy (const GstMessage * msg)
 #define         gst_message_make_writable(msg)  GST_MESSAGE_CAST (gst_mini_object_make_writable (GST_MINI_OBJECT_CAST (msg)))
 /**
  * gst_message_replace:
- * @old_message: (inout) (transfer full): pointer to a pointer to a #GstMessage
- *     to be replaced.
+ * @old_message: (inout) (transfer full) (nullable): pointer to a
+ *     pointer to a #GstMessage to be replaced.
  * @new_message: (allow-none) (transfer none): pointer to a #GstMessage that will
  *     replace the message pointed to by @old_message.
  *

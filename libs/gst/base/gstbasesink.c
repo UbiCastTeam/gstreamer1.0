@@ -492,7 +492,7 @@ gst_base_sink_class_init (GstBaseSinkClass * klass)
    *
    * The amount of bytes to pull when operating in pull mode.
    */
-  /* FIXME 0.11: blocksize property should be int, otherwise min>max.. */
+  /* FIXME 2.0: blocksize property should be int, otherwise min>max.. */
   g_object_class_install_property (gobject_class, PROP_BLOCKSIZE,
       g_param_spec_uint ("blocksize", "Block size",
           "Size in bytes to pull per buffer (0 = default)", 0, G_MAXUINT,
@@ -904,9 +904,9 @@ gst_base_sink_get_ts_offset (GstBaseSink * sink)
  *
  * Free-function: gst_sample_unref
  *
- * Returns: (transfer full): a #GstSample. gst_sample_unref() after usage.
- *     This function returns %NULL when no buffer has arrived in the sink yet
- *     or when the sink is not in PAUSED or PLAYING.
+ * Returns: (transfer full) (nullable): a #GstSample. gst_sample_unref() after
+ *     usage.  This function returns %NULL when no buffer has arrived in the
+ *     sink yet or when the sink is not in PAUSED or PLAYING.
  */
 GstSample *
 gst_base_sink_get_last_sample (GstBaseSink * sink)
@@ -1086,8 +1086,7 @@ gst_base_sink_query_latency (GstBaseSink * sink, gboolean * live,
       }
       if (l) {
         /* we need to add the render delay if we are live */
-        if (min != -1)
-          min += render_delay;
+        min += render_delay;
         if (max != -1)
           max += render_delay;
       }
@@ -1192,7 +1191,7 @@ gst_base_sink_get_render_delay (GstBaseSink * sink)
  * Set the number of bytes that the sink will pull when it is operating in pull
  * mode.
  */
-/* FIXME 0.11: blocksize property should be int, otherwise min>max.. */
+/* FIXME 2.0: blocksize property should be int, otherwise min>max.. */
 void
 gst_base_sink_set_blocksize (GstBaseSink * sink, guint blocksize)
 {
@@ -1213,7 +1212,7 @@ gst_base_sink_set_blocksize (GstBaseSink * sink, guint blocksize)
  *
  * Returns: the number of bytes @sink will pull in pull mode.
  */
-/* FIXME 0.11: blocksize property should be int, otherwise min>max.. */
+/* FIXME 2.0: blocksize property should be int, otherwise min>max.. */
 guint
 gst_base_sink_get_blocksize (GstBaseSink * sink)
 {
@@ -1507,7 +1506,7 @@ gst_base_sink_commit_state (GstBaseSink * basesink)
       /* state change function could have been executed and we could be
        * flushing now */
       if (G_UNLIKELY (basesink->flushing))
-        goto stopping;
+        goto stopping_unlocked;
     }
     GST_DEBUG_OBJECT (basesink, "posting PLAYING state change message");
     /* FIXME, we released the PREROLL lock above, it's possible that this
@@ -1546,6 +1545,11 @@ nothing_pending:
     basesink->priv->have_latency = TRUE;
     GST_OBJECT_UNLOCK (basesink);
     return TRUE;
+  }
+stopping_unlocked:
+  {
+    GST_OBJECT_LOCK (basesink);
+    goto stopping;
   }
 stopping:
   {
@@ -3064,19 +3068,28 @@ gst_base_sink_default_event (GstBaseSink * basesink, GstEvent * event)
     }
     case GST_EVENT_CAPS:
     {
-      GstCaps *caps;
+      GstCaps *caps, *current_caps;
 
       GST_DEBUG_OBJECT (basesink, "caps %p", event);
 
       gst_event_parse_caps (event, &caps);
-      if (bclass->set_caps)
-        result = bclass->set_caps (basesink, caps);
+      current_caps = gst_pad_get_current_caps (GST_BASE_SINK_PAD (basesink));
 
-      if (result) {
-        GST_OBJECT_LOCK (basesink);
-        gst_caps_replace (&basesink->priv->caps, caps);
-        GST_OBJECT_UNLOCK (basesink);
+      if (current_caps && gst_caps_is_equal (current_caps, caps)) {
+        GST_DEBUG_OBJECT (basesink,
+            "New caps equal to old ones: %" GST_PTR_FORMAT, caps);
+      } else {
+        if (bclass->set_caps)
+          result = bclass->set_caps (basesink, caps);
+
+        if (result) {
+          GST_OBJECT_LOCK (basesink);
+          gst_caps_replace (&basesink->priv->caps, caps);
+          GST_OBJECT_UNLOCK (basesink);
+        }
       }
+      if (current_caps)
+        gst_caps_unref (current_caps);
       break;
     }
     case GST_EVENT_SEGMENT:
@@ -3091,6 +3104,7 @@ gst_base_sink_default_event (GstBaseSink * basesink, GstEvent * event)
       GST_DEBUG_OBJECT (basesink, "configured segment %" GST_SEGMENT_FORMAT,
           &basesink->segment);
       basesink->have_newsegment = TRUE;
+      gst_base_sink_reset_qos (basesink);
       GST_OBJECT_UNLOCK (basesink);
       break;
     case GST_EVENT_GAP:
@@ -3282,7 +3296,12 @@ gst_base_sink_chain_unlocked (GstBaseSink * basesink, GstPad * pad,
     goto was_eos;
 
   if (is_list) {
-    sync_buf = gst_buffer_list_get (GST_BUFFER_LIST_CAST (obj), 0);
+    GstBufferList *buffer_list = GST_BUFFER_LIST_CAST (obj);
+
+    if (gst_buffer_list_length (buffer_list) == 0)
+      goto empty_list;
+
+    sync_buf = gst_buffer_list_get (buffer_list, 0);
     g_assert (NULL != sync_buf);
   } else {
     sync_buf = GST_BUFFER_CAST (obj);
@@ -3463,6 +3482,12 @@ was_eos:
     GST_DEBUG_OBJECT (basesink, "we are EOS, dropping object, return EOS");
     gst_mini_object_unref (GST_MINI_OBJECT_CAST (obj));
     return GST_FLOW_EOS;
+  }
+empty_list:
+  {
+    GST_DEBUG_OBJECT (basesink, "buffer list with no buffers");
+    gst_mini_object_unref (GST_MINI_OBJECT_CAST (obj));
+    return GST_FLOW_OK;
   }
 out_of_segment:
   {
@@ -4419,7 +4444,7 @@ gst_base_sink_get_position (GstBaseSink * basesink, GstFormat format,
 
   /* assume we will use the clock for getting the current position */
   with_clock = TRUE;
-  if (basesink->sync == FALSE)
+  if (!basesink->sync)
     with_clock = FALSE;
 
   /* and we need a clock */
@@ -4566,8 +4591,12 @@ gst_base_sink_get_position (GstBaseSink * basesink, GstFormat format,
     *cur = time + gst_guint64_to_gdouble (now - base_time) * rate;
 
     /* never report more than last seen position */
-    if (last != -1)
-      *cur = MIN (last, *cur);
+    if (last != -1) {
+      if (rate > 0.0)
+        *cur = MIN (last, *cur);
+      else
+        *cur = MAX (last, *cur);
+    }
 
     GST_DEBUG_OBJECT (basesink,
         "now %" GST_TIME_FORMAT " - base_time %" GST_TIME_FORMAT " - base %"
@@ -4787,6 +4816,18 @@ default_element_query (GstElement * element, GstQuery * query)
   return res;
 }
 
+static void
+gst_base_sink_drain (GstBaseSink * basesink)
+{
+  GstBuffer *old;
+
+  GST_OBJECT_LOCK (basesink);
+  if ((old = basesink->priv->last_buffer))
+    basesink->priv->last_buffer = gst_buffer_copy_deep (old);
+  GST_OBJECT_UNLOCK (basesink);
+  if (old)
+    gst_buffer_unref (old);
+}
 
 static gboolean
 gst_base_sink_default_query (GstBaseSink * basesink, GstQuery * query)
@@ -4799,6 +4840,7 @@ gst_base_sink_default_query (GstBaseSink * basesink, GstQuery * query)
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_ALLOCATION:
     {
+      gst_base_sink_drain (basesink);
       if (bclass->propose_allocation)
         res = bclass->propose_allocation (basesink, query);
       else
@@ -4835,15 +4877,13 @@ gst_base_sink_default_query (GstBaseSink * basesink, GstQuery * query)
     }
     case GST_QUERY_DRAIN:
     {
-      GstBuffer *old;
-
-      GST_OBJECT_LOCK (basesink);
-      if ((old = basesink->priv->last_buffer))
-        basesink->priv->last_buffer = gst_buffer_copy (old);
-      GST_OBJECT_UNLOCK (basesink);
-      if (old)
-        gst_buffer_unref (old);
+      gst_base_sink_drain (basesink);
       res = TRUE;
+      break;
+    }
+    case GST_QUERY_POSITION:
+    {
+      res = default_element_query (GST_ELEMENT (basesink), query);
       break;
     }
     default:
@@ -4997,11 +5037,6 @@ gst_base_sink_change_state (GstElement * element, GstStateChange transition)
       if (bclass->unlock_stop)
         bclass->unlock_stop (basesink);
 
-      /* we need preroll again and we set the flag before unlocking the clockid
-       * because if the clockid is unlocked before a current buffer expired, we
-       * can use that buffer to preroll with */
-      basesink->need_preroll = TRUE;
-
       if (basesink->clock_id) {
         GST_DEBUG_OBJECT (basesink, "unschedule clock");
         gst_clock_id_unschedule (basesink->clock_id);
@@ -5012,6 +5047,7 @@ gst_base_sink_change_state (GstElement * element, GstStateChange transition)
       if (!gst_base_sink_needs_preroll (basesink)) {
         GST_DEBUG_OBJECT (basesink, "PLAYING to PAUSED, we are prerolled");
         basesink->playing_async = FALSE;
+        basesink->need_preroll = FALSE;
       } else {
         if (GST_STATE_TARGET (GST_ELEMENT (basesink)) <= GST_STATE_READY) {
           GST_DEBUG_OBJECT (basesink, "element is <= READY");
@@ -5020,6 +5056,7 @@ gst_base_sink_change_state (GstElement * element, GstStateChange transition)
           GST_DEBUG_OBJECT (basesink,
               "PLAYING to PAUSED, we are not prerolled");
           basesink->playing_async = TRUE;
+          basesink->need_preroll = TRUE;
           priv->commited = FALSE;
           priv->call_preroll = TRUE;
           if (priv->async_enabled) {

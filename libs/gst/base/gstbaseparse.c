@@ -262,6 +262,7 @@ struct _GstBaseParsePrivate
   gboolean discont;
   gboolean flushing;
   gboolean drain;
+  gboolean saw_gaps;
 
   gint64 offset;
   gint64 sync_offset;
@@ -350,8 +351,14 @@ struct _GstBaseParsePrivate
   GList *detect_buffers;
   guint detect_buffers_size;
 
+  /* True when no buffers have been received yet */
+  gboolean first_buffer;
+
   /* if TRUE, a STREAM_START event needs to be pushed */
   gboolean push_stream_start;
+
+  /* When we need to skip more data than we have currently */
+  guint skip;
 };
 
 typedef struct _GstBaseParseSeek
@@ -788,6 +795,7 @@ gst_base_parse_reset (GstBaseParse * parse)
   parse->priv->min_frame_size = 1;
   parse->priv->discont = TRUE;
   parse->priv->flushing = FALSE;
+  parse->priv->saw_gaps = FALSE;
   parse->priv->offset = 0;
   parse->priv->sync_offset = 0;
   parse->priv->update_interval = -1;
@@ -837,6 +845,8 @@ gst_base_parse_reset (GstBaseParse * parse)
   parse->priv->last_pts = GST_CLOCK_TIME_NONE;
   parse->priv->last_offset = 0;
 
+  parse->priv->skip = 0;
+
   g_list_foreach (parse->priv->pending_events, (GFunc) gst_mini_object_unref,
       NULL);
   g_list_free (parse->priv->pending_events);
@@ -855,6 +865,8 @@ gst_base_parse_reset (GstBaseParse * parse)
     gst_adapter_clear (parse->priv->adapter);
 
   parse->priv->new_frame = TRUE;
+
+  parse->priv->first_buffer = TRUE;
 
   g_list_foreach (parse->priv->detect_buffers, (GFunc) gst_buffer_unref, NULL);
   g_list_free (parse->priv->detect_buffers);
@@ -1122,8 +1134,20 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
       parse->priv->prev_dts = GST_CLOCK_TIME_NONE;
       parse->priv->discont = TRUE;
       parse->priv->seen_keyframe = FALSE;
+      parse->priv->skip = 0;
       break;
     }
+
+    case GST_EVENT_SEGMENT_DONE:
+      /* need to drain now, rather than upon a new segment,
+       * since that would have SEGMENT_DONE come before potential
+       * delayed last part of the current segment */
+      GST_DEBUG_OBJECT (parse, "draining current segment");
+      if (parse->segment.rate > 0.0)
+        gst_base_parse_drain (parse);
+      else
+        gst_base_parse_finish_fragment (parse, FALSE);
+      break;
 
     case GST_EVENT_FLUSH_START:
       GST_OBJECT_LOCK (parse);
@@ -1139,6 +1163,7 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
       parse->priv->last_pts = GST_CLOCK_TIME_NONE;
       parse->priv->last_dts = GST_CLOCK_TIME_NONE;
       parse->priv->new_frame = TRUE;
+      parse->priv->skip = 0;
 
       forward_immediate = TRUE;
       break;
@@ -1150,14 +1175,15 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
         gst_base_parse_finish_fragment (parse, TRUE);
 
       /* If we STILL have zero frames processed, fire an error */
-      if (parse->priv->framecount == 0) {
+      if (parse->priv->framecount == 0 && !parse->priv->saw_gaps) {
         GST_ELEMENT_ERROR (parse, STREAM, WRONG_TYPE,
             ("No valid frames found before end of stream"), (NULL));
       }
       /* newsegment and other serialized events before eos */
       gst_base_parse_push_pending_events (parse);
 
-      if (parse->priv->framecount < MIN_FRAMES_TO_POST_BITRATE) {
+      if (!parse->priv->saw_gaps
+          && parse->priv->framecount < MIN_FRAMES_TO_POST_BITRATE) {
         /* We've not posted bitrate tags yet - do so now */
         gst_base_parse_post_bitrates (parse, TRUE, TRUE, TRUE);
       }
@@ -1198,6 +1224,7 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
       else
         gst_base_parse_finish_fragment (parse, TRUE);
       forward_immediate = TRUE;
+      parse->priv->saw_gaps = TRUE;
       break;
     }
     case GST_EVENT_TAG:
@@ -1229,10 +1256,8 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
     if (!GST_EVENT_IS_SERIALIZED (event) || forward_immediate) {
       ret = gst_pad_push_event (parse->srcpad, event);
     } else {
-      // GST_VIDEO_DECODER_STREAM_LOCK (decoder);
       parse->priv->pending_events =
           g_list_prepend (parse->priv->pending_events, event);
-      // GST_VIDEO_DECODER_STREAM_UNLOCK (decoder);
       ret = TRUE;
     }
   }
@@ -1532,16 +1557,18 @@ gst_base_parse_update_duration (GstBaseParse * baseparse)
         /* inform if duration changed, but try to avoid spamming */
         parse->priv->estimated_drift +=
             dest_value - parse->priv->estimated_duration;
+
+        parse->priv->estimated_duration = dest_value;
+        GST_LOG_OBJECT (parse,
+            "updated estimated duration to %" GST_TIME_FORMAT,
+            GST_TIME_ARGS (dest_value));
+
         if (parse->priv->estimated_drift > GST_SECOND ||
             parse->priv->estimated_drift < -GST_SECOND) {
           gst_element_post_message (GST_ELEMENT (parse),
               gst_message_new_duration_changed (GST_OBJECT (parse)));
           parse->priv->estimated_drift = 0;
         }
-        parse->priv->estimated_duration = dest_value;
-        GST_LOG_OBJECT (parse,
-            "updated estimated duration to %" GST_TIME_FORMAT,
-            GST_TIME_ARGS (dest_value));
       }
     }
   }
@@ -1988,7 +2015,20 @@ gst_base_parse_handle_buffer (GstBaseParse * parse, GstBuffer * buffer,
           g_slist_prepend (parse->priv->buffers_head, outbuf);
       outbuf = NULL;
     } else {
-      gst_adapter_flush (parse->priv->adapter, *skip);
+      /* If we're asked to skip more than is available in the adapter,
+         we need to remember what we need to skip for next iteration */
+      gsize av = gst_adapter_available (parse->priv->adapter);
+      GST_DEBUG ("Asked to skip %u (%" G_GSIZE_FORMAT " available)", *skip, av);
+      if (av >= *skip) {
+        gst_adapter_flush (parse->priv->adapter, *skip);
+      } else {
+        GST_DEBUG
+            ("This is more than available, flushing %" G_GSIZE_FORMAT
+            ", storing %u to skip", av, (guint) (*skip - av));
+        parse->priv->skip = *skip - av;
+        gst_adapter_flush (parse->priv->adapter, av);
+        *skip = av;
+      }
     }
     if (!parse->priv->discont)
       parse->priv->sync_offset = parse->priv->offset;
@@ -2358,6 +2398,9 @@ gst_base_parse_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
   /* ERRORS */
 no_caps:
   {
+    if (GST_PAD_IS_FLUSHING (parse->srcpad))
+      return GST_FLOW_FLUSHING;
+
     GST_ELEMENT_ERROR (parse, STREAM, DECODE, ("No caps set"), (NULL));
     return GST_FLOW_ERROR;
   }
@@ -2711,11 +2754,65 @@ gst_base_parse_check_sync (GstBaseParse * parse)
 }
 
 static GstFlowReturn
+gst_base_parse_process_streamheader (GstBaseParse * parse)
+{
+  GstCaps *caps;
+  GstStructure *str;
+  const GValue *value;
+  GstFlowReturn ret = GST_FLOW_OK;
+
+  caps = gst_pad_get_current_caps (GST_BASE_PARSE_SINK_PAD (parse));
+  if (caps == NULL)
+    goto notfound;
+
+  str = gst_caps_get_structure (caps, 0);
+  value = gst_structure_get_value (str, "streamheader");
+  if (value == NULL)
+    goto notfound;
+
+  GST_DEBUG_OBJECT (parse, "Found streamheader field on input caps");
+
+  if (GST_VALUE_HOLDS_ARRAY (value)) {
+    gint i;
+    gsize len = gst_value_array_get_size (value);
+
+    for (i = 0; i < len; i++) {
+      GstBuffer *buffer =
+          gst_value_get_buffer (gst_value_array_get_value (value, i));
+      ret =
+          gst_base_parse_chain (GST_BASE_PARSE_SINK_PAD (parse),
+          GST_OBJECT_CAST (parse), gst_buffer_ref (buffer));
+    }
+
+  } else if (GST_VALUE_HOLDS_BUFFER (value)) {
+    GstBuffer *buffer = gst_value_get_buffer (value);
+    ret =
+        gst_base_parse_chain (GST_BASE_PARSE_SINK_PAD (parse),
+        GST_OBJECT_CAST (parse), gst_buffer_ref (buffer));
+  }
+
+  gst_caps_unref (caps);
+
+  return ret;
+
+notfound:
+  {
+    if (caps) {
+      gst_caps_unref (caps);
+    }
+
+    GST_DEBUG_OBJECT (parse, "No streamheader on caps");
+    return GST_FLOW_OK;
+  }
+}
+
+static GstFlowReturn
 gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 {
   GstBaseParseClass *bclass;
   GstBaseParse *parse;
   GstFlowReturn ret = GST_FLOW_OK;
+  GstFlowReturn old_ret = GST_FLOW_OK;
   GstBuffer *tmpbuf = NULL;
   guint fsize = 1;
   gint skip = -1;
@@ -2725,6 +2822,44 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 
   parse = GST_BASE_PARSE (parent);
   bclass = GST_BASE_PARSE_GET_CLASS (parse);
+  GST_DEBUG_OBJECT (parent, "chain");
+
+  /* early out for speed, if we need to skip */
+  if (buffer && GST_BUFFER_IS_DISCONT (buffer))
+    parse->priv->skip = 0;
+  if (parse->priv->skip > 0) {
+    gsize bsize = gst_buffer_get_size (buffer);
+    GST_DEBUG ("Got %" G_GSIZE_FORMAT " buffer, need to skip %u", bsize,
+        parse->priv->skip);
+    if (parse->priv->skip >= bsize) {
+      parse->priv->skip -= bsize;
+      GST_DEBUG ("All the buffer is skipped");
+      parse->priv->offset += bsize;
+      parse->priv->sync_offset = parse->priv->offset;
+      return GST_FLOW_OK;
+    }
+    buffer = gst_buffer_make_writable (buffer);
+    gst_buffer_resize (buffer, parse->priv->skip, bsize - parse->priv->skip);
+    parse->priv->offset += parse->priv->skip;
+    GST_DEBUG ("Done skipping, we have %u left on this buffer",
+        (unsigned) (bsize - parse->priv->skip));
+    parse->priv->skip = 0;
+    parse->priv->discont = TRUE;
+  }
+
+  if (G_UNLIKELY (parse->priv->first_buffer)) {
+    parse->priv->first_buffer = FALSE;
+    if (!GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_HEADER)) {
+      /* this stream has no header buffers, check if we just prepend the
+       * streamheader from caps to the stream */
+      GST_DEBUG_OBJECT (parse, "Looking for streamheader field on caps to "
+          "prepend to the stream");
+      gst_base_parse_process_streamheader (parse);
+    } else {
+      GST_DEBUG_OBJECT (parse, "Stream has header buffers, not prepending "
+          "streamheader from caps");
+    }
+  }
 
   if (parse->priv->detecting) {
     GstBuffer *detect_buf;
@@ -2902,8 +3037,11 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
     if (skip == 0 && flush == 0) {
       GST_LOG_OBJECT (parse, "nothing skipped and no frames finished, "
           "breaking to get more data");
+      /* ignore this return as it produced no data */
+      ret = old_ret;
       goto done;
     }
+    old_ret = ret;
   }
 
 done:
@@ -3114,6 +3252,12 @@ gst_base_parse_scan_frame (GstBaseParse * parse, GstBaseParseClass * klass)
     ret = gst_base_parse_handle_buffer (parse, buffer, &skip, &flushed);
     if (ret != GST_FLOW_OK)
       break;
+
+    /* If a large amount of data was requested to be skipped, _handle_buffer
+       might have set the priv->skip flag to an extra amount on top of skip.
+       In pull mode, we can just pull from the new offset directly. */
+    parse->priv->offset += parse->priv->skip;
+    parse->priv->skip = 0;
 
     /* something flushed means something happened,
      * and we should bail out of this loop so as not to occupy
@@ -3626,6 +3770,9 @@ void
 gst_base_parse_set_latency (GstBaseParse * parse, GstClockTime min_latency,
     GstClockTime max_latency)
 {
+  g_return_if_fail (min_latency != GST_CLOCK_TIME_NONE);
+  g_return_if_fail (min_latency <= max_latency);
+
   GST_OBJECT_LOCK (parse);
   parse->priv->min_latency = min_latency;
   parse->priv->max_latency = max_latency;
@@ -3795,9 +3942,10 @@ gst_base_parse_src_query_default (GstBaseParse * parse, GstQuery * query)
 
         GST_OBJECT_LOCK (parse);
         /* add our latency */
-        if (min_latency != -1)
-          min_latency += parse->priv->min_latency;
-        if (max_latency != -1)
+        min_latency += parse->priv->min_latency;
+        if (max_latency == -1 || parse->priv->max_latency == -1)
+          max_latency = -1;
+        else
           max_latency += parse->priv->max_latency;
         GST_OBJECT_UNLOCK (parse);
 

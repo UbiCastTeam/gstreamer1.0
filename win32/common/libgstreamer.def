@@ -109,11 +109,13 @@ EXPORTS
 	gst_bin_recalculate_latency
 	gst_bin_remove
 	gst_bin_remove_many
+	gst_bin_sync_children_states
 	gst_bitmask_get_type
 	gst_buffer_add_meta
 	gst_buffer_append
 	gst_buffer_append_memory
 	gst_buffer_append_region
+	gst_buffer_copy_deep
 	gst_buffer_copy_flags_get_type
 	gst_buffer_copy_into
 	gst_buffer_copy_region
@@ -206,6 +208,7 @@ EXPORTS
 	gst_bus_pop_filtered
 	gst_bus_post
 	gst_bus_remove_signal_watch
+	gst_bus_remove_watch
 	gst_bus_set_flushing
 	gst_bus_set_sync_handler
 	gst_bus_sync_reply_get_type
@@ -240,8 +243,10 @@ EXPORTS
 	gst_caps_features_remove_id
 	gst_caps_features_set_parent_refcount
 	gst_caps_features_to_string
+	gst_caps_filter_and_map_in_place
 	gst_caps_fixate
 	gst_caps_flags_get_type
+	gst_caps_foreach
 	gst_caps_from_string
 	gst_caps_get_features
 	gst_caps_get_size
@@ -260,6 +265,7 @@ EXPORTS
 	gst_caps_is_subset
 	gst_caps_is_subset_structure
 	gst_caps_is_subset_structure_full
+	gst_caps_map_in_place
 	gst_caps_merge
 	gst_caps_merge_structure
 	gst_caps_merge_structure_full
@@ -294,7 +300,9 @@ EXPORTS
 	gst_child_proxy_set_property
 	gst_child_proxy_set_valist
 	gst_clock_add_observation
+	gst_clock_add_observation_unapplied
 	gst_clock_adjust_unlocked
+	gst_clock_adjust_with_calibration
 	gst_clock_entry_type_get_type
 	gst_clock_flags_get_type
 	gst_clock_get_calibration
@@ -371,6 +379,7 @@ EXPORTS
 	gst_date_time_to_iso8601_string
 	gst_date_time_unref
 	gst_debug_add_log_function
+	gst_debug_bin_to_dot_data
 	gst_debug_bin_to_dot_file
 	gst_debug_bin_to_dot_file_with_ts
 	gst_debug_category_free
@@ -415,31 +424,39 @@ EXPORTS
 	gst_device_get_type
 	gst_device_has_classes
 	gst_device_has_classesv
-	gst_device_monitor_can_monitor
-	gst_device_monitor_class_add_metadata
-	gst_device_monitor_class_add_static_metadata
-	gst_device_monitor_class_get_metadata
-	gst_device_monitor_class_set_metadata
-	gst_device_monitor_class_set_static_metadata
-	gst_device_monitor_device_add
-	gst_device_monitor_device_remove
-	gst_device_monitor_factory_find
-	gst_device_monitor_factory_get
-	gst_device_monitor_factory_get_by_name
-	gst_device_monitor_factory_get_device_monitor_type
-	gst_device_monitor_factory_get_metadata
-	gst_device_monitor_factory_get_metadata_keys
-	gst_device_monitor_factory_get_type
-	gst_device_monitor_factory_has_classes
-	gst_device_monitor_factory_has_classesv
-	gst_device_monitor_factory_list_get_device_monitors
+	gst_device_monitor_add_filter
 	gst_device_monitor_get_bus
 	gst_device_monitor_get_devices
-	gst_device_monitor_get_factory
 	gst_device_monitor_get_type
-	gst_device_monitor_register
+	gst_device_monitor_new
+	gst_device_monitor_remove_filter
 	gst_device_monitor_start
 	gst_device_monitor_stop
+	gst_device_provider_can_monitor
+	gst_device_provider_class_add_metadata
+	gst_device_provider_class_add_static_metadata
+	gst_device_provider_class_get_metadata
+	gst_device_provider_class_set_metadata
+	gst_device_provider_class_set_static_metadata
+	gst_device_provider_device_add
+	gst_device_provider_device_remove
+	gst_device_provider_factory_find
+	gst_device_provider_factory_get
+	gst_device_provider_factory_get_by_name
+	gst_device_provider_factory_get_device_provider_type
+	gst_device_provider_factory_get_metadata
+	gst_device_provider_factory_get_metadata_keys
+	gst_device_provider_factory_get_type
+	gst_device_provider_factory_has_classes
+	gst_device_provider_factory_has_classesv
+	gst_device_provider_factory_list_get_device_providers
+	gst_device_provider_get_bus
+	gst_device_provider_get_devices
+	gst_device_provider_get_factory
+	gst_device_provider_get_type
+	gst_device_provider_register
+	gst_device_provider_start
+	gst_device_provider_stop
 	gst_device_reconfigure_element
 	gst_double_range_get_type
 	gst_element_abort_state
@@ -605,16 +622,6 @@ EXPORTS
 	gst_ghost_pad_new_no_target
 	gst_ghost_pad_new_no_target_from_template
 	gst_ghost_pad_set_target
-	gst_global_device_monitor_get_bus
-	gst_global_device_monitor_get_caps_filter
-	gst_global_device_monitor_get_classes_filter
-	gst_global_device_monitor_get_devices
-	gst_global_device_monitor_get_type
-	gst_global_device_monitor_new
-	gst_global_device_monitor_set_caps_filter
-	gst_global_device_monitor_set_classes_filter
-	gst_global_device_monitor_start
-	gst_global_device_monitor_stop
 	gst_init
 	gst_init_check
 	gst_init_get_option_group
@@ -771,6 +778,7 @@ EXPORTS
 	gst_object_get_value_array
 	gst_object_has_active_control_bindings
 	gst_object_has_ancestor
+	gst_object_has_parent
 	gst_object_ref
 	gst_object_ref_sink
 	gst_object_remove_control_binding
@@ -972,6 +980,7 @@ EXPORTS
 	gst_preset_get_preset_names
 	gst_preset_get_property_names
 	gst_preset_get_type
+	gst_preset_is_editable
 	gst_preset_load_preset
 	gst_preset_rename_preset
 	gst_preset_save_preset
@@ -1137,6 +1146,7 @@ EXPORTS
 	gst_structure_can_intersect
 	gst_structure_change_type_get_type
 	gst_structure_copy
+	gst_structure_filter_and_map_in_place
 	gst_structure_fixate
 	gst_structure_fixate_field
 	gst_structure_fixate_field_boolean
@@ -1347,20 +1357,60 @@ EXPORTS
 	gst_type_find_suggest
 	gst_type_find_suggest_simple
 	gst_update_registry
+	gst_uri_append_path
+	gst_uri_append_path_segment
 	gst_uri_construct
+	gst_uri_equal
 	gst_uri_error_get_type
 	gst_uri_error_quark
+	gst_uri_from_string
+	gst_uri_from_string_with_base
+	gst_uri_get_fragment
+	gst_uri_get_host
 	gst_uri_get_location
+	gst_uri_get_path
+	gst_uri_get_path_segments
+	gst_uri_get_path_string
+	gst_uri_get_port
 	gst_uri_get_protocol
+	gst_uri_get_query_keys
+	gst_uri_get_query_string
+	gst_uri_get_query_table
+	gst_uri_get_query_value
+	gst_uri_get_scheme
+	gst_uri_get_type
+	gst_uri_get_userinfo
 	gst_uri_handler_get_protocols
 	gst_uri_handler_get_type
 	gst_uri_handler_get_uri
 	gst_uri_handler_get_uri_type
 	gst_uri_handler_set_uri
 	gst_uri_has_protocol
+	gst_uri_is_normalized
 	gst_uri_is_valid
+	gst_uri_is_writable
+	gst_uri_join
+	gst_uri_join_strings
+	gst_uri_make_writable
+	gst_uri_new
+	gst_uri_new_with_base
+	gst_uri_normalize
 	gst_uri_protocol_is_supported
 	gst_uri_protocol_is_valid
+	gst_uri_query_has_key
+	gst_uri_remove_query_key
+	gst_uri_set_fragment
+	gst_uri_set_host
+	gst_uri_set_path
+	gst_uri_set_path_segments
+	gst_uri_set_path_string
+	gst_uri_set_port
+	gst_uri_set_query_string
+	gst_uri_set_query_table
+	gst_uri_set_query_value
+	gst_uri_set_scheme
+	gst_uri_set_userinfo
+	gst_uri_to_string
 	gst_uri_type_get_type
 	gst_util_array_binary_search
 	gst_util_double_to_fraction

@@ -288,17 +288,17 @@ gst_caps_copy (const GstCaps * caps)
 
 /**
  * gst_caps_replace:
- * @old_caps: (inout) (transfer full): pointer to a pointer to a #GstCaps to be
- *     replaced.
+ * @old_caps: (inout) (transfer full) (nullable): pointer to a pointer
+ *     to a #GstCaps to be replaced.
  * @new_caps: (transfer none) (allow-none): pointer to a #GstCaps that will
- *     replace the caps pointed to by @ocaps.
+ *     replace the caps pointed to by @old_caps.
  *
  * Modifies a pointer to a #GstCaps to point to a different #GstCaps. The
  * modification is done atomically (so this is useful for ensuring thread safety
  * in some cases), and the reference counts are updated appropriately (the old
  * caps is unreffed, the new is reffed).
  *
- * Either @ncaps or the #GstCaps pointed to by @ocaps may be %NULL.
+ * Either @new_caps or the #GstCaps pointed to by @old_caps may be %NULL.
  *
  * Returns: %TRUE if @new_caps was different from @old_caps
  */
@@ -317,7 +317,7 @@ gst_caps_replace (GstCaps **old_caps, GstCaps *new_caps)
  * @old_caps: (inout) (transfer full): pointer to a pointer to a #GstCaps to be
  *     replaced.
  * @new_caps: (transfer full) (allow-none): pointer to a #GstCaps that will
- *     replace the caps pointed to by @ocaps.
+ *     replace the caps pointed to by @old_caps.
  *
  * Modifies a pointer to a #GstCaps to point to a different #GstCaps. This
  * function is similar to gst_caps_replace() except that it takes ownership
@@ -362,6 +362,58 @@ struct _GstStaticCaps {
   /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
 };
+
+/**
+ * GstCapsForeachFunc:
+ * @features: the #GstCapsFeatures
+ * @structure: the #GstStructure
+ * @user_data: user data
+ *
+ * A function that will be called in gst_caps_foreach(). The function may
+ * not modify @features or @structure.
+ *
+ * Returns: %TRUE if the foreach operation should continue, %FALSE if
+ * the foreach operation should stop with %FALSE.
+ *
+ * Since: 1.6
+ */
+typedef gboolean (*GstCapsForeachFunc) (GstCapsFeatures *features,
+                                        GstStructure    *structure,
+                                        gpointer         user_data);
+
+/**
+ * GstCapsMapFunc:
+ * @features: the #GstCapsFeatures
+ * @structure: the #GstStructure
+ * @user_data: user data
+ *
+ * A function that will be called in gst_caps_map_in_place(). The function
+ * may modify @features and @structure.
+ *
+ * Returns: %TRUE if the map operation should continue, %FALSE if
+ * the map operation should stop with %FALSE.
+ */
+typedef gboolean (*GstCapsMapFunc)     (GstCapsFeatures *features,
+                                        GstStructure    *structure,
+                                        gpointer         user_data);
+
+/**
+ * GstCapsFilterMapFunc:
+ * @features: the #GstCapsFeatures
+ * @structure: the #GstStructure
+ * @user_data: user data
+ *
+ * A function that will be called in gst_caps_filter_and_map_in_place().
+ * The function may modify @features and @structure, and both will be
+ * removed from the caps if %FALSE is returned.
+ *
+ * Returns: %TRUE if the features and structure should be preserved,
+ * %FALSE if it should be removed.
+ */
+typedef gboolean (*GstCapsFilterMapFunc) (GstCapsFeatures *features,
+                                          GstStructure    *structure,
+                                          gpointer user_data);
+
 
 GType             gst_caps_get_type                (void);
 
@@ -416,6 +468,18 @@ void              gst_caps_set_simple              (GstCaps       *caps,
 void              gst_caps_set_simple_valist       (GstCaps       *caps,
                                                     const char    *field,
                                                     va_list        varargs);
+
+gboolean          gst_caps_foreach                 (const GstCaps       *caps,
+                                                    GstCapsForeachFunc   func,
+                                                    gpointer             user_data);
+
+gboolean          gst_caps_map_in_place            (GstCaps        *caps,
+                                                    GstCapsMapFunc  func,
+                                                    gpointer        user_data);
+
+void              gst_caps_filter_and_map_in_place (GstCaps              *caps,
+                                                    GstCapsFilterMapFunc  func,
+                                                    gpointer              user_data);
 
 /* tests */
 gboolean          gst_caps_is_any                  (const GstCaps *caps);

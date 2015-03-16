@@ -275,8 +275,8 @@ GST_EXPORT GType _gst_event_type;
 #define         gst_event_make_writable(ev)   GST_EVENT_CAST (gst_mini_object_make_writable (GST_MINI_OBJECT_CAST (ev)))
 /**
  * gst_event_replace:
- * @old_event: (inout) (transfer full): pointer to a pointer to a #GstEvent
- *     to be replaced.
+ * @old_event: (inout) (transfer full) (nullable): pointer to a
+ *     pointer to a #GstEvent to be replaced.
  * @new_event: (allow-none) (transfer none): pointer to a #GstEvent that will
  *     replace the event pointed to by @old_event.
  *
@@ -301,8 +301,8 @@ gst_event_replace (GstEvent **old_event, GstEvent *new_event)
 
 /**
  * gst_event_steal:
- * @old_event: (inout) (transfer full): pointer to a pointer to a #GstEvent
- *     to be stolen.
+ * @old_event: (inout) (transfer full) (nullable): pointer to a
+ *     pointer to a #GstEvent to be stolen.
  *
  * Atomically replace the #GstEvent pointed to by @old_event with %NULL and
  * return the original event.
@@ -321,8 +321,8 @@ gst_event_steal (GstEvent **old_event)
 
 /**
  * gst_event_take:
- * @old_event: (inout) (transfer full): pointer to a pointer to a #GstEvent
- *     to be stolen.
+ * @old_event: (inout) (transfer full) (nullable): pointer to a
+ *     pointer to a #GstEvent to be stolen.
  * @new_event: (allow-none) (transfer full): pointer to a #GstEvent that will
  *     replace the event pointed to by @old_event.
  *
@@ -346,15 +346,15 @@ gst_event_take (GstEvent **old_event, GstEvent *new_event)
 
 /**
  * GstQOSType:
- * @GST_QOS_TYPE_OVERFLOW: The QoS event type that is produced when downstream
+ * @GST_QOS_TYPE_OVERFLOW: The QoS event type that is produced when upstream
  *    elements are producing data too quickly and the element can't keep up
- *    processing the data. Upstream should reduce their processing rate. This
+ *    processing the data. Upstream should reduce their production rate. This
  *    type is also used when buffers arrive early or in time.
- * @GST_QOS_TYPE_UNDERFLOW: The QoS event type that is produced when downstream
- *    elements are producing data too slowly and need to speed up their processing
- *    rate.
+ * @GST_QOS_TYPE_UNDERFLOW: The QoS event type that is produced when upstream
+ *    elements are producing data too slowly and need to speed up their
+ *    production rate.
  * @GST_QOS_TYPE_THROTTLE: The QoS event type that is produced when the
- *    application enabled throttling to limit the datarate.
+ *    application enabled throttling to limit the data rate.
  *
  * The different types of QoS events that can be given to the
  * gst_event_new_qos() method.

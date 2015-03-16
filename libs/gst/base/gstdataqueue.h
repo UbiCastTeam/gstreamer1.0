@@ -43,7 +43,7 @@ typedef struct _GstDataQueueItem GstDataQueueItem;
 typedef struct _GstDataQueuePrivate GstDataQueuePrivate;
 
 /**
- * GstDataQueueItem:
+ * GstDataQueueItem: (skip)
  * @object: the #GstMiniObject to queue.
  * @size: the size in bytes of the miniobject.
  * @duration: the duration in #GstClockTime of the miniobject. Can not be
@@ -72,7 +72,7 @@ struct _GstDataQueueItem
 };
 
 /**
- * GstDataQueueSize:
+ * GstDataQueueSize: (skip)
  * @visible: number of buffers
  * @bytes: number of bytes
  * @time: amount of time
@@ -87,7 +87,7 @@ struct _GstDataQueueSize
 };
 
 /**
- * GstDataQueueCheckFullFunction:
+ * GstDataQueueCheckFullFunction: (skip)
  * @queue: a #GstDataQueue.
  * @visible: The number of visible items currently in the queue.
  * @bytes: The amount of bytes currently in the queue.
@@ -120,6 +120,9 @@ struct _GstDataQueue
   gpointer _gst_reserved[GST_PADDING];
 };
 
+/**
+ * GstDataQueueClass:
+ */
 struct _GstDataQueueClass
 {
   GObjectClass parent_class;
