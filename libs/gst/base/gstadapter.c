@@ -132,6 +132,7 @@ struct _GstAdapter
   GSList *buflist_end;
   gsize size;
   gsize skip;
+  guint count;
 
   /* we keep state of assembled pieces */
   gpointer assembled_data;
@@ -233,6 +234,7 @@ gst_adapter_clear (GstAdapter * adapter)
   g_slist_free (adapter->buflist);
   adapter->buflist = NULL;
   adapter->buflist_end = NULL;
+  adapter->count = 0;
   adapter->size = 0;
   adapter->skip = 0;
   adapter->assembled_len = 0;
@@ -346,6 +348,7 @@ gst_adapter_push (GstAdapter * adapter, GstBuffer * buf)
     adapter->buflist_end = g_slist_append (adapter->buflist_end, buf);
     adapter->buflist_end = g_slist_next (adapter->buflist_end);
   }
+  ++adapter->count;
 }
 
 #if 0
@@ -549,7 +552,7 @@ gst_adapter_copy (GstAdapter * adapter, gpointer dest, gsize offset, gsize size)
 }
 
 /**
- * gst_adapter_copy_bytes:
+ * gst_adapter_copy_bytes: (rename-to gst_adapter_copy)
  * @adapter: a #GstAdapter
  * @offset: the bytes offset in the adapter to start from
  * @size: the number of bytes to copy
@@ -560,8 +563,6 @@ gst_adapter_copy (GstAdapter * adapter, gpointer dest, gsize offset, gsize size)
  * the value of the @size argument an empty #GBytes structure may be returned.
  *
  * Returns: (transfer full): A new #GBytes structure containing the copied data.
- *
- * Rename to: gst_adapter_copy
  *
  * Since: 1.4
  */
@@ -609,6 +610,7 @@ gst_adapter_flush_unchecked (GstAdapter * adapter, gsize flush)
 
     gst_buffer_unref (cur);
     g = g_slist_delete_link (g, g);
+    --adapter->count;
 
     if (G_UNLIKELY (g == NULL)) {
       GST_LOG_OBJECT (adapter, "adapter empty now");
@@ -797,10 +799,11 @@ gst_adapter_take_buffer_fast (GstAdapter * adapter, gsize nbytes)
   }
 
   for (item = adapter->buflist; item && left > 0; item = item->next) {
-    gsize size;
+    gsize size, cur_size;
 
     cur = item->data;
-    size = MIN (gst_buffer_get_size (cur) - skip, left);
+    cur_size = gst_buffer_get_size (cur);
+    size = MIN (cur_size - skip, left);
 
     GST_LOG_OBJECT (adapter, "appending %" G_GSIZE_FORMAT " bytes"
         " via region copy", size);
@@ -926,7 +929,7 @@ gst_adapter_take_list (GstAdapter * adapter, gsize nbytes)
 {
   GQueue queue = G_QUEUE_INIT;
   GstBuffer *cur;
-  gsize hsize, skip;
+  gsize hsize, skip, cur_size;
 
   g_return_val_if_fail (GST_IS_ADAPTER (adapter), NULL);
   g_return_val_if_fail (nbytes <= adapter->size, NULL);
@@ -936,7 +939,8 @@ gst_adapter_take_list (GstAdapter * adapter, gsize nbytes)
   while (nbytes > 0) {
     cur = adapter->buflist->data;
     skip = adapter->skip;
-    hsize = MIN (nbytes, gst_buffer_get_size (cur) - skip);
+    cur_size = gst_buffer_get_size (cur);
+    hsize = MIN (nbytes, cur_size - skip);
 
     cur = gst_adapter_take_buffer (adapter, hsize);
 
@@ -945,6 +949,60 @@ gst_adapter_take_list (GstAdapter * adapter, gsize nbytes)
     nbytes -= hsize;
   }
   return queue.head;
+}
+
+/**
+ * gst_adapter_take_buffer_list:
+ * @adapter: a #GstAdapter
+ * @nbytes: the number of bytes to take
+ *
+ * Returns a #GstBufferList of buffers containing the first @nbytes bytes of
+ * the @adapter. The returned bytes will be flushed from the adapter.
+ * When the caller can deal with individual buffers, this function is more
+ * performant because no memory should be copied.
+ *
+ * Caller owns the returned list. Call gst_buffer_list_unref() to free
+ * the list after usage.
+ *
+ * Returns: (transfer full) (nullable): a #GstBufferList of buffers containing
+ *     the first @nbytes of the adapter, or %NULL if @nbytes bytes are not
+ *     available
+ *
+ * Since: 1.6
+ */
+GstBufferList *
+gst_adapter_take_buffer_list (GstAdapter * adapter, gsize nbytes)
+{
+  GstBufferList *buffer_list;
+  GstBuffer *cur;
+  gsize hsize, skip, cur_size;
+  guint n_bufs;
+
+  g_return_val_if_fail (GST_IS_ADAPTER (adapter), NULL);
+
+  if (nbytes > adapter->size)
+    return NULL;
+
+  GST_LOG_OBJECT (adapter, "taking %" G_GSIZE_FORMAT " bytes", nbytes);
+
+  /* try to create buffer list with sufficient size, so no resize is done later */
+  if (adapter->count < 64)
+    n_bufs = adapter->count;
+  else
+    n_bufs = (adapter->count * nbytes * 1.2 / adapter->size) + 1;
+
+  buffer_list = gst_buffer_list_new_sized (n_bufs);
+
+  while (nbytes > 0) {
+    cur = adapter->buflist->data;
+    skip = adapter->skip;
+    cur_size = gst_buffer_get_size (cur);
+    hsize = MIN (nbytes, cur_size - skip);
+
+    gst_buffer_list_add (buffer_list, gst_adapter_take_buffer (adapter, hsize));
+    nbytes -= hsize;
+  }
+  return buffer_list;
 }
 
 /**

@@ -110,6 +110,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -127,7 +128,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/introspection.m4 \
-	$(top_srcdir)/common/m4/pkg.m4 $(top_srcdir)/m4/ax_pthread.m4 \
+	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/check-checks.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
 	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -285,6 +286,10 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
+BASH_COMPLETION_DIR = @BASH_COMPLETION_DIR@
+BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
+BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAT_ENTRY_END = @CAT_ENTRY_END@
 CAT_ENTRY_START = @CAT_ENTRY_START@
@@ -390,6 +395,7 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
 HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
+HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
 HAVE_JADETEX = @HAVE_JADETEX@
@@ -551,10 +557,10 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-docbook
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-docbook --with-bash-completion-dir=no
 aclocaldir = $(datadir)/aclocal
 aclocal_DATA = gst-element-check-@GST_API_VERSION@.m4
-SUBDIRS = pkgconfig gst libs plugins tests docs po m4 common \
+SUBDIRS = pkgconfig gst libs plugins tests docs po m4 common data \
 	$(am__append_1)
 
 # These are all the possible subdirs
@@ -563,7 +569,8 @@ DIST_SUBDIRS = pkgconfig \
 	docs \
 	po \
 	m4 \
-	common
+	common \
+	data
 
 
 # the MANIFEST contains all win32 related files that should be disted
@@ -1290,14 +1297,20 @@ download-po: $(top_srcdir)/common/download-translations
 @GST_GCOV_ENABLED_FALSE@	echo "Need to reconfigure with --enable-gcov"
 
 @HAVE_CHECK_TRUE@check-valgrind:
-@HAVE_CHECK_TRUE@	cd tests/check && make check-valgrind
+@HAVE_CHECK_TRUE@	$(MAKE) -C tests/check check-valgrind
 
 @HAVE_CHECK_TRUE@check-torture:
-@HAVE_CHECK_TRUE@	cd tests/check && make torture
+@HAVE_CHECK_TRUE@	$(MAKE) -C tests/check torture
+
+@HAVE_CHECK_TRUE@build-checks:
+@HAVE_CHECK_TRUE@	$(MAKE) -C tests/check build-checks
 @HAVE_CHECK_FALSE@check-valgrind:
 @HAVE_CHECK_FALSE@	echo "'check' library not installed, skipping"
 
 @HAVE_CHECK_FALSE@check-torture:
+@HAVE_CHECK_FALSE@	echo "'check' library not installed, skipping"
+
+@HAVE_CHECK_FALSE@build-checks:
 @HAVE_CHECK_FALSE@	echo "'check' library not installed, skipping"
 
 # FIXME: this target should be run every time we do "make release"

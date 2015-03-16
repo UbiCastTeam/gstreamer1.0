@@ -629,10 +629,10 @@ gst_base_src_query_latency (<em class="parameter"><code><a class="link" href="Gs
  will be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>src</code></em>
  is
 configured as a live source. <em class="parameter"><code>min_latency</code></em>
- will be set to the difference
-between the running time and the timestamp of the first buffer.
-<em class="parameter"><code>max_latency</code></em>
- is always the undefined value of -1.</p>
+ and <em class="parameter"><code>max_latency</code></em>
+ will be set
+to the difference between the running time and the timestamp of the first
+buffer.</p>
 <p>This function is mostly used by subclasses.</p>
 <div class="refsect3">
 <a name="id-1.2.4.4.9.8.6"></a><h4>Parameters</h4>
@@ -937,8 +937,8 @@ gst_base_src_set_caps (<em class="parameter"><code><a class="link" href="GstBase
 </tr>
 <tr>
 <td class="parameter_name"><p>caps</p></td>
-<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a></p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1154,7 +1154,8 @@ blocking operation should be unblocked with the unlock vmethod.</p>
   void          (*get_times)    (GstBaseSrc *src, GstBuffer *buffer,
                                  GstClockTime *start, GstClockTime *end);
 
-  /* get the total size of the resource in bytes */
+  /* get the total size of the resource in the format set by
+   * gst_base_src_set_format() */
   gboolean      (*get_size)     (GstBaseSrc *src, guint64 *size);
 
   /* check if the resource is seekable */
@@ -1258,7 +1259,8 @@ these times.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSrcClass.get-size"></a>get_size</code></em> ()</p></td>
-<td class="struct_member_description"><p>Return the total size of the resource, in the configured format.</p></td>
+<td class="struct_member_description"><p>Return the total size of the resource, in the format set by
+<a class="link" href="GstBaseSrc.html#gst-base-src-set-format" title="gst_base_src_set_format ()"><code class="function">gst_base_src_set_format()</code></a>.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>

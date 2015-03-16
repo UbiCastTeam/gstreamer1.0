@@ -180,6 +180,12 @@ gint __gst_date_time_compare (const GstDateTime * dt1, const GstDateTime * dt2);
 G_GNUC_INTERNAL
 gchar * __gst_date_time_serialize (GstDateTime * datetime, gboolean with_usecs);
 
+/* Non-static, for access from the testsuite, but not for external use */
+gboolean
+_priv_gst_do_linear_regression (GstClockTime *times, guint n,
+    GstClockTime * m_num, GstClockTime * m_denom, GstClockTime * b,
+    GstClockTime * xbase, gdouble * r_squared);
+
 #ifndef GST_DISABLE_REGISTRY
 /* Secret variable to initialise gst without registry cache */
 GST_EXPORT gboolean _gst_disable_registry_cache;
@@ -243,6 +249,8 @@ GST_EXPORT GstDebugCategory *GST_CAT_CONTEXT;
  * libgstreamer should be done like this: */
 #define GST_CAT_POLL _priv_GST_CAT_POLL
 extern GstDebugCategory *_priv_GST_CAT_POLL;
+
+extern GstClockTime _priv_gst_info_start_time;
 
 #else
 
@@ -417,6 +425,9 @@ struct _GstDeviceProviderFactoryClass {
 
   gpointer _gst_reserved[GST_PADDING];
 };
+
+/* privat flag used by GstBus / GstMessage */
+#define GST_MESSAGE_FLAG_ASYNC_DELIVERY (GST_MINI_OBJECT_FLAG_LAST << 0)
 
 G_END_DECLS
 #endif /* __GST_PRIVATE_H__ */

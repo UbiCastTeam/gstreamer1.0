@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="GstTypeFindFactory.html" title="GstTypeFindFactory">
+<link rel="prev" href="gstreamer-GstUri.html" title="GstUri">
 <link rel="next" href="gstreamer-GstUtils.html" title="GstUtils">
 <meta name="generator" content="GTK-Doc V1.21 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -20,7 +20,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GstTypeFindFactory.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-GstUri.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gstreamer-GstUtils.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -184,6 +184,10 @@
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gstreamer-GstUriHandler.html#GstURIError" title="enum GstURIError">GstURIError</a></td>
 </tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstUriHandler.html#GST-URI-NO-PORT:CAPS" title="GST_URI_NO_PORT">GST_URI_NO_PORT</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -221,7 +225,7 @@ gst_uri_error_quark (<em class="parameter"><code><span class="type">void</span><
 </pre>
 <p>Tests if the type direction is valid.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -245,7 +249,7 @@ gst_uri_protocol_is_valid (<em class="parameter"><code>const <a href="https://de
 must consist of alphanumeric characters, '+', '-' and '.' and must
 start with a alphabetic character. See RFC 3986 Section 3.1.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -260,7 +264,7 @@ start with a alphabetic character. See RFC 3986 Section 3.1.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.4.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.4.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the string is a valid protocol identifier, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p></p>
 </div>
@@ -275,7 +279,7 @@ gst_uri_protocol_is_supported (<em class="parameter"><code>const <a class="link"
 that a positive return value does not imply that a subsequent call to
 <a class="link" href="gstreamer-GstUriHandler.html#gst-element-make-from-uri" title="gst_element_make_from_uri ()"><code class="function">gst_element_make_from_uri()</code></a> is guaranteed to work.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -297,7 +301,7 @@ that a positive return value does not imply that a subsequent call to
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.5.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.5.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a></p>
 <p></p>
 </div>
@@ -310,7 +314,7 @@ gst_uri_is_valid (<em class="parameter"><code>const <a href="https://developer.g
 <p>Tests if the given string is a valid URI identifier. URIs start with a valid
 scheme followed by ":" and maybe a string identifying the location.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -325,7 +329,7 @@ scheme followed by ":" and maybe a string identifying the location.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.6.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.6.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the string is a valid URI</p>
 <p></p>
 </div>
@@ -339,7 +343,7 @@ gst_uri_has_protocol (<em class="parameter"><code>const <a href="https://develop
 <p>Checks if the protocol of a given valid URI matches <em class="parameter"><code>protocol</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -361,7 +365,7 @@ gst_uri_has_protocol (<em class="parameter"><code>const <a href="https://develop
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.7.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.7.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the protocol matches.</p>
 <p></p>
 </div>
@@ -374,7 +378,7 @@ gst_uri_get_protocol (<em class="parameter"><code>const <a href="https://develop
 <p>Extracts the protocol out of a given valid URI. The returned string must be
 freed using <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -389,7 +393,7 @@ freed using <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Alloc
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.8.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.8.6"></a><h4>Returns</h4>
 <p> The protocol for this URI.</p>
 <p></p>
 </div>
@@ -405,7 +409,7 @@ the hostname if one is specified. The returned string must be freed using
 <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.9.6"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -420,7 +424,7 @@ the hostname if one is specified. The returned string must be freed using
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.9.7"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.9.7"></a><h4>Returns</h4>
 <p> the location for this URI. Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
 URI isn't valid. If the URI does not contain a location, an empty
 string is returned. </p>
@@ -436,7 +440,7 @@ gst_uri_construct (<em class="parameter"><code>const <a href="https://developer.
 <p>Constructs a URI for a given valid protocol and location.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.10.6"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.10.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -458,7 +462,7 @@ gst_uri_construct (<em class="parameter"><code>const <a href="https://developer.
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.10.7"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.10.7"></a><h4>Returns</h4>
 <p> a new string for this URI. Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
 given URI protocol is not valid, or the given location is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -477,7 +481,7 @@ the current working directory if it is a relative path, and then the path
 will be canonicalised so that it doesn't contain any './' or '../' segments.</p>
 <p>On Windows <span class="type">filename</span> should be in UTF-8 encoding.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.11.6"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.11.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -509,7 +513,7 @@ gst_element_make_from_uri (<em class="parameter"><code>const <a class="link" hre
                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Creates an element for handling the given URI.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -541,7 +545,7 @@ gst_element_make_from_uri (<em class="parameter"><code>const <a class="link" hre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.12.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.12.6"></a><h4>Returns</h4>
 <p> a new element or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none could be created. </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
 </div>
@@ -553,7 +557,7 @@ gst_element_make_from_uri (<em class="parameter"><code>const <a class="link" hre
 gst_uri_handler_get_uri_type (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
 <p>Gets the type of the given URI handler</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.13.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -568,7 +572,7 @@ gst_uri_handler_get_uri_type (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.13.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.13.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="gstreamer-GstUriHandler.html#GstURIType" title="enum GstURIType"><span class="type">GstURIType</span></a> of the URI handler.
 Returns <a class="link" href="gstreamer-GstUriHandler.html#GST-URI-UNKNOWN:CAPS"><span class="type">GST_URI_UNKNOWN</span></a> if the <em class="parameter"><code>handler</code></em>
 isn't implemented correctly.</p>
@@ -584,7 +588,7 @@ gst_uri_handler_get_protocols (<em class="parameter"><code><a class="link" href=
 . This list may not be
 modified.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.14.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -599,7 +603,7 @@ modified.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.14.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.14.6"></a><h4>Returns</h4>
 <p> the
 supported protocols.  Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the <em class="parameter"><code>handler</code></em>
 isn't
@@ -616,7 +620,7 @@ protocols. </p>
 gst_uri_handler_get_uri (<em class="parameter"><code><a class="link" href="gstreamer-GstUriHandler.html#GstURIHandler"><span class="type">GstURIHandler</span></a> *handler</code></em>);</pre>
 <p>Gets the currently handled URI.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.15.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -631,7 +635,7 @@ gst_uri_handler_get_uri (<em class="parameter"><code><a class="link" href="gstre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.15.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.15.6"></a><h4>Returns</h4>
 <p> the URI currently handled by
 the <em class="parameter"><code>handler</code></em>
 .  Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there are no URI currently
@@ -649,7 +653,7 @@ gst_uri_handler_set_uri (<em class="parameter"><code><a class="link" href="gstre
                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Tries to set the URI of the given handler.</p>
 <div class="refsect3">
-<a name="id-1.3.55.9.16.5"></a><h4>Parameters</h4>
+<a name="id-1.3.56.9.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -677,7 +681,7 @@ an error, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.55.9.16.6"></a><h4>Returns</h4>
+<a name="id-1.3.56.9.16.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the URI was set successfully, else <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p></p>
 </div>
@@ -710,7 +714,7 @@ an error, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 </pre>
 <p>Any <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> using this interface should implement these methods.</p>
 <div class="refsect3">
-<a name="id-1.3.55.10.3.5"></a><h4>Members</h4>
+<a name="id-1.3.56.10.3.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -752,7 +756,7 @@ an error, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <a name="GstURIType"></a><h3>enum GstURIType</h3>
 <p>The different types of URI direction.</p>
 <div class="refsect3">
-<a name="id-1.3.55.10.4.4"></a><h4>Members</h4>
+<a name="id-1.3.56.10.4.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -790,7 +794,7 @@ an error, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <a name="GstURIError"></a><h3>enum GstURIError</h3>
 <p>Different URI-related errors that can occur.</p>
 <div class="refsect3">
-<a name="id-1.3.55.10.5.4"></a><h4>Members</h4>
+<a name="id-1.3.56.10.5.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -831,6 +835,13 @@ an error, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-URI-NO-PORT:CAPS"></a><h3>GST_URI_NO_PORT</h3>
+<pre class="programlisting">#define GST_URI_NO_PORT 0
+</pre>
+<p>Value for <span class="type">GstUri.port</span> to indicate no port number.</p>
 </div>
 </div>
 </div>

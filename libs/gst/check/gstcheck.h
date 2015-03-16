@@ -107,6 +107,9 @@ void gst_check_setup_events (GstPad * srcpad, GstElement * element,
 void gst_check_setup_events_with_stream_id (GstPad * srcpad,
     GstElement * element, GstCaps * caps, GstFormat format,
     const gchar * stream_id);
+void gst_check_objects_destroyed_on_unref (gpointer object_to_unref, gpointer first_object, ...)
+  G_GNUC_NULL_TERMINATED;
+void gst_check_object_destroyed_on_unref (gpointer object_to_unref);
 
 #define fail_unless_message_error(msg, domain, code)            \
 gst_check_message_error (msg, GST_MESSAGE_ERROR,                \
@@ -497,7 +500,7 @@ G_STMT_START {                                                  \
   g_usleep (1);                                                 \
 } G_STMT_END;
 
-#define THREAD_TEST_RUNNING()   (_gst_check_threads_running == TRUE)
+#define THREAD_TEST_RUNNING()   (!!_gst_check_threads_running)
 
 /* additional assertions */
 #define ASSERT_CRITICAL(code)                                   \
@@ -505,8 +508,9 @@ G_STMT_START {                                                  \
   _gst_check_expecting_log = TRUE;                              \
   _gst_check_raised_critical = FALSE;                           \
   code;                                                         \
-  _fail_unless (_gst_check_raised_critical, __FILE__, __LINE__, \
-                "Expected g_critical, got nothing", NULL);      \
+  if (!_gst_check_raised_critical)                              \
+    _ck_assert_failed (__FILE__, __LINE__,                      \
+        "Expected g_critical, got nothing", NULL);              \
   _gst_check_expecting_log = FALSE;                             \
 } G_STMT_END
 
@@ -515,8 +519,9 @@ G_STMT_START {                                                  \
   _gst_check_expecting_log = TRUE;                              \
   _gst_check_raised_warning = FALSE;                            \
   code;                                                         \
-  _fail_unless (_gst_check_raised_warning, __FILE__, __LINE__,  \
-                "Expected g_warning, got nothing", NULL);       \
+  if (!_gst_check_raised_warning)                               \
+    _ck_assert_failed (__FILE__, __LINE__,                      \
+        "Expected g_warning, got nothing", NULL);               \
   _gst_check_expecting_log = FALSE;                             \
 } G_STMT_END
 
@@ -560,7 +565,7 @@ G_STMT_START {                                                  \
 } G_STMT_END
 
 #define ASSERT_SET_STATE(element, state, ret)                   \
-fail_unless (gst_element_set_state (element,                    \
+fail_unless (gst_element_set_state (GST_ELEMENT(element),       \
   state) == ret,                                                \
   "could not change state to " #state);
 

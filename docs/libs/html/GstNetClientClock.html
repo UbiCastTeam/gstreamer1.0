@@ -67,6 +67,17 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> *</td>
+<td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--bus" title="The “bus” property">bus</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><span class="type">guint64</span></td>
+<td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--minimum-update-interval" title="The “minimum-update-interval” property">minimum-update-interval</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
 <td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--port" title="The “port” property">port</a></td>
 <td class="property_flags">Read / Write</td>
@@ -121,6 +132,10 @@ parameters based on the local and remote observations.</p>
 "timeout", "window-size" and "window-threshold" object properties.</p>
 <p>A <a class="link" href="GstNetClientClock.html" title="GstNetClientClock"><span class="type">GstNetClientClock</span></a> is typically set on a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPipeline.html"><span class="type">GstPipeline</span></a> with 
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPipeline.html#gst-pipeline-use-clock"><code class="function">gst_pipeline_use_clock()</code></a>.</p>
+<p>If you set a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> on the clock via the "bus" object property, it will
+send <em class="parameter"><code>GST_MESSAGE_ELEMENT</code></em>
+ messages with an attached <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> containing
+statistics about clock accuracy and network traffic.</p>
 </div>
 <div class="refsect1">
 <a name="GstNetClientClock.functions_details"></a><h2>Functions</h2>
@@ -192,6 +207,21 @@ clock.</p>
 <p>The IP address of the machine providing a time server.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: "127.0.0.1"</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstNetClientClock--bus"></a><h3>The <code class="literal">“bus”</code> property</h3>
+<pre class="programlisting">  “bus”                      <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> *</pre>
+<p>A GstBus on which to send clock status information.</p>
+<p>Flags: Read / Write</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstNetClientClock--minimum-update-interval"></a><h3>The <code class="literal">“minimum-update-interval”</code> property</h3>
+<pre class="programlisting">  “minimum-update-interval”  <span class="type">guint64</span></pre>
+<p>Minimum polling interval for packets, in nanoseconds(0 = no limit).</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 50000000</p>
 </div>
 <hr>
 <div class="refsect2">

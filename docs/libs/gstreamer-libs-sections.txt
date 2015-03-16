@@ -166,6 +166,7 @@ gst_adapter_take
 gst_adapter_take_buffer
 gst_adapter_take_buffer_fast
 gst_adapter_take_list
+gst_adapter_take_buffer_list
 gst_adapter_prev_pts
 gst_adapter_prev_dts
 gst_adapter_prev_pts_at_offset
@@ -442,6 +443,9 @@ gst_byte_reader_free
 
 gst_byte_reader_init
 
+gst_byte_reader_peek_sub_reader
+gst_byte_reader_get_sub_reader
+
 gst_byte_reader_get_pos
 gst_byte_reader_get_remaining
 gst_byte_reader_set_pos
@@ -504,6 +508,7 @@ gst_byte_reader_dup_data
 gst_byte_reader_peek_data
 
 gst_byte_reader_masked_scan_uint32
+gst_byte_reader_masked_scan_uint32_peek
 
 gst_byte_reader_get_string
 gst_byte_reader_get_string_utf8
@@ -760,6 +765,7 @@ gst_flow_combiner_free
 gst_flow_combiner_update_flow
 gst_flow_combiner_add_pad
 gst_flow_combiner_remove_pad
+gst_flow_combiner_clear
 <SUBSECTION Standard>
 GST_TYPE_FLOW_COMBINER
 <SUBSECTION Private>
@@ -863,6 +869,20 @@ GST_NET_ADDRESS_META_INFO
 gst_net_address_meta_api_get_type
 </SECTION>
 
+<SECTION>
+<FILE>gstnetcontrolmessagemeta</FILE>
+<TITLE>GstNetControlMessageMeta</TITLE>
+<INCLUDE>gst/net/gstnetcontrolmessagemeta.h</INCLUDE>
+GstNetControlMessageMeta
+gst_buffer_add_net_control_message_meta
+gst_buffer_get_net_control_message_meta
+gst_net_control_message_meta_get_info
+<SUBSECTION Standard>
+GST_NET_CONTROL_MESSAGE_META_API_TYPE
+GST_NET_CONTROL_MESSAGE_META_INFO
+<SUBSECTION Private>
+gst_net_control_message_meta_api_get_type
+</SECTION>
 
 <SECTION>
 <FILE>gstnetclientclock</FILE>
@@ -982,6 +1002,8 @@ gst_check_setup_sink_pad_by_name_from_template
 gst_check_setup_sink_pad_from_template
 gst_check_setup_src_pad_by_name_from_template
 gst_check_setup_src_pad_from_template
+gst_check_objects_destroyed_on_unref
+gst_check_object_destroyed_on_unref
 
 <SUBSECTION Private>
 MAIN_INIT

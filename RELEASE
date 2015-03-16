@@ -1,27 +1,34 @@
 
-Release notes for GStreamer 1.4.5
-
-The GStreamer team is pleased to announce a bugfix release of the stable
-1.4 release series. The 1.4 release series is adding new features on top
-of the 1.2 series and is part of the API and ABI-stable 1.x release
-series of the GStreamer multimedia framework that contains new features.
-The 1.4.x bugfix releases only contain important bugfixes compared to 1.4.0.
+Release notes for GStreamer 1.4.0
 
 
-Binaries for Android, iOS, Mac OS X and Windows are provided by the
-GStreamer project for this release.
+The GStreamer team is pleased to announce the first release of
+the stable 1.4 release series. The 1.4 release series is adding new
+features on top of the 1.0 and 1.2 series and is part of the API and
+ABI-stable 1.x release series of the GStreamer multimedia framework.
 
 
-The 1.x series is a stable series targeted at end users. It is not API
-or ABI compatible with the 0.10.x series. It can, however, be installed
-in parallel with the 0.10.x series and will not affect an existing
-0.10.x installation.
+
+Binaries for Android, iOS, Mac OS X and Windows are provided together
+with this release.
 
 
-The stable 1.4.x release series is API and ABI compatible with 1.0.x and
-any other 1.x release series in the future. Compared to 1.0.x it contains
-some new features and more intrusive changes that were considered too
-risky as a bugfix.
+
+The stable 1.4 release series is API and ABI compatible with 1.0.x,
+1.2.x and any other 1.x release series in the future. Compared to 1.2.x
+it contains some new features and more intrusive changes that were
+considered too risky as a bugfix.
+
+
+
+The versioning scheme that is used in general is that 1.x.y is API and
+ABI backwards compatible with previous 1.x.y releases. If x is an even
+number it is a stable release series and all releases in this series
+will only contain important bugfixes, e.g. the 1.0 series with 1.0.7. If
+x is odd it is a development release series that will lead to the next
+stable release series 1.x+1 and contains new features and bigger
+changes. During the development release series, new API can still
+change.
 
 
 
@@ -48,9 +55,8 @@ contains a set of codecs plugins based on libav (formerly gst-ffmpeg)
 
 Bugs fixed in this release
      
-      * 736969 : queue2: dead lock when buffering
-      * 738092 : basesink: clamp reported position based on direction
-      * 740001 : task: race condition when pausing and stopping
+      * 733121 : debugutils: Unref pad template after use
+      * 733291 : typefindelement: Propagate input buffer PTS and DTS
 
 ==== Download ====
 
@@ -88,8 +94,8 @@ subscribe to the gstreamer-devel list.
 Contributors to this release
     
       * Edward Hervey
-      * Haakon Sporsheim
+      * Sebastian Dröge
+      * Sebastian Rasmussen
       * Thiago Santos
-      * Vincent Penquerc'h
-      * Wim Taymans
+      * Thibault Saunier
  

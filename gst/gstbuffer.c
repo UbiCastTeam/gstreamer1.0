@@ -508,7 +508,7 @@ gst_buffer_copy_into (GstBuffer * dest, GstBuffer * src,
 }
 
 static GstBuffer *
-_gst_buffer_copy (GstBuffer * buffer)
+gst_buffer_copy_with_flags (const GstBuffer * buffer, GstBufferCopyFlags flags)
 {
   GstBuffer *copy;
 
@@ -517,14 +517,37 @@ _gst_buffer_copy (GstBuffer * buffer)
   /* create a fresh new buffer */
   copy = gst_buffer_new ();
 
-  /* we simply copy everything from our parent */
-  if (!gst_buffer_copy_into (copy, buffer, GST_BUFFER_COPY_ALL, 0, -1))
+  /* copy what the 'flags' want from our parent */
+  /* FIXME why we can't pass const to gst_buffer_copy_into() ? */
+  if (!gst_buffer_copy_into (copy, (GstBuffer *) buffer, flags, 0, -1))
     gst_buffer_replace (&copy, NULL);
 
   if (copy)
     GST_BUFFER_FLAG_UNSET (copy, GST_BUFFER_FLAG_TAG_MEMORY);
 
   return copy;
+}
+
+static GstBuffer *
+_gst_buffer_copy (const GstBuffer * buffer)
+{
+  return gst_buffer_copy_with_flags (buffer, GST_BUFFER_COPY_ALL);
+}
+
+/**
+ * gst_buffer_copy_deep:
+ * @buf: a #GstBuffer.
+ *
+ * Create a copy of the given buffer. This will make a newly allocated
+ * copy of the data the source buffer contains.
+ *
+ * Returns: (transfer full): a new copy of @buf.
+ */
+GstBuffer *
+gst_buffer_copy_deep (const GstBuffer * buffer)
+{
+  return gst_buffer_copy_with_flags (buffer,
+      GST_BUFFER_COPY_ALL | GST_BUFFER_COPY_DEEP);
 }
 
 /* the default dispose function revives the buffer and returns it to the
@@ -1114,9 +1137,9 @@ gst_buffer_remove_memory_range (GstBuffer * buffer, guint idx, gint length)
  * in @buffer.
  *
  * When this function returns %TRUE, @idx will contain the index of the first
- * memory bock where the byte for @offset can be found and @length contains the
+ * memory block where the byte for @offset can be found and @length contains the
  * number of memory blocks containing the @size remaining bytes. @skip contains
- * the number of bytes to skip in the memory bock at @idx to get to the byte
+ * the number of bytes to skip in the memory block at @idx to get to the byte
  * for @offset.
  *
  * @size can be -1 to get all the memory blocks after @idx.
@@ -1833,7 +1856,8 @@ gst_buffer_memset (GstBuffer * buffer, gsize offset, guint8 val, gsize size)
  * @flags: the #GstBufferCopyFlags
  * @offset: the offset into parent #GstBuffer at which the new sub-buffer 
  *          begins.
- * @size: the size of the new #GstBuffer sub-buffer, in bytes.
+ * @size: the size of the new #GstBuffer sub-buffer, in bytes. If -1, all
+ *        data is copied.
  *
  * Creates a sub-buffer from @parent at @offset and @size.
  * This sub-buffer uses the actual memory space of the parent buffer.
@@ -1935,8 +1959,11 @@ gst_buffer_append_region (GstBuffer * buf1, GstBuffer * buf2, gssize offset,
  * @buffer: a #GstBuffer
  * @api: the #GType of an API
  *
- * Get the metadata for @api on buffer. When there is no such
- * metadata, %NULL is returned.
+ * Get the metadata for @api on buffer. When there is no such metadata, %NULL is
+ * returned. If multiple metadata with the given @api are attached to this
+ * buffer only the first one is returned.  To handle multiple metadata with a
+ * given API use gst_buffer_iterate_meta() or gst_buffer_foreach_meta() instead
+ * and check the meta->info.api member for the API type.
  *
  * Returns: (transfer none) (nullable): the metadata for @api on
  * @buffer.

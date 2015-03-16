@@ -310,21 +310,25 @@ gst_queue2_class_init (GstQueue2Class * klass)
       g_param_spec_uint ("max-size-bytes", "Max. size (kB)",
           "Max. amount of data in the queue (bytes, 0=disable)",
           0, G_MAXUINT, DEFAULT_MAX_SIZE_BYTES,
-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_MAX_SIZE_BUFFERS,
       g_param_spec_uint ("max-size-buffers", "Max. size (buffers)",
           "Max. number of buffers in the queue (0=disable)", 0, G_MAXUINT,
           DEFAULT_MAX_SIZE_BUFFERS,
-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_MAX_SIZE_TIME,
       g_param_spec_uint64 ("max-size-time", "Max. size (ns)",
           "Max. amount of data in the queue (in ns, 0=disable)", 0, G_MAXUINT64,
-          DEFAULT_MAX_SIZE_TIME, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          DEFAULT_MAX_SIZE_TIME, G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_USE_BUFFERING,
       g_param_spec_boolean ("use-buffering", "Use buffering",
           "Emit GST_MESSAGE_BUFFERING based on low-/high-percent thresholds",
-          DEFAULT_USE_BUFFERING, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          DEFAULT_USE_BUFFERING, G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_USE_RATE_ESTIMATE,
       g_param_spec_boolean ("use-rate-estimate", "Use Rate Estimate",
           "Estimate the bitrate of the stream to calculate time level",
@@ -2025,7 +2029,7 @@ gst_queue2_locked_enqueue (GstQueue2 * queue, gpointer item,
 
     /* add buffer to the statistics */
     if (QUEUE_IS_USING_QUEUE (queue)) {
-      queue->cur_level.buffers++;
+      queue->cur_level.buffers += gst_buffer_list_length (buffer_list);
       queue->cur_level.bytes += size;
     }
     queue->bytes_in += size;
@@ -2218,7 +2222,7 @@ gst_queue2_locked_dequeue (GstQueue2 * queue, GstQueue2ItemType * item_type)
         "retrieved buffer list %p from queue", buffer_list);
 
     if (QUEUE_IS_USING_QUEUE (queue)) {
-      queue->cur_level.buffers--;
+      queue->cur_level.buffers -= gst_buffer_list_length (buffer_list);
       queue->cur_level.bytes -= size;
     }
     queue->bytes_out += size;
@@ -2808,6 +2812,13 @@ out_flushing:
     GstFlowReturn ret = queue->srcresult;
 
     gst_pad_pause_task (queue->srcpad);
+    if (ret == GST_FLOW_FLUSHING) {
+      gst_queue2_locked_flush (queue, FALSE, FALSE);
+    } else {
+      GST_QUEUE2_SIGNAL_DEL (queue);
+      queue->last_query = FALSE;
+      g_cond_signal (&queue->query_handled);
+    }
     GST_QUEUE2_MUTEX_UNLOCK (queue);
     GST_CAT_LOG_OBJECT (queue_dataflow, queue,
         "pause task, reason:  %s", gst_flow_get_name (queue->srcresult));

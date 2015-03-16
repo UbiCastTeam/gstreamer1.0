@@ -273,12 +273,12 @@ gst_data_queue_new (<em class="parameter"><code><a class="link" href="gstreamer-
                     <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueFullCallback" title="GstDataQueueFullCallback ()"><span class="type">GstDataQueueFullCallback</span></a> fullcallback</code></em>,
                     <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueEmptyCallback" title="GstDataQueueEmptyCallback ()"><span class="type">GstDataQueueEmptyCallback</span></a> emptycallback</code></em>,
                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> checkdata</code></em>);</pre>
-<p>Creates a new <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a>. The difference with <em class="parameter"><code>gst_data_queue_new</code></em>
- is that it will
-not emit the 'full' and 'empty' signals, but instead calling directly <em class="parameter"><code>fullcallback</code></em>
-
-or <em class="parameter"><code>emptycallback</code></em>
-.</p>
+<p>Creates a new <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a>. If <em class="parameter"><code>fullcallback</code></em>
+ or <em class="parameter"><code>emptycallback</code></em>
+ are supplied, then
+the <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> will call the respective callback to signal full or empty condition.
+If the callbacks are NULL the <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> will instead emit 'full' and 'empty'
+signals.</p>
 <div class="refsect3">
 <a name="id-1.2.4.15.7.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">

@@ -59,6 +59,7 @@
       <sub name="GstTocSetter" link="gstreamer-GstTocSetter.html"/>
       <sub name="GstTypeFind" link="gstreamer-GstTypeFind.html"/>
       <sub name="GstTypeFindFactory" link="GstTypeFindFactory.html"/>
+      <sub name="GstUri" link="gstreamer-GstUri.html"/>
       <sub name="GstUriHandler" link="gstreamer-GstUriHandler.html"/>
       <sub name="GstUtils" link="gstreamer-GstUtils.html"/>
       <sub name="GstValue" link="gstreamer-GstValue.html"/>
@@ -132,6 +133,7 @@
     <keyword type="function" name="gst_bin_add_many ()" link="GstBin.html#gst-bin-add-many"/>
     <keyword type="function" name="gst_bin_remove_many ()" link="GstBin.html#gst-bin-remove-many"/>
     <keyword type="function" name="gst_bin_find_unlinked_pad ()" link="GstBin.html#gst-bin-find-unlinked-pad"/>
+    <keyword type="function" name="gst_bin_sync_children_states ()" link="GstBin.html#gst-bin-sync-children-states" since="1.6"/>
     <keyword type="macro" name="GST_BIN_IS_NO_RESYNC()" link="GstBin.html#GST-BIN-IS-NO-RESYNC:CAPS" since="1.0.5"/>
     <keyword type="macro" name="GST_BIN_CHILDREN()" link="GstBin.html#GST-BIN-CHILDREN:CAPS"/>
     <keyword type="macro" name="GST_BIN_CHILDREN_COOKIE()" link="GstBin.html#GST-BIN-CHILDREN-COOKIE:CAPS"/>
@@ -272,6 +274,7 @@
     <keyword type="function" name="gst_bus_create_watch ()" link="GstBus.html#gst-bus-create-watch"/>
     <keyword type="function" name="gst_bus_add_watch_full ()" link="GstBus.html#gst-bus-add-watch-full"/>
     <keyword type="function" name="gst_bus_add_watch ()" link="GstBus.html#gst-bus-add-watch"/>
+    <keyword type="function" name="gst_bus_remove_watch ()" link="GstBus.html#gst-bus-remove-watch" since="1.6"/>
     <keyword type="function" name="gst_bus_disable_sync_message_emission ()" link="GstBus.html#gst-bus-disable-sync-message-emission"/>
     <keyword type="function" name="gst_bus_enable_sync_message_emission ()" link="GstBus.html#gst-bus-enable-sync-message-emission"/>
     <keyword type="function" name="gst_bus_async_signal_func ()" link="GstBus.html#gst-bus-async-signal-func"/>
@@ -293,6 +296,9 @@
     <keyword type="macro" name="GST_CAPS_FLAG_IS_SET()" link="GstCaps.html#GST-CAPS-FLAG-IS-SET:CAPS"/>
     <keyword type="macro" name="GST_CAPS_FLAG_SET()" link="GstCaps.html#GST-CAPS-FLAG-SET:CAPS"/>
     <keyword type="macro" name="GST_CAPS_FLAG_UNSET()" link="GstCaps.html#GST-CAPS-FLAG-UNSET:CAPS"/>
+    <keyword type="function" name="GstCapsForeachFunc ()" link="GstCaps.html#GstCapsForeachFunc" since="1.6"/>
+    <keyword type="function" name="GstCapsMapFunc ()" link="GstCaps.html#GstCapsMapFunc"/>
+    <keyword type="function" name="GstCapsFilterMapFunc ()" link="GstCaps.html#GstCapsFilterMapFunc"/>
     <keyword type="function" name="gst_caps_new_empty ()" link="GstCaps.html#gst-caps-new-empty"/>
     <keyword type="function" name="gst_caps_new_empty_simple ()" link="GstCaps.html#gst-caps-new-empty-simple"/>
     <keyword type="function" name="gst_caps_new_any ()" link="GstCaps.html#gst-caps-new-any"/>
@@ -319,6 +325,9 @@
     <keyword type="function" name="gst_caps_set_value ()" link="GstCaps.html#gst-caps-set-value"/>
     <keyword type="function" name="gst_caps_set_simple ()" link="GstCaps.html#gst-caps-set-simple"/>
     <keyword type="function" name="gst_caps_set_simple_valist ()" link="GstCaps.html#gst-caps-set-simple-valist"/>
+    <keyword type="function" name="gst_caps_foreach ()" link="GstCaps.html#gst-caps-foreach" since="1.6"/>
+    <keyword type="function" name="gst_caps_map_in_place ()" link="GstCaps.html#gst-caps-map-in-place" since="1.6"/>
+    <keyword type="function" name="gst_caps_filter_and_map_in_place ()" link="GstCaps.html#gst-caps-filter-and-map-in-place" since="1.6"/>
     <keyword type="function" name="gst_caps_is_any ()" link="GstCaps.html#gst-caps-is-any"/>
     <keyword type="function" name="gst_caps_is_empty ()" link="GstCaps.html#gst-caps-is-empty"/>
     <keyword type="function" name="gst_caps_is_fixed ()" link="GstCaps.html#gst-caps-is-fixed"/>
@@ -1009,6 +1018,7 @@
     <keyword type="function" name="gst_object_get_name ()" link="GstObject.html#gst-object-get-name"/>
     <keyword type="function" name="gst_object_set_parent ()" link="GstObject.html#gst-object-set-parent"/>
     <keyword type="function" name="gst_object_get_parent ()" link="GstObject.html#gst-object-get-parent"/>
+    <keyword type="function" name="gst_object_has_parent ()" link="GstObject.html#gst-object-has-parent" since="1.6"/>
     <keyword type="function" name="gst_object_unparent ()" link="GstObject.html#gst-object-unparent"/>
     <keyword type="function" name="gst_object_default_deep_notify ()" link="GstObject.html#gst-object-default-deep-notify"/>
     <keyword type="function" name="gst_object_default_error ()" link="GstObject.html#gst-object-default-error"/>
@@ -1222,6 +1232,7 @@
     <keyword type="struct" name="struct GstPadProbeInfo" link="GstPad.html#GstPadProbeInfo"/>
     <keyword type="property" name="The “caps” property" link="GstPad.html#GstPad--caps"/>
     <keyword type="property" name="The “direction” property" link="GstPad.html#GstPad--direction"/>
+    <keyword type="property" name="The “offset” property" link="GstPad.html#GstPad--offset"/>
     <keyword type="property" name="The “template” property" link="GstPad.html#GstPad--template"/>
     <keyword type="signal" name="The “linked” signal" link="GstPad.html#GstPad-linked"/>
     <keyword type="signal" name="The “unlinked” signal" link="GstPad.html#GstPad-unlinked"/>
@@ -1361,6 +1372,7 @@
     <keyword type="function" name="gst_preset_get_meta ()" link="GstPreset.html#gst-preset-get-meta"/>
     <keyword type="function" name="gst_preset_set_app_dir ()" link="GstPreset.html#gst-preset-set-app-dir"/>
     <keyword type="function" name="gst_preset_get_app_dir ()" link="GstPreset.html#gst-preset-get-app-dir"/>
+    <keyword type="function" name="gst_preset_is_editable ()" link="GstPreset.html#gst-preset-is-editable" since="1.6"/>
     <keyword type="struct" name="GstPreset" link="GstPreset.html#GstPreset-struct"/>
     <keyword type="struct" name="struct GstPresetInterface" link="GstPreset.html#GstPresetInterface"/>
     <keyword type="macro" name="GST_QUERY_MAKE_TYPE()" link="GstQuery.html#GST-QUERY-MAKE-TYPE:CAPS"/>
@@ -1503,6 +1515,7 @@
     <keyword type="enum" name="enum GstSegmentFlags" link="GstSegment.html#GstSegmentFlags"/>
     <keyword type="function" name="GstStructureForeachFunc ()" link="GstStructure.html#GstStructureForeachFunc"/>
     <keyword type="function" name="GstStructureMapFunc ()" link="GstStructure.html#GstStructureMapFunc"/>
+    <keyword type="function" name="GstStructureFilterMapFunc ()" link="GstStructure.html#GstStructureFilterMapFunc"/>
     <keyword type="function" name="gst_structure_new_empty ()" link="GstStructure.html#gst-structure-new-empty"/>
     <keyword type="function" name="gst_structure_new_id_empty ()" link="GstStructure.html#gst-structure-new-id-empty"/>
     <keyword type="function" name="gst_structure_new ()" link="GstStructure.html#gst-structure-new"/>
@@ -1534,7 +1547,6 @@
     <keyword type="function" name="gst_structure_remove_fields_valist ()" link="GstStructure.html#gst-structure-remove-fields-valist"/>
     <keyword type="function" name="gst_structure_remove_all_fields ()" link="GstStructure.html#gst-structure-remove-all-fields"/>
     <keyword type="function" name="gst_structure_get_field_type ()" link="GstStructure.html#gst-structure-get-field-type"/>
-    <keyword type="function" name="gst_structure_foreach ()" link="GstStructure.html#gst-structure-foreach"/>
     <keyword type="function" name="gst_structure_n_fields ()" link="GstStructure.html#gst-structure-n-fields"/>
     <keyword type="function" name="gst_structure_has_field ()" link="GstStructure.html#gst-structure-has-field"/>
     <keyword type="function" name="gst_structure_has_field_typed ()" link="GstStructure.html#gst-structure-has-field-typed"/>
@@ -1556,7 +1568,9 @@
     <keyword type="function" name="gst_structure_get_clock_time ()" link="GstStructure.html#gst-structure-get-clock-time"/>
     <keyword type="function" name="gst_structure_get_enum ()" link="GstStructure.html#gst-structure-get-enum"/>
     <keyword type="function" name="gst_structure_get_fraction ()" link="GstStructure.html#gst-structure-get-fraction"/>
+    <keyword type="function" name="gst_structure_foreach ()" link="GstStructure.html#gst-structure-foreach"/>
     <keyword type="function" name="gst_structure_map_in_place ()" link="GstStructure.html#gst-structure-map-in-place"/>
+    <keyword type="function" name="gst_structure_filter_and_map_in_place ()" link="GstStructure.html#gst-structure-filter-and-map-in-place" since="1.6"/>
     <keyword type="function" name="gst_structure_nth_field_name ()" link="GstStructure.html#gst-structure-nth-field-name"/>
     <keyword type="function" name="gst_structure_set_parent_refcount ()" link="GstStructure.html#gst-structure-set-parent-refcount"/>
     <keyword type="function" name="gst_structure_to_string ()" link="GstStructure.html#gst-structure-to-string"/>
@@ -1831,6 +1845,51 @@
     <keyword type="function" name="gst_type_find_factory_has_function ()" link="GstTypeFindFactory.html#gst-type-find-factory-has-function"/>
     <keyword type="function" name="gst_type_find_factory_call_function ()" link="GstTypeFindFactory.html#gst-type-find-factory-call-function"/>
     <keyword type="struct" name="GstTypeFindFactory" link="GstTypeFindFactory.html#GstTypeFindFactory-struct"/>
+    <keyword type="macro" name="GST_URI_CAST()" link="gstreamer-GstUri.html#GST-URI-CAST:CAPS"/>
+    <keyword type="macro" name="GST_URI_CONST_CAST()" link="gstreamer-GstUri.html#GST-URI-CONST-CAST:CAPS"/>
+    <keyword type="function" name="gst_uri_new ()" link="gstreamer-GstUri.html#gst-uri-new" since="1.6"/>
+    <keyword type="function" name="gst_uri_new_with_base ()" link="gstreamer-GstUri.html#gst-uri-new-with-base" since="1.6"/>
+    <keyword type="function" name="gst_uri_from_string ()" link="gstreamer-GstUri.html#gst-uri-from-string" since="1.6"/>
+    <keyword type="function" name="gst_uri_from_string_with_base ()" link="gstreamer-GstUri.html#gst-uri-from-string-with-base" since="1.6"/>
+    <keyword type="function" name="gst_uri_copy ()" link="gstreamer-GstUri.html#gst-uri-copy"/>
+    <keyword type="function" name="gst_uri_equal ()" link="gstreamer-GstUri.html#gst-uri-equal" since="1.6"/>
+    <keyword type="function" name="gst_uri_join ()" link="gstreamer-GstUri.html#gst-uri-join" since="1.6"/>
+    <keyword type="function" name="gst_uri_join_strings ()" link="gstreamer-GstUri.html#gst-uri-join-strings" since="1.6"/>
+    <keyword type="function" name="gst_uri_is_writable ()" link="gstreamer-GstUri.html#gst-uri-is-writable" since="1.6"/>
+    <keyword type="function" name="gst_uri_make_writable ()" link="gstreamer-GstUri.html#gst-uri-make-writable" since="1.6"/>
+    <keyword type="function" name="gst_uri_to_string ()" link="gstreamer-GstUri.html#gst-uri-to-string" since="1.6"/>
+    <keyword type="function" name="gst_uri_ref ()" link="gstreamer-GstUri.html#gst-uri-ref"/>
+    <keyword type="function" name="gst_uri_unref ()" link="gstreamer-GstUri.html#gst-uri-unref"/>
+    <keyword type="function" name="gst_uri_is_normalized ()" link="gstreamer-GstUri.html#gst-uri-is-normalized" since="1.6"/>
+    <keyword type="function" name="gst_uri_normalize ()" link="gstreamer-GstUri.html#gst-uri-normalize" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_scheme ()" link="gstreamer-GstUri.html#gst-uri-get-scheme"/>
+    <keyword type="function" name="gst_uri_set_scheme ()" link="gstreamer-GstUri.html#gst-uri-set-scheme" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_userinfo ()" link="gstreamer-GstUri.html#gst-uri-get-userinfo" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_userinfo ()" link="gstreamer-GstUri.html#gst-uri-set-userinfo" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_host ()" link="gstreamer-GstUri.html#gst-uri-get-host" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_host ()" link="gstreamer-GstUri.html#gst-uri-set-host" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_port ()" link="gstreamer-GstUri.html#gst-uri-get-port" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_port ()" link="gstreamer-GstUri.html#gst-uri-set-port" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_path ()" link="gstreamer-GstUri.html#gst-uri-get-path" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_path ()" link="gstreamer-GstUri.html#gst-uri-set-path" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_path_string ()" link="gstreamer-GstUri.html#gst-uri-get-path-string" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_path_string ()" link="gstreamer-GstUri.html#gst-uri-set-path-string" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_path_segments ()" link="gstreamer-GstUri.html#gst-uri-get-path-segments" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_path_segments ()" link="gstreamer-GstUri.html#gst-uri-set-path-segments" since="1.6"/>
+    <keyword type="function" name="gst_uri_append_path ()" link="gstreamer-GstUri.html#gst-uri-append-path" since="1.6"/>
+    <keyword type="function" name="gst_uri_append_path_segment ()" link="gstreamer-GstUri.html#gst-uri-append-path-segment" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_query_string ()" link="gstreamer-GstUri.html#gst-uri-get-query-string" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_query_string ()" link="gstreamer-GstUri.html#gst-uri-set-query-string" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_query_table ()" link="gstreamer-GstUri.html#gst-uri-get-query-table" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_query_table ()" link="gstreamer-GstUri.html#gst-uri-set-query-table" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_query_value ()" link="gstreamer-GstUri.html#gst-uri-get-query-value" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_query_value ()" link="gstreamer-GstUri.html#gst-uri-set-query-value" since="1.6"/>
+    <keyword type="function" name="gst_uri_remove_query_key ()" link="gstreamer-GstUri.html#gst-uri-remove-query-key" since="1.6"/>
+    <keyword type="function" name="gst_uri_query_has_key ()" link="gstreamer-GstUri.html#gst-uri-query-has-key" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_query_keys ()" link="gstreamer-GstUri.html#gst-uri-get-query-keys" since="1.6"/>
+    <keyword type="function" name="gst_uri_get_fragment ()" link="gstreamer-GstUri.html#gst-uri-get-fragment" since="1.6"/>
+    <keyword type="function" name="gst_uri_set_fragment ()" link="gstreamer-GstUri.html#gst-uri-set-fragment" since="1.6"/>
+    <keyword type="struct" name="GstUri" link="gstreamer-GstUri.html#GstUri"/>
     <keyword type="function" name="gst_uri_error_quark ()" link="gstreamer-GstUriHandler.html#gst-uri-error-quark"/>
     <keyword type="macro" name="GST_URI_TYPE_IS_VALID()" link="gstreamer-GstUriHandler.html#GST-URI-TYPE-IS-VALID:CAPS"/>
     <keyword type="function" name="gst_uri_protocol_is_valid ()" link="gstreamer-GstUriHandler.html#gst-uri-protocol-is-valid"/>
@@ -1850,6 +1909,7 @@
     <keyword type="struct" name="struct GstURIHandlerInterface" link="gstreamer-GstUriHandler.html#GstURIHandlerInterface"/>
     <keyword type="enum" name="enum GstURIType" link="gstreamer-GstUriHandler.html#GstURIType"/>
     <keyword type="enum" name="enum GstURIError" link="gstreamer-GstUriHandler.html#GstURIError"/>
+    <keyword type="macro" name="GST_URI_NO_PORT" link="gstreamer-GstUriHandler.html#GST-URI-NO-PORT:CAPS"/>
     <keyword type="macro" name="GST_CALL_PARENT()" link="gstreamer-GstUtils.html#GST-CALL-PARENT:CAPS"/>
     <keyword type="macro" name="GST_CALL_PARENT_WITH_DEFAULT()" link="gstreamer-GstUtils.html#GST-CALL-PARENT-WITH-DEFAULT:CAPS"/>
     <keyword type="macro" name="GST_READ_UINT8()" link="gstreamer-GstUtils.html#GST-READ-UINT8:CAPS"/>
@@ -2158,6 +2218,7 @@
     <keyword type="function" name="gst_debug_bin_to_dot_file_with_ts ()" link="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file-with-ts"/>
     <keyword type="enum" name="enum GstDebugLevel" link="gstreamer-GstInfo.html#GstDebugLevel"/>
     <keyword type="macro" name="GST_LEVEL_DEFAULT" link="gstreamer-GstInfo.html#GST-LEVEL-DEFAULT:CAPS"/>
+    <keyword type="macro" name="GST_LEVEL_MAX" link="gstreamer-GstInfo.html#GST-LEVEL-MAX:CAPS" since="1.6"/>
     <keyword type="enum" name="enum GstDebugColorFlags" link="gstreamer-GstInfo.html#GstDebugColorFlags"/>
     <keyword type="enum" name="enum GstDebugColorMode" link="gstreamer-GstInfo.html#GstDebugColorMode"/>
     <keyword type="struct" name="struct GstDebugCategory" link="gstreamer-GstInfo.html#GstDebugCategory"/>

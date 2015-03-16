@@ -397,6 +397,22 @@
 <a class="link" href="gstreamer-libs-GstCheck.html#gst-check-setup-src-pad-from-template" title="gst_check_setup_src_pad_from_template ()">gst_check_setup_src_pad_from_template</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstCheck.html#gst-check-objects-destroyed-on-unref" title="gst_check_objects_destroyed_on_unref ()">gst_check_objects_destroyed_on_unref</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstCheck.html#gst-check-object-destroyed-on-unref" title="gst_check_object_destroyed_on_unref ()">gst_check_object_destroyed_on_unref</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -422,9 +438,9 @@
 <a name="gstreamer-libs-GstCheck.description"></a><h2>Description</h2>
 <p>These macros and functions are for internal use of the unit tests found
 inside the 'check' directories of various GStreamer packages.</p>
-<p>One notable feature is that one can use the environment variables GST_CHECK
-and GST_CHECK_IGNORE to select which tests to run or skip. Both variables
-can contain a comman separated list of test name globs (e.g. test_*).</p>
+<p>One notable feature is that one can use the environment variables GST_CHECKS
+and GST_CHECKS_IGNORE to select which tests to run or skip. Both variables
+can contain a comma separated list of test name globs (e.g. test_*).</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstCheck.functions_details"></a><h2>Functions</h2>
@@ -1141,8 +1157,9 @@ gst_check_setup_element (<em class="parameter"><code>const <a href="https://deve
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="returnvalue">GstPad</span></a> *
 gst_check_setup_sink_pad (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                           <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *tmpl</code></em>);</pre>
+<p>Does the same as <a class="link" href="gstreamer-libs-GstCheck.html#gst-check-setup-sink-pad-by-name" title="gst_check_setup_sink_pad_by_name ()"><span class="type">gst_check_setup_sink_pad_by_name</span></a> with the <span class="emphasis"><em> name </em></span> parameter equal to "src".</p>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.34.4"></a><h4>Parameters</h4>
+<a name="id-1.2.7.3.7.34.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1164,8 +1181,9 @@ gst_check_setup_sink_pad (<em class="parameter"><code><a href="http://gstreamer.
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.34.5"></a><h4>Returns</h4>
-<p> a new pad. </p>
+<a name="id-1.2.7.3.7.34.6"></a><h4>Returns</h4>
+<p> a new pad that can be used to check the output of <em class="parameter"><code>element</code></em>
+. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -1175,8 +1193,9 @@ gst_check_setup_sink_pad (<em class="parameter"><code><a href="http://gstreamer.
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="returnvalue">GstPad</span></a> *
 gst_check_setup_src_pad (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                          <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *tmpl</code></em>);</pre>
+<p>Does the same as <a class="link" href="gstreamer-libs-GstCheck.html#gst-check-setup-src-pad-by-name" title="gst_check_setup_src_pad_by_name ()"><span class="type">gst_check_setup_src_pad_by_name</span></a> with the <span class="emphasis"><em> name </em></span> parameter equal to "sink".</p>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.35.4"></a><h4>Parameters</h4>
+<a name="id-1.2.7.3.7.35.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1198,8 +1217,9 @@ gst_check_setup_src_pad (<em class="parameter"><code><a href="http://gstreamer.f
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.35.5"></a><h4>Returns</h4>
-<p> a new pad. </p>
+<a name="id-1.2.7.3.7.35.6"></a><h4>Returns</h4>
+<p> A new pad that can be used to inject data on <em class="parameter"><code>element</code></em>
+. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -1210,8 +1230,15 @@ gst_check_setup_src_pad (<em class="parameter"><code><a href="http://gstreamer.f
 gst_check_setup_sink_pad_by_name (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                                   <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *tmpl</code></em>,
                                   <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Creates a new sink pad (based on the given <em class="parameter"><code>tmpl</code></em>
+) and links it to the given <em class="parameter"><code>element</code></em>
+ src pad 
+(the pad that matches the given <em class="parameter"><code>name</code></em>
+).
+You can set event/chain/query functions on this pad to check the output of the <em class="parameter"><code>element</code></em>
+.</p>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.36.4"></a><h4>Parameters</h4>
+<a name="id-1.2.7.3.7.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1231,15 +1258,17 @@ gst_check_setup_sink_pad_by_name (<em class="parameter"><code><a href="http://gs
 </tr>
 <tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p>name</p></td>
+<td class="parameter_description"><p>Name of the <em class="parameter"><code>element</code></em>
+src pad that will be linked to the sink pad that will be setup</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.36.5"></a><h4>Returns</h4>
-<p> a new pad. </p>
+<a name="id-1.2.7.3.7.36.6"></a><h4>Returns</h4>
+<p> a new pad that can be used to check the output of <em class="parameter"><code>element</code></em>
+. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -1250,8 +1279,75 @@ gst_check_setup_sink_pad_by_name (<em class="parameter"><code><a href="http://gs
 gst_check_setup_src_pad_by_name (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                                  <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *tmpl</code></em>,
                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Creates a new src pad (based on the given <em class="parameter"><code>tmpl</code></em>
+) and links it to the given <em class="parameter"><code>element</code></em>
+ sink pad (the pad that matches the given <em class="parameter"><code>name</code></em>
+).
+Before using the src pad to push data on <em class="parameter"><code>element</code></em>
+ you need to call <a class="link" href="gstreamer-libs-GstCheck.html#gst-check-setup-events" title="gst_check_setup_events ()"><span class="type">gst_check_setup_events</span></a> on the created src pad.</p>
+<p>Example of how to push a buffer on <em class="parameter"><code>element</code></em>
+:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="gtkdoc kwb">static</span> GstStaticPadTemplate sinktemplate <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GST-STATIC-PAD-TEMPLATE:CAPS">GST_STATIC_PAD_TEMPLATE</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;sink&quot;</span><span class="gtkdoc opt">,</span>
+GST_PAD_SINK<span class="gtkdoc opt">,</span>
+GST_PAD_ALWAYS<span class="gtkdoc opt">,</span>
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#GST-STATIC-CAPS">GST_STATIC_CAPS</a></span> <span class="gtkdoc opt">(</span>YOUR_CAPS_TEMPLATE_STRING<span class="gtkdoc opt">)</span>
+<span class="gtkdoc opt">);</span>
+<span class="gtkdoc kwb">static</span> GstStaticPadTemplate srctemplate <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GST-STATIC-PAD-TEMPLATE:CAPS">GST_STATIC_PAD_TEMPLATE</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;src&quot;</span><span class="gtkdoc opt">,</span>
+GST_PAD_SRC<span class="gtkdoc opt">,</span>
+GST_PAD_ALWAYS<span class="gtkdoc opt">,</span>
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#GST-STATIC-CAPS">GST_STATIC_CAPS</a></span> <span class="gtkdoc opt">(</span>YOUR_CAPS_TEMPLATE_STRING<span class="gtkdoc opt">)</span>
+<span class="gtkdoc opt">);</span>
+
+GstElement <span class="gtkdoc opt">*</span> element <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/gstreamer-libs-GstCheck.html#gst-check-setup-element">gst_check_setup_element</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;element&quot;</span><span class="gtkdoc opt">);</span>
+GstPad <span class="gtkdoc opt">*</span> mysrcpad <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/gstreamer-libs-GstCheck.html#gst-check-setup-src-pad">gst_check_setup_src_pad</a></span> <span class="gtkdoc opt">(</span>element<span class="gtkdoc opt">, &amp;</span>srctemplate<span class="gtkdoc opt">);</span>
+GstPad <span class="gtkdoc opt">*</span> mysinkpad <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/gstreamer-libs-GstCheck.html#gst-check-setup-sink-pad">gst_check_setup_sink_pad</a></span> <span class="gtkdoc opt">(</span>element<span class="gtkdoc opt">, &amp;</span>sinktemplate<span class="gtkdoc opt">);</span>
+
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-set-active">gst_pad_set_active</a></span> <span class="gtkdoc opt">(</span>mysrcpad<span class="gtkdoc opt">,</span> TRUE<span class="gtkdoc opt">);</span>
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-set-active">gst_pad_set_active</a></span> <span class="gtkdoc opt">(</span>mysinkpad<span class="gtkdoc opt">,</span> TRUE<span class="gtkdoc opt">);</span>
+<span class="function">fail_unless</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>element<span class="gtkdoc opt">,</span> GST_STATE_PLAYING<span class="gtkdoc opt">) ==</span> GST_STATE_CHANGE_SUCCESS<span class="gtkdoc opt">,</span> <span class="string">&quot;could not set to playing&quot;</span><span class="gtkdoc opt">);</span>
+
+GstCaps <span class="gtkdoc opt">*</span> caps <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#gst-caps-from-string">gst_caps_from_string</a></span> <span class="gtkdoc opt">(</span>YOUR_DESIRED_SINK_CAPS<span class="gtkdoc opt">);</span>
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/gstreamer-libs-GstCheck.html#gst-check-setup-events">gst_check_setup_events</a></span> <span class="gtkdoc opt">(</span>mysrcpad<span class="gtkdoc opt">,</span> element<span class="gtkdoc opt">,</span> caps<span class="gtkdoc opt">,</span> GST_FORMAT_TIME<span class="gtkdoc opt">);</span>
+<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#gst-caps-unref">gst_caps_unref</a></span> <span class="gtkdoc opt">(</span>caps<span class="gtkdoc opt">);</span>
+
+<span class="function">fail_unless</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#gst-pad-push">gst_pad_push</a></span> <span class="gtkdoc opt">(</span>mysrcpad<span class="gtkdoc opt">,</span> <span class="function">gst_buffer_new_and_alloc</span><span class="gtkdoc opt">(</span><span class="number">2</span><span class="gtkdoc opt">)) ==</span> GST_FLOW_OK<span class="gtkdoc opt">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>For very simple input/output test scenarios checkout <a class="link" href="gstreamer-libs-GstCheck.html#gst-check-element-push-buffer-list" title="gst_check_element_push_buffer_list ()"><span class="type">gst_check_element_push_buffer_list</span></a> and <a class="link" href="gstreamer-libs-GstCheck.html#gst-check-element-push-buffer" title="gst_check_element_push_buffer ()"><span class="type">gst_check_element_push_buffer</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.37.4"></a><h4>Parameters</h4>
+<a name="id-1.2.7.3.7.37.9"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1261,7 +1357,7 @@ gst_check_setup_src_pad_by_name (<em class="parameter"><code><a href="http://gst
 <tbody>
 <tr>
 <td class="parameter_name"><p>element</p></td>
-<td class="parameter_description"><p>element to setup pad on</p></td>
+<td class="parameter_description"><p>element to setup src pad on</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1271,15 +1367,17 @@ gst_check_setup_src_pad_by_name (<em class="parameter"><code><a href="http://gst
 </tr>
 <tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p>name</p></td>
+<td class="parameter_description"><p>Name of the <em class="parameter"><code>element</code></em>
+sink pad that will be linked to the src pad that will be setup</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.3.7.37.5"></a><h4>Returns</h4>
-<p> a new pad. </p>
+<a name="id-1.2.7.3.7.37.10"></a><h4>Returns</h4>
+<p> A new pad that can be used to inject data on <em class="parameter"><code>element</code></em>
+. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -1764,6 +1862,75 @@ gst_check_setup_src_pad_from_template (<em class="parameter"><code><a href="http
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since 1.4</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-check-objects-destroyed-on-unref"></a><h3>gst_check_objects_destroyed_on_unref ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_check_objects_destroyed_on_unref (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> object_to_unref</code></em>,
+                                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> first_object</code></em>,
+                                      <em class="parameter"><code>...</code></em>);</pre>
+<p>Unrefs <em class="parameter"><code>object_to_unref</code></em>
+ and checks that is has properly been
+destroyed, also checks that the other objects passed in
+parametter have been destroyed as a concequence of
+unrefing <em class="parameter"><code>object_to_unref</code></em>
+. Last variable argument should be NULL.</p>
+<div class="refsect3">
+<a name="id-1.2.7.3.7.54.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>object_to_unref</p></td>
+<td class="parameter_description"><p>The <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> to unref</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>first_object</p></td>
+<td class="parameter_description"><p> The first object that should be destroyed as a
+concequence of unrefing <em class="parameter"><code>object_to_unref</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>Additional object that should have been destroyed.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-check-object-destroyed-on-unref"></a><h3>gst_check_object_destroyed_on_unref ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_check_object_destroyed_on_unref (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> object_to_unref</code></em>);</pre>
+<p>Unrefs <em class="parameter"><code>object_to_unref</code></em>
+ and checks that is has properly been
+destroyed.</p>
+<div class="refsect3">
+<a name="id-1.2.7.3.7.55.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>object_to_unref</p></td>
+<td class="parameter_description"><p>The <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> to unref</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since 1.6</p>
 </div>
 </div>
 <div class="refsect1">

@@ -84,6 +84,7 @@ target_triplet = @target@
 @HAVE_INTROSPECTION_TRUE@am__append_1 = $(BUILT_GIRSOURCES) $(typelibs_DATA)
 subdir = libs/gst/check
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
+	$(top_srcdir)/libs/gst/check/libcheck/check.h.in \
 	$(top_srcdir)/depcomp \
 	$(libgstcheck_@GST_API_VERSION@include_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -94,6 +95,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -111,7 +113,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst.m4 \
 	$(top_srcdir)/common/m4/gtk-doc.m4 \
 	$(top_srcdir)/common/m4/introspection.m4 \
-	$(top_srcdir)/common/m4/pkg.m4 $(top_srcdir)/m4/ax_pthread.m4 \
+	$(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/check-checks.m4 $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
 	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -126,7 +128,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = internal-check.h
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -292,6 +294,10 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
+BASH_COMPLETION_DIR = @BASH_COMPLETION_DIR@
+BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
+BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAT_ENTRY_END = @CAT_ENTRY_END@
 CAT_ENTRY_START = @CAT_ENTRY_START@
@@ -397,6 +403,7 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
 HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
+HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
 HAVE_JADETEX = @HAVE_JADETEX@
@@ -560,10 +567,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libgstcheck-@GST_API_VERSION@.la
 SYMBOLS_FILE = exports.sym
-BUILT_SOURCES = internal-check.h
 libgstcheck_@GST_API_VERSION@_la_DEPENDENCIES = \
 	$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
-	internal-check.h \
 	$(SYMBOLS_FILE)
 
 libgstcheck_@GST_API_VERSION@_la_SOURCES = \
@@ -595,10 +600,9 @@ libgstcheck_@GST_API_VERSION@include_HEADERS = \
 	gsttestclock.h
 
 nodist_libgstcheck_@GST_API_VERSION@include_HEADERS = \
-	internal-check.h	
+	internal-check.h
 
-CLEANFILES = *.gcno *.gcda *.gcov internal-check.h $(SYMBOLS_FILE) \
-	$(am__append_1)
+CLEANFILES = *.gcno *.gcda *.gcov $(SYMBOLS_FILE) $(am__append_1)
 SUBDIRS = libcheck
 LIBGSTCHECK_EXPORTED_VARS = \
 	_gst_check_threads_running \
@@ -644,6 +648,8 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_check_teardown_pad_by_name \
 	gst_check_teardown_sink_pad \
 	gst_check_teardown_src_pad \
+	gst_check_objects_destroyed_on_unref \
+	gst_check_object_destroyed_on_unref \
 	gst_consistency_checker_add_pad \
 	gst_consistency_checker_new \
 	gst_consistency_checker_reset \
@@ -664,9 +670,15 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_test_clock_process_id_list \
 	gst_test_clock_id_list_get_latest_time
 
+
+# For backwards compatibility with GStreamer < 1.5
+LIBGSTCHECK_EXPORTED_COMPAT_FUNCS = \
+	_fail_unless
+
 LIBGSTCHECK_EXPORTED_SYMBOLS = \
 	$(LIBGSTCHECK_EXPORTED_VARS) \
-	$(LIBGSTCHECK_EXPORTED_FUNCS)
+	$(LIBGSTCHECK_EXPORTED_FUNCS) \
+	$(LIBGSTCHECK_EXPORTED_COMPAT_FUNCS)
 
 
 # Please do not even think about changing the alphabet below into A-Za-z.
@@ -682,8 +694,7 @@ CHECK_SYMS = `$(SED) -n -e 's/^..*CK_EXPORT[ ]\{1,\}\([_0-9ABCDEFGHIJKLMNOPQRSTU
 @HAVE_INTROSPECTION_TRUE@gir_DATA = $(BUILT_GIRSOURCES)
 @HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0/
 @HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
-all: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -717,6 +728,8 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+internal-check.h: $(top_builddir)/config.status $(top_srcdir)/libs/gst/check/libcheck/check.h.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -1064,16 +1077,14 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) check-recursive
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" "$(DESTDIR)$(typelibsdir)" "$(DESTDIR)$(libgstcheck_@GST_API_VERSION@includedir)" "$(DESTDIR)$(libgstcheck_@GST_API_VERSION@includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) install-recursive
+install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
 uninstall: uninstall-recursive
@@ -1104,7 +1115,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-recursive
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
@@ -1182,8 +1192,7 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 	uninstall-nodist_libgstcheck_@GST_API_VERSION@includeHEADERS \
 	uninstall-typelibsDATA
 
-.MAKE: $(am__recursive_targets) all check install install-am \
-	install-strip
+.MAKE: $(am__recursive_targets) install-am install-strip
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am check \
 	check-am clean clean-generic clean-libLTLIBRARIES \
@@ -1209,9 +1218,6 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 	uninstall-typelibsDATA
 
 
-internal-check.h: $(top_builddir)/libs/gst/check/libcheck/check.h
-	$(AM_V_GEN)cp $(top_builddir)/libs/gst/check/libcheck/check.h internal-check.h
-
 %.c.gcov: .libs/libgstcheck_@GST_API_VERSION@_la-%.gcda %.c
 	$(GCOV) -b -f -o $^ > $@.out
 
@@ -1221,7 +1227,7 @@ print-check-symbols:
 	  echo $$s; \
 	done;
 
-$(SYMBOLS_FILE): $(libgstcheck_@GST_API_VERSION@include_HEADERS) libcheck/check.h
+$(SYMBOLS_FILE): $(libgstcheck_@GST_API_VERSION@include_HEADERS) internal-check.h
 	$(AM_V_GEN)rm -f $(SYMBOLS_FILE) 2>/dev/null; \
 	for s in $(LIBGSTCHECK_EXPORTED_SYMBOLS) $(CHECK_SYMS); do \
 	  echo $$s >> $(SYMBOLS_FILE); \

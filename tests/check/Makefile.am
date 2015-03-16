@@ -44,6 +44,12 @@ ABI_CHECKS = gst/gstabi
 endif
 endif
 
+if !GST_DISABLE_GST_DEBUG
+PRINTF_CHECKS = gst/gstprintf
+else
+PRINTF_CHECKS =
+endif
+
 LIBSABI_CHECKS = libs/libsabi
 
 if HAVE_CXX
@@ -75,6 +81,7 @@ REGISTRY_CHECKS =				\
 	gst/gstutils				\
 	generic/sinks				\
 	elements/capsfilter			\
+	elements/concat				\
 	elements/fakesink			\
 	elements/fakesrc			\
 	elements/fdsrc			  	\
@@ -88,6 +95,7 @@ REGISTRY_CHECKS =				\
 	elements/queue                          \
 	elements/queue2                         \
 	elements/valve                          \
+	elements/streamiddemux			\
 	libs/baseparse				\
 	libs/basesrc				\
 	libs/basesink				\
@@ -123,6 +131,7 @@ check_PROGRAMS =				\
 	gst/gstparamspecs			\
 	gst/gstpipeline				\
 	gst/gstpoll     			\
+	$(PRINTF_CHECKS)			\
 	gst/gstsegment				\
 	gst/gstsystemclock			\
 	gst/gstclock				\
@@ -192,6 +201,10 @@ gst_gstcpp_SOURCES = gst/gstcpp.cc
 libs_gstlibscpp_SOURCES = libs/gstlibscpp.cc
 
 gst_gstutils_LDADD = $(LDADD) $(GSL_LIBS) $(GMP_LIBS)
+
+gst_gstprintf_LDADD = \
+	$(top_builddir)/gst/printf/libgstprintf.la \
+	$(LDADD)
 
 elements_fdsrc_CFLAGS=$(GST_OBJ_CFLAGS) $(AM_CFLAGS) \
 	-DTESTFILE=\"$(top_srcdir)/configure.ac\"

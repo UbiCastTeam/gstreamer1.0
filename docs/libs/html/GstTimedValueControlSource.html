@@ -16,7 +16,8 @@
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
                   <a href="#GstTimedValueControlSource.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
-                  <a href="#GstTimedValueControlSource.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+                  <a href="#GstTimedValueControlSource.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_signals">  <span class="dim">|</span> 
+                  <a href="#GstTimedValueControlSource.signals" class="shortcut">Signals</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-control.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -108,6 +109,33 @@
 </table></div>
 </div>
 <div class="refsect1">
+<a name="GstTimedValueControlSource.signals"></a><h2>Signals</h2>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="signals_return">
+<col width="300px" class="signals_name">
+<col width="200px" class="signals_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GstTimedValueControlSource.html#GstTimedValueControlSource-value-added" title="The “value-added” signal">value-added</a></td>
+<td class="signal_flags">Run First</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GstTimedValueControlSource.html#GstTimedValueControlSource-value-changed" title="The “value-changed” signal">value-changed</a></td>
+<td class="signal_flags">Run First</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GstTimedValueControlSource.html#GstTimedValueControlSource-value-removed" title="The “value-removed” signal">value-removed</a></td>
+<td class="signal_flags">Run First</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
 <a name="GstTimedValueControlSource.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
@@ -156,7 +184,7 @@ If all values in the control point list come after the given
 timestamp or no values exist, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
 <p>For use in control source implementations.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.2.6"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -178,7 +206,7 @@ timestamp or no values exist, <a href="https://developer.gnome.org/glib/unstable
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.2.7"></a><h4>Returns</h4>
+<a name="id-1.2.5.5.9.2.7"></a><h4>Returns</h4>
 <p> the found <a href="https://developer.gnome.org/glib/unstable/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 <p></p>
 </div>
@@ -192,7 +220,7 @@ gst_timed_value_control_source_set (<em class="parameter"><code><a class="link" 
                                     <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> value</code></em>);</pre>
 <p>Set the value of given controller-handled property at a certain time.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.3.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -219,7 +247,7 @@ gst_timed_value_control_source_set (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.3.6"></a><h4>Returns</h4>
+<a name="id-1.2.5.5.9.3.6"></a><h4>Returns</h4>
 <p> FALSE if the values couldn't be set, TRUE otherwise.</p>
 <p></p>
 </div>
@@ -233,7 +261,7 @@ gst_timed_value_control_source_set_from_list
                                 <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *timedvalues</code></em>);</pre>
 <p>Sets multiple timed values at once.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.4.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -256,7 +284,7 @@ with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.4.6"></a><h4>Returns</h4>
+<a name="id-1.2.5.5.9.4.6"></a><h4>Returns</h4>
 <p> FALSE if the values couldn't be set, TRUE otherwise.</p>
 <p></p>
 </div>
@@ -270,7 +298,7 @@ gst_timed_value_control_source_get_all
 <p>Returns a read-only copy of the list of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> for the given property.
 Free the list after done with it.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -285,7 +313,7 @@ Free the list after done with it.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.5.6"></a><h4>Returns</h4>
+<a name="id-1.2.5.5.9.5.6"></a><h4>Returns</h4>
 <p> a copy
 of the list, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the property isn't handled by the controller. </p>
 <p><span class="annotation">[<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstTimedValue]</span></p>
@@ -300,7 +328,7 @@ gst_timed_value_control_source_unset (<em class="parameter"><code><a class="link
 <p>Used to remove the value of given controller-handled property at a certain
 time.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.6.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -322,7 +350,7 @@ time.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.6.6"></a><h4>Returns</h4>
+<a name="id-1.2.5.5.9.6.6"></a><h4>Returns</h4>
 <p> FALSE if the value couldn't be unset (i.e. not found, TRUE otherwise.</p>
 <p></p>
 </div>
@@ -335,7 +363,7 @@ gst_timed_value_control_source_unset_all
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
 <p>Used to remove all time-stamped values of given controller-handled property</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -358,7 +386,7 @@ gst_timed_value_control_source_get_count
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
 <p>Get the number of control points that are set.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -373,7 +401,7 @@ gst_timed_value_control_source_get_count
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.8.6"></a><h4>Returns</h4>
+<a name="id-1.2.5.5.9.8.6"></a><h4>Returns</h4>
 <p> the number of control points that are set.</p>
 <p></p>
 </div>
@@ -386,7 +414,7 @@ gst_timed_value_control_invalidate_cache
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
 <p>Reset the controlled value cache.</p>
 <div class="refsect3">
-<a name="id-1.2.5.5.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.5.5.9.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -408,6 +436,128 @@ gst_timed_value_control_invalidate_cache
 <a name="GstTimedValueControlSource-struct"></a><h3>struct GstTimedValueControlSource</h3>
 <pre class="programlisting">struct GstTimedValueControlSource;</pre>
 <p>The instance structure of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html"><span class="type">GstControlSource</span></a>.</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="GstTimedValueControlSource.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="GstTimedValueControlSource-value-added"></a><h3>The <code class="literal">“value-added”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self,
+               <span class="type">GstControlPoint</span>            *timed_value,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                    user_data)</pre>
+<p>Emited right after the new value has been added to <em class="parameter"><code>self</code></em>
+</p>
+<p>Since 1.6</p>
+<div class="refsect3">
+<a name="id-1.2.5.5.11.2.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> into which a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> has been
+added</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timed_value</p></td>
+<td class="parameter_description"><p>The newly added <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Run First</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstTimedValueControlSource-value-changed"></a><h3>The <code class="literal">“value-changed”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self,
+               <span class="type">GstControlPoint</span>            *timed_value,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                    user_data)</pre>
+<p>Emited right after the new value has been set on <em class="parameter"><code>timed_signals</code></em>
+</p>
+<p>Since 1.6</p>
+<div class="refsect3">
+<a name="id-1.2.5.5.11.3.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> on which a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> has changed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timed_value</p></td>
+<td class="parameter_description"><p>The <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> where the value changed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Run First</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstTimedValueControlSource-value-removed"></a><h3>The <code class="literal">“value-removed”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self,
+               <span class="type">GstControlPoint</span>            *timed_value,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                    user_data)</pre>
+<p>Emited when <em class="parameter"><code>timed_value</code></em>
+ is removed from <em class="parameter"><code>self</code></em>
+</p>
+<p>Since 1.6</p>
+<div class="refsect3">
+<a name="id-1.2.5.5.11.4.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> from which a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> has been
+removed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timed_value</p></td>
+<td class="parameter_description"><p>The removed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Run First</p>
 </div>
 </div>
 </div>

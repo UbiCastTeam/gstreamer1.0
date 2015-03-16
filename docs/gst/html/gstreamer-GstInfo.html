@@ -607,6 +607,10 @@
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-LEVEL-DEFAULT:CAPS" title="GST_LEVEL_DEFAULT">GST_LEVEL_DEFAULT</a></td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-LEVEL-MAX:CAPS" title="GST_LEVEL_MAX">GST_LEVEL_MAX</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GstDebugColorFlags" title="enum GstDebugColorFlags">GstDebugColorFlags</a></td>
 </tr>
@@ -1010,11 +1014,13 @@ gst_debug_log_default (<em class="parameter"><code><a class="link" href="gstream
                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
                        <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
                        <em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> unused</code></em>);</pre>
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>The default logging handler used by GStreamer. Logging functions get called
-whenever a macro like GST_DEBUG or similar is used. This function outputs the
-message and additional info to stderr (or the log file specified via the
-GST_DEBUG_FILE environment variable).</p>
+whenever a macro like GST_DEBUG or similar is used. By default this function
+is setup to output the message and additional info to stderr (or the log file
+specified via the GST_DEBUG_FILE environment variable) as received via
+<em class="parameter"><code>user_data</code></em>
+.</p>
 <p>You can add other handlers by using <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
 And you can remove this handler by calling
 gst_debug_remove_log_function(gst_debug_log_default);</p>
@@ -1064,8 +1070,8 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
-<td class="parameter_name"><p>unused</p></td>
-<td class="parameter_description"><p>an unused variable, reserved for some user_data.</p></td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>the FILE* to log to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -3254,11 +3260,23 @@ reset the debugging output to default behaviour.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-LEVEL-MAX:CAPS"></a><h3>GST_LEVEL_MAX</h3>
+<pre class="programlisting">#define GST_LEVEL_MAX GST_LEVEL_COUNT
+</pre>
+<p>Defines the maximum debugging level to be enabled at compilation time. By default
+it is set such that all debugging statements will be enabled.</p>
+<p>If you wish to compile GStreamer and plugins with only some debugging statements
+(Such as just warnings and errors), you can define it at compile time to the
+maximum debug level. Any debug statements above that level will be compiled out.</p>
+<p class="since">Since 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstDebugColorFlags"></a><h3>enum GstDebugColorFlags</h3>
 <p>These are some terminal style flags you can use when creating your
 debugging categories to make them stand out in debugging output.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.4.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.5.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3400,7 +3418,7 @@ debugging categories to make them stand out in debugging output.</p>
 <div class="refsect2">
 <a name="GstDebugColorMode"></a><h3>enum GstDebugColorMode</h3>
 <div class="refsect3">
-<a name="id-1.5.3.8.5.3"></a><h4>Members</h4>
+<a name="id-1.5.3.8.6.3"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3449,7 +3467,7 @@ debugging categories to make them stand out in debugging output.</p>
 <p>Available details for pipeline graphs produced by <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>
 and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.7.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.8.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3474,7 +3492,8 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 <tr>
 <td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-NON-DEFAULT-PARAMS:CAPS"></a>GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS</p></td>
 <td class="enum_member_description">
-<p>show modified parameters on elements</p>
+<p>show modified parameters on
+                                          elements</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3486,9 +3505,25 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-FULL-PARAMS:CAPS"></a>GST_DEBUG_GRAPH_SHOW_FULL_PARAMS</p></td>
+<td class="enum_member_description">
+<p>show full element parameter values even
+                                   if they are very long</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-ALL:CAPS"></a>GST_DEBUG_GRAPH_SHOW_ALL</p></td>
 <td class="enum_member_description">
-<p>show all details</p>
+<p>show all the typical details that one might want</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-VERBOSE:CAPS"></a>GST_DEBUG_GRAPH_SHOW_VERBOSE</p></td>
+<td class="enum_member_description">
+<p>show all details regardless of how large or
+                               verbose they make the resulting output</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

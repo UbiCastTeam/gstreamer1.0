@@ -118,11 +118,6 @@ _priv_gst_message_initialize (void)
 
   GST_CAT_INFO (GST_CAT_GST_INIT, "init messages");
 
-  /* the GstMiniObject types need to be class_ref'd once before it can be
-   * done from multiple threads;
-   * see http://bugzilla.gnome.org/show_bug.cgi?id=304551 */
-  gst_message_get_type ();
-
   for (i = 0; message_quarks[i].name; i++) {
     message_quarks[i].quark =
         g_quark_from_static_string (message_quarks[i].name);
@@ -171,6 +166,28 @@ gst_message_type_to_quark (GstMessageType type)
   return 0;
 }
 
+static gboolean
+_gst_message_dispose (GstMessage * message)
+{
+  gboolean do_free = TRUE;
+
+  if (GST_MINI_OBJECT_FLAG_IS_SET (message, GST_MESSAGE_FLAG_ASYNC_DELIVERY)) {
+    /* revive message, so bus can finish with it and clean it up */
+    gst_message_ref (message);
+
+    GST_INFO ("[msg %p] signalling async free", message);
+
+    GST_MESSAGE_LOCK (message);
+    GST_MESSAGE_SIGNAL (message);
+    GST_MESSAGE_UNLOCK (message);
+
+    /* don't free it yet, let bus finish with it first */
+    do_free = FALSE;
+  }
+
+  return do_free;
+}
+
 static void
 _gst_message_free (GstMessage * message)
 {
@@ -184,12 +201,6 @@ _gst_message_free (GstMessage * message)
   if (GST_MESSAGE_SRC (message)) {
     gst_object_unref (GST_MESSAGE_SRC (message));
     GST_MESSAGE_SRC (message) = NULL;
-  }
-
-  if (message->lock.p) {
-    GST_MESSAGE_LOCK (message);
-    GST_MESSAGE_SIGNAL (message);
-    GST_MESSAGE_UNLOCK (message);
   }
 
   structure = GST_MESSAGE_STRUCTURE (message);
@@ -240,7 +251,8 @@ gst_message_init (GstMessageImpl * message, GstMessageType type,
     GstObject * src)
 {
   gst_mini_object_init (GST_MINI_OBJECT_CAST (message), 0, _gst_message_type,
-      (GstMiniObjectCopyFunction) _gst_message_copy, NULL,
+      (GstMiniObjectCopyFunction) _gst_message_copy,
+      (GstMiniObjectDisposeFunction) _gst_message_dispose,
       (GstMiniObjectFreeFunction) _gst_message_free);
 
   GST_MESSAGE_TYPE (message) = type;

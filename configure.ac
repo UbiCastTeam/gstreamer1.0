@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.4.5],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.5.0.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -64,7 +64,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 405, 0, 405)
+AS_LIBTOOL(GST, 501, 0, 501)
 
 dnl *** autotools stuff ****
 
@@ -133,6 +133,29 @@ AG_GST_PKG_CONFIG_PATH
 AG_GST_SET_PACKAGE_RELEASE_DATETIME_WITH_NANO([$PACKAGE_VERSION_NANO],
   ["${srcdir}/gstreamer.doap"],
   [$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR.$PACKAGE_VERSION_MICRO])
+
+dnl check for bash completion
+AC_ARG_WITH([bash-completion-dir],
+    AS_HELP_STRING([--with-bash-completion-dir[=PATH]],
+        [Install the bash auto-completion script in this directory. @<:@default=yes@:>@]),
+    [],
+    [with_bash_completion_dir=yes])
+
+if test "x$with_bash_completion_dir" = "xyes"; then
+    PKG_CHECK_MODULES([BASH_COMPLETION], [bash-completion >= 2.0],
+        [BASH_COMPLETION_DIR="`pkg-config --variable=completionsdir bash-completion`"],
+        [BASH_COMPLETION_DIR="$datadir/bash-completion/completions"])
+    PKG_CHECK_MODULES([BASH_COMPLETION], [bash-completion >= 2.0],
+        [BASH_HELPERS_DIR="`pkg-config --variable=helpersdir bash-completion`"],
+        [BASH_HELPERS_DIR="$datadir/bash-completion/helpers"])
+else
+    BASH_COMPLETION_DIR="$with_bash_completion_dir/completions"
+    BASH_HELPERS_DIR="$with_bash_completion_dir/helpers"
+fi
+
+AC_SUBST([BASH_COMPLETION_DIR])
+AC_SUBST([BASH_HELPERS_DIR])
+AM_CONDITIONAL([ENABLE_BASH_COMPLETION],[test "x$with_bash_completion_dir" != "xno"])
 
 dnl build static plugins or not
 AC_MSG_CHECKING([whether to build static plugins or not])
@@ -338,11 +361,28 @@ dnl Check for stdio_ext.f for __fbufsize
 AC_CHECK_HEADERS([stdio_ext.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl check for pthreads
-AX_PTHREAD([HAVE_PTHREAD=yes], [HAVE_PTHREAD=no])
-AM_CONDITIONAL(HAVE_PTHREAD, test "x$HAVE_PTHREAD" = "xyes")
+dnl without arguments AX_PTHREAD() will do AC_DEFINE(HAVE_PTHREAD)
+dnl which later checks use in their test code
+AX_PTHREAD()
+AM_CONDITIONAL(HAVE_PTHREAD, test "x$ax_pthread_ok" = "xyes")
 
 dnl check for sys/prctl for setting thread name on Linux
 AC_CHECK_HEADERS([sys/prctl.h], [], [], [AC_INCLUDES_DEFAULT])
+
+dnl check for pthread_setname_np(const char*)
+dnl which is present on OS X 10.6, iOS 3.2 and above
+AC_MSG_CHECKING(for pthread_setname_np(const char*))
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM(
+        [#include <pthread.h>],
+        [pthread_setname_np("example")])],
+    [AC_MSG_RESULT(yes)
+     AC_DEFINE(HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID,1,
+        [Have function pthread_setname_np(const char*)])],
+    [AC_MSG_RESULT(no)])
+
+dnl check for sys/uio.h for writev()
+AC_CHECK_HEADERS([sys/uio.h], [], [], [AC_INCLUDES_DEFAULT])
 
 dnl Check for valgrind.h
 dnl separate from HAVE_VALGRIND because you can have the program, but not
@@ -415,6 +455,8 @@ AC_MSG_RESULT($have_tm_gmtoff)
 
 
 dnl *** checks for library functions ***
+
+AC_CHECK_FUNCS([strcasestr])
 
 AC_CHECK_FUNCS([gmtime_r])
 AC_CHECK_FUNCS([localtime_r])
@@ -764,6 +806,7 @@ AG_GST_CHECK_CHECKS()
 
 AC_CONFIG_FILES(
 Makefile
+data/Makefile
 gst/Makefile
 gst/gstconfig.h
 gst/gstversion.h
@@ -774,7 +817,7 @@ libs/gst/Makefile
 libs/gst/base/Makefile
 libs/gst/check/Makefile
 libs/gst/check/libcheck/Makefile
-libs/gst/check/libcheck/check.h
+libs/gst/check/internal-check.h:libs/gst/check/libcheck/check.h.in
 libs/gst/controller/Makefile
 libs/gst/helpers/Makefile
 libs/gst/net/Makefile
@@ -794,7 +837,9 @@ tests/examples/launch/Makefile
 tests/examples/manual/Makefile
 tests/examples/memory/Makefile
 tests/examples/metadata/Makefile
+tests/examples/netclock/Makefile
 tests/examples/queue/Makefile
+tests/examples/streamiddemux/Makefile
 tests/examples/streams/Makefile
 tests/examples/typefind/Makefile
 tools/Makefile

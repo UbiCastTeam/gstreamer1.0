@@ -26,7 +26,7 @@
  *                     graphs.
  *
  * GStreamer is a framework for constructing graphs of various filters
- * (termed elements here) that will handle streaming media.  Any discreet
+ * (termed elements here) that will handle streaming media.  Any discrete
  * (packetizable) media type is supported, with provisions for automatically
  * determining source type.  Formatting/framing information is provided with
  * a powerful negotiation framework.  Plugins are heavily used to provide for
@@ -318,14 +318,18 @@ gst_init_get_option_group (void)
 gboolean
 gst_init_check (int *argc, char **argv[], GError ** err)
 {
+  static GMutex init_lock;
 #ifndef GST_DISABLE_OPTION_PARSING
   GOptionGroup *group;
   GOptionContext *ctx;
 #endif
   gboolean res;
 
+  g_mutex_lock (&init_lock);
+
   if (gst_initialized) {
     GST_DEBUG ("already initialized gst");
+    g_mutex_unlock (&init_lock);
     return TRUE;
   }
 #ifndef GST_DISABLE_OPTION_PARSING
@@ -344,11 +348,7 @@ gst_init_check (int *argc, char **argv[], GError ** err)
 
   gst_initialized = res;
 
-  if (res) {
-    GST_INFO ("initialized GStreamer successfully");
-  } else {
-    GST_INFO ("failed to initialize GStreamer");
-  }
+  g_mutex_unlock (&init_lock);
 
   return res;
 }
@@ -709,6 +709,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
       glib_minor_version, glib_micro_version);
   GST_INFO ("GLib headers version: %d.%d.%d", GLIB_MAJOR_VERSION,
       GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
+  GST_INFO ("initialized GStreamer successfully");
 
   return TRUE;
 }

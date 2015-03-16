@@ -1311,10 +1311,8 @@ the parser is now processing the frames at the end of the stream)</p>
 };
 </pre>
 <p>Subclasses can override any of the available virtual methods or not, as
-needed. At minimum <em class="parameter"><code>check_valid_frame</code></em>
- and <em class="parameter"><code>parse_frame</code></em>
- needs to be
-overridden.</p>
+needed. At minimum <em class="parameter"><code>handle_frame</code></em>
+ needs to be overridden.</p>
 <div class="refsect3">
 <a name="id-1.2.4.3.10.3.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1345,7 +1343,8 @@ Allows closing external resources.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseParseClass.set-sink-caps"></a>set_sink_caps</code></em> ()</p></td>
-<td class="struct_member_description"><p>allows the subclass to be notified of the actual caps set.</p></td>
+<td class="struct_member_description"><p>Optional.
+Allows the subclass to be notified of the actual caps set.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1395,7 +1394,8 @@ parent to let the default handler run.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseParseClass.get-sink-caps"></a>get_sink_caps</code></em> ()</p></td>
-<td class="struct_member_description"><p>allows the subclass to do its own sink get caps if needed.</p></td>
+<td class="struct_member_description"><p>Optional.
+Allows the subclass to do its own sink get caps if needed.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>

@@ -18,6 +18,7 @@ EXPORTS
 	gst_adapter_take
 	gst_adapter_take_buffer
 	gst_adapter_take_buffer_fast
+	gst_adapter_take_buffer_list
 	gst_adapter_take_list
 	gst_adapter_unmap
 	gst_base_parse_add_index_entry
@@ -142,6 +143,7 @@ EXPORTS
 	gst_byte_reader_get_remaining
 	gst_byte_reader_get_size
 	gst_byte_reader_get_string_utf8
+	gst_byte_reader_get_sub_reader
 	gst_byte_reader_get_uint16_be
 	gst_byte_reader_get_uint16_le
 	gst_byte_reader_get_uint24_be
@@ -153,6 +155,7 @@ EXPORTS
 	gst_byte_reader_get_uint8
 	gst_byte_reader_init
 	gst_byte_reader_masked_scan_uint32
+	gst_byte_reader_masked_scan_uint32_peek
 	gst_byte_reader_new
 	gst_byte_reader_peek_data
 	gst_byte_reader_peek_float32_be
@@ -169,6 +172,7 @@ EXPORTS
 	gst_byte_reader_peek_int64_le
 	gst_byte_reader_peek_int8
 	gst_byte_reader_peek_string_utf8
+	gst_byte_reader_peek_sub_reader
 	gst_byte_reader_peek_uint16_be
 	gst_byte_reader_peek_uint16_le
 	gst_byte_reader_peek_uint24_be
@@ -263,11 +267,14 @@ EXPORTS
 	gst_data_queue_push_force
 	gst_data_queue_set_flushing
 	gst_flow_combiner_add_pad
+	gst_flow_combiner_clear
 	gst_flow_combiner_free
 	gst_flow_combiner_get_type
 	gst_flow_combiner_new
 	gst_flow_combiner_remove_pad
+	gst_flow_combiner_reset
 	gst_flow_combiner_update_flow
+	gst_flow_combiner_update_pad_flow
 	gst_push_src_get_type
 	gst_queue_array_drop_element
 	gst_queue_array_find

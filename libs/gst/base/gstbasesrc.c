@@ -695,9 +695,9 @@ gst_base_src_is_async (GstBaseSrc * src)
  * @max_latency: (out) (allow-none): the max latency of the source
  *
  * Query the source for the latency parameters. @live will be %TRUE when @src is
- * configured as a live source. @min_latency will be set to the difference
- * between the running time and the timestamp of the first buffer.
- * @max_latency is always the undefined value of -1.
+ * configured as a live source. @min_latency and @max_latency will be set
+ * to the difference between the running time and the timestamp of the first
+ * buffer.
  *
  * This function is mostly used by subclasses.
  *
@@ -726,11 +726,11 @@ gst_base_src_query_latency (GstBaseSrc * src, gboolean * live,
   if (min_latency)
     *min_latency = min;
   if (max_latency)
-    *max_latency = -1;
+    *max_latency = min;
 
   GST_LOG_OBJECT (src, "latency: live %d, min %" GST_TIME_FORMAT
       ", max %" GST_TIME_FORMAT, src->is_live, GST_TIME_ARGS (min),
-      GST_TIME_ARGS (-1));
+      GST_TIME_ARGS (min));
   GST_OBJECT_UNLOCK (src);
 
   return TRUE;
@@ -895,7 +895,7 @@ gst_base_src_send_stream_start (GstBaseSrc * src)
 /**
  * gst_base_src_set_caps:
  * @src: a #GstBaseSrc
- * @caps: a #GstCaps
+ * @caps: (transfer none): a #GstCaps
  *
  * Set new caps on the basesrc source pad.
  *
@@ -906,16 +906,27 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
 {
   GstBaseSrcClass *bclass;
   gboolean res = TRUE;
+  GstCaps *current_caps;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
   gst_base_src_send_stream_start (src);
 
-  if (bclass->set_caps)
-    res = bclass->set_caps (src, caps);
+  current_caps = gst_pad_get_current_caps (GST_BASE_SRC_PAD (src));
+  if (current_caps && gst_caps_is_equal (current_caps, caps)) {
+    GST_DEBUG_OBJECT (src, "New caps equal to old ones: %" GST_PTR_FORMAT,
+        caps);
+    res = TRUE;
+  } else {
+    if (bclass->set_caps)
+      res = bclass->set_caps (src, caps);
 
-  if (res)
-    res = gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
+    if (res)
+      res = gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
+  }
+
+  if (current_caps)
+    gst_caps_unref (current_caps);
 
   return res;
 }
@@ -1103,7 +1114,7 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
             gst_base_src_seekable (src), 0, duration);
         res = TRUE;
       } else {
-        /* FIXME 0.11: return TRUE + seekable=FALSE for SEEKING query here */
+        /* FIXME 2.0: return TRUE + seekable=FALSE for SEEKING query here */
         /* Don't reply to the query to make up for demuxers which don't
          * handle the SEEKING query yet. Players like Totem will fall back
          * to the duration when the SEEKING query isn't answered. */
@@ -2310,19 +2321,17 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
 {
   guint64 size, maxsize;
   GstBaseSrcClass *bclass;
-  GstFormat format;
   gint64 stop;
+
+  /* only operate if we are working with bytes */
+  if (src->segment.format != GST_FORMAT_BYTES)
+    return TRUE;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
-  format = src->segment.format;
   stop = src->segment.stop;
   /* get total file size */
   size = src->segment.duration;
-
-  /* only operate if we are working with bytes */
-  if (format != GST_FORMAT_BYTES)
-    return TRUE;
 
   /* when not doing automatic EOS, just use the stop position. We don't use
    * the size to check for EOS */
@@ -2379,6 +2388,7 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
   /* ERRORS */
 unexpected_length:
   {
+    GST_WARNING_OBJECT (src, "processing at or past EOS");
     return FALSE;
   }
 }
@@ -3068,7 +3078,7 @@ gst_base_src_decide_allocation_default (GstBaseSrc * basesrc, GstQuery * query)
       /* If change are not acceptable, fallback to generic pool */
       if (!gst_buffer_pool_config_validate_params (config, outcaps, size, min,
               max)) {
-        GST_DEBUG_OBJECT (basesrc, "unsuported pool, making new pool");
+        GST_DEBUG_OBJECT (basesrc, "unsupported pool, making new pool");
 
         gst_object_unref (pool);
         pool = gst_buffer_pool_new ();

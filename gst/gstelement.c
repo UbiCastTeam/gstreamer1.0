@@ -795,7 +795,6 @@ gst_element_remove_pad (GstElement * element, GstPad * pad)
       break;
   }
   element->pads = g_list_remove (element->pads, pad);
-  GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_NEED_PARENT);
   element->numpads--;
   element->pads_cookie++;
   GST_OBJECT_UNLOCK (element);
@@ -949,7 +948,7 @@ _gst_element_request_pad (GstElement * element, GstPadTemplate * templ,
     pad = gst_element_get_static_pad (element, name);
     if (pad) {
       gst_object_unref (pad);
-      /* FIXME 0.11: Change this to g_return_val_if_fail() */
+      /* FIXME 2.0: Change this to g_return_val_if_fail() */
       g_critical ("Element %s already has a pad named %s, the behaviour of "
           " gst_element_get_request_pad() for existing pads is undefined!",
           GST_ELEMENT_NAME (element), name);
@@ -977,7 +976,7 @@ _gst_element_request_pad (GstElement * element, GstPadTemplate * templ,
  *
  * This method is slower than manually getting the pad template and calling
  * gst_element_request_pad() if the pads should have a specific name (e.g.
- * @name is "src_1" instead of "src_%u").
+ * @name is "src_1" instead of "src_\%u").
  *
  * Returns: (transfer full) (nullable): requested #GstPad if found,
  *     otherwise %NULL.  Release after usage.

@@ -299,7 +299,7 @@ gst_identity_sink_event (GstBaseTransform * trans, GstEvent * event)
   }
 
   if (identity->single_segment && (GST_EVENT_TYPE (event) == GST_EVENT_SEGMENT)) {
-    if (trans->have_segment == FALSE) {
+    if (!trans->have_segment) {
       GstEvent *news;
       GstSegment segment;
 
@@ -380,6 +380,7 @@ gst_identity_check_imperfect_timestamp (GstIdentity * identity, GstBuffer * buf)
         /*
          * "imperfect-timestamp" bus message:
          * @identity:        the identity instance
+         * @delta:           the GST_CLOCK_DIFF to the prev timestamp
          * @prev-timestamp:  the previous buffer timestamp
          * @prev-duration:   the previous buffer duration
          * @prev-offset:     the previous buffer offset
@@ -396,6 +397,7 @@ gst_identity_check_imperfect_timestamp (GstIdentity * identity, GstBuffer * buf)
         gst_element_post_message (GST_ELEMENT (identity),
             gst_message_new_element (GST_OBJECT (identity),
                 gst_structure_new ("imperfect-timestamp",
+                    "delta", G_TYPE_INT64, dt,
                     "prev-timestamp", G_TYPE_UINT64,
                     identity->prev_timestamp, "prev-duration", G_TYPE_UINT64,
                     identity->prev_duration, "prev-offset", G_TYPE_UINT64,
@@ -501,6 +503,7 @@ gst_identity_transform_ip (GstBaseTransform * trans, GstBuffer * buf)
   GstFlowReturn ret = GST_FLOW_OK;
   GstIdentity *identity = GST_IDENTITY (trans);
   GstClockTime runtimestamp = G_GINT64_CONSTANT (0);
+  GstClockTime ts, duration;
   gsize size;
 
   size = gst_buffer_get_size (buf);
@@ -608,6 +611,14 @@ dropped:
       gst_identity_update_last_message_for_buffer (identity, "dropping", buf,
           size);
     }
+
+    ts = GST_BUFFER_TIMESTAMP (buf);
+    if (GST_CLOCK_TIME_IS_VALID (ts)) {
+      duration = GST_BUFFER_DURATION (buf);
+      gst_pad_push_event (GST_BASE_TRANSFORM_SRC_PAD (identity),
+          gst_event_new_gap (ts, duration));
+    }
+
     /* return DROPPED to basetransform. */
     return GST_BASE_TRANSFORM_FLOW_DROPPED;
   }

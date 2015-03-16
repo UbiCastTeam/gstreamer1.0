@@ -2,11 +2,8 @@ lib_LTLIBRARIES = libgstcheck-@GST_API_VERSION@.la
 
 SYMBOLS_FILE = exports.sym
 
-BUILT_SOURCES = internal-check.h
-
 libgstcheck_@GST_API_VERSION@_la_DEPENDENCIES = \
 	$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
-	internal-check.h \
 	$(SYMBOLS_FILE)
 libgstcheck_@GST_API_VERSION@_la_SOURCES =	\
 	gstbufferstraw.c			\
@@ -35,12 +32,9 @@ libgstcheck_@GST_API_VERSION@include_HEADERS =	\
 	gsttestclock.h
 
 nodist_libgstcheck_@GST_API_VERSION@include_HEADERS =	\
-	internal-check.h	
+	internal-check.h
 
-CLEANFILES = *.gcno *.gcda *.gcov internal-check.h $(SYMBOLS_FILE)
-
-internal-check.h: $(top_builddir)/libs/gst/check/libcheck/check.h
-	$(AM_V_GEN)cp $(top_builddir)/libs/gst/check/libcheck/check.h internal-check.h
+CLEANFILES = *.gcno *.gcda *.gcov $(SYMBOLS_FILE)
 
 %.c.gcov: .libs/libgstcheck_@GST_API_VERSION@_la-%.gcda %.c
 	$(GCOV) -b -f -o $^ > $@.out
@@ -93,6 +87,8 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_check_teardown_pad_by_name \
 	gst_check_teardown_sink_pad \
 	gst_check_teardown_src_pad \
+	gst_check_objects_destroyed_on_unref \
+	gst_check_object_destroyed_on_unref \
 	gst_consistency_checker_add_pad \
 	gst_consistency_checker_new \
 	gst_consistency_checker_reset \
@@ -113,10 +109,14 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_test_clock_process_id_list \
 	gst_test_clock_id_list_get_latest_time
 
+# For backwards compatibility with GStreamer < 1.5
+LIBGSTCHECK_EXPORTED_COMPAT_FUNCS = \
+	_fail_unless
 
 LIBGSTCHECK_EXPORTED_SYMBOLS = \
 	$(LIBGSTCHECK_EXPORTED_VARS) \
-	$(LIBGSTCHECK_EXPORTED_FUNCS)
+	$(LIBGSTCHECK_EXPORTED_FUNCS) \
+	$(LIBGSTCHECK_EXPORTED_COMPAT_FUNCS)
 
 # Please do not even think about changing the alphabet below into A-Za-z.
 # It is there for purpose. (Bug #602093)
@@ -126,7 +126,7 @@ print-check-symbols:
 	  echo $$s; \
 	done;
 
-$(SYMBOLS_FILE): $(libgstcheck_@GST_API_VERSION@include_HEADERS) libcheck/check.h
+$(SYMBOLS_FILE): $(libgstcheck_@GST_API_VERSION@include_HEADERS) internal-check.h
 	$(AM_V_GEN)rm -f $(SYMBOLS_FILE) 2>/dev/null; \
 	for s in $(LIBGSTCHECK_EXPORTED_SYMBOLS) $(CHECK_SYMS); do \
 	  echo $$s >> $(SYMBOLS_FILE); \

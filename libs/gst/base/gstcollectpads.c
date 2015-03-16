@@ -939,7 +939,7 @@ gst_collect_pads_peek (GstCollectPads * pads, GstCollectData * data)
   if ((result = data->buffer))
     gst_buffer_ref (result);
 
-  GST_DEBUG_OBJECT (pads, "Peeking at pad %s:%s: buffer=%p",
+  GST_DEBUG_OBJECT (pads, "Peeking at pad %s:%s: buffer=%" GST_PTR_FORMAT,
       GST_DEBUG_PAD_NAME (data->pad), result);
 
   return result;
@@ -978,7 +978,7 @@ gst_collect_pads_pop (GstCollectPads * pads, GstCollectData * data)
 
   GST_COLLECT_PADS_EVT_BROADCAST (pads);
 
-  GST_DEBUG_OBJECT (pads, "Pop buffer on pad %s:%s: buffer=%p",
+  GST_DEBUG_OBJECT (pads, "Pop buffer on pad %s:%s: buffer=%" GST_PTR_FORMAT,
       GST_DEBUG_PAD_NAME (data->pad), result);
 
   return result;
@@ -1131,7 +1131,7 @@ GstBuffer *
 gst_collect_pads_read_buffer (GstCollectPads * pads, GstCollectData * data,
     guint size)
 {
-  guint readsize;
+  guint readsize, buf_size;
   GstBuffer *buffer;
 
   g_return_val_if_fail (pads != NULL, NULL);
@@ -1142,7 +1142,8 @@ gst_collect_pads_read_buffer (GstCollectPads * pads, GstCollectData * data,
   if ((buffer = data->buffer) == NULL)
     return NULL;
 
-  readsize = MIN (size, gst_buffer_get_size (buffer) - data->pos);
+  buf_size = gst_buffer_get_size (buffer);
+  readsize = MIN (size, buf_size - data->pos);
 
   return gst_buffer_copy_region (buffer, GST_BUFFER_COPY_ALL, data->pos,
       readsize);
@@ -1315,7 +1316,7 @@ gst_collect_pads_check_collected (GstCollectPads * pads)
         pads->priv->numpads, GST_DEBUG_FUNCPTR_NAME (func));
 
     if (G_UNLIKELY (g_atomic_int_compare_and_exchange (&pads->priv->seeking,
-                TRUE, FALSE) == TRUE)) {
+                TRUE, FALSE))) {
       GST_INFO_OBJECT (pads, "finished seeking");
     }
     do {
@@ -1333,7 +1334,7 @@ gst_collect_pads_check_collected (GstCollectPads * pads)
           GST_DEBUG_FUNCPTR_NAME (func));
 
       if (G_UNLIKELY (g_atomic_int_compare_and_exchange (&pads->priv->seeking,
-                  TRUE, FALSE) == TRUE)) {
+                  TRUE, FALSE))) {
         GST_INFO_OBJECT (pads, "finished seeking");
       }
       flow_ret = func (pads, user_data);
@@ -1664,8 +1665,8 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
     {
       if (g_atomic_int_get (&pads->priv->seeking)) {
         /* drop all but the first FLUSH_STARTs when seeking */
-        if (g_atomic_int_compare_and_exchange (&pads->priv->pending_flush_start,
-                TRUE, FALSE) == FALSE)
+        if (!g_atomic_int_compare_and_exchange (&pads->
+                priv->pending_flush_start, TRUE, FALSE))
           goto eat;
 
         /* unblock collect pads */

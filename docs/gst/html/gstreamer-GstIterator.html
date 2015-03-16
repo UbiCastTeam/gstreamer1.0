@@ -253,9 +253,10 @@ way.</p>
 a threadsafe way.</p>
 <p>Various GStreamer objects provide access to their internal structures using
 an iterator.</p>
-<p>In general, whenever calling a GstIterator function results in your code
-receiving a refcounted object, the refcount for that object will have been
-increased.  Your code is responsible for unreffing that object after use.</p>
+<p>Note that if calling a GstIterator function results in your code receiving
+a refcounted object (with, say, <a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-get-object"><code class="function">g_value_get_object()</code></a>), the refcount for that
+object will not be increased. Your code is responsible for taking a reference
+if it wants to continue using it later.</p>
 <p>The basic use pattern of an iterator is as follows:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -283,13 +284,15 @@ increased.  Your code is responsible for unreffing that object after use.</p>
 20
 21
 22
-23</pre></td>
+23
+24</pre></td>
         <td class="listing_code"><pre class="programlisting">GstIterator <span class="gtkdoc opt">*</span>it <span class="gtkdoc opt">=</span> <span class="function">_get_iterator</span><span class="gtkdoc opt">(</span>object<span class="gtkdoc opt">);</span>
+GValue item <span class="gtkdoc opt">=</span> G_VALUE_INIT<span class="gtkdoc opt">;</span>
 done <span class="gtkdoc opt">=</span> FALSE<span class="gtkdoc opt">;</span>
 <span class="keyword">while</span> <span class="gtkdoc opt">(!</span>done<span class="gtkdoc opt">) {</span>
   <span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstIterator.html#gst-iterator-next">gst_iterator_next</a></span> <span class="gtkdoc opt">(</span>it<span class="gtkdoc opt">, &amp;</span>item<span class="gtkdoc opt">)) {</span>
     <span class="keyword">case</span> GST_ITERATOR_OK<span class="gtkdoc opt">:</span>
-      <span class="gtkdoc opt">...</span> use<span class="gtkdoc opt">/</span>change item here<span class="gtkdoc opt">...</span>
+      <span class="gtkdoc opt">...</span>get<span class="gtkdoc opt">/</span>use<span class="gtkdoc opt">/</span>change item here<span class="gtkdoc opt">...</span>
       <span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#g-value-reset">g_value_reset</a></span> <span class="gtkdoc opt">(&amp;</span>item<span class="gtkdoc opt">);</span>
       <span class="keyword">break</span><span class="gtkdoc opt">;</span>
     <span class="keyword">case</span> GST_ITERATOR_RESYNC<span class="gtkdoc opt">:</span>
