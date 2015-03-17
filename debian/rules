@@ -226,7 +226,7 @@ DEB_INSTALL_DOCS_ALL += debian/README.Debian NEWS
 DEB_SHLIBDEPS_INCLUDE += debian/$(gst_lib)/usr/lib/$(DEB_HOST_MULTIARCH)
 
 install/$(gst_lib_dev)::
-	gcc -o debian/tmp/usr/bin/gst-codec-info-1.0 debian/gst-codec-info.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) `pkg-config --libs --cflags glib-2.0 gthread-2.0 gmodule-no-export-2.0 gobject-2.0` debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libgstreamer-1.0.so -Idebian/tmp/usr/include/gstreamer-1.0
+	gcc -o debian/tmp/usr/bin/gst-codec-info-1.0 debian/gst-codec-info.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) `pkg-config --libs --cflags glib-2.0 gthread-2.0 gmodule-no-export-2.0 gobject-2.0` debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libgstreamer-1.0.so -Idebian/tmp/usr/include/gstreamer-1.0 -Idebian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0/include
 	perldoc -o man debian/dh_gstscancodecs > debian/tmp/usr/share/man/man1/dh_gstscancodecs.1
 
 .PHONY: maint
