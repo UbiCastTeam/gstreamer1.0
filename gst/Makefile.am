@@ -99,6 +99,7 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstpluginloader.c	\
 	gstpoll.c		\
 	gstpreset.c             \
+	gstprotection.c         \
 	gstquark.c		\
 	gstquery.c		\
 	gstregistry.c		\
@@ -204,6 +205,7 @@ gst_headers =			\
 	gstpluginfeature.h	\
 	gstpoll.h		\
 	gstpreset.h             \
+	gstprotection.h         \
 	gstquery.h		\
 	gstsample.h		\
 	gstsegment.h		\
@@ -266,23 +268,6 @@ gstenumtypes.c: $(gst_headers)
 
 gcov: $(libgstreamer_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer -:SHARED libgstreamer-@GST_API_VERSION@ \
-	 -:TAGS eng debug \
-         -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES $(libgstreamer_@GST_API_VERSION@_la_SOURCES) \
-	           $(nodist_libgstreamer_@GST_API_VERSION@_la_SOURCES) \
-	 -:CFLAGS $(DEFS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) \
-	 -:LDFLAGS $(libgstreamer_@GST_API_VERSION@_la_LDFLAGS) \
-	           $(libgstreamer_@GST_API_VERSION@_la_LIBADD) \
-	           -ldl \
-	 -:SUBDIR gst/parse \
-	 -:HEADER_TARGET gstreamer-@GST_API_VERSION@/gst \
-	 -:HEADERS $(libgstreamer_@GST_API_VERSION@include_HEADERS) \
-	 -:LIBFILTER_STATIC gstparse \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
-
 if HAVE_INTROSPECTION
 BUILT_GIRSOURCES = Gst-@GST_API_VERSION@.gir
 
@@ -293,7 +278,7 @@ gir_sources=$(patsubst %,$(srcdir)/%, $(libgstreamer_@GST_API_VERSION@_la_SOURCE
 gir_sources+=$(patsubst %,$(builddir)/%, $(built_source_make))
 
 Gst-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstreamer-@GST_API_VERSION@.la
-	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no GI_SCANNER_DISABLE_CACHE=yes\
 		$(INTROSPECTION_SCANNER) -v --namespace Gst \
 		--nsversion=@GST_API_VERSION@ \
 		--warn-all \

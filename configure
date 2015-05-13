@@ -15813,7 +15813,15 @@ else
 fi
 
 
-if test "x$with_bash_completion_dir" = "xyes"; then
+if test "x$with_bash_completion_dir" = "xyes"
+then
+    extra_args=
+
+    if test "x$prefix" != "xNONE"
+    then
+        extra_args="--define-variable=prefix=\"$prefix\""
+    fi
+
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for BASH_COMPLETION" >&5
@@ -15883,7 +15891,7 @@ else
 	BASH_COMPLETION_LIBS=$pkg_cv_BASH_COMPLETION_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	BASH_COMPLETION_DIR="`pkg-config --variable=completionsdir bash-completion`"
+	BASH_COMPLETION_DIR="`eval pkg-config $extra_args --variable=completionsdir bash-completion`"
 fi
 
 pkg_failed=no
@@ -15954,7 +15962,7 @@ else
 	BASH_COMPLETION_LIBS=$pkg_cv_BASH_COMPLETION_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	BASH_HELPERS_DIR="`pkg-config --variable=helpersdir bash-completion`"
+	BASH_HELPERS_DIR="`eval pkg-config $extra_args --variable=helpersdir bash-completion`"
 fi
 else
     BASH_COMPLETION_DIR="$with_bash_completion_dir/completions"
@@ -27454,7 +27462,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile data/Makefile gst/Makefile gst/gstconfig.h gst/gstversion.h gst/parse/Makefile gst/printf/Makefile libs/Makefile libs/gst/Makefile libs/gst/base/Makefile libs/gst/check/Makefile libs/gst/check/libcheck/Makefile libs/gst/check/internal-check.h:libs/gst/check/libcheck/check.h.in libs/gst/controller/Makefile libs/gst/helpers/Makefile libs/gst/net/Makefile plugins/Makefile plugins/elements/Makefile po/Makefile.in tests/Makefile tests/benchmarks/Makefile tests/check/Makefile tests/misc/Makefile tests/examples/Makefile tests/examples/adapter/Makefile tests/examples/controller/Makefile tests/examples/stepping/Makefile tests/examples/helloworld/Makefile tests/examples/launch/Makefile tests/examples/manual/Makefile tests/examples/memory/Makefile tests/examples/metadata/Makefile tests/examples/netclock/Makefile tests/examples/queue/Makefile tests/examples/streamiddemux/Makefile tests/examples/streams/Makefile tests/examples/typefind/Makefile tools/Makefile common/Makefile common/m4/Makefile docs/Makefile docs/design/Makefile docs/faq/Makefile docs/gst/Makefile docs/gst/gstreamer.types docs/libs/Makefile docs/plugins/Makefile docs/manual/Makefile docs/pwg/Makefile docs/slides/Makefile docs/xsl/Makefile docs/version.entities m4/Makefile pkgconfig/Makefile stamp.h pkgconfig/gstreamer.pc pkgconfig/gstreamer-uninstalled.pc pkgconfig/gstreamer-base.pc pkgconfig/gstreamer-base-uninstalled.pc pkgconfig/gstreamer-check.pc pkgconfig/gstreamer-check-uninstalled.pc pkgconfig/gstreamer-controller.pc pkgconfig/gstreamer-controller-uninstalled.pc pkgconfig/gstreamer-net.pc pkgconfig/gstreamer-net-uninstalled.pc gstreamer.spec"
+ac_config_files="$ac_config_files Makefile data/Makefile gst/Makefile gst/gstconfig.h gst/gstversion.h gst/parse/Makefile gst/printf/Makefile libs/Makefile libs/gst/Makefile libs/gst/base/Makefile libs/gst/check/Makefile libs/gst/check/libcheck/Makefile libs/gst/check/internal-check.h:libs/gst/check/libcheck/check.h.in libs/gst/controller/Makefile libs/gst/helpers/Makefile libs/gst/net/Makefile plugins/Makefile plugins/elements/Makefile po/Makefile.in tests/Makefile tests/benchmarks/Makefile tests/check/Makefile tests/misc/Makefile tests/examples/Makefile tests/examples/adapter/Makefile tests/examples/controller/Makefile tests/examples/stepping/Makefile tests/examples/helloworld/Makefile tests/examples/manual/Makefile tests/examples/memory/Makefile tests/examples/netclock/Makefile tests/examples/streamiddemux/Makefile tests/examples/streams/Makefile tools/Makefile common/Makefile common/m4/Makefile docs/Makefile docs/design/Makefile docs/faq/Makefile docs/gst/Makefile docs/gst/gstreamer.types docs/libs/Makefile docs/plugins/Makefile docs/manual/Makefile docs/pwg/Makefile docs/slides/Makefile docs/xsl/Makefile docs/version.entities m4/Makefile pkgconfig/Makefile stamp.h pkgconfig/gstreamer.pc pkgconfig/gstreamer-uninstalled.pc pkgconfig/gstreamer-base.pc pkgconfig/gstreamer-base-uninstalled.pc pkgconfig/gstreamer-check.pc pkgconfig/gstreamer-check-uninstalled.pc pkgconfig/gstreamer-controller.pc pkgconfig/gstreamer-controller-uninstalled.pc pkgconfig/gstreamer-net.pc pkgconfig/gstreamer-net-uninstalled.pc gstreamer.spec"
 
 
 sed \
@@ -28893,15 +28901,11 @@ do
     "tests/examples/controller/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/controller/Makefile" ;;
     "tests/examples/stepping/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/stepping/Makefile" ;;
     "tests/examples/helloworld/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/helloworld/Makefile" ;;
-    "tests/examples/launch/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/launch/Makefile" ;;
     "tests/examples/manual/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/manual/Makefile" ;;
     "tests/examples/memory/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/memory/Makefile" ;;
-    "tests/examples/metadata/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/metadata/Makefile" ;;
     "tests/examples/netclock/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/netclock/Makefile" ;;
-    "tests/examples/queue/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/queue/Makefile" ;;
     "tests/examples/streamiddemux/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/streamiddemux/Makefile" ;;
     "tests/examples/streams/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/streams/Makefile" ;;
-    "tests/examples/typefind/Makefile") CONFIG_FILES="$CONFIG_FILES tests/examples/typefind/Makefile" ;;
     "tools/Makefile") CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
     "common/Makefile") CONFIG_FILES="$CONFIG_FILES common/Makefile" ;;
     "common/m4/Makefile") CONFIG_FILES="$CONFIG_FILES common/m4/Makefile" ;;

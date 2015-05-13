@@ -935,20 +935,8 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 
 gcov: $(libgstcontroller_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer -:SHARED libgstcontroller-@GST_API_VERSION@ -:TAGS eng debug \
-	 -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES $(libgstcontroller_@GST_API_VERSION@_la_SOURCES) \
-	 -:CFLAGS $(libgstcontroller_@GST_API_VERSION@_la_CFLAGS) \
-	 -:LDFLAGS $(libgstcontroller_@GST_API_VERSION@_la_LDFLAGS) \
-	           $(libgstcontroller_@GST_API_VERSION@_la_LIBADD) \
-	 -:HEADER_TARGET gstreamer-@GST_API_VERSION@/gst/controller \
-	 -:HEADERS $(libgstcontroller_@GST_API_VERSION@_include_HEADERS) \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
-
 @HAVE_INTROSPECTION_TRUE@GstController-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstcontroller-@GST_API_VERSION@.la
-@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
+@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
 @HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 @HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace GstController \
 @HAVE_INTROSPECTION_TRUE@		--nsversion=@GST_API_VERSION@ \

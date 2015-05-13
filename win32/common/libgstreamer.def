@@ -112,6 +112,7 @@ EXPORTS
 	gst_bin_sync_children_states
 	gst_bitmask_get_type
 	gst_buffer_add_meta
+	gst_buffer_add_protection_meta
 	gst_buffer_append
 	gst_buffer_append_memory
 	gst_buffer_append_region
@@ -559,6 +560,7 @@ EXPORTS
 	gst_event_new_gap
 	gst_event_new_latency
 	gst_event_new_navigation
+	gst_event_new_protection
 	gst_event_new_qos
 	gst_event_new_reconfigure
 	gst_event_new_seek
@@ -576,6 +578,7 @@ EXPORTS
 	gst_event_parse_gap
 	gst_event_parse_group_id
 	gst_event_parse_latency
+	gst_event_parse_protection
 	gst_event_parse_qos
 	gst_event_parse_seek
 	gst_event_parse_segment
@@ -912,6 +915,7 @@ EXPORTS
 	gst_pipeline_get_bus
 	gst_pipeline_get_clock
 	gst_pipeline_get_delay
+	gst_pipeline_get_pipeline_clock
 	gst_pipeline_get_type
 	gst_pipeline_new
 	gst_pipeline_set_auto_flush_bus
@@ -987,6 +991,9 @@ EXPORTS
 	gst_preset_set_app_dir
 	gst_preset_set_meta
 	gst_progress_type_get_type
+	gst_protection_meta_api_get_type
+	gst_protection_meta_get_info
+	gst_protection_select_system
 	gst_proxy_pad_chain_default
 	gst_proxy_pad_chain_list_default
 	gst_proxy_pad_get_internal
@@ -1122,11 +1129,13 @@ EXPORTS
 	gst_segment_free
 	gst_segment_get_type
 	gst_segment_init
+	gst_segment_is_equal
 	gst_segment_new
 	gst_segment_offset_running_time
 	gst_segment_set_running_time
 	gst_segment_to_position
 	gst_segment_to_running_time
+	gst_segment_to_running_time_full
 	gst_segment_to_stream_time
 	gst_segtrap_is_enabled
 	gst_segtrap_set_enabled

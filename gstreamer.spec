@@ -5,7 +5,7 @@
 
 Name: 		%{gstreamer}
 Version: 	1.5.0.1
-Release: 	0.20150316.185135
+Release: 	0.20150513.125409
 Summary: 	GStreamer streaming media framework runtime
 
 Group: 		Applications/Multimedia

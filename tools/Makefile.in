@@ -999,21 +999,6 @@ uninstall-man: uninstall-man1
 	uninstall-binPROGRAMS uninstall-man uninstall-man1
 
 
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer \
-	 -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:EXECUTABLE gst-inspect-@GST_API_VERSION@ -:TAGS eng debug \
-	 -:SOURCES $(gst_inspect_@GST_API_VERSION@_SOURCES) \
-	 -:CFLAGS $(DEFS) $(gst_inspect_@GST_API_VERSION@_CFLAGS) \
-	 -:LDFLAGS $(gst_inspect_@GST_API_VERSION@_LDADD) \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	 -:EXECUTABLE gst-launch-@GST_API_VERSION@ -:TAGS eng debug \
-	 -:SOURCES $(gst_launch_@GST_API_VERSION@_SOURCES) \
-	 -:CFLAGS $(DEFS) $(gst_launch_@GST_API_VERSION@_CFLAGS) \
-	 -:LDFLAGS $(gst_launch_@GST_API_VERSION@_LDADD) \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
-
 %-@GST_API_VERSION@.1: %.1.in
 	$(AM_V_GEN)sed \
 		-e s,gst-inspect,gst-inspect-@GST_API_VERSION@,g \

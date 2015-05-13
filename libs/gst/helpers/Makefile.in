@@ -82,6 +82,7 @@ host_triplet = @host@
 target_triplet = @target@
 @ENABLE_BASH_COMPLETION_TRUE@bin_PROGRAMS = gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
 helpers_PROGRAMS = gst-plugin-scanner$(EXEEXT)
+@ENABLE_BASH_COMPLETION_TRUE@am__append_1 = gst-completion-helper-@GST_API_VERSION@
 subdir = libs/gst/helpers
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp $(am__dist_bashhelpers_DATA_DIST)
@@ -541,7 +542,7 @@ gst_plugin_scanner_LDADD = $(GST_OBJ_LIBS)
 
 # clean out the old one to make sure everything is udpated correctly
 # remove again after release
-CLEANFILES = plugin-scanner
+CLEANFILES = plugin-scanner $(am__append_1)
 all: all-am
 
 .SUFFIXES:
@@ -891,7 +892,8 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-@ENABLE_BASH_COMPLETION_FALSE@install-data-hook:
+@ENABLE_BASH_COMPLETION_FALSE@install-exec-hook:
+@ENABLE_BASH_COMPLETION_FALSE@uninstall-hook:
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic clean-helpersPROGRAMS \
@@ -916,14 +918,14 @@ info: info-am
 info-am:
 
 install-data-am: install-dist_bashhelpersDATA install-helpersPROGRAMS
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
+
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
 install-exec-am: install-binPROGRAMS
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
 
 install-html-am:
@@ -964,8 +966,9 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
 	uninstall-helpersPROGRAMS
-
-.MAKE: install-am install-data-am install-strip
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
+.MAKE: install-am install-exec-am install-strip uninstall-am
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
 	clean-binPROGRAMS clean-generic clean-helpersPROGRAMS \
@@ -973,8 +976,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-data \
-	install-data-am install-data-hook install-dist_bashhelpersDATA \
-	install-dvi install-dvi-am install-exec install-exec-am \
+	install-data-am install-dist_bashhelpersDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-exec-hook \
 	install-helpersPROGRAMS install-html install-html-am \
 	install-info install-info-am install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
@@ -982,23 +985,19 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-dist_bashhelpersDATA uninstall-helpersPROGRAMS
+	uninstall-dist_bashhelpersDATA uninstall-helpersPROGRAMS \
+	uninstall-hook
 
 
-@ENABLE_BASH_COMPLETION_TRUE@install-data-hook:
+@ENABLE_BASH_COMPLETION_TRUE@install-exec-hook:
+@ENABLE_BASH_COMPLETION_TRUE@	$(MKDIR_P) $(DESTDIR)$(BASH_HELPERS_DIR) && \
 @ENABLE_BASH_COMPLETION_TRUE@	cd $(DESTDIR)$(bindir) && \
-@ENABLE_BASH_COMPLETION_TRUE@	mv `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT) \
-@ENABLE_BASH_COMPLETION_TRUE@	$(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
-@ENABLE_BASH_COMPLETION_TRUE@	chmod 755 $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
+@ENABLE_BASH_COMPLETION_TRUE@	$(INSTALL) `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT) \
+@ENABLE_BASH_COMPLETION_TRUE@        $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT) && \
+@ENABLE_BASH_COMPLETION_TRUE@	rm `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT)
 
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer -:EXECUTABLE gst-plugin-scanner  -:TAGS eng debug \
-	 -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES $(gst_plugin_scanner_SOURCES) \
-	 -:CFLAGS $(gst_plugin_scanner_CFLAGS) \
-	 -:LDFLAGS $(gst_plugin_scanner_LDADD) \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
+@ENABLE_BASH_COMPLETION_TRUE@uninstall-hook:
+@ENABLE_BASH_COMPLETION_TRUE@	rm -f $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

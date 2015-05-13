@@ -802,12 +802,6 @@ uninstall-am:
 	ps ps-am tags tags-am uninstall uninstall-am
 
 
-Android.mk: Makefile.am
-	echo $(PWD)
-	androgenizer -:PROJECT gstreamer \
-	 -:SUBDIR $(patsubst %, libs/gst/%, $(SUBDIRS)) \
-	> $@
-
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -28,18 +28,6 @@ CLEANFILES = *.gcno *.gcda *.gcov
 
 gcov: $(libgstnet_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer -:SHARED libgstnet-@GST_API_VERSION@ -:TAGS eng debug \
-	 -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES $(libgstnet_@GST_API_VERSION@_la_SOURCES) \
-	 -:CFLAGS $(libgstnet_@GST_API_VERSION@_la_CFLAGS) \
-	 -:LDFLAGS $(libgstnet_@GST_API_VERSION@_la_LDFLAGS) \
-	           $(libgstnet_@GST_API_VERSION@_la_LIBADD) \
-	 -:HEADER_TARGET gstreamer-@GST_API_VERSION@/gst/net \
-	 -:HEADERS $(libgstnet_@GST_API_VERSION@_include_HEADERS) \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
-
 
 if HAVE_INTROSPECTION
 BUILT_GIRSOURCES = GstNet-@GST_API_VERSION@.gir
@@ -49,7 +37,7 @@ gir_sources=$(patsubst %,$(srcdir)/%, $(libgstnet_@GST_API_VERSION@_la_SOURCES))
 gir_cincludes=--c-include="gst/net/net.h"
 
 GstNet-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstnet-@GST_API_VERSION@.la
-	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
+	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
 		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 		$(INTROSPECTION_SCANNER) -v --namespace GstNet \
 		--strip-prefix=Gst \
