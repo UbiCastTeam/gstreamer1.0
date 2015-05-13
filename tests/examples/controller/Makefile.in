@@ -795,18 +795,6 @@ uninstall-am:
 	tags tags-am uninstall uninstall-am
 
 
-Android.mk: Makefile.am audio-example.c
-	androgenizer \
-	-:PROJECT audio-example -:EXECUTABLE audio-example \
-	 -:TAGS eng debug \
-         -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES audio-example.c \
-	 -:CFLAGS $(DEFS) $(DEFAULT_INCLUDES) $(AM_CFLAGS) \
-	 -:LDFLAGS -lgstcontroller-@GST_API_VERSION@ \
-	     $(GST_OBJ_LIBS) -ldl \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
-
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

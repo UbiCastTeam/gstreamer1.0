@@ -1706,12 +1706,6 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
       gst_element_post_message (GST_ELEMENT (src), message);
     }
 
-    /* for deriving a stop position for the playback segment from the seek
-     * segment, we must take the duration when the stop is not set */
-    /* FIXME: This is never used below */
-    if ((stop = seeksegment.stop) == -1)
-      stop = seeksegment.duration;
-
     src->priv->segment_pending = TRUE;
     src->priv->segment_seqnum = seqnum;
   }
@@ -1800,6 +1794,12 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
       GST_OBJECT_LOCK (src->srcpad);
       start = (GST_PAD_MODE (src->srcpad) == GST_PAD_MODE_PUSH);
       GST_OBJECT_UNLOCK (src->srcpad);
+
+      if (src->is_live) {
+        if (!src->live_running)
+          start = FALSE;
+      }
+
       if (start)
         gst_pad_start_task (src->srcpad, (GstTaskFunction) gst_base_src_loop,
             src->srcpad, NULL);
@@ -2238,7 +2238,7 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
     if (!GST_CLOCK_TIME_IS_VALID (dts)) {
       if (do_timestamp) {
         dts = running_time;
-      } else {
+      } else if (!GST_CLOCK_TIME_IS_VALID (pts)) {
         if (GST_CLOCK_TIME_IS_VALID (basesrc->segment.start)) {
           dts = basesrc->segment.start;
         } else {
@@ -3109,6 +3109,7 @@ config_failed:
   GST_ELEMENT_ERROR (basesrc, RESOURCE, SETTINGS,
       ("Failed to configure the buffer pool"),
       ("Configuration is most likely invalid, please report this issue."));
+  gst_object_unref (pool);
   return FALSE;
 }
 
@@ -3859,7 +3860,7 @@ failure:
  * @src: a #GstBaseSrc
  *
  * Returns: (transfer full): the instance of the #GstBufferPool used
- * by the src; free it after use it
+ * by the src; unref it after usage.
  */
 GstBufferPool *
 gst_base_src_get_buffer_pool (GstBaseSrc * src)
@@ -3883,7 +3884,7 @@ gst_base_src_get_buffer_pool (GstBaseSrc * src)
  * Lets #GstBaseSrc sub-classes to know the memory @allocator
  * used by the base class and its @params.
  *
- * Unref the @allocator after use it.
+ * Unref the @allocator after usage.
  */
 void
 gst_base_src_get_allocator (GstBaseSrc * src,

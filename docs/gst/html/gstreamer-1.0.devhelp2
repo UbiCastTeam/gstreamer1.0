@@ -46,6 +46,7 @@
       <sub name="GstPluginFeature" link="GstPluginFeature.html"/>
       <sub name="GstPoll" link="gstreamer-GstPoll.html"/>
       <sub name="GstPreset" link="GstPreset.html"/>
+      <sub name="gstprotection" link="gstreamer-gstprotection.html"/>
       <sub name="GstQuery" link="GstQuery.html"/>
       <sub name="GstRegistry" link="GstRegistry.html"/>
       <sub name="GstSegment" link="GstSegment.html"/>
@@ -1279,6 +1280,7 @@
     <keyword type="function" name="gst_pipeline_new ()" link="GstPipeline.html#gst-pipeline-new"/>
     <keyword type="function" name="gst_pipeline_get_bus ()" link="GstPipeline.html#gst-pipeline-get-bus"/>
     <keyword type="function" name="gst_pipeline_set_clock ()" link="GstPipeline.html#gst-pipeline-set-clock"/>
+    <keyword type="function" name="gst_pipeline_get_pipeline_clock ()" link="GstPipeline.html#gst-pipeline-get-pipeline-clock" since="1.6"/>
     <keyword type="function" name="gst_pipeline_get_clock ()" link="GstPipeline.html#gst-pipeline-get-clock"/>
     <keyword type="function" name="gst_pipeline_use_clock ()" link="GstPipeline.html#gst-pipeline-use-clock"/>
     <keyword type="function" name="gst_pipeline_auto_clock ()" link="GstPipeline.html#gst-pipeline-auto-clock"/>
@@ -1375,6 +1377,10 @@
     <keyword type="function" name="gst_preset_is_editable ()" link="GstPreset.html#gst-preset-is-editable" since="1.6"/>
     <keyword type="struct" name="GstPreset" link="GstPreset.html#GstPreset-struct"/>
     <keyword type="struct" name="struct GstPresetInterface" link="GstPreset.html#GstPresetInterface"/>
+    <keyword type="function" name="gst_buffer_add_protection_meta ()" link="gstreamer-gstprotection.html#gst-buffer-add-protection-meta" since="1.6"/>
+    <keyword type="macro" name="gst_buffer_get_protection_meta()" link="gstreamer-gstprotection.html#gst-buffer-get-protection-meta"/>
+    <keyword type="function" name="gst_protection_select_system ()" link="gstreamer-gstprotection.html#gst-protection-select-system" since="1.6"/>
+    <keyword type="struct" name="struct GstProtectionMeta" link="gstreamer-gstprotection.html#GstProtectionMeta"/>
     <keyword type="macro" name="GST_QUERY_MAKE_TYPE()" link="GstQuery.html#GST-QUERY-MAKE-TYPE:CAPS"/>
     <keyword type="macro" name="GST_QUERY_TYPE()" link="GstQuery.html#GST-QUERY-TYPE:CAPS"/>
     <keyword type="macro" name="GST_QUERY_TYPE_NAME()" link="GstQuery.html#GST-QUERY-TYPE-NAME:CAPS"/>
@@ -1506,11 +1512,13 @@
     <keyword type="function" name="gst_segment_free ()" link="GstSegment.html#gst-segment-free"/>
     <keyword type="function" name="gst_segment_do_seek ()" link="GstSegment.html#gst-segment-do-seek"/>
     <keyword type="function" name="gst_segment_to_running_time ()" link="GstSegment.html#gst-segment-to-running-time"/>
+    <keyword type="function" name="gst_segment_to_running_time_full ()" link="GstSegment.html#gst-segment-to-running-time-full" since="1.6"/>
     <keyword type="function" name="gst_segment_to_stream_time ()" link="GstSegment.html#gst-segment-to-stream-time"/>
     <keyword type="function" name="gst_segment_to_position ()" link="GstSegment.html#gst-segment-to-position"/>
     <keyword type="function" name="gst_segment_set_running_time ()" link="GstSegment.html#gst-segment-set-running-time"/>
     <keyword type="function" name="gst_segment_copy_into ()" link="GstSegment.html#gst-segment-copy-into"/>
     <keyword type="function" name="gst_segment_offset_running_time ()" link="GstSegment.html#gst-segment-offset-running-time" since="1.2.3"/>
+    <keyword type="function" name="gst_segment_is_equal ()" link="GstSegment.html#gst-segment-is-equal" since="1.6"/>
     <keyword type="struct" name="struct GstSegment" link="GstSegment.html#GstSegment-struct"/>
     <keyword type="enum" name="enum GstSegmentFlags" link="GstSegment.html#GstSegmentFlags"/>
     <keyword type="function" name="GstStructureForeachFunc ()" link="GstStructure.html#GstStructureForeachFunc"/>

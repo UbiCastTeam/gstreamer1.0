@@ -179,7 +179,8 @@ typedef enum { /*< flags >*/
  * @start: the start of the segment
  * @stop: the stop of the segment
  * @time: the stream time of the segment
- * @position: the position in the segment
+ * @position: the position in the segment (used internally by elements
+ *     such as sources, demuxers or parsers to track progress)
  * @duration: the duration of the segment
  *
  * A helper structure that holds the configured region of
@@ -217,6 +218,9 @@ void         gst_segment_init                (GstSegment *segment, GstFormat for
 
 guint64      gst_segment_to_stream_time      (const GstSegment *segment, GstFormat format, guint64 position);
 guint64      gst_segment_to_running_time     (const GstSegment *segment, GstFormat format, guint64 position);
+
+gint         gst_segment_to_running_time_full (const GstSegment *segment, GstFormat format, guint64 position,
+                                               guint64 * running_time);
 guint64      gst_segment_to_position         (const GstSegment *segment, GstFormat format, guint64 running_time);
 
 gboolean     gst_segment_set_running_time    (GstSegment *segment, GstFormat format, guint64 running_time);
@@ -231,6 +235,7 @@ gboolean     gst_segment_do_seek             (GstSegment * segment, gdouble rate
                                               GstFormat format, GstSeekFlags flags,
                                               GstSeekType start_type, guint64 start,
                                               GstSeekType stop_type, guint64 stop, gboolean * update);
+gboolean     gst_segment_is_equal            (const GstSegment * s0, const GstSegment * s1);
 
 G_END_DECLS
 

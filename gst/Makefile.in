@@ -184,11 +184,12 @@ am__libgstreamer_@GST_API_VERSION@_la_SOURCES_DIST = gst.c gstobject.c \
 	gstmessage.c gstmeta.c gstmemory.c gstminiobject.c gstpad.c \
 	gstpadtemplate.c gstparamspecs.c gstpipeline.c gstplugin.c \
 	gstpluginfeature.c gstpluginloader.c gstpoll.c gstpreset.c \
-	gstquark.c gstquery.c gstregistry.c gstregistrychunks.c \
-	gstsample.c gstsegment.c gststructure.c gstsystemclock.c \
-	gsttaglist.c gsttagsetter.c gsttask.c gsttaskpool.c gsttoc.c \
-	gsttocsetter.c gsttrace.c gsttypefind.c gsttypefindfactory.c \
-	gsturi.c gstutils.c gstvalue.c gstparse.c gstregistrybinary.c
+	gstprotection.c gstquark.c gstquery.c gstregistry.c \
+	gstregistrychunks.c gstsample.c gstsegment.c gststructure.c \
+	gstsystemclock.c gsttaglist.c gsttagsetter.c gsttask.c \
+	gsttaskpool.c gsttoc.c gsttocsetter.c gsttrace.c gsttypefind.c \
+	gsttypefindfactory.c gsturi.c gstutils.c gstvalue.c gstparse.c \
+	gstregistrybinary.c
 @GST_DISABLE_TRACE_FALSE@am__objects_1 = libgstreamer_@GST_API_VERSION@_la-gsttrace.lo
 @GST_DISABLE_REGISTRY_FALSE@am__objects_2 = libgstreamer_@GST_API_VERSION@_la-gstregistrybinary.lo
 am_libgstreamer_@GST_API_VERSION@_la_OBJECTS =  \
@@ -236,6 +237,7 @@ am_libgstreamer_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstreamer_@GST_API_VERSION@_la-gstpluginloader.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstpoll.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstpreset.lo \
+	libgstreamer_@GST_API_VERSION@_la-gstprotection.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstquark.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstquery.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstregistry.lo \
@@ -737,6 +739,7 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstpluginloader.c	\
 	gstpoll.c		\
 	gstpreset.c             \
+	gstprotection.c         \
 	gstquark.c		\
 	gstquery.c		\
 	gstregistry.c		\
@@ -844,6 +847,7 @@ gst_headers = \
 	gstpluginfeature.h	\
 	gstpoll.h		\
 	gstpreset.h             \
+	gstprotection.h         \
 	gstquery.h		\
 	gstsample.h		\
 	gstsegment.h		\
@@ -1029,6 +1033,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpluginloader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpoll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpreset.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstprotection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstquark.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstquery.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstregistry.Plo@am__quote@
@@ -1382,6 +1387,13 @@ libgstreamer_@GST_API_VERSION@_la-gstpreset.lo: gstpreset.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstpreset.c' object='libgstreamer_@GST_API_VERSION@_la-gstpreset.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstpreset.lo `test -f 'gstpreset.c' || echo '$(srcdir)/'`gstpreset.c
+
+libgstreamer_@GST_API_VERSION@_la-gstprotection.lo: gstprotection.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstprotection.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstprotection.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstprotection.lo `test -f 'gstprotection.c' || echo '$(srcdir)/'`gstprotection.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstprotection.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstprotection.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstprotection.c' object='libgstreamer_@GST_API_VERSION@_la-gstprotection.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstprotection.lo `test -f 'gstprotection.c' || echo '$(srcdir)/'`gstprotection.c
 
 libgstreamer_@GST_API_VERSION@_la-gstquark.lo: gstquark.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstquark.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstquark.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstquark.lo `test -f 'gstquark.c' || echo '$(srcdir)/'`gstquark.c
@@ -1981,25 +1993,8 @@ gstenumtypes.c: $(gst_headers)
 
 gcov: $(libgstreamer_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer -:SHARED libgstreamer-@GST_API_VERSION@ \
-	 -:TAGS eng debug \
-         -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES $(libgstreamer_@GST_API_VERSION@_la_SOURCES) \
-	           $(nodist_libgstreamer_@GST_API_VERSION@_la_SOURCES) \
-	 -:CFLAGS $(DEFS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) \
-	 -:LDFLAGS $(libgstreamer_@GST_API_VERSION@_la_LDFLAGS) \
-	           $(libgstreamer_@GST_API_VERSION@_la_LIBADD) \
-	           -ldl \
-	 -:SUBDIR gst/parse \
-	 -:HEADER_TARGET gstreamer-@GST_API_VERSION@/gst \
-	 -:HEADERS $(libgstreamer_@GST_API_VERSION@include_HEADERS) \
-	 -:LIBFILTER_STATIC gstparse \
-	 -:PASSTHROUGH LOCAL_ARM_MODE:=arm \
-	> $@
-
 @HAVE_INTROSPECTION_TRUE@Gst-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstreamer-@GST_API_VERSION@.la
-@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no GI_SCANNER_DISABLE_CACHE=yes\
 @HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace Gst \
 @HAVE_INTROSPECTION_TRUE@		--nsversion=@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--warn-all \

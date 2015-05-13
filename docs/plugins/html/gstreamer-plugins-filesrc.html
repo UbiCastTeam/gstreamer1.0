@@ -89,12 +89,12 @@ GstFileSrc implements
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin <span class="gtkdoc opt">!</span> autoaudiosink</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> filesrc location<span class="gtkdoc opt">=</span>song<span class="gtkdoc opt">.</span>ogg <span class="gtkdoc opt">!</span> decodebin <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> audioresample <span class="gtkdoc opt">!</span> autoaudiosink</pre></td>
       </tr>
     </tbody>
   </table>
 </div>
- Play a song.ogg from local dir.
+ Play song.ogg audio file which must be in the current working directory.
 </div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>

@@ -490,8 +490,6 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@GST_DISABLE_PARSE_FALSE@GST_PARSE_DIRS = launch
-@GST_DISABLE_PARSE_TRUE@GST_PARSE_DIRS = 
 @HAVE_SYS_TIMES_H_AND_UNISTD_H_FALSE@ADAPTER_TEST_DIR = 
 
 # adapter test needs sys/times.h and unistd.h
@@ -501,36 +499,16 @@ always_dirs = \
 	helloworld \
 	manual     \
 	memory   \
-	metadata   \
 	netclock \
-	queue      \
 	stepping \
 	streamiddemux \
-	streams \
-	typefind
+	streams
 
-
-#appreader
-#cutter
-#events
-#helloworld2
-#launch
-#manual
-#mixer
-#pingpong
-#plugins
-#pwg
-#queue2
-#queue3
-#queue4
-#retag
-#thread
 SUBDIRS = \
 	$(always_dirs)			\
-	$(ADAPTER_TEST_DIR)		\
-	$(GST_PARSE_DIRS)
+	$(ADAPTER_TEST_DIR)
 
-DIST_SUBDIRS = $(always_dirs) adapter launch
+DIST_SUBDIRS = $(always_dirs) adapter
 all: all-recursive
 
 .SUFFIXES:

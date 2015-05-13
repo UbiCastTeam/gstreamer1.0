@@ -76,15 +76,13 @@ struct _GstInputSelector {
 
   GMutex lock;
   GCond cond;
-  gboolean blocked;
   gboolean eos;
+  gboolean eos_sent;
   gboolean flushing;
 };
 
 struct _GstInputSelectorClass {
   GstElementClass parent_class;
-
-  gint64 (*block)	(GstInputSelector *self);
 };
 
 G_GNUC_INTERNAL GType gst_input_selector_get_type (void);

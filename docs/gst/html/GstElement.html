@@ -3089,8 +3089,10 @@ or when it requires a specific clock to operate.</p>
 gst_element_get_clock (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>Gets the currently configured clock of the element. This is the clock as was
 last set with <a class="link" href="GstElement.html#gst-element-set-clock" title="gst_element_set_clock ()"><code class="function">gst_element_set_clock()</code></a>.</p>
+<p>Elements in a pipeline will only have their clock set when the
+pipeline is in the PLAYING state.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.66.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.66.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3105,7 +3107,7 @@ last set with <a class="link" href="GstElement.html#gst-element-set-clock" title
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.66.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.66.7"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> of the element. unref after usage.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -4218,8 +4220,10 @@ state will yield the running_time against the clock.</p></td>
   /* virtual methods for subclasses */
 
   /* request/release pads */
+  /* FIXME 2.0 harmonize naming with gst_element_request_pad */
   GstPad*               (*request_new_pad)      (GstElement *element, GstPadTemplate *templ,
                                                  const gchar* name, const GstCaps *caps);
+
   void                  (*release_pad)          (GstElement *element, GstPad *pad);
 
   /* state changes */

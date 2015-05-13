@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc --enable-docbook --with-bash-completion-dir=no
+DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc --enable-docbook
 
 # note: keep in sync with configure.ac
 ACLOCAL_AMFLAGS = -I m4 -I common/m4
@@ -205,6 +205,10 @@ CRUFT_FILES = \
 
 CRUFT_DIRS = \
 	$(top_builddir)/tests/examples/xml \
+	$(top_builddir)/tests/examples/launch \
+	$(top_builddir)/tests/examples/metadata \
+	$(top_builddir)/tests/examples/queue \
+	$(top_builddir)/tests/examples/typefind \
 	$(top_builddir)/gst/tmp-introspect* \
 	$(top_builddir)/libs/gst/*/tmp-introspect*
 

@@ -99,6 +99,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstSegment.html#gst-segment-to-running-time-full" title="gst_segment_to_running_time_full ()">gst_segment_to_running_time_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <span class="returnvalue">guint64</span>
 </td>
 <td class="function_name">
@@ -135,6 +143,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstSegment.html#gst-segment-offset-running-time" title="gst_segment_offset_running_time ()">gst_segment_offset_running_time</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstSegment.html#gst-segment-is-equal" title="gst_segment_is_equal ()">gst_segment_is_equal</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -251,7 +267,7 @@ respectively, the region fell partially in the segment.</p>
  will be set to the end of the
 segment. Depending on the use case, this may or may not be what you want.</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.2.8"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.2.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -293,7 +309,7 @@ segment. Depending on the use case, this may or may not be what you want.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.2.9"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.2.9"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the given <em class="parameter"><code>start</code></em>
 and <em class="parameter"><code>stop</code></em>
 times fall partially or
@@ -315,7 +331,7 @@ flags are set.</p>
 <p>Initialize <em class="parameter"><code>segment</code></em>
  to its default values.</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.3.6"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -346,7 +362,7 @@ gst_segment_new (<em class="parameter"><code><span class="type">void</span></cod
 <a class="link" href="GstSegment.html#gst-segment-init" title="gst_segment_init ()"><code class="function">gst_segment_init()</code></a>.</p>
 <p>Free-function: gst_segment_free</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.4.6"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.4.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a>, free with <a class="link" href="GstSegment.html#gst-segment-free" title="gst_segment_free ()"><code class="function">gst_segment_free()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -360,7 +376,7 @@ gst_segment_copy (<em class="parameter"><code>const <a class="link" href="GstSeg
 .</p>
 <p>Free-function: gst_segment_free</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.5.6"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -375,7 +391,7 @@ gst_segment_copy (<em class="parameter"><code>const <a class="link" href="GstSeg
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.5.7"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.5.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a>, free with <a class="link" href="GstSegment.html#gst-segment-free" title="gst_segment_free ()"><code class="function">gst_segment_free()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -388,7 +404,7 @@ gst_segment_free (<em class="parameter"><code><a class="link" href="GstSegment.h
 <p>Free the allocated segment <em class="parameter"><code>segment</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -457,7 +473,7 @@ position field. This field can be <a href="https://developer.gnome.org/glib/unst
 
 has been changed but not the playback position.</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.7.10"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.7.10"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -514,7 +530,7 @@ has been changed but not the playback position.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.7.11"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.7.11"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the seek could be performed.</p>
 <p></p>
 </div>
@@ -537,7 +553,7 @@ starting from 0. When <a class="link" href="GstSegment.html#gst-segment-init" ti
 <p>This function returns -1 if the position is outside of <em class="parameter"><code>segment</code></em>
  start and stop.</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.8.7"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.8.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -564,11 +580,74 @@ starting from 0. When <a class="link" href="GstSegment.html#gst-segment-init" ti
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.8.8"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.8.8"></a><h4>Returns</h4>
 <p> the position as the total running time or -1 when an invalid position
 was given.</p>
 <p></p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-segment-to-running-time-full"></a><h3>gst_segment_to_running_time_full ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+gst_segment_to_running_time_full (<em class="parameter"><code>const <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> *segment</code></em>,
+                                  <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
+                                  <em class="parameter"><code><span class="type">guint64</span> position</code></em>,
+                                  <em class="parameter"><code><span class="type">guint64</span> *running_time</code></em>);</pre>
+<p>Translate <em class="parameter"><code>position</code></em>
+ to the total running time using the currently configured
+segment. Compared to <a class="link" href="GstSegment.html#gst-segment-to-running-time" title="gst_segment_to_running_time ()"><code class="function">gst_segment_to_running_time()</code></a> this function can return
+negative running-time.</p>
+<p>This function is typically used by elements that need to synchronize buffers
+against the clock or eachother.</p>
+<p><em class="parameter"><code>position</code></em>
+ can be any value and the result of this function for values outside
+of the segment is extrapolated.</p>
+<p>When 1 is returned, <em class="parameter"><code>position</code></em>
+ resulted in a positive running-time returned
+in <em class="parameter"><code>running_time</code></em>
+.</p>
+<p>When this function returns -1, the returned <em class="parameter"><code>running_time</code></em>
+ should be negated
+to get the real negative running time.</p>
+<div class="refsect3">
+<a name="id-1.3.45.8.9.9"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>segment</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> structure.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>the format of the segment.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>position</p></td>
+<td class="parameter_description"><p>the position in the segment</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>running_time</p></td>
+<td class="parameter_description"><p>result running-time</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.45.8.9.10"></a><h4>Returns</h4>
+<p> a 1 or -1 on success, 0 on failure.</p>
+<p></p>
+</div>
+<p class="since">Since 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -591,7 +670,7 @@ clock time that one wants to convert to the stream time.
 The stream time is always between 0 and the total duration of the
 media stream.</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.9.6"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.10.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -618,7 +697,7 @@ media stream.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.9.7"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.10.7"></a><h4>Returns</h4>
 <p> the position in stream_time or -1 when an invalid position
 was given.</p>
 <p></p>
@@ -636,7 +715,7 @@ gst_segment_to_position (<em class="parameter"><code>const <a class="link" href=
 <a class="link" href="GstSegment.html#gst-segment-to-running-time" title="gst_segment_to_running_time ()"><code class="function">gst_segment_to_running_time()</code></a> with that position returns <em class="parameter"><code>running_time</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -663,7 +742,7 @@ gst_segment_to_position (<em class="parameter"><code>const <a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.10.6"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.11.6"></a><h4>Returns</h4>
 <p> the position in the segment for <em class="parameter"><code>running_time</code></em>
 . This function returns
 -1 when <em class="parameter"><code>running_time</code></em>
@@ -684,7 +763,7 @@ gst_segment_set_running_time (<em class="parameter"><code><a class="link" href="
 buffer will be one with <em class="parameter"><code>running_time</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -711,7 +790,7 @@ buffer will be one with <em class="parameter"><code>running_time</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.11.6"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.12.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the segment could be updated successfully. If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is
 returned, <em class="parameter"><code>running_time</code></em>
 is -1 or not in <em class="parameter"><code>segment</code></em>
@@ -729,7 +808,7 @@ gst_segment_copy_into (<em class="parameter"><code>const <a class="link" href="G
  into <em class="parameter"><code>dest</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -763,7 +842,7 @@ gst_segment_offset_running_time (<em class="parameter"><code><a class="link" hre
  is applied to all
 future running-time calculations.</p>
 <div class="refsect3">
-<a name="id-1.3.44.8.13.5"></a><h4>Parameters</h4>
+<a name="id-1.3.45.8.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -790,7 +869,7 @@ future running-time calculations.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.44.8.13.6"></a><h4>Returns</h4>
+<a name="id-1.3.45.8.14.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the segment could be updated successfully. If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is
 returned, <em class="parameter"><code>offset</code></em>
 is not in <em class="parameter"><code>segment</code></em>
@@ -798,6 +877,43 @@ is not in <em class="parameter"><code>segment</code></em>
 <p></p>
 </div>
 <p class="since">Since 1.2.3</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-segment-is-equal"></a><h3>gst_segment_is_equal ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_segment_is_equal (<em class="parameter"><code>const <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> *s0</code></em>,
+                      <em class="parameter"><code>const <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> *s1</code></em>);</pre>
+<p>Checks for two segments being equal. Equality here is defined
+as perfect equality, including floating point values.</p>
+<div class="refsect3">
+<a name="id-1.3.45.8.15.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>s0</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> structure.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>s1</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> structure.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.45.8.15.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the segments are equal, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+<p></p>
+</div>
+<p class="since">Since 1.6</p>
 </div>
 </div>
 <div class="refsect1">
@@ -824,7 +940,7 @@ is not in <em class="parameter"><code>segment</code></em>
 <p>A helper structure that holds the configured region of
 interest in a media file.</p>
 <div class="refsect3">
-<a name="id-1.3.44.9.2.5"></a><h4>Members</h4>
+<a name="id-1.3.45.9.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -881,7 +997,8 @@ or <em class="parameter"><code>stop</code></em>
 </tr>
 <tr>
 <td class="struct_member_name"><p><span class="type">guint64</span> <em class="structfield"><code><a name="GstSegment-struct.position"></a>position</code></em>;</p></td>
-<td class="struct_member_description"><p>the position in the segment</p></td>
+<td class="struct_member_description"><p>the position in the segment (used internally by elements
+such as sources, demuxers or parsers to track progress)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -899,7 +1016,7 @@ or <em class="parameter"><code>stop</code></em>
 <p>Flags for the GstSegment structure. Currently mapped to the corresponding
 values of the seek flags.</p>
 <div class="refsect3">
-<a name="id-1.3.44.9.3.4"></a><h4>Members</h4>
+<a name="id-1.3.45.9.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
