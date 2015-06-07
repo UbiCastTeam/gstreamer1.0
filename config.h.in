@@ -67,6 +67,9 @@
 /* location of the installed gst-plugin-scanner */
 #undef GST_PLUGIN_SCANNER_INSTALLED
 
+/* location of the installed gst-ptp-helper */
+#undef GST_PTP_HELPER_INSTALLED
+
 /* Define to 1 if you have the `alarm' function. */
 #undef HAVE_ALARM
 
@@ -266,6 +269,21 @@
 
 /* Have function pthread_setname_np(const char*) */
 #undef HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
+
+/* PTP support available */
+#undef HAVE_PTP
+
+/* Use capabilities for permissions in PTP helper */
+#undef HAVE_PTP_HELPER_CAPABILITIES
+
+/* Use setuid-root for permissions in PTP helper */
+#undef HAVE_PTP_HELPER_SETUID
+
+/* PTP helper setuid group */
+#undef HAVE_PTP_HELPER_SETUID_GROUP
+
+/* PTP helper setuid user */
+#undef HAVE_PTP_HELPER_SETUID_USER
 
 /* Define to 1 if the system has the type `ptrdiff_t'. */
 #undef HAVE_PTRDIFF_T

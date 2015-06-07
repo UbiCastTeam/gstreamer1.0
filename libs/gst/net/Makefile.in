@@ -85,7 +85,8 @@ target_triplet = @target@
 subdir = libs/gst/net
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp \
-	$(libgstnet_@GST_API_VERSION@_include_HEADERS)
+	$(libgstnet_@GST_API_VERSION@_include_HEADERS) \
+	$(noinst_HEADERS)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
@@ -162,13 +163,16 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgstnet_@GST_API_VERSION@_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la
 am_libgstnet_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstnet_@GST_API_VERSION@_la-gstnetaddressmeta.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnetclientclock.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnettimepacket.lo \
-	libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo
+	libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo \
+	libgstnet_@GST_API_VERSION@_la-gstptpclock.lo \
+	libgstnet_@GST_API_VERSION@_la-gstntppacket.lo
 libgstnet_@GST_API_VERSION@_la_OBJECTS =  \
 	$(am_libgstnet_@GST_API_VERSION@_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -221,8 +225,27 @@ am__can_run_installinfo = \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
 DATA = $(gir_DATA) $(typelibs_DATA)
-HEADERS = $(libgstnet_@GST_API_VERSION@_include_HEADERS)
+HEADERS = $(libgstnet_@GST_API_VERSION@_include_HEADERS) \
+	$(noinst_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
+# Read a list of newline-separated strings from the standard input,
+# and print each of them once, without duplicates.  Input order is
+# *not* preserved.
+am__uniquify_input = $(AWK) '\
+  BEGIN { nonempty = 0; } \
+  { items[$$0] = 1; nonempty = 1; } \
+  END { if (nonempty) { for (i in items) print i; }; } \
+'
+# Make sure the list of sources is unique.  This is necessary because,
+# e.g., the same source file might be shared among _SOURCES variables
+# for different programs/libraries.
+am__define_uniq_tagged_files = \
+  list='$(am__tagged_files)'; \
+  unique=`for i in $$list; do \
+    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+  done | $(am__uniquify_input)`
+ETAGS = etags
+CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
@@ -239,6 +262,7 @@ BASH_COMPLETION_DIR = @BASH_COMPLETION_DIR@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
+CAP_LIBS = @CAP_LIBS@
 CAT_ENTRY_END = @CAT_ENTRY_END@
 CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
@@ -329,6 +353,7 @@ GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
 GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
+GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
 GST_REVISION = @GST_REVISION@
 GST_VERSION_MAJOR = @GST_VERSION_MAJOR@
@@ -340,6 +365,7 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
 HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
@@ -426,6 +452,7 @@ PYTHON_PREFIX = @PYTHON_PREFIX@
 PYTHON_VERSION = @PYTHON_VERSION@
 RANLIB = @RANLIB@
 SED = @SED@
+SETCAP = @SETCAP@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -514,17 +541,23 @@ libgstnet_@GST_API_VERSION@_include_HEADERS = \
     gstnetclientclock.h \
     gstnetcontrolmessagemeta.h \
     gstnettimepacket.h \
-    gstnettimeprovider.h
+    gstnettimeprovider.h \
+    gstptpclock.h
 
 libgstnet_@GST_API_VERSION@_la_SOURCES = \
     gstnetaddressmeta.c \
     gstnetclientclock.c \
     gstnetcontrolmessagemeta.c \
     gstnettimepacket.c \
-    gstnettimeprovider.c
+    gstnettimeprovider.c \
+    gstptpclock.c \
+    gstntppacket.c
 
+noinst_HEADERS = gstptp_private.h gstntppacket.h
 libgstnet_@GST_API_VERSION@_la_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
-libgstnet_@GST_API_VERSION@_la_LIBADD = $(GST_OBJ_LIBS) $(GIO_LIBS)
+libgstnet_@GST_API_VERSION@_la_LIBADD = $(GST_OBJ_LIBS) $(GIO_LIBS) \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la
+
 libgstnet_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
 CLEANFILES = *.gcno *.gcda *.gcov $(am__append_1)
 @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstNet-@GST_API_VERSION@.gir
@@ -622,6 +655,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimepacket.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstntppacket.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstptpclock.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -681,6 +716,20 @@ libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo: gstnettimeprovider.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstnettimeprovider.c' object='libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo `test -f 'gstnettimeprovider.c' || echo '$(srcdir)/'`gstnettimeprovider.c
+
+libgstnet_@GST_API_VERSION@_la-gstptpclock.lo: gstptpclock.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstnet_@GST_API_VERSION@_la-gstptpclock.lo -MD -MP -MF $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstptpclock.Tpo -c -o libgstnet_@GST_API_VERSION@_la-gstptpclock.lo `test -f 'gstptpclock.c' || echo '$(srcdir)/'`gstptpclock.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstptpclock.Tpo $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstptpclock.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstptpclock.c' object='libgstnet_@GST_API_VERSION@_la-gstptpclock.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstptpclock.lo `test -f 'gstptpclock.c' || echo '$(srcdir)/'`gstptpclock.c
+
+libgstnet_@GST_API_VERSION@_la-gstntppacket.lo: gstntppacket.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstnet_@GST_API_VERSION@_la-gstntppacket.lo -MD -MP -MF $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstntppacket.Tpo -c -o libgstnet_@GST_API_VERSION@_la-gstntppacket.lo `test -f 'gstntppacket.c' || echo '$(srcdir)/'`gstntppacket.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstntppacket.Tpo $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstntppacket.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstntppacket.c' object='libgstnet_@GST_API_VERSION@_la-gstntppacket.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstntppacket.lo `test -f 'gstntppacket.c' || echo '$(srcdir)/'`gstntppacket.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -750,12 +799,58 @@ uninstall-libgstnet_@GST_API_VERSION@_includeHEADERS:
 	@list='$(libgstnet_@GST_API_VERSION@_include_HEADERS)'; test -n "$(libgstnet_@GST_API_VERSION@_includedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(libgstnet_@GST_API_VERSION@_includedir)'; $(am__uninstall_files_from_dir)
-tags TAGS:
 
-ctags CTAGS:
+ID: $(am__tagged_files)
+	$(am__define_uniq_tagged_files); mkid -fID $$unique
+tags: tags-am
+TAGS: tags
 
-cscope cscopelist:
+tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
+	set x; \
+	here=`pwd`; \
+	$(am__define_uniq_tagged_files); \
+	shift; \
+	if test -z "$(ETAGS_ARGS)$$*$$unique"; then :; else \
+	  test -n "$$unique" || unique=$$empty_fix; \
+	  if test $$# -gt 0; then \
+	    $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	      "$$@" $$unique; \
+	  else \
+	    $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	      $$unique; \
+	  fi; \
+	fi
+ctags: ctags-am
 
+CTAGS: ctags
+ctags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
+	$(am__define_uniq_tagged_files); \
+	test -z "$(CTAGS_ARGS)$$unique" \
+	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
+	     $$unique
+
+GTAGS:
+	here=`$(am__cd) $(top_builddir) && pwd` \
+	  && $(am__cd) $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) "$$here"
+cscopelist: cscopelist-am
+
+cscopelist-am: $(am__tagged_files)
+	list='$(am__tagged_files)'; \
+	case "$(srcdir)" in \
+	  [\\/]* | ?:[\\/]*) sdir="$(srcdir)" ;; \
+	  *) sdir=$(subdir)/$(srcdir) ;; \
+	esac; \
+	for i in $$list; do \
+	  if test -f "$$i"; then \
+	    echo "$(subdir)/$$i"; \
+	  else \
+	    echo "$$sdir/$$i"; \
+	  fi; \
+	done >> $(top_builddir)/cscope.files
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
@@ -789,7 +884,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS) all-local
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" "$(DESTDIR)$(typelibsdir)" "$(DESTDIR)$(libgstnet_@GST_API_VERSION@_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -833,7 +928,8 @@ clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-compile distclean-generic
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-tags
 
 dvi: dvi-am
 
@@ -901,25 +997,37 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool cscopelist-am ctags-am \
-	distclean distclean-compile distclean-generic \
-	distclean-libtool distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-girDATA \
-	install-html install-html-am install-info install-info-am \
-	install-libLTLIBRARIES \
+.PHONY: CTAGS GTAGS TAGS all all-am all-local check check-am clean \
+	clean-generic clean-libLTLIBRARIES clean-libtool cscopelist-am \
+	ctags ctags-am distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-girDATA install-html install-html-am \
+	install-info install-info-am install-libLTLIBRARIES \
 	install-libgstnet_@GST_API_VERSION@_includeHEADERS install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
 	install-strip install-typelibsDATA installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags-am uninstall uninstall-am uninstall-girDATA \
+	tags tags-am uninstall uninstall-am uninstall-girDATA \
 	uninstall-libLTLIBRARIES \
 	uninstall-libgstnet_@GST_API_VERSION@_includeHEADERS \
 	uninstall-typelibsDATA
 
+
+# try to prevent packaging errors
+check-libexecdir-consistency:
+	@if test "${GST_PTP_HELPER_INSTALLED}" != "${libexecdir}/gstreamer-$(GST_API_VERSION)/gst-ptp-helper"; then \
+	  echo "*** Inconsistent libexecdir! Please use ./configure --libexecdir=/foo/bar"; \
+	  echo "*** to set the libexecdir and not make libexecdir=/foo/bar or the like."; \
+	  echo "*** The same goes for prefix, libdir etc."; \
+	  echo "*** ${GST_PTP_HELPER_INSTALLED} != ${libexecdir}/gstreamer-$(GST_API_VERSION)/gst-ptp-helper"; \
+	  exit 1; \
+	fi
+
+all-local: check-libexecdir-consistency
 
 %.c.gcov: .libs/libgstnet_@GST_API_VERSION@_la-%.gcda %.c
 	$(GCOV) -b -f -o $^ > $@.out

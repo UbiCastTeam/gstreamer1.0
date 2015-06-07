@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstFlowCombiner</title>
+<title>GstFlowCombiner: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstCollectPads.html" title="GstCollectPads">
 <link rel="next" href="gstreamer-libs-GstTypeFindHelper.html" title="GstTypeFindHelper">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -104,7 +104,7 @@ the different <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/
 it has in its list and computes the combined return value and provides
 it to the caller.</p>
 <p>To add a new pad to the <span class="type">GstFlowCombiner</span> use <a class="link" href="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-add-pad" title="gst_flow_combiner_add_pad ()"><code class="function">gst_flow_combiner_add_pad()</code></a>.
-The new <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> is stored with a default value of <code class="literal">GST_FLOW_OK</code>.</p>
+The new <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> is stored with a default value of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>.</p>
 <p>In case you want a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> to be removed, use <a class="link" href="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-remove-pad" title="gst_flow_combiner_remove_pad ()"><code class="function">gst_flow_combiner_remove_pad()</code></a>.</p>
 <p>Please be aware that this struct isn't thread safe as its designed to be
  used by demuxers, those usually will have a single thread operating it.</p>
@@ -113,14 +113,14 @@ The new <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstrea
 helper struct is to follow the standard rules for <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> combination.
 These rules are:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p><code class="literal">GST_FLOW_EOS</code>: only if all returns are EOS too</p></li>
-<li class="listitem"><p><code class="literal">GST_FLOW_NOT_LINKED</code>: only if all returns are NOT_LINKED too</p></li>
-<li class="listitem"><p><code class="literal">GST_FLOW_ERROR</code> or below: if at least one returns an error return</p></li>
-<li class="listitem"><p><code class="literal">GST_FLOW_NOT_NEGOTIATED</code>: if at least one returns a not-negotiated return</p></li>
-<li class="listitem"><p><code class="literal">GST_FLOW_FLUSHING</code>: if at least one returns flushing</p></li>
-<li class="listitem"><p><code class="literal">GST_FLOW_OK</code>: otherwise</p></li>
+<li class="listitem"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-EOS:CAPS"><code class="literal">GST_FLOW_EOS</code></a>: only if all returns are EOS too</p></li>
+<li class="listitem"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-NOT-LINKED:CAPS"><code class="literal">GST_FLOW_NOT_LINKED</code></a>: only if all returns are NOT_LINKED too</p></li>
+<li class="listitem"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-ERROR:CAPS"><code class="literal">GST_FLOW_ERROR</code></a> or below: if at least one returns an error return</p></li>
+<li class="listitem"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-NOT-NEGOTIATED:CAPS"><code class="literal">GST_FLOW_NOT_NEGOTIATED</code></a>: if at least one returns a not-negotiated return</p></li>
+<li class="listitem"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-FLUSHING:CAPS"><code class="literal">GST_FLOW_FLUSHING</code></a>: if at least one returns flushing</p></li>
+<li class="listitem"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>: otherwise</p></li>
 </ul></div>
-<p><code class="literal">GST_FLOW_ERROR</code> or below, GST_FLOW_NOT_NEGOTIATED and GST_FLOW_FLUSHING are
+<p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-ERROR:CAPS"><code class="literal">GST_FLOW_ERROR</code></a> or below, GST_FLOW_NOT_NEGOTIATED and GST_FLOW_FLUSHING are
 returned immediatelly from the <a class="link" href="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-update-flow" title="gst_flow_combiner_update_flow ()"><code class="function">gst_flow_combiner_update_flow()</code></a> function.</p>
 </div>
 <div class="refsect1">
@@ -133,9 +133,8 @@ gst_flow_combiner_new (<em class="parameter"><code><span class="type">void</span
 <div class="refsect3">
 <a name="id-1.2.4.13.6.2.5"></a><h4>Returns</h4>
 <p> A new <span class="type">GstFlowCombiner</span></p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -158,7 +157,7 @@ gst_flow_combiner_free (<em class="parameter"><code><span class="type">GstFlowCo
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -196,9 +195,8 @@ return is the same as the latest obtained <a href="http://gstreamer.freedesktop.
 <div class="refsect3">
 <a name="id-1.2.4.13.6.4.7"></a><h4>Returns</h4>
 <p> The combined <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a></p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -229,7 +227,7 @@ gst_flow_combiner_add_pad (<em class="parameter"><code><span class="type">GstFlo
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -260,7 +258,7 @@ gst_flow_combiner_remove_pad (<em class="parameter"><code><span class="type">Gst
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -283,7 +281,7 @@ gst_flow_combiner_clear (<em class="parameter"><code><span class="type">GstFlowC
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.6</p>
+<p class="since">Since: 1.6</p>
 </div>
 </div>
 <div class="refsect1">
@@ -291,7 +289,6 @@ gst_flow_combiner_clear (<em class="parameter"><code><span class="type">GstFlowC
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

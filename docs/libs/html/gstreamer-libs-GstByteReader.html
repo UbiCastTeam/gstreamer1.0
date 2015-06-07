@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstByteReader</title>
+<title>GstByteReader: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstBitReader.html" title="GstBitReader">
 <link rel="next" href="gstreamer-libs-GstByteWriter.html" title="GstByteWriter">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1169,8 +1169,9 @@ formats and make sure that one doesn't read beyond the size of the sub-chunk.</p
 <p>Unlike <a class="link" href="gstreamer-libs-GstByteReader.html#gst-byte-reader-get-sub-reader" title="gst_byte_reader_get_sub_reader ()"><code class="function">gst_byte_reader_get_sub_reader()</code></a>, this function does not modify the
 current position of <em class="parameter"><code>reader</code></em>
 .</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.10.7.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.10.7.6.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1198,14 +1199,13 @@ in bytes</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.10.7.6.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.10.7.6.8"></a><h4>Returns</h4>
 <p> FALSE on error or if <em class="parameter"><code>reader</code></em>
 does not contain <em class="parameter"><code>size</code></em>
 more bytes from
 the current position, and otherwise TRUE</p>
-<p></p>
 </div>
-<p class="since">Since 1.6</p>
+<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1223,8 +1223,9 @@ formats and make sure that one doesn't read beyond the size of the sub-chunk.</p
 position of <em class="parameter"><code>reader</code></em>
  and moves it forward by <em class="parameter"><code>size</code></em>
  bytes.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.10.7.7.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.10.7.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1252,14 +1253,13 @@ in bytes</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.10.7.7.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.10.7.7.8"></a><h4>Returns</h4>
 <p> FALSE on error or if <em class="parameter"><code>reader</code></em>
 does not contain <em class="parameter"><code>size</code></em>
 more bytes from
 the current position, and otherwise TRUE</p>
-<p></p>
 </div>
-<p class="since">Since 1.6</p>
+<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1286,7 +1286,6 @@ gst_byte_reader_get_pos (<em class="parameter"><code>const <a class="link" href=
 <a name="id-1.2.4.10.7.8.6"></a><h4>Returns</h4>
 <p> The current position of <em class="parameter"><code>reader</code></em>
 in bytes.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1314,7 +1313,6 @@ gst_byte_reader_get_remaining (<em class="parameter"><code>const <a class="link"
 <a name="id-1.2.4.10.7.9.6"></a><h4>Returns</h4>
 <p> The remaining number of bytes of <em class="parameter"><code>reader</code></em>
 instance.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1351,7 +1349,6 @@ gst_byte_reader_set_pos (<em class="parameter"><code><a class="link" href="gstre
 <a name="id-1.2.4.10.7.10.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the position could be set successfully, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
 otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1379,7 +1376,6 @@ gst_byte_reader_get_size (<em class="parameter"><code>const <a class="link" href
 <a name="id-1.2.4.10.7.11.6"></a><h4>Returns</h4>
 <p> The total number of bytes of <em class="parameter"><code>reader</code></em>
 instance.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1416,7 +1412,6 @@ gst_byte_reader_skip (<em class="parameter"><code><a class="link" href="gstreame
 <a name="id-1.2.4.10.7.12.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>nbytes</code></em>
 bytes could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1452,7 +1447,6 @@ gst_byte_reader_get_int8 (<em class="parameter"><code><a class="link" href="gstr
 <div class="refsect3">
 <a name="id-1.2.4.10.7.13.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1489,7 +1483,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.14.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1526,7 +1519,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.15.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1563,7 +1555,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.16.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1600,7 +1591,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.17.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1637,7 +1627,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.18.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1674,7 +1663,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.19.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1711,7 +1699,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.20.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1748,7 +1735,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.21.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1784,7 +1770,6 @@ gst_byte_reader_get_uint8 (<em class="parameter"><code><a class="link" href="gst
 <div class="refsect3">
 <a name="id-1.2.4.10.7.22.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1821,7 +1806,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.23.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1858,7 +1842,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.24.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1895,7 +1878,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.25.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1932,7 +1914,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.26.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1969,7 +1950,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.27.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2006,7 +1986,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.28.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2043,7 +2022,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.29.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2080,7 +2058,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.30.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2116,7 +2093,6 @@ gst_byte_reader_peek_int8 (<em class="parameter"><code>const <a class="link" hre
 <div class="refsect3">
 <a name="id-1.2.4.10.7.31.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2153,7 +2129,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.32.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2190,7 +2165,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.33.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2227,7 +2201,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.34.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2264,7 +2237,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.35.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2301,7 +2273,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.36.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2338,7 +2309,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.37.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2375,7 +2345,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.38.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2412,7 +2381,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.39.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2448,7 +2416,6 @@ gst_byte_reader_peek_uint8 (<em class="parameter"><code>const <a class="link" hr
 <div class="refsect3">
 <a name="id-1.2.4.10.7.40.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2485,7 +2452,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.41.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2522,7 +2488,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.42.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2559,7 +2524,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.43.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2596,7 +2560,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.44.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2633,7 +2596,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.45.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2670,7 +2632,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.46.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2707,7 +2668,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.47.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2744,7 +2704,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.48.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2781,7 +2740,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.49.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2818,7 +2776,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.50.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2855,7 +2812,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.51.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2892,7 +2848,6 @@ and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.52.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2929,7 +2884,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.53.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2966,7 +2920,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.54.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3003,7 +2956,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.55.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3040,7 +2992,6 @@ but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.56.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3085,7 +3036,6 @@ updates the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.57.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3131,7 +3081,6 @@ updates the current position. Free with <a href="https://developer.gnome.org/gli
 <div class="refsect3">
 <a name="id-1.2.4.10.7.58.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3176,7 +3125,6 @@ keeps the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.59.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3261,7 +3209,6 @@ gst_byte_reader_masked_scan_uint32 (reader, 0xffff0000, 0x02030000, 0, 256);
 gst_byte_reader_masked_scan_uint32 (reader, 0xffff0000, 0x02030000, 0, 4);
 // -&gt; returns -1
 </pre>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3335,9 +3282,8 @@ position</p></td>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.61.8"></a><h4>Returns</h4>
 <p> offset of the first match, or -1 if no match was found.</p>
-<p></p>
 </div>
-<p class="since">Since 1.6</p>
+<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3383,7 +3329,6 @@ UTF-8, ISO-8859-N etc.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.63.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be found, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3422,7 +3367,6 @@ UTF-8, ISO-8859-N etc.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.64.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3464,7 +3408,6 @@ UTF-8, ISO-8859-N etc.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.65.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3513,7 +3456,6 @@ UTF-8, ISO-8859-N etc. No input checking for valid UTF-8 is done.</p>
 , <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise. The
 string put into <em class="parameter"><code>str</code></em>
 must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3560,7 +3502,6 @@ byte alignment of the UTF-16 string.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be read, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise. The
 string put into <em class="parameter"><code>str</code></em>
 must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3607,7 +3548,6 @@ byte alignment of the UTF-32 string.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be read, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise. The
 string put into <em class="parameter"><code>str</code></em>
 must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3637,7 +3577,6 @@ UTF-8, ISO-8859-N etc.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.70.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3668,7 +3607,6 @@ UTF-8, ISO-8859-N etc. No input checking for valid UTF-8 is done.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.71.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3698,7 +3636,6 @@ advancing the current position to the byte after the string.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.72.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3728,7 +3665,6 @@ advancing the current position to the byte after the string.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.73.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a string could be skipped, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3788,7 +3724,6 @@ available in the byte reader and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.75.6"></a><h4>Returns</h4>
 <p> signed 8 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3818,7 +3753,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.76.6"></a><h4>Returns</h4>
 <p> signed 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3848,7 +3782,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.77.6"></a><h4>Returns</h4>
 <p> signed 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3878,7 +3811,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.78.6"></a><h4>Returns</h4>
 <p> signed 24 bit integer (as gint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3908,7 +3840,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.79.6"></a><h4>Returns</h4>
 <p> signed 24 bit integer (as gint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3938,7 +3869,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.80.6"></a><h4>Returns</h4>
 <p> signed 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3968,7 +3898,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.81.6"></a><h4>Returns</h4>
 <p> signed 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3998,7 +3927,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.82.6"></a><h4>Returns</h4>
 <p> signed 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4028,7 +3956,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.83.6"></a><h4>Returns</h4>
 <p> signed 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4056,7 +3983,6 @@ available in the byte reader and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.84.6"></a><h4>Returns</h4>
 <p> unsigned 8 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4086,7 +4012,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.85.6"></a><h4>Returns</h4>
 <p> unsigned 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4116,7 +4041,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.86.6"></a><h4>Returns</h4>
 <p> unsigned 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4146,7 +4070,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.87.6"></a><h4>Returns</h4>
 <p> unsigned 24 bit integer (as guint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4176,7 +4099,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.88.6"></a><h4>Returns</h4>
 <p> unsigned 24 bit integer (as guint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4206,7 +4128,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.89.6"></a><h4>Returns</h4>
 <p> unsigned 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4236,7 +4157,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.90.6"></a><h4>Returns</h4>
 <p> unsigned 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4266,7 +4186,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.91.6"></a><h4>Returns</h4>
 <p> unsigned 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4296,7 +4215,6 @@ current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.92.6"></a><h4>Returns</h4>
 <p> unsigned 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4324,7 +4242,6 @@ available in the byte reader, but do not advance the current read position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.93.6"></a><h4>Returns</h4>
 <p> signed 8 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4354,7 +4271,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.94.6"></a><h4>Returns</h4>
 <p> signed 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4384,7 +4300,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.95.6"></a><h4>Returns</h4>
 <p> signed 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4414,7 +4329,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.96.6"></a><h4>Returns</h4>
 <p> signed 24 bit integer (as gint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4444,7 +4358,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.97.6"></a><h4>Returns</h4>
 <p> signed 24 bit integer (as gint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4474,7 +4387,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.98.6"></a><h4>Returns</h4>
 <p> signed 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4504,7 +4416,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.99.6"></a><h4>Returns</h4>
 <p> signed 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4534,7 +4445,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.100.6"></a><h4>Returns</h4>
 <p> signed 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4564,7 +4474,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.101.6"></a><h4>Returns</h4>
 <p> signed 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4592,7 +4501,6 @@ available in the byte reader, but do not advance the current read position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.102.6"></a><h4>Returns</h4>
 <p> unsigned 8 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4622,7 +4530,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.103.6"></a><h4>Returns</h4>
 <p> unsigned 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4652,7 +4559,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.104.6"></a><h4>Returns</h4>
 <p> unsigned 16 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4682,7 +4588,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.105.6"></a><h4>Returns</h4>
 <p> unsigned 24 bit integer (as guint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4712,7 +4617,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.106.6"></a><h4>Returns</h4>
 <p> unsigned 24 bit integer (as guint32)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4742,7 +4646,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.107.6"></a><h4>Returns</h4>
 <p> unsigned 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4772,7 +4675,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.108.6"></a><h4>Returns</h4>
 <p> unsigned 32 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4802,7 +4704,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.109.6"></a><h4>Returns</h4>
 <p> unsigned 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4832,7 +4733,6 @@ the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.110.6"></a><h4>Returns</h4>
 <p> unsigned 64 bit integer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4861,7 +4761,6 @@ data available and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.111.6"></a><h4>Returns</h4>
 <p> floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4890,7 +4789,6 @@ data available and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.112.6"></a><h4>Returns</h4>
 <p> floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4919,7 +4817,6 @@ data available and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.113.6"></a><h4>Returns</h4>
 <p> double precision floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4948,7 +4845,6 @@ data available and update the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.114.6"></a><h4>Returns</h4>
 <p> double precision floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4977,7 +4873,6 @@ data available, but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.115.6"></a><h4>Returns</h4>
 <p> floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5006,7 +4901,6 @@ data available, but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.116.6"></a><h4>Returns</h4>
 <p> floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5035,7 +4929,6 @@ data available, but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.117.6"></a><h4>Returns</h4>
 <p> double precision floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5064,7 +4957,6 @@ data available, but keep the current position.</p>
 <div class="refsect3">
 <a name="id-1.2.4.10.7.118.6"></a><h4>Returns</h4>
 <p> double precision floating point value read</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5221,7 +5113,6 @@ in bytes</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

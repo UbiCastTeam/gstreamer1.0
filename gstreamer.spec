@@ -4,8 +4,8 @@
 %define 	_glib2		2.32.0
 
 Name: 		%{gstreamer}
-Version: 	1.5.0.1
-Release: 	0.20150513.125409
+Version: 	1.5.1
+Release: 	1
 Summary: 	GStreamer streaming media framework runtime
 
 Group: 		Applications/Multimedia

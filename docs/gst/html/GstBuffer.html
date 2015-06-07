@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstBuffer</title>
+<title>GstBuffer: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstBin.html" title="GstBin">
 <link rel="next" href="GstBufferList.html" title="GstBufferList">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1333,7 +1333,6 @@ buffer memory blocks with <a class="link" href="GstBuffer.html#gst-buffer-resize
 <a name="id-1.3.7.8.24.7"></a><h4>Returns</h4>
 <p> total size of the memory blocks in <em class="parameter"><code>buffer</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1362,7 +1361,6 @@ gst_buffer_get_size (<em class="parameter"><code><a class="link" href="GstBuffer
 <a name="id-1.3.7.8.25.6"></a><h4>Returns</h4>
 <p> total size of the memory blocks in <em class="parameter"><code>buffer</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1436,7 +1434,6 @@ and <em class="parameter"><code>offset</code></em>
 memory blocks starting at <em class="parameter"><code>idx</code></em>
 in <em class="parameter"><code>buffer</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1493,7 +1490,6 @@ gst_buffer_resize_range (<em class="parameter"><code><a class="link" href="GstBu
 <div class="refsect3">
 <a name="id-1.3.7.8.27.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if resizing succeeded, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1576,9 +1572,8 @@ together to make room for the new block.</p>
 <div class="refsect3">
 <a name="id-1.3.7.8.30.6"></a><h4>Returns</h4>
 <p> the maximum amount of memory blocks that a buffer can hold.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1921,7 +1916,6 @@ and <em class="parameter"><code>idx</code></em>
 , <em class="parameter"><code>length</code></em>
 and <em class="parameter"><code>skip</code></em>
 will be filled.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2220,9 +2214,8 @@ gst_buffer_is_all_memory_writable (<em class="parameter"><code><a class="link" h
 <a name="id-1.3.7.8.46.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if all memory blocks in <em class="parameter"><code>buffer</code></em>
 are writable</p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2271,9 +2264,8 @@ gst_buffer_is_memory_range_writable (<em class="parameter"><code><a class="link"
 <div class="refsect3">
 <a name="id-1.3.7.8.47.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory range is writable</p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2330,7 +2322,6 @@ usage.</p>
 <a name="id-1.3.7.8.48.9"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map succeeded and <em class="parameter"><code>info</code></em>
 contains valid data.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2405,7 +2396,6 @@ will then also be replaced with this writable copy.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map succeeded and <em class="parameter"><code>info</code></em>
 contains valid
 data.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2487,7 +2477,6 @@ gst_buffer_memcmp (<em class="parameter"><code><a class="link" href="GstBuffer.h
 <div class="refsect3">
 <a name="id-1.3.7.8.51.6"></a><h4>Returns</h4>
 <p> 0 if the memory is equal.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2540,7 +2529,6 @@ gst_buffer_extract (<em class="parameter"><code><a class="link" href="GstBuffer.
 <p> The amount of bytes extracted. This value can be lower than <em class="parameter"><code>size</code></em>
 when <em class="parameter"><code>buffer</code></em>
 did not contain enough data.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2596,7 +2584,7 @@ can be written. </p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.0.10</p>
+<p class="since">Since: 1.0.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2648,7 +2636,6 @@ gst_buffer_fill (<em class="parameter"><code><a class="link" href="GstBuffer.htm
 <p> The amount of bytes copied. This value can be lower than <em class="parameter"><code>size</code></em>
 when <em class="parameter"><code>buffer</code></em>
 did not contain enough data.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2702,7 +2689,6 @@ gst_buffer_memset (<em class="parameter"><code><a class="link" href="GstBuffer.h
 <p> The amount of bytes filled. This value can be lower than <em class="parameter"><code>size</code></em>
 when <em class="parameter"><code>buffer</code></em>
 did not contain enough data.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2812,7 +2798,6 @@ the memory from <em class="parameter"><code>src</code></em>
 <div class="refsect3">
 <a name="id-1.3.7.8.59.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the copying succeeded, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2977,7 +2962,6 @@ replace the buffer pointed to by <em class="parameter"><code>obuf</code></em>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>obuf</code></em>
 was different from <em class="parameter"><code>nbuf</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3206,7 +3190,6 @@ gst_buffer_remove_meta (<em class="parameter"><code><a class="link" href="GstBuf
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the metadata existed and was removed, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if no such
 metadata was on <em class="parameter"><code>buffer</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3296,7 +3279,6 @@ returned. When <a href="https://developer.gnome.org/glib/unstable/glib-Standard-
 <div class="refsect3">
 <a name="id-1.3.7.8.70.9"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <a class="link" href="GstBuffer.html#gst-buffer-foreach-meta" title="gst_buffer_foreach_meta ()"><code class="function">gst_buffer_foreach_meta()</code></a> should stop</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3347,7 +3329,6 @@ in the buffer should be skipped.</p>
 <a name="id-1.3.7.8.71.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <em class="parameter"><code>func</code></em>
 returned <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for one of the metadata.</p>
-<p></p>
 </div>
 </div>
 </div>
@@ -3630,7 +3611,6 @@ function to specify which items should be copied.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstDataQueue</title>
+<title>GstDataQueue: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstTypeFindHelper.html" title="GstTypeFindHelper">
 <link rel="next" href="gstreamer-libs-GstQueueArray.html" title="GstQueueArray">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -208,8 +208,9 @@ any <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/
                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> checkdata</code></em>);</pre>
 <p>The prototype of the function used to inform the queue that it should be
 considered as full.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.2.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -246,9 +247,8 @@ considered as full.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.2.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.2.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the queue should be considered full.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -279,8 +279,9 @@ gst_data_queue_new (<em class="parameter"><code><a class="link" href="gstreamer-
 the <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> will call the respective callback to signal full or empty condition.
 If the callbacks are NULL the <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> will instead emit 'full' and 'empty'
 signals.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -317,11 +318,10 @@ callbacks.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.5.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.5.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a>.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -343,8 +343,9 @@ the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/
  if the push was successful. If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
 is returned, the caller is responsible for freeing <em class="parameter"><code>item</code></em>
  and its contents.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.6.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -366,13 +367,12 @@ is returned, the caller is responsible for freeing <em class="parameter"><code>i
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.6.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.6.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>item</code></em>
 was successfully pushed on the <em class="parameter"><code>queue</code></em>
 .</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -394,8 +394,9 @@ the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/
  if the push was successful. If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
 is returned, the caller is responsible for freeing <em class="parameter"><code>item</code></em>
  and its contents.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.7.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -417,13 +418,12 @@ is returned, the caller is responsible for freeing <em class="parameter"><code>i
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.7.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.7.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>item</code></em>
 was successfully pushed on the <em class="parameter"><code>queue</code></em>
 .</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -438,8 +438,9 @@ empty, the call will block until at least one item is available, OR the
 <em class="parameter"><code>queue</code></em>
  is set to the flushing state.
 MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -461,13 +462,12 @@ MT safe.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.8.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.8.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if an <em class="parameter"><code>item</code></em>
 was successfully retrieved from the <em class="parameter"><code>queue</code></em>
 .</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -482,8 +482,9 @@ If the queue is currently empty, the call will block until at least
 one item is available, OR the <em class="parameter"><code>queue</code></em>
  is set to the flushing state.
 MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -505,13 +506,12 @@ MT safe.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.9.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.9.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if an <em class="parameter"><code>item</code></em>
 was successfully retrieved from the <em class="parameter"><code>queue</code></em>
 .</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -522,8 +522,9 @@ gst_data_queue_flush (<em class="parameter"><code><a class="link" href="gstreame
 . Any call to <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-push" title="gst_data_queue_push ()"><span class="type">gst_data_queue_push</span></a> and
 <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-pop" title="gst_data_queue_pop ()"><span class="type">gst_data_queue_pop</span></a> will be released.
 MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.10.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -537,7 +538,7 @@ MT safe.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -554,8 +555,9 @@ away with a return value of <a href="https://developer.gnome.org/glib/unstable/g
  is in flushing state, 
 all calls to those two functions will return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p>MT Safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.11.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.11.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -576,7 +578,7 @@ all calls to those two functions will return <a href="https://developer.gnome.or
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -585,8 +587,9 @@ all calls to those two functions will return <a href="https://developer.gnome.or
 gst_data_queue_drop_head (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>,
                           <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> type</code></em>);</pre>
 <p>Pop and unref the head-most <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstMiniObject.html#GstMiniObject"><span class="type">GstMiniObject</span></a> with the given <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a>.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.12.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.12.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -608,11 +611,10 @@ gst_data_queue_drop_head (<em class="parameter"><code><a class="link" href="gstr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.12.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.12.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if an element was removed.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -624,8 +626,9 @@ gst_data_queue_is_full (<em class="parameter"><code><a class="link" href="gstrea
 <a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueCheckFullFunction" title="GstDataQueueCheckFullFunction ()"><span class="type">GstDataQueueCheckFullFunction</span></a> registered with <em class="parameter"><code>queue</code></em>
 .
 MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.13.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -640,12 +643,11 @@ MT safe.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.13.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.13.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>queue</code></em>
 is full.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -655,8 +657,9 @@ gst_data_queue_is_empty (<em class="parameter"><code><a class="link" href="gstre
 <p>Queries if there are any items in the <em class="parameter"><code>queue</code></em>
 .
 MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.14.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.14.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -671,12 +674,11 @@ MT safe.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.14.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.15.7.14.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>queue</code></em>
 is empty.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -685,8 +687,9 @@ is empty.</p>
 gst_data_queue_get_level (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>,
                           <em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueueSize" title="struct GstDataQueueSize"><span class="type">GstDataQueueSize</span></a> *level</code></em>);</pre>
 <p>Get the current level of the queue.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.15.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.15.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -707,7 +710,7 @@ gst_data_queue_get_level (<em class="parameter"><code><a class="link" href="gstr
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -716,8 +719,9 @@ gst_data_queue_get_level (<em class="parameter"><code><a class="link" href="gstr
 gst_data_queue_limits_changed (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstDataQueue.html#GstDataQueue" title="struct GstDataQueue"><span class="type">GstDataQueue</span></a> *queue</code></em>);</pre>
 <p>Inform the queue that the limits for the fullness check have changed and that
 any blocking <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-queue-push" title="gst_data_queue_push ()"><code class="function">gst_data_queue_push()</code></a> should be unblocked to recheck the limits.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.15.7.16.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.15.7.16.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -731,7 +735,7 @@ any blocking <a class="link" href="gstreamer-libs-GstDataQueue.html#gst-data-que
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 </div>
 <div class="refsect1">
@@ -858,7 +862,6 @@ the owner of the
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>
