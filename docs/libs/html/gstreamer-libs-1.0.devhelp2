@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
 <book xmlns="http://www.devhelp.net/book" title="GStreamer 1.0 Library Reference Manual" link="index.html" author="" name="gstreamer-libs-1.0" version="2" language="c">
   <chapters>
     <sub name="GStreamer Libraries" link="gstreamer-libs.html">
@@ -32,6 +31,7 @@
         <sub name="GstNetClientClock" link="GstNetClientClock.html"/>
         <sub name="GstNetTimePacket" link="gstreamer-libs-GstNetTimePacket.html"/>
         <sub name="GstNetTimeProvider" link="GstNetTimeProvider.html"/>
+        <sub name="GstPtpClock" link="gstreamer-libs-GstPtpClock.html"/>
       </sub>
       <sub name="GStreamer Check Unit Testing" link="gstreamer-check.html">
         <sub name="GstCheck" link="gstreamer-libs-GstCheck.html"/>
@@ -76,7 +76,6 @@
     <keyword type="enum" name="enum GstBaseParseFrameFlags" link="GstBaseParse.html#GstBaseParseFrameFlags"/>
     <keyword type="macro" name="GST_BASE_PARSE_FLOW_DROPPED" link="GstBaseParse.html#GST-BASE-PARSE-FLOW-DROPPED:CAPS"/>
     <keyword type="property" name="The “disable-passthrough” property" link="GstBaseParse.html#GstBaseParse--disable-passthrough"/>
-    <keyword type="" name="Controlled shutdown of live sources in applications" link="GstBaseSrc.html#id-1.2.4.4.8.19"/>
     <keyword type="function" name="gst_base_src_wait_playing ()" link="GstBaseSrc.html#gst-base-src-wait-playing"/>
     <keyword type="function" name="gst_base_src_start_wait ()" link="GstBaseSrc.html#gst-base-src-start-wait"/>
     <keyword type="function" name="gst_base_src_start_complete ()" link="GstBaseSrc.html#gst-base-src-start-complete"/>
@@ -156,8 +155,6 @@
     <keyword type="property" name="The “sync” property" link="GstBaseSink.html#GstBaseSink--sync"/>
     <keyword type="property" name="The “throttle-time” property" link="GstBaseSink.html#GstBaseSink--throttle-time"/>
     <keyword type="property" name="The “ts-offset” property" link="GstBaseSink.html#GstBaseSink--ts-offset"/>
-    <keyword type="" name="Use Cases" link="GstBaseTransform.html#id-1.2.4.6.8.5"/>
-    <keyword type="" name="Sub-class settable flags on GstBaseTransform" link="GstBaseTransform.html#id-1.2.4.6.8.6"/>
     <keyword type="function" name="gst_base_transform_is_passthrough ()" link="GstBaseTransform.html#gst-base-transform-is-passthrough"/>
     <keyword type="function" name="gst_base_transform_set_passthrough ()" link="GstBaseTransform.html#gst-base-transform-set-passthrough"/>
     <keyword type="function" name="gst_base_transform_set_prefer_passthrough ()" link="GstBaseTransform.html#gst-base-transform-set-prefer-passthrough" since="1.0.1"/>
@@ -547,8 +544,11 @@
     <keyword type="function" name="gst_net_address_meta_get_info ()" link="gstreamer-libs-GstNetAddressMeta.html#gst-net-address-meta-get-info"/>
     <keyword type="struct" name="struct GstNetAddressMeta" link="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta"/>
     <keyword type="function" name="gst_net_client_clock_new ()" link="GstNetClientClock.html#gst-net-client-clock-new"/>
+    <keyword type="function" name="gst_ntp_clock_new ()" link="GstNetClientClock.html#gst-ntp-clock-new" since="1.6"/>
     <keyword type="struct" name="struct GstNetClientClock" link="GstNetClientClock.html#GstNetClientClock-struct"/>
+    <keyword type="typedef" name="GstNtpClock" link="GstNetClientClock.html#GstNtpClock"/>
     <keyword type="property" name="The “address” property" link="GstNetClientClock.html#GstNetClientClock--address"/>
+    <keyword type="property" name="The “base-time” property" link="GstNetClientClock.html#GstNetClientClock--base-time"/>
     <keyword type="property" name="The “bus” property" link="GstNetClientClock.html#GstNetClientClock--bus"/>
     <keyword type="property" name="The “minimum-update-interval” property" link="GstNetClientClock.html#GstNetClientClock--minimum-update-interval"/>
     <keyword type="property" name="The “port” property" link="GstNetClientClock.html#GstNetClientClock--port"/>
@@ -567,6 +567,14 @@
     <keyword type="property" name="The “address” property" link="GstNetTimeProvider.html#GstNetTimeProvider--address"/>
     <keyword type="property" name="The “clock” property" link="GstNetTimeProvider.html#GstNetTimeProvider--clock"/>
     <keyword type="property" name="The “port” property" link="GstNetTimeProvider.html#GstNetTimeProvider--port"/>
+    <keyword type="function" name="gst_ptp_init ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-init" since="1.6"/>
+    <keyword type="function" name="gst_ptp_deinit ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-deinit" since="1.6"/>
+    <keyword type="function" name="gst_ptp_is_initialized ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-is-initialized" since="1.6"/>
+    <keyword type="function" name="gst_ptp_is_supported ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-is-supported" since="1.6"/>
+    <keyword type="function" name="gst_ptp_clock_new ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-clock-new" since="1.6"/>
+    <keyword type="function" name="gst_ptp_statistics_callback_add ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-add" since="1.6"/>
+    <keyword type="function" name="gst_ptp_statistics_callback_remove ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-remove" since="1.6"/>
+    <keyword type="struct" name="struct GstPtpClock" link="gstreamer-libs-GstPtpClock.html#GstPtpClock"/>
     <keyword type="macro" name="GST_START_TEST()" link="gstreamer-libs-GstCheck.html#GST-START-TEST:CAPS"/>
     <keyword type="macro" name="ASSERT_BUFFER_REFCOUNT()" link="gstreamer-libs-GstCheck.html#ASSERT-BUFFER-REFCOUNT:CAPS"/>
     <keyword type="macro" name="ASSERT_CAPS_REFCOUNT()" link="gstreamer-libs-GstCheck.html#ASSERT-CAPS-REFCOUNT:CAPS"/>
@@ -647,5 +655,27 @@
     <keyword type="struct" name="struct GstTestClock" link="GstTestClock.html#GstTestClock-struct"/>
     <keyword type="struct" name="struct GstTestClockClass" link="GstTestClock.html#GstTestClockClass" since="1.2"/>
     <keyword type="property" name="The “start-time” property" link="GstTestClock.html#GstTestClock--start-time"/>
+    <keyword type="constant" name="GST_BASE_PARSE_FRAME_FLAG_NONE" link="GstBaseParse.html#GST-BASE-PARSE-FRAME-FLAG-NONE:CAPS"/>
+    <keyword type="constant" name="GST_BASE_PARSE_FRAME_FLAG_NEW_FRAME" link="GstBaseParse.html#GST-BASE-PARSE-FRAME-FLAG-NEW-FRAME:CAPS"/>
+    <keyword type="constant" name="GST_BASE_PARSE_FRAME_FLAG_NO_FRAME" link="GstBaseParse.html#GST-BASE-PARSE-FRAME-FLAG-NO-FRAME:CAPS"/>
+    <keyword type="constant" name="GST_BASE_PARSE_FRAME_FLAG_CLIP" link="GstBaseParse.html#GST-BASE-PARSE-FRAME-FLAG-CLIP:CAPS"/>
+    <keyword type="constant" name="GST_BASE_PARSE_FRAME_FLAG_DROP" link="GstBaseParse.html#GST-BASE-PARSE-FRAME-FLAG-DROP:CAPS"/>
+    <keyword type="constant" name="GST_BASE_PARSE_FRAME_FLAG_QUEUE" link="GstBaseParse.html#GST-BASE-PARSE-FRAME-FLAG-QUEUE:CAPS"/>
+    <keyword type="constant" name="GST_BASE_SRC_FLAG_STARTING" link="GstBaseSrc.html#GST-BASE-SRC-FLAG-STARTING:CAPS"/>
+    <keyword type="constant" name="GST_BASE_SRC_FLAG_STARTED" link="GstBaseSrc.html#GST-BASE-SRC-FLAG-STARTED:CAPS"/>
+    <keyword type="constant" name="GST_BASE_SRC_FLAG_LAST" link="GstBaseSrc.html#GST-BASE-SRC-FLAG-LAST:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_EOS" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-EOS:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_FLUSHING" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-FLUSHING:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_NEW_SEGMENT" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-NEW-SEGMENT:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_WAITING" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-WAITING:CAPS"/>
+    <keyword type="constant" name="GST_COLLECT_PADS_STATE_LOCKED" link="GstCollectPads.html#GST-COLLECT-PADS-STATE-LOCKED:CAPS"/>
+    <keyword type="constant" name="GST_INTERPOLATION_MODE_NONE" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-NONE:CAPS"/>
+    <keyword type="constant" name="GST_INTERPOLATION_MODE_LINEAR" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-LINEAR:CAPS"/>
+    <keyword type="constant" name="GST_INTERPOLATION_MODE_CUBIC" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-CUBIC:CAPS"/>
+    <keyword type="constant" name="GST_LFO_WAVEFORM_SINE" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SINE:CAPS"/>
+    <keyword type="constant" name="GST_LFO_WAVEFORM_SQUARE" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SQUARE:CAPS"/>
+    <keyword type="constant" name="GST_LFO_WAVEFORM_SAW" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SAW:CAPS"/>
+    <keyword type="constant" name="GST_LFO_WAVEFORM_REVERSE_SAW" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-REVERSE-SAW:CAPS"/>
+    <keyword type="constant" name="GST_LFO_WAVEFORM_TRIANGLE" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-TRIANGLE:CAPS"/>
   </functions>
 </book>

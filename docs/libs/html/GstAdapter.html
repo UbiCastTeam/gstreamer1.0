@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstAdapter</title>
+<title>GstAdapter: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstPushSrc.html" title="GstPushSrc">
 <link rel="next" href="gstreamer-libs-GstBitReader.html" title="GstBitReader">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -317,7 +317,7 @@ is the libvisual element.</p>
 <p>An element using <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> in its sink pad chain function should ensure that
 when the FLUSH_STOP event is received, that any queued data is cleared using
 <a class="link" href="GstAdapter.html#gst-adapter-clear" title="gst_adapter_clear ()"><code class="function">gst_adapter_clear()</code></a>. Data should also be cleared or processed on EOS and
-when changing state from <code class="literal">GST_STATE_PAUSED</code> to <code class="literal">GST_STATE_READY</code>.</p>
+when changing state from <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a> to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-READY:CAPS"><code class="literal">GST_STATE_READY</code></a>.</p>
 <p>Also check the GST_BUFFER_FLAG_DISCONT flag on the buffer. Some elements might
 need to clear the adapter after a discontinuity.</p>
 <p>The adapter will keep track of the timestamps of the buffers
@@ -506,8 +506,9 @@ The user should check that the adapter has (<em class="parameter"><code>offset</
  + <em class="parameter"><code>size</code></em>
 ) bytes
 available before calling this function.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.8.8.7.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.8.8.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -554,8 +555,9 @@ in <em class="parameter"><code>adapter</code></em>
  and into a new <a href="https://developer.gnome.org/glib/unstable/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a> structure which is returned. Depending on
 the value of the <em class="parameter"><code>size</code></em>
  argument an empty <a href="https://developer.gnome.org/glib/unstable/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a> structure may be returned.</p>
+<p><span class="annotation">[<acronym title="Rename the original symbol's name to SYMBOL."><span class="acronym">rename-to</span></acronym> gst_adapter_copy]</span></p>
 <div class="refsect3">
-<a name="id-1.2.4.8.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.8.8.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -582,11 +584,11 @@ the value of the <em class="parameter"><code>size</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.8.8.8.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.8.8.8.7"></a><h4>Returns</h4>
 <p> A new <a href="https://developer.gnome.org/glib/unstable/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a> structure containing the copied data. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -649,7 +651,6 @@ returning <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macro
 <a name="id-1.2.4.8.8.10.6"></a><h4>Returns</h4>
 <p> number of bytes available in <em class="parameter"><code>adapter</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -680,7 +681,6 @@ temporary buffer).</p>
 <p> number of bytes that are available in <em class="parameter"><code>adapter</code></em>
 without expensive
 operations</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -832,7 +832,7 @@ bytes are not available.
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html#gst-buffer-unref"><code class="function">gst_buffer_unref()</code></a> when no longer needed. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -924,7 +924,7 @@ bytes are not
 available. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.6</p>
+<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -965,7 +965,6 @@ and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</p>
 <div class="refsect3">
 <a name="id-1.2.4.8.8.17.7"></a><h4>Returns</h4>
 <p> The previously seen pts.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1007,7 +1006,6 @@ and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</p>
 <div class="refsect3">
 <a name="id-1.2.4.8.8.18.7"></a><h4>Returns</h4>
 <p> The previously seen dts.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1056,9 +1054,8 @@ and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</p>
 <div class="refsect3">
 <a name="id-1.2.4.8.8.19.7"></a><h4>Returns</h4>
 <p> The previously seen pts at given offset.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1106,9 +1103,8 @@ and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</p>
 <div class="refsect3">
 <a name="id-1.2.4.8.8.20.7"></a><h4>Returns</h4>
 <p> The previously seen dts at given offset.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1193,7 +1189,6 @@ gst_adapter_masked_scan_uint32 (adapter, 0xffff0000, 0x02030000, 0, 256);
 gst_adapter_masked_scan_uint32 (adapter, 0xffff0000, 0x02030000, 0, 4);
 // -&gt; returns -1
 </pre>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1268,7 +1263,6 @@ the last scanned position.</p></td>
 <div class="refsect3">
 <a name="id-1.2.4.8.8.22.8"></a><h4>Returns</h4>
 <p> offset of the first match, or -1 if no match was found.</p>
-<p></p>
 </div>
 </div>
 </div>
@@ -1282,7 +1276,6 @@ the last scanned position.</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

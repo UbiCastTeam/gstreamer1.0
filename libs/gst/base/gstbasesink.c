@@ -1380,7 +1380,7 @@ gst_base_sink_get_property (GObject * object, guint prop_id, GValue * value,
       g_value_set_int64 (value, gst_base_sink_get_ts_offset (sink));
       break;
     case PROP_LAST_SAMPLE:
-      gst_value_take_buffer (value, gst_base_sink_get_last_sample (sink));
+      gst_value_take_sample (value, gst_base_sink_get_last_sample (sink));
       break;
     case PROP_ENABLE_LAST_SAMPLE:
       g_value_set_boolean (value, gst_base_sink_is_last_sample_enabled (sink));
@@ -3369,10 +3369,28 @@ gst_base_sink_chain_unlocked (GstBaseSink * basesink, GstPad * pad,
     if (G_UNLIKELY (stepped))
       goto dropped;
 
-    if (syncable && do_sync)
-      late =
-          gst_base_sink_is_too_late (basesink, obj, rstart, rstop,
-          GST_CLOCK_EARLY, 0, FALSE);
+    if (syncable && do_sync) {
+      GstClock *clock;
+
+      GST_OBJECT_LOCK (basesink);
+      clock = GST_ELEMENT_CLOCK (basesink);
+      if (clock && GST_STATE (basesink) == GST_STATE_PLAYING) {
+        GstClockTime base_time;
+        GstClockTime stime;
+        GstClockTime now;
+
+        base_time = GST_ELEMENT_CAST (basesink)->base_time;
+        stime = base_time + gst_base_sink_adjust_time (basesink, rstart);
+        now = gst_clock_get_time (clock);
+        GST_OBJECT_UNLOCK (basesink);
+
+        late =
+            gst_base_sink_is_too_late (basesink, obj, rstart, rstop,
+            GST_CLOCK_EARLY, GST_CLOCK_DIFF (stime, now), FALSE);
+      } else {
+        GST_OBJECT_UNLOCK (basesink);
+      }
+    }
 
     if (G_UNLIKELY (late))
       goto dropped;

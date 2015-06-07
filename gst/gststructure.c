@@ -619,7 +619,8 @@ gst_structure_set_valist_internal (GstStructure * structure,
  * @fieldname: the name of the field to set
  * @...: variable arguments
  *
- * Parses the variable arguments and sets fields accordingly.
+ * Parses the variable arguments and sets fields accordingly. Fields that
+ * weren't already part of the structure are added as needed.
  * Variable arguments should be in the form field name, field type
  * (as a GType), value(s).  The last variable argument should be %NULL.
  */
@@ -1720,6 +1721,44 @@ gst_structure_get_fraction (const GstStructure * structure,
   return TRUE;
 }
 
+/**
+ * gst_structure_get_flagset:
+ * @structure: a #GstStructure
+ * @fieldname: the name of a field
+ * @value_flags: (out) (allow-none): a pointer to a guint for the flags field
+ * @value_mask: (out) (allow-none): a pointer to a guint for the mask field
+ *
+ * Read the GstFlagSet flags and mask out of the structure into the
+ * provided pointers.
+ *
+ * Returns: %TRUE if the values could be set correctly. If there was no field
+ * with @fieldname or the existing field did not contain a GstFlagSet, this
+ * function returns %FALSE.
+ *
+ * Since: 1.6
+ */
+gboolean
+gst_structure_get_flagset (const GstStructure * structure,
+    const gchar * fieldname, guint * value_flags, guint * value_mask)
+{
+  GstStructureField *field;
+
+  g_return_val_if_fail (structure != NULL, FALSE);
+  g_return_val_if_fail (fieldname != NULL, FALSE);
+
+  field = gst_structure_get_field (structure, fieldname);
+
+  if (field == NULL || !GST_VALUE_HOLDS_FLAG_SET (&field->value))
+    return FALSE;
+
+  if (value_flags)
+    *value_flags = gst_value_get_flagset_flags (&field->value);
+  if (value_mask)
+    *value_mask = gst_value_get_flagset_mask (&field->value);
+
+  return TRUE;
+}
+
 typedef struct _GstStructureAbbreviation
 {
   const gchar *type_name;
@@ -2296,8 +2335,8 @@ gst_structure_parse_value (gchar * str,
 
     if (G_UNLIKELY (type == G_TYPE_INVALID)) {
       GType try_types[] =
-          { G_TYPE_INT, G_TYPE_DOUBLE, GST_TYPE_FRACTION, G_TYPE_BOOLEAN,
-        G_TYPE_STRING
+          { G_TYPE_INT, G_TYPE_DOUBLE, GST_TYPE_FRACTION, GST_TYPE_FLAG_SET,
+        G_TYPE_BOOLEAN, G_TYPE_STRING
       };
       int i;
 

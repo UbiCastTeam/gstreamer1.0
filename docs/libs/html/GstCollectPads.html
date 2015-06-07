@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstCollectPads</title>
+<title>GstCollectPads: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstByteWriter.html" title="GstByteWriter">
 <link rel="next" href="gstreamer-libs-GstFlowCombiner.html" title="GstFlowCombiner">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -498,8 +498,7 @@ and <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.3.6"></a><h4>Returns</h4>
-<p> <code class="literal">GST_FLOW_OK</code> for success</p>
-<p></p>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> for success</p>
 </div>
 </div>
 <hr>
@@ -565,7 +564,6 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.4.8"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> that corresponds to the result of clipping.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -626,7 +624,6 @@ the pad to perform clipping of <em class="parameter"><code>inbuffer</code></em>
 <p> Integer less than zero when first timestamp is deemed older than the second one.
 Zero if the timestamps are deemed equally old.
 Integer greater than zero when second timestamp is deemed older than the first one.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -676,7 +673,6 @@ being handled by the default handler).</p>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.6.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could handle the event</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -713,7 +709,7 @@ gst_collect_pads_set_flushing nor gst_collect_pads_clear from this function.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -761,7 +757,6 @@ events downstream (with <a href="http://gstreamer.freedesktop.org/data/doc/gstre
 <div class="refsect3">
 <a name="id-1.2.4.12.8.8.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could handle the event</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -795,8 +790,7 @@ events downstream (with <a href="http://gstreamer.freedesktop.org/data/doc/gstre
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.12.8.9.6"></a><h4>Returns</h4>
-<p> <code class="literal">GST_FLOW_OK</code> for success</p>
-<p></p>
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> for success</p>
 </div>
 </div>
 <hr>
@@ -1105,7 +1099,6 @@ free the <a class="link" href="GstCollectPads.html#GstCollectData" title="struct
 <div class="refsect3">
 <a name="id-1.2.4.12.8.19.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be removed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1186,7 +1179,6 @@ in the callback.</p>
 <a name="id-1.2.4.12.8.22.8"></a><h4>Returns</h4>
 <p> The maximum number of bytes queued on all pads. This function
 returns 0 if a pad has no queued buffer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1235,7 +1227,6 @@ in the callback.</p>
 <p> The number of bytes flushed This can be less than <em class="parameter"><code>size</code></em>
 and
 is 0 if the pad was end-of-stream.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1277,7 +1268,6 @@ handler.</p>
 <p> The buffer in <em class="parameter"><code>data</code></em>
 or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffer is queued.
 should unref the buffer after usage.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1418,7 +1408,6 @@ callback.</p>
 <p> A sub buffer. The size of the buffer can be less that requested.
 A return of <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> signals that the pad is end-of-stream.
 Unref the buffer after use.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1595,7 +1584,7 @@ be done by <a class="link" href="GstCollectPads.html" title="GstCollectPads"><sp
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1794,7 +1783,7 @@ handling. See <a class="link" href="GstCollectPads.html#GstCollectPadsFlushFunct
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: 1.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2101,7 +2090,6 @@ by this <a class="link" href="GstCollectPads.html" title="GstCollectPads"><span 
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

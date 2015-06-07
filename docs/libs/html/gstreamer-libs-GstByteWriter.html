@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstByteWriter</title>
+<title>GstByteWriter: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-libs-GstByteReader.html" title="GstByteReader">
 <link rel="next" href="GstCollectPads.html" title="GstCollectPads">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1034,7 +1034,6 @@ gst_byte_writer_get_pos (<em class="parameter"><code>const <a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.14.5"></a><h4>Returns</h4>
 <p> The current position of the read/write cursor</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1071,7 +1070,6 @@ can only be between 0 and the current size.</p>
 <div class="refsect3">
 <a name="id-1.2.4.11.7.15.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the new position could be set</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1099,7 +1097,6 @@ gst_byte_writer_get_remaining (<em class="parameter"><code>const <a class="link"
 <div class="refsect3">
 <a name="id-1.2.4.11.7.16.6"></a><h4>Returns</h4>
 <p> the remaining size of data that can still be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1125,7 +1122,6 @@ gst_byte_writer_get_size (<em class="parameter"><code>const <a class="link" href
 <div class="refsect3">
 <a name="id-1.2.4.11.7.17.5"></a><h4>Returns</h4>
 <p> The current, initialized size of the data</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1162,7 +1158,6 @@ available and reallocates if necessary.</p>
 <a name="id-1.2.4.11.7.18.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if at least <em class="parameter"><code>size</code></em>
 bytes are still available</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1172,7 +1167,8 @@ bytes are still available</p>
 gst_byte_writer_put_int8 (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstByteWriter.html#GstByteWriter" title="GstByteWriter"><span class="type">GstByteWriter</span></a> *writer</code></em>,
                           <em class="parameter"><code><span class="type">gint8</span> val</code></em>);</pre>
 <p>Writes a signed 8 bit integer to <em class="parameter"><code>writer</code></em>
-.</p>
+ without
+checking if there is enough free space available in the byte writer.</p>
 <div class="refsect3">
 <a name="id-1.2.4.11.7.19.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1194,11 +1190,6 @@ gst_byte_writer_put_int8 (<em class="parameter"><code><a class="link" href="gstr
 </tr>
 </tbody>
 </table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.4.11.7.19.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1234,7 +1225,6 @@ gst_byte_writer_put_int16_be (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.20.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1270,7 +1260,6 @@ gst_byte_writer_put_int16_le (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.21.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1306,7 +1295,6 @@ gst_byte_writer_put_int24_be (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.22.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1342,7 +1330,6 @@ gst_byte_writer_put_int24_le (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.23.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1378,7 +1365,6 @@ gst_byte_writer_put_int32_be (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.24.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1414,7 +1400,6 @@ gst_byte_writer_put_int32_le (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.25.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1450,7 +1435,6 @@ gst_byte_writer_put_int64_be (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.26.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1486,7 +1470,6 @@ gst_byte_writer_put_int64_le (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="id-1.2.4.11.7.27.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1522,7 +1505,6 @@ gst_byte_writer_put_uint8 (<em class="parameter"><code><a class="link" href="gst
 <div class="refsect3">
 <a name="id-1.2.4.11.7.28.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1558,7 +1540,6 @@ gst_byte_writer_put_uint16_be (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.29.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1594,7 +1575,6 @@ gst_byte_writer_put_uint16_le (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.30.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1630,7 +1610,6 @@ gst_byte_writer_put_uint24_be (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.31.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1666,7 +1645,6 @@ gst_byte_writer_put_uint24_le (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.32.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1702,7 +1680,6 @@ gst_byte_writer_put_uint32_be (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.33.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1738,7 +1715,6 @@ gst_byte_writer_put_uint32_le (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.34.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1774,7 +1750,6 @@ gst_byte_writer_put_uint64_be (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.35.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1810,7 +1785,6 @@ gst_byte_writer_put_uint64_le (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.2.4.11.7.36.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1846,7 +1820,6 @@ gst_byte_writer_put_float32_be (<em class="parameter"><code><a class="link" href
 <div class="refsect3">
 <a name="id-1.2.4.11.7.37.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1882,7 +1855,6 @@ gst_byte_writer_put_float32_le (<em class="parameter"><code><a class="link" href
 <div class="refsect3">
 <a name="id-1.2.4.11.7.38.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1918,7 +1890,6 @@ gst_byte_writer_put_float64_be (<em class="parameter"><code><a class="link" href
 <div class="refsect3">
 <a name="id-1.2.4.11.7.39.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1954,7 +1925,6 @@ gst_byte_writer_put_float64_le (<em class="parameter"><code><a class="link" href
 <div class="refsect3">
 <a name="id-1.2.4.11.7.40.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1990,7 +1960,6 @@ ISO-8859-1).</p>
 <div class="refsect3">
 <a name="id-1.2.4.11.7.41.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the string could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2026,7 +1995,6 @@ gst_byte_writer_put_string_utf16 (<em class="parameter"><code><a class="link" hr
 <div class="refsect3">
 <a name="id-1.2.4.11.7.42.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2062,7 +2030,6 @@ gst_byte_writer_put_string_utf32 (<em class="parameter"><code><a class="link" hr
 <div class="refsect3">
 <a name="id-1.2.4.11.7.43.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2099,7 +2066,6 @@ write. </p></td>
 <div class="refsect3">
 <a name="id-1.2.4.11.7.44.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2144,7 +2110,6 @@ in bytes</p></td>
 <div class="refsect3">
 <a name="id-1.2.4.11.7.45.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2188,7 +2153,6 @@ gst_byte_writer_fill (<em class="parameter"><code><a class="link" href="gstreame
 <div class="refsect3">
 <a name="id-1.2.4.11.7.46.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2238,7 +2202,6 @@ gst_byte_writer_put_buffer (<em class="parameter"><code><a class="link" href="gs
 <div class="refsect3">
 <a name="id-1.2.4.11.7.47.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the data could be written</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3081,7 +3044,6 @@ checking if there is enough free space available in the byte writer.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>
