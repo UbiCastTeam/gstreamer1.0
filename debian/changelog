@@ -1,3 +1,14 @@
+gstreamer1.0 (1.5.1-1) experimental; urgency=medium
+
+  * New unstable upstream release.
+  * debian/control.in,
+    debian/libgstreamer.postinst:
+    + Install gst-ptp-helper with cap_net_bind_service,cap_net_admin
+      capabilities, and otherwise fall back to setuid root. It needs
+      to be able to listen for multicast on port 319 and 320.
+
+ -- Sebastian Dröge <slomo@debian.org>  Sun, 07 Jun 2015 09:48:18 +0200
+
 gstreamer1.0 (1.5.0.1+git20150513-1) experimental; urgency=medium
 
   * New upstream GIT snapshot.

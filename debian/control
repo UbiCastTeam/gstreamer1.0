@@ -27,7 +27,8 @@ Build-Depends: debhelper (>= 9),
                libgirepository1.0-dev (>= 0.9.12-4~),
                gobject-introspection (>= 0.9.12-4~),
                gir1.2-glib-2.0,
-               gir1.2-freedesktop
+               gir1.2-freedesktop,
+               libcap-dev [linux-any]
 Build-Depends-Indep: python (>= 2.2),
                      gtk-doc-tools (>= 1.12),
                      jade (>= 1.2.1),
@@ -49,7 +50,8 @@ Multi-Arch: same
 Section: libs
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
-         ${misc:Depends}
+         ${misc:Depends},
+         libcap2-bin [linux-any]
 Suggests: gstreamer1.0-tools,
           gstreamer1.0-plugins-base
 Description: Core GStreamer libraries and elements
@@ -131,7 +133,7 @@ Section: utils
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          pkg-config,
-         libgstreamer1.0-0 (>= 1.5.0.1+git20150513)
+         libgstreamer1.0-0 (>= 1.5.1)
 Suggests: gstreamer1.0-plugins-base
 Description: Tools for use with GStreamer
  GStreamer is a streaming media framework, based on graphs of filters
