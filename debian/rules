@@ -108,7 +108,10 @@ debian/$(gst_lib).symbols: debian/libgstreamer.symbols debian/rules
 
 debian/$(gst_lib).postinst: debian/libgstreamer.postinst debian/rules
 	rm -f $@
-	cp -v $< $@
+	cat $< | \
+		sed 's/@MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' | \
+		sed 's/@GST_ABI@/$(gst_abi)/g' \
+		> $@
 
 debian/gir1.2-gstreamer-$(gst_abi).install: debian/gir1.2-gstreamer.install debian/rules
 	rm -f $@
