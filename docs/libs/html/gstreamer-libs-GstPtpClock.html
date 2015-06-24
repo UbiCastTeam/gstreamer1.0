@@ -41,6 +41,10 @@
 </colgroup>
 <tbody>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-libs-GstPtpClock.html#GST-PTP-CLOCK-ID-NONE:CAPS" title="GST_PTP_CLOCK_ID_NONE">GST_PTP_CLOCK_ID_NONE</a></td>
+</tr>
+<tr>
 <td class="function_type">
 <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
@@ -78,6 +82,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-libs-GstPtpClock.html#gst-ptp-clock-new" title="gst_ptp_clock_new ()">gst_ptp_clock_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="gstreamer-libs-GstPtpClock.html#GstPtpStatisticsCallback" title="GstPtpStatisticsCallback ()">*GstPtpStatisticsCallback</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -141,6 +153,12 @@ synchronization.</p>
 <div class="refsect1">
 <a name="gstreamer-libs-GstPtpClock.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
+<a name="GST-PTP-CLOCK-ID-NONE:CAPS"></a><h3>GST_PTP_CLOCK_ID_NONE</h3>
+<pre class="programlisting">#define GST_PTP_CLOCK_ID_NONE ((guint64) -1)
+</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-ptp-init"></a><h3>gst_ptp_init ()</h3>
 <pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_ptp_init (<em class="parameter"><code><span class="type">guint64</span> clock_id</code></em>,
@@ -151,12 +169,12 @@ slave-only mode for all domains on the given <em class="parameter"><code>interfa
 given <em class="parameter"><code>clock_id</code></em>
 .</p>
 <p>If <em class="parameter"><code>clock_id</code></em>
- is <code class="literal">GST_PTP_CLOCK_ID_NONE</code>, a clock id is automatically
+ is <a class="link" href="gstreamer-libs-GstPtpClock.html#GST-PTP-CLOCK-ID-NONE:CAPS" title="GST_PTP_CLOCK_ID_NONE"><code class="literal">GST_PTP_CLOCK_ID_NONE</code></a>, a clock id is automatically
 generated from the MAC address of the first network interface.</p>
 <p>This function is automatically called by <a class="link" href="gstreamer-libs-GstPtpClock.html#gst-ptp-clock-new" title="gst_ptp_clock_new ()"><code class="function">gst_ptp_clock_new()</code></a> with default
 parameters if it wasn't called before.</p>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.2.7"></a><h4>Parameters</h4>
+<a name="id-1.2.6.8.7.3.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -166,7 +184,7 @@ parameters if it wasn't called before.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>clock_id</p></td>
-<td class="parameter_description"><p>PTP clock id of this process' clock or <code class="literal">GST_PTP_CLOCK_ID_NONE</code></p></td>
+<td class="parameter_description"><p>PTP clock id of this process' clock or <a class="link" href="gstreamer-libs-GstPtpClock.html#GST-PTP-CLOCK-ID-NONE:CAPS" title="GST_PTP_CLOCK_ID_NONE"><code class="literal">GST_PTP_CLOCK_ID_NONE</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -178,10 +196,10 @@ parameters if it wasn't called before.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.2.8"></a><h4>Returns</h4>
+<a name="id-1.2.6.8.7.3.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the GStreamer PTP clock subsystem could be initialized.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -191,7 +209,7 @@ gst_ptp_deinit (<em class="parameter"><code><span class="type">void</span></code
 <p>Deinitialize the GStreamer PTP subsystem and stop the PTP clock. If there
 are any remaining GstPtpClock instances, they won't be further synchronized
 to the PTP network clock.</p>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -200,10 +218,10 @@ to the PTP network clock.</p>
 gst_ptp_is_initialized (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Check if the GStreamer PTP clock subsystem is initialized.</p>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.4.5"></a><h4>Returns</h4>
+<a name="id-1.2.6.8.7.5.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the GStreamer PTP clock subsystem is intialized.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -213,11 +231,11 @@ gst_ptp_is_supported (<em class="parameter"><code><span class="type">void</span>
 <p>Check if PTP clocks are generally supported on this system, and if previous
 initializations did not fail.</p>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.5.5"></a><h4>Returns</h4>
+<a name="id-1.2.6.8.7.6.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if PTP clocks are generally supported on this system, and
 previous initializations did not fail.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -236,7 +254,7 @@ GstPtpClock::internal-clock property will become non-NULL. You can
 check this with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#gst-clock-wait-for-sync"><code class="function">gst_clock_wait_for_sync()</code></a>, the GstClock::synced signal and
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#gst-clock-is-synced"><code class="function">gst_clock_is_synced()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.6.7"></a><h4>Parameters</h4>
+<a name="id-1.2.6.8.7.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -257,19 +275,85 @@ check this with <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/hea
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstPtpStatisticsCallback"></a><h3>GstPtpStatisticsCallback ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstPtpStatisticsCallback<span class="c_punctuation">)</span> (<em class="parameter"><code><span class="type">guint8</span> domain</code></em>,
+                             <em class="parameter"><code>const <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstStructure.html"><span class="type">GstStructure</span></a> *stats</code></em>,
+                             <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>The statistics can be the following structures:</p>
+<p>GST_PTP_STATISTICS_NEW_DOMAIN_FOUND:
+"domain"                G_TYPE_UINT          The domain identifier of the domain
+"clock"                 GST_TYPE_CLOCK       The internal clock that is slaved to the
+                                             PTP domain</p>
+<p>GST_PTP_STATISTICS_BEST_MASTER_CLOCK_SELECTED:
+"domain"                G_TYPE_UINT          The domain identifier of the domain
+"master-clock-id"       G_TYPE_UINT64        PTP clock identifier of the selected master
+                                             clock
+"master-clock-port"     G_TYPE_UINT          PTP port number of the selected master clock
+"grandmaster-clock-id"  G_TYPE_UINT64        PTP clock identifier of the grandmaster clock</p>
+<p>GST_PTP_STATISTICS_PATH_DELAY_MEASURED:
+"domain"                G_TYPE_UINT          The domain identifier of the domain
+"mean-path-delay-avg"   GST_TYPE_CLOCK_TIME  Average mean path delay
+"mean-path-delay"       GST_TYPE_CLOCK_TIME  Latest mean path delay
+"delay-request-delay"   GST_TYPE_CLOCK_TIME  Delay of DELAY_REQ / DELAY_RESP messages</p>
+<p>GST_PTP_STATISTICS_TIME_UPDATED:
+"domain"                G_TYPE_UINT          The domain identifier of the domain
+"mean-path-delay-avg"   GST_TYPE_CLOCK_TIME  Average mean path delay
+"local-time"            GST_TYPE_CLOCK_TIME  Local time that corresponds to ptp-time
+"ptp-time"              GST_TYPE_CLOCK_TIME  Newly measured PTP time at local-time
+"estimated-ptp-time"    GST_TYPE_CLOCK_TIME  Estimated PTP time based on previous measurements
+"discontinuity"         G_TYPE_INT64         Difference between estimated and measured PTP time
+"synced"                G_TYPE_BOOLEAN       Currently synced to the remote clock
+"r-squared"             G_TYPE_DOUBLE        R² of clock estimation regression
+"internal-time"         GST_TYPE_CLOCK_TIME  Internal time clock parameter
+"external-time"         GST_TYPE_CLOCK_TIME  External time clock parameter
+"rate-num"              G_TYPE_UINT64        Internal/external rate numerator
+"rate-den"              G_TYPE_UINT64        Internal/external rate denominator
+"rate"                  G_TYPE_DOUBLE        Internal/external rate</p>
+<p>If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is returned, the callback is removed and never called again.</p>
+<div class="refsect3">
+<a name="id-1.2.6.8.7.8.10"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>domain</p></td>
+<td class="parameter_description"><p>PTP domain identifier</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>stats</p></td>
+<td class="parameter_description"><p>New statistics</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>Data passed to <a class="link" href="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-add" title="gst_ptp_statistics_callback_add ()"><code class="function">gst_ptp_statistics_callback_add()</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-ptp-statistics-callback-add"></a><h3>gst_ptp_statistics_callback_add ()</h3>
 <pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>
-gst_ptp_statistics_callback_add (<em class="parameter"><code><span class="type">GstPtpStatisticsCallback</span> callback</code></em>,
+gst_ptp_statistics_callback_add (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstPtpClock.html#GstPtpStatisticsCallback" title="GstPtpStatisticsCallback ()"><span class="type">GstPtpStatisticsCallback</span></a> callback</code></em>,
                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy_data</code></em>);</pre>
 <p>Installs a new statistics callback for gathering PTP statistics. See
 GstPtpStatisticsCallback for a list of statistics that are provided.</p>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.6.8.7.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -296,11 +380,11 @@ GstPtpStatisticsCallback for a list of statistics that are provided.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.7.6"></a><h4>Returns</h4>
+<a name="id-1.2.6.8.7.9.6"></a><h4>Returns</h4>
 <p> Id for the callback that can be passed to
 <a class="link" href="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-remove" title="gst_ptp_statistics_callback_remove ()"><code class="function">gst_ptp_statistics_callback_remove()</code></a></p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -310,7 +394,7 @@ gst_ptp_statistics_callback_remove (<em class="parameter"><code><a href="https:/
 <p>Removes a PTP statistics callback that was previously added with
 <a class="link" href="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-add" title="gst_ptp_statistics_callback_add ()"><code class="function">gst_ptp_statistics_callback_add()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.6.7.7.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.6.8.7.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -324,7 +408,7 @@ gst_ptp_statistics_callback_remove (<em class="parameter"><code><a href="https:/
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -336,6 +420,21 @@ gst_ptp_statistics_callback_remove (<em class="parameter"><code><a href="https:/
 };
 </pre>
 <p>Opaque <a class="link" href="gstreamer-libs-GstPtpClock.html#GstPtpClock" title="struct GstPtpClock"><span class="type">GstPtpClock</span></a> structure.</p>
+<div class="refsect3">
+<a name="id-1.2.6.8.8.2.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSystemClock.html"><span class="type">GstSystemClock</span></a> <em class="structfield"><code><a name="GstPtpClock.clock"></a>clock</code></em>;</p></td>
+<td class="struct_member_description"><p>parented to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstSystemClock.html"><span class="type">GstSystemClock</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">

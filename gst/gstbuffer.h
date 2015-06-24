@@ -194,6 +194,9 @@ typedef struct _GstBufferPool GstBufferPool;
  * @GST_BUFFER_FLAG_DELTA_UNIT:  this unit cannot be decoded independently.
  * @GST_BUFFER_FLAG_TAG_MEMORY:  this flag is set when memory of the buffer
  *                               is added/removed
+ * @GST_BUFFER_FLAG_SYNC_AFTER:  Elements which write to disk or permanent
+ * 				 storage should ensure the data is synced after
+ * 				 writing the contents of this buffer. (Since 1.6)
  * @GST_BUFFER_FLAG_LAST:        additional media specific flags can be added starting from
  *                               this flag.
  *
@@ -211,6 +214,7 @@ typedef enum {
   GST_BUFFER_FLAG_DROPPABLE   = (GST_MINI_OBJECT_FLAG_LAST << 8),
   GST_BUFFER_FLAG_DELTA_UNIT  = (GST_MINI_OBJECT_FLAG_LAST << 9),
   GST_BUFFER_FLAG_TAG_MEMORY  = (GST_MINI_OBJECT_FLAG_LAST << 10),
+  GST_BUFFER_FLAG_SYNC_AFTER  = (GST_MINI_OBJECT_FLAG_LAST << 11),
 
   GST_BUFFER_FLAG_LAST        = (GST_MINI_OBJECT_FLAG_LAST << 16)
 } GstBufferFlags;
@@ -556,6 +560,52 @@ gboolean        gst_buffer_foreach_meta         (GstBuffer *buffer,
  * Returns: (transfer none): buffer
  */
 #define         gst_value_get_buffer(v)         GST_BUFFER_CAST (g_value_get_boxed(v))
+
+typedef struct _GstParentBufferMeta GstParentBufferMeta;
+
+/**
+ * GstParentBufferMeta:
+ * @parent: the parent #GstMeta structure
+ * @buffer: the #GstBuffer on which a reference is being held.
+ *
+ * The #GstParentBufferMeta is a #GstMeta which can be attached to a #GstBuffer
+ * to hold a reference to another buffer that is only released when the child
+ * #GstBuffer is released.
+ *
+ * Typically, #GstParentBufferMeta is used when the child buffer is directly
+ * using the #GstMemory of the parent buffer, and wants to prevent the parent
+ * buffer from being returned to a buffer pool until the #GstMemory is available
+ * for re-use.
+ *
+ * Since: 1.6
+ */
+struct _GstParentBufferMeta
+{
+  GstMeta parent;
+
+  /*< public >*/
+  GstBuffer *buffer;
+};
+
+GType gst_parent_buffer_meta_api_get_type (void);
+#define GST_TYPE_PARENT_BUFFER_META_API_TYPE (gst_parent_buffer_meta_api_get_type())
+
+/**
+ * gst_buffer_get_parent_buffer_meta:
+ * @b: a #GstBuffer
+ *
+ * Find and return a #GstParentBufferMeta if one exists on the
+ * buffer
+ */
+#define gst_buffer_get_parent_buffer_meta(b) \
+  ((GstParentBufferMeta*)gst_buffer_get_meta((b),GST_PARENT_BUFFER_META_API_TYPE))
+
+const GstMetaInfo *gst_parent_buffer_meta_get_info (void);
+#define GST_PARENT_BUFFER_META_INFO (gst_parent_buffer_meta_get_info())
+
+/* implementation */
+GstParentBufferMeta *gst_buffer_add_parent_buffer_meta (GstBuffer *buffer,
+    GstBuffer *ref);
 
 G_END_DECLS
 

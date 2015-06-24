@@ -80,7 +80,7 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 noinst_PROGRAMS = audio-example$(EXEEXT) control-sources$(EXEEXT) \
-	text-color-example$(EXEEXT)
+	text-color-example$(EXEEXT) absolute-example$(EXEEXT)
 subdir = tests/examples/controller
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -128,16 +128,21 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-audio_example_SOURCES = audio-example.c
-audio_example_OBJECTS = audio-example.$(OBJEXT)
-audio_example_LDADD = $(LDADD)
+absolute_example_SOURCES = absolute-example.c
+absolute_example_OBJECTS = absolute-example.$(OBJEXT)
+absolute_example_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-audio_example_DEPENDENCIES = $(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
+absolute_example_DEPENDENCIES = $(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+audio_example_SOURCES = audio-example.c
+audio_example_OBJECTS = audio-example.$(OBJEXT)
+audio_example_LDADD = $(LDADD)
+audio_example_DEPENDENCIES = $(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 control_sources_SOURCES = control-sources.c
 control_sources_OBJECTS = control-sources.$(OBJEXT)
 control_sources_LDADD = $(LDADD)
@@ -182,8 +187,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = audio-example.c control-sources.c text-color-example.c
-DIST_SOURCES = audio-example.c control-sources.c text-color-example.c
+SOURCES = absolute-example.c audio-example.c control-sources.c \
+	text-color-example.c
+DIST_SOURCES = absolute-example.c audio-example.c control-sources.c \
+	text-color-example.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -353,6 +360,7 @@ INTROSPECTION_CFLAGS = @INTROSPECTION_CFLAGS@
 INTROSPECTION_COMPILER = @INTROSPECTION_COMPILER@
 INTROSPECTION_GENERATE = @INTROSPECTION_GENERATE@
 INTROSPECTION_GIRDIR = @INTROSPECTION_GIRDIR@
+INTROSPECTION_INIT = @INTROSPECTION_INIT@
 INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
 INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
 INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
@@ -543,6 +551,10 @@ clean-noinstPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+absolute-example$(EXEEXT): $(absolute_example_OBJECTS) $(absolute_example_DEPENDENCIES) $(EXTRA_absolute_example_DEPENDENCIES) 
+	@rm -f absolute-example$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(absolute_example_OBJECTS) $(absolute_example_LDADD) $(LIBS)
+
 audio-example$(EXEEXT): $(audio_example_OBJECTS) $(audio_example_DEPENDENCIES) $(EXTRA_audio_example_DEPENDENCIES) 
 	@rm -f audio-example$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(audio_example_OBJECTS) $(audio_example_LDADD) $(LIBS)
@@ -561,6 +573,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/absolute-example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio-example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/control-sources.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/text-color-example.Po@am__quote@
