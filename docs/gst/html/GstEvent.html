@@ -553,6 +553,22 @@
 <a class="link" href="GstEvent.html#gst-event-parse-segment-done" title="gst_event_parse_segment_done ()">gst_event_parse_segment_done</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()">gst_event_new_protection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-parse-protection" title="gst_event_parse_protection ()">gst_event_parse_protection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -1455,7 +1471,7 @@ before usage with this offset.</p>
 <p> The event's running time offset</p>
 <p>MT safe.</p>
 </div>
-<p class="since">Since: 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1488,7 +1504,7 @@ gst_event_set_running_time_offset (<em class="parameter"><code><a class="link" h
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1783,7 +1799,7 @@ gst_event_set_stream_flags (<em class="parameter"><code><a class="link" href="Gs
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1813,7 +1829,7 @@ gst_event_parse_stream_flags (<em class="parameter"><code><a class="link" href="
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1849,7 +1865,7 @@ each time a file is played for example.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1884,7 +1900,7 @@ gst_event_parse_group_id (<em class="parameter"><code><a class="link" href="GstE
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a group id was set on the event and could be parsed,
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3078,6 +3094,136 @@ gst_event_parse_segment_done (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-new-protection"></a><h3>gst_event_new_protection ()</h3>
+<pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+gst_event_new_protection (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *system_id</code></em>,
+                          <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *data</code></em>,
+                          <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *origin</code></em>);</pre>
+<p>Creates a new event containing information specific to a particular
+protection system (uniquely identified by <em class="parameter"><code>system_id</code></em>
+), by which that
+protection system can acquire key(s) to decrypt a protected stream.</p>
+<p>In order for a decryption element to decrypt media
+protected using a specific system, it first needs all the
+protection system specific information necessary to acquire the decryption
+key(s) for that stream. The functions defined here enable this information
+to be passed in events from elements that extract it
+(e.g., ISOBMFF demuxers, MPEG DASH demuxers) to protection decrypter
+elements that use it.</p>
+<p>Events containing protection system specific information are created using
+<a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()"><span class="type">gst_event_new_protection</span></a>, and they can be parsed by downstream elements
+using <a class="link" href="GstEvent.html#gst-event-parse-protection" title="gst_event_parse_protection ()"><span class="type">gst_event_parse_protection</span></a>.</p>
+<p>In Common Encryption, protection system specific information may be located
+within ISOBMFF files, both in movie (moov) boxes and movie fragment (moof)
+boxes; it may also be contained in ContentProtection elements within MPEG
+DASH MPDs. The events created by <a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()"><span class="type">gst_event_new_protection</span></a> contain data
+identifying from which of these locations the encapsulated protection system
+specific information originated. This origin information is required as
+some protection systems use different encodings depending upon where the
+information originates.</p>
+<p>The events returned by <a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()"><code class="function">gst_event_new_protection()</code></a> are implemented
+in such a way as to ensure that the most recently-pushed protection info
+event of a particular <em class="parameter"><code>origin</code></em>
+ and <em class="parameter"><code>system_id</code></em>
+ will
+be stuck to the output pad of the sending element.</p>
+<div class="refsect3">
+<a name="id-1.3.24.8.69.9"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>system_id</p></td>
+<td class="parameter_description"><p> a string holding a UUID that uniquely
+identifies a protection system. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> holding protection system specific
+information. The reference count of the buffer will be incremented by one. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>origin</p></td>
+<td class="parameter_description"><p>a string indicating where the protection
+information carried in the event was extracted from. The allowed values
+of this string will depend upon the protection scheme.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.24.8.69.10"></a><h4>Returns</h4>
+<p> a <a class="link" href="GstEvent.html#GST-EVENT-PROTECTION:CAPS"><span class="type">GST_EVENT_PROTECTION</span></a> event, if successful; <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+if unsuccessful.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-protection"></a><h3>gst_event_parse_protection ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_parse_protection (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                            <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **system_id</code></em>,
+                            <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> **data</code></em>,
+                            <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **origin</code></em>);</pre>
+<p>Parses an event containing protection system specific information and stores
+the results in <em class="parameter"><code>system_id</code></em>
+, <em class="parameter"><code>data</code></em>
+ and <em class="parameter"><code>origin</code></em>
+. The data stored in <em class="parameter"><code>system_id</code></em>
+,
+<em class="parameter"><code>origin</code></em>
+ and <em class="parameter"><code>data</code></em>
+ are valid until <em class="parameter"><code>event</code></em>
+ is released.</p>
+<div class="refsect3">
+<a name="id-1.3.24.8.70.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstEvent.html#GST-EVENT-PROTECTION:CAPS"><span class="type">GST_EVENT_PROTECTION</span></a> event.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>system_id</p></td>
+<td class="parameter_description"><p> pointer to store the UUID
+string uniquely identifying a content protection system. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p> pointer to store a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>
+holding protection system specific information. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>origin</p></td>
+<td class="parameter_description"><p> pointer to store a value that
+indicates where the protection information carried by <em class="parameter"><code>event</code></em>
+was extracted
+from. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstEvent.other_details"></a><h2>Types and Values</h2>
@@ -3471,7 +3617,7 @@ Specific custom events are distinguished by the name of the structure.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3649,7 +3795,7 @@ elements that handle them.</p>
 <td class="enum_member_description">
 <p>when doing fast forward or fast reverse playback, allow
                     elements to skip frames instead of generating all
-                    frames. (Since: 1.6)</p>
+                    frames. (Since 1.6)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3696,7 +3842,7 @@ elements that handle them.</p>
 <p>when doing fast forward or fast reverse
                     playback, request that elements only decode keyframes
                     and skip all other content, for formats that have
-                    keyframes. (Since: 1.6)</p>
+                    keyframes. (Since 1.6)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3705,7 +3851,7 @@ elements that handle them.</p>
 <td class="enum_member_description">
 <p>when doing fast forward or fast reverse
                     playback, request that audio decoder elements skip
-                    decoding and output only gap events or silence. (Since: 1.6)</p>
+                    decoding and output only gap events or silence. (Since 1.6)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

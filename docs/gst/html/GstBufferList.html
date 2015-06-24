@@ -111,6 +111,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a class="link" href="GstBufferList.html" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstBufferList.html#gst-buffer-list-copy-deep" title="gst_buffer_list_copy_deep ()">gst_buffer_list_copy_deep</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstBufferList.html#gst-buffer-list-is-writable" title="gst_buffer_list_is_writable()">gst_buffer_list_is_writable</a><span class="c_punctuation">()</span>
@@ -458,12 +466,42 @@ refcount of buffers pointed to will be increased by one.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-buffer-list-copy-deep"></a><h3>gst_buffer_list_copy_deep ()</h3>
+<pre class="programlisting"><a class="link" href="GstBufferList.html" title="GstBufferList"><span class="returnvalue">GstBufferList</span></a> *
+gst_buffer_list_copy_deep (<em class="parameter"><code>const <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a> *list</code></em>);</pre>
+<p>Create a copy of the given buffer list. This will make a newly allocated
+copy of the buffer that the source buffer list contains.</p>
+<div class="refsect3">
+<a name="id-1.3.8.8.11.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>list</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.8.8.11.6"></a><h4>Returns</h4>
+<p> a new copy of <em class="parameter"><code>list</code></em>
+. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-buffer-list-is-writable"></a><h3>gst_buffer_list_is_writable()</h3>
 <pre class="programlisting">#define gst_buffer_list_is_writable(list) gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (list))
 </pre>
 <p>Tests if you can safely add buffers and groups into a buffer list.</p>
 <div class="refsect3">
-<a name="id-1.3.8.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.8.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -487,7 +525,7 @@ refcount of buffers pointed to will be increased by one.</p>
 list is already writable, this will simply return the same buffer list. A
 copy will otherwise be made using <a class="link" href="GstBufferList.html#gst-buffer-list-copy" title="gst_buffer_list_copy ()"><code class="function">gst_buffer_list_copy()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.8.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.8.8.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -502,7 +540,7 @@ copy will otherwise be made using <a class="link" href="GstBufferList.html#gst-b
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.8.8.12.6"></a><h4>Returns</h4>
+<a name="id-1.3.8.8.13.6"></a><h4>Returns</h4>
 <p> a writable list, which may or may not be the
 same as <em class="parameter"><code>list</code></em>
 . </p>
@@ -530,7 +568,7 @@ to <em class="parameter"><code>buffer</code></em>
 . This function is responsible for unreffing the old buffer when
 removing or modifying.</p>
 <div class="refsect3">
-<a name="id-1.3.8.8.13.7"></a><h4>Parameters</h4>
+<a name="id-1.3.8.8.14.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -558,7 +596,7 @@ removing or modifying.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.8.8.13.8"></a><h4>Returns</h4>
+<a name="id-1.3.8.8.14.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <a class="link" href="GstBufferList.html#gst-buffer-list-foreach" title="gst_buffer_list_foreach ()"><code class="function">gst_buffer_list_foreach()</code></a> should stop</p>
 </div>
 </div>
@@ -579,7 +617,7 @@ of <em class="parameter"><code>func</code></em>
  define if this function returns or if the remaining buffers in
 the list should be skipped.</p>
 <div class="refsect3">
-<a name="id-1.3.8.8.14.6"></a><h4>Parameters</h4>
+<a name="id-1.3.8.8.15.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -607,7 +645,7 @@ the list should be skipped.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.8.8.14.7"></a><h4>Returns</h4>
+<a name="id-1.3.8.8.15.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>func</code></em>
 returned <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for each buffer in <em class="parameter"><code>list</code></em>
 or when
@@ -624,7 +662,7 @@ gst_buffer_list_get (<em class="parameter"><code><a class="link" href="GstBuffer
 <p>Get the buffer at <em class="parameter"><code>idx</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.8.8.15.5"></a><h4>Parameters</h4>
+<a name="id-1.3.8.8.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -646,7 +684,7 @@ gst_buffer_list_get (<em class="parameter"><code><a class="link" href="GstBuffer
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.8.8.15.6"></a><h4>Returns</h4>
+<a name="id-1.3.8.8.16.6"></a><h4>Returns</h4>
 <p> the buffer at <em class="parameter"><code>idx</code></em>
 in <em class="parameter"><code>group</code></em>
 or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there is no buffer. The buffer remains valid as

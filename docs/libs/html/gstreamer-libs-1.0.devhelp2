@@ -29,6 +29,7 @@
       <sub name="GStreamer Network Classes" link="gstreamer-net.html">
         <sub name="GstNetAddressMeta" link="gstreamer-libs-GstNetAddressMeta.html"/>
         <sub name="GstNetClientClock" link="GstNetClientClock.html"/>
+        <sub name="GstNetControlMessageMeta" link="gstreamer-libs-GstNetControlMessageMeta.html"/>
         <sub name="GstNetTimePacket" link="gstreamer-libs-GstNetTimePacket.html"/>
         <sub name="GstNetTimeProvider" link="GstNetTimeProvider.html"/>
         <sub name="GstPtpClock" link="gstreamer-libs-GstPtpClock.html"/>
@@ -41,8 +42,12 @@
       </sub>
     </sub>
     <sub name="Object Hierarchy" link="gstreamer-hierarchy.html"/>
-    <sub name="API Index" link="api-index-full.html"/>
-    <sub name="Index of deprecated API" link="api-index-deprecated.html"/>
+    <sub name="API Index" link="ix01.html"/>
+    <sub name="Index of deprecated API" link="ix02.html"/>
+    <sub name="Index of new API in 1.6" link="ix03.html"/>
+    <sub name="Index of new API in 1.4" link="ix04.html"/>
+    <sub name="Index of new API in 1.2" link="ix05.html"/>
+    <sub name="Index of new API in 1.0.1" link="ix06.html"/>
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
   <functions>
@@ -168,6 +173,7 @@
     <keyword type="function" name="gst_base_transform_get_buffer_pool ()" link="GstBaseTransform.html#gst-base-transform-get-buffer-pool"/>
     <keyword type="function" name="gst_base_transform_reconfigure_sink ()" link="GstBaseTransform.html#gst-base-transform-reconfigure-sink"/>
     <keyword type="function" name="gst_base_transform_reconfigure_src ()" link="GstBaseTransform.html#gst-base-transform-reconfigure-src"/>
+    <keyword type="function" name="gst_base_transform_update_src_caps ()" link="GstBaseTransform.html#gst-base-transform-update-src-caps" since="1.6"/>
     <keyword type="macro" name="GST_BASE_TRANSFORM_SINK_PAD()" link="GstBaseTransform.html#GST-BASE-TRANSFORM-SINK-PAD:CAPS"/>
     <keyword type="macro" name="GST_BASE_TRANSFORM_SRC_PAD()" link="GstBaseTransform.html#GST-BASE-TRANSFORM-SRC-PAD:CAPS"/>
     <keyword type="struct" name="struct GstBaseTransform" link="GstBaseTransform.html#GstBaseTransform-struct"/>
@@ -437,6 +443,8 @@
     <keyword type="macro" name="GST_COLLECT_PADS_GET_STREAM_LOCK()" link="GstCollectPads.html#GST-COLLECT-PADS-GET-STREAM-LOCK:CAPS"/>
     <keyword type="macro" name="GST_COLLECT_PADS_STREAM_LOCK()" link="GstCollectPads.html#GST-COLLECT-PADS-STREAM-LOCK:CAPS"/>
     <keyword type="macro" name="GST_COLLECT_PADS_STREAM_UNLOCK()" link="GstCollectPads.html#GST-COLLECT-PADS-STREAM-UNLOCK:CAPS"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_DTS()" link="GstCollectPads.html#GST-COLLECT-PADS-DTS:CAPS" since="1.6"/>
+    <keyword type="macro" name="GST_COLLECT_PADS_DTS_IS_VALID()" link="GstCollectPads.html#GST-COLLECT-PADS-DTS-IS-VALID:CAPS" since="1.6"/>
     <keyword type="function" name="gst_collect_pads_new ()" link="GstCollectPads.html#gst-collect-pads-new"/>
     <keyword type="function" name="gst_collect_pads_add_pad ()" link="GstCollectPads.html#gst-collect-pads-add-pad"/>
     <keyword type="function" name="gst_collect_pads_remove_pad ()" link="GstCollectPads.html#gst-collect-pads-remove-pad"/>
@@ -470,6 +478,7 @@
     <keyword type="function" name="gst_flow_combiner_add_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-add-pad" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_remove_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-remove-pad" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_clear ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-clear" since="1.6"/>
+    <keyword type="struct" name="GstFlowCombiner" link="gstreamer-libs-GstFlowCombiner.html#GstFlowCombiner" since="1.4"/>
     <keyword type="function" name="gst_type_find_helper ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper"/>
     <keyword type="function" name="gst_type_find_helper_for_buffer ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-buffer"/>
     <keyword type="function" name="gst_type_find_helper_for_extension ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-extension"/>
@@ -510,6 +519,7 @@
     <keyword type="property" name="The “control-source-g” property" link="GstARGBControlBinding.html#GstARGBControlBinding--control-source-g"/>
     <keyword type="property" name="The “control-source-r” property" link="GstARGBControlBinding.html#GstARGBControlBinding--control-source-r"/>
     <keyword type="function" name="gst_direct_control_binding_new ()" link="GstDirectControlBinding.html#gst-direct-control-binding-new"/>
+    <keyword type="property" name="The “absolute” property" link="GstDirectControlBinding.html#GstDirectControlBinding--absolute"/>
     <keyword type="property" name="The “control-source” property" link="GstDirectControlBinding.html#GstDirectControlBinding--control-source"/>
     <keyword type="function" name="gst_timed_value_control_source_find_control_point_iter ()" link="GstTimedValueControlSource.html#gst-timed-value-control-source-find-control-point-iter"/>
     <keyword type="function" name="gst_timed_value_control_source_set ()" link="GstTimedValueControlSource.html#gst-timed-value-control-source-set"/>
@@ -520,6 +530,7 @@
     <keyword type="function" name="gst_timed_value_control_source_get_count ()" link="GstTimedValueControlSource.html#gst-timed-value-control-source-get-count"/>
     <keyword type="function" name="gst_timed_value_control_invalidate_cache ()" link="GstTimedValueControlSource.html#gst-timed-value-control-invalidate-cache"/>
     <keyword type="struct" name="struct GstTimedValueControlSource" link="GstTimedValueControlSource.html#GstTimedValueControlSource-struct"/>
+    <keyword type="struct" name="struct GstControlPoint" link="GstTimedValueControlSource.html#GstControlPoint"/>
     <keyword type="signal" name="The “value-added” signal" link="GstTimedValueControlSource.html#GstTimedValueControlSource-value-added"/>
     <keyword type="signal" name="The “value-changed” signal" link="GstTimedValueControlSource.html#GstTimedValueControlSource-value-changed"/>
     <keyword type="signal" name="The “value-removed” signal" link="GstTimedValueControlSource.html#GstTimedValueControlSource-value-removed"/>
@@ -550,9 +561,14 @@
     <keyword type="property" name="The “address” property" link="GstNetClientClock.html#GstNetClientClock--address"/>
     <keyword type="property" name="The “base-time” property" link="GstNetClientClock.html#GstNetClientClock--base-time"/>
     <keyword type="property" name="The “bus” property" link="GstNetClientClock.html#GstNetClientClock--bus"/>
+    <keyword type="property" name="The “internal-clock” property" link="GstNetClientClock.html#GstNetClientClock--internal-clock"/>
     <keyword type="property" name="The “minimum-update-interval” property" link="GstNetClientClock.html#GstNetClientClock--minimum-update-interval"/>
     <keyword type="property" name="The “port” property" link="GstNetClientClock.html#GstNetClientClock--port"/>
     <keyword type="property" name="The “round-trip-limit” property" link="GstNetClientClock.html#GstNetClientClock--round-trip-limit"/>
+    <keyword type="function" name="gst_buffer_add_net_control_message_meta ()" link="gstreamer-libs-GstNetControlMessageMeta.html#gst-buffer-add-net-control-message-meta"/>
+    <keyword type="macro" name="gst_buffer_get_net_control_message_meta()" link="gstreamer-libs-GstNetControlMessageMeta.html#gst-buffer-get-net-control-message-meta"/>
+    <keyword type="function" name="gst_net_control_message_meta_get_info ()" link="gstreamer-libs-GstNetControlMessageMeta.html#gst-net-control-message-meta-get-info"/>
+    <keyword type="struct" name="struct GstNetControlMessageMeta" link="gstreamer-libs-GstNetControlMessageMeta.html#GstNetControlMessageMeta"/>
     <keyword type="function" name="gst_net_time_packet_new ()" link="gstreamer-libs-GstNetTimePacket.html#gst-net-time-packet-new"/>
     <keyword type="function" name="gst_net_time_packet_copy ()" link="gstreamer-libs-GstNetTimePacket.html#gst-net-time-packet-copy"/>
     <keyword type="function" name="gst_net_time_packet_free ()" link="gstreamer-libs-GstNetTimePacket.html#gst-net-time-packet-free"/>
@@ -567,11 +583,13 @@
     <keyword type="property" name="The “address” property" link="GstNetTimeProvider.html#GstNetTimeProvider--address"/>
     <keyword type="property" name="The “clock” property" link="GstNetTimeProvider.html#GstNetTimeProvider--clock"/>
     <keyword type="property" name="The “port” property" link="GstNetTimeProvider.html#GstNetTimeProvider--port"/>
+    <keyword type="macro" name="GST_PTP_CLOCK_ID_NONE" link="gstreamer-libs-GstPtpClock.html#GST-PTP-CLOCK-ID-NONE:CAPS"/>
     <keyword type="function" name="gst_ptp_init ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-init" since="1.6"/>
     <keyword type="function" name="gst_ptp_deinit ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-deinit" since="1.6"/>
     <keyword type="function" name="gst_ptp_is_initialized ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-is-initialized" since="1.6"/>
     <keyword type="function" name="gst_ptp_is_supported ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-is-supported" since="1.6"/>
     <keyword type="function" name="gst_ptp_clock_new ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-clock-new" since="1.6"/>
+    <keyword type="function" name="GstPtpStatisticsCallback ()" link="gstreamer-libs-GstPtpClock.html#GstPtpStatisticsCallback"/>
     <keyword type="function" name="gst_ptp_statistics_callback_add ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-add" since="1.6"/>
     <keyword type="function" name="gst_ptp_statistics_callback_remove ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-remove" since="1.6"/>
     <keyword type="struct" name="struct GstPtpClock" link="gstreamer-libs-GstPtpClock.html#GstPtpClock"/>

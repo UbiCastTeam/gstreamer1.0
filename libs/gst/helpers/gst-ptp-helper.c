@@ -41,7 +41,7 @@
 #include <netinet/in.h>
 #include <string.h>
 
-#ifdef __APPLE__
+#ifdef HAVE_GETIFADDRS_AF_LINK
 #include <ifaddrs.h>
 #include <net/if_dl.h>
 #endif
@@ -240,7 +240,7 @@ setup_sockets (void)
 
   /* Probe all non-loopback interfaces */
   if (!ifaces) {
-#ifndef __APPLE__
+#if defined(HAVE_SIOCGIFCONF_SIOCGIFFLAGS_SIOCGIFHWADDR)
     struct ifreq ifr;
     struct ifconf ifc;
     gchar buf[8192];
@@ -253,23 +253,23 @@ setup_sockets (void)
       probed_ifaces = g_new0 (gchar *, ifc.ifc_len + 1);
 
       for (i = 0; i < ifc.ifc_len / sizeof (struct ifreq); i++) {
-        strcpy (ifr.ifr_name, ifc.ifc_req[i].ifr_name);
+        strncpy (ifr.ifr_name, ifc.ifc_req[i].ifr_name, IFNAMSIZ);
         if (ioctl (g_socket_get_fd (socket_event), SIOCGIFFLAGS, &ifr) == 0) {
           if ((ifr.ifr_flags & IFF_LOOPBACK))
             continue;
-          probed_ifaces[idx] = g_strdup (ifc.ifc_req[i].ifr_name);
+          probed_ifaces[idx] = g_strndup (ifc.ifc_req[i].ifr_name, IFNAMSIZ);
           idx++;
         } else {
           g_warning ("can't get flags of interface '%s'",
               ifc.ifc_req[i].ifr_name);
-          probed_ifaces[idx] = g_strdup (ifc.ifc_req[i].ifr_name);
+          probed_ifaces[idx] = g_strndup (ifc.ifc_req[i].ifr_name, IFNAMSIZ);
           idx++;
         }
         if (idx != 0)
           ifaces = probed_ifaces;
       }
     }
-#else
+#elif defined(HAVE_GETIFADDRS_AF_LINK)
     struct ifaddrs *ifaddr, *ifa;
 
     if (getifaddrs (&ifaddr) != -1) {
@@ -291,6 +291,8 @@ setup_sockets (void)
       g_ptr_array_add (arr, NULL);
       ifaces = probed_ifaces = (gchar **) g_ptr_array_free (arr, FALSE);
     }
+#else
+#warning "Implement something to list all network interfaces"
 #endif
   }
 
@@ -298,14 +300,14 @@ setup_sockets (void)
   if (clock_id == (guint64) - 1) {
     gboolean success = FALSE;
 
-#ifndef __APPLE__
+#if defined(HAVE_SIOCGIFCONF_SIOCGIFFLAGS_SIOCGIFHWADDR)
     struct ifreq ifr;
 
     if (ifaces) {
       gchar **ptr = ifaces;
 
       while (*ptr) {
-        strcpy (ifr.ifr_name, *ptr);
+        strncpy (ifr.ifr_name, *ptr, IFNAMSIZ);
         if (ioctl (g_socket_get_fd (socket_event), SIOCGIFHWADDR, &ifr) == 0) {
           clock_id_array[0] = ifr.ifr_hwaddr.sa_data[0];
           clock_id_array[1] = ifr.ifr_hwaddr.sa_data[1];
@@ -331,7 +333,7 @@ setup_sockets (void)
         guint i;
 
         for (i = 0; i < ifc.ifc_len / sizeof (struct ifreq); i++) {
-          strcpy (ifr.ifr_name, ifc.ifc_req[i].ifr_name);
+          strncpy (ifr.ifr_name, ifc.ifc_req[i].ifr_name, IFNAMSIZ);
           if (ioctl (g_socket_get_fd (socket_event), SIOCGIFFLAGS, &ifr) == 0) {
             if ((ifr.ifr_flags & IFF_LOOPBACK))
               continue;
@@ -356,7 +358,7 @@ setup_sockets (void)
         }
       }
     }
-#else
+#elif defined(HAVE_GETIFADDRS_AF_LINK)
     struct ifaddrs *ifaddr, *ifa;
 
     if (getifaddrs (&ifaddr) != -1) {
@@ -405,6 +407,8 @@ setup_sockets (void)
 
       freeifaddrs (ifaddr);
     }
+#else
+#warning "Implement something to get MAC addresses of network interfaces"
 #endif
 
     if (!success) {

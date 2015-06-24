@@ -471,6 +471,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a class="link" href="GstBuffer.html" title="GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-copy-deep" title="gst_buffer_copy_deep ()">gst_buffer_copy_deep</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstBuffer.html#gst-buffer-is-writable" title="gst_buffer_is_writable()">gst_buffer_is_writable</a><span class="c_punctuation">()</span>
@@ -554,6 +562,20 @@
 <a class="link" href="GstBuffer.html#gst-buffer-foreach-meta" title="gst_buffer_foreach_meta ()">gst_buffer_foreach_meta</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="returnvalue">GstParentBufferMeta</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-add-parent-buffer-meta" title="gst_buffer_add_parent_buffer_meta ()">gst_buffer_add_parent_buffer_meta</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-get-parent-buffer-meta" title="gst_buffer_get_parent_buffer_meta()">gst_buffer_get_parent_buffer_meta</a><span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -576,6 +598,10 @@
 <tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="GstBuffer.html#GstBufferCopyFlags" title="enum GstBufferCopyFlags">GstBufferCopyFlags</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta">GstParentBufferMeta</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -675,6 +701,13 @@ using <a class="link" href="GstPad.html#gst-pad-push" title="gst_pad_push ()"><
 the refcount drops to 0, any memory and metadata pointed to by the buffer is
 unreffed as well. Buffers allocated from a <a class="link" href="GstBufferPool.html" title="GstBufferPool"><span class="type">GstBufferPool</span></a> will be returned to
 the pool when the refcount drops to 0.</p>
+<p>The <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> is a meta which can be attached to a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>
+to hold a reference to another buffer that is only released when the child
+<a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> is released.</p>
+<p>Typically, <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> is used when the child buffer is directly
+using the <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> of the parent buffer, and wants to prevent the parent
+buffer from being returned to a buffer pool until the <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> is available
+for re-use. (Since 1.6)</p>
 </div>
 <div class="refsect1">
 <a name="GstBuffer.functions_details"></a><h2>Functions</h2>
@@ -1573,7 +1606,7 @@ together to make room for the new block.</p>
 <a name="id-1.3.7.8.30.6"></a><h4>Returns</h4>
 <p> the maximum amount of memory blocks that a buffer can hold.</p>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2215,7 +2248,7 @@ gst_buffer_is_all_memory_writable (<em class="parameter"><code><a class="link" h
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if all memory blocks in <em class="parameter"><code>buffer</code></em>
 are writable</p>
 </div>
-<p class="since">Since: 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2265,7 +2298,7 @@ gst_buffer_is_memory_range_writable (<em class="parameter"><code><a class="link"
 <a name="id-1.3.7.8.47.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory range is writable</p>
 </div>
-<p class="since">Since: 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2584,7 +2617,7 @@ can be written. </p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.0.10</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.0.10">1.0.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2714,7 +2747,7 @@ gst_buffer_copy (<em class="parameter"><code>const <a class="link" href="GstBuff
 <p>Create a copy of the given buffer. This will only copy the buffer's
 data to a newly allocated memory if needed (if the type of memory
 requires it), otherwise the underlying data is just referenced.
-Check <code class="function">gst_buffer_copy_deep()</code> if you want to force the data
+Check <a class="link" href="GstBuffer.html#gst-buffer-copy-deep" title="gst_buffer_copy_deep ()"><code class="function">gst_buffer_copy_deep()</code></a> if you want to force the data
 to be copied to newly allocated memory.</p>
 <div class="refsect3">
 <a name="id-1.3.7.8.58.5"></a><h4>Parameters</h4>
@@ -2814,7 +2847,7 @@ gst_buffer_copy_region (<em class="parameter"><code><a class="link" href="GstBuf
 .
 This sub-buffer uses the actual memory space of the parent buffer.
 This function will copy the offset and timestamp fields when the
-offset is 0. If not, they will be set to <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><span class="type">GST_CLOCK_TIME_NONE</span></a> and 
+offset is 0. If not, they will be set to <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><span class="type">GST_CLOCK_TIME_NONE</span></a> and
 <a class="link" href="GstBuffer.html#GST-BUFFER-OFFSET-NONE:CAPS" title="GST_BUFFER_OFFSET_NONE"><span class="type">GST_BUFFER_OFFSET_NONE</span></a>.
 If <em class="parameter"><code>offset</code></em>
  equals 0 and <em class="parameter"><code>size</code></em>
@@ -2866,6 +2899,36 @@ invalid. </p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-buffer-copy-deep"></a><h3>gst_buffer_copy_deep ()</h3>
+<pre class="programlisting"><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="returnvalue">GstBuffer</span></a> *
+gst_buffer_copy_deep (<em class="parameter"><code>const <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);</pre>
+<p>Create a copy of the given buffer. This will make a newly allocated
+copy of the data the source buffer contains.</p>
+<div class="refsect3">
+<a name="id-1.3.7.8.61.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>buf</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.8.61.6"></a><h4>Returns</h4>
+<p> a new copy of <em class="parameter"><code>buf</code></em>
+. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-buffer-is-writable"></a><h3>gst_buffer_is_writable()</h3>
 <pre class="programlisting">#define         gst_buffer_is_writable(buf)     gst_mini_object_is_writable (GST_MINI_OBJECT_CAST (buf))
 </pre>
@@ -2873,7 +2936,7 @@ invalid. </p>
 It is only safe to change buffer metadata when the current reference is
 writable, i.e. nobody can see the modifications you will make.</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.61.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.62.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2897,7 +2960,7 @@ writable, i.e. nobody can see the modifications you will make.</p>
 already writable, this will simply return the same buffer. A copy will
 otherwise be made using <a class="link" href="GstBuffer.html#gst-buffer-copy" title="gst_buffer_copy ()"><code class="function">gst_buffer_copy()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.62.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.63.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2912,7 +2975,7 @@ otherwise be made using <a class="link" href="GstBuffer.html#gst-buffer-copy" ti
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.62.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.63.6"></a><h4>Returns</h4>
 <p> a writable buffer which may or may not be the
 same as <em class="parameter"><code>buf</code></em>
 . </p>
@@ -2933,7 +2996,7 @@ buffer is unreffed, the new is reffed).</p>
  or the <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> pointed to by <em class="parameter"><code>obuf</code></em>
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.63.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.64.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2958,7 +3021,7 @@ replace the buffer pointed to by <em class="parameter"><code>obuf</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.63.7"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.64.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>obuf</code></em>
 was different from <em class="parameter"><code>nbuf</code></em>
 .</p>
@@ -2977,7 +3040,7 @@ concatenation of the memory of <em class="parameter"><code>buf1</code></em>
  and <em class="parameter"><code>buf2</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.64.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.65.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2999,7 +3062,7 @@ concatenation of the memory of <em class="parameter"><code>buf1</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.64.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.65.6"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> that contains the memory
 of the two source buffers. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -3023,7 +3086,7 @@ contain a concatenation of the memory of <em class="parameter"><code>buf1</code>
 <em class="parameter"><code>buf2</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.65.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.66.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3057,7 +3120,7 @@ contain a concatenation of the memory of <em class="parameter"><code>buf1</code>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.65.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.66.6"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> that contains the memory
 of the two source buffers. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -3077,7 +3140,7 @@ buffer only the first one is returned.  To handle multiple metadata with a
 given API use <a class="link" href="GstBuffer.html#gst-buffer-iterate-meta" title="gst_buffer_iterate_meta ()"><code class="function">gst_buffer_iterate_meta()</code></a> or <a class="link" href="GstBuffer.html#gst-buffer-foreach-meta" title="gst_buffer_foreach_meta ()"><code class="function">gst_buffer_foreach_meta()</code></a> instead
 and check the meta-&gt;info.api member for the API type.</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.66.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.67.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3099,7 +3162,7 @@ and check the meta-&gt;info.api member for the API type.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.66.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.67.6"></a><h4>Returns</h4>
 <p> the metadata for <em class="parameter"><code>api</code></em>
 on
 <em class="parameter"><code>buffer</code></em>
@@ -3119,7 +3182,7 @@ gst_buffer_add_meta (<em class="parameter"><code><a class="link" href="GstBuffer
  using the parameters in <em class="parameter"><code>params</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.67.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.68.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3147,7 +3210,7 @@ gst_buffer_add_meta (<em class="parameter"><code><a class="link" href="GstBuffer
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.67.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.68.6"></a><h4>Returns</h4>
 <p> the metadata for the api in <em class="parameter"><code>info</code></em>
 on <em class="parameter"><code>buffer</code></em>
 . </p>
@@ -3164,7 +3227,7 @@ gst_buffer_remove_meta (<em class="parameter"><code><a class="link" href="GstBuf
  on <em class="parameter"><code>buffer</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.68.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.69.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3186,7 +3249,7 @@ gst_buffer_remove_meta (<em class="parameter"><code><a class="link" href="GstBuf
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.68.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.69.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the metadata existed and was removed, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if no such
 metadata was on <em class="parameter"><code>buffer</code></em>
 .</p>
@@ -3205,7 +3268,7 @@ to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <p><em class="parameter"><code>state</code></em>
  will be updated with an opaque state pointer</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.69.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.70.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3227,7 +3290,7 @@ to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.69.7"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.70.7"></a><h4>Returns</h4>
 <p> The next <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 when there are no more items. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -3250,7 +3313,7 @@ returned. When <a href="https://developer.gnome.org/glib/unstable/glib-Standard-
 <p>When <em class="parameter"><code>meta</code></em>
  is set to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the item will be removed from the buffer.</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.70.8"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.71.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3277,7 +3340,7 @@ returned. When <a href="https://developer.gnome.org/glib/unstable/glib-Standard-
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.70.9"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.71.9"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <a class="link" href="GstBuffer.html#gst-buffer-foreach-meta" title="gst_buffer_foreach_meta ()"><code class="function">gst_buffer_foreach_meta()</code></a> should stop</p>
 </div>
 </div>
@@ -3298,7 +3361,7 @@ of <em class="parameter"><code>func</code></em>
  define if this function returns or if the remaining metadata items
 in the buffer should be skipped.</p>
 <div class="refsect3">
-<a name="id-1.3.7.8.71.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.8.72.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3326,9 +3389,70 @@ in the buffer should be skipped.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.8.71.7"></a><h4>Returns</h4>
+<a name="id-1.3.7.8.72.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <em class="parameter"><code>func</code></em>
 returned <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for one of the metadata.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-add-parent-buffer-meta"></a><h3>gst_buffer_add_parent_buffer_meta ()</h3>
+<pre class="programlisting"><a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="returnvalue">GstParentBufferMeta</span></a> *
+gst_buffer_add_parent_buffer_meta (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                   <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *ref</code></em>);</pre>
+<p>Add a <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> to <em class="parameter"><code>buffer</code></em>
+ that holds a reference on
+<em class="parameter"><code>ref</code></em>
+ until the buffer is freed.</p>
+<div class="refsect3">
+<a name="id-1.3.7.8.73.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>ref</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> to ref. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.8.73.6"></a><h4>Returns</h4>
+<p> The <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> that was added to the buffer. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-get-parent-buffer-meta"></a><h3>gst_buffer_get_parent_buffer_meta()</h3>
+<pre class="programlisting">#define             gst_buffer_get_parent_buffer_meta(b)</pre>
+<p>Find and return a <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> if one exists on the
+buffer</p>
+<div class="refsect3">
+<a name="id-1.3.7.8.74.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>b</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
 </div>
 </div>
 </div>
@@ -3518,6 +3642,15 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-SYNC-AFTER:CAPS"></a>GST_BUFFER_FLAG_SYNC_AFTER</p></td>
+<td class="enum_member_description">
+<p>Elements which write to disk or permanent
+				 storage should ensure the data is synced after
+				 writing the contents of this buffer. (Since 1.6)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-LAST:CAPS"></a>GST_BUFFER_FLAG_LAST</p></td>
 <td class="enum_member_description">
 <p>additional media specific flags can be added starting from
@@ -3603,6 +3736,46 @@ function to specify which items should be copied.</p>
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstParentBufferMeta"></a><h3>struct GstParentBufferMeta</h3>
+<pre class="programlisting">struct GstParentBufferMeta {
+  GstMeta parent;
+
+  GstBuffer *buffer;
+};
+</pre>
+<p>The <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> is a <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> which can be attached to a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>
+to hold a reference to another buffer that is only released when the child
+<a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> is released.</p>
+<p>Typically, <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> is used when the child buffer is directly
+using the <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> of the parent buffer, and wants to prevent the parent
+buffer from being returned to a buffer pool until the <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> is available
+for re-use.</p>
+<div class="refsect3">
+<a name="id-1.3.7.9.5.6"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> <em class="structfield"><code><a name="GstParentBufferMeta.parent"></a>parent</code></em>;</p></td>
+<td class="struct_member_description"><p>the parent <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> structure</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="GstParentBufferMeta.buffer"></a>buffer</code></em>;</p></td>
+<td class="struct_member_description"><p>the <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> on which a reference is being held.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">

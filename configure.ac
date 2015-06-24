@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.5.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.5.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 501, 0, 501)
+AS_LIBTOOL(GST, 502, 0, 502)
 
 dnl *** autotools stuff ****
 
@@ -324,6 +324,44 @@ AC_PATH_PROG([SETCAP], [setcap], [no], [$PATH:/usr/bin:/bin:/usr/sbin:/sbin])
 
 if test "x$HAVE_PTP" = "xyes"; then
 AC_DEFINE(HAVE_PTP, 1, [PTP support available])
+
+AC_MSG_CHECKING([for SIOCGIFCONF, SIOCGIFFLAGS and SIOCGIFHWADDR])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+    [[
+        #include <sys/ioctl.h>
+        #include <net/if.h>
+    ]],
+    [[
+        struct ifreq ifr;
+        struct ifconf ifc;
+        ioctl(0, SIOCGIFCONF, &ifc);
+        ioctl(0, SIOCGIFFLAGS, &ifr);
+        ioctl(0, SIOCGIFHWADDR, &ifr);
+        int dummy = ifr.ifr_hwaddr.sa_data[0];
+    ]])], [
+        AC_MSG_RESULT(yes)
+        AC_DEFINE(HAVE_SIOCGIFCONF_SIOCGIFFLAGS_SIOCGIFHWADDR, 1, [SIOCGIFCONF, SIOCGIFFLAGS and SIOCGIFHWADDR is available])
+    ], [
+        AC_MSG_RESULT(no)
+])
+
+AC_MSG_CHECKING([for getifaddrs() and AF_LINK])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+    [[
+        #include <ifaddrs.h>
+        #include <net/if.h>
+        #include <net/if_dl.h>
+    ]],
+    [[
+        struct ifaddrs *ifaddr;
+        getifaddrs(&ifaddr);
+        int dummy = (ifaddr->ifa_flags & IFF_LOOPBACK) && ifaddr->ifa_addr->sa_family != AF_LINK;
+    ]])], [
+        AC_MSG_RESULT(yes)
+        AC_DEFINE(HAVE_GETIFADDRS_AF_LINK, 1, [getifaddrs() and AF_LINK is available])
+    ], [
+        AC_MSG_RESULT(no)
+    ])
 
 AC_MSG_CHECKING([how to install gst-ptp-helper])
 if test "x$with_ptp_helper_permissions" = "xauto"; then
