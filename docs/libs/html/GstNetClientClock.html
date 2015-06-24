@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-net.html" title="GStreamer Network Classes">
 <link rel="prev" href="gstreamer-libs-GstNetAddressMeta.html" title="GstNetAddressMeta">
-<link rel="next" href="gstreamer-libs-GstNetTimePacket.html" title="GstNetTimePacket">
+<link rel="next" href="gstreamer-libs-GstNetControlMessageMeta.html" title="GstNetControlMessageMeta">
 <meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-net.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-libs-GstNetAddressMeta.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-libs-GstNetTimePacket.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gstreamer-libs-GstNetControlMessageMeta.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstNetClientClock"></a><div class="titlepage"></div>
@@ -86,6 +86,12 @@
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> *</td>
 <td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--bus" title="The “bus” property">bus</a></td>
 <td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="type">GstClock</span></a> *</td>
+<td class="property_name"><a class="link" href="GstNetClientClock.html#GstNetClientClock--internal-clock" title="The “internal-clock” property">internal-clock</a></td>
+<td class="property_flags">Read</td>
 </tr>
 <tr>
 <td class="property_type"><span class="type">guint64</span></td>
@@ -260,7 +266,7 @@ the NTPv4 server on <em class="parameter"><code>remote_address</code></em>
 <p> a new <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="type">GstClock</span></a> that receives a time from the remote
 clock.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -300,6 +306,13 @@ clock.</p>
 <pre class="programlisting">  “bus”                      <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBus.html"><span class="type">GstBus</span></a> *</pre>
 <p>A GstBus on which to send clock status information.</p>
 <p>Flags: Read / Write</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstNetClientClock--internal-clock"></a><h3>The <code class="literal">“internal-clock”</code> property</h3>
+<pre class="programlisting">  “internal-clock”           <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="type">GstClock</span></a> *</pre>
+<p>Internal clock that directly slaved to the remote clock.</p>
+<p>Flags: Read</p>
 </div>
 <hr>
 <div class="refsect2">

@@ -526,6 +526,7 @@ an alignment of 7 would be the same as what <code class="function">malloc()</cod
   GstMemoryShareFunction     mem_share;
   GstMemoryIsSpanFunction    mem_is_span;
 
+  GstMemoryMapFullFunction   mem_map_full;
   GstMemoryUnmapFullFunction mem_unmap_full;
 } GstAllocator;
 </pre>
@@ -565,10 +566,17 @@ an alignment of 7 would be the same as what <code class="function">malloc()</cod
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">GstMemoryUnmapFullFunction</span> <em class="structfield"><code><a name="GstAllocator-struct.mem-unmap-full"></a>mem_unmap_full</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryMapFullFunction" title="GstMemoryMapFullFunction ()"><span class="type">GstMemoryMapFullFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-map-full"></a>mem_map_full</code></em>;</p></td>
+<td class="struct_member_description"><p>the implementation of the GstMemoryMapFullFunction.
+Will be used instead of <em class="parameter"><code>mem_map</code></em>
+if present. (Since 1.6)</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstMemory.html#GstMemoryUnmapFullFunction" title="GstMemoryUnmapFullFunction ()"><span class="type">GstMemoryUnmapFullFunction</span></a> <em class="structfield"><code><a name="GstAllocator-struct.mem-unmap-full"></a>mem_unmap_full</code></em>;</p></td>
 <td class="struct_member_description"><p>the implementation of the GstMemoryUnmapFullFunction.
 Will be used instead of <em class="parameter"><code>mem_unmap</code></em>
-if present. Since 1.6</p></td>
+if present. (Since 1.6)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

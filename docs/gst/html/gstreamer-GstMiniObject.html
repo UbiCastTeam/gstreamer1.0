@@ -726,8 +726,9 @@ important to note that keeping additional references to
 GstMiniObject instances can potentially increase the number
 of memcpy operations in a pipeline, especially if the miniobject
 is a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.31.7.17.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.17.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -742,7 +743,7 @@ is a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.7.17.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.17.8"></a><h4>Returns</h4>
 <p> the mini-object. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -754,8 +755,9 @@ is a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">
 gst_mini_object_unref (<em class="parameter"><code><a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> *mini_object</code></em>);</pre>
 <p>Decreases the reference count of the mini-object, possibly freeing
 the mini-object.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.31.7.18.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.18.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -961,8 +963,9 @@ gst_mini_object_make_writable (<em class="parameter"><code><a class="link" href=
 returned.  This gives away the reference to the original mini object,
 and returns a reference to the new object.</p>
 <p>MT safe</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.31.7.24.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.24.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -977,7 +980,7 @@ and returns a reference to the new object.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.7.24.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.24.8"></a><h4>Returns</h4>
 <p> a mini-object (possibly the same pointer) that
 is writable. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -990,8 +993,9 @@ is writable. </p>
 gst_mini_object_copy (<em class="parameter"><code>const <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> *mini_object</code></em>);</pre>
 <p>Creates a copy of the mini-object.</p>
 <p>MT safe</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.31.7.25.6"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.25.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1006,7 +1010,7 @@ gst_mini_object_copy (<em class="parameter"><code>const <a class="link" href="gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.7.25.7"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.25.8"></a><h4>Returns</h4>
 <p> the new mini-object. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1244,8 +1248,9 @@ gst_mini_object_steal (<em class="parameter"><code><a class="link" href="gstream
 <p>Replace the current <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> pointer to by <em class="parameter"><code>olddata</code></em>
  with <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> and
 return the old value.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.31.7.31.5"></a><h4>Parameters</h4>
+<a name="id-1.3.31.7.31.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1261,7 +1266,7 @@ be stolen. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.31.7.31.6"></a><h4>Returns</h4>
+<a name="id-1.3.31.7.31.7"></a><h4>Returns</h4>
 <p> the <a class="link" href="gstreamer-GstMiniObject.html#GstMiniObject" title="struct GstMiniObject"><span class="type">GstMiniObject</span></a> at <em class="parameter"><code>oldata</code></em>
 </p>
 </div>
@@ -1283,11 +1288,7 @@ be stolen. </p></td>
   GstMiniObjectFreeFunction free;
 };
 </pre>
-<p>Base class for refcounted lightweight objects.
-Ref Func: gst_mini_object_ref
-Unref Func: gst_mini_object_unref
-Set Value Func: g_value_set_boxed
-Get Value Func: g_value_get_boxed</p>
+<p>Base class for refcounted lightweight objects.</p>
 <div class="refsect3">
 <a name="id-1.3.31.8.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">

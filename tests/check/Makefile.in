@@ -109,7 +109,8 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	libs/sparsefile$(EXEEXT) libs/collectpads$(EXEEXT) \
 	libs/gstnetclientclock$(EXEEXT) \
 	libs/gstnettimeprovider$(EXEEXT) libs/gsttestclock$(EXEEXT) \
-	libs/transform1$(EXEEXT) tools/gstinspect$(EXEEXT)
+	libs/transform1$(EXEEXT) libs/transform2$(EXEEXT) \
+	tools/gstinspect$(EXEEXT)
 noinst_PROGRAMS =
 subdir = tests/check
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -748,6 +749,12 @@ libs_transform1_LDADD = $(LDADD)
 libs_transform1_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+libs_transform2_SOURCES = libs/transform2.c
+libs_transform2_OBJECTS = libs/transform2.$(OBJEXT)
+libs_transform2_LDADD = $(LDADD)
+libs_transform2_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 libs_typefindhelper_SOURCES = libs/typefindhelper.c
 libs_typefindhelper_OBJECTS = libs/typefindhelper.$(OBJEXT)
 libs_typefindhelper_LDADD = $(LDADD)
@@ -885,7 +892,7 @@ SOURCES = elements/capsfilter.c elements/concat.c elements/fakesink.c \
 	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
 	libs/gstnettimeprovider.c libs/gsttestclock.c libs/libsabi.c \
 	libs/queuearray.c libs/sparsefile.c libs/transform1.c \
-	libs/typefindhelper.c pipelines/cleanup.c \
+	libs/transform2.c libs/typefindhelper.c pipelines/cleanup.c \
 	pipelines/parse-disabled.c pipelines/parse-launch.c \
 	pipelines/queue-error.c pipelines/seek.c \
 	pipelines/simple-launch-lines.c pipelines/stress.c \
@@ -920,7 +927,7 @@ DIST_SOURCES = elements/capsfilter.c elements/concat.c \
 	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
 	libs/gstnettimeprovider.c libs/gsttestclock.c libs/libsabi.c \
 	libs/queuearray.c libs/sparsefile.c libs/transform1.c \
-	libs/typefindhelper.c pipelines/cleanup.c \
+	libs/transform2.c libs/typefindhelper.c pipelines/cleanup.c \
 	pipelines/parse-disabled.c pipelines/parse-launch.c \
 	pipelines/queue-error.c pipelines/seek.c \
 	pipelines/simple-launch-lines.c pipelines/stress.c \
@@ -1299,6 +1306,7 @@ INTROSPECTION_CFLAGS = @INTROSPECTION_CFLAGS@
 INTROSPECTION_COMPILER = @INTROSPECTION_COMPILER@
 INTROSPECTION_GENERATE = @INTROSPECTION_GENERATE@
 INTROSPECTION_GIRDIR = @INTROSPECTION_GIRDIR@
+INTROSPECTION_INIT = @INTROSPECTION_INIT@
 INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
 INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
 INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
@@ -2222,6 +2230,12 @@ libs/transform1.$(OBJEXT): libs/$(am__dirstamp) \
 libs/transform1$(EXEEXT): $(libs_transform1_OBJECTS) $(libs_transform1_DEPENDENCIES) $(EXTRA_libs_transform1_DEPENDENCIES) libs/$(am__dirstamp)
 	@rm -f libs/transform1$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(libs_transform1_OBJECTS) $(libs_transform1_LDADD) $(LIBS)
+libs/transform2.$(OBJEXT): libs/$(am__dirstamp) \
+	libs/$(DEPDIR)/$(am__dirstamp)
+
+libs/transform2$(EXEEXT): $(libs_transform2_OBJECTS) $(libs_transform2_DEPENDENCIES) $(EXTRA_libs_transform2_DEPENDENCIES) libs/$(am__dirstamp)
+	@rm -f libs/transform2$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(libs_transform2_OBJECTS) $(libs_transform2_LDADD) $(LIBS)
 libs/typefindhelper.$(OBJEXT): libs/$(am__dirstamp) \
 	libs/$(DEPDIR)/$(am__dirstamp)
 
@@ -2389,6 +2403,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/queuearray.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/sparsefile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/transform1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/transform2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/typefindhelper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@pipelines/$(DEPDIR)/cleanup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@pipelines/$(DEPDIR)/parse-disabled.Po@am__quote@
@@ -3348,6 +3363,13 @@ libs/gsttestclock.log: libs/gsttestclock$(EXEEXT)
 libs/transform1.log: libs/transform1$(EXEEXT)
 	@p='libs/transform1$(EXEEXT)'; \
 	b='libs/transform1'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+libs/transform2.log: libs/transform2$(EXEEXT)
+	@p='libs/transform2$(EXEEXT)'; \
+	b='libs/transform2'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
