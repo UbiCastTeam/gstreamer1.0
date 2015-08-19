@@ -733,6 +733,14 @@ to GStreamer</p>
 <a class="link" href="gstreamer-GstValue.html#gst-value-fixate" title="gst_value_fixate ()">gst_value_fixate</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstValue.html#gst-flagset-register" title="gst_flagset_register ()">gst_flagset_register</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -3748,6 +3756,31 @@ If <em class="parameter"><code>src</code></em>
 contains a fixated version of <em class="parameter"><code>src</code></em>
 .</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-flagset-register"></a><h3>gst_flagset_register ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+gst_flagset_register (<em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> flags_type</code></em>);</pre>
+<p>Create a new sub-class of <a class="link" href="gstreamer-GstValue.html#GST-TYPE-FLAG-SET:CAPS" title="GST_TYPE_FLAG_SET"><span class="type">GST_TYPE_FLAG_SET</span></a>
+which will pretty-print the human-readable flags
+when serializing, for easier debugging.</p>
+<div class="refsect3">
+<a name="id-1.3.59.7.101.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>flags_type</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of a <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#G-TYPE-FLAGS:CAPS"><span class="type">G_TYPE_FLAGS</span></a> type.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">

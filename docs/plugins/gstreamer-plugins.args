@@ -104,7 +104,7 @@
 <RANGE></RANGE>
 <FLAGS>rwx</FLAGS>
 <NICK>Allow not linked</NICK>
-<BLURB>Return GTS_FLOW_OK even if there are not source pads or all are unlinked.</BLURB>
+<BLURB>Return GST_FLOW_OK even if there are no source pads or they are all unlinked.</BLURB>
 <DEFAULT>FALSE</DEFAULT>
 </ARG>
 
@@ -1115,6 +1115,16 @@
 <FLAGS>rw</FLAGS>
 <NICK>Adjust segment base</NICK>
 <BLURB>Adjust the base value of segments to ensure they are adjacent.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstFunnel::forward-sticky-events</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Forward sticky events</NICK>
+<BLURB>Forward sticky events on stream changes.</BLURB>
 <DEFAULT>TRUE</DEFAULT>
 </ARG>
 

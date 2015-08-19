@@ -49,7 +49,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><span class="type">GstFileSinkBufferMode</span></td>
+<td class="property_type"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSinkBufferMode" title="enum GstFileSinkBufferMode"><span class="type">GstFileSinkBufferMode</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink--buffer-mode" title="The “buffer-mode” property">buffer-mode</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -74,10 +74,16 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink-struct" title="struct GstFileSink">GstFileSink</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSinkBufferMode" title="enum GstFileSinkBufferMode">GstFileSinkBufferMode</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -100,7 +106,7 @@ GstFileSink implements
 <a name="gstreamer-plugins-filesink.description"></a><h2>Description</h2>
 <p>Write incoming data to a file in the local file system.</p>
 <div class="refsect2">
-<a name="id-1.2.9.8.3"></a><h3>Example launch line</h3>
+<a name="id-1.2.10.8.3"></a><h3>Example launch line</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -116,7 +122,7 @@ GstFileSink implements
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.9.8.4.1"></a><h3>Element Information</h3>
+<a name="id-1.2.10.8.4.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -142,7 +148,7 @@ GstFileSink implements
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.9.8.4.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.10.8.4.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -181,6 +187,51 @@ GstFileSink implements
 <pre class="programlisting">struct GstFileSink;</pre>
 <p>Opaque <a class="link" href="gstreamer-plugins-filesink.html#GstFileSink"><span class="type">GstFileSink</span></a> structure.</p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstFileSinkBufferMode"></a><h3>enum GstFileSinkBufferMode</h3>
+<p>File read buffering mode.</p>
+<div class="refsect3">
+<a name="id-1.2.10.10.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-DEFAULT:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_DEFAULT</p></td>
+<td class="enum_member_description">
+<p>Default buffering</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-FULL:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_FULL</p></td>
+<td class="enum_member_description">
+<p>Fully buffered</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-LINE:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_LINE</p></td>
+<td class="enum_member_description">
+<p>Line buffered</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-UNBUFFERED:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_UNBUFFERED</p></td>
+<td class="enum_member_description">
+<p>Unbuffered</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.property-details"></a><h2>Property Details</h2>
@@ -194,7 +245,7 @@ GstFileSink implements
 <hr>
 <div class="refsect2">
 <a name="GstFileSink--buffer-mode"></a><h3>The <code class="literal">“buffer-mode”</code> property</h3>
-<pre class="programlisting">  “buffer-mode”              <span class="type">GstFileSinkBufferMode</span></pre>
+<pre class="programlisting">  “buffer-mode”              <a class="link" href="gstreamer-plugins-filesink.html#GstFileSinkBufferMode" title="enum GstFileSinkBufferMode"><span class="type">GstFileSinkBufferMode</span></a></pre>
 <p>The buffering mode to use.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: Default buffering</p>
