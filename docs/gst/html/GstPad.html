@@ -1272,6 +1272,24 @@
 <a class="link" href="GstPad.html#GST-PAD-UNSET-ACCEPT-INTERSECT:CAPS" title="GST_PAD_UNSET_ACCEPT_INTERSECT()">GST_PAD_UNSET_ACCEPT_INTERSECT</a><span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-IS-ACCEPT-TEMPLATE:CAPS" title="GST_PAD_IS_ACCEPT_TEMPLATE()">GST_PAD_IS_ACCEPT_TEMPLATE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-SET-ACCEPT-TEMPLATE:CAPS" title="GST_PAD_SET_ACCEPT_TEMPLATE()">GST_PAD_SET_ACCEPT_TEMPLATE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-UNSET-ACCEPT-TEMPLATE:CAPS" title="GST_PAD_UNSET_ACCEPT_TEMPLATE()">GST_PAD_UNSET_ACCEPT_TEMPLATE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -7187,6 +7205,81 @@ accept incompletely specified caps.</p>
 </table></div>
 </div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-IS-ACCEPT-TEMPLATE:CAPS"></a><h3>GST_PAD_IS_ACCEPT_TEMPLATE()</h3>
+<pre class="programlisting">#define GST_PAD_IS_ACCEPT_TEMPLATE(pad)    (GST_OBJECT_FLAG_IS_SET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+</pre>
+<p>Check if the pad's accept caps operation will use the pad template caps.
+The default accept-caps will do a query caps to get the caps, which might
+be querying downstream causing unnecessary overhead. It is recommended to
+implement a proper accept-caps query handler or to use this flag to prevent
+recursive accept-caps handling.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.174.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-SET-ACCEPT-TEMPLATE:CAPS"></a><h3>GST_PAD_SET_ACCEPT_TEMPLATE()</h3>
+<pre class="programlisting">#define GST_PAD_SET_ACCEPT_TEMPLATE(pad)   (GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+</pre>
+<p>Set <em class="parameter"><code>pad</code></em>
+ to by default use the pad template caps to compare with
+the accept caps instead of using a caps query result.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.175.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-UNSET-ACCEPT-TEMPLATE:CAPS"></a><h3>GST_PAD_UNSET_ACCEPT_TEMPLATE()</h3>
+<pre class="programlisting">#define GST_PAD_UNSET_ACCEPT_TEMPLATE(pad) (GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+</pre>
+<p>Unset accept template flag.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.176.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstPad.other_details"></a><h2>Types and Values</h2>
@@ -7376,6 +7469,16 @@ the pad.</p></td>
                      it the caps intersect the query-caps result instead
                      of checking for a subset. This is interesting for
                      parsers that can accept incompletely specified caps.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-PAD-FLAG-ACCEPT-TEMPLATE:CAPS"></a>GST_PAD_FLAG_ACCEPT_TEMPLATE</p></td>
+<td class="enum_member_description">
+<p>the default accept-caps handler will use
+                     the template pad caps instead of query caps to
+                     compare with the accept caps. Use this in combination
+                     with <a class="link" href="GstPad.html#GST-PAD-FLAG-ACCEPT-INTERSECT:CAPS"><code class="literal">GST_PAD_FLAG_ACCEPT_INTERSECT</code></a>. (Since 1.6)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -7702,31 +7805,50 @@ pad operates in push or pull mode.</p>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-DROP:CAPS"></a>GST_PAD_PROBE_DROP</p></td>
 <td class="enum_member_description">
 <p>drop data in data probes. For push mode this means that
-       the data item is not sent downstream. For pull mode, it means that the
-       data item is not passed upstream. In both cases, this result code
-       means that <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the caller.</p>
+       the data item is not sent downstream. For pull mode, it means that
+       the data item is not passed upstream. In both cases, no more probes
+       are called and <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the caller.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-OK:CAPS"></a>GST_PAD_PROBE_OK</p></td>
 <td class="enum_member_description">
-<p>normal probe return value</p>
+<p>normal probe return value. This leaves the probe in
+       place, and defers decisions about dropping or passing data to other
+       probes, if any. If there are no other probes, the default behaviour
+       for the probe type applies (block for blocking probes, and pass for
+       non-blocking probes).</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-REMOVE:CAPS"></a>GST_PAD_PROBE_REMOVE</p></td>
 <td class="enum_member_description">
-<p>remove probe</p>
+<p>remove this probe.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-PASS:CAPS"></a>GST_PAD_PROBE_PASS</p></td>
 <td class="enum_member_description">
-<p>pass the data item in the block probe and block on
-                        the next item</p>
+<p>pass the data item in the block probe and block on the
+       next item.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-PAD-PROBE-HANDLED:CAPS"></a>GST_PAD_PROBE_HANDLED</p></td>
+<td class="enum_member_description">
+<p>Data has been handled in the probe and will not be
+       forwarded further. For events and buffers this is the same behaviour as
+       <em class="parameter"><code>GST_PAD_PROBE_DROP</code></em>
+ (except that in this case you need to unref the buffer
+       or event yourself). For queries it will also return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to the caller.
+       The probe can also modify the <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value by using the
+       <code class="function"><GTKDOCLINK HREF="GST-PAD-PROBE-INFO-FLOW-RETURN:CAPS"><code class="function">GST_PAD_PROBE_INFO_FLOW_RETURN()</code></code></GTKDOCLINK> accessor.
+       Note that the resulting query must contain valid entries.
+       Since: 1.6</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

@@ -5,6 +5,10 @@ EXPORTS
 	gst_adapter_copy
 	gst_adapter_copy_bytes
 	gst_adapter_flush
+	gst_adapter_get_buffer
+	gst_adapter_get_buffer_fast
+	gst_adapter_get_buffer_list
+	gst_adapter_get_list
 	gst_adapter_get_type
 	gst_adapter_map
 	gst_adapter_masked_scan_uint32
@@ -29,6 +33,7 @@ EXPORTS
 	gst_base_parse_frame_init
 	gst_base_parse_frame_new
 	gst_base_parse_get_type
+	gst_base_parse_merge_tags
 	gst_base_parse_push_frame
 	gst_base_parse_set_average_bitrate
 	gst_base_parse_set_duration
@@ -278,14 +283,19 @@ EXPORTS
 	gst_flow_combiner_update_pad_flow
 	gst_push_src_get_type
 	gst_queue_array_drop_element
+	gst_queue_array_drop_struct
 	gst_queue_array_find
 	gst_queue_array_free
 	gst_queue_array_get_length
 	gst_queue_array_is_empty
 	gst_queue_array_new
+	gst_queue_array_new_for_struct
 	gst_queue_array_peek_head
+	gst_queue_array_peek_head_struct
 	gst_queue_array_pop_head
+	gst_queue_array_pop_head_struct
 	gst_queue_array_push_tail
+	gst_queue_array_push_tail_struct
 	gst_type_find_helper
 	gst_type_find_helper_for_buffer
 	gst_type_find_helper_for_data

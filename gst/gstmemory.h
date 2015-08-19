@@ -26,6 +26,7 @@
 #include <gst/gstconfig.h>
 
 #include <glib-object.h>
+#include <gst/gstminiobject.h>
 
 G_BEGIN_DECLS
 
@@ -215,7 +216,7 @@ typedef struct {
  *
  * Initializer for #GstMapInfo
  */
-#define GST_MAP_INFO_INIT { NULL, 0, NULL, 0, 0, }
+#define GST_MAP_INFO_INIT { NULL, 0, NULL, 0, 0, {0, }, {0, }}
 
 /**
  * GstMemoryMapFunction:

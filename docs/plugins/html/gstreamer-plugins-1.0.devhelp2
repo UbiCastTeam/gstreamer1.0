@@ -3,6 +3,7 @@
   <chapters>
     <sub name="gstreamer Elements" link="ch01.html">
       <sub name="capsfilter" link="gstreamer-plugins-capsfilter.html"/>
+      <sub name="concat" link="gstreamer-plugins-concat.html"/>
       <sub name="downloadbuffer" link="gstreamer-plugins-downloadbuffer.html"/>
       <sub name="fakesrc" link="gstreamer-plugins-fakesrc.html"/>
       <sub name="fakesink" link="gstreamer-plugins-fakesink.html"/>
@@ -17,6 +18,7 @@
       <sub name="output-selector" link="gstreamer-plugins-output-selector.html"/>
       <sub name="queue" link="gstreamer-plugins-queue.html"/>
       <sub name="queue2" link="gstreamer-plugins-queue2.html"/>
+      <sub name="streamiddemux" link="gstreamer-plugins-streamiddemux.html"/>
       <sub name="tee" link="gstreamer-plugins-tee.html"/>
       <sub name="typefind" link="gstreamer-plugins-typefind.html"/>
       <sub name="valve" link="gstreamer-plugins-valve.html"/>
@@ -27,8 +29,12 @@
   </chapters>
   <functions>
     <keyword type="struct" name="struct GstCapsFilter" link="gstreamer-plugins-capsfilter.html#GstCapsFilter-struct"/>
+    <keyword type="enum" name="enum GstCapsFilterCapsChangeMode" link="gstreamer-plugins-capsfilter.html#GstCapsFilterCapsChangeMode"/>
     <keyword type="property" name="The “caps” property" link="gstreamer-plugins-capsfilter.html#GstCapsFilter--caps"/>
     <keyword type="property" name="The “caps-change-mode” property" link="gstreamer-plugins-capsfilter.html#GstCapsFilter--caps-change-mode"/>
+    <keyword type="struct" name="struct GstConcat" link="gstreamer-plugins-concat.html#GstConcat-struct"/>
+    <keyword type="property" name="The “active-pad” property" link="gstreamer-plugins-concat.html#GstConcat--active-pad"/>
+    <keyword type="property" name="The “adjust-base” property" link="gstreamer-plugins-concat.html#GstConcat--adjust-base"/>
     <keyword type="struct" name="struct GstDownloadBuffer" link="gstreamer-plugins-downloadbuffer.html#GstDownloadBuffer-struct"/>
     <keyword type="property" name="The “high-percent” property" link="gstreamer-plugins-downloadbuffer.html#GstDownloadBuffer--high-percent"/>
     <keyword type="property" name="The “low-percent” property" link="gstreamer-plugins-downloadbuffer.html#GstDownloadBuffer--low-percent"/>
@@ -80,11 +86,13 @@
     <keyword type="struct" name="struct GstFileSrc" link="gstreamer-plugins-filesrc.html#GstFileSrc-struct"/>
     <keyword type="property" name="The “location” property" link="gstreamer-plugins-filesrc.html#GstFileSrc--location"/>
     <keyword type="struct" name="struct GstFileSink" link="gstreamer-plugins-filesink.html#GstFileSink-struct"/>
+    <keyword type="enum" name="enum GstFileSinkBufferMode" link="gstreamer-plugins-filesink.html#GstFileSinkBufferMode"/>
     <keyword type="property" name="The “append” property" link="gstreamer-plugins-filesink.html#GstFileSink--append"/>
     <keyword type="property" name="The “buffer-mode” property" link="gstreamer-plugins-filesink.html#GstFileSink--buffer-mode"/>
     <keyword type="property" name="The “buffer-size” property" link="gstreamer-plugins-filesink.html#GstFileSink--buffer-size"/>
     <keyword type="property" name="The “location” property" link="gstreamer-plugins-filesink.html#GstFileSink--location"/>
     <keyword type="struct" name="struct GstFunnel" link="gstreamer-plugins-funnel.html#GstFunnel-struct"/>
+    <keyword type="property" name="The “forward-sticky-events” property" link="gstreamer-plugins-funnel.html#GstFunnel--forward-sticky-events"/>
     <keyword type="struct" name="struct GstIdentity" link="gstreamer-plugins-identity.html#GstIdentity-struct"/>
     <keyword type="property" name="The “check-imperfect-offset” property" link="gstreamer-plugins-identity.html#GstIdentity--check-imperfect-offset"/>
     <keyword type="property" name="The “check-imperfect-timestamp” property" link="gstreamer-plugins-identity.html#GstIdentity--check-imperfect-timestamp"/>
@@ -158,6 +166,8 @@
     <keyword type="property" name="The “temp-template” property" link="gstreamer-plugins-queue2.html#GstQueue2--temp-template"/>
     <keyword type="property" name="The “use-buffering” property" link="gstreamer-plugins-queue2.html#GstQueue2--use-buffering"/>
     <keyword type="property" name="The “use-rate-estimate” property" link="gstreamer-plugins-queue2.html#GstQueue2--use-rate-estimate"/>
+    <keyword type="struct" name="struct GstStreamidDemux" link="gstreamer-plugins-streamiddemux.html#GstStreamidDemux-struct"/>
+    <keyword type="property" name="The “active-pad” property" link="gstreamer-plugins-streamiddemux.html#GstStreamidDemux--active-pad"/>
     <keyword type="struct" name="struct GstTee" link="gstreamer-plugins-tee.html#GstTee-struct"/>
     <keyword type="enum" name="enum GstTeePullMode" link="gstreamer-plugins-tee.html#GstTeePullMode"/>
     <keyword type="property" name="The “alloc-pad” property" link="gstreamer-plugins-tee.html#GstTee--alloc-pad"/>
@@ -174,6 +184,8 @@
     <keyword type="signal" name="The “have-type” signal" link="gstreamer-plugins-typefind.html#GstTypeFindElement-have-type"/>
     <keyword type="struct" name="struct GstValve" link="gstreamer-plugins-valve.html#GstValve-struct"/>
     <keyword type="property" name="The “drop” property" link="gstreamer-plugins-valve.html#GstValve--drop"/>
+    <keyword type="constant" name="GST_CAPS_FILTER_CAPS_CHANGE_MODE_IMMEDIATE" link="gstreamer-plugins-capsfilter.html#GST-CAPS-FILTER-CAPS-CHANGE-MODE-IMMEDIATE:CAPS"/>
+    <keyword type="constant" name="GST_CAPS_FILTER_CAPS_CHANGE_MODE_DELAYED" link="gstreamer-plugins-capsfilter.html#GST-CAPS-FILTER-CAPS-CHANGE-MODE-DELAYED:CAPS"/>
     <keyword type="constant" name="FAKE_SRC_DATA_ALLOCATE" link="gstreamer-plugins-fakesrc.html#FAKE-SRC-DATA-ALLOCATE:CAPS"/>
     <keyword type="constant" name="FAKE_SRC_DATA_SUBBUFFER" link="gstreamer-plugins-fakesrc.html#FAKE-SRC-DATA-SUBBUFFER:CAPS"/>
     <keyword type="constant" name="FAKE_SRC_FILLTYPE_NOTHING" link="gstreamer-plugins-fakesrc.html#FAKE-SRC-FILLTYPE-NOTHING:CAPS"/>
@@ -199,6 +211,10 @@
     <keyword type="constant" name="FAKE_SINK_STATE_ERROR_PLAYING_PAUSED" link="gstreamer-plugins-fakesink.html#FAKE-SINK-STATE-ERROR-PLAYING-PAUSED:CAPS"/>
     <keyword type="constant" name="FAKE_SINK_STATE_ERROR_PAUSED_READY" link="gstreamer-plugins-fakesink.html#FAKE-SINK-STATE-ERROR-PAUSED-READY:CAPS"/>
     <keyword type="constant" name="FAKE_SINK_STATE_ERROR_READY_NULL" link="gstreamer-plugins-fakesink.html#FAKE-SINK-STATE-ERROR-READY-NULL:CAPS"/>
+    <keyword type="constant" name="GST_FILE_SINK_BUFFER_MODE_DEFAULT" link="gstreamer-plugins-filesink.html#GST-FILE-SINK-BUFFER-MODE-DEFAULT:CAPS"/>
+    <keyword type="constant" name="GST_FILE_SINK_BUFFER_MODE_FULL" link="gstreamer-plugins-filesink.html#GST-FILE-SINK-BUFFER-MODE-FULL:CAPS"/>
+    <keyword type="constant" name="GST_FILE_SINK_BUFFER_MODE_LINE" link="gstreamer-plugins-filesink.html#GST-FILE-SINK-BUFFER-MODE-LINE:CAPS"/>
+    <keyword type="constant" name="GST_FILE_SINK_BUFFER_MODE_UNBUFFERED" link="gstreamer-plugins-filesink.html#GST-FILE-SINK-BUFFER-MODE-UNBUFFERED:CAPS"/>
     <keyword type="constant" name="GST_INPUT_SELECTOR_SYNC_MODE_ACTIVE_SEGMENT" link="gstreamer-plugins-input-selector.html#GST-INPUT-SELECTOR-SYNC-MODE-ACTIVE-SEGMENT:CAPS"/>
     <keyword type="constant" name="GST_INPUT_SELECTOR_SYNC_MODE_CLOCK" link="gstreamer-plugins-input-selector.html#GST-INPUT-SELECTOR-SYNC-MODE-CLOCK:CAPS"/>
     <keyword type="constant" name="GST_OUTPUT_SELECTOR_PAD_NEGOTIATION_MODE_NONE" link="gstreamer-plugins-output-selector.html#GST-OUTPUT-SELECTOR-PAD-NEGOTIATION-MODE-NONE:CAPS"/>

@@ -448,6 +448,7 @@
     <keyword type="macro" name="GST_CLOCK_ENTRY_STATUS()" link="GstClock.html#GST-CLOCK-ENTRY-STATUS:CAPS"/>
     <keyword type="macro" name="GST_CLOCK_FLAGS()" link="GstClock.html#GST-CLOCK-FLAGS:CAPS"/>
     <keyword type="function" name="gst_clock_add_observation ()" link="GstClock.html#gst-clock-add-observation"/>
+    <keyword type="function" name="gst_clock_add_observation_unapplied ()" link="GstClock.html#gst-clock-add-observation-unapplied" since="1.6"/>
     <keyword type="function" name="gst_clock_set_master ()" link="GstClock.html#gst-clock-set-master"/>
     <keyword type="function" name="gst_clock_get_master ()" link="GstClock.html#gst-clock-get-master"/>
     <keyword type="function" name="gst_clock_set_resolution ()" link="GstClock.html#gst-clock-set-resolution"/>
@@ -460,6 +461,7 @@
     <keyword type="function" name="gst_clock_get_internal_time ()" link="GstClock.html#gst-clock-get-internal-time"/>
     <keyword type="function" name="gst_clock_adjust_unlocked ()" link="GstClock.html#gst-clock-adjust-unlocked"/>
     <keyword type="function" name="gst_clock_unadjust_unlocked ()" link="GstClock.html#gst-clock-unadjust-unlocked"/>
+    <keyword type="function" name="gst_clock_adjust_with_calibration ()" link="GstClock.html#gst-clock-adjust-with-calibration" since="1.6"/>
     <keyword type="function" name="gst_clock_get_calibration ()" link="GstClock.html#gst-clock-get-calibration"/>
     <keyword type="function" name="gst_clock_set_calibration ()" link="GstClock.html#gst-clock-set-calibration"/>
     <keyword type="function" name="gst_clock_get_timeout ()" link="GstClock.html#gst-clock-get-timeout"/>
@@ -676,9 +678,11 @@
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-AUDIOVIDEO-SINKS:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_AUDIO_ENCODER" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-AUDIO-ENCODER:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_DECODER" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-DECODER:CAPS"/>
+    <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_DECRYPTOR" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-DECRYPTOR:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_DEMUXER" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-DEMUXER:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-DEPAYLOADER:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_ENCODER" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-ENCODER:CAPS"/>
+    <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_ENCRYPTOR" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-ENCRYPTOR:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_FORMATTER" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-FORMATTER:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-MAX-ELEMENTS:CAPS"/>
     <keyword type="macro" name="GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO" link="GstElementFactory.html#GST-ELEMENT-FACTORY-TYPE-MEDIA-AUDIO:CAPS"/>
@@ -1241,6 +1245,9 @@
     <keyword type="macro" name="GST_PAD_IS_ACCEPT_INTERSECT()" link="GstPad.html#GST-PAD-IS-ACCEPT-INTERSECT:CAPS"/>
     <keyword type="macro" name="GST_PAD_SET_ACCEPT_INTERSECT()" link="GstPad.html#GST-PAD-SET-ACCEPT-INTERSECT:CAPS"/>
     <keyword type="macro" name="GST_PAD_UNSET_ACCEPT_INTERSECT()" link="GstPad.html#GST-PAD-UNSET-ACCEPT-INTERSECT:CAPS"/>
+    <keyword type="macro" name="GST_PAD_IS_ACCEPT_TEMPLATE()" link="GstPad.html#GST-PAD-IS-ACCEPT-TEMPLATE:CAPS" since="1.6"/>
+    <keyword type="macro" name="GST_PAD_SET_ACCEPT_TEMPLATE()" link="GstPad.html#GST-PAD-SET-ACCEPT-TEMPLATE:CAPS" since="1.6"/>
+    <keyword type="macro" name="GST_PAD_UNSET_ACCEPT_TEMPLATE()" link="GstPad.html#GST-PAD-UNSET-ACCEPT-TEMPLATE:CAPS" since="1.6"/>
     <keyword type="struct" name="struct GstPad" link="GstPad.html#GstPad-struct"/>
     <keyword type="enum" name="enum GstPadDirection" link="GstPad.html#GstPadDirection"/>
     <keyword type="enum" name="enum GstPadFlags" link="GstPad.html#GstPadFlags"/>
@@ -1404,6 +1411,7 @@
     <keyword type="macro" name="gst_buffer_get_protection_meta()" link="gstreamer-GstProtectionMeta.html#gst-buffer-get-protection-meta"/>
     <keyword type="function" name="gst_protection_select_system ()" link="gstreamer-GstProtectionMeta.html#gst-protection-select-system" since="1.6"/>
     <keyword type="struct" name="struct GstProtectionMeta" link="gstreamer-GstProtectionMeta.html#GstProtectionMeta" since="1.6"/>
+    <keyword type="macro" name="GST_PROTECTION_SYSTEM_ID_CAPS_FIELD" link="gstreamer-GstProtectionMeta.html#GST-PROTECTION-SYSTEM-ID-CAPS-FIELD:CAPS" since="1.6"/>
     <keyword type="macro" name="GST_QUERY_MAKE_TYPE()" link="GstQuery.html#GST-QUERY-MAKE-TYPE:CAPS"/>
     <keyword type="macro" name="GST_QUERY_TYPE()" link="GstQuery.html#GST-QUERY-TYPE:CAPS"/>
     <keyword type="macro" name="GST_QUERY_TYPE_NAME()" link="GstQuery.html#GST-QUERY-TYPE-NAME:CAPS"/>
@@ -2118,6 +2126,7 @@
     <keyword type="function" name="gst_value_array_get_value ()" link="gstreamer-GstValue.html#gst-value-array-get-value"/>
     <keyword type="function" name="gst_value_array_prepend_value ()" link="gstreamer-GstValue.html#gst-value-array-prepend-value"/>
     <keyword type="function" name="gst_value_fixate ()" link="gstreamer-GstValue.html#gst-value-fixate"/>
+    <keyword type="function" name="gst_flagset_register ()" link="gstreamer-GstValue.html#gst-flagset-register" since="1.6"/>
     <keyword type="macro" name="GST_FOURCC_FORMAT" link="gstreamer-GstValue.html#GST-FOURCC-FORMAT:CAPS"/>
     <keyword type="macro" name="GST_VALUE_EQUAL" link="gstreamer-GstValue.html#GST-VALUE-EQUAL:CAPS"/>
     <keyword type="macro" name="GST_VALUE_GREATER_THAN" link="gstreamer-GstValue.html#GST-VALUE-GREATER-THAN:CAPS"/>
@@ -2144,6 +2153,7 @@
     <keyword type="function" name="gst_device_has_classes ()" link="gstreamer-GstDevice.html#gst-device-has-classes" since="1.4"/>
     <keyword type="function" name="gst_device_has_classesv ()" link="gstreamer-GstDevice.html#gst-device-has-classesv" since="1.4"/>
     <keyword type="function" name="gst_device_reconfigure_element ()" link="gstreamer-GstDevice.html#gst-device-reconfigure-element" since="1.4"/>
+    <keyword type="function" name="gst_device_get_properties ()" link="gstreamer-GstDevice.html#gst-device-get-properties" since="1.6"/>
     <keyword type="struct" name="struct GstDevice" link="gstreamer-GstDevice.html#GstDevice" since="1.4"/>
     <keyword type="struct" name="struct GstDeviceClass" link="gstreamer-GstDevice.html#GstDeviceClass" since="1.4"/>
     <keyword type="function" name="gst_device_provider_can_monitor ()" link="gstreamer-GstDeviceProvider.html#gst-device-provider-can-monitor"/>
@@ -2252,6 +2262,8 @@
     <keyword type="macro" name="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()" link="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS"/>
     <keyword type="function" name="gst_debug_print_stack_trace ()" link="gstreamer-GstInfo.html#gst-debug-print-stack-trace"/>
     <keyword type="macro" name="GST_TIME_ARGS()" link="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS"/>
+    <keyword type="macro" name="GST_STIME_ARGS()" link="gstreamer-GstInfo.html#GST-STIME-ARGS:CAPS" since="1.6"/>
+    <keyword type="function" name="gst_debug_bin_to_dot_data ()" link="gstreamer-GstInfo.html#gst-debug-bin-to-dot-data"/>
     <keyword type="function" name="gst_debug_bin_to_dot_file ()" link="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file"/>
     <keyword type="function" name="gst_debug_bin_to_dot_file_with_ts ()" link="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file-with-ts"/>
     <keyword type="enum" name="enum GstDebugLevel" link="gstreamer-GstInfo.html#GstDebugLevel"/>
@@ -2263,6 +2275,7 @@
     <keyword type="enum" name="enum GstDebugGraphDetails" link="gstreamer-GstInfo.html#GstDebugGraphDetails"/>
     <keyword type="variable" name="GST_CAT_DEFAULT" link="gstreamer-GstInfo.html#GST-CAT-DEFAULT:CAPS"/>
     <keyword type="macro" name="GST_TIME_FORMAT" link="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS"/>
+    <keyword type="macro" name="GST_STIME_FORMAT" link="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" since="1.6"/>
     <keyword type="constant" name="GST_ALLOCATOR_FLAG_CUSTOM_ALLOC" link="GstAllocator.html#GST-ALLOCATOR-FLAG-CUSTOM-ALLOC:CAPS"/>
     <keyword type="constant" name="GST_ALLOCATOR_FLAG_LAST" link="GstAllocator.html#GST-ALLOCATOR-FLAG-LAST:CAPS"/>
     <keyword type="constant" name="GST_BIN_FLAG_NO_RESYNC" link="GstBin.html#GST-BIN-FLAG-NO-RESYNC:CAPS"/>
@@ -2547,6 +2560,7 @@
     <keyword type="constant" name="GST_PAD_FLAG_PROXY_ALLOCATION" link="GstPad.html#GST-PAD-FLAG-PROXY-ALLOCATION:CAPS"/>
     <keyword type="constant" name="GST_PAD_FLAG_PROXY_SCHEDULING" link="GstPad.html#GST-PAD-FLAG-PROXY-SCHEDULING:CAPS"/>
     <keyword type="constant" name="GST_PAD_FLAG_ACCEPT_INTERSECT" link="GstPad.html#GST-PAD-FLAG-ACCEPT-INTERSECT:CAPS"/>
+    <keyword type="constant" name="GST_PAD_FLAG_ACCEPT_TEMPLATE" link="GstPad.html#GST-PAD-FLAG-ACCEPT-TEMPLATE:CAPS"/>
     <keyword type="constant" name="GST_PAD_FLAG_LAST" link="GstPad.html#GST-PAD-FLAG-LAST:CAPS"/>
     <keyword type="constant" name="GST_PAD_LINK_OK" link="GstPad.html#GST-PAD-LINK-OK:CAPS"/>
     <keyword type="constant" name="GST_PAD_LINK_WRONG_HIERARCHY" link="GstPad.html#GST-PAD-LINK-WRONG-HIERARCHY:CAPS"/>
@@ -2580,6 +2594,7 @@
     <keyword type="constant" name="GST_PAD_PROBE_OK" link="GstPad.html#GST-PAD-PROBE-OK:CAPS"/>
     <keyword type="constant" name="GST_PAD_PROBE_REMOVE" link="GstPad.html#GST-PAD-PROBE-REMOVE:CAPS"/>
     <keyword type="constant" name="GST_PAD_PROBE_PASS" link="GstPad.html#GST-PAD-PROBE-PASS:CAPS"/>
+    <keyword type="constant" name="GST_PAD_PROBE_HANDLED" link="GstPad.html#GST-PAD-PROBE-HANDLED:CAPS"/>
     <keyword type="constant" name="GST_PAD_PROBE_TYPE_INVALID" link="GstPad.html#GST-PAD-PROBE-TYPE-INVALID:CAPS"/>
     <keyword type="constant" name="GST_PAD_PROBE_TYPE_IDLE" link="GstPad.html#GST-PAD-PROBE-TYPE-IDLE:CAPS"/>
     <keyword type="constant" name="GST_PAD_PROBE_TYPE_BLOCK" link="GstPad.html#GST-PAD-PROBE-TYPE-BLOCK:CAPS"/>

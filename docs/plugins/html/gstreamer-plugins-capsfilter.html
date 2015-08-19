@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="ch01.html" title="gstreamer Elements">
-<link rel="next" href="gstreamer-plugins-downloadbuffer.html" title="downloadbuffer">
+<link rel="next" href="gstreamer-plugins-concat.html" title="concat">
 <meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="ch01.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-plugins-downloadbuffer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gstreamer-plugins-concat.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gstreamer-plugins-capsfilter"></a><div class="titlepage"></div>
@@ -49,7 +49,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><span class="type">GstCapsFilterCapsChangeMode</span></td>
+<td class="property_type"><a class="link" href="gstreamer-plugins-capsfilter.html#GstCapsFilterCapsChangeMode" title="enum GstCapsFilterCapsChangeMode"><span class="type">GstCapsFilterCapsChangeMode</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-capsfilter.html#GstCapsFilter--caps-change-mode" title="The “caps-change-mode” property">caps-change-mode</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -63,10 +63,16 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gstreamer-plugins-capsfilter.html#GstCapsFilter-struct" title="struct GstCapsFilter">GstCapsFilter</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gstreamer-plugins-capsfilter.html#GstCapsFilterCapsChangeMode" title="enum GstCapsFilterCapsChangeMode">GstCapsFilterCapsChangeMode</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -200,6 +206,37 @@ data format.</p>
 <pre class="programlisting">struct GstCapsFilter;</pre>
 <p>The opaque <a class="link" href="gstreamer-plugins-capsfilter.html#GstCapsFilter"><span class="type">GstCapsFilter</span></a> data structure.</p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstCapsFilterCapsChangeMode"></a><h3>enum GstCapsFilterCapsChangeMode</h3>
+<p>Filter caps change behaviour</p>
+<div class="refsect3">
+<a name="id-1.2.2.9.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-CAPS-FILTER-CAPS-CHANGE-MODE-IMMEDIATE:CAPS"></a>GST_CAPS_FILTER_CAPS_CHANGE_MODE_IMMEDIATE</p></td>
+<td class="enum_member_description">
+<p>Only accept the current filter caps</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-CAPS-FILTER-CAPS-CHANGE-MODE-DELAYED:CAPS"></a>GST_CAPS_FILTER_CAPS_CHANGE_MODE_DELAYED</p></td>
+<td class="enum_member_description">
+<p>Temporarily accept previous filter caps</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-capsfilter.property-details"></a><h2>Property Details</h2>
@@ -212,7 +249,7 @@ data format.</p>
 <hr>
 <div class="refsect2">
 <a name="GstCapsFilter--caps-change-mode"></a><h3>The <code class="literal">“caps-change-mode”</code> property</h3>
-<pre class="programlisting">  “caps-change-mode”         <span class="type">GstCapsFilterCapsChangeMode</span></pre>
+<pre class="programlisting">  “caps-change-mode”         <a class="link" href="gstreamer-plugins-capsfilter.html#GstCapsFilterCapsChangeMode" title="enum GstCapsFilterCapsChangeMode"><span class="type">GstCapsFilterCapsChangeMode</span></a></pre>
 <p>Filter caps change behaviour.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: Only accept the current filter caps</p>

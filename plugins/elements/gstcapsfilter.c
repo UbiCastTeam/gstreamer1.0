@@ -168,6 +168,7 @@ gst_capsfilter_init (GstCapsFilter * filter)
   gst_base_transform_set_gap_aware (trans, TRUE);
   gst_base_transform_set_prefer_passthrough (trans, FALSE);
   filter->filter_caps = gst_caps_new_any ();
+  filter->filter_caps_used = FALSE;
   filter->caps_change_mode = DEFAULT_CAPS_CHANGE_MODE;
 }
 
@@ -175,7 +176,7 @@ static void
 gst_capsfilter_set_property (GObject * object, guint prop_id,
     const GValue * value, GParamSpec * pspec)
 {
-  GstCapsFilter *capsfilter = GST_CAPSFILTER (object);
+  GstCapsFilter *capsfilter = GST_CAPS_FILTER (object);
 
   switch (prop_id) {
     case PROP_FILTER_CAPS:{
@@ -193,8 +194,8 @@ gst_capsfilter_set_property (GObject * object, guint prop_id,
       GST_OBJECT_LOCK (capsfilter);
       old_caps = capsfilter->filter_caps;
       capsfilter->filter_caps = new_caps;
-      if (old_caps
-          && capsfilter->caps_change_mode ==
+      if (old_caps && capsfilter->filter_caps_used &&
+          capsfilter->caps_change_mode ==
           GST_CAPS_FILTER_CAPS_CHANGE_MODE_DELAYED) {
         capsfilter->previous_caps =
             g_list_prepend (capsfilter->previous_caps, gst_caps_ref (old_caps));
@@ -204,6 +205,7 @@ gst_capsfilter_set_property (GObject * object, guint prop_id,
             (GDestroyNotify) gst_caps_unref);
         capsfilter->previous_caps = NULL;
       }
+      capsfilter->filter_caps_used = FALSE;
       GST_OBJECT_UNLOCK (capsfilter);
 
       gst_caps_unref (old_caps);
@@ -213,9 +215,21 @@ gst_capsfilter_set_property (GObject * object, guint prop_id,
       gst_base_transform_reconfigure_sink (GST_BASE_TRANSFORM (object));
       break;
     }
-    case PROP_CAPS_CHANGE_MODE:
+    case PROP_CAPS_CHANGE_MODE:{
+      GstCapsFilterCapsChangeMode old_change_mode;
+
+      GST_OBJECT_LOCK (capsfilter);
+      old_change_mode = capsfilter->caps_change_mode;
       capsfilter->caps_change_mode = g_value_get_enum (value);
+
+      if (capsfilter->caps_change_mode != old_change_mode) {
+        g_list_free_full (capsfilter->previous_caps,
+            (GDestroyNotify) gst_caps_unref);
+        capsfilter->previous_caps = NULL;
+      }
+      GST_OBJECT_UNLOCK (capsfilter);
       break;
+    }
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -226,7 +240,7 @@ static void
 gst_capsfilter_get_property (GObject * object, guint prop_id, GValue * value,
     GParamSpec * pspec)
 {
-  GstCapsFilter *capsfilter = GST_CAPSFILTER (object);
+  GstCapsFilter *capsfilter = GST_CAPS_FILTER (object);
 
   switch (prop_id) {
     case PROP_FILTER_CAPS:
@@ -246,7 +260,7 @@ gst_capsfilter_get_property (GObject * object, guint prop_id, GValue * value,
 static void
 gst_capsfilter_dispose (GObject * object)
 {
-  GstCapsFilter *filter = GST_CAPSFILTER (object);
+  GstCapsFilter *filter = GST_CAPS_FILTER (object);
 
   gst_caps_replace (&filter->filter_caps, NULL);
   g_list_free_full (filter->pending_events, (GDestroyNotify) gst_event_unref);
@@ -259,13 +273,14 @@ static GstCaps *
 gst_capsfilter_transform_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps, GstCaps * filter)
 {
-  GstCapsFilter *capsfilter = GST_CAPSFILTER (base);
+  GstCapsFilter *capsfilter = GST_CAPS_FILTER (base);
   GstCaps *ret, *filter_caps, *tmp;
   gboolean retried = FALSE;
   GstCapsFilterCapsChangeMode caps_change_mode;
 
   GST_OBJECT_LOCK (capsfilter);
   filter_caps = gst_caps_ref (capsfilter->filter_caps);
+  capsfilter->filter_caps_used = TRUE;
   caps_change_mode = capsfilter->caps_change_mode;
   GST_OBJECT_UNLOCK (capsfilter);
 
@@ -314,12 +329,13 @@ static gboolean
 gst_capsfilter_accept_caps (GstBaseTransform * base,
     GstPadDirection direction, GstCaps * caps)
 {
-  GstCapsFilter *capsfilter = GST_CAPSFILTER (base);
+  GstCapsFilter *capsfilter = GST_CAPS_FILTER (base);
   GstCaps *filter_caps;
   gboolean ret;
 
   GST_OBJECT_LOCK (capsfilter);
   filter_caps = gst_caps_ref (capsfilter->filter_caps);
+  capsfilter->filter_caps_used = TRUE;
   GST_OBJECT_UNLOCK (capsfilter);
 
   ret = gst_caps_can_intersect (caps, filter_caps);
@@ -397,7 +413,7 @@ gst_capsfilter_prepare_buf (GstBaseTransform * trans, GstBuffer * input,
     GstBuffer ** buf)
 {
   GstFlowReturn ret = GST_FLOW_OK;
-  GstCapsFilter *filter = GST_CAPSFILTER (trans);
+  GstCapsFilter *filter = GST_CAPS_FILTER (trans);
 
   /* always return the input as output buffer */
   *buf = input;
@@ -473,7 +489,7 @@ gst_capsfilter_prepare_buf (GstBaseTransform * trans, GstBuffer * input,
 static gboolean
 gst_capsfilter_sink_event (GstBaseTransform * trans, GstEvent * event)
 {
-  GstCapsFilter *filter = GST_CAPSFILTER (trans);
+  GstCapsFilter *filter = GST_CAPS_FILTER (trans);
   gboolean ret;
 
   if (GST_EVENT_TYPE (event) == GST_EVENT_FLUSH_STOP) {
@@ -543,6 +559,7 @@ done:
     if (!l && gst_caps_can_intersect (caps, filter->filter_caps)) {
       g_list_free_full (filter->previous_caps, (GDestroyNotify) gst_caps_unref);
       filter->previous_caps = NULL;
+      filter->filter_caps_used = TRUE;
     }
     GST_OBJECT_UNLOCK (filter);
   }
@@ -554,7 +571,7 @@ done:
 static gboolean
 gst_capsfilter_stop (GstBaseTransform * trans)
 {
-  GstCapsFilter *filter = GST_CAPSFILTER (trans);
+  GstCapsFilter *filter = GST_CAPS_FILTER (trans);
 
   g_list_free_full (filter->pending_events, (GDestroyNotify) gst_event_unref);
   filter->pending_events = NULL;

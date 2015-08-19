@@ -38,6 +38,7 @@
         <sub name="GstCheck" link="gstreamer-libs-GstCheck.html"/>
         <sub name="GstBufferStraw" link="gstreamer-libs-GstBufferStraw.html"/>
         <sub name="GstStreamConsistency" link="gstreamer-libs-GstStreamConsistency.html"/>
+        <sub name="GstHarness" link="gstreamer-libs-GstHarness.html"/>
         <sub name="GstTestClock" link="GstTestClock.html"/>
       </sub>
     </sub>
@@ -51,6 +52,7 @@
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
   <functions>
+    <keyword type="function" name="gst_base_parse_merge_tags ()" link="GstBaseParse.html#gst-base-parse-merge-tags" since="1.6"/>
     <keyword type="function" name="gst_base_parse_set_duration ()" link="GstBaseParse.html#gst-base-parse-set-duration"/>
     <keyword type="function" name="gst_base_parse_set_average_bitrate ()" link="GstBaseParse.html#gst-base-parse-set-average-bitrate"/>
     <keyword type="function" name="gst_base_parse_set_min_frame_size ()" link="GstBaseParse.html#gst-base-parse-set-min-frame-size"/>
@@ -196,9 +198,13 @@
     <keyword type="function" name="gst_adapter_available_fast ()" link="GstAdapter.html#gst-adapter-available-fast"/>
     <keyword type="function" name="gst_adapter_take ()" link="GstAdapter.html#gst-adapter-take"/>
     <keyword type="function" name="gst_adapter_take_buffer ()" link="GstAdapter.html#gst-adapter-take-buffer"/>
+    <keyword type="function" name="gst_adapter_get_buffer ()" link="GstAdapter.html#gst-adapter-get-buffer" since="1.6"/>
     <keyword type="function" name="gst_adapter_take_buffer_fast ()" link="GstAdapter.html#gst-adapter-take-buffer-fast" since="1.2"/>
+    <keyword type="function" name="gst_adapter_get_buffer_fast ()" link="GstAdapter.html#gst-adapter-get-buffer-fast" since="1.6"/>
     <keyword type="function" name="gst_adapter_take_list ()" link="GstAdapter.html#gst-adapter-take-list"/>
+    <keyword type="function" name="gst_adapter_get_list ()" link="GstAdapter.html#gst-adapter-get-list" since="1.6"/>
     <keyword type="function" name="gst_adapter_take_buffer_list ()" link="GstAdapter.html#gst-adapter-take-buffer-list" since="1.6"/>
+    <keyword type="function" name="gst_adapter_get_buffer_list ()" link="GstAdapter.html#gst-adapter-get-buffer-list" since="1.6"/>
     <keyword type="function" name="gst_adapter_prev_pts ()" link="GstAdapter.html#gst-adapter-prev-pts"/>
     <keyword type="function" name="gst_adapter_prev_dts ()" link="GstAdapter.html#gst-adapter-prev-dts"/>
     <keyword type="function" name="gst_adapter_prev_pts_at_offset ()" link="GstAdapter.html#gst-adapter-prev-pts-at-offset" since="1.2"/>
@@ -512,6 +518,11 @@
     <keyword type="function" name="gst_queue_array_is_empty ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-is-empty" since="1.2"/>
     <keyword type="function" name="gst_queue_array_drop_element ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-drop-element" since="1.2"/>
     <keyword type="function" name="gst_queue_array_find ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-find" since="1.2"/>
+    <keyword type="function" name="gst_queue_array_new_for_struct ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-new-for-struct" since="1.6"/>
+    <keyword type="function" name="gst_queue_array_push_tail_struct ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-push-tail-struct"/>
+    <keyword type="function" name="gst_queue_array_peek_head_struct ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-peek-head-struct" since="1.6"/>
+    <keyword type="function" name="gst_queue_array_pop_head_struct ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-pop-head-struct" since="1.6"/>
+    <keyword type="function" name="gst_queue_array_drop_struct ()" link="gstreamer-libs-GstQueueArray.html#gst-queue-array-drop-struct" since="1.6"/>
     <keyword type="struct" name="GstQueueArray" link="gstreamer-libs-GstQueueArray.html#GstQueueArray"/>
     <keyword type="function" name="gst_argb_control_binding_new ()" link="GstARGBControlBinding.html#gst-argb-control-binding-new"/>
     <keyword type="property" name="The “control-source-a” property" link="GstARGBControlBinding.html#GstARGBControlBinding--control-source-a"/>
@@ -519,6 +530,7 @@
     <keyword type="property" name="The “control-source-g” property" link="GstARGBControlBinding.html#GstARGBControlBinding--control-source-g"/>
     <keyword type="property" name="The “control-source-r” property" link="GstARGBControlBinding.html#GstARGBControlBinding--control-source-r"/>
     <keyword type="function" name="gst_direct_control_binding_new ()" link="GstDirectControlBinding.html#gst-direct-control-binding-new"/>
+    <keyword type="function" name="gst_direct_control_binding_new_absolute ()" link="GstDirectControlBinding.html#gst-direct-control-binding-new-absolute" since="1.6"/>
     <keyword type="property" name="The “absolute” property" link="GstDirectControlBinding.html#GstDirectControlBinding--absolute"/>
     <keyword type="property" name="The “control-source” property" link="GstDirectControlBinding.html#GstDirectControlBinding--control-source"/>
     <keyword type="function" name="gst_timed_value_control_source_find_control_point_iter ()" link="GstTimedValueControlSource.html#gst-timed-value-control-source-find-control-point-iter"/>
@@ -656,6 +668,89 @@
     <keyword type="function" name="gst_consistency_checker_free ()" link="gstreamer-libs-GstStreamConsistency.html#gst-consistency-checker-free"/>
     <keyword type="function" name="gst_consistency_checker_add_pad ()" link="gstreamer-libs-GstStreamConsistency.html#gst-consistency-checker-add-pad"/>
     <keyword type="struct" name="GstStreamConsistency" link="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency"/>
+    <keyword type="function" name="gst_harness_new_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-full" since="1.6"/>
+    <keyword type="function" name="gst_harness_new_with_element ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-with-element" since="1.6"/>
+    <keyword type="function" name="gst_harness_new_with_padnames ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-with-padnames" since="1.6"/>
+    <keyword type="function" name="gst_harness_new_with_templates ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-with-templates" since="1.6"/>
+    <keyword type="function" name="gst_harness_new ()" link="gstreamer-libs-GstHarness.html#gst-harness-new" since="1.6"/>
+    <keyword type="function" name="gst_harness_new_parse ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-parse" since="1.6"/>
+    <keyword type="function" name="gst_harness_teardown ()" link="gstreamer-libs-GstHarness.html#gst-harness-teardown" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_element_src_pad ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-element-src-pad" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_element_sink_pad ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-element-sink-pad" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_src_caps ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-src-caps" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_sink_caps ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-sink-caps" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_caps ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-caps" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_src_caps_str ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-src-caps-str" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_sink_caps_str ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-sink-caps-str" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_caps_str ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-caps-str" since="1.6"/>
+    <keyword type="function" name="gst_harness_use_systemclock ()" link="gstreamer-libs-GstHarness.html#gst-harness-use-systemclock" since="1.6"/>
+    <keyword type="function" name="gst_harness_use_testclock ()" link="gstreamer-libs-GstHarness.html#gst-harness-use-testclock" since="1.6"/>
+    <keyword type="function" name="gst_harness_get_testclock ()" link="gstreamer-libs-GstHarness.html#gst-harness-get-testclock" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_time ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-time" since="1.6"/>
+    <keyword type="function" name="gst_harness_wait_for_clock_id_waits ()" link="gstreamer-libs-GstHarness.html#gst-harness-wait-for-clock-id-waits" since="1.6"/>
+    <keyword type="function" name="gst_harness_crank_single_clock_wait ()" link="gstreamer-libs-GstHarness.html#gst-harness-crank-single-clock-wait" since="1.6"/>
+    <keyword type="function" name="gst_harness_crank_multiple_clock_waits ()" link="gstreamer-libs-GstHarness.html#gst-harness-crank-multiple-clock-waits" since="1.6"/>
+    <keyword type="function" name="gst_harness_play ()" link="gstreamer-libs-GstHarness.html#gst-harness-play" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_blocking_push_mode ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-blocking-push-mode" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_forwarding ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-forwarding" since="1.6"/>
+    <keyword type="function" name="gst_harness_create_buffer ()" link="gstreamer-libs-GstHarness.html#gst-harness-create-buffer" since="1.6"/>
+    <keyword type="function" name="gst_harness_push ()" link="gstreamer-libs-GstHarness.html#gst-harness-push" since="1.6"/>
+    <keyword type="function" name="gst_harness_pull ()" link="gstreamer-libs-GstHarness.html#gst-harness-pull" since="1.6"/>
+    <keyword type="function" name="gst_harness_try_pull ()" link="gstreamer-libs-GstHarness.html#gst-harness-try-pull" since="1.6"/>
+    <keyword type="function" name="gst_harness_push_and_pull ()" link="gstreamer-libs-GstHarness.html#gst-harness-push-and-pull" since="1.6"/>
+    <keyword type="function" name="gst_harness_buffers_received ()" link="gstreamer-libs-GstHarness.html#gst-harness-buffers-received" since="1.6"/>
+    <keyword type="function" name="gst_harness_buffers_in_queue ()" link="gstreamer-libs-GstHarness.html#gst-harness-buffers-in-queue" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_drop_buffers ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-drop-buffers" since="1.6"/>
+    <keyword type="function" name="gst_harness_dump_to_file ()" link="gstreamer-libs-GstHarness.html#gst-harness-dump-to-file" since="1.6"/>
+    <keyword type="function" name="gst_harness_get_last_pushed_timestamp ()" link="gstreamer-libs-GstHarness.html#gst-harness-get-last-pushed-timestamp" since="1.6"/>
+    <keyword type="function" name="gst_harness_push_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-push-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_pull_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-pull-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_try_pull_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-try-pull-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_events_received ()" link="gstreamer-libs-GstHarness.html#gst-harness-events-received" since="1.6"/>
+    <keyword type="function" name="gst_harness_events_in_queue ()" link="gstreamer-libs-GstHarness.html#gst-harness-events-in-queue" since="1.6"/>
+    <keyword type="function" name="gst_harness_push_upstream_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-push-upstream-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_pull_upstream_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-pull-upstream-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_try_pull_upstream_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-try-pull-upstream-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_upstream_events_received ()" link="gstreamer-libs-GstHarness.html#gst-harness-upstream-events-received" since="1.6"/>
+    <keyword type="function" name="gst_harness_upstream_events_in_queue ()" link="gstreamer-libs-GstHarness.html#gst-harness-upstream-events-in-queue" since="1.6"/>
+    <keyword type="function" name="gst_harness_query_latency ()" link="gstreamer-libs-GstHarness.html#gst-harness-query-latency" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_upstream_latency ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-upstream-latency" since="1.6"/>
+    <keyword type="function" name="gst_harness_set_propose_allocator ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-propose-allocator" since="1.6"/>
+    <keyword type="function" name="gst_harness_get_allocator ()" link="gstreamer-libs-GstHarness.html#gst-harness-get-allocator" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_src ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-src" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_src_harness ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-src-harness" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_src_parse ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-src-parse" since="1.6"/>
+    <keyword type="function" name="gst_harness_push_from_src ()" link="gstreamer-libs-GstHarness.html#gst-harness-push-from-src" since="1.6"/>
+    <keyword type="function" name="gst_harness_src_crank_and_push_many ()" link="gstreamer-libs-GstHarness.html#gst-harness-src-crank-and-push-many" since="1.6"/>
+    <keyword type="function" name="gst_harness_src_push_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-src-push-event" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_sink ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-sink" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_sink_harness ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-sink-harness" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_sink_parse ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-sink-parse" since="1.6"/>
+    <keyword type="function" name="gst_harness_push_to_sink ()" link="gstreamer-libs-GstHarness.html#gst-harness-push-to-sink" since="1.6"/>
+    <keyword type="function" name="gst_harness_sink_push_many ()" link="gstreamer-libs-GstHarness.html#gst-harness-sink-push-many" since="1.6"/>
+    <keyword type="function" name="gst_harness_find_element ()" link="gstreamer-libs-GstHarness.html#gst-harness-find-element" since="1.6"/>
+    <keyword type="function" name="gst_harness_set ()" link="gstreamer-libs-GstHarness.html#gst-harness-set" since="1.6"/>
+    <keyword type="function" name="gst_harness_get ()" link="gstreamer-libs-GstHarness.html#gst-harness-get" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_probe ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-probe" since="1.6"/>
+    <keyword type="function" name="gst_harness_stress_thread_stop ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-thread-stop" since="1.6"/>
+    <keyword type="function" name="gst_harness_stress_custom_start ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-custom-start" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_statechange_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-statechange-start"/>
+    <keyword type="function" name="gst_harness_stress_statechange_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-statechange-start-full" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_push_buffer_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-buffer-start"/>
+    <keyword type="function" name="gst_harness_stress_push_buffer_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-buffer-start-full" since="1.6"/>
+    <keyword type="function" name="GstHarnessPrepareBufferFunc ()" link="gstreamer-libs-GstHarness.html#GstHarnessPrepareBufferFunc" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_push_buffer_with_cb_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-buffer-with-cb-start"/>
+    <keyword type="function" name="gst_harness_stress_push_buffer_with_cb_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-buffer-with-cb-start-full" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_push_event_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-start"/>
+    <keyword type="function" name="gst_harness_stress_push_event_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-start-full" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_send_upstream_event_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-send-upstream-event-start"/>
+    <keyword type="function" name="gst_harness_stress_push_upstream_event_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-upstream-event-start-full" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_property_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-property-start"/>
+    <keyword type="function" name="gst_harness_stress_property_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-property-start-full" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_requestpad_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-requestpad-start"/>
+    <keyword type="function" name="gst_harness_stress_requestpad_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-requestpad-start-full" since="1.6"/>
+    <keyword type="struct" name="struct GstHarness" link="gstreamer-libs-GstHarness.html#GstHarness" since="1.6"/>
+    <keyword type="struct" name="GstHarnessThread" link="gstreamer-libs-GstHarness.html#GstHarnessThread" since="1.6"/>
     <keyword type="function" name="gst_test_clock_new ()" link="GstTestClock.html#gst-test-clock-new" since="1.2"/>
     <keyword type="function" name="gst_test_clock_new_with_start_time ()" link="GstTestClock.html#gst-test-clock-new-with-start-time" since="1.2"/>
     <keyword type="function" name="gst_test_clock_set_time ()" link="GstTestClock.html#gst-test-clock-set-time" since="1.2"/>

@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-check.html" title="GStreamer Check Unit Testing">
-<link rel="prev" href="gstreamer-libs-GstStreamConsistency.html" title="GstStreamConsistency">
+<link rel="prev" href="gstreamer-libs-GstHarness.html" title="GstHarness">
 <link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
 <meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,7 +21,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-check.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-libs-GstStreamConsistency.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-libs-GstHarness.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gstreamer-hierarchy.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -214,7 +214,7 @@ called. <a class="link" href="GstTestClock.html" title="GstTestClock"><span clas
 precisely advance the time in a deterministic manner, independent of the
 system time or any other external factors.</p>
 <div class="example">
-<a name="id-1.2.7.6.8.3"></a><p class="title"><b>Example 1. Advancing the time of a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a></b></p>
+<a name="id-1.2.7.7.8.3"></a><p class="title"><b>Example 4. Advancing the time of a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -290,7 +290,7 @@ buffer sent will arrive exactly on time only delayed by the latency. The
 second buffer will arrive a little late (7ms) due to simulated jitter in the
 clock notification.</p>
 <div class="example">
-<a name="id-1.2.7.6.8.9"></a><p class="title"><b>Example 2. Demonstration of how to work with clock notifications and <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a></b></p>
+<a name="id-1.2.7.7.8.9"></a><p class="title"><b>Example 5. Demonstration of how to work with clock notifications and <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a></b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -454,7 +454,7 @@ gst_test_clock_new (<em class="parameter"><code><span class="type">void</span></
 <p>Creates a new test clock with its time set to zero.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.2.6"></a><h4>Returns</h4>
+<a name="id-1.2.7.7.9.2.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> cast to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="type">GstClock</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -468,7 +468,7 @@ gst_test_clock_new_with_start_time (<em class="parameter"><code><a href="http://
 <p>Creates a new test clock with its time set to the specified time.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.3.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -483,7 +483,7 @@ gst_test_clock_new_with_start_time (<em class="parameter"><code><a href="http://
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.3.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.7.9.3.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> cast to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html"><span class="type">GstClock</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -505,7 +505,7 @@ which is earlier or equal to the time of the clock as given by
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#gst-clock-get-time"><code class="function">gst_clock_get_time()</code></a> is a programming error.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.4.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -543,7 +543,7 @@ time of <em class="parameter"><code>test_clock</code></em>
  which is negative or zero is a programming error.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.5.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -576,7 +576,7 @@ requested from the <em class="parameter"><code>test_clock</code></em>
 .</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -591,7 +591,7 @@ requested from the <em class="parameter"><code>test_clock</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.6.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.7.9.6.7"></a><h4>Returns</h4>
 <p> the number of pending clock notifications.</p>
 </div>
 <p class="since">Since: <a class="link" href="ix05.html#api-index-1.2">1.2</a></p>
@@ -608,7 +608,7 @@ given by <em class="parameter"><code>id</code></em>
 .</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.7.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.7.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -630,7 +630,7 @@ given by <em class="parameter"><code>id</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.7.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.7.9.7.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the clock has been asked to provide the given clock
 notification, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
@@ -651,7 +651,7 @@ be triggered given the current time of the <em class="parameter"><code>test_cloc
  is the next clock notification to be
 triggered, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.8.7"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.8.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -689,7 +689,7 @@ to the pending clock notification is stored in <em class="parameter"><code>pendi
 .</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.9.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -730,7 +730,7 @@ gst_test_clock_wait_for_pending_id_count
 . There is no timeout for this wait, see the main description of
 <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.10.7"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.10.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -760,7 +760,7 @@ gst_test_clock_wait_for_pending_id_count
 gst_test_clock_process_next_clock_id (<em class="parameter"><code><a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> *test_clock</code></em>);</pre>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -776,7 +776,7 @@ notification</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.11.6"></a><h4>Returns</h4>
+<a name="id-1.2.7.7.9.11.6"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockID"><span class="type">GstClockID</span></a> containing the next pending clock
 notification. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -791,7 +791,7 @@ gst_test_clock_get_next_entry_time (<em class="parameter"><code><a class="link" 
 <p>Retrieve the requested time for the next pending clock notification.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.12.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.12.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -806,7 +806,7 @@ gst_test_clock_get_next_entry_time (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.12.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.7.9.12.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> set to the time of the next pending clock
 notification. If no clock notifications have been requested
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><code class="literal">GST_CLOCK_TIME_NONE</code></a> will be returned.</p>
@@ -828,7 +828,7 @@ gst_test_clock_wait_for_multiple_pending_ids
 <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.13.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.13.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -867,7 +867,7 @@ gst_test_clock_id_list_get_latest_time
 <p>Finds the latest time inside the list.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.14.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.14.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -893,7 +893,7 @@ gst_test_clock_process_id_list (<em class="parameter"><code><a class="link" href
 <p>Processes and releases the pending IDs in the list.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.9.15.6"></a><h4>Parameters</h4>
+<a name="id-1.2.7.7.9.15.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -936,7 +936,7 @@ private data.</p>
 </pre>
 <p>The class of a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>, which has no virtual methods to override.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.10.3.5"></a><h4>Members</h4>
+<a name="id-1.2.7.7.10.3.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
