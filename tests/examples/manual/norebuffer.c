@@ -66,7 +66,7 @@ on_message_buffering (GstBus *bus, GstMessage *message, gpointer user_data)
 
   if (percent < 100) {
     /* buffering busy */
-    if (is_buffering == FALSE) {
+    if (!is_buffering) {
       is_buffering = TRUE;
       if (target_state == GST_STATE_PLAYING) {
         /* we were not buffering but PLAYING, PAUSE  the pipeline. */
@@ -81,7 +81,7 @@ on_message_async_done (GstBus *bus, GstMessage *message, gpointer user_data)
 {
   GstElement *pipeline = user_data;
 
-  if (is_buffering == FALSE)
+  if (!is_buffering)
     gst_element_set_state (pipeline, target_state);
   else
     g_timeout_add (500, buffer_timeout, pipeline);

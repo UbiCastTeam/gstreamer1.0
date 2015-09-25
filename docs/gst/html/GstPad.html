@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstPad</title>
+<title>GstPad: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstObject.html" title="GstObject">
 <link rel="next" href="GstPadTemplate.html" title="GstPadTemplate">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1272,6 +1272,24 @@
 <a class="link" href="GstPad.html#GST-PAD-UNSET-ACCEPT-INTERSECT:CAPS" title="GST_PAD_UNSET_ACCEPT_INTERSECT()">GST_PAD_UNSET_ACCEPT_INTERSECT</a><span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-IS-ACCEPT-TEMPLATE:CAPS" title="GST_PAD_IS_ACCEPT_TEMPLATE()">GST_PAD_IS_ACCEPT_TEMPLATE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-SET-ACCEPT-TEMPLATE:CAPS" title="GST_PAD_SET_ACCEPT_TEMPLATE()">GST_PAD_SET_ACCEPT_TEMPLATE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#GST-PAD-UNSET-ACCEPT-TEMPLATE:CAPS" title="GST_PAD_UNSET_ACCEPT_TEMPLATE()">GST_PAD_UNSET_ACCEPT_TEMPLATE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -1296,6 +1314,11 @@
 <td class="property_flags">Read / Write / Construct Only</td>
 </tr>
 <tr>
+<td class="property_type"><span class="type">gint64</span></td>
+<td class="property_name"><a class="link" href="GstPad.html#GstPad--offset" title="The “offset” property">offset</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
 <td class="property_type">
 <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> *</td>
 <td class="property_name"><a class="link" href="GstPad.html#GstPad--template" title="The “template” property">template</a></td>
@@ -1316,12 +1339,12 @@
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstPad.html#GstPad-linked" title="The “linked” signal">linked</a></td>
-<td class="signal_flags">Run Last</td>
+<td class="signal_flags"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstPad.html#GstPad-unlinked" title="The “unlinked” signal">unlinked</a></td>
-<td class="signal_flags">Run Last</td>
+<td class="signal_flags"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -1465,9 +1488,8 @@ gst_pad_link_get_name (<em class="parameter"><code><a class="link" href="GstPad.
 <div class="refsect3">
 <a name="id-1.3.33.10.2.6"></a><h4>Returns</h4>
 <p> a static string with the name of the pad-link return.</p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1539,7 +1561,6 @@ gst_flow_get_name (<em class="parameter"><code><a class="link" href="GstPad.html
 <div class="refsect3">
 <a name="id-1.3.33.10.5.6"></a><h4>Returns</h4>
 <p> a static string with the name of the flow return.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1567,7 +1588,6 @@ gst_flow_to_quark (<em class="parameter"><code><a class="link" href="GstPad.html
 <a name="id-1.3.33.10.6.6"></a><h4>Returns</h4>
 <p> the quark associated with the flow return or 0 if an
 invalid return was specified.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1595,7 +1615,6 @@ gst_pad_mode_get_name (<em class="parameter"><code><a class="link" href="GstPad.
 <a name="id-1.3.33.10.7.6"></a><h4>Returns</h4>
 <p> short mnemonic for pad mode <em class="parameter"><code>mode</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1633,9 +1652,8 @@ gst_pad_store_sticky_event (<em class="parameter"><code><a class="link" href="Gs
 <a name="id-1.3.33.10.8.6"></a><h4>Returns</h4>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> on success, <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a> when the pad
 was flushing or <a class="link" href="GstPad.html#GST-FLOW-EOS:CAPS"><span class="type">GST_FLOW_EOS</span></a> when the pad was EOS.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1687,7 +1705,6 @@ the LOCK.</p>
 <a name="id-1.3.33.10.10.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstPad.html#GstPadDirection" title="enum GstPadDirection"><span class="type">GstPadDirection</span></a> of the pad.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1818,7 +1835,6 @@ gst_pad_link (<em class="parameter"><code><a class="link" href="GstPad.html" tit
 <p> A result code indicating if the connection worked or
 what went wrong.</p>
 <p>MT Safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1866,7 +1882,6 @@ for more information.</p>
 <a name="id-1.3.33.10.15.8"></a><h4>Returns</h4>
 <p> A result code indicating if the connection worked or
 what went wrong.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1904,7 +1919,6 @@ signal on both pads.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pads were unlinked. This function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
 the pads were not linked together.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1933,7 +1947,6 @@ gst_pad_is_linked (<em class="parameter"><code><a class="link" href="GstPad.html
 <a name="id-1.3.33.10.17.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is linked, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1969,7 +1982,6 @@ linked.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.18.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pads can be linked.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2035,7 +2047,6 @@ gst_pad_get_current_caps (<em class="parameter"><code><a class="link" href="GstP
 <div class="refsect3">
 <a name="id-1.3.33.10.20.6"></a><h4>Returns</h4>
 <p> the current caps of the pad with incremented ref-count.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2150,7 +2161,6 @@ gst_pad_has_current_caps (<em class="parameter"><code><a class="link" href="GstP
 <a name="id-1.3.33.10.24.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>pad</code></em>
 has caps associated with it.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2247,7 +2257,6 @@ removing or modifying.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.26.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the iteration should continue</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2316,7 +2325,6 @@ gst_pad_is_active (<em class="parameter"><code><a class="link" href="GstPad.html
 <a name="id-1.3.33.10.28.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is active.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2340,7 +2348,7 @@ gst_pad_get_last_flow_return (<em class="parameter"><code><a class="link" href="
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2521,7 +2529,6 @@ blocking type.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.43.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstPadProbeReturn" title="enum GstPadProbeReturn"><span class="type">GstPadProbeReturn</span></a></p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2578,10 +2585,9 @@ the pad state</p></td>
 <a name="id-1.3.33.10.44.6"></a><h4>Returns</h4>
 <p> an id or 0 if no probe is pending. The id can be used to remove the
 probe with <a class="link" href="GstPad.html#gst-pad-remove-probe" title="gst_pad_remove_probe ()"><code class="function">gst_pad_remove_probe()</code></a>. When using GST_PAD_PROBE_TYPE_IDLE it can
-happend that the probe can be run immediately and if the probe returns
+happen that the probe can be run immediately and if the probe returns
 GST_PAD_PROBE_REMOVE this functions returns 0.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2644,7 +2650,6 @@ is actually blocking at this point (see <a class="link" href="GstPad.html#gst-pa
 <a name="id-1.3.33.10.46.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is blocked.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2673,7 +2678,6 @@ of whether the pad is actually blocking on a <a class="link" href="GstBuffer.htm
 <a name="id-1.3.33.10.47.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is blocking.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2703,7 +2707,6 @@ pad.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.48.6"></a><h4>Returns</h4>
 <p> the offset.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2803,7 +2806,7 @@ This function makes a copy of the name so you can safely free the name.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p> the name of the element. </p></td>
+<td class="parameter_description"><p> the name of the pad. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -2842,7 +2845,7 @@ This function makes a copy of the name so you can safely free the name.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p>the name of the element</p></td>
+<td class="parameter_description"><p>the name of the pad</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -2970,8 +2973,8 @@ during the execution of this function. </p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> that is chained, not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> the <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> that is chained, not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -2979,7 +2982,6 @@ during the execution of this function. </p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.55.8"></a><h4>Returns</h4>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3098,8 +3100,8 @@ during the execution of this function. </p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>list</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a> that is chained, not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> the <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a> that is chained, not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -3107,7 +3109,6 @@ during the execution of this function. </p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.58.8"></a><h4>Returns</h4>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> for success</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3189,7 +3190,6 @@ returns <a class="link" href="GstPad.html#GST-FLOW-ERROR:CAPS"><span class="type
 <a name="id-1.3.33.10.59.12"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the pad.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3372,7 +3372,6 @@ during the execution of this function. </p></td>
 . Any other
 return value leaves <em class="parameter"><code>buffer</code></em>
 undefined.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3482,8 +3481,8 @@ during the execution of this function. </p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>event</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> to handle.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> the <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> to handle. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -3491,7 +3490,6 @@ during the execution of this function. </p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.65.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could handle the event.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3618,7 +3616,6 @@ during the execution of this function. </p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.68.6"></a><h4>Returns</h4>
 <p> the result of the link with the specified peer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3768,7 +3765,6 @@ the same caps.  Two such elements are tee and adder.</p>
 <a name="id-1.3.33.10.72.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>query</code></em>
 could be executed</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3810,7 +3806,6 @@ all opposite pads.</p>
 <a name="id-1.3.33.10.73.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>query</code></em>
 could be executed</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3927,7 +3922,6 @@ override this function to activate the pad in pull mode if they wish.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.76.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be activated.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4052,7 +4046,6 @@ will not be used anymore.</p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.79.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be activated or deactivated.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4082,7 +4075,6 @@ if the flag was set.</p>
 <a name="id-1.3.33.10.80.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the GST_PAD_FLAG_NEED_RECONFIGURE flag is set on <em class="parameter"><code>pad</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4112,7 +4104,6 @@ if the flag was set.</p>
 <a name="id-1.3.33.10.81.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the GST_PAD_FLAG_NEED_RECONFIGURE flag was set on <em class="parameter"><code>pad</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4182,7 +4173,6 @@ if not. </p></td>
 <a name="id-1.3.33.10.83.9"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the peer pad.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4222,7 +4212,6 @@ elements.</p>
 <a name="id-1.3.33.10.84.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4271,7 +4260,6 @@ if not. </p></td>
 <a name="id-1.3.33.10.85.9"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the peer pad.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4352,7 +4340,6 @@ GST_FLOW_ERROR if <a href="https://developer.gnome.org/glib/unstable/glib-Standa
 <a name="id-1.3.33.10.86.11"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the peer pad.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4397,7 +4384,6 @@ pad's activatemodefunc. For use from within pad activation functions only.</p>
 <a name="id-1.3.33.10.87.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the operation was successful.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4452,7 +4438,6 @@ all necessary locks and checks.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.88.9"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4466,7 +4451,7 @@ gst_pad_event_default (<em class="parameter"><code><a class="link" href="GstPad.
 <p>The EOS event will pause the task associated with <em class="parameter"><code>pad</code></em>
  before it is forwarded
 to all internally linked pads,</p>
-<p>The the event is sent to all pads internally linked to <em class="parameter"><code>pad</code></em>
+<p>The event is sent to all pads internally linked to <em class="parameter"><code>pad</code></em>
 . This function
 takes ownership of <em class="parameter"><code>event</code></em>
 .</p>
@@ -4501,7 +4486,6 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <div class="refsect3">
 <a name="id-1.3.33.10.89.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was sent successfully.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4543,7 +4527,6 @@ the query structure.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.90.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4583,7 +4566,6 @@ the query structure.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed. This function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
 if <em class="parameter"><code>pad</code></em>
 has no peer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4631,7 +4613,6 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <div class="refsect3">
 <a name="id-1.3.33.10.92.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query was performed successfully.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4672,7 +4653,6 @@ gst_pad_query_position (<em class="parameter"><code><a class="link" href="GstPad
 <div class="refsect3">
 <a name="id-1.3.33.10.93.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4714,7 +4694,6 @@ duration, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <div class="refsect3">
 <a name="id-1.3.33.10.94.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4770,7 +4749,6 @@ gst_pad_query_convert (<em class="parameter"><code><a class="link" href="GstPad.
 <div class="refsect3">
 <a name="id-1.3.33.10.95.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4805,7 +4783,6 @@ gst_pad_query_accept_caps (<em class="parameter"><code><a class="link" href="Gst
 <div class="refsect3">
 <a name="id-1.3.33.10.96.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad can accept the caps.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4900,7 +4877,6 @@ position, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <div class="refsect3">
 <a name="id-1.3.33.10.98.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4943,7 +4919,6 @@ duration, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <div class="refsect3">
 <a name="id-1.3.33.10.99.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5001,7 +4976,6 @@ Must be a sink pad.</p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.100.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5042,7 +5016,6 @@ returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the peer of <em class="parameter"><code>pad</code></em>
 can accept the caps or <em class="parameter"><code>pad</code></em>
 has no peer.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5091,7 +5064,6 @@ no peer pad, this function returns <em class="parameter"><code>filter</code></em
 or, when <em class="parameter"><code>filter</code></em>
 is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, ANY
 caps.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5210,7 +5182,6 @@ during the execution of this function. </p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.105.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5326,7 +5297,6 @@ during the execution of this function. </p></td>
 <p> a new <a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="type">GstIterator</span></a> that will iterate over all pads that are
 linked to the given pad on the inside of the parent element.</p>
 <p>the caller must call <a class="link" href="gstreamer-GstIterator.html#gst-iterator-free" title="gst_iterator_free ()"><code class="function">gst_iterator_free()</code></a> after usage.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5525,7 +5495,6 @@ preceded by 0's, such as by using the format %03u instead of %u.</p>
 <a name="id-1.3.33.10.113.8"></a><h4>Returns</h4>
 <p> A stream-id for <em class="parameter"><code>pad</code></em>
 . <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5593,7 +5562,6 @@ format string</p></td>
 <a name="id-1.3.33.10.114.7"></a><h4>Returns</h4>
 <p> A stream-id for <em class="parameter"><code>pad</code></em>
 . <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5662,7 +5630,6 @@ format string</p></td>
 <a name="id-1.3.33.10.115.7"></a><h4>Returns</h4>
 <p> A stream-id for <em class="parameter"><code>pad</code></em>
 . <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5700,7 +5667,7 @@ contents should not be interpreted.</p>
 needed. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -5735,7 +5702,6 @@ needed. </p>
 <div class="refsect3">
 <a name="id-1.3.33.10.117.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the dispatching procedure has to be stopped.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5784,7 +5750,6 @@ function is only called once for each pad.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.118.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if one of the dispatcher functions returned <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5836,7 +5801,6 @@ if not. </p></td>
 <a name="id-1.3.33.10.119.10"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the pad.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5887,7 +5851,6 @@ if not. </p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.120.11"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> from the pad.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5942,7 +5905,6 @@ is no longer referenced</p></td>
 <div class="refsect3">
 <a name="id-1.3.33.10.121.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the task could be started.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -5973,7 +5935,6 @@ called from the task function.</p>
 <a name="id-1.3.33.10.122.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the task could be paused or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when the pad
 has no task.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -6007,7 +5968,6 @@ released so as to ensure that streaming through this pad has finished.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.123.8"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the task could be stopped or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -6051,7 +6011,6 @@ and a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.ht
 <a name="id-1.3.33.10.124.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the operation was successful.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -6291,7 +6250,7 @@ a <em class="parameter"><code>pad</code></em>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -6628,7 +6587,6 @@ No locking is performed in this function, use <a class="link" href="GstPad.html#
 <a name="id-1.3.33.10.148.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is linked to another pad. Use <a class="link" href="GstPad.html#gst-pad-is-linked" title="gst_pad_is_linked ()"><code class="function">gst_pad_is_linked()</code></a>
 instead.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -6654,7 +6612,6 @@ instead.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.149.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is a source pad (i.e. produces data).</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -6680,7 +6637,6 @@ instead.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.150.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad is a sink pad (i.e. consumes data).</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -6706,7 +6662,6 @@ instead.</p>
 <div class="refsect3">
 <a name="id-1.3.33.10.151.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad has been activated.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -7250,6 +7205,81 @@ accept incompletely specified caps.</p>
 </table></div>
 </div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-IS-ACCEPT-TEMPLATE:CAPS"></a><h3>GST_PAD_IS_ACCEPT_TEMPLATE()</h3>
+<pre class="programlisting">#define GST_PAD_IS_ACCEPT_TEMPLATE(pad)    (GST_OBJECT_FLAG_IS_SET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+</pre>
+<p>Check if the pad's accept caps operation will use the pad template caps.
+The default accept-caps will do a query caps to get the caps, which might
+be querying downstream causing unnecessary overhead. It is recommended to
+implement a proper accept-caps query handler or to use this flag to prevent
+recursive accept-caps handling.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.174.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-SET-ACCEPT-TEMPLATE:CAPS"></a><h3>GST_PAD_SET_ACCEPT_TEMPLATE()</h3>
+<pre class="programlisting">#define GST_PAD_SET_ACCEPT_TEMPLATE(pad)   (GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+</pre>
+<p>Set <em class="parameter"><code>pad</code></em>
+ to by default use the pad template caps to compare with
+the accept caps instead of using a caps query result.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.175.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PAD-UNSET-ACCEPT-TEMPLATE:CAPS"></a><h3>GST_PAD_UNSET_ACCEPT_TEMPLATE()</h3>
+<pre class="programlisting">#define GST_PAD_UNSET_ACCEPT_TEMPLATE(pad) (GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+</pre>
+<p>Unset accept template flag.</p>
+<div class="refsect3">
+<a name="id-1.3.33.10.176.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstPad.other_details"></a><h2>Types and Values</h2>
@@ -7439,6 +7469,16 @@ the pad.</p></td>
                      it the caps intersect the query-caps result instead
                      of checking for a subset. This is interesting for
                      parsers that can accept incompletely specified caps.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-PAD-FLAG-ACCEPT-TEMPLATE:CAPS"></a>GST_PAD_FLAG_ACCEPT_TEMPLATE</p></td>
+<td class="enum_member_description">
+<p>the default accept-caps handler will use
+                     the template pad caps instead of query caps to
+                     compare with the accept caps. Use this in combination
+                     with <a class="link" href="GstPad.html#GST-PAD-FLAG-ACCEPT-INTERSECT:CAPS"><code class="literal">GST_PAD_FLAG_ACCEPT_INTERSECT</code></a>. (Since 1.6)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -7765,31 +7805,50 @@ pad operates in push or pull mode.</p>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-DROP:CAPS"></a>GST_PAD_PROBE_DROP</p></td>
 <td class="enum_member_description">
 <p>drop data in data probes. For push mode this means that
-       the data item is not sent downstream. For pull mode, it means that the
-       data item is not passed upstream. In both cases, this result code
-       means that <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the caller.</p>
+       the data item is not sent downstream. For pull mode, it means that
+       the data item is not passed upstream. In both cases, no more probes
+       are called and <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the caller.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-OK:CAPS"></a>GST_PAD_PROBE_OK</p></td>
 <td class="enum_member_description">
-<p>normal probe return value</p>
+<p>normal probe return value. This leaves the probe in
+       place, and defers decisions about dropping or passing data to other
+       probes, if any. If there are no other probes, the default behaviour
+       for the probe type applies (block for blocking probes, and pass for
+       non-blocking probes).</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-REMOVE:CAPS"></a>GST_PAD_PROBE_REMOVE</p></td>
 <td class="enum_member_description">
-<p>remove probe</p>
+<p>remove this probe.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-PAD-PROBE-PASS:CAPS"></a>GST_PAD_PROBE_PASS</p></td>
 <td class="enum_member_description">
-<p>pass the data item in the block probe and block on
-                        the next item</p>
+<p>pass the data item in the block probe and block on the
+       next item.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-PAD-PROBE-HANDLED:CAPS"></a>GST_PAD_PROBE_HANDLED</p></td>
+<td class="enum_member_description">
+<p>Data has been handled in the probe and will not be
+       forwarded further. For events and buffers this is the same behaviour as
+       <em class="parameter"><code>GST_PAD_PROBE_DROP</code></em>
+ (except that in this case you need to unref the buffer
+       or event yourself). For queries it will also return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to the caller.
+       The probe can also modify the <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value by using the
+       <code class="function"><GTKDOCLINK HREF="GST-PAD-PROBE-INFO-FLOW-RETURN:CAPS"><code class="function">GST_PAD_PROBE_INFO_FLOW_RETURN()</code></code></GTKDOCLINK> accessor.
+       Note that the resulting query must contain valid entries.
+       Since: 1.6</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -8052,6 +8111,16 @@ contains
 </div>
 <hr>
 <div class="refsect2">
+<a name="GstPad--offset"></a><h3>The <code class="literal">“offset”</code> property</h3>
+<pre class="programlisting">  “offset”                   <span class="type">gint64</span></pre>
+<p>The offset that will be applied to the running time of the pad.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: &gt;= 0</p>
+<p>Default value: 0</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstPad--template"></a><h3>The <code class="literal">“template”</code> property</h3>
 <pre class="programlisting">  “template”                 <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> *</pre>
 <p>The GstPadTemplate of this pad.</p>
@@ -8094,7 +8163,7 @@ user_function (<a class="link" href="GstPad.html" title="GstPad"><span class="ty
 </tbody>
 </table></div>
 </div>
-<p>Flags: Run Last</p>
+<p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -8131,7 +8200,7 @@ user_function (<a class="link" href="GstPad.html" title="GstPad"><span class="ty
 </tbody>
 </table></div>
 </div>
-<p>Flags: Run Last</p>
+<p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -8140,7 +8209,6 @@ user_function (<a class="link" href="GstPad.html" title="GstPad"><span class="ty
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

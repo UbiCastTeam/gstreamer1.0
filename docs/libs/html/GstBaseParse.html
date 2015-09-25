@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstBaseParse</title>
+<title>GstBaseParse: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="next" href="GstBaseSrc.html" title="GstBaseSrc">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -41,6 +41,14 @@
 <col class="functions_name">
 </colgroup>
 <tbody>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseParse.html#gst-base-parse-merge-tags" title="gst_base_parse_merge_tags ()">gst_base_parse_merge_tags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 <tr>
 <td class="function_type">
 <span class="returnvalue">void</span>
@@ -395,9 +403,9 @@ source and sink pads. The pads need to be named "sink" and "src". It also
 needs to set the fixed caps on srcpad, when the format is ensured (e.g.
 when base class calls subclass' <em class="parameter"><code>set_sink_caps</code></em>
  function).</p>
-<p>This base class uses <code class="literal">GST_FORMAT_DEFAULT</code> as a meaning of frames. So,
+<p>This base class uses <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-DEFAULT:CAPS"><code class="literal">GST_FORMAT_DEFAULT</code></a> as a meaning of frames. So,
 subclass conversion routine needs to know that conversion from
-<code class="literal">GST_FORMAT_TIME</code> to <code class="literal">GST_FORMAT_DEFAULT</code> must return the
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-TIME:CAPS"><code class="literal">GST_FORMAT_TIME</code></a> to <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-DEFAULT:CAPS"><code class="literal">GST_FORMAT_DEFAULT</code></a> must return the
 frame number that can be found from the given byte position.</p>
 <p><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> uses subclasses conversion methods also for seeking (or
 otherwise uses its own default one, see also below).</p>
@@ -448,6 +456,48 @@ and end of data processing.</p>
 <div class="refsect1">
 <a name="GstBaseParse.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
+<a name="gst-base-parse-merge-tags"></a><h3>gst_base_parse_merge_tags ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_base_parse_merge_tags (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
+                           <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTagList.html"><span class="type">GstTagList</span></a> *tags</code></em>,
+                           <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTagList.html#GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>);</pre>
+<p>Sets the parser subclass's tags and how they should be merged with any
+upstream stream tags. This will override any tags previously-set
+with <a class="link" href="GstBaseParse.html#gst-base-parse-merge-tags" title="gst_base_parse_merge_tags ()"><code class="function">gst_base_parse_merge_tags()</code></a>.</p>
+<p>Note that this is provided for convenience, and the subclass is
+not required to use this and can still do tag handling on its own.</p>
+<div class="refsect3">
+<a name="id-1.2.4.3.9.2.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>parse</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>tags</p></td>
+<td class="parameter_description"><p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTagList.html"><span class="type">GstTagList</span></a> to merge, or NULL to unset
+previously-set tags. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>mode</p></td>
+<td class="parameter_description"><p>the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTagList.html#GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> to use, usually <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstTagList.html#GST-TAG-MERGE-REPLACE:CAPS"><span class="type">GST_TAG_MERGE_REPLACE</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-base-parse-set-duration"></a><h3>gst_base_parse_set_duration ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_duration (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
@@ -462,7 +512,7 @@ duration is determined based on estimated bitrate, and updated every <em class="
 
 frames.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.2.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -507,7 +557,7 @@ is used to estimate the total duration of the stream and to estimate
 a seek position, if there's no index and the format is syncable
 (see <a class="link" href="GstBaseParse.html#gst-base-parse-set-syncable" title="gst_base_parse_set_syncable ()"><code class="function">gst_base_parse_set_syncable()</code></a>).</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.3.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -538,7 +588,7 @@ gst_base_parse_set_min_frame_size (<em class="parameter"><code><a class="link" h
 <p>Subclass can use this function to tell the base class that it needs to
 give at least <span class="type">min_size</span> buffers.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.4.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -579,7 +629,7 @@ so subclass can perform as much or as little is appropriate for
 passthrough semantics in <em class="parameter"><code>pre_push_frame</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -611,7 +661,7 @@ gst_base_parse_set_syncable (<em class="parameter"><code><a class="link" href="G
 determines whether seeking based on bitrate averages
 is possible for a format/stream.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.6.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -643,7 +693,7 @@ gst_base_parse_set_has_timing_info (<em class="parameter"><code><a class="link" 
 parse and provide.  In particular, intrinsic (rather than estimated) time
 can be obtained following a seek.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -682,7 +732,7 @@ following <em class="parameter"><code>lead_out</code></em>
  number of frames to ensure the desired segment is
 entirely filled upon decoding.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.8.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -730,7 +780,7 @@ gst_base_parse_set_latency (<em class="parameter"><code><a class="link" href="Gs
 by the parsing process.  If there is such a latency, which depends on the
 particular parsing of the format, it typically corresponds to 1 frame duration.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -768,7 +818,7 @@ versa.  While this is generally correct for audio data, it may not
 be otherwise. Sub-classes implementing such formats should disable
 timestamp inferring.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -801,7 +851,7 @@ interpolation (previous timestamp + duration), which is incorrect for
 data streams with reordering, where PTS can go backward. Sub-classes
 implementing such formats should disable PTS interpolation.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -838,7 +888,7 @@ start of the frame, but before the start of the actual picture data.
 This function can be used to set the timestamps based on the offset
 into the frame data that the picture starts.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.12.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.13.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -859,7 +909,7 @@ into the frame data that the picture starts.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -872,7 +922,7 @@ gst_base_parse_convert_default (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code><span class="type">gint64</span> *dest_value</code></em>);</pre>
 <p>Default implementation of "convert" vmethod in <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> class.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -909,9 +959,8 @@ gst_base_parse_convert_default (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.13.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.3.9.14.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if conversion was successful.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -931,7 +980,7 @@ to only add keyframe entries.  <em class="parameter"><code>force</code></em>
 whether the stream is (upstream) seekable, another entry is already "close"
 to the new entry, etc.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.14.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -968,9 +1017,8 @@ to the new entry, etc.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.14.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.3.9.15.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating whether entry was added</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -984,7 +1032,7 @@ gst_base_parse_frame_new (<em class="parameter"><code><a href="http://gstreamer.
 elements written in C should usually allocate the frame on the stack and
 then use <a class="link" href="GstBaseParse.html#gst-base-parse-frame-init" title="gst_base_parse_frame_init ()"><code class="function">gst_base_parse_frame_init()</code></a> to initialise it.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.15.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1013,10 +1061,9 @@ Set to -1 to mark the entire frame as metadata. If in doubt, set to 0.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.15.6"></a><h4>Returns</h4>
+<a name="id-1.2.4.3.9.16.6"></a><h4>Returns</h4>
 <p> a newly-allocated <a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>. Free with
 <a class="link" href="GstBaseParse.html#gst-base-parse-frame-free" title="gst_base_parse_frame_free ()"><code class="function">gst_base_parse_frame_free()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1030,7 +1077,7 @@ sure <a class="link" href="GstBaseParse.html#gst-base-parse-frame-free" title="g
 the actual frame. Use this function to initialise a <a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>
 allocated on the stack.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.16.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.17.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1063,7 +1110,7 @@ frame's buffer, though caller retains ownership of <em class="parameter"><code>f
 .</p>
 <p>This must be called with sinkpad STREAM_LOCK held.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.18.6"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.19.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1085,9 +1132,8 @@ frame's buffer, though caller retains ownership of <em class="parameter"><code>f
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.18.7"></a><h4>Returns</h4>
+<a name="id-1.2.4.3.9.19.7"></a><h4>Returns</h4>
 <p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a></p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1111,7 +1157,7 @@ ignored for any but the above purpose/information).</p>
 caller retains ownership of <em class="parameter"><code>frame</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.19.7"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.20.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1138,9 +1184,8 @@ caller retains ownership of <em class="parameter"><code>frame</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.19.8"></a><h4>Returns</h4>
+<a name="id-1.2.4.3.9.20.8"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> that should be escalated to caller (of caller)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1151,7 +1196,7 @@ caller retains ownership of <em class="parameter"><code>frame</code></em>
 <p>Obtains current drain status (ie. whether EOS has been received and
 the parser is now processing the frames at the end of the stream)</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.20.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1185,7 +1230,7 @@ the parser is now processing the frames at the end of the stream)</p>
 </pre>
 <p>Obtains current sync status.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.23.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.24.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1207,7 +1252,7 @@ the parser is now processing the frames at the end of the stream)</p>
 </pre>
 <p>Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.24.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.25.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1229,7 +1274,7 @@ the parser is now processing the frames at the end of the stream)</p>
 </pre>
 <p>Gives the pointer to the source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.3.9.25.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.3.9.26.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1249,7 +1294,10 @@ the parser is now processing the frames at the end of the stream)</p>
 <a name="GstBaseParse.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstBaseParse-struct"></a><h3>struct GstBaseParse</h3>
-<pre class="programlisting">struct GstBaseParse;</pre>
+<pre class="programlisting">struct GstBaseParse {
+  GstElement     element;
+};
+</pre>
 <p>The opaque <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> data structure.</p>
 <div class="refsect3">
 <a name="id-1.2.4.3.10.2.5"></a><h4>Members</h4>
@@ -1259,7 +1307,11 @@ the parser is now processing the frames at the end of the stream)</p>
 <col class="struct_members_description">
 <col width="200px" class="struct_members_annotations">
 </colgroup>
-<tbody></tbody>
+<tbody><tr>
+<td class="struct_member_name"><p><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> <em class="structfield"><code><a name="GstBaseParse-struct.element"></a>element</code></em>;</p></td>
+<td class="struct_member_description"><p>the parent element.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
 </table></div>
 </div>
 </div>
@@ -1311,10 +1363,8 @@ the parser is now processing the frames at the end of the stream)</p>
 };
 </pre>
 <p>Subclasses can override any of the available virtual methods or not, as
-needed. At minimum <em class="parameter"><code>check_valid_frame</code></em>
- and <em class="parameter"><code>parse_frame</code></em>
- needs to be
-overridden.</p>
+needed. At minimum <em class="parameter"><code>handle_frame</code></em>
+ needs to be overridden.</p>
 <div class="refsect3">
 <a name="id-1.2.4.3.10.3.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1345,7 +1395,8 @@ Allows closing external resources.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseParseClass.set-sink-caps"></a>set_sink_caps</code></em> ()</p></td>
-<td class="struct_member_description"><p>allows the subclass to be notified of the actual caps set.</p></td>
+<td class="struct_member_description"><p>Optional.
+Allows the subclass to be notified of the actual caps set.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1395,7 +1446,8 @@ parent to let the default handler run.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseParseClass.get-sink-caps"></a>get_sink_caps</code></em> ()</p></td>
-<td class="struct_member_description"><p>allows the subclass to do its own sink get caps if needed.</p></td>
+<td class="struct_member_description"><p>Optional.
+Allows the subclass to do its own sink get caps if needed.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1590,7 +1642,6 @@ the implementation (standard behaviour).</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

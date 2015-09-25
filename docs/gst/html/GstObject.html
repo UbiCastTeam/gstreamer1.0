@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstObject</title>
+<title>GstObject: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstMiniObject.html" title="GstMiniObject">
 <link rel="next" href="GstPad.html" title="GstPad">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -148,6 +148,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstObject.html#gst-object-has-as-parent" title="gst_object_has_as_parent ()">gst_object_has_as_parent</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
@@ -176,6 +184,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstObject.html#gst-object-check-uniqueness" title="gst_object_check_uniqueness ()">gst_object_check_uniqueness</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstObject.html#gst-object-has-as-ancestor" title="gst_object_has_as_ancestor ()">gst_object_has_as_ancestor</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -368,7 +384,7 @@
 <tbody><tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstObject.html#GstObject-deep-notify" title="The “deep-notify” signal">deep-notify</a></td>
-<td class="signal_flags">No Hooks</td>
+<td class="signal_flags"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-NO-HOOKS:CAPS">No Hooks</a></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -817,7 +833,6 @@ a parent cannot be renamed, this function returns <a href="https://developer.gno
 cases.</p>
 <p>MT safe.  This function grabs and releases <em class="parameter"><code>object</code></em>
 's LOCK.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -897,7 +912,6 @@ and <em class="parameter"><code>parent</code></em>
 are the same.</p>
 <p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
 's LOCK.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -936,6 +950,51 @@ has no parent. unref after usage.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-object-has-as-parent"></a><h3>gst_object_has_as_parent ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_object_has_as_parent (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
+                          <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *parent</code></em>);</pre>
+<p>Check if <em class="parameter"><code>parent</code></em>
+ is the parent of <em class="parameter"><code>object</code></em>
+.
+E.g. a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> can check if it owns a given <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</p>
+<div class="refsect3">
+<a name="id-1.3.32.10.18.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>object</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to check</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>parent</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to check as parent</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.32.10.18.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if either <em class="parameter"><code>object</code></em>
+or <em class="parameter"><code>parent</code></em>
+is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>parent</code></em>
+is
+the parent of <em class="parameter"><code>object</code></em>
+. Otherwise <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+<p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
+'s locks.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-object-unparent"></a><h3>gst_object_unparent ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_object_unparent (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>);</pre>
@@ -946,7 +1005,7 @@ This function decreases the refcount of <em class="parameter"><code>object</code
 <p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
 's lock.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.18.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.19.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -977,7 +1036,7 @@ using g_print.</p>
 's LOCK for getting its
          path string.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.19.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.20.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1021,7 +1080,7 @@ gst_object_default_error (<em class="parameter"><code><a class="link" href="GstO
 and the optional debug sting..</p>
 <p>The default handler will simply print the error string using g_print.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.20.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.21.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1062,7 +1121,7 @@ provided list with the lock of the owner of the list. This function
 will lock each <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> in the list to compare the name, so be
 careful when passing a list with a locked object.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.21.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.22.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1085,27 +1144,26 @@ check through. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.21.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.22.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> named <em class="parameter"><code>name</code></em>
 does not appear in <em class="parameter"><code>list</code></em>
 ,
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it does.</p>
 <p>MT safe. Grabs and releases the LOCK of each object in the list.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-object-has-ancestor"></a><h3>gst_object_has_ancestor ()</h3>
+<a name="gst-object-has-as-ancestor"></a><h3>gst_object_has_as_ancestor ()</h3>
 <pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_object_has_ancestor (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
-                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *ancestor</code></em>);</pre>
+gst_object_has_as_ancestor (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
+                            <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *ancestor</code></em>);</pre>
 <p>Check if <em class="parameter"><code>object</code></em>
  has an ancestor <em class="parameter"><code>ancestor</code></em>
  somewhere up in
 the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> is inside a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.22.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.23.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1127,13 +1185,57 @@ the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" ti
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.22.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.23.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>ancestor</code></em>
 is an ancestor of <em class="parameter"><code>object</code></em>
 .</p>
 <p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
 's locks.</p>
-<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-object-has-ancestor"></a><h3>gst_object_has_ancestor ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_object_has_ancestor (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *object</code></em>,
+                         <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *ancestor</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">gst_object_has_ancestor</code> is deprecated and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="GstObject.html#gst-object-has-as-ancestor" title="gst_object_has_as_ancestor ()"><code class="function">gst_object_has_as_ancestor()</code></a> instead.</p>
+<p>MT safe. Grabs and releases <em class="parameter"><code>object</code></em>
+'s locks.</p>
+</div>
+<p>Check if <em class="parameter"><code>object</code></em>
+ has an ancestor <em class="parameter"><code>ancestor</code></em>
+ somewhere up in
+the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> is inside a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>.</p>
+<div class="refsect3">
+<a name="id-1.3.32.10.24.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>object</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to check</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>ancestor</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> to check as ancestor</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.32.10.24.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>ancestor</code></em>
+is an ancestor of <em class="parameter"><code>object</code></em>
+.</p>
 </div>
 </div>
 <hr>
@@ -1150,7 +1252,7 @@ atomic refcounting.</p>
 constructs like :
  result = gst_object_ref (object-&gt;parent);</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.23.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.25.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1165,7 +1267,7 @@ constructs like :
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.23.7"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.25.7"></a><h4>Returns</h4>
 <p> A pointer to <em class="parameter"><code>object</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gst.Object]</span></p>
@@ -1185,7 +1287,7 @@ on <em class="parameter"><code>object</code></em>
 <p>The unref method should never be called with the LOCK held since
 this might deadlock the dispose function.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.24.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.26.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1214,8 +1316,9 @@ of the floating reference, converting it to a normal reference by clearing
 the floating flag while leaving the reference count unchanged. If the object
 is not floating, then this call adds a new normal reference increasing the
 reference count by one.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.32.10.25.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.27.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1245,7 +1348,7 @@ The reference count of <em class="parameter"><code>oldobj</code></em>
  and the value pointed to by <em class="parameter"><code>oldobj</code></em>
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.26.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.28.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1268,11 +1371,10 @@ a <a class="link" href="GstObject.html" title="GstObject"><span class="type">Gst
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.26.7"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.28.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>newobj</code></em>
 was different from <em class="parameter"><code>oldobj</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1285,7 +1387,7 @@ gst_object_get_path_string (<em class="parameter"><code><a class="link" href="Gs
 the object hierarchy. Only useful (or used) for debugging.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.27.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.29.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1300,7 +1402,7 @@ the object hierarchy. Only useful (or used) for debugging.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.27.7"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.29.7"></a><h4>Returns</h4>
 <p> a string describing the path of <em class="parameter"><code>object</code></em>
 . You must
 <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> the string after usage.</p>
@@ -1317,7 +1419,7 @@ gst_object_suggest_next_sync (<em class="parameter"><code><a class="link" href="
 <p>Returns a suggestion for timestamps where buffers should be split
 to get best controller results.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.28.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.30.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1332,10 +1434,9 @@ to get best controller results.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.28.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.30.6"></a><h4>Returns</h4>
 <p> Returns the suggested timestamp or <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><code class="literal">GST_CLOCK_TIME_NONE</code></a>
 if no control-rate was set.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1349,7 +1450,7 @@ gst_object_sync_values (<em class="parameter"><code><a class="link" href="GstObj
 <p>If this function fails, it is most likely the application developers fault.
 Most probably the control sources are not setup correctly.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.29.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.31.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1371,10 +1472,9 @@ Most probably the control sources are not setup correctly.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.29.7"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.31.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the controller values could be applied to the object
 properties, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1386,7 +1486,7 @@ gst_object_has_active_control_bindings
 <p>Check if the <em class="parameter"><code>object</code></em>
  has an active controlled properties.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.30.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.32.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1401,9 +1501,8 @@ gst_object_has_active_control_bindings
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.30.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.32.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the object has active controlled properties</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1417,7 +1516,7 @@ gst_object_set_control_bindings_disabled
  for
 some time, i.e. <a class="link" href="GstObject.html#gst-object-sync-values" title="gst_object_sync_values ()"><code class="function">gst_object_sync_values()</code></a> will do nothing.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.31.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.33.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1452,7 +1551,7 @@ gst_object_set_control_binding_disabled
 some time, i.e. <a class="link" href="GstObject.html#gst-object-sync-values" title="gst_object_sync_values ()"><code class="function">gst_object_sync_values()</code></a> will do nothing for the
 property.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.32.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.34.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1492,7 +1591,7 @@ gst_object_add_control_binding (<em class="parameter"><code><a class="link" href
  will take ownership of the <em class="parameter"><code>binding</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.33.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.35.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1514,11 +1613,10 @@ gst_object_add_control_binding (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.33.7"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.35.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the given <em class="parameter"><code>binding</code></em>
 has not been setup for this object or
 has been setup for a non suitable property, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1530,7 +1628,7 @@ gst_object_get_control_binding (<em class="parameter"><code><a class="link" href
 <p>Gets the corresponding <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> for the property. This should be
 unreferenced again after use.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.34.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1552,7 +1650,7 @@ unreferenced again after use.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.34.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.36.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a> for
 <em class="parameter"><code>property_name</code></em>
 or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the property is not controlled. </p>
@@ -1568,7 +1666,7 @@ gst_object_remove_control_binding (<em class="parameter"><code><a class="link" h
 <p>Removes the corresponding <a class="link" href="GstControlBinding.html" title="GstControlBinding"><span class="type">GstControlBinding</span></a>. If it was the
 last ref of the binding, it will be disposed.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.35.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.37.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1590,9 +1688,8 @@ last ref of the binding, it will be disposed.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.35.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.37.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the binding could be removed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1604,7 +1701,7 @@ gst_object_get_value (<em class="parameter"><code><a class="link" href="GstObjec
                       <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);</pre>
 <p>Gets the value for the given controlled property at the requested time.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.36.5"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.38.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1631,7 +1728,7 @@ gst_object_get_value (<em class="parameter"><code><a class="link" href="GstObjec
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.36.6"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.38.6"></a><h4>Returns</h4>
 <p> the GValue of the property at the given time,
 or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the property isn't controlled. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -1658,7 +1755,7 @@ curve or apply a control curve sample by sample.</p>
 <a class="link" href="GstObject.html#gst-object-get-g-value-array" title="gst_object_get_g_value_array ()"><code class="function">gst_object_get_g_value_array()</code></a> returns the array as <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValues</span></a> and is
 better suites for bindings.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.37.7"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.39.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1700,9 +1797,8 @@ better suites for bindings.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.37.8"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.39.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the given array could be filled, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1723,7 +1819,7 @@ requested time. The array <em class="parameter"><code>values</code></em>
 <p>This function is useful if one wants to e.g. draw a graph of the control
 curve or apply a control curve sample by sample.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.38.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.40.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1765,9 +1861,8 @@ curve or apply a control curve sample by sample.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.38.7"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.40.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the given array could be filled, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1787,7 +1882,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <p>The control-rate is not expected to change if the element is in
 <a class="link" href="GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a> or <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.39.7"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.41.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1802,9 +1897,8 @@ should be up to <em class="parameter"><code>control</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.32.10.39.8"></a><h4>Returns</h4>
+<a name="id-1.3.32.10.41.8"></a><h4>Returns</h4>
 <p> the control rate in nanoseconds</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1822,7 +1916,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <p>The control-rate should not change if the element is in <a class="link" href="GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a> or
 <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.32.10.40.6"></a><h4>Parameters</h4>
+<a name="id-1.3.32.10.42.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2021,12 +2115,11 @@ the elements contained in that bin.</p>
 </tbody>
 </table></div>
 </div>
-<p>Flags: No Hooks</p>
+<p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-NO-HOOKS:CAPS">No Hooks</a></p>
 </div>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

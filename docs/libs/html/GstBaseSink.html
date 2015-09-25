@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstBaseSink</title>
+<title>GstBaseSink: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseSrc.html" title="GstBaseSrc">
 <link rel="next" href="GstBaseTransform.html" title="GstBaseTransform">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -477,7 +477,7 @@ install a pad template in its class_init function, like so:</p>
 
 <p></p>
 <p><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> will handle the prerolling correctly. This means that it will
-return <code class="literal">GST_STATE_CHANGE_ASYNC</code> from a state change to PAUSED until the first
+return <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> from a state change to PAUSED until the first
 buffer arrives in this element. The base class will call the
 <a class="link" href="GstBaseSink.html#GstBaseSinkClass.preroll"><code class="function">GstBaseSinkClass.preroll()</code></a> vmethod with this preroll buffer and will then
 commit the state change to the next asynchronously pending state.</p>
@@ -499,13 +499,13 @@ for the clock to reach the time indicated by the stop time of the last
 <a class="link" href="GstBaseSink.html#GstBaseSinkClass.get-times"><code class="function">GstBaseSinkClass.get_times()</code></a> call before posting an EOS message. When the
 element receives EOS in PAUSED, preroll completes, the event is queued and an
 EOS message is posted when going to PLAYING.</p>
-<p><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> will internally use the <code class="literal">GST_EVENT_SEGMENT</code> events to schedule
+<p><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> will internally use the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html#GST-EVENT-SEGMENT:CAPS"><code class="literal">GST_EVENT_SEGMENT</code></a> events to schedule
 synchronisation and clipping of buffers. Buffers that fall completely outside
 of the current segment are dropped. Buffers that fall partially in the
 segment are rendered (and prerolled). Subclasses should do any subbuffer
 clipping themselves when needed.</p>
 <p><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> will by default report the current playback position in
-<code class="literal">GST_FORMAT_TIME</code> based on the current clock time and segment information.
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-TIME:CAPS"><code class="literal">GST_FORMAT_TIME</code></a> based on the current clock time and segment information.
 If no clock has been set on the element, the query will be forwarded
 upstream.</p>
 <p>The <a class="link" href="GstBaseSink.html#GstBaseSinkClass.set-caps"><code class="function">GstBaseSinkClass.set_caps()</code></a> function will be called when the subclass
@@ -610,7 +610,6 @@ for the latency introduced by the upstream elements by setting the
 <div class="refsect3">
 <a name="id-1.2.4.5.9.2.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query succeeded.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -637,7 +636,6 @@ gst_base_sink_get_latency (<em class="parameter"><code><a class="link" href="Gst
 <div class="refsect3">
 <a name="id-1.2.4.5.9.3.6"></a><h4>Returns</h4>
 <p> The configured latency.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -676,9 +674,8 @@ until the element state is changed.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.4.7"></a><h4>Returns</h4>
-<p> <code class="literal">GST_FLOW_OK</code> if the preroll completed and processing can
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> if the preroll completed and processing can
 continue. Any other return value should be returned from the render vmethod.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -729,7 +726,6 @@ and will be adjusted with any latency and offset configured in the sink.</p>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.5.8"></a><h4>Returns</h4>
 <p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a></p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -741,9 +737,9 @@ gst_base_sink_wait_preroll (<em class="parameter"><code><a class="link" href="Gs
 against the clock it must unblock when going from PLAYING to the PAUSED state
 and call this method before continuing to render the remaining data.</p>
 <p>This function will block until a state change to PLAYING happens (in which
-case this function returns <code class="literal">GST_FLOW_OK</code>) or the processing must be stopped due
+case this function returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>) or the processing must be stopped due
 to a state change to READY or a FLUSH event (in which case this function
-returns <code class="literal">GST_FLOW_FLUSHING</code>).</p>
+returns <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-FLUSHING:CAPS"><code class="literal">GST_FLOW_FLUSHING</code></a>).</p>
 <p>This function should only be called with the PREROLL_LOCK held, like in the
 render function.</p>
 <div class="refsect3">
@@ -763,9 +759,8 @@ render function.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.6.8"></a><h4>Returns</h4>
-<p> <code class="literal">GST_FLOW_OK</code> if the preroll completed and processing can
+<p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> if the preroll completed and processing can
 continue. Any other return value should be returned from the render vmethod.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -779,9 +774,9 @@ gst_base_sink_wait_clock (<em class="parameter"><code><a class="link" href="GstB
  is reached. It is usually called by
 subclasses that use their own internal synchronisation.</p>
 <p>If <em class="parameter"><code>time</code></em>
- is not valid, no synchronisation is done and <code class="literal">GST_CLOCK_BADTIME</code> is
+ is not valid, no synchronisation is done and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-BADTIME:CAPS"><code class="literal">GST_CLOCK_BADTIME</code></a> is
 returned. Likewise, if synchronisation is disabled in the element or there
-is no clock, no synchronisation is done and <code class="literal">GST_CLOCK_BADTIME</code> is returned.</p>
+is no clock, no synchronisation is done and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-BADTIME:CAPS"><code class="literal">GST_CLOCK_BADTIME</code></a> is returned.</p>
 <p>This function should only be called with the PREROLL_LOCK held, like when
 receiving an EOS event in the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.event"><code class="function">GstBaseSinkClass.event()</code></a> vmethod or when
 receiving a buffer in
@@ -820,7 +815,6 @@ sink.</p>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.7.9"></a><h4>Returns</h4>
 <p> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockReturn"><span class="type">GstClockReturn</span></a></p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -886,7 +880,6 @@ clock.</p>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.9.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sink is configured to synchronize against the clock.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -950,7 +943,6 @@ more details.</p>
 <p> The maximum time in nanoseconds that a buffer can be late
 before it is dropped and not rendered. A value of -1 means an
 unlimited time.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1010,7 +1002,6 @@ upstream.</p>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.13.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sink is configured to perform Quality-of-Service.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1074,7 +1065,6 @@ changes to PAUSED.</p>
 <a name="id-1.2.4.5.9.15.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sink is configured to perform asynchronous state
 changes.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1137,7 +1127,6 @@ gst_base_sink_get_ts_offset (<em class="parameter"><code><a class="link" href="G
 <div class="refsect3">
 <a name="id-1.2.4.5.9.17.6"></a><h4>Returns</h4>
 <p> The synchronisation offset.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1205,7 +1194,6 @@ information about the render delay.</p>
 <a name="id-1.2.4.5.9.19.6"></a><h4>Returns</h4>
 <p> the render delay of <em class="parameter"><code>sink</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1297,7 +1285,6 @@ mode.</p>
 <a name="id-1.2.4.5.9.22.6"></a><h4>Returns</h4>
 <p> the number of bytes <em class="parameter"><code>sink</code></em>
 will pull in pull mode.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1326,7 +1313,6 @@ maximum buffers per second.</p>
 <a name="id-1.2.4.5.9.23.6"></a><h4>Returns</h4>
 <p> the number of nanoseconds <em class="parameter"><code>sink</code></em>
 will put between frames.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1390,7 +1376,7 @@ gst_base_sink_set_max_bitrate (<em class="parameter"><code><a class="link" href=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1417,9 +1403,8 @@ gst_base_sink_get_max_bitrate (<em class="parameter"><code><a class="link" href=
 <a name="id-1.2.4.5.9.26.6"></a><h4>Returns</h4>
 <p> the maximum number of bits per second <em class="parameter"><code>sink</code></em>
 will render.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1479,7 +1464,6 @@ the last-sample property.</p>
 <div class="refsect3">
 <a name="id-1.2.4.5.9.28.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sink is configured to store the last received sample.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1798,7 +1782,7 @@ Setting this property to a value bigger than 0 will make the sink delay
 rendering of the buffers when it would exceed to max-bitrate.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: 0</p>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1862,7 +1846,6 @@ used to fix synchronisation in bad files.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>
