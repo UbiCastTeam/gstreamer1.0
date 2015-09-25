@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer Core Plugins 1.0 Plugins Reference Manual: input-selector</title>
+<title>input-selector: GStreamer Core Plugins 1.0 Plugins Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-identity.html" title="identity">
 <link rel="next" href="gstreamer-plugins-multiqueue.html" title="multiqueue">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -17,8 +17,7 @@
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
                   <a href="#gstreamer-plugins-input-selector.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
                   <a href="#gstreamer-plugins-input-selector.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
-                  <a href="#gstreamer-plugins-input-selector.properties" class="shortcut">Properties</a></span><span id="nav_signals">  <span class="dim">|</span> 
-                  <a href="#gstreamer-plugins-input-selector.signals" class="shortcut">Signals</a></span>
+                  <a href="#gstreamer-plugins-input-selector.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -30,7 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-plugins-input-selector.top_of_page"></a>input-selector</span></h2>
-<p>input-selector — N-to-1 input stream selector</p>
+<p>input-selector</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -70,21 +69,6 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 </tbody>
-</table></div>
-</div>
-<div class="refsect1">
-<a name="gstreamer-plugins-input-selector.signals"></a><h2>Signals</h2>
-<div class="informaltable"><table border="0">
-<colgroup>
-<col width="150px" class="signals_return">
-<col width="300px" class="signals_name">
-<col width="200px" class="signals_flags">
-</colgroup>
-<tbody><tr>
-<td class="signal_type"><span class="returnvalue">gint64</span></td>
-<td class="signal_name"><a class="link" href="gstreamer-plugins-input-selector.html#GstInputSelector-block" title="The “block” signal">block</a></td>
-<td class="signal_flags">Action</td>
-</tr></tbody>
 </table></div>
 </div>
 <a name="GstInputSelector"></a><div class="refsect1">
@@ -131,14 +115,14 @@ properties, which users may find useful, namely:</p>
 "active": If the pad is currently active (<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>)
 </li>
 <li class="listitem">
-"always-ok" : Make an inactive pads return <span class="type">GST_FLOW_OK</span> instead of
-<span class="type">GST_FLOW_NOT_LINKED</span>
+"always-ok" : Make an inactive pads return <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> instead of
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GST-FLOW-NOT-LINKED:CAPS"><span class="type">GST_FLOW_NOT_LINKED</span></a>
 </li>
 </ul></div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.12.8.5.1"></a><h3>Element Information</h3>
+<a name="id-1.2.13.7.5.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -164,7 +148,7 @@ properties, which users may find useful, namely:</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.12.8.5.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.13.7.5.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -215,26 +199,23 @@ properties, which users may find useful, namely:</p>
 </table></div>
 </div>
 </div>
-<p>
-</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-input-selector.functions_details"></a><h2>Functions</h2>
+<p></p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-input-selector.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstInputSelector-struct"></a><h3>struct GstInputSelector</h3>
 <pre class="programlisting">struct GstInputSelector;</pre>
-<p>
-</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstInputSelectorSyncMode"></a><h3>enum GstInputSelectorSyncMode</h3>
 <p>The different ways that input-selector can behave when in sync-streams mode.</p>
 <div class="refsect3">
-<a name="id-1.2.12.10.3.4"></a><h4>Members</h4>
+<a name="id-1.2.13.9.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -317,47 +298,11 @@ sync-mode should be set to "clock" and cache-buffers to TRUE.</p>
 </div>
 </div>
 <div class="refsect1">
-<a name="gstreamer-plugins-input-selector.signal-details"></a><h2>Signal Details</h2>
-<div class="refsect2">
-<a name="GstInputSelector-block"></a><h3>The <code class="literal">“block”</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">gint64</span>
-user_function (<a class="link" href="gstreamer-plugins-input-selector.html#GstInputSelector"><span class="type">GstInputSelector</span></a> *inputselector,
-               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
-<p>Block all sink pads in preparation for a switch. Returns the stop time of
-the current switch segment, as a running time, or 0 if there is no current
-active pad or the current active pad never received data.</p>
-<div class="refsect3">
-<a name="id-1.2.12.12.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>inputselector</p></td>
-<td class="parameter_description"><p>the <a class="link" href="gstreamer-plugins-input-selector.html#GstInputSelector"><span class="type">GstInputSelector</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>user_data</p></td>
-<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<p>Flags: Action</p>
-</div>
-</div>
-<div class="refsect1">
 <a name="gstreamer-plugins-input-selector.see-also"></a><h2>See Also</h2>
 <p><a class="link" href="gstreamer-plugins-output-selector.html#GstOutputSelector"><span class="type">GstOutputSelector</span></a></p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

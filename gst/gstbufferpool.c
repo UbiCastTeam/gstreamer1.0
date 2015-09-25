@@ -236,10 +236,8 @@ default_alloc_buffer (GstBufferPool * pool, GstBuffer ** buffer,
 static gboolean
 mark_meta_pooled (GstBuffer * buffer, GstMeta ** meta, gpointer user_data)
 {
-  GstBufferPool *pool = user_data;
-
-  GST_DEBUG_OBJECT (pool, "marking meta %p as POOLED in buffer %p", *meta,
-      buffer);
+  GST_DEBUG_OBJECT (GST_BUFFER_POOL (user_data),
+      "marking meta %p as POOLED in buffer %p", *meta, buffer);
   GST_META_FLAG_SET (*meta, GST_META_FLAG_POOLED);
   GST_META_FLAG_SET (*meta, GST_META_FLAG_LOCKED);
 
@@ -609,9 +607,9 @@ wrong_config:
  *
  * Set the configuration of the pool. If the pool is already configured, and
  * the configuration haven't change, this function will return %TRUE. If the
- * pool is active, this function will try deactivating it. Buffers allocated
- * form this pool must be returned or else this function will do nothing and
- * return %FALSE.
+ * pool is active, this method will return %FALSE and active configuration
+ * will remain. Buffers allocated form this pool must be returned or else this
+ * function will do nothing and return %FALSE.
  *
  * @config is a #GstStructure that contains the configuration parameters for
  * the pool. A default and mandatory set of parameters can be configured with
@@ -645,18 +643,8 @@ gst_buffer_pool_set_config (GstBufferPool * pool, GstStructure * config)
     goto config_unchanged;
 
   /* can't change the settings when active */
-  if (priv->active) {
-    GST_BUFFER_POOL_UNLOCK (pool);
-    if (!gst_buffer_pool_set_active (pool, FALSE)) {
-      GST_BUFFER_POOL_LOCK (pool);
-      goto was_active;
-    }
-    GST_BUFFER_POOL_LOCK (pool);
-
-    /* not likely but as we released the lock */
-    if (priv->active)
-      goto was_active;
-  }
+  if (priv->active)
+    goto was_active;
 
   /* we can't change when outstanding buffers */
   if (g_atomic_int_get (&priv->outstanding) != 0)
@@ -694,7 +682,7 @@ config_unchanged:
 was_active:
   {
     gst_structure_free (config);
-    GST_WARNING_OBJECT (pool, "can't change config, we are active");
+    GST_INFO_OBJECT (pool, "can't change config, we are active");
     GST_BUFFER_POOL_UNLOCK (pool);
     return FALSE;
   }
@@ -1008,8 +996,8 @@ gst_buffer_pool_config_get_params (GstStructure * config, GstCaps ** caps,
 /**
  * gst_buffer_pool_config_get_allocator:
  * @config: (transfer none): a #GstBufferPool configuration
- * @allocator: (transfer none): a #GstAllocator
- * @params: #GstAllocationParams
+ * @allocator: (out) (allow-none) (transfer none): a #GstAllocator, or %NULL
+ * @params: (out) (allow-none): #GstAllocationParams, or %NULL
  *
  * Get the @allocator and @params from @config.
  *
@@ -1049,9 +1037,11 @@ gst_buffer_pool_config_get_allocator (GstStructure * config,
  * Validate that changes made to @config are still valid in the context of the
  * expected parameters. This function is a helper that can be used to validate
  * changes made by a pool to a config when gst_buffer_pool_set_config()
- * returns %FALSE. This expects that @caps and @size haven't changed, and that
- * @min_buffers aren't lower then what we initially expected. This does not check
- * if options or allocator parameters.
+ * returns %FALSE. This expects that @caps haven't changed and that
+ * @min_buffers aren't lower then what we initially expected.
+ * This does not check if options or allocator parameters are still valid,
+ * won't check if size have changed, since changing the size is valid to adapt
+ * padding.
  *
  * Since: 1.4
  *
@@ -1069,7 +1059,7 @@ gst_buffer_pool_config_validate_params (GstStructure * config, GstCaps * caps,
 
   gst_buffer_pool_config_get_params (config, &newcaps, &newsize, &newmin, NULL);
 
-  if (gst_caps_is_equal (caps, newcaps) && (size == newsize)
+  if (gst_caps_is_equal (caps, newcaps) && (newsize >= size)
       && (newmin >= min_buffers))
     ret = TRUE;
 

@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstQuery</title>
+<title>GstQuery: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="GstPreset.html" title="GstPreset">
+<link rel="prev" href="gstreamer-GstProtectionMeta.html" title="GstProtectionMeta">
 <link rel="next" href="GstRegistry.html" title="GstRegistry">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GstPreset.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-GstProtectionMeta.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstRegistry.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -892,7 +892,7 @@ res <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gst
 <p>when making custom query types, use this macro with the num and
 the given flags</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -921,7 +921,7 @@ the given flags</p>
 </pre>
 <p>Get the <a class="link" href="GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="type">GstQueryType</span></a> of the query.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -943,7 +943,7 @@ the given flags</p>
 </pre>
 <p>Get a constant string representation of the <a class="link" href="GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="type">GstQueryType</span></a> of the query.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -965,7 +965,7 @@ the given flags</p>
 </pre>
 <p>Check if an query can travel upstream.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -987,7 +987,7 @@ the given flags</p>
 </pre>
 <p>Check if an query can travel downstream.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1009,7 +1009,7 @@ the given flags</p>
 </pre>
 <p>Check if an query is serialized with the data stream.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1032,7 +1032,7 @@ gst_query_type_get_flags (<em class="parameter"><code><a class="link" href="GstQ
 <p>Gets the <a class="link" href="GstQuery.html#GstQueryTypeFlags" title="enum GstQueryTypeFlags"><span class="type">GstQueryTypeFlags</span></a> associated with <em class="parameter"><code>type</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1047,9 +1047,8 @@ gst_query_type_get_flags (<em class="parameter"><code><a class="link" href="GstQ
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.8.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.8.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstQuery.html#GstQueryTypeFlags" title="enum GstQueryTypeFlags"><span class="type">GstQueryTypeFlags</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1059,7 +1058,7 @@ gst_query_type_get_flags (<em class="parameter"><code><a class="link" href="GstQ
 gst_query_type_get_name (<em class="parameter"><code><a class="link" href="GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="type">GstQueryType</span></a> type</code></em>);</pre>
 <p>Get a printable name for the given query type. Do not modify or free.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.9.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1074,9 +1073,8 @@ gst_query_type_get_name (<em class="parameter"><code><a class="link" href="GstQu
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.9.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.9.6"></a><h4>Returns</h4>
 <p> a reference to the static name of the query.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1086,7 +1084,7 @@ gst_query_type_get_name (<em class="parameter"><code><a class="link" href="GstQu
 gst_query_type_to_quark (<em class="parameter"><code><a class="link" href="GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="type">GstQueryType</span></a> type</code></em>);</pre>
 <p>Get the unique quark for the given query type.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1101,9 +1099,8 @@ gst_query_type_to_quark (<em class="parameter"><code><a class="link" href="GstQu
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.10.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.10.6"></a><h4>Returns</h4>
 <p> the quark associated with the query type</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1113,7 +1110,7 @@ gst_query_type_to_quark (<em class="parameter"><code><a class="link" href="GstQu
 gst_query_ref (<em class="parameter"><code><a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> *q</code></em>);</pre>
 <p>Increases the refcount of the given query by one.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1128,10 +1125,9 @@ gst_query_ref (<em class="parameter"><code><a class="link" href="GstQuery.html" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.11.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.11.6"></a><h4>Returns</h4>
 <p> <em class="parameter"><code>q</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1142,7 +1138,7 @@ gst_query_unref (<em class="parameter"><code><a class="link" href="GstQuery.html
 <p>Decreases the refcount of the query. If the refcount reaches 0, the query
 will be freed.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1165,7 +1161,7 @@ gst_query_copy (<em class="parameter"><code>const <a class="link" href="GstQuery
 <p>Copies the given query using the copy function of the parent <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a>.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.13.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.13.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1180,7 +1176,7 @@ gst_query_copy (<em class="parameter"><code>const <a class="link" href="GstQuery
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.13.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.13.7"></a><h4>Returns</h4>
 <p> a new copy of <em class="parameter"><code>q</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1193,7 +1189,7 @@ gst_query_copy (<em class="parameter"><code>const <a class="link" href="GstQuery
 </pre>
 <p>Makes a writable query from the given query.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.14.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1208,7 +1204,7 @@ gst_query_copy (<em class="parameter"><code>const <a class="link" href="GstQuery
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.14.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.14.6"></a><h4>Returns</h4>
 <p> a new writable query (possibly same as <em class="parameter"><code>q</code></em>
 ). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1221,7 +1217,7 @@ gst_query_copy (<em class="parameter"><code>const <a class="link" href="GstQuery
 </pre>
 <p>Tests if you can safely write data into a query's structure.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.15.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1250,7 +1246,7 @@ query is unreffed, the new one is reffed).</p>
  or the <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> pointed to by <em class="parameter"><code>old_query</code></em>
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.16.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.16.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1275,11 +1271,10 @@ replace the query pointed to by <em class="parameter"><code>old_query</code></em
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.16.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.16.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_query</code></em>
 was different from <em class="parameter"><code>old_query</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1291,7 +1286,7 @@ gst_query_writable_structure (<em class="parameter"><code><a class="link" href="
 <em class="parameter"><code>query</code></em>
  so that the returned structure is guaranteed to be writable.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.17.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.17.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1306,7 +1301,7 @@ gst_query_writable_structure (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.17.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.17.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> of the query. The structure is
 still owned by the query and will therefore be freed when the query
 is unreffed. </p>
@@ -1323,7 +1318,7 @@ gst_query_new_custom (<em class="parameter"><code><a class="link" href="GstQuery
 when done with it.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.18.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.18.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1345,7 +1340,7 @@ when done with it.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.18.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.18.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1357,7 +1352,7 @@ when done with it.</p>
 gst_query_get_structure (<em class="parameter"><code><a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> *query</code></em>);</pre>
 <p>Get the structure of a query.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.19.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.19.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1372,7 +1367,7 @@ gst_query_get_structure (<em class="parameter"><code><a class="link" href="GstQu
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.19.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.19.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> of the query. The structure is
 still owned by the query and will therefore be freed when the query
 is unreffed. </p>
@@ -1391,7 +1386,7 @@ when done with it. A convert query is used to ask for a conversion between
 one format and another.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.20.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.20.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1418,7 +1413,7 @@ one format and another.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.20.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.20.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1434,7 +1429,7 @@ gst_query_set_convert (<em class="parameter"><code><a class="link" href="GstQuer
                        <em class="parameter"><code><span class="type">gint64</span> dest_value</code></em>);</pre>
 <p>Answer a convert query by setting the requested values.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.21.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1487,7 +1482,7 @@ gst_query_parse_convert (<em class="parameter"><code><a class="link" href="GstQu
 and <em class="parameter"><code>dest_value</code></em>
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, in which case that value is omitted.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.22.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.22.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1537,7 +1532,7 @@ when done with it. A position query is used to query the current position
 of playback in the streams, in some format.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.23.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.23.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1552,7 +1547,7 @@ of playback in the streams, in some format.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.23.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.23.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1566,7 +1561,7 @@ gst_query_set_position (<em class="parameter"><code><a class="link" href="GstQue
                         <em class="parameter"><code><span class="type">gint64</span> cur</code></em>);</pre>
 <p>Answer a position query by setting the requested value in the given format.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.24.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.24.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1605,7 +1600,7 @@ gst_query_parse_position (<em class="parameter"><code><a class="link" href="GstQ
 into <em class="parameter"><code>cur</code></em>
 , if the respective parameters are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.25.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.25.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1643,7 +1638,7 @@ Use <a class="link" href="GstQuery.html#gst-query-unref" title="gst_query_unref�
 total length of the stream.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.26.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.26.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1658,7 +1653,7 @@ total length of the stream.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.26.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.26.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1672,7 +1667,7 @@ gst_query_set_duration (<em class="parameter"><code><a class="link" href="GstQue
                         <em class="parameter"><code><span class="type">gint64</span> duration</code></em>);</pre>
 <p>Answer a duration query by setting the requested value in the given format.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.27.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.27.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1711,7 +1706,7 @@ gst_query_parse_duration (<em class="parameter"><code><a class="link" href="GstQ
 and the value into <em class="parameter"><code>duration</code></em>
 , if the respective variables are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.28.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.28.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1750,7 +1745,7 @@ by sinks to compensate for additional latency introduced by elements in the
 pipeline.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.29.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.29.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1765,7 +1760,7 @@ gst_query_parse_latency (<em class="parameter"><code><a class="link" href="GstQu
                          <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> *max_latency</code></em>);</pre>
 <p>Parse a latency query answer.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.30.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.30.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1807,7 +1802,7 @@ gst_query_set_latency (<em class="parameter"><code><a class="link" href="GstQuer
                        <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> max_latency</code></em>);</pre>
 <p>Answer a latency query by setting the requested values in the given format.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.31.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.31.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1848,7 +1843,7 @@ gst_query_new_seeking (<em class="parameter"><code><a class="link" href="gstream
 the stream.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.32.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.32.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1863,7 +1858,7 @@ the stream.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.32.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.32.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1880,7 +1875,7 @@ gst_query_set_seeking (<em class="parameter"><code><a class="link" href="GstQuer
 <p>Set the seeking query result fields in <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.33.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.33.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1933,7 +1928,7 @@ gst_query_parse_seeking (<em class="parameter"><code><a class="link" href="GstQu
 other results into the passed parameters, if the respective parameters
 are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 <div class="refsect3">
-<a name="id-1.3.42.8.34.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.34.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1981,7 +1976,7 @@ gst_query_new_formats (<em class="parameter"><code><span class="type">void</span
 the stream.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.35.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.35.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1998,7 +1993,7 @@ gst_query_set_formats (<em class="parameter"><code><a class="link" href="GstQuer
 must be equal to <em class="parameter"><code>n_formats</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.36.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2040,7 +2035,7 @@ in the <em class="parameter"><code>formats</code></em>
  array must be equal to <em class="parameter"><code>n_formats</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.37.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.37.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2078,7 +2073,7 @@ gst_query_parse_n_formats (<em class="parameter"><code><a class="link" href="Gst
 <p>Parse the number of formats in the formats <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.38.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.38.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2115,7 +2110,7 @@ gst_query_parse_nth_format (<em class="parameter"><code><a class="link" href="Gs
  will be
 set to GST_FORMAT_UNDEFINED.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.39.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.39.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2152,7 +2147,7 @@ when done with it. A segment query is used to discover information about the
 currently configured segment for playback.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.40.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.40.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2167,7 +2162,7 @@ currently configured segment for playback.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.40.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.40.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2200,7 +2195,7 @@ negative rates, playback will actually happen from <em class="parameter"><code>s
 <em class="parameter"><code>start_value</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.41.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.41.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2256,7 +2251,7 @@ gst_query_parse_segment (<em class="parameter"><code><a class="link" href="GstQu
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, which will cause this value to be omitted.</p>
 <p>See <a class="link" href="GstQuery.html#gst-query-set-segment" title="gst_query_set_segment ()"><code class="function">gst_query_set_segment()</code></a> for an explanation of the function arguments.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.42.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.42.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2318,7 +2313,7 @@ helps with autoplugging.</p>
 greatly reduce the amount of processing an element needs to do.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.43.9"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.43.9"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2333,7 +2328,7 @@ greatly reduce the amount of processing an element needs to do.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.43.10"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.43.10"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2349,7 +2344,7 @@ gst_query_parse_caps (<em class="parameter"><code><a class="link" href="GstQuery
 <em class="parameter"><code>query</code></em>
  remains valid.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.44.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.44.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2381,7 +2376,7 @@ gst_query_set_caps_result (<em class="parameter"><code><a class="link" href="Gst
  result in <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.45.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.45.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2414,7 +2409,7 @@ gst_query_parse_caps_result (<em class="parameter"><code><a class="link" href="G
 <em class="parameter"><code>query</code></em>
  remains valid.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.46.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.46.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2445,7 +2440,7 @@ gst_query_new_accept_caps (<em class="parameter"><code><a class="link" href="Gst
  are accepted.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.47.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.47.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2460,7 +2455,7 @@ gst_query_new_accept_caps (<em class="parameter"><code><a class="link" href="Gst
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.47.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.47.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2476,7 +2471,7 @@ gst_query_parse_accept_caps (<em class="parameter"><code><a class="link" href="G
  remains
 valid.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.48.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.48.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2508,7 +2503,7 @@ gst_query_set_accept_caps_result (<em class="parameter"><code><a class="link" hr
  as the result for the <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.49.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.49.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2540,7 +2535,7 @@ gst_query_parse_accept_caps_result (<em class="parameter"><code><a class="link" 
  and store in <em class="parameter"><code>result</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.50.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.50.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2571,7 +2566,7 @@ gst_query_new_buffering (<em class="parameter"><code><a class="link" href="gstre
 a stream.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.51.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.51.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2586,7 +2581,7 @@ a stream.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.51.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.51.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2602,7 +2597,7 @@ gst_query_set_buffering_percent (<em class="parameter"><code><a class="link" hre
 The <em class="parameter"><code>busy</code></em>
  indicator is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when the buffering is in progress.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.52.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.52.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2640,7 +2635,7 @@ gst_query_parse_buffering_percent (<em class="parameter"><code><a class="link" h
 The <em class="parameter"><code>busy</code></em>
  indicator is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when the buffering is in progress.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.53.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.53.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2679,7 +2674,7 @@ gst_query_set_buffering_stats (<em class="parameter"><code><a class="link" href=
 <p>Configures the buffering stats values in <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.54.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.54.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2728,7 +2723,7 @@ gst_query_parse_buffering_stats (<em class="parameter"><code><a class="link" hre
 <p>Extracts the buffering stats values from <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.55.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.55.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2778,7 +2773,7 @@ gst_query_set_buffering_range (<em class="parameter"><code><a class="link" href=
 <p>Set the available query result fields in <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.56.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.56.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2832,7 +2827,7 @@ gst_query_parse_buffering_range (<em class="parameter"><code><a class="link" hre
 other results into the passed parameters, if the respective parameters
 are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 <div class="refsect3">
-<a name="id-1.3.42.8.57.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.57.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2884,7 +2879,7 @@ gst_query_add_buffering_range (<em class="parameter"><code><a class="link" href=
 start position of the array should be inferior to <em class="parameter"><code>start</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.58.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.58.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2911,9 +2906,8 @@ start position of the array should be inferior to <em class="parameter"><code>st
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.58.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.58.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if the range was added or not.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2924,7 +2918,7 @@ gst_query_get_n_buffering_ranges (<em class="parameter"><code><a class="link" hr
 <p>Retrieve the number of values currently stored in the
 buffered-ranges array of the query's structure.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.59.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.59.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2939,9 +2933,8 @@ buffered-ranges array of the query's structure.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.59.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.59.6"></a><h4>Returns</h4>
 <p> the range array size as a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2956,7 +2949,7 @@ gst_query_parse_nth_buffering_range (<em class="parameter"><code><a class="link"
 at the <em class="parameter"><code>index</code></em>
  of the buffered ranges array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.60.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.60.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2988,9 +2981,8 @@ at the <em class="parameter"><code>index</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.60.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.60.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if the parsing succeeded.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3003,7 +2995,7 @@ when done with it. An URI query is used to query the current URI
 that is used by the source or sink.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.61.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.61.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -3019,7 +3011,7 @@ gst_query_parse_uri (<em class="parameter"><code><a class="link" href="GstQuery.
 allocated string, if the respective parameters are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
 Free the string with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.62.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.62.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3050,7 +3042,7 @@ gst_query_set_uri (<em class="parameter"><code><a class="link" href="GstQuery.ht
                    <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>Answer a URI query by setting the requested URI.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.63.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.63.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3083,7 +3075,7 @@ gst_query_parse_uri_redirection (<em class="parameter"><code><a class="link" hre
 allocated string, if the respective parameters are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
 Free the string with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after usage.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.64.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.64.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3105,7 +3097,7 @@ Free the string with <a href="https://developer.gnome.org/glib/unstable/glib-Mem
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3115,7 +3107,7 @@ gst_query_set_uri_redirection (<em class="parameter"><code><a class="link" href=
                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>Answer a URI query by setting the requested URI redirection.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.65.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.65.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3136,7 +3128,7 @@ gst_query_set_uri_redirection (<em class="parameter"><code><a class="link" href=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3151,7 +3143,7 @@ and it should be considered permanent. If a redirection is permanent,
 applications should update their internal storage of the URI, otherwise
 they should make all future requests to the original URI.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.66.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.66.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3173,7 +3165,7 @@ they should make all future requests to the original URI.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3185,7 +3177,7 @@ gst_query_set_uri_redirection_permanent
 <p>Answer a URI query by setting the requested URI redirection
 to permanent or not.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.67.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.67.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3206,7 +3198,7 @@ to permanent or not.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3217,7 +3209,7 @@ gst_query_new_allocation (<em class="parameter"><code><a class="link" href="GstC
 <p>Constructs a new query object for querying the allocation properties.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.68.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.68.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3239,7 +3231,7 @@ gst_query_new_allocation (<em class="parameter"><code><a class="link" href="GstC
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.68.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.68.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -3257,7 +3249,7 @@ whether a pool is needed in <em class="parameter"><code>need_pool</code></em>
 , if the respective parameters
 are non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.69.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.69.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3296,7 +3288,7 @@ gst_query_add_allocation_pool (<em class="parameter"><code><a class="link" href=
 <p>Set the pool parameters in <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.70.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.70.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3341,7 +3333,7 @@ gst_query_get_n_allocation_pools (<em class="parameter"><code><a class="link" hr
 <p>Retrieve the number of values currently stored in the
 pool array of the query's structure.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.71.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.71.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3356,9 +3348,8 @@ pool array of the query's structure.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.71.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.71.6"></a><h4>Returns</h4>
 <p> the pool array size as a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3376,7 +3367,7 @@ gst_query_parse_nth_allocation_pool (<em class="parameter"><code><a class="link"
 <p>Unref <em class="parameter"><code>pool</code></em>
  with <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> when it's not needed any more.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.72.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.72.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3431,7 +3422,7 @@ gst_query_set_nth_allocation_pool (<em class="parameter"><code><a class="link" h
 <p>Set the pool parameters in <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.73.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.73.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3482,7 +3473,7 @@ gst_query_remove_nth_allocation_pool (<em class="parameter"><code><a class="link
 <p>Remove the allocation pool at <em class="parameter"><code>index</code></em>
  of the allocation pool array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.74.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.74.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3503,7 +3494,7 @@ gst_query_remove_nth_allocation_pool (<em class="parameter"><code><a class="link
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3516,7 +3507,7 @@ gst_query_add_allocation_param (<em class="parameter"><code><a class="link" href
  and its <em class="parameter"><code>params</code></em>
  as a supported memory allocator.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.75.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.75.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3555,7 +3546,7 @@ the default memory allocator. The first memory allocator in the query
 should be generic and allow mapping to system memory, all following
 allocators should be ordered by preference with the preferred one first.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.76.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.76.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3570,9 +3561,8 @@ allocators should be ordered by preference with the preferred one first.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.76.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.76.7"></a><h4>Returns</h4>
 <p> the allocator array size as a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3587,7 +3577,7 @@ gst_query_parse_nth_allocation_param (<em class="parameter"><code><a class="link
 at <em class="parameter"><code>index</code></em>
  of the allocator array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.77.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.77.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3631,7 +3621,7 @@ gst_query_set_nth_allocation_param (<em class="parameter"><code><a class="link" 
 at <em class="parameter"><code>index</code></em>
  of the allocator array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.78.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.78.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3672,7 +3662,7 @@ gst_query_remove_nth_allocation_param (<em class="parameter"><code><a class="lin
 <p>Remove the allocation param at <em class="parameter"><code>index</code></em>
  of the allocation param array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.79.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.79.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3693,7 +3683,7 @@ gst_query_remove_nth_allocation_param (<em class="parameter"><code><a class="lin
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3707,7 +3697,7 @@ gst_query_add_allocation_meta (<em class="parameter"><code><a class="link" href=
  as one of the supported metadata API to <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.80.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.80.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3742,7 +3732,7 @@ gst_query_get_n_allocation_metas (<em class="parameter"><code><a class="link" hr
 <p>Retrieve the number of values currently stored in the
 meta API array of the query's structure.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.81.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.81.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3757,9 +3747,8 @@ meta API array of the query's structure.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.81.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.81.6"></a><h4>Returns</h4>
 <p> the metadata API array size as a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3773,7 +3762,7 @@ gst_query_parse_nth_allocation_meta (<em class="parameter"><code><a class="link"
 at <em class="parameter"><code>index</code></em>
  of the metadata API array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.82.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.82.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3800,10 +3789,9 @@ at <em class="parameter"><code>index</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.82.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.82.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the metadata API at <em class="parameter"><code>index</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3815,7 +3803,7 @@ gst_query_remove_nth_allocation_meta (<em class="parameter"><code><a class="link
 <p>Remove the metadata API at <em class="parameter"><code>index</code></em>
  of the metadata API array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.83.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.83.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3851,7 +3839,7 @@ gst_query_find_allocation_meta (<em class="parameter"><code><a class="link" href
  will contain the index where the requested API and the flags can be
 found.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.84.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.84.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3878,10 +3866,9 @@ found.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.84.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.84.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>api</code></em>
 is in the list of metadata.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3892,7 +3879,7 @@ gst_query_new_scheduling (<em class="parameter"><code><span class="type">void</s
 <p>Constructs a new query object for querying the scheduling properties.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.85.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.85.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -3908,7 +3895,7 @@ gst_query_parse_scheduling (<em class="parameter"><code><a class="link" href="Gs
                             <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *align</code></em>);</pre>
 <p>Set the scheduling properties.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.86.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.86.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3956,7 +3943,7 @@ gst_query_set_scheduling (<em class="parameter"><code><a class="link" href="GstQ
                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> align</code></em>);</pre>
 <p>Set the scheduling properties.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.87.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.87.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4003,7 +3990,7 @@ gst_query_add_scheduling_mode (<em class="parameter"><code><a class="link" href=
  as one of the supported scheduling modes to <em class="parameter"><code>query</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.88.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.88.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4033,7 +4020,7 @@ gst_query_get_n_scheduling_modes (<em class="parameter"><code><a class="link" hr
 <p>Retrieve the number of values currently stored in the
 scheduling mode array of the query's structure.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.89.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.89.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4048,9 +4035,8 @@ scheduling mode array of the query's structure.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.89.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.89.6"></a><h4>Returns</h4>
 <p> the scheduling mode array size as a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4063,7 +4049,7 @@ gst_query_parse_nth_scheduling_mode (<em class="parameter"><code><a class="link"
 at <em class="parameter"><code>index</code></em>
  of the scheduling modes array.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.90.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.90.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4085,10 +4071,9 @@ at <em class="parameter"><code>index</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.90.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.90.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> of the scheduling mode at <em class="parameter"><code>index</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4107,7 +4092,7 @@ gst_query_has_scheduling_mode (<em class="parameter"><code><a class="link" href=
     random access is supported, not only sequential pulls).
   </p></div>
 <div class="refsect3">
-<a name="id-1.3.42.8.91.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.91.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4129,10 +4114,9 @@ gst_query_has_scheduling_mode (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.91.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.91.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>mode</code></em>
 is in the list of scheduling modes.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4148,7 +4132,7 @@ gst_query_has_scheduling_mode_with_flags
  is set in
 query scheduling flags.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.92.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.92.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4175,12 +4159,11 @@ query scheduling flags.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.92.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.92.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>mode</code></em>
 is in the list of scheduling modes
 and <em class="parameter"><code>flags</code></em>
 are compatible with query flags.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4191,7 +4174,7 @@ gst_query_new_drain (<em class="parameter"><code><span class="type">void</span><
 <p>Constructs a new query object for querying the drain state.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.93.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.93.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -4204,7 +4187,7 @@ gst_query_new_context (<em class="parameter"><code>const <a href="https://develo
 <p>Constructs a new query object for querying the pipeline-local context.</p>
 <p>Free-function: gst_query_unref</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.94.6"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.94.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4219,11 +4202,11 @@ gst_query_new_context (<em class="parameter"><code>const <a href="https://develo
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.94.7"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.94.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4233,7 +4216,7 @@ gst_query_set_context (<em class="parameter"><code><a class="link" href="GstQuer
                        <em class="parameter"><code><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Answer a context query by setting the requested context.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.95.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.95.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4254,7 +4237,7 @@ gst_query_set_context (<em class="parameter"><code><a class="link" href="GstQuer
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4267,7 +4250,7 @@ gst_query_parse_context (<em class="parameter"><code><a class="link" href="GstQu
 <em class="parameter"><code>query</code></em>
  remains valid.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.96.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.96.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4288,7 +4271,7 @@ gst_query_parse_context (<em class="parameter"><code><a class="link" href="GstQu
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4298,7 +4281,7 @@ gst_query_parse_context_type (<em class="parameter"><code><a class="link" href="
                               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **context_type</code></em>);</pre>
 <p>Parse a context type from an existing GST_QUERY_CONTEXT query.</p>
 <div class="refsect3">
-<a name="id-1.3.42.8.97.5"></a><h4>Parameters</h4>
+<a name="id-1.3.43.8.97.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4320,11 +4303,10 @@ gst_query_parse_context_type (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.42.8.97.6"></a><h4>Returns</h4>
+<a name="id-1.3.43.8.97.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if the parsing succeeded.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -4339,7 +4321,7 @@ gst_query_parse_context_type (<em class="parameter"><code><a class="link" href="
 </pre>
 <p>The <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> structure.</p>
 <div class="refsect3">
-<a name="id-1.3.42.9.2.5"></a><h4>Members</h4>
+<a name="id-1.3.43.9.2.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -4368,7 +4350,7 @@ gst_query_parse_context_type (<em class="parameter"><code><a class="link" href="
 values. You can get the type flags of a <a class="link" href="GstQuery.html#GstQueryType" title="enum GstQueryType"><span class="type">GstQueryType</span></a> with the
 <a class="link" href="GstQuery.html#gst-query-type-get-flags" title="gst_query_type_get_flags ()"><code class="function">gst_query_type_get_flags()</code></a> function.</p>
 <div class="refsect3">
-<a name="id-1.3.42.9.3.4"></a><h4>Members</h4>
+<a name="id-1.3.43.9.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -4413,7 +4395,7 @@ values. You can get the type flags of a <a class="link" href="GstQuery.html#GstQ
 <a name="GstQueryType"></a><h3>enum GstQueryType</h3>
 <p>Standard predefined Query types</p>
 <div class="refsect3">
-<a name="id-1.3.42.9.5.4"></a><h4>Members</h4>
+<a name="id-1.3.43.9.5.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -4564,7 +4546,7 @@ values. You can get the type flags of a <a class="link" href="GstQuery.html#GstQ
 <a name="GstBufferingMode"></a><h3>enum GstBufferingMode</h3>
 <p>The different types of buffering methods.</p>
 <div class="refsect3">
-<a name="id-1.3.42.9.6.4"></a><h4>Members</h4>
+<a name="id-1.3.43.9.6.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -4609,7 +4591,7 @@ values. You can get the type flags of a <a class="link" href="GstQuery.html#GstQ
 <a name="GstSchedulingFlags"></a><h3>enum GstSchedulingFlags</h3>
 <p>The different scheduling flags.</p>
 <div class="refsect3">
-<a name="id-1.3.42.9.7.4"></a><h4>Members</h4>
+<a name="id-1.3.43.9.7.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -4649,7 +4631,6 @@ values. You can get the type flags of a <a class="link" href="GstQuery.html#GstQ
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstBaseTransform</title>
+<title>GstBaseTransform: GStreamer 1.0 Library Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseSink.html" title="GstBaseSink">
 <link rel="next" href="GstPushSrc.html" title="GstPushSrc">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -146,6 +146,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBaseTransform.html#gst-base-transform-update-src-caps" title="gst_base_transform_update_src_caps ()">gst_base_transform_update_src_caps</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstBaseTransform.html#GST-BASE-TRANSFORM-SINK-PAD:CAPS" title="GST_BASE_TRANSFORM_SINK_PAD()">GST_BASE_TRANSFORM_SINK_PAD</a><span class="c_punctuation">()</span>
@@ -222,7 +230,14 @@
 </div>
 <div class="refsect1">
 <a name="GstBaseTransform.description"></a><h2>Description</h2>
-<p>This base class is for filter elements that process data.</p>
+<p>This base class is for filter elements that process data. Elements
+that are suitable for implementation using <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> are ones
+where the size and caps of the output is known entirely from the input
+caps and buffer sizes. These include elements that directly transform
+one buffer into another, modify the contents of a buffer in-place, as
+well as elements that collate multiple input buffers into one output buffer,
+or that expand one input buffer into multiple output buffers. See below
+for more concrete use cases.</p>
 <p>It provides for:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>one sinkpad and one srcpad</p></li>
@@ -453,7 +468,6 @@ gst_base_transform_is_passthrough (<em class="parameter"><code><a class="link" h
 <a name="id-1.2.4.6.9.2.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the transform is configured in passthrough mode.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -530,7 +544,7 @@ capsfilter.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.0.1</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.0.1">1.0.1</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -558,7 +572,6 @@ gst_base_transform_is_in_place (<em class="parameter"><code><a class="link" href
 <a name="id-1.2.4.6.9.5.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is the transform is configured in in_place mode.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -623,7 +636,6 @@ gst_base_transform_is_qos_enabled (<em class="parameter"><code><a class="link" h
 <a name="id-1.2.4.6.9.7.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if QoS is enabled.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -711,7 +723,7 @@ gst_base_transform_set_gap_aware (<em class="parameter"><code><a class="link" hr
                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> gap_aware</code></em>);</pre>
 <p>If <em class="parameter"><code>gap_aware</code></em>
  is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> (the default), output buffers will have the
-<code class="literal">GST_BUFFER_FLAG_GAP</code> flag unset.</p>
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html#GST-BUFFER-FLAG-GAP:CAPS"><code class="literal">GST_BUFFER_FLAG_GAP</code></a> flag unset.</p>
 <p>If set to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the element must handle output buffers with this flag set
 correctly, i.e. it can assume that the buffer contains neutral data but must
 unset the flag if the output is no neutral data.</p>
@@ -863,12 +875,52 @@ were set that influence the output format.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-base-transform-update-src-caps"></a><h3>gst_base_transform_update_src_caps ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_base_transform_update_src_caps (<em class="parameter"><code><a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a> *trans</code></em>,
+                                    <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> *updated_caps</code></em>);</pre>
+<p>Updates the srcpad caps and send the caps downstream. This function
+can be used by subclasses when they have already negotiated their caps
+but found a change in them (or computed new informations). This way,
+they can notify downstream about that change without loosing any
+buffer.</p>
+<div class="refsect3">
+<a name="id-1.2.4.6.9.15.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>trans</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBaseTransform.html" title="GstBaseTransform"><span class="type">GstBaseTransform</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>updated_caps</p></td>
+<td class="parameter_description"><p>An updated version of the srcpad caps to be pushed
+downstream</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.6.9.15.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the caps could be send downstream <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GST-BASE-TRANSFORM-SINK-PAD:CAPS"></a><h3>GST_BASE_TRANSFORM_SINK_PAD()</h3>
 <pre class="programlisting">#define GST_BASE_TRANSFORM_SINK_PAD(obj) (GST_BASE_TRANSFORM_CAST (obj)-&gt;sinkpad)
 </pre>
 <p>Gives the pointer to the sink <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.6.9.15.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.6.9.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -890,7 +942,7 @@ were set that influence the output format.</p>
 </pre>
 <p>Gives the pointer to the source <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPad</span></a> object of the element.</p>
 <div class="refsect3">
-<a name="id-1.2.4.6.9.16.5"></a><h4>Parameters</h4>
+<a name="id-1.2.4.6.9.17.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -977,6 +1029,9 @@ were set that influence the output format.</p>
   GstFlowReturn (*transform)    (GstBaseTransform *trans, GstBuffer *inbuf,
                                  GstBuffer *outbuf);
   GstFlowReturn (*transform_ip) (GstBaseTransform *trans, GstBuffer *buf);
+
+  GstFlowReturn (*submit_input_buffer) (GstBaseTransform *trans, gboolean is_discont, GstBuffer *input);
+  GstFlowReturn (*generate_output) (GstBaseTransform *trans, GstBuffer **outbuf);
 };
 </pre>
 <p>Subclasses can override any of the available virtual methods or not, as
@@ -1158,9 +1213,9 @@ offsets of the buffer.</p></td>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseTransformClass.transform-meta"></a>transform_meta</code></em> ()</p></td>
 <td class="struct_member_description"><p>Optional. Transform the metadata on the input buffer to the
-output buffer. By default this method is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> and no
-metadata is copied. subclasses can implement this method and
-return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the metadata is to be copied.</p></td>
+output buffer. By default this method copies all meta without
+tags. subclasses can implement this method and return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if
+the metadata is to be copied.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1183,6 +1238,34 @@ of the outgoing buffer.</p></td>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseTransformClass.transform-ip"></a>transform_ip</code></em> ()</p></td>
 <td class="struct_member_description"><p>Required if the element operates in-place.
 Transform the incoming buffer in-place.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseTransformClass.submit-input-buffer"></a>submit_input_buffer</code></em> ()</p></td>
+<td class="struct_member_description"><p>Function which accepts a new input buffer and pre-processes it.
+The default implementation performs caps (re)negotiation, then
+QoS if needed, and places the input buffer into the <em class="parameter"><code>queued_buf</code></em>
+member variable. If the buffer is dropped due to QoS, it returns
+GST_BASE_TRANSFORM_FLOW_DROPPED. If this input buffer is not
+contiguous with any previous input buffer, then <em class="parameter"><code>is_discont</code></em>
+is set to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>. (Since 1.6)</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseTransformClass.generate-output"></a>generate_output</code></em> ()</p></td>
+<td class="struct_member_description"><p>Called after each new input buffer is submitted repeatedly
+until it either generates an error or fails to generate an output
+buffer. The default implementation takes the contents of the
+<em class="parameter"><code>queued_buf</code></em>
+variable, generates an output buffer if needed
+by calling the class <em class="parameter"><code>prepare_output_buffer</code></em>
+, and then
+calls either <em class="parameter"><code>transform</code></em>
+or <em class="parameter"><code>transform_ip</code></em>
+. Elements that don't
+do 1-to-1 transformations on input to output buffers can either
+return GST_BASE_TRANSFORM_FLOW_DROPPED or simply not generate
+an output buffer until they are ready to do so. (Since 1.6)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -1228,7 +1311,6 @@ indicate that no output buffer was generated.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

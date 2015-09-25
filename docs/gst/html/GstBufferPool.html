@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstBufferPool</title>
+<title>GstBufferPool: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstBufferList.html" title="GstBufferList">
 <link rel="next" href="GstBus.html" title="GstBus">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -357,7 +357,6 @@ gst_buffer_pool_config_get_params (<em class="parameter"><code><a class="link" h
 <div class="refsect3">
 <a name="id-1.3.9.8.4.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if all parameters could be fetched.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -424,11 +423,12 @@ gst_buffer_pool_config_validate_params
 expected parameters. This function is a helper that can be used to validate
 changes made by a pool to a config when <a class="link" href="GstBufferPool.html#gst-buffer-pool-set-config" title="gst_buffer_pool_set_config ()"><code class="function">gst_buffer_pool_set_config()</code></a>
 returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>. This expects that <em class="parameter"><code>caps</code></em>
- and <em class="parameter"><code>size</code></em>
- haven't changed, and that
+ haven't changed and that
 <em class="parameter"><code>min_buffers</code></em>
- aren't lower then what we initially expected. This does not check
-if options or allocator parameters.</p>
+ aren't lower then what we initially expected.
+This does not check if options or allocator parameters are still valid,
+won't check if size have changed, since changing the size is valid to adapt
+padding.</p>
 <div class="refsect3">
 <a name="id-1.3.9.8.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -469,9 +469,8 @@ if options or allocator parameters.</p>
 <div class="refsect3">
 <a name="id-1.3.9.8.6.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the parameters are valid in this context.</p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -500,13 +499,13 @@ gst_buffer_pool_config_get_allocator (<em class="parameter"><code><a class="link
 </tr>
 <tr>
 <td class="parameter_name"><p>allocator</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>params</p></td>
-<td class="parameter_description"><p><a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a></p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> <a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -514,7 +513,6 @@ gst_buffer_pool_config_get_allocator (<em class="parameter"><code><a class="link
 <div class="refsect3">
 <a name="id-1.3.9.8.7.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the values are set. </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -598,7 +596,6 @@ gst_buffer_pool_config_n_options (<em class="parameter"><code><a class="link" hr
 <div class="refsect3">
 <a name="id-1.3.9.8.9.6"></a><h4>Returns</h4>
 <p> the options array size as a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -672,7 +669,6 @@ array.</p>
 <a name="id-1.3.9.8.11.6"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> of the option at <em class="parameter"><code>index</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -710,7 +706,6 @@ gst_buffer_pool_config_has_option (<em class="parameter"><code><a class="link" h
 <a name="id-1.3.9.8.12.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the options array contains <em class="parameter"><code>option</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -778,7 +773,6 @@ gst_buffer_pool_has_option (<em class="parameter"><code><a class="link" href="Gs
 <a name="id-1.3.9.8.14.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the buffer pool contains <em class="parameter"><code>option</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -820,9 +814,9 @@ gst_buffer_pool_set_config (<em class="parameter"><code><a class="link" href="Gs
                             <em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *config</code></em>);</pre>
 <p>Set the configuration of the pool. If the pool is already configured, and
 the configuration haven't change, this function will return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. If the
-pool is active, this function will try deactivating it. Buffers allocated
-form this pool must be returned or else this function will do nothing and
-return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+pool is active, this method will return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> and active configuration
+will remain. Buffers allocated form this pool must be returned or else this
+function will do nothing and return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 <p><em class="parameter"><code>config</code></em>
  is a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> that contains the configuration parameters for
 the pool. A default and mandatory set of parameters can be configured with
@@ -859,7 +853,6 @@ then be retrieved and refined with <a class="link" href="GstBufferPool.html#gst-
 <div class="refsect3">
 <a name="id-1.3.9.8.16.9"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when the configuration could be set.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -902,7 +895,6 @@ they are all returned to the pool.</p>
 <a name="id-1.3.9.8.17.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when the pool was not configured or when preallocation of the
 buffers failed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -931,7 +923,6 @@ gst_buffer_pool_is_active (<em class="parameter"><code><a class="link" href="Gst
 <div class="refsect3">
 <a name="id-1.3.9.8.18.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when the pool is active.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -965,7 +956,7 @@ allocating buffers.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1012,7 +1003,6 @@ allocation.</p>
 <a name="id-1.3.9.8.20.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> such as <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><code class="literal">GST_FLOW_FLUSHING</code></a> when the pool is
 inactive.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1169,12 +1159,12 @@ buffer will be freed with <em class="parameter"><code>free_buffer</code></em>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBufferPoolClass.flush-start"></a>flush_start</code></em> ()</p></td>
-<td class="struct_member_description"><p>enter the flushing state. Since: 1.4</p></td>
+<td class="struct_member_description"><p>enter the flushing state. (Since 1.4)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBufferPoolClass.flush-stop"></a>flush_stop</code></em> ()</p></td>
-<td class="struct_member_description"><p>leave the flushign state. Since: 1.4</p></td>
+<td class="struct_member_description"><p>leave the flushign state. (Since 1.4)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -1295,7 +1285,6 @@ and <em class="parameter"><code>stop</code></em>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

@@ -417,6 +417,9 @@ gst_element_set_clock (GstElement * element, GstClock * clock)
  * Gets the currently configured clock of the element. This is the clock as was
  * last set with gst_element_set_clock().
  *
+ * Elements in a pipeline will only have their clock set when the
+ * pipeline is in the PLAYING state.
+ *
  * Returns: (transfer full): the #GstClock of the element. unref after usage.
  *
  * MT safe.
@@ -795,7 +798,6 @@ gst_element_remove_pad (GstElement * element, GstPad * pad)
       break;
   }
   element->pads = g_list_remove (element->pads, pad);
-  GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_NEED_PARENT);
   element->numpads--;
   element->pads_cookie++;
   GST_OBJECT_UNLOCK (element);
@@ -949,7 +951,7 @@ _gst_element_request_pad (GstElement * element, GstPadTemplate * templ,
     pad = gst_element_get_static_pad (element, name);
     if (pad) {
       gst_object_unref (pad);
-      /* FIXME 0.11: Change this to g_return_val_if_fail() */
+      /* FIXME 2.0: Change this to g_return_val_if_fail() */
       g_critical ("Element %s already has a pad named %s, the behaviour of "
           " gst_element_get_request_pad() for existing pads is undefined!",
           GST_ELEMENT_NAME (element), name);
@@ -977,7 +979,7 @@ _gst_element_request_pad (GstElement * element, GstPadTemplate * templ,
  *
  * This method is slower than manually getting the pad template and calling
  * gst_element_request_pad() if the pads should have a specific name (e.g.
- * @name is "src_1" instead of "src_%u").
+ * @name is "src_1" instead of "src_\%u").
  *
  * Returns: (transfer full) (nullable): requested #GstPad if found,
  *     otherwise %NULL.  Release after usage.
@@ -1070,7 +1072,7 @@ gst_element_get_request_pad (GstElement * element, const gchar * name)
 }
 
 /**
- * gst_element_request_pad:
+ * gst_element_request_pad: (virtual request_new_pad)
  * @element: a #GstElement to find a request pad of.
  * @templ: a #GstPadTemplate of which we want a pad of.
  * @name: (transfer none) (allow-none): the name of the request #GstPad

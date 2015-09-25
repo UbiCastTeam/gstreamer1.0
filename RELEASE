@@ -1,28 +1,16 @@
 
-Release notes for GStreamer 1.4.5
-
-The GStreamer team is pleased to announce a bugfix release of the stable
-1.4 release series. The 1.4 release series is adding new features on top
-of the 1.2 series and is part of the API and ABI-stable 1.x release
-series of the GStreamer multimedia framework that contains new features.
-The 1.4.x bugfix releases only contain important bugfixes compared to 1.4.0.
+Release notes for GStreamer 1.5.91
 
 
-Binaries for Android, iOS, Mac OS X and Windows are provided by the
-GStreamer project for this release.
+The GStreamer team is pleased to announce the second release candidate for the
+stable 1.6 release series. The 1.6 release series is adding new features on top of
+the 1.0, 1.2 and 1.4 series and is part of the API and ABI-stable 1.x release
+series of the GStreamer multimedia framework. The final 1.6.0 release is planned
+in the next few days unless any major bugs are found.
 
 
-The 1.x series is a stable series targeted at end users. It is not API
-or ABI compatible with the 0.10.x series. It can, however, be installed
-in parallel with the 0.10.x series and will not affect an existing
-0.10.x installation.
-
-
-The stable 1.4.x release series is API and ABI compatible with 1.0.x and
-any other 1.x release series in the future. Compared to 1.0.x it contains
-some new features and more intrusive changes that were considered too
-risky as a bugfix.
-
+Binaries for Android, iOS, Mac OS X and Windows will be provided separately by
+the GStreamer project.
 
 
 This module, gstreamer, only contains core functionality.
@@ -48,9 +36,13 @@ contains a set of codecs plugins based on libav (formerly gst-ffmpeg)
 
 Bugs fixed in this release
      
-      * 736969 : queue2: dead lock when buffering
-      * 738092 : basesink: clamp reported position based on direction
-      * 740001 : task: race condition when pausing and stopping
+      * 754036 : bin: Make sure we don't add/remove a bin to/from itself
+      * 754040 : Investigate why caps negotiation is slower than in 1.4
+      * 754193 : harness: misc bugfixes
+      * 754661 : harness: Fix race for gst_harness_element_ref
+      * 754875 : configure.ac: no socketpair() check causes unresolved reference
+      * 754975 : bin: trivial fix in critical log when threadpool alloc fails
+      * 755019 : gstreamer: Fix error leak during failure cases
 
 ==== Download ====
 
@@ -87,9 +79,15 @@ subscribe to the gstreamer-devel list.
         
 Contributors to this release
     
-      * Edward Hervey
-      * Haakon Sporsheim
+      * Arun Raghavan
+      * Havard Graff
+      * Igor Rondarev
+      * Nicolas Dufresne
+      * Sebastian Dröge
+      * Stian Selnes
       * Thiago Santos
-      * Vincent Penquerc'h
-      * Wim Taymans
+      * Thibault Saunier
+      * Tim-Philipp Müller
+      * Vineeth TM
+      * Vivia Nikolaidou
  

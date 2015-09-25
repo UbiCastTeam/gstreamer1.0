@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstElement</title>
+<title>GstElement: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstDateTime.html" title="GstDateTime">
 <link rel="next" href="GstElementFactory.html" title="GstElementFactory">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -692,17 +692,17 @@
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstElement.html#GstElement-no-more-pads" title="The “no-more-pads” signal">no-more-pads</a></td>
-<td class="signal_flags">Run Last</td>
+<td class="signal_flags"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstElement.html#GstElement-pad-added" title="The “pad-added” signal">pad-added</a></td>
-<td class="signal_flags">Run Last</td>
+<td class="signal_flags"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstElement.html#GstElement-pad-removed" title="The “pad-removed” signal">pad-removed</a></td>
-<td class="signal_flags">Run Last</td>
+<td class="signal_flags"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -1747,7 +1747,6 @@ state. See <a class="link" href="GstPad.html#gst-pad-set-active" title="gst_pad_
 a pad with the same name already existed or the pad already had another
 parent.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1876,7 +1875,7 @@ retrieves request pads. The pad should be released with
 <p>This method is slower than manually getting the pad template and calling
 <a class="link" href="GstElement.html#gst-element-request-pad" title="gst_element_request_pad ()"><code class="function">gst_element_request_pad()</code></a> if the pads should have a specific name (e.g.
 <em class="parameter"><code>name</code></em>
- is "src_1" instead of "src_<code class="literal">u</code>").</p>
+ is "src_1" instead of "src_%u").</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.34.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1957,8 +1956,9 @@ gst_element_request_pad (<em class="parameter"><code><a class="link" href="GstEl
 Pad templates can be looked up using
 <a class="link" href="GstElementFactory.html#gst-element-factory-get-static-pad-templates" title="gst_element_factory_get_static_pad_templates ()"><code class="function">gst_element_factory_get_static_pad_templates()</code></a>.</p>
 <p>The pad should be released with <a class="link" href="GstElement.html#gst-element-release-request-pad" title="gst_element_release_request_pad ()"><code class="function">gst_element_release_request_pad()</code></a>.</p>
+<p><span class="annotation">[<acronym title="This is the invoker for a virtual method."><span class="acronym">virtual</span></acronym> request_new_pad]</span></p>
 <div class="refsect3">
-<a name="id-1.3.21.10.36.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.36.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1992,7 +1992,7 @@ request. Can be <a href="https://developer.gnome.org/glib/unstable/glib-Standard
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.36.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.36.8"></a><h4>Returns</h4>
 <p> requested <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> if found,
 otherwise <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.  Release after usage. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -2110,7 +2110,6 @@ deactivating pads.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad could be removed. Can return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the
 pad does not belong to the provided element.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2248,7 +2247,6 @@ If multiple links are possible, only one is established.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.43.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the elements could be linked, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2324,7 +2322,6 @@ Make sure you have added your elements to a bin or pipeline with
 <div class="refsect3">
 <a name="id-1.3.21.10.45.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2412,7 +2409,6 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <div class="refsect3">
 <a name="id-1.3.21.10.47.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pads could be linked, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2475,7 +2471,6 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <div class="refsect3">
 <a name="id-1.3.21.10.48.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pads could be linked, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2579,7 +2574,6 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <div class="refsect3">
 <a name="id-1.3.21.10.50.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pads could be linked, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2629,7 +2623,6 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <div class="refsect3">
 <a name="id-1.3.21.10.51.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pads could be linked, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2667,7 +2660,6 @@ gst_element_class_get_metadata (<em class="parameter"><code><a class="link" href
 <a name="id-1.3.21.10.52.6"></a><h4>Returns</h4>
 <p> the metadata for <em class="parameter"><code>key</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2729,7 +2721,6 @@ the running time of the element.</p>
 <a name="id-1.3.21.10.54.6"></a><h4>Returns</h4>
 <p> the base time of the element.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2799,7 +2790,6 @@ running time of the clock when this element was last put to PAUSED.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.56.8"></a><h4>Returns</h4>
 <p> the start time of the element.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3079,7 +3069,6 @@ clock when it, for example, is not able to slave its internal clock to the
 <em class="parameter"><code>clock</code></em>
 or when it requires a specific clock to operate.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3089,8 +3078,10 @@ or when it requires a specific clock to operate.</p>
 gst_element_get_clock (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>Gets the currently configured clock of the element. This is the clock as was
 last set with <a class="link" href="GstElement.html#gst-element-set-clock" title="gst_element_set_clock ()"><code class="function">gst_element_set_clock()</code></a>.</p>
+<p>Elements in a pipeline will only have their clock set when the
+pipeline is in the PLAYING state.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.66.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.66.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3105,7 +3096,7 @@ last set with <a class="link" href="GstElement.html#gst-element-set-clock" title
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.66.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.66.7"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> of the element. unref after usage.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -3185,7 +3176,6 @@ of the state change or it can wait for a <a class="link" href="GstMessage.html#G
 <a name="id-1.3.21.10.68.8"></a><h4>Returns</h4>
 <p> Result of the state change using <a class="link" href="GstElement.html#GstStateChangeReturn" title="enum GstStateChangeReturn"><span class="type">GstStateChangeReturn</span></a>.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3255,7 +3245,6 @@ and the last state change succeeded, <a class="link" href="GstElement.html#GST-S
 element is still performing a state change or
 <a class="link" href="GstElement.html#GST-STATE-CHANGE-FAILURE:CAPS"><code class="literal">GST_STATE_CHANGE_FAILURE</code></a> if the last state change failed.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3293,7 +3282,6 @@ this element anymore.</p>
 <a name="id-1.3.21.10.70.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the state was changed, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if bad parameters were given
 or the elements state-locking needed no change.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3325,7 +3313,6 @@ state before changing the state from <a class="link" href="GstElement.html#GST-S
 <div class="refsect3">
 <a name="id-1.3.21.10.71.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the element's state is locked.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3395,7 +3382,6 @@ or applications.</p>
 <a name="id-1.3.21.10.73.8"></a><h4>Returns</h4>
 <p> The result of the commit state change.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3514,7 +3500,6 @@ If this function returns <a href="https://developer.gnome.org/glib/unstable/glib
 <a name="id-1.3.21.10.77.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the element's state could be synced to the parent's state.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3553,7 +3538,6 @@ internally.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.78.7"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstElement.html#GstStateChangeReturn" title="enum GstStateChangeReturn"><span class="type">GstStateChangeReturn</span></a> of the state transition.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3672,7 +3656,6 @@ additional reference before calling.</p>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message was successfully posted. The function returns
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the element did not have a bus.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3712,7 +3695,6 @@ random linked sinkpad of this element.</p>
 <a name="id-1.3.21.10.81.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3768,7 +3750,6 @@ gst_element_query_convert (<em class="parameter"><code><a class="link" href="Gst
 <div class="refsect3">
 <a name="id-1.3.21.10.82.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3817,7 +3798,6 @@ position, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <div class="refsect3">
 <a name="id-1.3.21.10.83.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3864,7 +3844,6 @@ using this function.</p>
 <div class="refsect3">
 <a name="id-1.3.21.10.84.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3905,7 +3884,6 @@ downstream events or a random linked source pad for upstream events.</p>
 <a name="id-1.3.21.10.85.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Events that trigger a preroll (such
 as flushing seeks and steps) will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3968,7 +3946,6 @@ with <a class="link" href="GstClock.html#GST-MSECOND:CAPS" title="GST_MSECOND"><
 <a name="id-1.3.21.10.86.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the seek operation succeeded. Flushing seeks will trigger a
 preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -4043,7 +4020,6 @@ the parameters. The seek event is sent to the element using
 <a name="id-1.3.21.10.87.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Flushing seeks will trigger a
 preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
-<p></p>
 </div>
 </div>
 </div>
@@ -4218,8 +4194,10 @@ state will yield the running_time against the clock.</p></td>
   /* virtual methods for subclasses */
 
   /* request/release pads */
+  /* FIXME 2.0 harmonize naming with gst_element_request_pad */
   GstPad*               (*request_new_pad)      (GstElement *element, GstPadTemplate *templ,
                                                  const gchar* name, const GstCaps *caps);
+
   void                  (*release_pad)          (GstElement *element, GstPad *pad);
 
   /* state changes */
@@ -4788,7 +4766,7 @@ the streaming thread.</p>
 </tbody>
 </table></div>
 </div>
-<p>Flags: Run Last</p>
+<p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4829,7 +4807,7 @@ you will need to set them to the desired target state with
 </tbody>
 </table></div>
 </div>
-<p>Flags: Run Last</p>
+<p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4866,7 +4844,7 @@ user_function (<a class="link" href="GstElement.html" title="GstElement"><span c
 </tbody>
 </table></div>
 </div>
-<p>Flags: Run Last</p>
+<p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -4875,7 +4853,6 @@ user_function (<a class="link" href="GstElement.html" title="GstElement"><span c
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

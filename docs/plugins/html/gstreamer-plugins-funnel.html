@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer Core Plugins 1.0 Plugins Reference Manual: funnel</title>
+<title>funnel: GStreamer Core Plugins 1.0 Plugins Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-filesink.html" title="filesink">
 <link rel="next" href="gstreamer-plugins-identity.html" title="identity">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -16,7 +16,8 @@
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
                   <a href="#gstreamer-plugins-funnel.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
-                  <a href="#gstreamer-plugins-funnel.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
+                  <a href="#gstreamer-plugins-funnel.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#gstreamer-plugins-funnel.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -28,10 +29,25 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-plugins-funnel.top_of_page"></a>funnel</span></h2>
-<p>funnel — N-to-1 pipe fitting</p>
+<p>funnel</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
+<div class="refsect1">
+<a name="gstreamer-plugins-funnel.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody><tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-funnel.html#GstFunnel--forward-sticky-events" title="The “forward-sticky-events” property">forward-sticky-events</a></td>
+<td class="property_flags">Read / Write</td>
+</tr></tbody>
+</table></div>
+</div>
 <a name="GstFunnel"></a><div class="refsect1">
 <a name="gstreamer-plugins-funnel.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table width="100%" border="0">
@@ -58,7 +74,7 @@
 <a name="gstreamer-plugins-funnel.description"></a><h2>Description</h2>
 <p>Takes packets from various input sinks into one output source.</p>
 <p>funnel always outputs a single, open ended segment from
-0 with in <code class="literal">GST_FORMAT_TIME</code> and outputs the buffers of the
+0 with in <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstFormat.html#GST-FORMAT-TIME:CAPS"><code class="literal">GST_FORMAT_TIME</code></a> and outputs the buffers of the
 different sinkpads with timestamps that are set to the
 running time for that stream. funnel does not synchronize
 the different input streams but simply forwards all buffers
@@ -66,7 +82,7 @@ immediately when they arrive.</p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.10.6.3.2.1"></a><h3>Element Information</h3>
+<a name="id-1.2.11.7.4.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -92,7 +108,7 @@ immediately when they arrive.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.10.6.3.2.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.11.7.4.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -143,11 +159,10 @@ immediately when they arrive.</p>
 </table></div>
 </div>
 </div>
-<p>
-</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-funnel.functions_details"></a><h2>Functions</h2>
+<p></p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-funnel.other_details"></a><h2>Types and Values</h2>
@@ -157,9 +172,18 @@ immediately when they arrive.</p>
 <p>Opaque <a class="link" href="gstreamer-plugins-funnel.html#GstFunnel"><span class="type">GstFunnel</span></a> data structure.</p>
 </div>
 </div>
+<div class="refsect1">
+<a name="gstreamer-plugins-funnel.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="GstFunnel--forward-sticky-events"></a><h3>The <code class="literal">“forward-sticky-events”</code> property</h3>
+<pre class="programlisting">  “forward-sticky-events”    <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Forward sticky events on stream changes.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: TRUE</p>
+</div>
+</div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

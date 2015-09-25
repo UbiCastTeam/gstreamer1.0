@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstEvent</title>
+<title>GstEvent: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstGError.html" title="GstGError">
 <link rel="next" href="gstreamer-GstFormat.html" title="GstFormat">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -553,6 +553,22 @@
 <a class="link" href="GstEvent.html#gst-event-parse-segment-done" title="gst_event_parse_segment_done ()">gst_event_parse_segment_done</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()">gst_event_new_protection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-parse-protection" title="gst_event_parse_protection ()">gst_event_parse_protection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -905,7 +921,6 @@ gst_event_type_get_flags (<em class="parameter"><code><a class="link" href="GstE
 <div class="refsect3">
 <a name="id-1.3.24.8.11.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstEvent.html#GstEventTypeFlags" title="enum GstEventTypeFlags"><span class="type">GstEventTypeFlags</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -932,7 +947,6 @@ gst_event_type_get_name (<em class="parameter"><code><a class="link" href="GstEv
 <div class="refsect3">
 <a name="id-1.3.24.8.12.6"></a><h4>Returns</h4>
 <p> a reference to the static name of the event.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -959,7 +973,6 @@ gst_event_type_to_quark (<em class="parameter"><code><a class="link" href="GstEv
 <div class="refsect3">
 <a name="id-1.3.24.8.13.6"></a><h4>Returns</h4>
 <p> the quark associated with the event type</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1055,7 +1068,6 @@ replace the event pointed to by <em class="parameter"><code>old_event</code></em
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_event</code></em>
 was different from <em class="parameter"><code>old_event</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1113,7 +1125,6 @@ pointer to a <a class="link" href="GstEvent.html" title="GstEvent"><span class="
 <a name="id-1.3.24.8.18.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> that was in <em class="parameter"><code>old_event</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1159,7 +1170,6 @@ replace the event pointed to by <em class="parameter"><code>old_event</code></em
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_event</code></em>
 was different from <em class="parameter"><code>old_event</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1319,7 +1329,6 @@ gst_event_get_structure (<em class="parameter"><code><a class="link" href="GstEv
 owned by the event, which means that you should not free it and
 that the pointer becomes invalid when you free the event.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1358,7 +1367,6 @@ check the name of a custom event.</p>
 <a name="id-1.3.24.8.25.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>name</code></em>
 matches the name of the event structure.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1395,7 +1403,6 @@ that correspondence was made explicitly.</p>
 <a name="id-1.3.24.8.26.8"></a><h4>Returns</h4>
 <p> The event's sequence number.</p>
 <p>MT safe.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1463,9 +1470,8 @@ before usage with this offset.</p>
 <a name="id-1.3.24.8.28.8"></a><h4>Returns</h4>
 <p> The event's running time offset</p>
 <p>MT safe.</p>
-<p></p>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1498,7 +1504,7 @@ gst_event_set_running_time_offset (<em class="parameter"><code><a class="link" h
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.4</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1695,7 +1701,7 @@ travel downstream synchronized with the buffer flow. It is expected
 to be the first event that is sent for a new stream.</p>
 <p>Source elements, demuxers and other elements that create new streams
 are supposed to send this event as the first event of a new stream. It
-should not be send after a flushing seek or in similar situations
+should not be sent after a flushing seek or in similar situations
 and is used to mark the beginning of a new logical stream. Elements
 combining multiple streams must ensure that this event is only forwarded
 downstream once and not for every single input stream.</p>
@@ -1793,7 +1799,7 @@ gst_event_set_stream_flags (<em class="parameter"><code><a class="link" href="Gs
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1823,7 +1829,7 @@ gst_event_parse_stream_flags (<em class="parameter"><code><a class="link" href="
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1859,7 +1865,7 @@ each time a file is played for example.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1893,9 +1899,8 @@ gst_event_parse_group_id (<em class="parameter"><code><a class="link" href="GstE
 <a name="id-1.3.24.8.41.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a group id was set on the event and could be parsed,
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1906,7 +1911,7 @@ gst_event_new_segment (<em class="parameter"><code>const <a class="link" href="G
 . The segment event can only travel
 downstream synchronized with the buffer flow and contains timing information
 and playback properties for the buffers that will follow.</p>
-<p>The newsegment event marks the range of buffers to be processed. All
+<p>The segment event marks the range of buffers to be processed. All
 data not within the segment range is not to be processed. This can be
 used intelligently by plugins to apply more efficient methods of skipping
 unneeded data. The valid range is expressed with the <em class="parameter"><code>start</code></em>
@@ -1938,11 +1943,11 @@ stream. (<em class="parameter"><code>rate</code></em>
 requested for playback. For example, if an element has an input segment
 with intended playback <em class="parameter"><code>rate</code></em>
  of 2.0 and applied_rate of 1.0, it can adjust
-incoming timestamps and buffer content by half and output a newsegment event
+incoming timestamps and buffer content by half and output a segment event
 with <em class="parameter"><code>rate</code></em>
  of 1.0 and <em class="parameter"><code>applied_rate</code></em>
  of 2.0</p>
-<p>After a newsegment event, the buffer stream time is calculated with:</p>
+<p>After a segment event, the buffer stream time is calculated with:</p>
 <p>  time + (TIMESTAMP(buf) - start) * ABS (rate * applied_rate)</p>
 <div class="refsect3">
 <a name="id-1.3.24.8.42.11"></a><h4>Parameters</h4>
@@ -2983,7 +2988,6 @@ given <em class="parameter"><code>uid</code></em>
 <div class="refsect3">
 <a name="id-1.3.24.8.65.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3089,6 +3093,136 @@ gst_event_parse_segment_done (<em class="parameter"><code><a class="link" href="
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-new-protection"></a><h3>gst_event_new_protection ()</h3>
+<pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+gst_event_new_protection (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *system_id</code></em>,
+                          <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *data</code></em>,
+                          <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *origin</code></em>);</pre>
+<p>Creates a new event containing information specific to a particular
+protection system (uniquely identified by <em class="parameter"><code>system_id</code></em>
+), by which that
+protection system can acquire key(s) to decrypt a protected stream.</p>
+<p>In order for a decryption element to decrypt media
+protected using a specific system, it first needs all the
+protection system specific information necessary to acquire the decryption
+key(s) for that stream. The functions defined here enable this information
+to be passed in events from elements that extract it
+(e.g., ISOBMFF demuxers, MPEG DASH demuxers) to protection decrypter
+elements that use it.</p>
+<p>Events containing protection system specific information are created using
+<a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()"><span class="type">gst_event_new_protection</span></a>, and they can be parsed by downstream elements
+using <a class="link" href="GstEvent.html#gst-event-parse-protection" title="gst_event_parse_protection ()"><span class="type">gst_event_parse_protection</span></a>.</p>
+<p>In Common Encryption, protection system specific information may be located
+within ISOBMFF files, both in movie (moov) boxes and movie fragment (moof)
+boxes; it may also be contained in ContentProtection elements within MPEG
+DASH MPDs. The events created by <a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()"><span class="type">gst_event_new_protection</span></a> contain data
+identifying from which of these locations the encapsulated protection system
+specific information originated. This origin information is required as
+some protection systems use different encodings depending upon where the
+information originates.</p>
+<p>The events returned by <a class="link" href="GstEvent.html#gst-event-new-protection" title="gst_event_new_protection ()"><code class="function">gst_event_new_protection()</code></a> are implemented
+in such a way as to ensure that the most recently-pushed protection info
+event of a particular <em class="parameter"><code>origin</code></em>
+ and <em class="parameter"><code>system_id</code></em>
+ will
+be stuck to the output pad of the sending element.</p>
+<div class="refsect3">
+<a name="id-1.3.24.8.69.9"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>system_id</p></td>
+<td class="parameter_description"><p> a string holding a UUID that uniquely
+identifies a protection system. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> holding protection system specific
+information. The reference count of the buffer will be incremented by one. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>origin</p></td>
+<td class="parameter_description"><p>a string indicating where the protection
+information carried in the event was extracted from. The allowed values
+of this string will depend upon the protection scheme.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.24.8.69.10"></a><h4>Returns</h4>
+<p> a <a class="link" href="GstEvent.html#GST-EVENT-PROTECTION:CAPS"><span class="type">GST_EVENT_PROTECTION</span></a> event, if successful; <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+if unsuccessful.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-protection"></a><h3>gst_event_parse_protection ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_parse_protection (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                            <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **system_id</code></em>,
+                            <em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> **data</code></em>,
+                            <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **origin</code></em>);</pre>
+<p>Parses an event containing protection system specific information and stores
+the results in <em class="parameter"><code>system_id</code></em>
+, <em class="parameter"><code>data</code></em>
+ and <em class="parameter"><code>origin</code></em>
+. The data stored in <em class="parameter"><code>system_id</code></em>
+,
+<em class="parameter"><code>origin</code></em>
+ and <em class="parameter"><code>data</code></em>
+ are valid until <em class="parameter"><code>event</code></em>
+ is released.</p>
+<div class="refsect3">
+<a name="id-1.3.24.8.70.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstEvent.html#GST-EVENT-PROTECTION:CAPS"><span class="type">GST_EVENT_PROTECTION</span></a> event.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>system_id</p></td>
+<td class="parameter_description"><p> pointer to store the UUID
+string uniquely identifying a content protection system. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p> pointer to store a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>
+holding protection system specific information. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>origin</p></td>
+<td class="parameter_description"><p> pointer to store a value that
+indicates where the protection information carried by <em class="parameter"><code>event</code></em>
+was extracted
+from. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -3307,6 +3441,14 @@ Specific custom events are distinguished by the name of the structure.</p>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-EVENT-PROTECTION:CAPS"></a>GST_EVENT_PROTECTION</p></td>
+<td class="enum_member_description">
+<p>An event which indicates that new or updated
+                encryption information has been found in the stream.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-EVENT-SEGMENT-DONE:CAPS"></a>GST_EVENT_SEGMENT_DONE</p></td>
 <td class="enum_member_description">
 <p>Marks the end of a segment playback.</p>
@@ -3475,7 +3617,7 @@ Specific custom events are distinguished by the name of the structure.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3494,9 +3636,9 @@ Specific custom events are distinguished by the name of the structure.</p>
 <tr>
 <td class="enum_member_name"><p><a name="GST-QOS-TYPE-OVERFLOW:CAPS"></a>GST_QOS_TYPE_OVERFLOW</p></td>
 <td class="enum_member_description">
-<p>The QoS event type that is produced when downstream
+<p>The QoS event type that is produced when upstream
    elements are producing data too quickly and the element can't keep up
-   processing the data. Upstream should reduce their processing rate. This
+   processing the data. Upstream should reduce their production rate. This
    type is also used when buffers arrive early or in time.</p>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -3504,9 +3646,9 @@ Specific custom events are distinguished by the name of the structure.</p>
 <tr>
 <td class="enum_member_name"><p><a name="GST-QOS-TYPE-UNDERFLOW:CAPS"></a>GST_QOS_TYPE_UNDERFLOW</p></td>
 <td class="enum_member_description">
-<p>The QoS event type that is produced when downstream
-   elements are producing data too slowly and need to speed up their processing
-   rate.</p>
+<p>The QoS event type that is produced when upstream
+   elements are producing data too slowly and need to speed up their
+   production rate.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3514,7 +3656,7 @@ Specific custom events are distinguished by the name of the structure.</p>
 <td class="enum_member_name"><p><a name="GST-QOS-TYPE-THROTTLE:CAPS"></a>GST_QOS_TYPE_THROTTLE</p></td>
 <td class="enum_member_description">
 <p>The QoS event type that is produced when the
-   application enabled throttling to limit the datarate.</p>
+   application enabled throttling to limit the data rate.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3573,31 +3715,32 @@ or timestamp markers in the stream. Specifying this flag might require a
 complete scan of the file in those cases.</p>
 <p>When performing a segment seek: after the playback of the segment completes,
 no EOS will be emitted by the element that performed the seek, but a
-<a class="link" href="GstMessage.html#GST-MESSAGE-SEGMENT-DONE:CAPS"><span class="type">GST_MESSAGE_SEGMENT_DONE</span></a> message will be posted on the bus by the element.
+<a class="link" href="GstMessage.html#GST-MESSAGE-SEGMENT-DONE:CAPS"><code class="literal">GST_MESSAGE_SEGMENT_DONE</code></a> message will be posted on the bus by the element.
 When this message is posted, it is possible to send a new seek event to
 continue playback. With this seek method it is possible to perform seamless
 looping or simple linear editing.</p>
 <p>When doing fast forward (rate &gt; 1.0) or fast reverse (rate &lt; -1.0) trickmode
-playback, the <em class="parameter"><code>GST_SEEK_FLAG_SKIP</code></em>
- flag can be used to instruct decoders
+playback, the <a class="link" href="GstEvent.html#GST-SEEK-FLAG-TRICKMODE:CAPS"><code class="literal">GST_SEEK_FLAG_TRICKMODE</code></a> flag can be used to instruct decoders
 and demuxers to adjust the playback rate by skipping frames. This can improve
 performance and decrease CPU usage because not all frames need to be decoded.</p>
-<p>The <em class="parameter"><code>GST_SEEK_FLAG_SNAP_BEFORE</code></em>
- flag can be used to snap to the previous
-relevant location, and the <em class="parameter"><code>GST_SEEK_FLAG_SNAP_AFTER</code></em>
- flag can be used to
-select the next relevant location. If KEY_UNIT is specified, the relevant
-location is a keyframe. If both flags are specified, the nearest of these
-locations will be selected. If none are specified, the implementation is
-free to select whichever it wants.
-The before and after here are in running time, so when playing backwards,
+<p>Beyond that, the <a class="link" href="GstEvent.html#GST-SEEK-FLAG-TRICKMODE-KEY-UNITS:CAPS"><code class="literal">GST_SEEK_FLAG_TRICKMODE_KEY_UNITS</code></a> flag can be used to
+request that decoders skip all frames except key units, and
+<a class="link" href="GstEvent.html#GST-SEEK-FLAG-TRICKMODE-NO-AUDIO:CAPS"><code class="literal">GST_SEEK_FLAG_TRICKMODE_NO_AUDIO</code></a> flags can be used to request that audio
+decoders do no decoding at all, and simple output silence.</p>
+<p>The <a class="link" href="GstEvent.html#GST-SEEK-FLAG-SNAP-BEFORE:CAPS"><code class="literal">GST_SEEK_FLAG_SNAP_BEFORE</code></a> flag can be used to snap to the previous
+relevant location, and the <a class="link" href="GstEvent.html#GST-SEEK-FLAG-SNAP-AFTER:CAPS"><code class="literal">GST_SEEK_FLAG_SNAP_AFTER</code></a> flag can be used to
+select the next relevant location. If <a class="link" href="GstEvent.html#GST-SEEK-FLAG-KEY-UNIT:CAPS"><code class="literal">GST_SEEK_FLAG_KEY_UNIT</code></a> is specified,
+the relevant location is a keyframe. If both flags are specified, the nearest
+of these locations will be selected. If none are specified, the implementation is
+free to select whichever it wants.</p>
+<p>The before and after here are in running time, so when playing backwards,
 the next location refers to the one that will played in next, and not the
 one that is located after in the actual source stream.</p>
 <p>Also see part-seeking.txt in the GStreamer design documentation for more
 details on the meaning of these flags and the behaviour expected of
 elements that handle them.</p>
 <div class="refsect3">
-<a name="id-1.3.24.9.9.10"></a><h4>Members</h4>
+<a name="id-1.3.24.9.9.12"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3643,11 +3786,19 @@ elements that handle them.</p>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
-<td class="enum_member_name"><p><a name="GST-SEEK-FLAG-SKIP:CAPS"></a>GST_SEEK_FLAG_SKIP</p></td>
+<td class="enum_member_name"><p><a name="GST-SEEK-FLAG-TRICKMODE:CAPS"></a>GST_SEEK_FLAG_TRICKMODE</p></td>
 <td class="enum_member_description">
 <p>when doing fast forward or fast reverse playback, allow
                     elements to skip frames instead of generating all
-                    frames.</p>
+                    frames. (Since 1.6)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-SEEK-FLAG-SKIP:CAPS"></a>GST_SEEK_FLAG_SKIP</p></td>
+<td class="enum_member_description">
+<p>Deprecated backward compatibility flag, replaced
+                    by <a class="link" href="GstEvent.html#GST-SEEK-FLAG-TRICKMODE:CAPS"><code class="literal">GST_SEEK_FLAG_TRICKMODE</code></a></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3655,8 +3806,8 @@ elements that handle them.</p>
 <td class="enum_member_name"><p><a name="GST-SEEK-FLAG-SNAP-BEFORE:CAPS"></a>GST_SEEK_FLAG_SNAP_BEFORE</p></td>
 <td class="enum_member_description">
 <p>go to a location before the requested position,
-                    if KEY_UNIT this means the keyframe at or before the
-                    requested position the one at or before the seek target.</p>
+                    if <a class="link" href="GstEvent.html#GST-SEEK-FLAG-KEY-UNIT:CAPS"><code class="literal">GST_SEEK_FLAG_KEY_UNIT</code></a> this means the keyframe at or before
+                    the requested position the one at or before the seek target.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3664,7 +3815,7 @@ elements that handle them.</p>
 <td class="enum_member_name"><p><a name="GST-SEEK-FLAG-SNAP-AFTER:CAPS"></a>GST_SEEK_FLAG_SNAP_AFTER</p></td>
 <td class="enum_member_description">
 <p>go to a location after the requested position,
-                    if KEY_UNIT this means the keyframe at of after the
+                    if <a class="link" href="GstEvent.html#GST-SEEK-FLAG-KEY-UNIT:CAPS"><code class="literal">GST_SEEK_FLAG_KEY_UNIT</code></a> this means the keyframe at of after the
                     requested position.</p>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -3673,9 +3824,28 @@ elements that handle them.</p>
 <td class="enum_member_name"><p><a name="GST-SEEK-FLAG-SNAP-NEAREST:CAPS"></a>GST_SEEK_FLAG_SNAP_NEAREST</p></td>
 <td class="enum_member_description">
 <p>go to a position near the requested position,
-                    if KEY_UNIT this means the keyframe closest to the
-                    requested position, if both keyframes are at an equal
-                    distance, behaves like SNAP_BEFORE.</p>
+                    if <a class="link" href="GstEvent.html#GST-SEEK-FLAG-KEY-UNIT:CAPS"><code class="literal">GST_SEEK_FLAG_KEY_UNIT</code></a> this means the keyframe closest
+                    to the requested position, if both keyframes are at an equal
+                    distance, behaves like <a class="link" href="GstEvent.html#GST-SEEK-FLAG-SNAP-BEFORE:CAPS"><code class="literal">GST_SEEK_FLAG_SNAP_BEFORE</code></a>.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-SEEK-FLAG-TRICKMODE-KEY-UNITS:CAPS"></a>GST_SEEK_FLAG_TRICKMODE_KEY_UNITS</p></td>
+<td class="enum_member_description">
+<p>when doing fast forward or fast reverse
+                    playback, request that elements only decode keyframes
+                    and skip all other content, for formats that have
+                    keyframes. (Since 1.6)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-SEEK-FLAG-TRICKMODE-NO-AUDIO:CAPS"></a>GST_SEEK_FLAG_TRICKMODE_NO_AUDIO</p></td>
+<td class="enum_member_description">
+<p>when doing fast forward or fast reverse
+                    playback, request that audio decoder elements skip
+                    decoding and output only gap events or silence. (Since 1.6)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3690,7 +3860,6 @@ elements that handle them.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>

@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstInfo</title>
+<title>GstInfo: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -572,6 +572,20 @@
 </td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#GST-STIME-ARGS:CAPS" title="GST_STIME_ARGS()">GST_STIME_ARGS</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-bin-to-dot-data" title="gst_debug_bin_to_dot_data ()">gst_debug_bin_to_dot_data</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="function_type">
 <span class="returnvalue">void</span>
 </td>
@@ -607,6 +621,10 @@
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-LEVEL-DEFAULT:CAPS" title="GST_LEVEL_DEFAULT">GST_LEVEL_DEFAULT</a></td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-LEVEL-MAX:CAPS" title="GST_LEVEL_MAX">GST_LEVEL_MAX</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GstDebugColorFlags" title="enum GstDebugColorFlags">GstDebugColorFlags</a></td>
 </tr>
@@ -629,6 +647,10 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS" title="GST_TIME_FORMAT">GST_TIME_FORMAT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" title="GST_STIME_FORMAT">GST_STIME_FORMAT</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -699,7 +721,7 @@ nothing at all.
 So don't take addresses of these functions or use other tricks.
 If you must do that for some reason, there is still an option.
 If the debugging
-subsystem was compiled out, <a class="link" href="gstreamer-gstconfig.html#GST-DISABLE-GST-DEBUG:CAPS" title="GST_DISABLE_GST_DEBUG"><span class="type">GST_DISABLE_GST_DEBUG</span></a> is defined in
+subsystem was compiled out, <a class="link" href="gstreamer-GstConfig.html#GST-DISABLE-GST-DEBUG:CAPS" title="GST_DISABLE_GST_DEBUG"><span class="type">GST_DISABLE_GST_DEBUG</span></a> is defined in
 &lt;gst/gst.h&gt;,
 so you can check that before doing your trick.
 Disabling the debugging subsystem will give you a slight (read: unnoticeable)
@@ -996,7 +1018,6 @@ in debug handlers to extract the message.</p>
 <div class="refsect3">
 <a name="id-1.5.3.7.8.6"></a><h4>Returns</h4>
 <p> the string representation of a <span class="type">GstDebugMessage</span>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1010,11 +1031,13 @@ gst_debug_log_default (<em class="parameter"><code><a class="link" href="gstream
                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
                        <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
                        <em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> unused</code></em>);</pre>
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>The default logging handler used by GStreamer. Logging functions get called
-whenever a macro like GST_DEBUG or similar is used. This function outputs the
-message and additional info to stderr (or the log file specified via the
-GST_DEBUG_FILE environment variable).</p>
+whenever a macro like GST_DEBUG or similar is used. By default this function
+is setup to output the message and additional info to stderr (or the log file
+specified via the GST_DEBUG_FILE environment variable) as received via
+<em class="parameter"><code>user_data</code></em>
+.</p>
 <p>You can add other handlers by using <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
 And you can remove this handler by calling
 gst_debug_remove_log_function(gst_debug_log_default);</p>
@@ -1064,8 +1087,8 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
-<td class="parameter_name"><p>unused</p></td>
-<td class="parameter_description"><p>an unused variable, reserved for some user_data.</p></td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>the FILE* to log to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1096,7 +1119,6 @@ gst_debug_level_get_name (<em class="parameter"><code><a class="link" href="gstr
 <div class="refsect3">
 <a name="id-1.5.3.7.10.6"></a><h4>Returns</h4>
 <p> the name</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1161,7 +1183,6 @@ gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="id-1.5.3.7.12.6"></a><h4>Returns</h4>
 <p> How many instances of the function were removed</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1188,7 +1209,6 @@ gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="http
 <div class="refsect3">
 <a name="id-1.5.3.7.13.6"></a><h4>Returns</h4>
 <p> How many instances of the function were removed</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1226,7 +1246,6 @@ gst_debug_is_active (<em class="parameter"><code><span class="type">void</span><
 <div class="refsect3">
 <a name="id-1.5.3.7.15.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if debugging is activated</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1277,7 +1296,7 @@ gst_debug_set_color_mode (<em class="parameter"><code><a class="link" href="gstr
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1302,7 +1321,7 @@ gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href=
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1313,7 +1332,6 @@ gst_debug_is_colored (<em class="parameter"><code><span class="type">void</span>
 <div class="refsect3">
 <a name="id-1.5.3.7.19.5"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the debug output should be colored.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1326,9 +1344,8 @@ gst_debug_get_color_mode (<em class="parameter"><code><span class="type">void</s
 <a name="id-1.5.3.7.20.5"></a><h4>Returns</h4>
 <p> see <em class="parameter"><code>GstDebugColorMode</code></em>
 for possible values.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1390,7 +1407,7 @@ to the one already set.</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1401,7 +1418,6 @@ gst_debug_get_default_threshold (<em class="parameter"><code><span class="type">
 <div class="refsect3">
 <a name="id-1.5.3.7.23.5"></a><h4>Returns</h4>
 <p> the default threshold level</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1754,7 +1770,6 @@ gst_debug_category_get_threshold (<em class="parameter"><code><a class="link" hr
 <div class="refsect3">
 <a name="id-1.5.3.7.34.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> that is used as threshold.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1781,7 +1796,6 @@ gst_debug_category_get_name (<em class="parameter"><code><a class="link" href="g
 <div class="refsect3">
 <a name="id-1.5.3.7.35.6"></a><h4>Returns</h4>
 <p> the name of the category.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1809,7 +1823,6 @@ category.</p>
 <div class="refsect3">
 <a name="id-1.5.3.7.36.6"></a><h4>Returns</h4>
 <p> the color of the category.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1836,7 +1849,6 @@ gst_debug_category_get_description (<em class="parameter"><code><a class="link" 
 <div class="refsect3">
 <a name="id-1.5.3.7.37.6"></a><h4>Returns</h4>
 <p> the description of the category.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1911,7 +1923,6 @@ ignore this attribute.</p>
 <div class="refsect3">
 <a name="id-1.5.3.7.40.7"></a><h4>Returns</h4>
 <p> an integer containing the color definition</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2961,7 +2972,6 @@ category.</p>
 <a name="id-1.5.3.7.75.6"></a><h4>Returns</h4>
 <p> the value passed to <em class="parameter"><code>ptr</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -3109,6 +3119,38 @@ evaluated more than once.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-STIME-ARGS:CAPS"></a><h3>GST_STIME_ARGS()</h3>
+<pre class="programlisting">#define             GST_STIME_ARGS(t)</pre>
+<p>Format <em class="parameter"><code>t</code></em>
+ for the <a class="link" href="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" title="GST_STIME_FORMAT"><span class="type">GST_STIME_FORMAT</span></a> format string. Note: <em class="parameter"><code>t</code></em>
+ will be
+evaluated more than once.</p>
+<div class="refsect3">
+<a name="id-1.5.3.7.81.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>t</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> or <span class="type">gint64</span></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-bin-to-dot-data"></a><h3>gst_debug_bin_to_dot_data ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_debug_bin_to_dot_data (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                           <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-debug-bin-to-dot-file"></a><h3>gst_debug_bin_to_dot_file ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_bin_to_dot_file (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
@@ -3205,10 +3247,10 @@ message is, the greater the probability that the debugging system outputs it.</p
 <td class="enum_member_name"><p><a name="GST-LEVEL-LOG:CAPS"></a>GST_LEVEL_LOG</p></td>
 <td class="enum_member_description">
 <p>Log messages are messages that are very common but might be
- useful to know. As a rule of thumb a pipeline that is iterating as expected
- should never output anything else but LOG messages. Use this log level to
- log recurring information in chain functions and loop functions, for
- example.</p>
+ useful to know. As a rule of thumb a pipeline that is running as expected
+ should never output anything else but LOG messages whilst processing data.
+ Use this log level to log recurring information in chain functions and
+ loop functions, for example.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3254,11 +3296,23 @@ reset the debugging output to default behaviour.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-LEVEL-MAX:CAPS"></a><h3>GST_LEVEL_MAX</h3>
+<pre class="programlisting">#define GST_LEVEL_MAX GST_LEVEL_COUNT
+</pre>
+<p>Defines the maximum debugging level to be enabled at compilation time. By default
+it is set such that all debugging statements will be enabled.</p>
+<p>If you wish to compile GStreamer and plugins with only some debugging statements
+(Such as just warnings and errors), you can define it at compile time to the
+maximum debug level. Any debug statements above that level will be compiled out.</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstDebugColorFlags"></a><h3>enum GstDebugColorFlags</h3>
 <p>These are some terminal style flags you can use when creating your
 debugging categories to make them stand out in debugging output.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.4.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.5.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3400,7 +3454,7 @@ debugging categories to make them stand out in debugging output.</p>
 <div class="refsect2">
 <a name="GstDebugColorMode"></a><h3>enum GstDebugColorMode</h3>
 <div class="refsect3">
-<a name="id-1.5.3.8.5.3"></a><h4>Members</h4>
+<a name="id-1.5.3.8.6.3"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3449,7 +3503,7 @@ debugging categories to make them stand out in debugging output.</p>
 <p>Available details for pipeline graphs produced by <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>
 and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.7.4"></a><h4>Members</h4>
+<a name="id-1.5.3.8.8.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -3474,7 +3528,8 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 <tr>
 <td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-NON-DEFAULT-PARAMS:CAPS"></a>GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS</p></td>
 <td class="enum_member_description">
-<p>show modified parameters on elements</p>
+<p>show modified parameters on
+                                          elements</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3486,9 +3541,25 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-FULL-PARAMS:CAPS"></a>GST_DEBUG_GRAPH_SHOW_FULL_PARAMS</p></td>
+<td class="enum_member_description">
+<p>show full element parameter values even
+                                   if they are very long</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-ALL:CAPS"></a>GST_DEBUG_GRAPH_SHOW_ALL</p></td>
 <td class="enum_member_description">
-<p>show all details</p>
+<p>show all the typical details that one might want</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-VERBOSE:CAPS"></a>GST_DEBUG_GRAPH_SHOW_VERBOSE</p></td>
+<td class="enum_member_description">
+<p>show all details regardless of how large or
+                               verbose they make the resulting output</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3525,15 +3596,37 @@ the matching arguments.</p>
 
 <p></p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GST-STIME-FORMAT:CAPS"></a><h3>GST_STIME_FORMAT</h3>
+<pre class="programlisting">#define GST_STIME_FORMAT "c%" GST_TIME_FORMAT
+</pre>
+<p>A string that can be used in printf-like format strings to display a signed
+<a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> or <span class="type">gint64</span> value in h:m:s format.  Use <a class="link" href="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS" title="GST_TIME_ARGS()"><code class="function">GST_TIME_ARGS()</code></a> to
+construct the matching arguments.</p>
+<p>Example:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_STIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-STIME-ARGS:CAPS">GST_STIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstInfo.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="gstreamer-gstconfig.html" title="gstconfig"><span class="type">gstreamer-gstconfig</span></a>, <a class="link" href="gstreamer-Gst.html" title="Gst"><span class="type">gstreamer-Gst</span></a> for command line parameters
+<p><a class="link" href="gst-running.html" title="Running GStreamer Applications"><span class="type">gst-running</span></a> for command line parameters
 and environment variables that affect the debugging output.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.24</div>
 </body>
 </html>
