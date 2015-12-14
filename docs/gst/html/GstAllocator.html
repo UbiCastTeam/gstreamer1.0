@@ -349,7 +349,7 @@ gst_allocation_params_free (<em class="parameter"><code><a class="link" href="Gs
 <a name="gst-allocator-alloc"></a><h3>gst_allocator_alloc ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_allocator_alloc (<em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                     <em class="parameter"><code><span class="type">gsize</span> size</code></em>,
+                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
                      <em class="parameter"><code><a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
 <p>Use <em class="parameter"><code>allocator</code></em>
  to allocate a new memory block with memory that is at least
@@ -438,9 +438,9 @@ gst_allocator_free (<em class="parameter"><code><a class="link" href="GstAllocat
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                        <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
-                        <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
-                        <em class="parameter"><code><span class="type">gsize</span> size</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> maxsize</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> offset</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Allocate a new memory block that wraps the given <em class="parameter"><code>data</code></em>
@@ -680,17 +680,17 @@ if present. (Since 1.6)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstAllocationParams-struct.align"></a>align</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.align"></a>align</code></em>;</p></td>
 <td class="struct_member_description"><p>the desired alignment of the memory</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstAllocationParams-struct.prefix"></a>prefix</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.prefix"></a>prefix</code></em>;</p></td>
 <td class="struct_member_description"><p>the desired prefix</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstAllocationParams-struct.padding"></a>padding</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.padding"></a>padding</code></em>;</p></td>
 <td class="struct_member_description"><p>the desired padding</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>

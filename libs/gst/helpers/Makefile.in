@@ -944,6 +944,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@ENABLE_BASH_COMPLETION_FALSE@install-exec-hook:
 @ENABLE_BASH_COMPLETION_FALSE@uninstall-hook:
 clean: clean-am
 
@@ -969,7 +970,8 @@ info: info-am
 info-am:
 
 install-data-am: install-dist_bashhelpersDATA install-helpersPROGRAMS
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
 
 install-dvi-am:
@@ -1019,7 +1021,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
 	uninstall-helpersPROGRAMS
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
-.MAKE: install-am install-exec-am install-strip uninstall-am
+.MAKE: install-am install-data-am install-exec-am install-strip \
+	uninstall-am
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
 	clean-binPROGRAMS clean-generic clean-helpersPROGRAMS \
@@ -1027,25 +1030,22 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dist_bashhelpersDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-exec-hook \
-	install-helpersPROGRAMS install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-dist_bashhelpersDATA uninstall-helpersPROGRAMS \
-	uninstall-hook
+	install-data-am install-data-hook install-dist_bashhelpersDATA \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-exec-hook install-helpersPROGRAMS install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
+	uninstall-helpersPROGRAMS uninstall-hook
 
 .PRECIOUS: Makefile
 
 
-install-exec-hook: install-helpersPROGRAMS
-@HAVE_PTP_HELPER_SETUID_TRUE@@HAVE_PTP_TRUE@	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper
-@HAVE_PTP_HELPER_SETUID_TRUE@@HAVE_PTP_TRUE@	- chmod u+s $(DESTDIR)$(helpersdir)/gst-ptp-helper
-@HAVE_PTP_HELPER_CAPABILITIES_TRUE@@HAVE_PTP_TRUE@	- $(SETCAP) cap_net_bind_service,cap_net_admin+ep $(DESTDIR)$(helpersdir)/gst-ptp-helper
+@ENABLE_BASH_COMPLETION_TRUE@install-exec-hook:
 @ENABLE_BASH_COMPLETION_TRUE@	$(MKDIR_P) $(DESTDIR)$(BASH_HELPERS_DIR) && \
 @ENABLE_BASH_COMPLETION_TRUE@	cd $(DESTDIR)$(bindir) && \
 @ENABLE_BASH_COMPLETION_TRUE@	$(INSTALL) `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT) \
@@ -1054,6 +1054,11 @@ install-exec-hook: install-helpersPROGRAMS
 
 @ENABLE_BASH_COMPLETION_TRUE@uninstall-hook:
 @ENABLE_BASH_COMPLETION_TRUE@	rm -f $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
+
+install-data-hook:
+@HAVE_PTP_HELPER_SETUID_TRUE@@HAVE_PTP_TRUE@	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper
+@HAVE_PTP_HELPER_SETUID_TRUE@@HAVE_PTP_TRUE@	- chmod u+s $(DESTDIR)$(helpersdir)/gst-ptp-helper
+@HAVE_PTP_HELPER_CAPABILITIES_TRUE@@HAVE_PTP_TRUE@	- $(SETCAP) cap_net_bind_service,cap_net_admin+ep $(DESTDIR)$(helpersdir)/gst-ptp-helper
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
