@@ -3703,9 +3703,9 @@ random linked sinkpad of this element.</p>
 <pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_query_convert (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                            <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> src_format</code></em>,
-                           <em class="parameter"><code><span class="type">gint64</span> src_val</code></em>,
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> src_val</code></em>,
                            <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> dest_format</code></em>,
-                           <em class="parameter"><code><span class="type">gint64</span> *dest_val</code></em>);</pre>
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *dest_val</code></em>);</pre>
 <p>Queries an element to convert <em class="parameter"><code>src_val</code></em>
  in <em class="parameter"><code>src_format</code></em>
  to <em class="parameter"><code>dest_format</code></em>
@@ -3758,7 +3758,7 @@ gst_element_query_convert (<em class="parameter"><code><a class="link" href="Gst
 <pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_query_position (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                             <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
-                            <em class="parameter"><code><span class="type">gint64</span> *cur</code></em>);</pre>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *cur</code></em>);</pre>
 <p>Queries an element (usually top-level pipeline or playbin element) for the
 stream position in nanoseconds. This will be a value between 0 and the
 stream duration (if the stream duration is known). This query will usually
@@ -3806,7 +3806,7 @@ position, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 <pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_query_duration (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                             <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
-                            <em class="parameter"><code><span class="type">gint64</span> *duration</code></em>);</pre>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *duration</code></em>);</pre>
 <p>Queries an element (usually top-level pipeline or playbin element) for the
 total stream duration in nanoseconds. This query will only work once the
 pipeline is prerolled (i.e. reached PAUSED or PLAYING state). The application
@@ -3893,7 +3893,7 @@ as flushing seeks and steps) will emit <a class="link" href="GstMessage.html#GST
 gst_element_seek_simple (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
                          <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
                          <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekFlags" title="enum GstSeekFlags"><span class="type">GstSeekFlags</span></a> seek_flags</code></em>,
-                         <em class="parameter"><code><span class="type">gint64</span> seek_pos</code></em>);</pre>
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> seek_pos</code></em>);</pre>
 <p>Simple API to perform a seek on the given element, meaning it just seeks
 to the given position relative to the start of the stream. For more complex
 operations like segment seeks (e.g. for looping) or changing the playback
@@ -3957,9 +3957,9 @@ gst_element_seek (<em class="parameter"><code><a class="link" href="GstElement.h
                   <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>,
                   <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekFlags" title="enum GstSeekFlags"><span class="type">GstSeekFlags</span></a> flags</code></em>,
                   <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekType" title="enum GstSeekType"><span class="type">GstSeekType</span></a> start_type</code></em>,
-                  <em class="parameter"><code><span class="type">gint64</span> start</code></em>,
+                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> start</code></em>,
                   <em class="parameter"><code><a class="link" href="GstEvent.html#GstSeekType" title="enum GstSeekType"><span class="type">GstSeekType</span></a> stop_type</code></em>,
-                  <em class="parameter"><code><span class="type">gint64</span> stop</code></em>);</pre>
+                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> stop</code></em>);</pre>
 <p>Sends a seek event to an element. See <a class="link" href="GstEvent.html#gst-event-new-seek" title="gst_event_new_seek ()"><code class="function">gst_event_new_seek()</code></a> for the details of
 the parameters. The seek event is sent to the element using
 <a class="link" href="GstElement.html#gst-element-send-event" title="gst_element_send_event ()"><code class="function">gst_element_send_event()</code></a>.</p>
@@ -4078,7 +4078,7 @@ preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint32</span> <em class="structfield"><code><a name="GstElement-struct.state-cookie"></a>state_cookie</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GstElement-struct.state-cookie"></a>state_cookie</code></em>;</p></td>
 <td class="struct_member_description"><p>Used to detect concurrent execution of
 <a class="link" href="GstElement.html#gst-element-set-state" title="gst_element_set_state ()"><code class="function">gst_element_set_state()</code></a> and <a class="link" href="GstElement.html#gst-element-get-state" title="gst_element_get_state ()"><code class="function">gst_element_get_state()</code></a></p></td>
 <td class="struct_member_annotations"> </td>
@@ -4136,7 +4136,7 @@ state will yield the running_time against the clock.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint16</span> <em class="structfield"><code><a name="GstElement-struct.numpads"></a>numpads</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GstElement-struct.numpads"></a>numpads</code></em>;</p></td>
 <td class="struct_member_description"><p>number of pads of the element, includes both source and sink pads.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -4146,7 +4146,7 @@ state will yield the running_time against the clock.</p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Pad]</span></td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint16</span> <em class="structfield"><code><a name="GstElement-struct.numsrcpads"></a>numsrcpads</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GstElement-struct.numsrcpads"></a>numsrcpads</code></em>;</p></td>
 <td class="struct_member_description"><p>number of source pads of the element.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -4156,7 +4156,7 @@ state will yield the running_time against the clock.</p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Pad]</span></td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint16</span> <em class="structfield"><code><a name="GstElement-struct.numsinkpads"></a>numsinkpads</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GstElement-struct.numsinkpads"></a>numsinkpads</code></em>;</p></td>
 <td class="struct_member_description"><p>number of sink pads of the element.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -4166,7 +4166,7 @@ state will yield the running_time against the clock.</p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Pad]</span></td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint32</span> <em class="structfield"><code><a name="GstElement-struct.pads-cookie"></a>pads_cookie</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GstElement-struct.pads-cookie"></a>pads_cookie</code></em>;</p></td>
 <td class="struct_member_description"><p>updated whenever the a pad is added or removed</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -4262,7 +4262,7 @@ functionality.</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint32</span> <em class="structfield"><code><a name="GstElementClass.pad-templ-cookie"></a>pad_templ_cookie</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GstElementClass.pad-templ-cookie"></a>pad_templ_cookie</code></em>;</p></td>
 <td class="struct_member_description"><p>changed whenever the padtemplates change</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
