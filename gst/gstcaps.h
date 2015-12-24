@@ -203,10 +203,6 @@ GST_EXPORT GstCaps * _gst_caps_none;
  *
  * Returns: the same #GstCaps object.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstCaps * gst_caps_ref (GstCaps * caps);
-#endif
-
 static inline GstCaps *
 gst_caps_ref (GstCaps * caps)
 {
@@ -220,10 +216,6 @@ gst_caps_ref (GstCaps * caps)
  * Unref a #GstCaps and and free all its structures and the
  * structures' values when the refcount reaches 0.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC void gst_caps_unref (GstCaps * caps);
-#endif
-
 static inline void
 gst_caps_unref (GstCaps * caps)
 {
@@ -246,10 +238,6 @@ gst_caps_unref (GstCaps * caps)
  *
  * Returns: the new #GstCaps
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstCaps * gst_caps_copy (const GstCaps * caps);
-#endif
-
 static inline GstCaps *
 gst_caps_copy (const GstCaps * caps)
 {
@@ -302,10 +290,6 @@ gst_caps_copy (const GstCaps * caps)
  *
  * Returns: %TRUE if @new_caps was different from @old_caps
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC gboolean gst_caps_replace (GstCaps **old_caps, GstCaps *new_caps);
-#endif
-
 static inline gboolean
 gst_caps_replace (GstCaps **old_caps, GstCaps *new_caps)
 {
@@ -325,10 +309,6 @@ gst_caps_replace (GstCaps **old_caps, GstCaps *new_caps)
  *
  * Returns: %TRUE if @new_caps was different from @old_caps
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC gboolean gst_caps_take (GstCaps **old_caps, GstCaps *new_caps);
-#endif
-
 static inline gboolean
 gst_caps_take (GstCaps **old_caps, GstCaps *new_caps)
 {
@@ -520,6 +500,10 @@ GstCaps *         gst_caps_fixate                  (GstCaps *caps) G_GNUC_WARN_U
 /* utility */
 gchar *           gst_caps_to_string               (const GstCaps *caps) G_GNUC_MALLOC;
 GstCaps *         gst_caps_from_string             (const gchar   *string) G_GNUC_WARN_UNUSED_RESULT;
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstCaps, gst_caps_unref)
+#endif
 
 G_END_DECLS
 

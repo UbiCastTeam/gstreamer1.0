@@ -404,6 +404,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -1262,6 +1264,9 @@ release: dist
 	@if [ -d ../www/data/src ]; then \
 	  mv -v $(PACKAGE)-$(VERSION).tar.xz ../www/data/src/$(PACKAGE)/ ; \
 	  mv -v $(PACKAGE)-$(VERSION).tar.xz.sha256sum ../www/data/src/$(PACKAGE)/ ; \
+	elif [ -d ../../www/data/src ]; then \
+	  mv -v $(PACKAGE)-$(VERSION).tar.xz ../../www/data/src/$(PACKAGE)/ ; \
+	  mv -v $(PACKAGE)-$(VERSION).tar.xz.sha256sum ../../www/data/src/$(PACKAGE)/ ; \
 	fi
 	@echo "================================================================================================="
 

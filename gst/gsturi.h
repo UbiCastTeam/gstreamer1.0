@@ -261,10 +261,6 @@ gboolean gst_uri_set_fragment          (GstUri * uri, const gchar * fragment);
  * Returns: (transfer full): A new #GstUri object which is a copy of this
  *          #GstUri or %NULL.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstUri * gst_uri_copy (const GstUri * uri);
-#endif
-
 static inline GstUri *
 gst_uri_copy (const GstUri * uri)
 {
@@ -280,10 +276,6 @@ gst_uri_copy (const GstUri * uri)
  *
  * Returns: This object with the reference count incremented.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstUri * gst_uri_ref (GstUri * uri);
-#endif
-
 static inline GstUri *
 gst_uri_ref (GstUri * uri)
 {
@@ -300,15 +292,15 @@ gst_uri_ref (GstUri * uri)
  *
  * See gst_mini_object_unref() for further info.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC void gst_uri_unref (GstUri * uri);
-#endif
-
 static inline void
 gst_uri_unref (GstUri * uri)
 {
   gst_mini_object_unref (GST_MINI_OBJECT_CAST (uri));
 }
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstUri, gst_uri_unref)
+#endif
 
 G_END_DECLS
 

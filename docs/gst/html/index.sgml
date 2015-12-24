@@ -118,6 +118,7 @@
 <ANCHOR id="GST-BUFFER-FLAG-UNSET:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-FLAG-UNSET:CAPS">
 <ANCHOR id="GST-BUFFER-PTS:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-PTS:CAPS">
 <ANCHOR id="GST-BUFFER-DTS:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-DTS:CAPS">
+<ANCHOR id="GST-BUFFER-DTS-OR-PTS:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-DTS-OR-PTS:CAPS">
 <ANCHOR id="GST-BUFFER-DURATION:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-DURATION:CAPS">
 <ANCHOR id="GST-BUFFER-OFFSET:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-OFFSET:CAPS">
 <ANCHOR id="GST-BUFFER-OFFSET-END:CAPS" href="gstreamer-1.0/GstBuffer.html#GST-BUFFER-OFFSET-END:CAPS">
@@ -764,6 +765,9 @@
 <ANCHOR id="gst-element-set-bus" href="gstreamer-1.0/GstElement.html#gst-element-set-bus">
 <ANCHOR id="gst-element-get-bus" href="gstreamer-1.0/GstElement.html#gst-element-get-bus">
 <ANCHOR id="gst-element-set-context" href="gstreamer-1.0/GstElement.html#gst-element-set-context">
+<ANCHOR id="gst-element-get-context" href="gstreamer-1.0/GstElement.html#gst-element-get-context">
+<ANCHOR id="gst-element-get-context-unlocked" href="gstreamer-1.0/GstElement.html#gst-element-get-context-unlocked">
+<ANCHOR id="gst-element-get-contexts" href="gstreamer-1.0/GstElement.html#gst-element-get-contexts">
 <ANCHOR id="gst-element-get-factory" href="gstreamer-1.0/GstElement.html#gst-element-get-factory">
 <ANCHOR id="gst-element-set-name" href="gstreamer-1.0/GstElement.html#gst-element-set-name">
 <ANCHOR id="gst-element-get-name" href="gstreamer-1.0/GstElement.html#gst-element-get-name">
@@ -1977,6 +1981,7 @@
 <ANCHOR id="GST-PLUGIN-DEPENDENCY-FLAG-RECURSE:CAPS" href="gstreamer-1.0/GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-RECURSE:CAPS">
 <ANCHOR id="GST-PLUGIN-DEPENDENCY-FLAG-PATHS-ARE-DEFAULT-ONLY:CAPS" href="gstreamer-1.0/GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-PATHS-ARE-DEFAULT-ONLY:CAPS">
 <ANCHOR id="GST-PLUGIN-DEPENDENCY-FLAG-FILE-NAME-IS-SUFFIX:CAPS" href="gstreamer-1.0/GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-FILE-NAME-IS-SUFFIX:CAPS">
+<ANCHOR id="GST-PLUGIN-DEPENDENCY-FLAG-FILE-NAME-IS-PREFIX:CAPS" href="gstreamer-1.0/GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-FILE-NAME-IS-PREFIX:CAPS">
 <ANCHOR id="GstPlugin.see-also" href="gstreamer-1.0/GstPlugin.html#GstPlugin.see-also">
 <ANCHOR id="GstPluginFeature" href="gstreamer-1.0/GstPluginFeature.html">
 <ANCHOR id="GstPluginFeature.functions" href="gstreamer-1.0/GstPluginFeature.html#GstPluginFeature.functions">
@@ -2255,9 +2260,14 @@
 <ANCHOR id="gst-segment-copy" href="gstreamer-1.0/GstSegment.html#gst-segment-copy">
 <ANCHOR id="gst-segment-free" href="gstreamer-1.0/GstSegment.html#gst-segment-free">
 <ANCHOR id="gst-segment-do-seek" href="gstreamer-1.0/GstSegment.html#gst-segment-do-seek">
+<ANCHOR id="gst-segment-position-from-stream-time" href="gstreamer-1.0/GstSegment.html#gst-segment-position-from-stream-time">
+<ANCHOR id="gst-segment-position-from-stream-time-full" href="gstreamer-1.0/GstSegment.html#gst-segment-position-from-stream-time-full">
 <ANCHOR id="gst-segment-to-running-time" href="gstreamer-1.0/GstSegment.html#gst-segment-to-running-time">
 <ANCHOR id="gst-segment-to-running-time-full" href="gstreamer-1.0/GstSegment.html#gst-segment-to-running-time-full">
 <ANCHOR id="gst-segment-to-stream-time" href="gstreamer-1.0/GstSegment.html#gst-segment-to-stream-time">
+<ANCHOR id="gst-segment-to-stream-time-full" href="gstreamer-1.0/GstSegment.html#gst-segment-to-stream-time-full">
+<ANCHOR id="gst-segment-position-from-running-time" href="gstreamer-1.0/GstSegment.html#gst-segment-position-from-running-time">
+<ANCHOR id="gst-segment-position-from-running-time-full" href="gstreamer-1.0/GstSegment.html#gst-segment-position-from-running-time-full">
 <ANCHOR id="gst-segment-to-position" href="gstreamer-1.0/GstSegment.html#gst-segment-to-position">
 <ANCHOR id="gst-segment-set-running-time" href="gstreamer-1.0/GstSegment.html#gst-segment-set-running-time">
 <ANCHOR id="gst-segment-copy-into" href="gstreamer-1.0/GstSegment.html#gst-segment-copy-into">
@@ -3249,6 +3259,8 @@
 <ANCHOR id="GST-CAT-DEFAULT:CAPS" href="gstreamer-1.0/gstreamer-GstInfo.html#GST-CAT-DEFAULT:CAPS">
 <ANCHOR id="GST-TIME-FORMAT:CAPS" href="gstreamer-1.0/gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS">
 <ANCHOR id="GST-STIME-FORMAT:CAPS" href="gstreamer-1.0/gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS">
+<ANCHOR id="GST-PTR-FORMAT:CAPS" href="gstreamer-1.0/gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS">
+<ANCHOR id="GST-SEGMENT-FORMAT:CAPS" href="gstreamer-1.0/gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS">
 <ANCHOR id="gstreamer-GstInfo.see-also" href="gstreamer-1.0/gstreamer-GstInfo.html#gstreamer-GstInfo.see-also">
 <ANCHOR id="annotation-glossterm-allow-none" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-allow-none">
 <ANCHOR id="annotation-glossterm-array" href="gstreamer-1.0/annotation-glossary.html#annotation-glossterm-array">

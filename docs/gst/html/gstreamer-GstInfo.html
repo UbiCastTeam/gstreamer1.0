@@ -652,6 +652,14 @@
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" title="GST_STIME_FORMAT">GST_STIME_FORMAT</a></td>
 </tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT">GST_PTR_FORMAT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT">GST_SEGMENT_FORMAT</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -782,7 +790,7 @@ statements.</p>
 <hr>
 <div class="refsect2">
 <a name="GST-FUNCTION:CAPS"></a><h3>GST_FUNCTION</h3>
-<pre class="programlisting">#  define GST_FUNCTION     ((const char*) (__FUNCTION__))
+<pre class="programlisting">#  define GST_FUNCTION     ((const char*) (__func__))
 </pre>
 <p>This macro should evaluate to the name of the current function and be should
 be defined when configuring your project, as it is compiler dependant. If it
@@ -3005,7 +3013,7 @@ freed by the caller.</p>
 </pre>
 <p>To aid debugging applications one can use this method to write out the whole
 network of gstreamer elements that form the pipeline into an dot file.
-This file can be processed with graphviz to get an image.</p>
+This file can be processed with graphviz to get an image, like this:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -3017,11 +3025,13 @@ This file can be processed with graphviz to get an image.</p>
   </table>
 </div>
 
+<p>There is also a utility called xdot which allows you to view the dot file
+directly without converting it first.</p>
 <p>The macro is only active if gstreamer is configured with
 "--gst-enable-gst-debug" and the environment variable
 GST_DEBUG_DUMP_DOT_DIR is set to a basepath (e.g. /tmp).</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.77.7"></a><h4>Parameters</h4>
+<a name="id-1.5.3.7.77.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3618,6 +3628,22 @@ construct the matching arguments.</p>
 
 <p></p>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PTR-FORMAT:CAPS"></a><h3>GST_PTR_FORMAT</h3>
+<pre class="programlisting">#define GST_PTR_FORMAT     "p\aA"
+</pre>
+<p>printf format type used to debug GStreamer types.
+This can only be used on types whose size is &gt;= sizeof(gpointer).</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-SEGMENT-FORMAT:CAPS"></a><h3>GST_SEGMENT_FORMAT</h3>
+<pre class="programlisting">#define GST_SEGMENT_FORMAT "p\aB"
+</pre>
+<p>printf format type used to debug GStreamer segments.
+This can only be used on pointers to GstSegment structures.</p>
 </div>
 </div>
 <div class="refsect1">

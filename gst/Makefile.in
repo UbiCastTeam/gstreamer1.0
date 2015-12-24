@@ -195,7 +195,8 @@ am__libgstreamer_@GST_API_VERSION@_la_SOURCES_DIST = gst.c gstobject.c \
 	gstprotection.c gstquark.c gstquery.c gstregistry.c \
 	gstregistrychunks.c gstsample.c gstsegment.c gststructure.c \
 	gstsystemclock.c gsttaglist.c gsttagsetter.c gsttask.c \
-	gsttaskpool.c gsttoc.c gsttocsetter.c gsttrace.c gsttypefind.c \
+	gsttaskpool.c gsttoc.c gsttocsetter.c gsttrace.c gsttracer.c \
+	gsttracerfactory.c gsttracerutils.c gsttypefind.c \
 	gsttypefindfactory.c gsturi.c gstutils.c gstvalue.c gstparse.c \
 	gstregistrybinary.c
 @GST_DISABLE_TRACE_FALSE@am__objects_1 = libgstreamer_@GST_API_VERSION@_la-gsttrace.lo
@@ -261,6 +262,9 @@ am_libgstreamer_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstreamer_@GST_API_VERSION@_la-gsttoc.lo \
 	libgstreamer_@GST_API_VERSION@_la-gsttocsetter.lo \
 	$(am__objects_1) \
+	libgstreamer_@GST_API_VERSION@_la-gsttracer.lo \
+	libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.lo \
+	libgstreamer_@GST_API_VERSION@_la-gsttracerutils.lo \
 	libgstreamer_@GST_API_VERSION@_la-gsttypefind.lo \
 	libgstreamer_@GST_API_VERSION@_la-gsttypefindfactory.lo \
 	libgstreamer_@GST_API_VERSION@_la-gsturi.lo \
@@ -510,6 +514,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -772,6 +778,9 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gsttoc.c		\
 	gsttocsetter.c		\
 	$(GST_TRACE_SRC)	\
+	gsttracer.c		\
+	gsttracerfactory.c	\
+	gsttracerutils.c		\
 	gsttypefind.c		\
 	gsttypefindfactory.c	\
 	gsturi.c		\
@@ -877,6 +886,9 @@ gst_headers = \
 	gsttaskpool.h		\
 	gsttoc.h		\
 	gsttocsetter.h		\
+	gsttracer.h		\
+	gsttracerfactory.h	\
+	gsttracerutils.h		\
 	gsttypefind.h		\
 	gsttypefindfactory.h	\
 	gsturi.h		\
@@ -1067,6 +1079,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttoc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttocsetter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttrace.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerutils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttypefind.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttypefindfactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsturi.Plo@am__quote@
@@ -1516,6 +1531,27 @@ libgstreamer_@GST_API_VERSION@_la-gsttrace.lo: gsttrace.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsttrace.c' object='libgstreamer_@GST_API_VERSION@_la-gsttrace.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gsttrace.lo `test -f 'gsttrace.c' || echo '$(srcdir)/'`gsttrace.c
+
+libgstreamer_@GST_API_VERSION@_la-gsttracer.lo: gsttracer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gsttracer.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracer.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gsttracer.lo `test -f 'gsttracer.c' || echo '$(srcdir)/'`gsttracer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracer.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracer.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsttracer.c' object='libgstreamer_@GST_API_VERSION@_la-gsttracer.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gsttracer.lo `test -f 'gsttracer.c' || echo '$(srcdir)/'`gsttracer.c
+
+libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.lo: gsttracerfactory.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.lo `test -f 'gsttracerfactory.c' || echo '$(srcdir)/'`gsttracerfactory.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsttracerfactory.c' object='libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gsttracerfactory.lo `test -f 'gsttracerfactory.c' || echo '$(srcdir)/'`gsttracerfactory.c
+
+libgstreamer_@GST_API_VERSION@_la-gsttracerutils.lo: gsttracerutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gsttracerutils.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerutils.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gsttracerutils.lo `test -f 'gsttracerutils.c' || echo '$(srcdir)/'`gsttracerutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerutils.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttracerutils.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsttracerutils.c' object='libgstreamer_@GST_API_VERSION@_la-gsttracerutils.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gsttracerutils.lo `test -f 'gsttracerutils.c' || echo '$(srcdir)/'`gsttracerutils.c
 
 libgstreamer_@GST_API_VERSION@_la-gsttypefind.lo: gsttypefind.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gsttypefind.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gsttypefind.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gsttypefind.lo `test -f 'gsttypefind.c' || echo '$(srcdir)/'`gsttypefind.c

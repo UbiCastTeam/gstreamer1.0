@@ -180,6 +180,11 @@ on the bus.</p></li>
 <p>Bins will catch GST_MESSAGE_NEED_CONTEXT messages and will set any previously
 known context on the element that asks for it if possible. Otherwise the
 application should provide one if it can.</p>
+<p><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>s can be persistent.
+A persistent <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> is kept in elements when they reach
+<a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a>, non-persistent ones will be removed.
+Also, a non-persistent context won't override a previous persistent
+context set to an element.</p>
 </div>
 <div class="refsect1">
 <a name="GstContext.functions_details"></a><h2>Functions</h2>
@@ -446,8 +451,8 @@ gst_context_writable_structure (<em class="parameter"><code><a class="link" href
 <div class="refsect3">
 <a name="id-1.3.17.8.10.6"></a><h4>Returns</h4>
 <p> The structure of the context. The structure is still
-owned by the event, which means that you should not free it and
-that the pointer becomes invalid when you free the event.
+owned by the context, which means that you should not free it and
+that the pointer becomes invalid when you free the context.
 This function checks if <em class="parameter"><code>context</code></em>
 is writable.</p>
 </div>

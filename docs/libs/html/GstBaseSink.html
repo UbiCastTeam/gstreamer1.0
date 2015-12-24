@@ -1491,54 +1491,54 @@ the last-sample property.</p>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-GET-PREROLL-COND:CAPS"></a><h3>GST_BASE_SINK_GET_PREROLL_COND()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_GET_PREROLL_COND(pad)   (&amp;GST_BASE_SINK_CAST(pad)-&gt;preroll_cond)
+<pre class="programlisting">#define GST_BASE_SINK_GET_PREROLL_COND(obj)   (&amp;GST_BASE_SINK_CAST(obj)-&gt;preroll_cond)
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-GET-PREROLL-LOCK:CAPS"></a><h3>GST_BASE_SINK_GET_PREROLL_LOCK()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_GET_PREROLL_LOCK(pad)   (&amp;GST_BASE_SINK_CAST(pad)-&gt;preroll_lock)
+<pre class="programlisting">#define GST_BASE_SINK_GET_PREROLL_LOCK(obj)   (&amp;GST_BASE_SINK_CAST(obj)-&gt;preroll_lock)
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-BROADCAST:CAPS"></a><h3>GST_BASE_SINK_PREROLL_BROADCAST()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_PREROLL_BROADCAST(pad)  g_cond_broadcast (GST_BASE_SINK_GET_PREROLL_COND (pad));
+<pre class="programlisting">#define GST_BASE_SINK_PREROLL_BROADCAST(obj)  g_cond_broadcast (GST_BASE_SINK_GET_PREROLL_COND (obj));
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-LOCK:CAPS"></a><h3>GST_BASE_SINK_PREROLL_LOCK()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_PREROLL_LOCK(pad)       (g_mutex_lock(GST_BASE_SINK_GET_PREROLL_LOCK(pad)))
+<pre class="programlisting">#define GST_BASE_SINK_PREROLL_LOCK(obj)       (g_mutex_lock(GST_BASE_SINK_GET_PREROLL_LOCK(obj)))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-SIGNAL:CAPS"></a><h3>GST_BASE_SINK_PREROLL_SIGNAL()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_PREROLL_SIGNAL(pad)     g_cond_signal (GST_BASE_SINK_GET_PREROLL_COND (pad));
+<pre class="programlisting">#define GST_BASE_SINK_PREROLL_SIGNAL(obj)     g_cond_signal (GST_BASE_SINK_GET_PREROLL_COND (obj));
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-TRYLOCK:CAPS"></a><h3>GST_BASE_SINK_PREROLL_TRYLOCK()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_PREROLL_TRYLOCK(pad)    (g_mutex_trylock(GST_BASE_SINK_GET_PREROLL_LOCK(pad)))
+<pre class="programlisting">#define GST_BASE_SINK_PREROLL_TRYLOCK(obj)    (g_mutex_trylock(GST_BASE_SINK_GET_PREROLL_LOCK(obj)))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-UNLOCK:CAPS"></a><h3>GST_BASE_SINK_PREROLL_UNLOCK()</h3>
-<pre class="programlisting">#define GST_BASE_SINK_PREROLL_UNLOCK(pad)     (g_mutex_unlock(GST_BASE_SINK_GET_PREROLL_LOCK(pad)))
+<pre class="programlisting">#define GST_BASE_SINK_PREROLL_UNLOCK(obj)     (g_mutex_unlock(GST_BASE_SINK_GET_PREROLL_LOCK(obj)))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-WAIT:CAPS"></a><h3>GST_BASE_SINK_PREROLL_WAIT()</h3>
-<pre class="programlisting">#define             GST_BASE_SINK_PREROLL_WAIT(pad)</pre>
+<pre class="programlisting">#define             GST_BASE_SINK_PREROLL_WAIT(obj)</pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BASE-SINK-PREROLL-WAIT-UNTIL:CAPS"></a><h3>GST_BASE_SINK_PREROLL_WAIT_UNTIL()</h3>
-<pre class="programlisting">#define             GST_BASE_SINK_PREROLL_WAIT_UNTIL(pad, end_time)</pre>
+<pre class="programlisting">#define             GST_BASE_SINK_PREROLL_WAIT_UNTIL(obj, end_time)</pre>
 </div>
 </div>
 <div class="refsect1">

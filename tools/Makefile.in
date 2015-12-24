@@ -92,6 +92,7 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 bin_PROGRAMS = gst-inspect-@GST_API_VERSION@$(EXEEXT) \
+	gst-stats-@GST_API_VERSION@$(EXEEXT) \
 	gst-typefind-@GST_API_VERSION@$(EXEEXT) $(am__EXEEXT_1)
 @GST_DISABLE_PARSE_FALSE@am__append_1 = gst-launch-@GST_API_VERSION@
 @GST_DISABLE_PARSE_FALSE@am__append_2 = gst-launch-@GST_API_VERSION@.1
@@ -168,6 +169,15 @@ gst_launch_@GST_API_VERSION@_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(gst_launch_@GST_API_VERSION@_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am_gst_stats_@GST_API_VERSION@_OBJECTS =  \
+	gst_stats_@GST_API_VERSION@-gst-stats.$(OBJEXT)
+gst_stats_@GST_API_VERSION@_OBJECTS =  \
+	$(am_gst_stats_@GST_API_VERSION@_OBJECTS)
+gst_stats_@GST_API_VERSION@_DEPENDENCIES = $(am__DEPENDENCIES_1)
+gst_stats_@GST_API_VERSION@_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(gst_stats_@GST_API_VERSION@_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am_gst_typefind_@GST_API_VERSION@_OBJECTS =  \
 	gst_typefind_@GST_API_VERSION@-gst-typefind.$(OBJEXT)
 gst_typefind_@GST_API_VERSION@_OBJECTS =  \
@@ -214,9 +224,11 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(gst_inspect_@GST_API_VERSION@_SOURCES) \
 	$(gst_launch_@GST_API_VERSION@_SOURCES) \
+	$(gst_stats_@GST_API_VERSION@_SOURCES) \
 	$(gst_typefind_@GST_API_VERSION@_SOURCES)
 DIST_SOURCES = $(gst_inspect_@GST_API_VERSION@_SOURCES) \
 	$(am__gst_launch_@GST_API_VERSION@_SOURCES_DIST) \
+	$(gst_stats_@GST_API_VERSION@_SOURCES) \
 	$(gst_typefind_@GST_API_VERSION@_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -393,6 +405,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -566,6 +580,9 @@ top_srcdir = @top_srcdir@
 gst_inspect_@GST_API_VERSION@_SOURCES = gst-inspect.c tools.h
 gst_inspect_@GST_API_VERSION@_CFLAGS = $(GST_OBJ_CFLAGS)
 gst_inspect_@GST_API_VERSION@_LDADD = $(GST_OBJ_LIBS)
+gst_stats_@GST_API_VERSION@_SOURCES = gst-stats.c tools.h
+gst_stats_@GST_API_VERSION@_CFLAGS = $(GST_OBJ_CFLAGS)
+gst_stats_@GST_API_VERSION@_LDADD = $(GST_OBJ_LIBS)
 gst_typefind_@GST_API_VERSION@_SOURCES = gst-typefind.c tools.h
 gst_typefind_@GST_API_VERSION@_CFLAGS = $(GST_OBJ_CFLAGS)
 gst_typefind_@GST_API_VERSION@_LDADD = $(GST_OBJ_LIBS)
@@ -677,6 +694,10 @@ gst-launch-@GST_API_VERSION@$(EXEEXT): $(gst_launch_@GST_API_VERSION@_OBJECTS) $
 	@rm -f gst-launch-@GST_API_VERSION@$(EXEEXT)
 	$(AM_V_CCLD)$(gst_launch_@GST_API_VERSION@_LINK) $(gst_launch_@GST_API_VERSION@_OBJECTS) $(gst_launch_@GST_API_VERSION@_LDADD) $(LIBS)
 
+gst-stats-@GST_API_VERSION@$(EXEEXT): $(gst_stats_@GST_API_VERSION@_OBJECTS) $(gst_stats_@GST_API_VERSION@_DEPENDENCIES) $(EXTRA_gst_stats_@GST_API_VERSION@_DEPENDENCIES) 
+	@rm -f gst-stats-@GST_API_VERSION@$(EXEEXT)
+	$(AM_V_CCLD)$(gst_stats_@GST_API_VERSION@_LINK) $(gst_stats_@GST_API_VERSION@_OBJECTS) $(gst_stats_@GST_API_VERSION@_LDADD) $(LIBS)
+
 gst-typefind-@GST_API_VERSION@$(EXEEXT): $(gst_typefind_@GST_API_VERSION@_OBJECTS) $(gst_typefind_@GST_API_VERSION@_DEPENDENCIES) $(EXTRA_gst_typefind_@GST_API_VERSION@_DEPENDENCIES) 
 	@rm -f gst-typefind-@GST_API_VERSION@$(EXEEXT)
 	$(AM_V_CCLD)$(gst_typefind_@GST_API_VERSION@_LINK) $(gst_typefind_@GST_API_VERSION@_OBJECTS) $(gst_typefind_@GST_API_VERSION@_LDADD) $(LIBS)
@@ -689,6 +710,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_inspect_@GST_API_VERSION@-gst-inspect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_launch_@GST_API_VERSION@-gst-launch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_typefind_@GST_API_VERSION@-gst-typefind.Po@am__quote@
 
 .c.o:
@@ -742,6 +764,20 @@ gst_launch_@GST_API_VERSION@-gst-launch.obj: gst-launch.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-launch.c' object='gst_launch_@GST_API_VERSION@-gst-launch.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_launch_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -c -o gst_launch_@GST_API_VERSION@-gst-launch.obj `if test -f 'gst-launch.c'; then $(CYGPATH_W) 'gst-launch.c'; else $(CYGPATH_W) '$(srcdir)/gst-launch.c'; fi`
+
+gst_stats_@GST_API_VERSION@-gst-stats.o: gst-stats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_stats_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -MT gst_stats_@GST_API_VERSION@-gst-stats.o -MD -MP -MF $(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Tpo -c -o gst_stats_@GST_API_VERSION@-gst-stats.o `test -f 'gst-stats.c' || echo '$(srcdir)/'`gst-stats.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Tpo $(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-stats.c' object='gst_stats_@GST_API_VERSION@-gst-stats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_stats_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -c -o gst_stats_@GST_API_VERSION@-gst-stats.o `test -f 'gst-stats.c' || echo '$(srcdir)/'`gst-stats.c
+
+gst_stats_@GST_API_VERSION@-gst-stats.obj: gst-stats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_stats_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -MT gst_stats_@GST_API_VERSION@-gst-stats.obj -MD -MP -MF $(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Tpo -c -o gst_stats_@GST_API_VERSION@-gst-stats.obj `if test -f 'gst-stats.c'; then $(CYGPATH_W) 'gst-stats.c'; else $(CYGPATH_W) '$(srcdir)/gst-stats.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Tpo $(DEPDIR)/gst_stats_@GST_API_VERSION@-gst-stats.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-stats.c' object='gst_stats_@GST_API_VERSION@-gst-stats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_stats_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -c -o gst_stats_@GST_API_VERSION@-gst-stats.obj `if test -f 'gst-stats.c'; then $(CYGPATH_W) 'gst-stats.c'; else $(CYGPATH_W) '$(srcdir)/gst-stats.c'; fi`
 
 gst_typefind_@GST_API_VERSION@-gst-typefind.o: gst-typefind.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_typefind_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -MT gst_typefind_@GST_API_VERSION@-gst-typefind.o -MD -MP -MF $(DEPDIR)/gst_typefind_@GST_API_VERSION@-gst-typefind.Tpo -c -o gst_typefind_@GST_API_VERSION@-gst-typefind.o `test -f 'gst-typefind.c' || echo '$(srcdir)/'`gst-typefind.c

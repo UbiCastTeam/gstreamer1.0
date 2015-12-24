@@ -2508,7 +2508,10 @@ gst_caps_normalize (<em class="parameter"><code><a class="link" href="GstCaps.ht
 <em class="parameter"><code>GstStructures</code></em>
 .</p>
 <p>This function takes ownership of <em class="parameter"><code>caps</code></em>
-.</p>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an additional
+reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.11.8.55.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -2540,10 +2543,15 @@ gst_caps_simplify (<em class="parameter"><code><a class="link" href="GstCaps.htm
 same set of formats, but in a simpler form.  Component structures that are
 identical are merged.  Component structures that have values that can be
 merged are also merged.</p>
+<p>This function takes ownership of <em class="parameter"><code>caps</code></em>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it if necessary, so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an
+additional reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <p>This method does not preserve the original order of <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.56.6"></a><h4>Parameters</h4>
+<a name="id-1.3.11.8.56.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2558,7 +2566,7 @@ merged are also merged.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.56.7"></a><h4>Returns</h4>
+<a name="id-1.3.11.8.56.8"></a><h4>Returns</h4>
 <p> The simplified caps.</p>
 </div>
 </div>
@@ -2811,8 +2819,13 @@ gst_caps_truncate (<em class="parameter"><code><a class="link" href="GstCaps.htm
 <p>Discard all but the first structure from <em class="parameter"><code>caps</code></em>
 . Useful when
 fixating.</p>
+<p>This function takes ownership of <em class="parameter"><code>caps</code></em>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it if necessary, so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an
+additional reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.63.5"></a><h4>Parameters</h4>
+<a name="id-1.3.11.8.63.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2827,7 +2840,7 @@ fixating.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.63.6"></a><h4>Returns</h4>
+<a name="id-1.3.11.8.63.7"></a><h4>Returns</h4>
 <p> truncated caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2841,8 +2854,13 @@ gst_caps_fixate (<em class="parameter"><code><a class="link" href="GstCaps.html"
  into a representation with only fixed
 values. First the caps will be truncated and then the first structure will be
 fixated with <a class="link" href="GstStructure.html#gst-structure-fixate" title="gst_structure_fixate ()"><code class="function">gst_structure_fixate()</code></a>.</p>
+<p>This function takes ownership of <em class="parameter"><code>caps</code></em>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an additional
+reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.64.5"></a><h4>Parameters</h4>
+<a name="id-1.3.11.8.64.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2857,7 +2875,7 @@ fixated with <a class="link" href="GstStructure.html#gst-structure-fixate" title
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.64.6"></a><h4>Returns</h4>
+<a name="id-1.3.11.8.64.7"></a><h4>Returns</h4>
 <p> the fixated caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
