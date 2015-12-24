@@ -465,6 +465,30 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="GstContext.html" title="GstContext"><span class="returnvalue">GstContext</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-get-context" title="gst_element_get_context ()">gst_element_get_context</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstContext.html" title="GstContext"><span class="returnvalue">GstContext</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-get-context-unlocked" title="gst_element_get_context_unlocked ()">gst_element_get_context_unlocked</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-get-contexts" title="gst_element_get_contexts ()">gst_element_get_contexts</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="returnvalue">GstElementFactory</span></a> *
 </td>
 <td class="function_name">
@@ -2886,12 +2910,116 @@ gst_element_set_context (<em class="parameter"><code><a class="link" href="GstEl
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-element-get-context"></a><h3>gst_element_get_context ()</h3>
+<pre class="programlisting"><a class="link" href="GstContext.html" title="GstContext"><span class="returnvalue">GstContext</span></a> *
+gst_element_get_context (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                         <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>);</pre>
+<p>Gets the context with <em class="parameter"><code>context_type</code></em>
+ set on the element or NULL.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.3.21.10.60.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to get the context of.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>context_type</p></td>
+<td class="parameter_description"><p>a name of a context to retrieve</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.21.10.60.7"></a><h4>Returns</h4>
+<p> A <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> or NULL. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-get-context-unlocked"></a><h3>gst_element_get_context_unlocked ()</h3>
+<pre class="programlisting"><a class="link" href="GstContext.html" title="GstContext"><span class="returnvalue">GstContext</span></a> *
+gst_element_get_context_unlocked (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>);</pre>
+<p>Gets the context with <em class="parameter"><code>context_type</code></em>
+ set on the element or NULL.</p>
+<div class="refsect3">
+<a name="id-1.3.21.10.61.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to get the context of.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>context_type</p></td>
+<td class="parameter_description"><p>a name of a context to retrieve</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.21.10.61.6"></a><h4>Returns</h4>
+<p> A <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> or NULL. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-get-contexts"></a><h3>gst_element_get_contexts ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+gst_element_get_contexts (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>Gets the contexts set on the element.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.3.21.10.62.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to set the context of.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.21.10.62.7"></a><h4>Returns</h4>
+<p> List of <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>. </p>
+<p><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Context][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.8</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-element-get-factory"></a><h3>gst_element_get_factory ()</h3>
 <pre class="programlisting"><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="returnvalue">GstElementFactory</span></a> *
 gst_element_get_factory (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>Retrieves the factory that was used to create this element.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.60.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.63.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2906,7 +3034,7 @@ gst_element_get_factory (<em class="parameter"><code><a class="link" href="GstEl
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.60.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.63.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> used for creating this
 element. no refcounting is needed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -2919,7 +3047,7 @@ element. no refcounting is needed. </p>
 </pre>
 <p>Sets the name of the element, getting rid of the old name if there was one.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.61.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.64.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2952,7 +3080,7 @@ Caller should <a href="https://developer.gnome.org/glib/unstable/glib-Memory-All
 For a nameless element, this returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, which you can safely <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
 as well.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.62.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.65.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -2968,7 +3096,7 @@ as well.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.62.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.65.6"></a><h4>Returns</h4>
 <p> the name of <em class="parameter"><code>elem</code></em>
 . <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>
 after usage. MT safe. </p>
@@ -2982,7 +3110,7 @@ after usage. MT safe. </p>
 </pre>
 <p>Sets the parent of an element.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.63.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.66.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3011,7 +3139,7 @@ after usage. MT safe. </p>
 </pre>
 <p>Get the parent of an element.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.64.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.67.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3026,7 +3154,7 @@ after usage. MT safe. </p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.64.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.67.6"></a><h4>Returns</h4>
 <p> the parent of an element. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -3041,7 +3169,7 @@ gst_element_set_clock (<em class="parameter"><code><a class="link" href="GstElem
 refcount on the clock. Any previously set clock on the object
 is unreffed.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.65.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.68.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3063,7 +3191,7 @@ is unreffed.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.65.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.68.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the element accepted the clock. An element can refuse a
 clock when it, for example, is not able to slave its internal clock to the
 <em class="parameter"><code>clock</code></em>
@@ -3081,7 +3209,7 @@ last set with <a class="link" href="GstElement.html#gst-element-set-clock" title
 <p>Elements in a pipeline will only have their clock set when the
 pipeline is in the PLAYING state.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.66.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.69.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3096,7 +3224,7 @@ pipeline is in the PLAYING state.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.66.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.69.7"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> of the element. unref after usage.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -3111,7 +3239,7 @@ gst_element_provide_clock (<em class="parameter"><code><a class="link" href="Gst
 <div class="note">An element is only required to provide a clock in the PAUSED
 state. Some elements can provide a clock in other states.</div>
 <div class="refsect3">
-<a name="id-1.3.21.10.67.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.70.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3126,7 +3254,7 @@ state. Some elements can provide a clock in other states.</div>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.67.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.70.7"></a><h4>Returns</h4>
 <p> the GstClock provided by the
 element or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no clock could be provided.  Unref after usage.</p>
 <p>MT safe. </p>
@@ -3151,7 +3279,7 @@ of the state change or it can wait for a <a class="link" href="GstMessage.html#G
 <p>State changes to <a class="link" href="GstElement.html#GST-STATE-READY:CAPS"><code class="literal">GST_STATE_READY</code></a> or <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> never return
 <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><span class="type">GST_STATE_CHANGE_ASYNC</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.68.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.71.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3173,7 +3301,7 @@ of the state change or it can wait for a <a class="link" href="GstMessage.html#G
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.68.8"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.71.8"></a><h4>Returns</h4>
 <p> Result of the state change using <a class="link" href="GstElement.html#GstStateChangeReturn" title="enum GstStateChangeReturn"><span class="type">GstStateChangeReturn</span></a>.</p>
 <p>MT safe.</p>
 </div>
@@ -3204,7 +3332,7 @@ some sink elements might not be able to complete their state change because
 an element is not producing data to complete the preroll. When setting the
 element to playing, the preroll will complete and playback will start.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.69.8"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.72.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3239,7 +3367,7 @@ state change or <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" ti
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.69.9"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.72.9"></a><h4>Returns</h4>
 <p> <a class="link" href="GstElement.html#GST-STATE-CHANGE-SUCCESS:CAPS"><code class="literal">GST_STATE_CHANGE_SUCCESS</code></a> if the element has no more pending state
 and the last state change succeeded, <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> if the
 element is still performing a state change or
@@ -3257,7 +3385,7 @@ gst_element_set_locked_state (<em class="parameter"><code><a class="link" href="
 this element anymore.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.70.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.73.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3279,7 +3407,7 @@ this element anymore.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.70.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.73.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the state was changed, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if bad parameters were given
 or the elements state-locking needed no change.</p>
 </div>
@@ -3296,7 +3424,7 @@ This way you can leave currently unused elements inside bins. Just lock their
 state before changing the state from <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><span class="type">GST_STATE_NULL</span></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.71.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.74.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3311,7 +3439,7 @@ state before changing the state from <a class="link" href="GstElement.html#GST-S
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.71.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.74.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the element's state is locked.</p>
 </div>
 </div>
@@ -3326,7 +3454,7 @@ something is wrong.</p>
 <p>This function should be called with the STATE_LOCK held.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.72.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.75.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3357,7 +3485,7 @@ the pending state, the next state change is performed.</p>
 <p>This method is used internally and should normally not be called by plugins
 or applications.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.73.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.76.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3379,7 +3507,7 @@ or applications.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.73.8"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.76.8"></a><h4>Returns</h4>
 <p> The result of the commit state change.</p>
 <p>MT safe.</p>
 </div>
@@ -3403,7 +3531,7 @@ not in error or an async state change.</p>
 <p>This function is used internally and should normally not be called from
 plugins or applications.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.74.8"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.77.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3425,7 +3553,7 @@ plugins or applications.</p>
 gst_element_state_get_name (<em class="parameter"><code><a class="link" href="GstElement.html#GstState" title="enum GstState"><span class="type">GstState</span></a> state</code></em>);</pre>
 <p>Gets a string representing the given state.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.75.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.78.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3440,7 +3568,7 @@ gst_element_state_get_name (<em class="parameter"><code><a class="link" href="Gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.75.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.78.6"></a><h4>Returns</h4>
 <p> a string with the name of the state. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -3453,7 +3581,7 @@ gst_element_state_change_return_get_name
                                (<em class="parameter"><code><a class="link" href="GstElement.html#GstStateChangeReturn" title="enum GstStateChangeReturn"><span class="type">GstStateChangeReturn</span></a> state_ret</code></em>);</pre>
 <p>Gets a string representing the given state change result.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.76.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.79.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3468,7 +3596,7 @@ gst_element_state_change_return_get_name
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.76.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.79.6"></a><h4>Returns</h4>
 <p> a string with the name of the state
 result. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -3482,7 +3610,7 @@ gst_element_sync_state_with_parent (<em class="parameter"><code><a class="link" 
 <p>Tries to change the state of the element to the same as its parent.
 If this function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, the state of element is undefined.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.77.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.80.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3497,7 +3625,7 @@ If this function returns <a href="https://developer.gnome.org/glib/unstable/glib
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.77.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.80.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the element's state could be synced to the parent's state.</p>
 <p>MT safe.</p>
 </div>
@@ -3514,7 +3642,7 @@ gst_element_change_state (<em class="parameter"><code><a class="link" href="GstE
 <p>This function must be called with STATE_LOCK held and is mainly used
 internally.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.78.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.81.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3536,7 +3664,7 @@ internally.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.78.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.81.7"></a><h4>Returns</h4>
 <p> the <a class="link" href="GstElement.html#GstStateChangeReturn" title="enum GstStateChangeReturn"><span class="type">GstStateChangeReturn</span></a> of the state transition.</p>
 </div>
 </div>
@@ -3559,7 +3687,7 @@ gst_element_message_full (<em class="parameter"><code><a class="link" href="GstE
 <a class="link" href="GstMessage.html#GST-MESSAGE-INFO:CAPS"><span class="type">GST_MESSAGE_INFO</span></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.79.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.82.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3630,7 +3758,7 @@ gst_element_post_message (<em class="parameter"><code><a class="link" href="GstE
 message; if you want to access the message after this call, you should add an
 additional reference before calling.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.80.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.83.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3652,7 +3780,7 @@ additional reference before calling.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.80.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.83.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the message was successfully posted. The function returns
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the element did not have a bus.</p>
 <p>MT safe.</p>
@@ -3670,7 +3798,7 @@ forwards the query to a random srcpad or to the peer of a
 random linked sinkpad of this element.</p>
 <p>Please note that some queries might need a running pipeline to work.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.81.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.84.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3692,7 +3820,7 @@ random linked sinkpad of this element.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.81.8"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.84.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 <p>MT safe.</p>
 </div>
@@ -3711,7 +3839,7 @@ gst_element_query_convert (<em class="parameter"><code><a class="link" href="Gst
  to <em class="parameter"><code>dest_format</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.82.5"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.85.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3748,7 +3876,7 @@ gst_element_query_convert (<em class="parameter"><code><a class="link" href="Gst
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.82.6"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.85.6"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 </div>
 </div>
@@ -3768,7 +3896,7 @@ bus when that is the case.</p>
 <p>If one repeatedly calls this function one can also create a query and reuse
 it in <a class="link" href="GstElement.html#gst-element-query" title="gst_element_query ()"><code class="function">gst_element_query()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.83.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.86.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3796,7 +3924,7 @@ position, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Ma
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.83.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.86.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 </div>
 </div>
@@ -3815,7 +3943,7 @@ will receive an ASYNC_DONE message on the pipeline bus when that is the case.</p
 message on the pipeline bus, in which case you should re-query the duration
 using this function.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.84.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.87.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3842,7 +3970,7 @@ using this function.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.84.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.87.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query could be performed.</p>
 </div>
 </div>
@@ -3859,7 +3987,7 @@ downstream events or a random linked source pad for upstream events.</p>
 <a class="link" href="GstEvent.html#gst-event-ref" title="gst_event_ref ()"><code class="function">gst_event_ref()</code></a> it if you want to reuse the event after this call.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.85.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.88.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3881,7 +4009,7 @@ downstream events or a random linked source pad for upstream events.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.85.8"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.88.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Events that trigger a preroll (such
 as flushing seeks and steps) will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
 </div>
@@ -3907,7 +4035,7 @@ case they will store the seek event and execute it when they are put to
 PAUSED. If the element supports seek in READY, it will always return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when
 it receives the event in the READY state.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.86.7"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.89.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -3943,7 +4071,7 @@ with <a class="link" href="GstClock.html#GST-MSECOND:CAPS" title="GST_MSECOND"><
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.86.8"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.89.8"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the seek operation succeeded. Flushing seeks will trigger a
 preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
 </div>
@@ -3965,7 +4093,7 @@ the parameters. The seek event is sent to the element using
 <a class="link" href="GstElement.html#gst-element-send-event" title="gst_element_send_event ()"><code class="function">gst_element_send_event()</code></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.3.21.10.87.6"></a><h4>Parameters</h4>
+<a name="id-1.3.21.10.90.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -4017,7 +4145,7 @@ the parameters. The seek event is sent to the element using
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.21.10.87.7"></a><h4>Returns</h4>
+<a name="id-1.3.21.10.90.7"></a><h4>Returns</h4>
 <p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the event was handled. Flushing seeks will trigger a
 preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC-DONE:CAPS"><code class="literal">GST_MESSAGE_ASYNC_DONE</code></a>.</p>
 </div>
@@ -4055,6 +4183,9 @@ preroll, which will emit <a class="link" href="GstMessage.html#GST-MESSAGE-ASYNC
   guint16               numsinkpads;
   GList                *sinkpads;
   guint32               pads_cookie;
+
+  /* with object LOCK */
+  GList                *contexts;
 };
 </pre>
 <p>GStreamer element abstract base class.</p>
@@ -4169,6 +4300,11 @@ state will yield the running_time against the clock.</p></td>
 <td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GstElement-struct.pads-cookie"></a>pads_cookie</code></em>;</p></td>
 <td class="struct_member_description"><p>updated whenever the a pad is added or removed</p></td>
 <td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstElement-struct.contexts"></a>contexts</code></em>;</p></td>
+<td> </td>
+<td> </td>
 </tr>
 </tbody>
 </table></div>

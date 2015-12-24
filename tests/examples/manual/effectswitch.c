@@ -22,11 +22,11 @@ event_probe_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
   GstElement *next;
 
   if (GST_EVENT_TYPE (GST_PAD_PROBE_INFO_DATA (info)) != GST_EVENT_EOS)
-    return GST_PAD_PROBE_OK;
+    return GST_PAD_PROBE_PASS;
 
   gst_pad_remove_probe (pad, GST_PAD_PROBE_INFO_ID (info));
 
-  /* push current event back into the queue */
+  /* push current effect back into the queue */
   g_queue_push_tail (&effects, gst_object_ref (cur_effect));
   /* take next effect from the queue */
   next = g_queue_pop_head (&effects);
@@ -105,7 +105,7 @@ bus_cb (GstBus * bus, GstMessage * msg, gpointer user_data)
 
       gst_message_parse_error (msg, &err, &dbg);
       gst_object_default_error (msg->src, err, dbg);
-      g_error_free (err);
+      g_clear_error (&err);
       g_free (dbg);
       g_main_loop_quit (loop);
       break;
@@ -135,6 +135,8 @@ main (int argc, char **argv)
   g_option_context_add_group (ctx, gst_init_get_option_group ());
   if (!g_option_context_parse (ctx, &argc, &argv, &err)) {
     g_print ("Error initializing: %s\n", err->message);
+    g_clear_error (&err);
+    g_option_context_free (ctx);
     return 1;
   }
   g_option_context_free (ctx);

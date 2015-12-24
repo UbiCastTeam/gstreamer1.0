@@ -291,10 +291,6 @@ GST_EXPORT GType _gst_event_type;
  *
  * Returns: %TRUE if @new_event was different from @old_event
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC gboolean gst_event_replace (GstEvent **old_event, GstEvent *new_event);
-#endif
-
 static inline gboolean
 gst_event_replace (GstEvent **old_event, GstEvent *new_event)
 {
@@ -311,10 +307,6 @@ gst_event_replace (GstEvent **old_event, GstEvent *new_event)
  *
  * Returns: the #GstEvent that was in @old_event
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstEvent * gst_event_steal (GstEvent **old_event);
-#endif
-
 static inline GstEvent *
 gst_event_steal (GstEvent **old_event)
 {
@@ -336,10 +328,6 @@ gst_event_steal (GstEvent **old_event)
  *
  * Returns: %TRUE if @new_event was different from @old_event
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC gboolean gst_event_take (GstEvent **old_event, GstEvent *new_event);
-#endif
-
 static inline gboolean
 gst_event_take (GstEvent **old_event, GstEvent *new_event)
 {
@@ -424,10 +412,6 @@ GstEventTypeFlags
  *
  * Returns: (transfer full): @event (for convenience when doing assignments)
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstEvent * gst_event_ref (GstEvent * event);
-#endif
-
 static inline GstEvent *
 gst_event_ref (GstEvent * event)
 {
@@ -440,10 +424,6 @@ gst_event_ref (GstEvent * event)
  *
  * Decrease the refcount of an event, freeing it if the refcount reaches 0.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC void gst_event_unref (GstEvent * event);
-#endif
-
 static inline void
 gst_event_unref (GstEvent * event)
 {
@@ -459,10 +439,6 @@ gst_event_unref (GstEvent * event)
  *
  * Returns: (transfer full): the new event
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstEvent * gst_event_copy (const GstEvent * event);
-#endif
-
 static inline GstEvent *
 gst_event_copy (const GstEvent * event)
 {
@@ -586,6 +562,10 @@ void            gst_event_parse_toc_select      (GstEvent *event, gchar **uid);
 /* segment-done event */
 GstEvent*       gst_event_new_segment_done      (GstFormat format, gint64 position) G_GNUC_MALLOC;
 void            gst_event_parse_segment_done    (GstEvent *event, GstFormat *format, gint64 *position);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstEvent, gst_event_unref)
+#endif
 
 G_END_DECLS
 

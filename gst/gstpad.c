@@ -94,6 +94,7 @@
 #include "gstutils.h"
 #include "gstinfo.h"
 #include "gsterror.h"
+#include "gsttracerutils.h"
 #include "gstvalue.h"
 #include "glib-compat-private.h"
 
@@ -1323,6 +1324,13 @@ cleanup_hook (GstPad * pad, GHook * hook)
  * Be notified of different states of pads. The provided callback is called for
  * every state that matches @mask.
  *
+ * Probes are called in groups: First GST_PAD_PROBE_TYPE_BLOCK probes are
+ * called, then others, then finally GST_PAD_PROBE_TYPE_IDLE. The only
+ * exception here are GST_PAD_PROBE_TYPE_IDLE probes that are called
+ * immediately if the pad is already idle while calling gst_pad_add_probe().
+ * In each of the groups, probes are called in the order in which they were
+ * added.
+ *
  * Returns: an id or 0 if no probe is pending. The id can be used to remove the
  * probe with gst_pad_remove_probe(). When using GST_PAD_PROBE_TYPE_IDLE it can
  * happen that the probe can be run immediately and if the probe returns
@@ -1364,7 +1372,7 @@ gst_pad_add_probe (GstPad * pad, GstPadProbeType mask,
   PROBE_COOKIE (hook) = (pad->priv->probe_cookie - 1);
 
   /* add the probe */
-  g_hook_prepend (&pad->probes, hook);
+  g_hook_append (&pad->probes, hook);
   pad->num_probes++;
   /* incremenent cookie so that the new hook get's called */
   pad->priv->probe_list_cookie++;
@@ -1818,6 +1826,51 @@ gst_pad_set_event_function_full (GstPad * pad, GstPadEventFunction event,
       GST_DEBUG_FUNCPTR_NAME (event));
 }
 
+static gboolean
+event_wrap (GstPad * pad, GstObject * object, GstEvent * event)
+{
+  GstFlowReturn ret;
+
+  ret = GST_PAD_EVENTFULLFUNC (pad) (pad, object, event);
+  if (ret == GST_FLOW_OK)
+    return TRUE;
+  return FALSE;
+}
+
+/**
+ * gst_pad_set_event_full_function:
+ * @p: a #GstPad of either direction.
+ * @f: the #GstPadEventFullFunction to set.
+ *
+ * Calls gst_pad_set_event_full_function_full() with %NULL for the user_data and
+ * notify.
+ */
+/**
+ * gst_pad_set_event_full_function_full:
+ * @pad: a #GstPad of either direction.
+ * @event: the #GstPadEventFullFunction to set.
+ * @user_data: user_data passed to @notify
+ * @notify: notify called when @event will not be used anymore.
+ *
+ * Sets the given event handler for the pad.
+ */
+void
+gst_pad_set_event_full_function_full (GstPad * pad,
+    GstPadEventFullFunction event, gpointer user_data, GDestroyNotify notify)
+{
+  g_return_if_fail (GST_IS_PAD (pad));
+
+  if (pad->eventnotify)
+    pad->eventnotify (pad->eventdata);
+  GST_PAD_EVENTFULLFUNC (pad) = event;
+  GST_PAD_EVENTFUNC (pad) = event_wrap;
+  pad->eventdata = user_data;
+  pad->eventnotify = notify;
+
+  GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "eventfullfunc for set to %s",
+      GST_DEBUG_FUNCPTR_NAME (event));
+}
+
 /**
  * gst_pad_set_query_function:
  * @p: a #GstPad of either direction.
@@ -1986,6 +2039,8 @@ gst_pad_unlink (GstPad * srcpad, GstPad * sinkpad)
   g_return_val_if_fail (GST_IS_PAD (sinkpad), FALSE);
   g_return_val_if_fail (GST_PAD_IS_SINK (sinkpad), FALSE);
 
+  GST_TRACER_PAD_UNLINK_PRE (srcpad, sinkpad);
+
   GST_CAT_INFO (GST_CAT_ELEMENT_PADS, "unlinking %s:%s(%p) and %s:%s(%p)",
       GST_DEBUG_PAD_NAME (srcpad), srcpad,
       GST_DEBUG_PAD_NAME (sinkpad), sinkpad);
@@ -2053,6 +2108,7 @@ done:
             GST_STRUCTURE_CHANGE_TYPE_PAD_UNLINK, parent, FALSE));
     gst_object_unref (parent);
   }
+  GST_TRACER_PAD_UNLINK_POST (srcpad, sinkpad, result);
   return result;
 
   /* ERRORS */
@@ -2494,7 +2550,13 @@ link_failed:
 GstPadLinkReturn
 gst_pad_link (GstPad * srcpad, GstPad * sinkpad)
 {
-  return gst_pad_link_full (srcpad, sinkpad, GST_PAD_LINK_CHECK_DEFAULT);
+  GstPadLinkReturn ret;
+
+  GST_TRACER_PAD_LINK_PRE (srcpad, sinkpad);
+  ret = gst_pad_link_full (srcpad, sinkpad, GST_PAD_LINK_CHECK_DEFAULT);
+  GST_TRACER_PAD_LINK_POST (srcpad, sinkpad, ret);
+
+  return ret;
 }
 
 static void
@@ -2965,7 +3027,7 @@ static gboolean
 gst_pad_query_accept_caps_default (GstPad * pad, GstQuery * query)
 {
   /* get the caps and see if it intersects to something not empty */
-  GstCaps *caps, *allowed;
+  GstCaps *caps, *allowed = NULL;
   gboolean result;
 
   GST_DEBUG_OBJECT (pad, "query accept-caps %" GST_PTR_FORMAT, query);
@@ -2973,19 +3035,22 @@ gst_pad_query_accept_caps_default (GstPad * pad, GstQuery * query)
   /* first forward the query to internally linked pads when we are dealing with
    * a PROXY CAPS */
   if (GST_PAD_IS_PROXY_CAPS (pad)) {
-    if ((result = gst_pad_proxy_query_accept_caps (pad, query))) {
+    result = gst_pad_proxy_query_accept_caps (pad, query);
+    if (result)
+      allowed = gst_pad_get_pad_template_caps (pad);
+    else
       goto done;
-    }
   }
 
-  GST_CAT_DEBUG_OBJECT (GST_CAT_PERFORMANCE, pad,
-      "fallback ACCEPT_CAPS query, consider implementing a specialized version");
-
   gst_query_parse_accept_caps (query, &caps);
-  if (GST_PAD_IS_ACCEPT_TEMPLATE (pad))
-    allowed = gst_pad_get_pad_template_caps (pad);
-  else
-    allowed = gst_pad_query_caps (pad, caps);
+  if (!allowed) {
+    GST_CAT_DEBUG_OBJECT (GST_CAT_PERFORMANCE, pad,
+        "fallback ACCEPT_CAPS query, consider implementing a specialized version");
+    if (GST_PAD_IS_ACCEPT_TEMPLATE (pad))
+      allowed = gst_pad_get_pad_template_caps (pad);
+    else
+      allowed = gst_pad_query_caps (pad, caps);
+  }
 
   if (allowed) {
     if (GST_PAD_IS_ACCEPT_INTERSECT (pad)) {
@@ -3813,6 +3878,7 @@ gst_pad_query (GstPad * pad, GstQuery * query)
 
   GST_DEBUG_OBJECT (pad, "doing query %p (%s)", query,
       GST_QUERY_TYPE_NAME (query));
+  GST_TRACER_PAD_QUERY_PRE (pad, query);
 
   serialized = GST_QUERY_IS_SERIALIZED (query);
   if (G_UNLIKELY (serialized))
@@ -3835,6 +3901,7 @@ gst_pad_query (GstPad * pad, GstQuery * query)
 
   GST_DEBUG_OBJECT (pad, "sent query %p (%s), result %d", query,
       GST_QUERY_TYPE_NAME (query), res);
+  GST_TRACER_PAD_QUERY_POST (pad, res, query);
 
   if (res != TRUE)
     goto query_failed;
@@ -4044,7 +4111,7 @@ gst_pad_chain_data_unchecked (GstPad * pad, GstPadProbeType type, void *data)
   if (G_UNLIKELY (GST_PAD_MODE (pad) != GST_PAD_MODE_PUSH))
     goto wrong_mode;
 
-#ifndef G_DISABLE_ASSERT
+#ifdef GST_ENABLE_EXTRA_CHECKS
   if (G_UNLIKELY (pad->priv->last_cookie != pad->priv->events_cookie)) {
     if (!find_event_by_type (pad, GST_EVENT_STREAM_START, 0)) {
       g_warning (G_STRLOC
@@ -4297,7 +4364,7 @@ gst_pad_push_data (GstPad * pad, GstPadProbeType type, void *data)
   if (G_UNLIKELY (GST_PAD_MODE (pad) != GST_PAD_MODE_PUSH))
     goto wrong_mode;
 
-#ifndef G_DISABLE_ASSERT
+#ifdef GST_ENABLE_EXTRA_CHECKS
   if (G_UNLIKELY (pad->priv->last_cookie != pad->priv->events_cookie)) {
     if (!find_event_by_type (pad, GST_EVENT_STREAM_START, 0)) {
       g_warning (G_STRLOC
@@ -4447,12 +4514,17 @@ not_linked:
 GstFlowReturn
 gst_pad_push (GstPad * pad, GstBuffer * buffer)
 {
+  GstFlowReturn res;
+
   g_return_val_if_fail (GST_IS_PAD (pad), GST_FLOW_ERROR);
   g_return_val_if_fail (GST_PAD_IS_SRC (pad), GST_FLOW_ERROR);
   g_return_val_if_fail (GST_IS_BUFFER (buffer), GST_FLOW_ERROR);
 
-  return gst_pad_push_data (pad,
+  GST_TRACER_PAD_PUSH_PRE (pad, buffer);
+  res = gst_pad_push_data (pad,
       GST_PAD_PROBE_TYPE_BUFFER | GST_PAD_PROBE_TYPE_PUSH, buffer);
+  GST_TRACER_PAD_PUSH_POST (pad, res);
+  return res;
 }
 
 /**
@@ -4482,12 +4554,17 @@ gst_pad_push (GstPad * pad, GstBuffer * buffer)
 GstFlowReturn
 gst_pad_push_list (GstPad * pad, GstBufferList * list)
 {
+  GstFlowReturn res;
+
   g_return_val_if_fail (GST_IS_PAD (pad), GST_FLOW_ERROR);
   g_return_val_if_fail (GST_PAD_IS_SRC (pad), GST_FLOW_ERROR);
   g_return_val_if_fail (GST_IS_BUFFER_LIST (list), GST_FLOW_ERROR);
 
-  return gst_pad_push_data (pad,
+  GST_TRACER_PAD_PUSH_LIST_PRE (pad, list);
+  res = gst_pad_push_data (pad,
       GST_PAD_PROBE_TYPE_BUFFER_LIST | GST_PAD_PROBE_TYPE_PUSH, list);
+  GST_TRACER_PAD_PUSH_LIST_POST (pad, res);
+  return res;
 }
 
 static GstFlowReturn
@@ -4751,6 +4828,8 @@ gst_pad_pull_range (GstPad * pad, guint64 offset, guint size,
   g_return_val_if_fail (*buffer == NULL || (GST_IS_BUFFER (*buffer)
           && gst_buffer_get_size (*buffer) >= size), GST_FLOW_ERROR);
 
+  GST_TRACER_PAD_PULL_RANGE_PRE (pad, offset, size);
+
   GST_OBJECT_LOCK (pad);
   if (G_UNLIKELY (GST_PAD_IS_FLUSHING (pad)))
     goto flushing;
@@ -4797,6 +4876,7 @@ probed_data:
 
   *buffer = res_buf;
 
+  GST_TRACER_PAD_PULL_RANGE_POST (pad, *buffer, ret);
   return ret;
 
   /* ERROR recovery here */
@@ -4806,7 +4886,8 @@ flushing:
         "pullrange, but pad was flushing");
     pad->ABI.abi.last_flowret = GST_FLOW_FLUSHING;
     GST_OBJECT_UNLOCK (pad);
-    return GST_FLOW_FLUSHING;
+    ret = GST_FLOW_FLUSHING;
+    goto done;
   }
 wrong_mode:
   {
@@ -4814,7 +4895,8 @@ wrong_mode:
         GST_DEBUG_PAD_NAME (pad));
     pad->ABI.abi.last_flowret = GST_FLOW_ERROR;
     GST_OBJECT_UNLOCK (pad);
-    return GST_FLOW_ERROR;
+    ret = GST_FLOW_ERROR;
+    goto done;
   }
 probe_stopped:
   {
@@ -4835,7 +4917,7 @@ probe_stopped:
     }
     pad->ABI.abi.last_flowret = ret;
     GST_OBJECT_UNLOCK (pad);
-    return ret;
+    goto done;
   }
 not_linked:
   {
@@ -4843,7 +4925,8 @@ not_linked:
         "pulling range, but it was not linked");
     pad->ABI.abi.last_flowret = GST_FLOW_NOT_LINKED;
     GST_OBJECT_UNLOCK (pad);
-    return GST_FLOW_NOT_LINKED;
+    ret = GST_FLOW_NOT_LINKED;
+    goto done;
   }
 pull_range_failed:
   {
@@ -4852,7 +4935,7 @@ pull_range_failed:
     GST_CAT_LEVEL_LOG (GST_CAT_SCHEDULING,
         (ret >= GST_FLOW_EOS) ? GST_LEVEL_INFO : GST_LEVEL_WARNING,
         pad, "pullrange failed, flow: %s", gst_flow_get_name (ret));
-    return ret;
+    goto done;
   }
 probe_stopped_unref:
   {
@@ -4868,8 +4951,11 @@ probe_stopped_unref:
 
     if (*buffer == NULL)
       gst_buffer_unref (res_buf);
-    return ret;
+    goto done;
   }
+done:
+  GST_TRACER_PAD_PULL_RANGE_POST (pad, NULL, ret);
+  return ret;
 }
 
 /* must be called with pad object lock */
@@ -5218,6 +5304,8 @@ gst_pad_push_event (GstPad * pad, GstEvent * event)
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
   g_return_val_if_fail (GST_IS_EVENT (event), FALSE);
 
+  GST_TRACER_PAD_PUSH_EVENT_PRE (pad, event);
+
   if (GST_PAD_IS_SRC (pad)) {
     if (G_UNLIKELY (!GST_EVENT_IS_DOWNSTREAM (event)))
       goto wrong_direction;
@@ -5272,6 +5360,7 @@ gst_pad_push_event (GstPad * pad, GstEvent * event)
   }
   GST_OBJECT_UNLOCK (pad);
 
+  GST_TRACER_PAD_PUSH_EVENT_POST (pad, res);
   return res;
 
   /* ERROR handling */
@@ -5280,28 +5369,31 @@ wrong_direction:
     g_warning ("pad %s:%s pushing %s event in wrong direction",
         GST_DEBUG_PAD_NAME (pad), GST_EVENT_TYPE_NAME (event));
     gst_event_unref (event);
-    return FALSE;
+    goto done;
   }
 unknown_direction:
   {
     g_warning ("pad %s:%s has invalid direction", GST_DEBUG_PAD_NAME (pad));
     gst_event_unref (event);
-    return FALSE;
+    goto done;
   }
 flushed:
   {
     GST_DEBUG_OBJECT (pad, "We're flushing");
     GST_OBJECT_UNLOCK (pad);
     gst_event_unref (event);
-    return FALSE;
+    goto done;
   }
 eos:
   {
     GST_DEBUG_OBJECT (pad, "We're EOS");
     GST_OBJECT_UNLOCK (pad);
     gst_event_unref (event);
-    return FALSE;
+    goto done;
   }
+done:
+  GST_TRACER_PAD_PUSH_EVENT_POST (pad, FALSE);
+  return FALSE;
 }
 
 /* Check if we can call the event function with the given event */
@@ -5342,6 +5434,7 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
   GstEventType event_type;
   gboolean serialized, need_unlock = FALSE, sticky;
   GstPadEventFunction eventfunc;
+  GstPadEventFullFunction eventfullfunc = NULL;
   GstObject *parent;
 
   GST_OBJECT_LOCK (pad);
@@ -5439,7 +5532,9 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
 
   PROBE_PUSH (pad, type | GST_PAD_PROBE_TYPE_PUSH, event, probe_stopped);
 
-  if (G_UNLIKELY ((eventfunc = GST_PAD_EVENTFUNC (pad)) == NULL))
+  eventfullfunc = GST_PAD_EVENTFULLFUNC (pad);
+  eventfunc = GST_PAD_EVENTFUNC (pad);
+  if (G_UNLIKELY (eventfunc == NULL && eventfullfunc == NULL))
     goto no_function;
 
   ACQUIRE_PARENT (pad, parent, no_parent);
@@ -5452,7 +5547,9 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
   if (sticky)
     gst_event_ref (event);
 
-  if (eventfunc (pad, parent, event)) {
+  if (eventfullfunc) {
+    ret = eventfullfunc (pad, parent, event);
+  } else if (eventfunc (pad, parent, event)) {
     ret = GST_FLOW_OK;
   } else {
     /* something went wrong */

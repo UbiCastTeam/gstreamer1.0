@@ -38,7 +38,7 @@ main (int argc, char *argv[])
 
   if (error != NULL) {
     g_print ("could not construct pipeline: %s\n", error->message);
-    g_error_free (error);
+    g_clear_error (&error);
     exit (-1);
   }
 

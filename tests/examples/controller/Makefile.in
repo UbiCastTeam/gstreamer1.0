@@ -90,7 +90,9 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 noinst_PROGRAMS = audio-example$(EXEEXT) control-sources$(EXEEXT) \
-	text-color-example$(EXEEXT) absolute-example$(EXEEXT)
+	text-color-example$(EXEEXT) absolute-example$(EXEEXT) \
+	$(am__EXEEXT_1)
+@HAVE_GTK_TRUE@am__append_1 = controller-graph
 subdir = tests/examples/controller
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -136,6 +138,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+@HAVE_GTK_TRUE@am__EXEEXT_1 = controller-graph$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 absolute_example_SOURCES = absolute-example.c
 absolute_example_OBJECTS = absolute-example.$(OBJEXT)
@@ -157,6 +160,15 @@ control_sources_OBJECTS = control-sources.$(OBJEXT)
 control_sources_LDADD = $(LDADD)
 control_sources_DEPENDENCIES = $(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+controller_graph_SOURCES = controller-graph.c
+controller_graph_OBJECTS =  \
+	controller_graph-controller-graph.$(OBJEXT)
+@HAVE_GTK_TRUE@controller_graph_DEPENDENCIES = $(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
+@HAVE_GTK_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+controller_graph_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(controller_graph_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
 text_color_example_SOURCES = text-color-example.c
 text_color_example_OBJECTS = text-color-example.$(OBJEXT)
 text_color_example_LDADD = $(LDADD)
@@ -197,9 +209,9 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = absolute-example.c audio-example.c control-sources.c \
-	text-color-example.c
+	controller-graph.c text-color-example.c
 DIST_SOURCES = absolute-example.c audio-example.c control-sources.c \
-	text-color-example.c
+	controller-graph.c text-color-example.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -344,6 +356,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -519,6 +533,11 @@ LDADD = \
 	$(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
 	$(GST_OBJ_LIBS)
 
+@HAVE_GTK_TRUE@controller_graph_CFLAGS = $(GST_OBJ_CFLAGS) $(GTK_CFLAGS)
+@HAVE_GTK_TRUE@controller_graph_LDADD = \
+@HAVE_GTK_TRUE@	$(top_builddir)/libs/gst/controller/libgstcontroller-@GST_API_VERSION@.la \
+@HAVE_GTK_TRUE@	$(GST_OBJ_LIBS) $(GTK_LIBS)
+
 all: all-am
 
 .SUFFIXES:
@@ -574,6 +593,10 @@ control-sources$(EXEEXT): $(control_sources_OBJECTS) $(control_sources_DEPENDENC
 	@rm -f control-sources$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(control_sources_OBJECTS) $(control_sources_LDADD) $(LIBS)
 
+controller-graph$(EXEEXT): $(controller_graph_OBJECTS) $(controller_graph_DEPENDENCIES) $(EXTRA_controller_graph_DEPENDENCIES) 
+	@rm -f controller-graph$(EXEEXT)
+	$(AM_V_CCLD)$(controller_graph_LINK) $(controller_graph_OBJECTS) $(controller_graph_LDADD) $(LIBS)
+
 text-color-example$(EXEEXT): $(text_color_example_OBJECTS) $(text_color_example_DEPENDENCIES) $(EXTRA_text_color_example_DEPENDENCIES) 
 	@rm -f text-color-example$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(text_color_example_OBJECTS) $(text_color_example_LDADD) $(LIBS)
@@ -587,6 +610,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/absolute-example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio-example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/control-sources.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/controller_graph-controller-graph.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/text-color-example.Po@am__quote@
 
 .c.o:
@@ -612,6 +636,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+controller_graph-controller-graph.o: controller-graph.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(controller_graph_CFLAGS) $(CFLAGS) -MT controller_graph-controller-graph.o -MD -MP -MF $(DEPDIR)/controller_graph-controller-graph.Tpo -c -o controller_graph-controller-graph.o `test -f 'controller-graph.c' || echo '$(srcdir)/'`controller-graph.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/controller_graph-controller-graph.Tpo $(DEPDIR)/controller_graph-controller-graph.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='controller-graph.c' object='controller_graph-controller-graph.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(controller_graph_CFLAGS) $(CFLAGS) -c -o controller_graph-controller-graph.o `test -f 'controller-graph.c' || echo '$(srcdir)/'`controller-graph.c
+
+controller_graph-controller-graph.obj: controller-graph.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(controller_graph_CFLAGS) $(CFLAGS) -MT controller_graph-controller-graph.obj -MD -MP -MF $(DEPDIR)/controller_graph-controller-graph.Tpo -c -o controller_graph-controller-graph.obj `if test -f 'controller-graph.c'; then $(CYGPATH_W) 'controller-graph.c'; else $(CYGPATH_W) '$(srcdir)/controller-graph.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/controller_graph-controller-graph.Tpo $(DEPDIR)/controller_graph-controller-graph.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='controller-graph.c' object='controller_graph-controller-graph.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(controller_graph_CFLAGS) $(CFLAGS) -c -o controller_graph-controller-graph.obj `if test -f 'controller-graph.c'; then $(CYGPATH_W) 'controller-graph.c'; else $(CYGPATH_W) '$(srcdir)/controller-graph.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

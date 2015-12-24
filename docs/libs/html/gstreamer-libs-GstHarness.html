@@ -702,10 +702,10 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstHarness.description"></a><h2>Description</h2>
-<p><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is ment to make writing unit test for GStreamer much easier.
-It can be though of as a way of treating a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> as a black box,
-deterministially feeding it data, and controlling what data it outputs.</p>
-<p>The basic structure of <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is two "floating" <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPads</span></a>, that connects
+<p><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is meant to make writing unit test for GStreamer much easier.
+It can be thought of as a way of treating a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> as a black box,
+deterministically feeding it data, and controlling what data it outputs.</p>
+<p>The basic structure of <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is two "floating" <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPads</span></a> that connect
 to the harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> src and sink <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPads</span></a> like so:</p>
 <pre class="programlisting">
           __________________________
@@ -718,15 +718,15 @@ to the harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/he
 </pre>
 <p>With this, you can now simulate any environment the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> might find
 itself in. By specifying the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html"><span class="type">GstCaps</span></a> of the harness <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPads</span></a>, using
-functions like gst_harness_set_src_caps or gst_harness_set_sink_caps_str,
-you can test how the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> interacts with different capssets.</p>
+functions like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-set-src-caps" title="gst_harness_set_src_caps ()"><code class="function">gst_harness_set_src_caps()</code></a> or <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-set-sink-caps-str" title="gst_harness_set_sink_caps_str ()"><code class="function">gst_harness_set_sink_caps_str()</code></a>,
+you can test how the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> interacts with different caps sets.</p>
 <p>Your harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> can of course also be a bin, and using
-gst_harness_new_parse supporting standard gst-launch syntax, you can
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-parse" title="gst_harness_new_parse ()"><code class="function">gst_harness_new_parse()</code></a> supporting standard gst-launch syntax, you can
 easily test a whole pipeline instead of just one element.</p>
 <p>You can then go on to push <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffers</span></a> and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> on to the srcpad,
-using functions like gst_harness_push and gst_harness_push_event, and
-then pull them out to examine them with gst_harness_pull and
-gst_harness_pull_event.</p>
+using functions like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-push" title="gst_harness_push ()"><code class="function">gst_harness_push()</code></a> and <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-push-event" title="gst_harness_push_event ()"><code class="function">gst_harness_push_event()</code></a>, and
+then pull them out to examine them with <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-pull" title="gst_harness_pull ()"><code class="function">gst_harness_pull()</code></a> and
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-pull-event" title="gst_harness_pull_event ()"><code class="function">gst_harness_pull_event()</code></a>.</p>
 <div class="example">
 <a name="id-1.2.7.6.6.8"></a><p class="title"><b>Example 1. A simple buffer-in buffer-out example</b></p>
 <div class="example-contents">
@@ -797,13 +797,13 @@ out_buf <span class="gtkdoc opt">=</span> <span class="function"><a href="http:/
 <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>. Operating the <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> can be very challenging, but
 <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> simplifies some of the most desired actions a lot, like wanting
 to manually advance the clock while at the same time releasing a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockID"><span class="type">GstClockID</span></a>
-that is waiting, with functions like gst_harness_crank_single_clock_wait.</p>
+that is waiting, with functions like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-crank-single-clock-wait" title="gst_harness_crank_single_clock_wait ()"><code class="function">gst_harness_crank_single_clock_wait()</code></a>.</p>
 <p><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> also supports sub-harnesses, as a way of generating and
 validating data. A sub-harness is another <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> that is managed by
 the "parent" harness, and can either be created by using the standard
 gst_harness_new type functions directly on the (GstHarness *)-&gt;src_harness,
-or using the much more convenient gst_harness_add_src or
-gst_harness_add_sink_parse. If you have a decoder-element you want to test,
+or using the much more convenient <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-add-src" title="gst_harness_add_src ()"><code class="function">gst_harness_add_src()</code></a> or
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-add-sink-parse" title="gst_harness_add_sink_parse ()"><code class="function">gst_harness_add_sink_parse()</code></a>. If you have a decoder-element you want to test,
 (like vp8dec) it can be very useful to add a src-harness with both a
 src-element (videotestsrc) and an encoder (vp8enc) to feed the decoder data
 with different configurations, by simply doing:</p>

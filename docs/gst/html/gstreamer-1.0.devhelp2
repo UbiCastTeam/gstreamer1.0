@@ -156,6 +156,7 @@
     <keyword type="macro" name="GST_BUFFER_FLAG_UNSET()" link="GstBuffer.html#GST-BUFFER-FLAG-UNSET:CAPS"/>
     <keyword type="macro" name="GST_BUFFER_PTS()" link="GstBuffer.html#GST-BUFFER-PTS:CAPS"/>
     <keyword type="macro" name="GST_BUFFER_DTS()" link="GstBuffer.html#GST-BUFFER-DTS:CAPS"/>
+    <keyword type="macro" name="GST_BUFFER_DTS_OR_PTS()" link="GstBuffer.html#GST-BUFFER-DTS-OR-PTS:CAPS"/>
     <keyword type="macro" name="GST_BUFFER_DURATION()" link="GstBuffer.html#GST-BUFFER-DURATION:CAPS"/>
     <keyword type="macro" name="GST_BUFFER_OFFSET()" link="GstBuffer.html#GST-BUFFER-OFFSET:CAPS"/>
     <keyword type="macro" name="GST_BUFFER_OFFSET_END()" link="GstBuffer.html#GST-BUFFER-OFFSET-END:CAPS"/>
@@ -615,6 +616,9 @@
     <keyword type="function" name="gst_element_set_bus ()" link="GstElement.html#gst-element-set-bus"/>
     <keyword type="function" name="gst_element_get_bus ()" link="GstElement.html#gst-element-get-bus"/>
     <keyword type="function" name="gst_element_set_context ()" link="GstElement.html#gst-element-set-context"/>
+    <keyword type="function" name="gst_element_get_context ()" link="GstElement.html#gst-element-get-context" since="1.8"/>
+    <keyword type="function" name="gst_element_get_context_unlocked ()" link="GstElement.html#gst-element-get-context-unlocked" since="1.8"/>
+    <keyword type="function" name="gst_element_get_contexts ()" link="GstElement.html#gst-element-get-contexts" since="1.8"/>
     <keyword type="function" name="gst_element_get_factory ()" link="GstElement.html#gst-element-get-factory"/>
     <keyword type="macro" name="gst_element_set_name()" link="GstElement.html#gst-element-set-name"/>
     <keyword type="macro" name="gst_element_get_name()" link="GstElement.html#gst-element-get-name"/>
@@ -1542,10 +1546,15 @@
     <keyword type="function" name="gst_segment_copy ()" link="GstSegment.html#gst-segment-copy"/>
     <keyword type="function" name="gst_segment_free ()" link="GstSegment.html#gst-segment-free"/>
     <keyword type="function" name="gst_segment_do_seek ()" link="GstSegment.html#gst-segment-do-seek"/>
+    <keyword type="function" name="gst_segment_position_from_stream_time ()" link="GstSegment.html#gst-segment-position-from-stream-time" since="1.8"/>
+    <keyword type="function" name="gst_segment_position_from_stream_time_full ()" link="GstSegment.html#gst-segment-position-from-stream-time-full" since="1.8"/>
     <keyword type="function" name="gst_segment_to_running_time ()" link="GstSegment.html#gst-segment-to-running-time"/>
     <keyword type="function" name="gst_segment_to_running_time_full ()" link="GstSegment.html#gst-segment-to-running-time-full" since="1.6"/>
-    <keyword type="function" name="gst_segment_to_stream_time ()" link="GstSegment.html#gst-segment-to-stream-time"/>
-    <keyword type="function" name="gst_segment_to_position ()" link="GstSegment.html#gst-segment-to-position"/>
+    <keyword type="function" name="gst_segment_to_stream_time ()" link="GstSegment.html#gst-segment-to-stream-time" since="1.8"/>
+    <keyword type="function" name="gst_segment_to_stream_time_full ()" link="GstSegment.html#gst-segment-to-stream-time-full" since="1.8"/>
+    <keyword type="function" name="gst_segment_position_from_running_time ()" link="GstSegment.html#gst-segment-position-from-running-time" since="1.8"/>
+    <keyword type="function" name="gst_segment_position_from_running_time_full ()" link="GstSegment.html#gst-segment-position-from-running-time-full" since="1.8"/>
+    <keyword type="function" name="gst_segment_to_position ()" link="GstSegment.html#gst-segment-to-position" deprecated=""/>
     <keyword type="function" name="gst_segment_set_running_time ()" link="GstSegment.html#gst-segment-set-running-time"/>
     <keyword type="function" name="gst_segment_copy_into ()" link="GstSegment.html#gst-segment-copy-into"/>
     <keyword type="function" name="gst_segment_offset_running_time ()" link="GstSegment.html#gst-segment-offset-running-time" since="1.2.3"/>
@@ -2276,6 +2285,8 @@
     <keyword type="variable" name="GST_CAT_DEFAULT" link="gstreamer-GstInfo.html#GST-CAT-DEFAULT:CAPS"/>
     <keyword type="macro" name="GST_TIME_FORMAT" link="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS"/>
     <keyword type="macro" name="GST_STIME_FORMAT" link="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" since="1.6"/>
+    <keyword type="macro" name="GST_PTR_FORMAT" link="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS"/>
+    <keyword type="macro" name="GST_SEGMENT_FORMAT" link="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS"/>
     <keyword type="constant" name="GST_ALLOCATOR_FLAG_CUSTOM_ALLOC" link="GstAllocator.html#GST-ALLOCATOR-FLAG-CUSTOM-ALLOC:CAPS"/>
     <keyword type="constant" name="GST_ALLOCATOR_FLAG_LAST" link="GstAllocator.html#GST-ALLOCATOR-FLAG-LAST:CAPS"/>
     <keyword type="constant" name="GST_BIN_FLAG_NO_RESYNC" link="GstBin.html#GST-BIN-FLAG-NO-RESYNC:CAPS"/>
@@ -2642,6 +2653,7 @@
     <keyword type="constant" name="GST_PLUGIN_DEPENDENCY_FLAG_RECURSE" link="GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-RECURSE:CAPS"/>
     <keyword type="constant" name="GST_PLUGIN_DEPENDENCY_FLAG_PATHS_ARE_DEFAULT_ONLY" link="GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-PATHS-ARE-DEFAULT-ONLY:CAPS"/>
     <keyword type="constant" name="GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX" link="GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-FILE-NAME-IS-SUFFIX:CAPS"/>
+    <keyword type="constant" name="GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_PREFIX" link="GstPlugin.html#GST-PLUGIN-DEPENDENCY-FLAG-FILE-NAME-IS-PREFIX:CAPS"/>
     <keyword type="constant" name="GST_RANK_NONE" link="GstPluginFeature.html#GST-RANK-NONE:CAPS"/>
     <keyword type="constant" name="GST_RANK_MARGINAL" link="GstPluginFeature.html#GST-RANK-MARGINAL:CAPS"/>
     <keyword type="constant" name="GST_RANK_SECONDARY" link="GstPluginFeature.html#GST-RANK-SECONDARY:CAPS"/>

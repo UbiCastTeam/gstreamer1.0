@@ -97,6 +97,7 @@ GST_DEBUG_CATEGORY_STATIC (queue_dataflow);
 
 enum
 {
+  SIGNAL_OVERRUN,
   LAST_SIGNAL
 };
 
@@ -136,6 +137,7 @@ enum
   PROP_TEMP_LOCATION,
   PROP_TEMP_REMOVE,
   PROP_RING_BUFFER_MAX_SIZE,
+  PROP_AVG_IN_RATE,
   PROP_LAST
 };
 
@@ -289,7 +291,7 @@ typedef struct
   GstMiniObject *item;
 } GstQueue2Item;
 
-/* static guint gst_queue2_signals[LAST_SIGNAL] = { 0 }; */
+static guint gst_queue2_signals[LAST_SIGNAL] = { 0 };
 
 static void
 gst_queue2_class_init (GstQueue2Class * klass)
@@ -299,6 +301,23 @@ gst_queue2_class_init (GstQueue2Class * klass)
 
   gobject_class->set_property = gst_queue2_set_property;
   gobject_class->get_property = gst_queue2_get_property;
+
+  /* signals */
+  /**
+   * GstQueue2::overrun:
+   * @queue: the queue2 instance
+   *
+   * Reports that the buffer became full (overrun).
+   * A buffer is full if the total amount of data inside it (num-buffers, time,
+   * size) is higher than the boundary values which can be set through the
+   * GObject properties.
+   *
+   * Since: 1.8
+   */
+  gst_queue2_signals[SIGNAL_OVERRUN] =
+      g_signal_new ("overrun", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_FIRST,
+      G_STRUCT_OFFSET (GstQueue2Class, overrun), NULL, NULL,
+      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
   /* properties */
   g_object_class_install_property (gobject_class, PROP_CUR_LEVEL_BYTES,
@@ -387,6 +406,16 @@ gst_queue2_class_init (GstQueue2Class * klass)
           "Max. amount of data in the ring buffer (bytes, 0 = disabled)",
           0, G_MAXUINT64, DEFAULT_RING_BUFFER_MAX_SIZE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * GstQueue2:avg-in-rate
+   *
+   * The average input data rate.
+   */
+  g_object_class_install_property (gobject_class, PROP_AVG_IN_RATE,
+      g_param_spec_int64 ("avg-in-rate", "Input data rate (bytes/s)",
+          "Average input data rate (bytes/s)",
+          0, G_MAXINT64, 0, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /* set several parent class virtual functions */
   gobject_class->finalize = gst_queue2_finalize;
@@ -705,7 +734,7 @@ apply_segment (GstQueue2 * queue, GstEvent * event, GstSegment * segment,
   /* now configure the values, we use these to track timestamps on the
    * sinkpad. */
   if (segment->format != GST_FORMAT_TIME) {
-    /* non-time format, pretent the current time segment is closed with a
+    /* non-time format, pretend the current time segment is closed with a
      * 0 start and unknown stop time. */
     segment->format = GST_FORMAT_TIME;
     segment->start = 0;
@@ -758,7 +787,7 @@ apply_buffer (GstQueue2 * queue, GstBuffer * buffer, GstSegment * segment,
 {
   GstClockTime duration, timestamp;
 
-  timestamp = GST_BUFFER_TIMESTAMP (buffer);
+  timestamp = GST_BUFFER_DTS_OR_PTS (buffer);
   duration = GST_BUFFER_DURATION (buffer);
 
   /* if no timestamp is set, assume it's continuous with the previous
@@ -788,14 +817,17 @@ static gboolean
 buffer_list_apply_time (GstBuffer ** buf, guint idx, gpointer data)
 {
   GstClockTime *timestamp = data;
+  GstClockTime btime;
 
-  GST_TRACE ("buffer %u has ts %" GST_TIME_FORMAT
+  GST_TRACE ("buffer %u has pts %" GST_TIME_FORMAT " dts %" GST_TIME_FORMAT
       " duration %" GST_TIME_FORMAT, idx,
-      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (*buf)),
+      GST_TIME_ARGS (GST_BUFFER_PTS (*buf)),
+      GST_TIME_ARGS (GST_BUFFER_DTS (*buf)),
       GST_TIME_ARGS (GST_BUFFER_DURATION (*buf)));
 
-  if (GST_BUFFER_TIMESTAMP_IS_VALID (*buf))
-    *timestamp = GST_BUFFER_TIMESTAMP (*buf);
+  btime = GST_BUFFER_DTS_OR_PTS (*buf);
+  if (GST_CLOCK_TIME_IS_VALID (btime))
+    *timestamp = btime;
 
   if (GST_BUFFER_DURATION_IS_VALID (*buf))
     *timestamp += GST_BUFFER_DURATION (*buf);
@@ -851,6 +883,11 @@ get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
     perc = 100;
     GST_LOG_OBJECT (queue, "we are EOS");
   } else {
+    GST_LOG_OBJECT (queue,
+        "Cur level bytes/time/buffers %u/%" GST_TIME_FORMAT "/%u",
+        queue->cur_level.bytes, GST_TIME_ARGS (queue->cur_level.time),
+        queue->cur_level.buffers);
+
     /* figure out the percent we are filled, we take the max of all formats. */
     if (!QUEUE_IS_USING_RING_BUFFER (queue)) {
       perc = GET_PERCENT (bytes, 0);
@@ -864,6 +901,10 @@ get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
     /* also apply the rate estimate when we need to */
     if (queue->use_rate_estimate)
       perc = MAX (perc, GET_PERCENT (rate_time, 0));
+
+    /* Don't get to 0% unless we're really empty */
+    if (queue->cur_level.bytes > 0)
+      perc = MAX (1, perc);
   }
 #undef GET_PERCENT
 
@@ -983,6 +1024,7 @@ reset_rate_timer (GstQueue2 * queue)
   queue->byte_in_rate = 0.0;
   queue->byte_in_period = 0;
   queue->byte_out_rate = 0.0;
+  queue->last_update_in_rates_elapsed = 0.0;
   queue->last_in_elapsed = 0.0;
   queue->last_out_elapsed = 0.0;
   queue->in_timer_started = FALSE;
@@ -1013,7 +1055,8 @@ update_in_rates (GstQueue2 * queue)
     return;
   }
 
-  elapsed = g_timer_elapsed (queue->in_timer, NULL);
+  queue->last_update_in_rates_elapsed = elapsed =
+      g_timer_elapsed (queue->in_timer, NULL);
 
   /* recalc after each interval. */
   if (queue->last_in_elapsed + RATE_INTERVAL < elapsed) {
@@ -1500,7 +1543,7 @@ gst_queue2_open_temp_location_file (GstQueue2 * queue)
 
   GST_DEBUG_OBJECT (queue, "opening temp file %s", queue->temp_template);
 
-  /* If temp_template was set, allocate a filename and open that filen */
+  /* If temp_template was set, allocate a filename and open that file */
 
   /* nothing to do */
   if (queue->temp_template == NULL)
@@ -1662,6 +1705,13 @@ gst_queue2_wait_free_space (GstQueue2 * queue)
     GST_CAT_DEBUG_OBJECT (queue_dataflow, queue,
         "queue is full, waiting for free space");
     do {
+      GST_QUEUE2_MUTEX_UNLOCK (queue);
+      g_signal_emit (queue, gst_queue2_signals[SIGNAL_OVERRUN], 0);
+      GST_QUEUE2_MUTEX_LOCK_CHECK (queue, queue->srcresult, out_flushing);
+      /* we recheck, the signal could have changed the thresholds */
+      if (!gst_queue2_is_filled (queue))
+        break;
+
       /* Wait for space to be available, we could be unlocked because of a flush. */
       GST_QUEUE2_WAIT_DEL_CHECK (queue, queue->sinkresult, out_flushing);
     }
@@ -3605,6 +3655,19 @@ gst_queue2_get_property (GObject * object,
     case PROP_RING_BUFFER_MAX_SIZE:
       g_value_set_uint64 (value, queue->ring_buffer_max_size);
       break;
+    case PROP_AVG_IN_RATE:
+    {
+      gdouble in_rate = queue->byte_in_rate;
+
+      /* During the first RATE_INTERVAL, byte_in_rate will not have been
+       * calculated, so calculate it here. */
+      if (in_rate == 0.0 && queue->bytes_in
+          && queue->last_update_in_rates_elapsed > 0.0)
+        in_rate = queue->bytes_in / queue->last_update_in_rates_elapsed;
+
+      g_value_set_int64 (value, (gint64) in_rate);
+      break;
+    }
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;

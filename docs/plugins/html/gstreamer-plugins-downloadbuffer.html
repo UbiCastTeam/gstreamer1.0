@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-concat.html" title="concat">
-<link rel="next" href="gstreamer-plugins-fakesrc.html" title="fakesrc">
+<link rel="next" href="gstreamer-plugins-fakesink.html" title="fakesink">
 <meta name="generator" content="GTK-Doc V1.24 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-plugins-concat.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-plugins-fakesrc.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gstreamer-plugins-fakesink.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gstreamer-plugins-downloadbuffer"></a><div class="titlepage"></div>
@@ -113,7 +113,7 @@ buffer the data in the file.</p>
 <p>With max-size-bytes and max-size-time you can configure the buffering limits.
 The downloadbuffer element will try to read-ahead these amounts of data. When
 the amount of read-ahead data drops below low-percent of the configured max,
-the element will start emiting BUFFERING messages until high-percent of max is
+the element will start emitting BUFFERING messages until high-percent of max is
 reached again.</p>
 <p>The downloadbuffer provides push and pull based scheduling on its source pad
 and will efficiently seek in the upstream element when needed.</p>

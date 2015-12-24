@@ -508,8 +508,7 @@ gst_collect_pads_clip_running_time (GstCollectPads * pads,
   *outbuf = buf;
 
   /* invalid left alone and passed */
-  if (G_LIKELY (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DTS (buf))
-          || GST_CLOCK_TIME_IS_VALID (GST_BUFFER_PTS (buf)))) {
+  if (G_LIKELY (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DTS_OR_PTS (buf)))) {
     GstClockTime time;
     GstClockTime buf_dts, abs_dts;
     gint dts_sign;
@@ -1479,10 +1478,7 @@ gst_collect_pads_find_best_pad (GstCollectPads * pads,
     buffer = gst_collect_pads_peek (pads, data);
     /* if we have a buffer check if it is better then the current best one */
     if (buffer != NULL) {
-      timestamp = GST_BUFFER_DTS (buffer);
-      if (!GST_CLOCK_TIME_IS_VALID (timestamp)) {
-        timestamp = GST_BUFFER_PTS (buffer);
-      }
+      timestamp = GST_BUFFER_DTS_OR_PTS (buffer);
       gst_buffer_unref (buffer);
       if (best == NULL || pads->priv->compare_func (pads, data, timestamp,
               best, best_time, pads->priv->compare_user_data) < 0) {
@@ -2207,9 +2203,7 @@ gst_collect_pads_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
   if (G_LIKELY (data->segment.format == GST_FORMAT_TIME)) {
     GstClockTime timestamp;
 
-    timestamp = GST_BUFFER_DTS (buffer);
-    if (!GST_CLOCK_TIME_IS_VALID (timestamp))
-      timestamp = GST_BUFFER_PTS (buffer);
+    timestamp = GST_BUFFER_DTS_OR_PTS (buffer);
 
     if (GST_CLOCK_TIME_IS_VALID (timestamp))
       data->segment.position = timestamp;
