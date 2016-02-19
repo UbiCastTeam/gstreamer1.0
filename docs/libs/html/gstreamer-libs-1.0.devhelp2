@@ -32,7 +32,7 @@
         <sub name="GstNetControlMessageMeta" link="gstreamer-libs-GstNetControlMessageMeta.html"/>
         <sub name="GstNetTimePacket" link="gstreamer-libs-GstNetTimePacket.html"/>
         <sub name="GstNetTimeProvider" link="GstNetTimeProvider.html"/>
-        <sub name="GstPtpClock" link="gstreamer-libs-GstPtpClock.html"/>
+        <sub name="GstPtpClock" link="GstPtpClock.html"/>
       </sub>
       <sub name="GStreamer Check Unit Testing" link="gstreamer-check.html">
         <sub name="GstCheck" link="gstreamer-libs-GstCheck.html"/>
@@ -484,6 +484,8 @@
     <keyword type="function" name="gst_flow_combiner_add_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-add-pad" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_remove_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-remove-pad" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_clear ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-clear" since="1.6"/>
+    <keyword type="function" name="gst_flow_combiner_reset ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-reset" since="1.6"/>
+    <keyword type="function" name="gst_flow_combiner_update_pad_flow ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-update-pad-flow" since="1.6"/>
     <keyword type="struct" name="GstFlowCombiner" link="gstreamer-libs-GstFlowCombiner.html#GstFlowCombiner" since="1.4"/>
     <keyword type="function" name="gst_type_find_helper ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper"/>
     <keyword type="function" name="gst_type_find_helper_for_buffer ()" link="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-buffer"/>
@@ -595,16 +597,24 @@
     <keyword type="property" name="The “address” property" link="GstNetTimeProvider.html#GstNetTimeProvider--address"/>
     <keyword type="property" name="The “clock” property" link="GstNetTimeProvider.html#GstNetTimeProvider--clock"/>
     <keyword type="property" name="The “port” property" link="GstNetTimeProvider.html#GstNetTimeProvider--port"/>
-    <keyword type="macro" name="GST_PTP_CLOCK_ID_NONE" link="gstreamer-libs-GstPtpClock.html#GST-PTP-CLOCK-ID-NONE:CAPS"/>
-    <keyword type="function" name="gst_ptp_init ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-init" since="1.6"/>
-    <keyword type="function" name="gst_ptp_deinit ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-deinit" since="1.6"/>
-    <keyword type="function" name="gst_ptp_is_initialized ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-is-initialized" since="1.6"/>
-    <keyword type="function" name="gst_ptp_is_supported ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-is-supported" since="1.6"/>
-    <keyword type="function" name="gst_ptp_clock_new ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-clock-new" since="1.6"/>
-    <keyword type="function" name="GstPtpStatisticsCallback ()" link="gstreamer-libs-GstPtpClock.html#GstPtpStatisticsCallback"/>
-    <keyword type="function" name="gst_ptp_statistics_callback_add ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-add" since="1.6"/>
-    <keyword type="function" name="gst_ptp_statistics_callback_remove ()" link="gstreamer-libs-GstPtpClock.html#gst-ptp-statistics-callback-remove" since="1.6"/>
-    <keyword type="struct" name="struct GstPtpClock" link="gstreamer-libs-GstPtpClock.html#GstPtpClock"/>
+    <keyword type="macro" name="GST_PTP_CLOCK_ID_NONE" link="GstPtpClock.html#GST-PTP-CLOCK-ID-NONE:CAPS"/>
+    <keyword type="function" name="gst_ptp_init ()" link="GstPtpClock.html#gst-ptp-init" since="1.6"/>
+    <keyword type="function" name="gst_ptp_deinit ()" link="GstPtpClock.html#gst-ptp-deinit" since="1.6"/>
+    <keyword type="function" name="gst_ptp_is_initialized ()" link="GstPtpClock.html#gst-ptp-is-initialized" since="1.6"/>
+    <keyword type="function" name="gst_ptp_is_supported ()" link="GstPtpClock.html#gst-ptp-is-supported" since="1.6"/>
+    <keyword type="function" name="gst_ptp_clock_new ()" link="GstPtpClock.html#gst-ptp-clock-new" since="1.6"/>
+    <keyword type="function" name="GstPtpStatisticsCallback ()" link="GstPtpClock.html#GstPtpStatisticsCallback"/>
+    <keyword type="function" name="gst_ptp_statistics_callback_add ()" link="GstPtpClock.html#gst-ptp-statistics-callback-add" since="1.6"/>
+    <keyword type="function" name="gst_ptp_statistics_callback_remove ()" link="GstPtpClock.html#gst-ptp-statistics-callback-remove" since="1.6"/>
+    <keyword type="struct" name="struct GstPtpClock" link="GstPtpClock.html#GstPtpClock-struct"/>
+    <keyword type="macro" name="GST_PTP_STATISTICS_BEST_MASTER_CLOCK_SELECTED" link="GstPtpClock.html#GST-PTP-STATISTICS-BEST-MASTER-CLOCK-SELECTED:CAPS"/>
+    <keyword type="macro" name="GST_PTP_STATISTICS_NEW_DOMAIN_FOUND" link="GstPtpClock.html#GST-PTP-STATISTICS-NEW-DOMAIN-FOUND:CAPS"/>
+    <keyword type="macro" name="GST_PTP_STATISTICS_PATH_DELAY_MEASURED" link="GstPtpClock.html#GST-PTP-STATISTICS-PATH-DELAY-MEASURED:CAPS"/>
+    <keyword type="macro" name="GST_PTP_STATISTICS_TIME_UPDATED" link="GstPtpClock.html#GST-PTP-STATISTICS-TIME-UPDATED:CAPS"/>
+    <keyword type="property" name="The “domain” property" link="GstPtpClock.html#GstPtpClock--domain"/>
+    <keyword type="property" name="The “grandmaster-clock-id” property" link="GstPtpClock.html#GstPtpClock--grandmaster-clock-id"/>
+    <keyword type="property" name="The “internal-clock” property" link="GstPtpClock.html#GstPtpClock--internal-clock"/>
+    <keyword type="property" name="The “master-clock-id” property" link="GstPtpClock.html#GstPtpClock--master-clock-id"/>
     <keyword type="macro" name="GST_START_TEST()" link="gstreamer-libs-GstCheck.html#GST-START-TEST:CAPS"/>
     <keyword type="macro" name="ASSERT_BUFFER_REFCOUNT()" link="gstreamer-libs-GstCheck.html#ASSERT-BUFFER-REFCOUNT:CAPS"/>
     <keyword type="macro" name="ASSERT_CAPS_REFCOUNT()" link="gstreamer-libs-GstCheck.html#ASSERT-CAPS-REFCOUNT:CAPS"/>
@@ -668,12 +678,15 @@
     <keyword type="function" name="gst_consistency_checker_free ()" link="gstreamer-libs-GstStreamConsistency.html#gst-consistency-checker-free"/>
     <keyword type="function" name="gst_consistency_checker_add_pad ()" link="gstreamer-libs-GstStreamConsistency.html#gst-consistency-checker-add-pad"/>
     <keyword type="struct" name="GstStreamConsistency" link="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency"/>
+    <keyword type="function" name="gst_harness_new_empty ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-empty" since="1.8"/>
     <keyword type="function" name="gst_harness_new_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-full" since="1.6"/>
     <keyword type="function" name="gst_harness_new_with_element ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-with-element" since="1.6"/>
     <keyword type="function" name="gst_harness_new_with_padnames ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-with-padnames" since="1.6"/>
     <keyword type="function" name="gst_harness_new_with_templates ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-with-templates" since="1.6"/>
     <keyword type="function" name="gst_harness_new ()" link="gstreamer-libs-GstHarness.html#gst-harness-new" since="1.6"/>
     <keyword type="function" name="gst_harness_new_parse ()" link="gstreamer-libs-GstHarness.html#gst-harness-new-parse" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_element_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-element-full" since="1.6"/>
+    <keyword type="function" name="gst_harness_add_parse ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-parse" since="1.6"/>
     <keyword type="function" name="gst_harness_teardown ()" link="gstreamer-libs-GstHarness.html#gst-harness-teardown" since="1.6"/>
     <keyword type="function" name="gst_harness_add_element_src_pad ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-element-src-pad" since="1.6"/>
     <keyword type="function" name="gst_harness_add_element_sink_pad ()" link="gstreamer-libs-GstHarness.html#gst-harness-add-element-sink-pad" since="1.6"/>
@@ -743,8 +756,13 @@
     <keyword type="function" name="gst_harness_stress_push_buffer_with_cb_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-buffer-with-cb-start-full" since="1.6"/>
     <keyword type="macro" name="gst_harness_stress_push_event_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-start"/>
     <keyword type="function" name="gst_harness_stress_push_event_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-start-full" since="1.6"/>
+    <keyword type="function" name="GstHarnessPrepareEventFunc ()" link="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" since="1.8"/>
+    <keyword type="macro" name="gst_harness_stress_push_event_with_cb_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-with-cb-start"/>
+    <keyword type="function" name="gst_harness_stress_push_event_with_cb_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-with-cb-start-full" since="1.8"/>
     <keyword type="macro" name="gst_harness_stress_send_upstream_event_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-send-upstream-event-start"/>
     <keyword type="function" name="gst_harness_stress_push_upstream_event_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-upstream-event-start-full" since="1.6"/>
+    <keyword type="macro" name="gst_harness_stress_send_upstream_event_with_cb_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-send-upstream-event-with-cb-start"/>
+    <keyword type="function" name="gst_harness_stress_push_upstream_event_with_cb_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-push-upstream-event-with-cb-start-full" since="1.8"/>
     <keyword type="macro" name="gst_harness_stress_property_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-property-start"/>
     <keyword type="function" name="gst_harness_stress_property_start_full ()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-property-start-full" since="1.6"/>
     <keyword type="macro" name="gst_harness_stress_requestpad_start()" link="gstreamer-libs-GstHarness.html#gst-harness-stress-requestpad-start"/>
@@ -765,6 +783,7 @@
     <keyword type="function" name="gst_test_clock_wait_for_multiple_pending_ids ()" link="GstTestClock.html#gst-test-clock-wait-for-multiple-pending-ids" since="1.4"/>
     <keyword type="function" name="gst_test_clock_id_list_get_latest_time ()" link="GstTestClock.html#gst-test-clock-id-list-get-latest-time" since="1.4"/>
     <keyword type="function" name="gst_test_clock_process_id_list ()" link="GstTestClock.html#gst-test-clock-process-id-list" since="1.4"/>
+    <keyword type="function" name="gst_test_clock_crank ()" link="GstTestClock.html#gst-test-clock-crank" since="1.8"/>
     <keyword type="struct" name="struct GstTestClock" link="GstTestClock.html#GstTestClock-struct"/>
     <keyword type="struct" name="struct GstTestClockClass" link="GstTestClock.html#GstTestClockClass" since="1.2"/>
     <keyword type="property" name="The “start-time” property" link="GstTestClock.html#GstTestClock--start-time"/>
@@ -785,7 +804,7 @@
     <keyword type="constant" name="GST_INTERPOLATION_MODE_NONE" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-NONE:CAPS"/>
     <keyword type="constant" name="GST_INTERPOLATION_MODE_LINEAR" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-LINEAR:CAPS"/>
     <keyword type="constant" name="GST_INTERPOLATION_MODE_CUBIC" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-CUBIC:CAPS"/>
-    <keyword type="constant" name="GST_INTERPOLATION_MODE_CUBIC_MONO" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-CUBIC-MONO:CAPS"/>
+    <keyword type="constant" name="GST_INTERPOLATION_MODE_CUBIC_MONOTONIC" link="GstInterpolationControlSource.html#GST-INTERPOLATION-MODE-CUBIC-MONOTONIC:CAPS"/>
     <keyword type="constant" name="GST_LFO_WAVEFORM_SINE" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SINE:CAPS"/>
     <keyword type="constant" name="GST_LFO_WAVEFORM_SQUARE" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SQUARE:CAPS"/>
     <keyword type="constant" name="GST_LFO_WAVEFORM_SAW" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SAW:CAPS"/>

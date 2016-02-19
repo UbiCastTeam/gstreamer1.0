@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstObject: GStreamer 1.0 Core Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstMiniObject.html" title="GstMiniObject">
@@ -36,7 +36,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstObject.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -351,7 +351,7 @@
 </div>
 <div class="refsect1">
 <a name="GstObject.properties"></a><h2>Properties</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="properties_type">
 <col width="300px" class="properties_name">
@@ -375,7 +375,7 @@
 </div>
 <div class="refsect1">
 <a name="GstObject.signals"></a><h2>Signals</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="signals_return">
 <col width="300px" class="signals_name">
@@ -390,7 +390,7 @@
 </div>
 <div class="refsect1">
 <a name="GstObject.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -429,7 +429,9 @@
             <span class="lineart">├──</span> <a class="link" href="GstControlSource.html" title="GstControlSource">GstControlSource</a>
             <span class="lineart">├──</span> <a class="link" href="GstPlugin.html" title="GstPlugin">GstPlugin</a>
             <span class="lineart">├──</span> <a class="link" href="GstRegistry.html" title="GstRegistry">GstRegistry</a>
-            <span class="lineart">╰──</span> <a class="link" href="GstBufferPool.html" title="GstBufferPool">GstBufferPool</a>
+            <span class="lineart">├──</span> <a class="link" href="GstBufferPool.html" title="GstBufferPool">GstBufferPool</a>
+            <span class="lineart">├──</span> <a class="link" href="GstTracer.html" title="GstTracer">GstTracer</a>
+            <span class="lineart">╰──</span> <a class="link" href="GstTracerRecord.html" title="GstTracerRecord">GstTracerRecord</a>
 </pre>
 </div>
 <div class="refsect1">
@@ -512,7 +514,7 @@ Again it's not a lot to change.
 <p>This macro returns the entire set of flags for the object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -534,7 +536,7 @@ Again it's not a lot to change.
 <p>This macro checks to see if the given flag is set.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -563,7 +565,7 @@ Again it's not a lot to change.
 <p>This macro sets the given bits.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -592,7 +594,7 @@ Again it's not a lot to change.
 <p>This macro unsets the given bits.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -621,7 +623,7 @@ Again it's not a lot to change.
 <p>Get the name of this object</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -643,7 +645,7 @@ Again it's not a lot to change.
 <p>Get the parent of this object</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -665,7 +667,7 @@ Again it's not a lot to change.
 <p>Get access to the reference count field of the object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -687,7 +689,7 @@ Again it's not a lot to change.
 <p>Get the reference count value of the object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.9.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -710,7 +712,7 @@ Again it's not a lot to change.
 It blocks until the lock can be obtained.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -733,7 +735,7 @@ It blocks until the lock can be obtained.</p>
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it can't get it immediately.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.11.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -755,7 +757,7 @@ It blocks until the lock can be obtained.</p>
 <p>This macro releases a lock on the object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -777,7 +779,7 @@ It blocks until the lock can be obtained.</p>
 <p>Acquire a reference to the mutex of this object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.13.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -806,7 +808,7 @@ This function makes a copy of the provided name, so the caller
 retains ownership of the name it sent.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.14.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -848,7 +850,7 @@ as well.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.15.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -883,7 +885,7 @@ gst_object_set_parent (<em class="parameter"><code><a class="link" href="GstObje
 be incremented, and any floating reference will be removed (see <a class="link" href="GstObject.html#gst-object-ref-sink" title="gst_object_ref_sink ()"><code class="function">gst_object_ref_sink()</code></a>).</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.16.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -924,7 +926,7 @@ gst_object_get_parent (<em class="parameter"><code><a class="link" href="GstObje
 of the parent object so you should <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a> it after usage.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.17.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -960,7 +962,7 @@ gst_object_has_as_parent (<em class="parameter"><code><a class="link" href="GstO
 E.g. a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> can check if it owns a given <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.18.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1006,7 +1008,7 @@ This function decreases the refcount of <em class="parameter"><code>object</code
 's lock.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.19.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1037,7 +1039,7 @@ using g_print.</p>
          path string.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.20.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1081,7 +1083,7 @@ and the optional debug sting..</p>
 <p>The default handler will simply print the error string using g_print.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.21.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1122,7 +1124,7 @@ will lock each <a class="link" href="GstObject.html" title="GstObject"><span cla
 careful when passing a list with a locked object.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.22.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1164,7 +1166,7 @@ gst_object_has_as_ancestor (<em class="parameter"><code><a class="link" href="Gs
 the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> is inside a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.23.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1211,7 +1213,7 @@ gst_object_has_ancestor (<em class="parameter"><code><a class="link" href="GstOb
 the hierarchy. One can e.g. check if a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> is inside a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.24.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1253,7 +1255,7 @@ constructs like :
  result = gst_object_ref (object-&gt;parent);</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.25.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1288,7 +1290,7 @@ on <em class="parameter"><code>object</code></em>
 this might deadlock the dispose function.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.26.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1319,7 +1321,7 @@ reference count by one.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="id-1.3.32.10.27.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1349,7 +1351,7 @@ The reference count of <em class="parameter"><code>oldobj</code></em>
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.28.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1388,7 +1390,7 @@ the object hierarchy. Only useful (or used) for debugging.</p>
 <p>Free-function: g_free</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.29.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1420,7 +1422,7 @@ gst_object_suggest_next_sync (<em class="parameter"><code><a class="link" href="
 to get best controller results.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.30.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1451,7 +1453,7 @@ gst_object_sync_values (<em class="parameter"><code><a class="link" href="GstObj
 Most probably the control sources are not setup correctly.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.31.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1487,7 +1489,7 @@ gst_object_has_active_control_bindings
  has an active controlled properties.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.32.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1517,7 +1519,7 @@ gst_object_set_control_bindings_disabled
 some time, i.e. <a class="link" href="GstObject.html#gst-object-sync-values" title="gst_object_sync_values ()"><code class="function">gst_object_sync_values()</code></a> will do nothing.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.33.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1552,7 +1554,7 @@ some time, i.e. <a class="link" href="GstObject.html#gst-object-sync-values" tit
 property.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.34.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1592,7 +1594,7 @@ gst_object_add_control_binding (<em class="parameter"><code><a class="link" href
 .</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.35.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1629,7 +1631,7 @@ gst_object_get_control_binding (<em class="parameter"><code><a class="link" href
 unreferenced again after use.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.36.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1667,7 +1669,7 @@ gst_object_remove_control_binding (<em class="parameter"><code><a class="link" h
 last ref of the binding, it will be disposed.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.37.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1702,7 +1704,7 @@ gst_object_get_value (<em class="parameter"><code><a class="link" href="GstObjec
 <p>Gets the value for the given controlled property at the requested time.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.38.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1756,7 +1758,7 @@ curve or apply a control curve sample by sample.</p>
 better suites for bindings.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.39.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1820,7 +1822,7 @@ requested time. The array <em class="parameter"><code>values</code></em>
 curve or apply a control curve sample by sample.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.40.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1883,7 +1885,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <a class="link" href="GstElement.html#GST-STATE-PAUSED:CAPS"><code class="literal">GST_STATE_PAUSED</code></a> or <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.41.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1917,7 +1919,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.32.10.42.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1953,7 +1955,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <p>GStreamer base object class.</p>
 <div class="refsect3">
 <a name="id-1.3.32.11.2.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -2001,7 +2003,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <p>GStreamer base object class.</p>
 <div class="refsect3">
 <a name="id-1.3.32.11.3.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -2033,7 +2035,7 @@ should be up to <em class="parameter"><code>control</code></em>
 <p>The standard flags that an gstobject may have.</p>
 <div class="refsect3">
 <a name="id-1.3.32.11.4.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -2085,7 +2087,7 @@ typically attached to the toplevel bin to receive notifications from all
 the elements contained in that bin.</p>
 <div class="refsect3">
 <a name="id-1.3.32.13.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">

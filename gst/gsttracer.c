@@ -24,9 +24,11 @@
  * @short_description: Tracing base class
  *
  * Tracing modules will subclass #GstTracer and register through
- * gst_tracer_register(). Modules can attach to various hook-types - see
- * #GstTracerHook. When invoked they receive hook specific contextual data, 
- * which they must not modify.
+ * gst_tracing_register(). Modules can attach to various hook-types - see
+ * gst_tracing_register_hook(). When invoked they receive hook specific
+ * contextual data, which they must not modify.
+ *
+ * Since: 1.8
  */
 
 #define GST_USE_UNSTABLE_API
@@ -35,6 +37,7 @@
 #include "gstenumtypes.h"
 #include "gsttracer.h"
 #include "gsttracerfactory.h"
+#include "gsttracerutils.h"
 
 GST_DEBUG_CATEGORY_EXTERN (tracer_debug);
 #define GST_CAT_DEFAULT tracer_debug
@@ -128,6 +131,17 @@ gst_tracer_get_property (GObject * object, guint prop_id,
 
 /* tracing modules */
 
+/**
+ * gst_tracer_register:
+ * @plugin: (allow-none): A #GstPlugin, or %NULL for a static typefind function
+ * @name: The name for registering
+ * @type: GType of tracer to register
+ *
+ * Create a new tracer-factory  capable of instantiating objects of the
+ * @type and add the factory to @plugin.
+ *
+ * Returns: %TRUE, if the registering succeeded, %FALSE on error
+ */
 gboolean
 gst_tracer_register (GstPlugin * plugin, const gchar * name, GType type)
 {
@@ -180,28 +194,4 @@ gst_tracer_register (GstPlugin * plugin, const gchar * name, GType type)
       GST_PLUGIN_FEATURE_CAST (factory));
 
   return TRUE;
-}
-
-/* tracing module helpers */
-
-void
-gst_tracer_log_trace (GstStructure * s)
-{
-  GST_TRACE ("%" GST_PTR_FORMAT, s);
-  /* expands to:
-     gst_debug_log_valist (
-     GST_CAT_DEFAULT, GST_LEVEL_TRACE,
-     file, func, line, object
-     "%" GST_PTR_FORMAT, s);
-     // does it make sense to use the {file, line, func} from the tracer hook?
-     // a)
-     // - we'd need to pass them in the macros to gst_tracer_dispatch()
-     // - and each tracer needs to grab them from the va_list and pass them here
-     // b)
-     // - we create a content in dispatch, pass that to the tracer
-     // - and the tracer will pass that here
-     // ideally we also use *our* ts instead of the one that
-     // gst_debug_log_default() will pick
-   */
-  gst_structure_free (s);
 }

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>queue2: GStreamer Core Plugins 1.0 Plugins Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-output-selector.html" title="output-selector">
@@ -36,7 +36,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="gstreamer-plugins-queue2.properties"></a><h2>Properties</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="properties_type">
 <col width="300px" class="properties_name">
@@ -120,12 +120,17 @@
 <td class="property_name"><a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--avg-in-rate" title="The “avg-in-rate” property">avg-in-rate</a></td>
 <td class="property_flags">Read</td>
 </tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--use-tags-bitrate" title="The “use-tags-bitrate” property">use-tags-bitrate</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-queue2.signals"></a><h2>Signals</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="signals_return">
 <col width="300px" class="signals_name">
@@ -140,7 +145,7 @@
 </div>
 <a name="GstQueue2"></a><div class="refsect1">
 <a name="gstreamer-plugins-queue2.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -396,42 +401,23 @@ buffer is disabled. Default 0.</p>
 <p>Allowed values: &gt;= 0</p>
 <p>Default value: 0</p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstQueue2--use-tags-bitrate"></a><h3>The <code class="literal">“use-tags-bitrate”</code> property</h3>
+<pre class="programlisting">  “use-tags-bitrate”         <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Use a bitrate from upstream tags to estimate buffer duration if not provided.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-queue2.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
 <a name="GstQueue2-overrun"></a><h3>The <code class="literal">“overrun”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2"><span class="type">GstQueue2</span></a> *queue,
+user_function (<a class="link" href="gstreamer-plugins-queue2.html#GstQueue2"><span class="type">GstQueue2</span></a> *gstqueue2,
                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)</pre>
-<p>Reports that the buffer became full (overrun).
-A buffer is full if the total amount of data inside it (num-buffers, time,
-size) is higher than the boundary values which can be set through the
-GObject properties.</p>
-<div class="refsect3">
-<a name="id-1.2.16.12.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>queue</p></td>
-<td class="parameter_description"><p>the queue2 instance</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>user_data</p></td>
-<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 <p>Flags: <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></p>
-<p class="since">Since: 1.8</p>
 </div>
 </div>
 </div>

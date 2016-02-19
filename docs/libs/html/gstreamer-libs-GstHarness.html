@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstHarness: GStreamer 1.0 Library Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-check.html" title="GStreamer Check Unit Testing">
 <link rel="prev" href="gstreamer-libs-GstStreamConsistency.html" title="GstStreamConsistency">
@@ -33,12 +33,20 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstHarness.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
 </colgroup>
 <tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="returnvalue">GstHarness</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-empty" title="gst_harness_new_empty ()">gst_harness_new_empty</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 <tr>
 <td class="function_type">
 <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="returnvalue">GstHarness</span></a> *
@@ -85,6 +93,22 @@
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-parse" title="gst_harness_new_parse ()">gst_harness_new_parse</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-add-element-full" title="gst_harness_add_element_full ()">gst_harness_add_element_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-add-parse" title="gst_harness_add_parse ()">gst_harness_add_parse</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -632,6 +656,28 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()">*GstHarnessPrepareEventFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-with-cb-start" title="gst_harness_stress_push_event_with_cb_start()">gst_harness_stress_push_event_with_cb_start</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="returnvalue">GstHarnessThread</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-stress-push-event-with-cb-start-full" title="gst_harness_stress_push_event_with_cb_start_full ()">gst_harness_stress_push_event_with_cb_start_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-stress-send-upstream-event-start" title="gst_harness_stress_send_upstream_event_start()">gst_harness_stress_send_upstream_event_start</a><span class="c_punctuation">()</span>
@@ -643,6 +689,20 @@
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-stress-push-upstream-event-start-full" title="gst_harness_stress_push_upstream_event_start_full ()">gst_harness_stress_push_upstream_event_start_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-stress-send-upstream-event-with-cb-start" title="gst_harness_stress_send_upstream_event_with_cb_start()">gst_harness_stress_send_upstream_event_with_cb_start</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="returnvalue">GstHarnessThread</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-stress-push-upstream-event-with-cb-start-full" title="gst_harness_stress_push_upstream_event_with_cb_start_full ()">gst_harness_stress_push_upstream_event_with_cb_start_full</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -678,7 +738,7 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstHarness.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -843,6 +903,23 @@ with different configurations, by simply doing:</p>
 <div class="refsect1">
 <a name="gstreamer-libs-GstHarness.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
+<a name="gst-harness-new-empty"></a><h3>gst_harness_new_empty ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="returnvalue">GstHarness</span></a> *
+gst_harness_new_empty (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Creates a new empty harness. Use <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-add-element-full" title="gst_harness_add_element_full ()"><code class="function">gst_harness_add_element_full()</code></a> to add
+an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to it.</p>
+<p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.2.7"></a><h4>Returns</h4>
+<p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
+not be created. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.8</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-harness-new-full"></a><h3>gst_harness_new_full ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="returnvalue">GstHarness</span></a> *
 gst_harness_new_full (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
@@ -854,8 +931,8 @@ gst_harness_new_full (<em class="parameter"><code><a href="http://gstreamer.free
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.2.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.3.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -899,7 +976,7 @@ srcpad that is then linked to the harness sinkpad, similar to the
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.2.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.3.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
 not be created. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -913,14 +990,14 @@ not be created. </p>
 gst_harness_new_with_element (<em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
                               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_sinkpad_name</code></em>,
                               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_srcpad_name</code></em>);</pre>
-<p>Creates a new harness. Works in the same way as gst_harness_new_full, only
+<p>Creates a new harness. Works in the same way as <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-full" title="gst_harness_new_full ()"><code class="function">gst_harness_new_full()</code></a>, only
 that generic padtemplates are used for the harness src and sinkpads, which
 will be sufficient in most usecases.</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.3.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.4.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -950,7 +1027,7 @@ srcpad. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.3.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.4.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
 not be created. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -964,13 +1041,13 @@ not be created. </p>
 gst_harness_new_with_padnames (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_name</code></em>,
                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_sinkpad_name</code></em>,
                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_srcpad_name</code></em>);</pre>
-<p>Creates a new harness. Works in the same way as gst_harness_new_with_element,
+<p>Creates a new harness. Works like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-with-element" title="gst_harness_new_with_element ()"><code class="function">gst_harness_new_with_element()</code></a>,
 except you specify the factoryname of the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a></p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.4.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.5.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1000,7 +1077,7 @@ srcpad. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.4.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.5.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
 not be created. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1014,13 +1091,13 @@ not be created. </p>
 gst_harness_new_with_templates (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_name</code></em>,
                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *hsrc</code></em>,
                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *hsink</code></em>);</pre>
-<p>Creates a new harness, like gst_harness_new_full, except it
+<p>Creates a new harness, like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-full" title="gst_harness_new_full ()"><code class="function">gst_harness_new_full()</code></a>, except it
 assumes the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> sinkpad is named "sink" and srcpad is named "src"</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.5.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.6.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1048,7 +1125,7 @@ assumes the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.5.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.6.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
 not be created. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1060,13 +1137,13 @@ not be created. </p>
 <a name="gst-harness-new"></a><h3>gst_harness_new ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="returnvalue">GstHarness</span></a> *
 gst_harness_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_name</code></em>);</pre>
-<p>Creates a new harness. Works like gst_harness_new_with_padnames, except it
+<p>Creates a new harness. Works like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-new-with-padnames" title="gst_harness_new_with_padnames ()"><code class="function">gst_harness_new_with_padnames()</code></a>, except it
 assumes the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> sinkpad is named "sink" and srcpad is named "src"</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.6.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.7.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1080,7 +1157,7 @@ assumes the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gs
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.6.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.7.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
 not be created. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1098,8 +1175,8 @@ and then attches the harness to the bin.</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.7.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.8.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1113,10 +1190,110 @@ and then attches the harness to the bin.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.7.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.8.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the harness could
 not be created. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-add-element-full"></a><h3>gst_harness_add_element_full ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_harness_add_element_full (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                              <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>,
+                              <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *hsrc</code></em>,
+                              <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_sinkpad_name</code></em>,
+                              <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *hsink</code></em>,
+                              <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *element_srcpad_name</code></em>);</pre>
+<p>Adds a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to an empty <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p>
+<p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.9.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> to add to the harness (transfer none)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>hsrc</p></td>
+<td class="parameter_description"><p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> describing the harness srcpad.
+<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will not create a harness srcpad. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element_sinkpad_name</p></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> with the name of the element
+sinkpad that is then linked to the harness srcpad. Can be a static or request
+or a sometimes pad that has been added. <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will not get/request a sinkpad
+from the element. (Like if the element is a src.). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>hsink</p></td>
+<td class="parameter_description"><p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPadTemplate.html#GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> describing the harness sinkpad.
+<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will not create a harness sinkpad. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element_srcpad_name</p></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> with the name of the element
+srcpad that is then linked to the harness sinkpad, similar to the
+<em class="parameter"><code>element_sinkpad_name</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-add-parse"></a><h3>gst_harness_add_parse ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_harness_add_parse (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *launchline</code></em>);</pre>
+<p>Parses the <em class="parameter"><code>launchline</code></em>
+ and puts that in a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBin.html"><span class="type">GstBin</span></a>,
+and then attches the supplied <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> to the bin.</p>
+<p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.10.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>launchline</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> describing a gst-launch type line</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
@@ -1129,8 +1306,8 @@ gst_harness_teardown (<em class="parameter"><code><a class="link" href="gstreame
 , freeing all resources allocated using it.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.8.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.11.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1157,8 +1334,8 @@ perhaps the srcpad did not exist at the time of creating the harness,
 like a demuxer that provides a sometimes-pad after receiving data.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.9.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.12.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1190,8 +1367,8 @@ gst_harness_add_element_sink_pad (<em class="parameter"><code><a class="link" hr
  srcpad.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.10.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.13.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1224,8 +1401,8 @@ gst_harness_set_src_caps (<em class="parameter"><code><a class="link" href="gstr
 can legally be pushed from the harness to the element.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.11.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.14.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1257,8 +1434,8 @@ gst_harness_set_sink_caps (<em class="parameter"><code><a class="link" href="gst
  sinkpad caps.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.12.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.15.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1291,8 +1468,8 @@ gst_harness_set_caps (<em class="parameter"><code><a class="link" href="gstreame
  srcpad and sinkpad caps.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.13.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.16.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1330,8 +1507,8 @@ gst_harness_set_src_caps_str (<em class="parameter"><code><a class="link" href="
 any buffers can legally be pushed from the harness to the element.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.14.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.17.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1364,8 +1541,8 @@ gst_harness_set_sink_caps_str (<em class="parameter"><code><a class="link" href=
  sinkpad caps using a string.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.15.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.18.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1399,8 +1576,8 @@ gst_harness_set_caps_str (<em class="parameter"><code><a class="link" href="gstr
  srcpad and sinkpad caps using strings.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.16.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.19.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1438,8 +1615,8 @@ gst_harness_use_systemclock (<em class="parameter"><code><a class="link" href="g
  <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a></p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.17.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.20.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1462,8 +1639,8 @@ gst_harness_use_testclock (<em class="parameter"><code><a class="link" href="gst
 <p>Sets the <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a></p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.18.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.21.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1487,8 +1664,8 @@ gst_harness_get_testclock (<em class="parameter"><code><a class="link" href="gst
 needed.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.19.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.22.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1502,7 +1679,7 @@ needed.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.19.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.22.7"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the testclock is not
 present. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -1518,8 +1695,8 @@ gst_harness_set_time (<em class="parameter"><code><a class="link" href="gstreame
 <p>Advance the <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> to a specific time.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.20.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.23.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1540,7 +1717,7 @@ gst_harness_set_time (<em class="parameter"><code><a class="link" href="gstreame
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.20.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.23.7"></a><h4>Returns</h4>
 <p> a <em class="parameter"><code>gboolean</code></em>
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the time could be set. <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not.</p>
 </div>
@@ -1561,8 +1738,8 @@ where you want to make sure that an expected number of waits have been
 reached.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.21.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.24.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1590,7 +1767,7 @@ to be true</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.21.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.24.7"></a><h4>Returns</h4>
 <p> a <em class="parameter"><code>gboolean</code></em>
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the waits have been registered, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not.
 (Could be that it timed out waiting or that more waits then waits was found)</p>
@@ -1612,8 +1789,8 @@ that are dependant on this. A "crank" can be though of as the notion of
 manually driving the clock forward to its next logical step.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.22.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.25.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1627,7 +1804,7 @@ manually driving the clock forward to its next logical step.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.22.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.25.7"></a><h4>Returns</h4>
 <p> a <em class="parameter"><code>gboolean</code></em>
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the "crank" was successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not.</p>
 </div>
@@ -1640,7 +1817,7 @@ manually driving the clock forward to its next logical step.</p>
 gst_harness_crank_multiple_clock_waits
                                (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> waits</code></em>);</pre>
-<p>Similar to gst_harness_crank_single_clock_wait, this is the function to use
+<p>Similar to <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-crank-single-clock-wait" title="gst_harness_crank_single_clock_wait ()"><code class="function">gst_harness_crank_single_clock_wait()</code></a>, this is the function to use
 if your harnessed element(s) are using more then one gst_clock_id_wait.
 Failing to do so can (and will) make it racy which <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockID"><span class="type">GstClockID</span></a> you actually
 are releasing, where as this function will process all the waits at the
@@ -1648,8 +1825,8 @@ same time, ensuring that one thread can't register another wait before
 both are released.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.23.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.26.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1670,7 +1847,7 @@ both are released.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.23.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.26.7"></a><h4>Returns</h4>
 <p> a <em class="parameter"><code>gboolean</code></em>
 <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the "crank" was successful, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not.</p>
 </div>
@@ -1687,11 +1864,11 @@ flag set is concidered a src <a href="http://gstreamer.freedesktop.org/data/doc/
 Non-src <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElements</span></a> (like sinks and filters) are automatically set to
 playing by the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a>, but src <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElements</span></a> are not to avoid them
 starting to produce buffers.
-Hence, for src <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> you will need to call gst_harness_play explicitly.</p>
+Hence, for src <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> you must call <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-play" title="gst_harness_play ()"><code class="function">gst_harness_play()</code></a> explicitly.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.24.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.27.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1712,14 +1889,14 @@ Hence, for src <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_harness_set_blocking_push_mode (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
 <p>Setting this will make the harness block in the chain-function, and
-then release when gst_harness_pull or gst_harness_try_pull is called.
+then release when <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-pull" title="gst_harness_pull ()"><code class="function">gst_harness_pull()</code></a> or <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-try-pull" title="gst_harness_try_pull ()"><code class="function">gst_harness_try_pull()</code></a> is called.
 Can be useful when wanting to control a src-element that is not implementing
-gst_clock_id_wait so it can't be controlled by the <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>, since
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#gst-clock-id-wait"><code class="function">gst_clock_id_wait()</code></a> so it can't be controlled by the <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>, since
 it otherwise would produce buffers as fast as possible.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.25.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.28.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1745,7 +1922,7 @@ gst_harness_set_forwarding (<em class="parameter"><code><a class="link" href="gs
 is enabled, and forward any sticky-events from the main-harness to
 the sink-harness. It will also forward the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstQuery.html#GST-QUERY-ALLOCATION:CAPS"><code class="literal">GST_QUERY_ALLOCATION</code></a>.</p>
 <p>If forwarding is disabled, the user will have to either manually push
-these events from the src-harness using gst_harness_src_push_event, or
+these events from the src-harness using <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-src-push-event" title="gst_harness_src_push_event ()"><code class="function">gst_harness_src_push_event()</code></a>, or
 create and push them manually. While this will allow full control and
 inspection of these events, for the most cases having forwarding enabled
 will be sufficient when writing a test where the src-harness' main function
@@ -1753,8 +1930,8 @@ is providing data for the main-harness.</p>
 <p>Forwarding is enabled by default.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.26.8"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.29.8"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1786,8 +1963,8 @@ gst_harness_create_buffer (<em class="parameter"><code><a class="link" href="gst
 configured <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstAllocator.html"><span class="type">GstAllocator</span></a> and <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a></p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.27.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.30.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1808,7 +1985,7 @@ configured <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.27.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.30.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> of size <em class="parameter"><code>size</code></em>
 </p>
 </div>
@@ -1824,106 +2001,8 @@ gst_harness_push (<em class="parameter"><code><a class="link" href="gstreamer-li
 interacting with an harnessed element.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.28.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> to push</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.28.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> with the result from the push</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-pull"></a><h3>gst_harness_pull ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
-gst_harness_pull (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Pulls a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad. The pull
-will timeout in 60 seconds. This is the standard way of getting a buffer
-from a harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>.</p>
-<p>MT safe.</p>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.29.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.29.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-try-pull"></a><h3>gst_harness_try_pull ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
-gst_harness_try_pull (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Pulls a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad. Unlike
-gst_harness_pull this will not wait for any buffers if not any are present,
-and return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> straight away.</p>
-<p>MT safe.</p>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.30.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.30.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffers are present in the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-push-and-pull"></a><h3>gst_harness_push_and_pull ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
-gst_harness_push_and_pull (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
-                           <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
-<p>Basically a gst_harness_push and a gst_harness_pull in one line. Reflects
-the fact that you often want to do exactly this in your test: Push one buffer
-in, and inspect the outcome.</p>
-<p>MT safe.</p>
-<div class="refsect3">
 <a name="id-1.2.7.6.7.31.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1945,22 +2024,22 @@ in, and inspect the outcome.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.31.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> with the result from the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-buffers-received"></a><h3>gst_harness_buffers_received ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_harness_buffers_received (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>The total number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffers</span></a> that has arrived on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.
-This number includes buffers that have been dropped as well as buffers
-that have already been pulled out.</p>
+<a name="gst-harness-pull"></a><h3>gst_harness_pull ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
+gst_harness_pull (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Pulls a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad. The pull
+will timeout in 60 seconds. This is the standard way of getting a buffer
+from a harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.32.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1975,20 +2054,22 @@ that have already been pulled out.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.32.7"></a><h4>Returns</h4>
-<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of buffers received</p>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-buffers-in-queue"></a><h3>gst_harness_buffers_in_queue ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_harness_buffers_in_queue (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>The number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffers</span></a> currently in the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+<a name="gst-harness-try-pull"></a><h3>gst_harness_try_pull ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
+gst_harness_try_pull (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Pulls a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad. Unlike
+gst_harness_pull this will not wait for any buffers if not any are present,
+and return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> straight away.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.33.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2003,6 +2084,102 @@ gst_harness_buffers_in_queue (<em class="parameter"><code><a class="link" href="
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.33.7"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffers are present in the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-push-and-pull"></a><h3>gst_harness_push_and_pull ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="returnvalue">GstBuffer</span></a> *
+gst_harness_push_and_pull (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                           <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
+<p>Basically a gst_harness_push and a gst_harness_pull in one line. Reflects
+the fact that you often want to do exactly this in your test: Push one buffer
+in, and inspect the outcome.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.34.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> to push</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.34.7"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-buffers-received"></a><h3>gst_harness_buffers_received ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_harness_buffers_received (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>The total number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffers</span></a> that has arrived on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.
+This number includes buffers that have been dropped as well as buffers
+that have already been pulled out.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.35.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.35.7"></a><h4>Returns</h4>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of buffers received</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-buffers-in-queue"></a><h3>gst_harness_buffers_in_queue ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_harness_buffers_in_queue (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>The number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffers</span></a> currently in the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.36.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.36.7"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of buffers in the queue</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2017,8 +2194,8 @@ gst_harness_set_drop_buffers (<em class="parameter"><code><a class="link" href="
 <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> inside the sinkpads <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a>, they are instead unreffed.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.34.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.37.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2050,8 +2227,8 @@ gst_harness_dump_to_file (<em class="parameter"><code><a class="link" href="gstr
 to a file.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.35.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.38.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2082,103 +2259,8 @@ gst_harness_get_last_pushed_timestamp (<em class="parameter"><code><a class="lin
 typically with gst_harness_push or gst_harness_push_from_src.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.36.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.36.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> with the timestamp or <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><code class="literal">GST_CLOCK_TIME_NONE</code></a> if no
-<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> has been pushed on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-push-event"></a><h3>gst_harness_push_event ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_harness_push_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
-                        <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
-<p>Pushes an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad.</p>
-<p>MT safe.</p>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.37.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>event</p></td>
-<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> to push</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.37.7"></a><h4>Returns</h4>
-<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> with the result from the push</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-pull-event"></a><h3>gst_harness_pull_event ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
-gst_harness_pull_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.
-Timeouts after 60 seconds similar to gst_harness_pull.</p>
-<p>MT safe.</p>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.38.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.38.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-try-pull-event"></a><h3>gst_harness_try_pull_event ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
-gst_harness_try_pull_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.
-See gst_harness_try_pull for details.</p>
-<p>MT safe.</p>
-<div class="refsect3">
 <a name="id-1.2.7.6.7.39.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2193,79 +2275,22 @@ See gst_harness_try_pull for details.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.39.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffers are present in the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> with the timestamp or <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><code class="literal">GST_CLOCK_TIME_NONE</code></a> if no
+<a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> has been pushed on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-events-received"></a><h3>gst_harness_events_received ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_harness_events_received (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>The total number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> that has arrived on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad
-This number includes events handled by the harness as well as events
-that have already been pulled out.</p>
+<a name="gst-harness-push-event"></a><h3>gst_harness_push_event ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_harness_push_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                        <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
+<p>Pushes an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.40.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.40.7"></a><h4>Returns</h4>
-<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events received</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-events-in-queue"></a><h3>gst_harness_events_in_queue ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_harness_events_in_queue (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>The number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> currently in the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
-<p>MT safe.</p>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.41.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>h</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.41.7"></a><h4>Returns</h4>
-<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events in the queue</p>
-</div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-harness-push-upstream-event"></a><h3>gst_harness_push_upstream_event ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_harness_push_upstream_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
-                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
-<p>Pushes an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.</p>
-<p>MT safe.</p>
-<div class="refsect3">
-<a name="id-1.2.7.6.7.42.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2286,22 +2311,81 @@ gst_harness_push_upstream_event (<em class="parameter"><code><a class="link" hre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.42.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.40.7"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> with the result from the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-pull-upstream-event"></a><h3>gst_harness_pull_upstream_event ()</h3>
+<a name="gst-harness-pull-event"></a><h3>gst_harness_pull_event ()</h3>
 <pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
-gst_harness_pull_upstream_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad.
+gst_harness_pull_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.
 Timeouts after 60 seconds similar to gst_harness_pull.</p>
 <p>MT safe.</p>
 <div class="refsect3">
+<a name="id-1.2.7.6.7.41.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.41.7"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-try-pull-event"></a><h3>gst_harness_try_pull_event ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
+gst_harness_try_pull_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.
+See gst_harness_try_pull for details.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.42.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.42.7"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffers are present in the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-events-received"></a><h3>gst_harness_events_received ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_harness_events_received (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>The total number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> that has arrived on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad
+This number includes events handled by the harness as well as events
+that have already been pulled out.</p>
+<p>MT safe.</p>
+<div class="refsect3">
 <a name="id-1.2.7.6.7.43.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2316,21 +2400,20 @@ Timeouts after 60 seconds similar to gst_harness_pull.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.43.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events received</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-try-pull-upstream-event"></a><h3>gst_harness_try_pull_upstream_event ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
-gst_harness_try_pull_upstream_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad.
-See gst_harness_try_pull for details.</p>
+<a name="gst-harness-events-in-queue"></a><h3>gst_harness_events_in_queue ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_harness_events_in_queue (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>The number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> currently in the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.44.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2345,50 +2428,57 @@ See gst_harness_try_pull for details.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.44.7"></a><h4>Returns</h4>
-<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffers are present in the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events in the queue</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-upstream-events-received"></a><h3>gst_harness_upstream_events_received ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_harness_upstream_events_received (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>The total number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> that has arrived on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad
-This number includes events handled by the harness as well as events
-that have already been pulled out.</p>
+<a name="gst-harness-push-upstream-event"></a><h3>gst_harness_push_upstream_event ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_harness_push_upstream_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                                 <em class="parameter"><code><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> *event</code></em>);</pre>
+<p>Pushes an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> sinkpad.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.45.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
 <col width="200px" class="parameters_annotations">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="parameter_name"><p>h</p></td>
 <td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
 <td class="parameter_annotations"> </td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> to push</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.45.7"></a><h4>Returns</h4>
-<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events received</p>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> with the result from the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-upstream-events-in-queue"></a><h3>gst_harness_upstream_events_in_queue ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_harness_upstream_events_in_queue (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>The number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> currently in the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+<a name="gst-harness-pull-upstream-event"></a><h3>gst_harness_pull_upstream_event ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
+gst_harness_pull_upstream_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad.
+Timeouts after 60 seconds similar to gst_harness_pull.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.46.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2403,20 +2493,21 @@ gst_harness_upstream_events_in_queue (<em class="parameter"><code><a class="link
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.46.7"></a><h4>Returns</h4>
-<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events in the queue</p>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if timed out.</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gst-harness-query-latency"></a><h3>gst_harness_query_latency ()</h3>
-<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
-gst_harness_query_latency (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
-<p>Get the min latency reported by any harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>.</p>
+<a name="gst-harness-try-pull-upstream-event"></a><h3>gst_harness_try_pull_upstream_event ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
+gst_harness_try_pull_upstream_event (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Pulls an <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> from the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad.
+See gst_harness_try_pull for details.</p>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.47.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2431,6 +2522,92 @@ gst_harness_query_latency (<em class="parameter"><code><a class="link" href="gst
 </div>
 <div class="refsect3">
 <a name="id-1.2.7.6.7.47.7"></a><h4>Returns</h4>
+<p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no buffers are present in the <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-upstream-events-received"></a><h3>gst_harness_upstream_events_received ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_harness_upstream_events_received (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>The total number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> that has arrived on the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad
+This number includes events handled by the harness as well as events
+that have already been pulled out.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.48.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.48.7"></a><h4>Returns</h4>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events received</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-upstream-events-in-queue"></a><h3>gst_harness_upstream_events_in_queue ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_harness_upstream_events_in_queue (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>The number of <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvents</span></a> currently in the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> srcpad <a href="https://developer.gnome.org/glib/unstable/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a></p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.49.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.49.7"></a><h4>Returns</h4>
+<p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> number of events in the queue</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-query-latency"></a><h3>gst_harness_query_latency ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+gst_harness_query_latency (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>);</pre>
+<p>Get the min latency reported by any harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a>.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.50.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.50.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> with min latency</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2444,8 +2621,8 @@ gst_harness_set_upstream_latency (<em class="parameter"><code><a class="link" hr
 <p>Sets the min latency reported by <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> when receiving a latency-query</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.48.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.51.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2466,7 +2643,7 @@ gst_harness_set_upstream_latency (<em class="parameter"><code><a class="link" hr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.48.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.51.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> with min latency</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2484,8 +2661,8 @@ gst_harness_set_propose_allocator (<em class="parameter"><code><a class="link" h
 query.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.49.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.52.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2525,8 +2702,8 @@ gst_harness_get_allocator (<em class="parameter"><code><a class="link" href="gst
 allocation query.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.50.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.53.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2567,8 +2744,8 @@ directly create a src-harness using the <em class="parameter"><code>src_element_
  name specified.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.51.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.54.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2614,8 +2791,8 @@ spin out of control producing buffers as fast as possible.</p>
 <p>If a src-harness already exists it will be replaced.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.52.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.55.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2657,8 +2834,8 @@ data), but also by allowing you to set properties like "is-live" directly on
 the elements.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.53.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.56.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2699,8 +2876,8 @@ of 4 steps:
 4: Push the same <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> into the main-<a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> (see: gst_harness_push)</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.54.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.57.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2714,7 +2891,7 @@ of 4 steps:
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.54.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.57.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> with the result of the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2733,8 +2910,8 @@ of data at the same time, as well as cases when one crank does not equal one
 buffer to push and v.v.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.55.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.58.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2760,7 +2937,7 @@ buffer to push and v.v.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.55.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.58.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> with the result of the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2776,8 +2953,8 @@ some <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer
 for details.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.56.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.59.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2791,7 +2968,7 @@ for details.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.56.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.59.7"></a><h4>Returns</h4>
 <p> a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> with the result of the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2807,8 +2984,8 @@ directly create a sink-harness using the <em class="parameter"><code>sink_elemen
  name specified.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.57.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.60.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2845,8 +3022,8 @@ this is better acheived using gst_harness_new directly on the sink.</p>
 <p>If a sink-harness already exists it will be replaced.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.58.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.61.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2878,8 +3055,8 @@ gst_harness_add_sink_parse (<em class="parameter"><code><a class="link" href="gs
 instead of just an element name. See gst_harness_add_src_parse for details.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.59.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.62.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2910,8 +3087,8 @@ gst_harness_push_to_sink (<em class="parameter"><code><a class="link" href="gstr
 See gst_harness_push_from_src for details.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.60.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.63.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2925,7 +3102,7 @@ See gst_harness_push_from_src for details.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.60.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.63.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> with the result of the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2941,8 +3118,8 @@ gst_harness_sink_push_many (<em class="parameter"><code><a class="link" href="gs
 Will abort the pushing if any one push fails.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.61.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.64.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2963,7 +3140,7 @@ Will abort the pushing if any one push fails.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.61.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.64.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a> with the result of the push</p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -2981,8 +3158,8 @@ gst_harness_find_element (<em class="parameter"><code><a class="link" href="gstr
 harnessed elements for properties and/or signals.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.62.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.65.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3003,7 +3180,7 @@ harnessed elements for properties and/or signals.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.62.7"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.65.7"></a><h4>Returns</h4>
 <p> a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if not found. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></p>
 </div>
@@ -3022,8 +3199,8 @@ that are residing inside the <a class="link" href="gstreamer-libs-GstHarness.htm
 syntax.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.63.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.66.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3069,8 +3246,8 @@ that are residing inside the <a class="link" href="gstreamer-libs-GstHarness.htm
 syntax.</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.64.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.67.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3119,8 +3296,8 @@ gst_harness_add_probe (<em class="parameter"><code><a class="link" href="gstream
 by using normal gst_pad_add_probe syntax</p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.65.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.68.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3175,8 +3352,8 @@ gst_harness_stress_thread_stop (<em class="parameter"><code><a class="link" href
 <p>Stop the running <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 <p>MT safe.</p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.66.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.69.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3206,8 +3383,8 @@ iteration allowing you to do something nasty.</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.67.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.70.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3246,7 +3423,7 @@ each call to the <em class="parameter"><code>callback</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.67.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.70.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -3269,8 +3446,8 @@ back again, only pausing for <em class="parameter"><code>sleep</code></em>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.69.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.72.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3292,7 +3469,7 @@ each state-change</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.69.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.72.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -3317,8 +3494,8 @@ gst_harness_stress_push_buffer_start_full
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.71.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.74.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3355,7 +3532,7 @@ each call to gst_pad_push</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.71.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.74.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -3367,8 +3544,8 @@ each call to gst_pad_push</p></td>
 <span class="c_punctuation">(</span>*GstHarnessPrepareBufferFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.72.4"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.75.4"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3407,13 +3584,14 @@ gst_harness_stress_push_buffer_with_cb_start_full
                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> sleep</code></em>);</pre>
-<p>Push a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> in intervals of <em class="parameter"><code>sleep</code></em>
+<p>Push a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a> returned by <em class="parameter"><code>func</code></em>
+ in intervals of <em class="parameter"><code>sleep</code></em>
  microseconds.</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.74.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.77.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3448,8 +3626,7 @@ to prepare / create a <a href="http://gstreamer.freedesktop.org/data/doc/gstream
 </tr>
 <tr>
 <td class="parameter_name"><p>notify</p></td>
-<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> that is called for every push to allow cleaning
-up the <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstBuffer.html"><span class="type">GstBuffer</span></a>. (like gst_buffer_unref)</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> that is called when thread is stopped</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -3462,7 +3639,7 @@ each call to gst_pad_push</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.74.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.77.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -3487,8 +3664,8 @@ gst_harness_stress_push_event_start_full
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.76.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.79.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3516,10 +3693,106 @@ each gst_event_push with <em class="parameter"><code>event</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.76.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.79.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstHarnessPrepareEventFunc"></a><h3>GstHarnessPrepareEventFunc ()</h3>
+<pre class="programlisting"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="returnvalue">GstEvent</span></a> *
+<span class="c_punctuation">(</span>*GstHarnessPrepareEventFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.80.4"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>user data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-stress-push-event-with-cb-start"></a><h3>gst_harness_stress_push_event_with_cb_start()</h3>
+<pre class="programlisting">#define             gst_harness_stress_push_event_with_cb_start(h, f, d, n)</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-stress-push-event-with-cb-start-full"></a><h3>gst_harness_stress_push_event_with_cb_start_full ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="returnvalue">GstHarnessThread</span></a> *
+gst_harness_stress_push_event_with_cb_start_full
+                               (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                                <em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()"><span class="type">GstHarnessPrepareEventFunc</span></a> func</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> sleep</code></em>);</pre>
+<p>Push a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> returned by <em class="parameter"><code>func</code></em>
+ onto the harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> sinkpad
+in intervals of <em class="parameter"><code>sleep</code></em>
+ microseconds.</p>
+<p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.82.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()"><span class="type">GstHarnessPrepareEventFunc</span></a> function called before every iteration
+to prepare / create a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> for pushing</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> with data to the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()"><span class="type">GstHarnessPrepareEventFunc</span></a> function</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>notify</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> that is called when thread is stopped</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sleep</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> specifying how long to sleep in (microseconds) for
+each call to gst_pad_push</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.82.8"></a><h4>Returns</h4>
+<p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
+</div>
+<p class="since">Since: 1.8</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3537,15 +3810,12 @@ gst_harness_stress_push_upstream_event_start_full
 <p>Push the <em class="parameter"><code>event</code></em>
  onto the harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> srcpad in intervals of
 <em class="parameter"><code>sleep</code></em>
- microseconds.
-Pushing events should generally be OOB events.
-If you need serialized events, you may use a custom stress thread which
-both pushes buffers and events.</p>
+ microseconds.</p>
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.78.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.84.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3573,10 +3843,76 @@ each gst_event_push with <em class="parameter"><code>event</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.78.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.84.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-stress-send-upstream-event-with-cb-start"></a><h3>gst_harness_stress_send_upstream_event_with_cb_start()</h3>
+<pre class="programlisting">#define             gst_harness_stress_send_upstream_event_with_cb_start(h, f, d, n)</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-harness-stress-push-upstream-event-with-cb-start-full"></a><h3>gst_harness_stress_push_upstream_event_with_cb_start_full ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="returnvalue">GstHarnessThread</span></a> *
+gst_harness_stress_push_upstream_event_with_cb_start_full
+                               (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> *h</code></em>,
+                                <em class="parameter"><code><a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()"><span class="type">GstHarnessPrepareEventFunc</span></a> func</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> sleep</code></em>);</pre>
+<p>Push a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> returned by <em class="parameter"><code>func</code></em>
+ onto the harnessed <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html"><span class="type">GstElement</span></a> srcpad
+in intervals of <em class="parameter"><code>sleep</code></em>
+ microseconds.</p>
+<p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.86.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>h</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()"><span class="type">GstHarnessPrepareEventFunc</span></a> function called before every iteration
+to prepare / create a <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstEvent.html"><span class="type">GstEvent</span></a> for pushing</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> with data to the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessPrepareEventFunc" title="GstHarnessPrepareEventFunc ()"><span class="type">GstHarnessPrepareEventFunc</span></a> function</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>notify</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> that is called when thread is stopped</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sleep</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> specifying how long to sleep in (microseconds) for
+each call to gst_pad_push</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.6.7.86.8"></a><h4>Returns</h4>
+<p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
+</div>
+<p class="since">Since: 1.8</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3599,8 +3935,8 @@ gst_harness_stress_property_start_full
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.80.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.88.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3634,7 +3970,7 @@ and <em class="parameter"><code>value</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.80.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.88.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -3660,8 +3996,8 @@ gst_harness_stress_requestpad_start_full
 <p>MT safe.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.82.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="id-1.2.7.6.7.90.7"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3703,7 +4039,7 @@ each gst_element_request_pad</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.7.6.7.82.8"></a><h4>Returns</h4>
+<a name="id-1.2.7.6.7.90.8"></a><h4>Returns</h4>
 <p> a <a class="link" href="gstreamer-libs-GstHarness.html#GstHarnessThread" title="GstHarnessThread"><span class="type">GstHarnessThread</span></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
@@ -3725,7 +4061,7 @@ each gst_element_request_pad</p></td>
 </pre>
 <div class="refsect3">
 <a name="id-1.2.7.6.8.2.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
