@@ -269,67 +269,60 @@ GST_START_TEST (test_filled_read)
 
 GST_END_TEST;
 
-static gint overrun_count;
 
-static void
-queue_overrun (GstElement * queue, gpointer user_data)
+static GstPadProbeReturn
+block_callback (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 {
-  overrun_count++;
-  GST_DEBUG ("queue overrun %d", overrun_count);
+  return GST_PAD_PROBE_OK;
 }
 
-static gpointer
-pull_buffer (GstPad * srcpad)
-{
-  GstBuffer *buffer = NULL;
-  gst_pad_get_range (srcpad, 0, 1024, &buffer);
-  gst_buffer_unref (buffer);
-  return NULL;
-}
-
-GST_START_TEST (test_overrun)
+GST_START_TEST (test_percent_overflow)
 {
   GstElement *queue2;
   GstBuffer *buffer;
   GstPad *sinkpad, *srcpad;
+  gulong block_probe;
+  guint64 i;
+  guint64 current_level_time;
   GstSegment segment;
-  GThread *thread;
 
-  overrun_count = 0;
   queue2 = gst_element_factory_make ("queue2", NULL);
   sinkpad = gst_element_get_static_pad (queue2, "sink");
   srcpad = gst_element_get_static_pad (queue2, "src");
 
-  g_signal_connect (queue2, "overrun", G_CALLBACK (queue_overrun), srcpad);
-  g_object_set (queue2, "ring-buffer-max-size", (guint64) 4 * 1024,
-      "use-buffering", FALSE,
-      "max-size-buffers", (guint) 0, "max-size-time", (guint64) 0,
-      "max-size-bytes", (guint) 4 * 1024, NULL);
+  block_probe = gst_pad_add_probe (srcpad,
+      GST_PAD_PROBE_TYPE_BLOCK | GST_PAD_PROBE_TYPE_BUFFER,
+      block_callback, NULL, NULL);
 
+  g_object_set (queue2, "use-buffering", TRUE,
+      "use-rate-estimate", FALSE,
+      "max-size-buffers", 0,
+      "max-size-time", 2 * GST_SECOND, "max-size-bytes", 0, NULL);
 
-  gst_pad_activate_mode (srcpad, GST_PAD_MODE_PULL, TRUE);
-  gst_element_set_state (queue2, GST_STATE_PLAYING);
+  gst_pad_activate_mode (srcpad, GST_PAD_MODE_PUSH, TRUE);
+  gst_element_set_state (queue2, GST_STATE_PAUSED);
 
-  gst_segment_init (&segment, GST_FORMAT_BYTES);
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  segment.start = 0;
+  segment.time = 0;
+  segment.position = 0;
   gst_pad_send_event (sinkpad, gst_event_new_stream_start ("test"));
   gst_pad_send_event (sinkpad, gst_event_new_segment (&segment));
 
-  /* Fill the queue */
-  buffer = gst_buffer_new_and_alloc (4 * 1024);
-  fail_unless (gst_pad_chain (sinkpad, buffer) == GST_FLOW_OK);
+  /* push 2 seconds of data with valid but excessively high timestamps */
+  for (i = 0; i < 20; i++) {
+    buffer = gst_buffer_new_and_alloc (1024);
+    GST_BUFFER_PTS (buffer) =
+        G_GUINT64_CONSTANT (18446744071709551616) + i * (GST_SECOND / 10);
+    GST_BUFFER_DTS (buffer) =
+        G_GUINT64_CONSTANT (18446744071709551616) + i * (GST_SECOND / 10);
+    GST_BUFFER_DURATION (buffer) = (GST_SECOND / 10);
+    fail_unless (gst_pad_chain (sinkpad, buffer) == GST_FLOW_OK);
+  }
 
+  g_object_get (queue2, "current-level-time", &current_level_time, NULL);
 
-  /* Make sure the queue doesn't remain full */
-  thread =
-      g_thread_try_new ("gst-check", (GThreadFunc) pull_buffer, srcpad, NULL);
-  fail_unless (thread != NULL);
-
-  /* Push a new buffer in the full queue, should trigger overrun */
-  buffer = gst_buffer_new_and_alloc (1024);
-  fail_unless (gst_pad_chain (sinkpad, buffer) == GST_FLOW_OK);
-  fail_unless (overrun_count == 1);
-
-  g_thread_join (thread);
+  gst_pad_remove_probe (srcpad, block_probe);
 
   gst_element_set_state (queue2, GST_STATE_NULL);
 
@@ -339,7 +332,6 @@ GST_START_TEST (test_overrun)
 }
 
 GST_END_TEST;
-
 
 static Suite *
 queue2_suite (void)
@@ -354,7 +346,8 @@ queue2_suite (void)
   tcase_add_test (tc_chain, test_simple_shutdown_while_running);
   tcase_add_test (tc_chain, test_simple_shutdown_while_running_ringbuffer);
   tcase_add_test (tc_chain, test_filled_read);
-  tcase_add_test (tc_chain, test_overrun);
+  tcase_add_test (tc_chain, test_percent_overflow);
+
   return s;
 }
 

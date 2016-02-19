@@ -22,15 +22,9 @@
 #ifndef __GST_TRACER_H__
 #define __GST_TRACER_H__
 
-#ifndef GST_USE_UNSTABLE_API
-#warning "The tracer subsystem is unstable API and may change in future."
-#warning "You can define GST_USE_UNSTABLE_API to avoid this warning."
-#endif
-
 #include <glib.h>
 #include <glib-object.h>
 #include <gst/gstconfig.h>
-#include <gst/gsttracerutils.h>
 
 G_BEGIN_DECLS
 
@@ -55,23 +49,22 @@ struct _GstTracer {
 
 struct _GstTracerClass {
   GstObjectClass parent_class;
-    
+
   /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
 };
 
 GType gst_tracer_get_type          (void);
 
-void gst_tracing_register_hook (GstTracer *tracer, const gchar *detail, 
-  GCallback func);
-void gst_tracing_register_hook_id (GstTracer *tracer, GQuark detail, 
+#ifdef GST_USE_UNSTABLE_API
+
+void gst_tracing_register_hook (GstTracer *tracer, const gchar *detail,
   GCallback func);
 
 /* tracing modules */
 gboolean gst_tracer_register (GstPlugin * plugin, const gchar * name, GType type);
 
-/* tracing module helpers */
-void gst_tracer_log_trace (GstStructure * s);
+#endif
 
 #ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstTracer, gst_object_unref)

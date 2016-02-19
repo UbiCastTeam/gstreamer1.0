@@ -260,6 +260,7 @@ GST_API_VERSION = @GST_API_VERSION@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_ALLOC_TRACE_DEFINE = @GST_DISABLE_ALLOC_TRACE_DEFINE@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
+GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
 GST_DISABLE_OPTION_PARSING_DEFINE = @GST_DISABLE_OPTION_PARSING_DEFINE@
 GST_DISABLE_PARSE_DEFINE = @GST_DISABLE_PARSE_DEFINE@
 GST_DISABLE_PLUGIN_DEFINE = @GST_DISABLE_PLUGIN_DEFINE@
@@ -344,6 +345,7 @@ LOCALEDIR = @LOCALEDIR@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -516,11 +518,19 @@ IGNORE_HFILES = \
 	gst_private.h \
 	gstelementdetails.h \
 	gstmacros.h \
+	gstmarshal.h \
+	math-compat.h \
 	\
 	grammar.tab.h \
 	grammar.tab.pre.h \
-	math-compat.h \
-	types.h
+  parse_lex.h \
+	types.h \
+	\
+	gst-printf.h \
+	printf-args.h \
+	printf-extension.h \
+	printf-parse.h \
+	vasnprintf.h
 
 
 # Images to copy into HTML directory.
@@ -534,7 +544,7 @@ extra_files = gst-universe.dot
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
 # contains GtkObjects/GObjects and you want to document signals and properties.
-GTKDOC_CFLAGS = $(GST_OBJ_CFLAGS)
+GTKDOC_CFLAGS = $(GST_OBJ_CFLAGS) -DGST_USE_UNSTABLE_API
 GTKDOC_LIBS = $(GST_OBJ_LIBS) \
 	$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \

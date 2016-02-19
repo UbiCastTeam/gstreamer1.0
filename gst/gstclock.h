@@ -221,7 +221,7 @@ G_STMT_START {                                                    \
  * the matching arguments.
  *
  * Example:
- * |[
+ * |[<!-- language="C" -->
  * printf("%" GST_TIME_FORMAT "\n", GST_TIME_ARGS(ts));
  * ]|
  */
@@ -531,6 +531,12 @@ GstClockTime            gst_clock_get_internal_time     (GstClock *clock);
 GstClockTime            gst_clock_adjust_unlocked       (GstClock *clock, GstClockTime internal);
 GstClockTime            gst_clock_adjust_with_calibration (GstClock *clock,
                                                          GstClockTime internal_target,
+                                                         GstClockTime cinternal,
+                                                         GstClockTime cexternal,
+                                                         GstClockTime cnum,
+                                                         GstClockTime cdenom);
+GstClockTime            gst_clock_unadjust_with_calibration (GstClock *clock,
+                                                         GstClockTime external_target,
                                                          GstClockTime cinternal,
                                                          GstClockTime cexternal,
                                                          GstClockTime cnum,

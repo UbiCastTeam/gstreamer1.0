@@ -34,7 +34,7 @@
  * handle or produce at runtime.
  *
  * A #GstCaps can be constructed with the following code fragment:
- * |[
+ * |[<!-- language="C" -->
  *   GstCaps *caps = gst_caps_new_simple ("video/x-raw",
  *      "format", G_TYPE_STRING, "I420",
  *      "framerate", GST_TYPE_FRACTION, 25, 1,
@@ -1578,7 +1578,7 @@ gst_caps_intersect_zig_zag (GstCaps * caps1, GstCaps * caps2)
  * Unlike @gst_caps_intersect, the returned caps will be ordered in a similar
  * fashion as @caps1.
  *
- * Returns: the new #GstCaps
+ * Returns: (transfer full): the new #GstCaps
  */
 static GstCaps *
 gst_caps_intersect_first (GstCaps * caps1, GstCaps * caps2)
@@ -1649,7 +1649,7 @@ gst_caps_intersect_first (GstCaps * caps1, GstCaps * caps2)
  * to both @caps1 and @caps2, the order is defined by the #GstCapsIntersectMode
  * used.
  *
- * Returns: the new #GstCaps
+ * Returns: (transfer full): the new #GstCaps
  */
 GstCaps *
 gst_caps_intersect_full (GstCaps * caps1, GstCaps * caps2,
@@ -1677,7 +1677,7 @@ gst_caps_intersect_full (GstCaps * caps1, GstCaps * caps2,
  * Creates a new #GstCaps that contains all the formats that are common
  * to both @caps1 and @caps2. Defaults to %GST_CAPS_INTERSECT_ZIG_ZAG mode.
  *
- * Returns: the new #GstCaps
+ * Returns: (transfer full): the new #GstCaps
  */
 GstCaps *
 gst_caps_intersect (GstCaps * caps1, GstCaps * caps2)
@@ -1757,7 +1757,7 @@ gst_caps_structure_subtract (GSList ** into, const GstStructure * minuend,
  * <note>This function does not work reliably if optional properties for caps
  * are included on one caps and omitted on the other.</note>
  *
- * Returns: the resulting caps
+ * Returns: (transfer full): the resulting caps
  */
 GstCaps *
 gst_caps_subtract (GstCaps * minuend, GstCaps * subtrahend)
@@ -2055,7 +2055,7 @@ gst_caps_switch_structures (GstCaps * caps, GstStructure * old,
  *
  * This method does not preserve the original order of @caps.
  *
- * Returns: The simplified caps.
+ * Returns: (transfer full): The simplified caps.
  */
 GstCaps *
 gst_caps_simplify (GstCaps * caps)
@@ -2163,7 +2163,7 @@ gst_caps_fixate (GstCaps * caps)
  * can be converted back to a #GstCaps by gst_caps_from_string().
  *
  * For debugging purposes its easier to do something like this:
- * |[
+ * |[<!-- language="C" -->
  * GST_LOG ("caps are %" GST_PTR_FORMAT, caps);
  * ]|
  * This prints the caps in human readable form.
