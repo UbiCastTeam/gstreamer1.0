@@ -232,10 +232,10 @@ gst_type_find_element_class_init (GstTypeFindElementClass * typefind_class)
       "Generic",
       "Finds the media type of a stream",
       "Benjamin Otte <in7y118@public.uni-hamburg.de>");
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&type_find_element_src_template));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&type_find_element_sink_template));
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &type_find_element_src_template);
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &type_find_element_sink_template);
 
   gstelement_class->change_state =
       GST_DEBUG_FUNCPTR (gst_type_find_element_change_state);
@@ -929,7 +929,8 @@ not_enough_data:
 
     if (at_eos) {
       GST_ELEMENT_ERROR (typefind, STREAM, TYPE_NOT_FOUND,
-          (_("Stream doesn't contain enough data.")), ("Can't typefind stream"));
+          (_("Stream doesn't contain enough data.")),
+          ("Can't typefind stream"));
       return GST_FLOW_ERROR;
     } else {
       GST_DEBUG_OBJECT (typefind, "not enough data for typefinding yet "
@@ -950,7 +951,8 @@ wait_for_data:
 
     if (at_eos) {
       GST_ELEMENT_ERROR (typefind, STREAM, TYPE_NOT_FOUND,
-          (_("Stream doesn't contain enough data.")), ("Can't typefind stream"));
+          (_("Stream doesn't contain enough data.")),
+          ("Can't typefind stream"));
       return GST_FLOW_ERROR;
     } else {
       GST_DEBUG_OBJECT (typefind,
