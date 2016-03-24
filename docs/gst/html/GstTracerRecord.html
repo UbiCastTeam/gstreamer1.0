@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="GstTracerFactory.html" title="GstTracerFactory">
 <link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -84,8 +84,8 @@
 </div>
 <div class="refsect1">
 <a name="GstTracerRecord.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GstObject.html" title="GstObject">GstObject</a>
             <span class="lineart">╰──</span> GstTracerRecord
 </pre>
@@ -105,8 +105,8 @@ will log and create a log formatter.</p>
 <div class="refsect2">
 <a name="gst-tracer-record-new"></a><h3>gst_tracer_record_new ()</h3>
 <pre class="programlisting"><a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="returnvalue">GstTracerRecord</span></a> *
-gst_tracer_record_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
+gst_tracer_record_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                       <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
                        <em class="parameter"><code>...</code></em>);</pre>
 <p>Create a new tracer record. The record instance can be used to efficiently
 log entries using <a class="link" href="GstTracerRecord.html#gst-tracer-record-log" title="gst_tracer_record_log ()"><code class="function">gst_tracer_record_log()</code></a>.</p>
@@ -114,12 +114,12 @@ log entries using <a class="link" href="GstTracerRecord.html#gst-tracer-record-l
  without the ".class" suffix will be used for the log records.
 There must be fields for each value that gets logged where the field name is
 the value name. The field must be a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> describing the value. The
-sub structure must contain a field called 'type' of <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#G-TYPE-GTYPE:CAPS"><code class="literal">G_TYPE_GTYPE</code></a> that
+sub structure must contain a field called 'type' of <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-GTYPE:CAPS"><code class="literal">G_TYPE_GTYPE</code></a> that
 contains the GType of the value. The resulting <a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="type">GstTracerRecord</span></a> will take
 ownership of the field structures.</p>
 <p>The way to deal with optional values is to log an additional boolean before
-the optional field, that if <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> signals that the optional field is valid
-and <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> signals that the optional field should be ignored. One must still
+the optional field, that if <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> signals that the optional field is valid
+and <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> signals that the optional field should be ignored. One must still
 log a placeholder value for the optional field though. Please also note, that
 pointer type values must not be NULL - the underlying serialisation can not
 handle that right now.</p>
@@ -127,7 +127,7 @@ handle that right now.</p>
   Please note that this is still under discussion and subject to change.
 </p></div>
 <div class="refsect3">
-<a name="id-1.5.6.8.2.8"></a><h4>Parameters</h4>
+<a name="gst-tracer-record-new.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -154,7 +154,7 @@ handle that right now.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.6.8.2.9"></a><h4>Returns</h4>
+<a name="gst-tracer-record-new.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="type">GstTracerRecord</span></a></p>
 </div>
 </div>
@@ -171,7 +171,7 @@ the category "GST_TRACER".</p>
   Please note that this is still under discussion and subject to change.
 </p></div>
 <div class="refsect3">
-<a name="id-1.5.6.8.3.7"></a><h4>Parameters</h4>
+<a name="gst-tracer-record-log.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -206,7 +206,7 @@ the category "GST_TRACER".</p>
 <p>Flag that describe the value. These flags help applications processing the
 logs to understand the values.</p>
 <div class="refsect3">
-<a name="id-1.5.6.9.3.4"></a><h4>Members</h4>
+<a name="GstTracerValueFlags.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -249,9 +249,9 @@ logs to understand the values.</p>
 meta-data. One such meta data are values that tell where a measurement was
 taken. This enumerating declares to which scope such a meta data field
 relates to. If it is e.g. <a class="link" href="GstTracerRecord.html#GST-TRACER-VALUE-SCOPE-PAD:CAPS"><code class="literal">GST_TRACER_VALUE_SCOPE_PAD</code></a>, then each of the log
-events may contain values for different <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstPad.html"><span class="type">GstPads</span></a>.</p>
+events may contain values for different <a href="GstPad.html#GstPad-struct"><span class="type">GstPads</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.6.9.4.4"></a><h4>Members</h4>
+<a name="GstTracerValueScope.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -295,6 +295,6 @@ events may contain values for different <a href="http://gstreamer.freedesktop.or
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.24</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>
