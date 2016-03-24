@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstElementFactory.html" title="GstElementFactory">
 <link rel="next" href="GstEvent.html" title="GstEvent">
-<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -38,20 +38,14 @@
 <col width="150px" class="functions_return">
 <col class="functions_name">
 </colgroup>
-<tbody>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name"><a class="link" href="gstreamer-GstGError.html#GST-ERROR-SYSTEM:CAPS" title="GST_ERROR_SYSTEM">GST_ERROR_SYSTEM</a></td>
-</tr>
-<tr>
+<tbody><tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstGError.html#gst-error-get-message" title="gst_error_get_message ()">gst_error_get_message</a> <span class="c_punctuation">()</span>
 </td>
-</tr>
-</tbody>
+</tr></tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -94,6 +88,10 @@
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstGError.html#GST-STREAM-ERROR:CAPS" title="GST_STREAM_ERROR">GST_STREAM_ERROR</a></td>
 </tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstGError.html#GST-ERROR-SYSTEM:CAPS" title="GST_ERROR_SYSTEM">GST_ERROR_SYSTEM</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -111,8 +109,8 @@ and have a default handler handle the rest of them.</p>
 <p>The rest of this section will use the term <span class="quote">“<span class="quote">error</span>”</span>
 to mean both (non-fatal) warnings and (fatal) errors; they are treated
 similarly.</p>
-<p>Errors from elements are the combination of a <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> and a debug string.
-The <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> contains:</p>
+<p>Errors from elements are the combination of a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> and a debug string.
+The <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> contains:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>a domain type: CORE, LIBRARY, RESOURCE or STREAM</p></li>
 <li class="listitem"><p>a code: an enum value specific to the domain</p></li>
@@ -149,8 +147,8 @@ to use another sink instead.</p>
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html#GST-ELEMENT-ERROR:CAPS">GST_ELEMENT_ERROR</a></span> <span class="gtkdoc opt">(</span>src<span class="gtkdoc opt">,</span> RESOURCE<span class="gtkdoc opt">,</span> NOT_FOUND<span class="gtkdoc opt">,</span>
-  <span class="gtkdoc opt">(</span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#gettext-macro">_</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;No file name specified for reading.&quot;</span><span class="gtkdoc opt">)), (</span>NULL<span class="gtkdoc opt">));</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="GstElement.html#GST-ELEMENT-ERROR:CAPS">GST_ELEMENT_ERROR</a></span> <span class="gtkdoc opt">(</span>src<span class="gtkdoc opt">,</span> RESOURCE<span class="gtkdoc opt">,</span> NOT_FOUND<span class="gtkdoc opt">,</span>
+  <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/glibglib-I18N.html#gettext-macro">_</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;No file name specified for reading.&quot;</span><span class="gtkdoc opt">)), (</span>NULL<span class="gtkdoc opt">));</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -163,7 +161,7 @@ to use another sink instead.</p>
     currently provided should be enough.  If you find your type of error
     does not fit the current codes, you should use FAILED.</p></li>
 <li class="listitem"><p>Don't provide a message if the default one suffices.
-    this keeps messages more uniform.  Use (<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>) - not forgetting the
+    this keeps messages more uniform.  Use (<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>) - not forgetting the
     parentheses.</p></li>
 <li class="listitem"><p>If you do supply a custom message, it should be
     marked for translation.  The message should start with a capital
@@ -172,7 +170,7 @@ to use another sink instead.</p>
     A user interface will present this message as the first thing a user
     sees.  Details, technical info, ... should go in the debug string.
   </p></li>
-<li class="listitem"><p>The debug string can be as you like.  Again, use (<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>)
+<li class="listitem"><p>The debug string can be as you like.  Again, use (<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>)
     if there's nothing to add - file and line number will still be
     passed.  <a class="link" href="gstreamer-GstGError.html#GST-ERROR-SYSTEM:CAPS" title="GST_ERROR_SYSTEM"><span class="type">GST_ERROR_SYSTEM</span></a> can be used as a shortcut to give
     debug information on a system call error.</p></li>
@@ -181,21 +179,13 @@ to use another sink instead.</p>
 <div class="refsect1">
 <a name="gstreamer-GstGError.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
-<a name="GST-ERROR-SYSTEM:CAPS"></a><h3>GST_ERROR_SYSTEM</h3>
-<pre class="programlisting">#define GST_ERROR_SYSTEM    ("system error: %s", g_strerror (errno))
-</pre>
-<p>Builds a string using errno describing the previously failed system
-call.  To be used as the debug argument in <a class="link" href="GstElement.html#GST-ELEMENT-ERROR:CAPS" title="GST_ELEMENT_ERROR()"><span class="type">GST_ELEMENT_ERROR</span></a>.</p>
-</div>
-<hr>
-<div class="refsect2">
 <a name="gst-error-get-message"></a><h3>gst_error_get_message ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
-gst_error_get_message (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> domain</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> code</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_error_get_message (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Quarks.html#GQuark"><span class="type">GQuark</span></a> domain</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> code</code></em>);</pre>
 <p>Get a string describing the error message in the current locale.</p>
 <div class="refsect3">
-<a name="id-1.3.23.7.3.5"></a><h4>Parameters</h4>
+<a name="gst-error-get-message.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -217,7 +207,7 @@ gst_error_get_message (<em class="parameter"><code><a href="https://developer.gn
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.23.7.3.6"></a><h4>Returns</h4>
+<a name="gst-error-get-message.returns"></a><h4>Returns</h4>
 <p> a newly allocated string describing
 the error message (in UTF-8 encoding). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -230,7 +220,7 @@ the error message (in UTF-8 encoding). </p>
 <a name="GstCoreError"></a><h3>enum GstCoreError</h3>
 <p>Core errors are errors inside the core GStreamer library.</p>
 <div class="refsect3">
-<a name="id-1.3.23.8.2.4"></a><h4>Members</h4>
+<a name="GstCoreError.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -357,7 +347,7 @@ this functionality yet.</p>
 <p>Library errors are for errors from the library being used by elements
 (initializing, finalizing, settings, ...)</p>
 <div class="refsect3">
-<a name="id-1.3.23.8.3.4"></a><h4>Members</h4>
+<a name="GstLibraryError.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -427,7 +417,7 @@ deciding where to go while developing code.</p>
 memory, files, network connections, process space, ...
 They're typically used by source and sink elements.</p>
 <div class="refsect3">
-<a name="id-1.3.23.8.4.4"></a><h4>Members</h4>
+<a name="GstResourceError.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -563,7 +553,7 @@ both reading and writing, or either (but unspecified which).</p>
 format errors, media type errors, ...
 They're typically used by decoders, demuxers, converters, ...</p>
 <div class="refsect3">
-<a name="id-1.3.23.8.5.4"></a><h4>Members</h4>
+<a name="GstStreamError.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -689,7 +679,7 @@ can't be decrypted because no suitable key is available.</p>
 </pre>
 <p>Error domain for core system. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstCoreError" title="enum GstCoreError"><span class="type">GstCoreError</span></a> enumeration.
-See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -698,7 +688,7 @@ See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html
 </pre>
 <p>Error domain for library loading. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstLibraryError" title="enum GstLibraryError"><span class="type">GstLibraryError</span></a> enumeration.
-See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -707,7 +697,7 @@ See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html
 </pre>
 <p>Error domain for resource handling. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstResourceError" title="enum GstResourceError"><span class="type">GstResourceError</span></a> enumeration.
-See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -716,7 +706,15 @@ See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html
 </pre>
 <p>Error domain for media stream processing. Errors in this domain will
 be from the <a class="link" href="gstreamer-GstGError.html#GstStreamError" title="enum GstStreamError"><span class="type">GstStreamError</span></a> enumeration.
-See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+See <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> for information on error domains.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-ERROR-SYSTEM:CAPS"></a><h3>GST_ERROR_SYSTEM</h3>
+<pre class="programlisting">#define GST_ERROR_SYSTEM    ("system error: %s", g_strerror (errno))
+</pre>
+<p>Builds a string using errno describing the previously failed system
+call.  To be used as the debug argument in <a class="link" href="GstElement.html#GST-ELEMENT-ERROR:CAPS" title="GST_ELEMENT_ERROR()"><span class="type">GST_ELEMENT_ERROR</span></a>.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -725,6 +723,6 @@ See <a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.24</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>
