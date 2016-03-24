@@ -389,10 +389,6 @@ gboolean     gst_tag_list_get_sample_index  (const GstTagList * list,
  *
  * Returns: the same #GstTagList mini object.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstTagList * gst_tag_list_ref (GstTagList * taglist);
-#endif
-
 static inline GstTagList *
 gst_tag_list_ref (GstTagList * taglist)
 {
@@ -405,10 +401,6 @@ gst_tag_list_ref (GstTagList * taglist)
  *
  * Unref a #GstTagList, and and free all its memory when the refcount reaches 0.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC void gst_tag_list_unref (GstTagList * taglist);
-#endif
-
 static inline void
 gst_tag_list_unref (GstTagList * taglist)
 {
@@ -431,10 +423,6 @@ gst_tag_list_unref (GstTagList * taglist)
  *
  * Returns: the new #GstTagList
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstTagList * gst_tag_list_copy (const GstTagList * taglist);
-#endif
-
 static inline GstTagList *
 gst_tag_list_copy (const GstTagList * taglist)
 {
@@ -541,6 +529,14 @@ gst_tag_list_copy (const GstTagList * taglist)
  * person(s) who composed the recording (string)
  */
 #define GST_TAG_COMPOSER               "composer"
+/**
+ * GST_TAG_CONDUCTOR:
+ *
+ * conductor/performer refinement (string)
+ *
+ * Since: 1.8
+ */
+#define GST_TAG_CONDUCTOR               "conductor"
 /**
  * GST_TAG_DATE:
  *
@@ -1072,6 +1068,27 @@ gst_tag_list_copy (const GstTagList * taglist)
  * Since: 1.4
  */
 #define GST_TAG_MIDI_BASE_NOTE                    "midi-base-note"
+/**
+ * GST_TAG_PRIVATE_DATA:
+ *
+ * Any private data that may be contained in tags (sample).
+ *
+ * It is represented by #GstSample in which #GstBuffer contains the
+ * binary data and the sample's info #GstStructure may contain any
+ * extra information that identifies the origin or meaning of the data.
+ *
+ * Private frames in ID3v2 tags ('PRIV' frames) will be represented
+ * using this tag, in which case the GstStructure will be named
+ * "ID3PrivateFrame" and contain a field named "owner" of type string
+ * which contains the owner-identification string from the tag.
+ *
+ * Since: 1.8
+ */
+#define GST_TAG_PRIVATE_DATA                         "private-data"
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstTagList, gst_tag_list_unref)
+#endif
 
 G_END_DECLS
 

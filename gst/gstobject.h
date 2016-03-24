@@ -105,14 +105,18 @@ typedef enum
  * GST_OBJECT_NAME:
  * @obj: a #GstObject
  *
- * Get the name of this object
+ * Get the name of this object. This is not thread-safe by default
+ * (i.e. you will have to make sure the object lock is taken yourself).
+ * If in doubt use gst_object_get_name() instead.
  */
 #define GST_OBJECT_NAME(obj)            (GST_OBJECT_CAST(obj)->name)
 /**
  * GST_OBJECT_PARENT:
  * @obj: a #GstObject
  *
- * Get the parent of this object
+ * Get the parent of this object. This is not thread-safe by default
+ * (i.e. you will have to make sure the object lock is taken yourself).
+ * If in doubt use gst_object_get_parent() instead.
  */
 #define GST_OBJECT_PARENT(obj)          (GST_OBJECT_CAST(obj)->parent)
 
@@ -264,6 +268,10 @@ gboolean        gst_object_get_g_value_array      (GstObject * object, const gch
 
 GstClockTime    gst_object_get_control_rate       (GstObject * object);
 void            gst_object_set_control_rate       (GstObject * object, GstClockTime control_rate);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstObject, gst_object_unref)
+#endif
 
 G_END_DECLS
 

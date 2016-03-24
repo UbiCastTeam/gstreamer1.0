@@ -115,6 +115,10 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gsttoc.c		\
 	gsttocsetter.c		\
 	$(GST_TRACE_SRC)	\
+	gsttracer.c		\
+	gsttracerfactory.c	\
+	gsttracerrecord.c		\
+	gsttracerutils.c		\
 	gsttypefind.c		\
 	gsttypefindfactory.c	\
 	gsturi.c		\
@@ -218,6 +222,9 @@ gst_headers =			\
 	gsttaskpool.h		\
 	gsttoc.h		\
 	gsttocsetter.h		\
+	gsttracer.h		\
+	gsttracerfactory.h	\
+	gsttracerrecord.h		\
 	gsttypefind.h		\
 	gsttypefindfactory.h	\
 	gsturi.h		\
@@ -245,6 +252,7 @@ noinst_HEADERS = 		\
 	gstregistrybinary.h     \
 	gstregistrychunks.h     \
 	gsttrace.h		\
+	gsttracerutils.h		\
 	gst_private.h
 
 gstenumtypes.h: $(gst_headers)

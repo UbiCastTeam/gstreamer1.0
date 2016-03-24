@@ -145,10 +145,8 @@ gst_capsfilter_class_init (GstCapsFilterClass * klass)
       "Generic",
       "Pass data without modification, limiting formats",
       "David Schleef <ds@schleef.org>");
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   trans_class = GST_BASE_TRANSFORM_CLASS (klass);
   trans_class->transform_caps =
@@ -357,19 +355,6 @@ gst_capsfilter_accept_caps (GstBaseTransform * base,
      * looking at old caps */
     if (ret)
       gst_base_transform_reconfigure_sink (base);
-  }
-
-  if (ret) {
-    /* if we can intersect, see if the other end also accepts */
-    if (direction == GST_PAD_SRC)
-      ret =
-          gst_pad_peer_query_accept_caps (GST_BASE_TRANSFORM_SINK_PAD (base),
-          caps);
-    else
-      ret =
-          gst_pad_peer_query_accept_caps (GST_BASE_TRANSFORM_SRC_PAD (base),
-          caps);
-    GST_DEBUG_OBJECT (capsfilter, "peer accept: %d", ret);
   }
 
   gst_caps_unref (filter_caps);

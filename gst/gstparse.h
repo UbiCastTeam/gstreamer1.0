@@ -35,6 +35,8 @@ GQuark gst_parse_error_quark (void);
  */
 #define GST_PARSE_ERROR gst_parse_error_quark ()
 
+/* FIXME 2.0: rename to GstParseLaunchError, this is not only related to
+ *parsing */
 /**
  * GstParseError:
  * @GST_PARSE_ERROR_SYNTAX: A syntax error occurred.
@@ -44,6 +46,7 @@ GQuark gst_parse_error_quark (void);
  * @GST_PARSE_ERROR_COULD_NOT_SET_PROPERTY: There was an error setting a property
  * @GST_PARSE_ERROR_EMPTY_BIN: An empty bin was specified.
  * @GST_PARSE_ERROR_EMPTY: An empty description was specified
+ * @GST_PARSE_ERROR_DELAYED_LINK: A delayed link did not get resolved.
  *
  * The different parsing errors that can occur.
  */
@@ -55,7 +58,8 @@ typedef enum
   GST_PARSE_ERROR_LINK,
   GST_PARSE_ERROR_COULD_NOT_SET_PROPERTY,
   GST_PARSE_ERROR_EMPTY_BIN,
-  GST_PARSE_ERROR_EMPTY
+  GST_PARSE_ERROR_EMPTY,
+  GST_PARSE_ERROR_DELAYED_LINK
 } GstParseError;
 
 /**
@@ -112,6 +116,10 @@ GstElement      * gst_parse_launchv_full (const gchar     ** argv,
                                           GstParseContext  * context,
                                           GstParseFlags      flags,
                                           GError          ** error) G_GNUC_MALLOC;
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstParseContext, gst_parse_context_free)
+#endif
 
 G_END_DECLS
 

@@ -260,6 +260,7 @@ GST_API_VERSION = @GST_API_VERSION@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_ALLOC_TRACE_DEFINE = @GST_DISABLE_ALLOC_TRACE_DEFINE@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
+GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
 GST_DISABLE_OPTION_PARSING_DEFINE = @GST_DISABLE_OPTION_PARSING_DEFINE@
 GST_DISABLE_PARSE_DEFINE = @GST_DISABLE_PARSE_DEFINE@
 GST_DISABLE_PLUGIN_DEFINE = @GST_DISABLE_PLUGIN_DEFINE@
@@ -296,6 +297,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -342,6 +345,7 @@ LOCALEDIR = @LOCALEDIR@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -514,11 +518,19 @@ IGNORE_HFILES = \
 	gst_private.h \
 	gstelementdetails.h \
 	gstmacros.h \
+	gstmarshal.h \
+	math-compat.h \
 	\
 	grammar.tab.h \
 	grammar.tab.pre.h \
-	math-compat.h \
-	types.h
+  parse_lex.h \
+	types.h \
+	\
+	gst-printf.h \
+	printf-args.h \
+	printf-extension.h \
+	printf-parse.h \
+	vasnprintf.h
 
 
 # Images to copy into HTML directory.
@@ -532,7 +544,7 @@ extra_files = gst-universe.dot
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
 # contains GtkObjects/GObjects and you want to document signals and properties.
-GTKDOC_CFLAGS = $(GST_OBJ_CFLAGS)
+GTKDOC_CFLAGS = $(GST_OBJ_CFLAGS) -DGST_USE_UNSTABLE_API
 GTKDOC_LIBS = $(GST_OBJ_LIBS) \
 	$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
@@ -891,17 +903,18 @@ gst-universe.svg: gst-universe.dot
 @ENABLE_GTK_DOC_TRUE@	            scanobj_options="--verbose"; \
 @ENABLE_GTK_DOC_TRUE@	        fi; \
 @ENABLE_GTK_DOC_TRUE@	    fi; \
-@ENABLE_GTK_DOC_TRUE@	    GST_PLUGIN_SYSTEM_PATH_1_0=`cd $(top_builddir) && pwd`		\
-@ENABLE_GTK_DOC_TRUE@	    GST_PLUGIN_PATH_1_0=						\
+@ENABLE_GTK_DOC_TRUE@	    GST_PLUGIN_SYSTEM_PATH_1_0=`cd $(top_builddir) && pwd`	\
+@ENABLE_GTK_DOC_TRUE@	    GST_PLUGIN_PATH_1_0=					\
 @ENABLE_GTK_DOC_TRUE@	    GST_REGISTRY_1_0=doc-registry.xml				\
 @ENABLE_GTK_DOC_TRUE@	    $(GTKDOC_EXTRA_ENVIRONMENT)					\
 @ENABLE_GTK_DOC_TRUE@	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)"	\
 @ENABLE_GTK_DOC_TRUE@	    CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)"				\
 @ENABLE_GTK_DOC_TRUE@	    LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)"				\
 @ENABLE_GTK_DOC_TRUE@	    gtkdoc-scangobj --type-init-func="gst_init(NULL,NULL)"	\
-@ENABLE_GTK_DOC_TRUE@	        $$scanobj_options --module=$(DOC_MODULE) ;				\
+@ENABLE_GTK_DOC_TRUE@	        $$scanobj_options --module=$(DOC_MODULE) ;		\
 @ENABLE_GTK_DOC_TRUE@	else								\
 @ENABLE_GTK_DOC_TRUE@	    for i in $(SCANOBJ_FILES) ; do				\
+@ENABLE_GTK_DOC_TRUE@	       $(MKDIR_P) $(dirname $$i) ;				\
 @ENABLE_GTK_DOC_TRUE@	       test -f $$i || touch $$i ;				\
 @ENABLE_GTK_DOC_TRUE@	    done							\
 @ENABLE_GTK_DOC_TRUE@	fi

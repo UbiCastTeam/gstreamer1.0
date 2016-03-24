@@ -104,13 +104,13 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	gst/gstprotection$(EXEEXT) $(am__EXEEXT_3) \
 	gst/gstsegment$(EXEEXT) gst/gstsystemclock$(EXEEXT) \
 	gst/gstclock$(EXEEXT) gst/gststructure$(EXEEXT) \
-	gst/gsttag$(EXEEXT) gst/gsttagsetter$(EXEEXT) \
-	gst/gsttask$(EXEEXT) gst/gsttoc$(EXEEXT) \
-	gst/gsttocsetter$(EXEEXT) gst/gstvalue$(EXEEXT) \
-	generic/states$(EXEEXT) $(am__EXEEXT_4) $(am__EXEEXT_5) \
-	$(am__EXEEXT_6) libs/adapter$(EXEEXT) libs/bitreader$(EXEEXT) \
-	libs/bytereader$(EXEEXT) libs/bytewriter$(EXEEXT) \
-	libs/bitreader-noinline$(EXEEXT) \
+	gst/gsttag$(EXEEXT) gst/gsttracerrecord$(EXEEXT) \
+	gst/gsttagsetter$(EXEEXT) gst/gsttask$(EXEEXT) \
+	gst/gsttoc$(EXEEXT) gst/gsttocsetter$(EXEEXT) \
+	gst/gstvalue$(EXEEXT) generic/states$(EXEEXT) $(am__EXEEXT_4) \
+	$(am__EXEEXT_5) $(am__EXEEXT_6) libs/adapter$(EXEEXT) \
+	libs/bitreader$(EXEEXT) libs/bytereader$(EXEEXT) \
+	libs/bytewriter$(EXEEXT) libs/bitreader-noinline$(EXEEXT) \
 	libs/bytereader-noinline$(EXEEXT) \
 	libs/bytewriter-noinline$(EXEEXT) libs/flowcombiner$(EXEEXT) \
 	libs/sparsefile$(EXEEXT) libs/collectpads$(EXEEXT) \
@@ -620,6 +620,17 @@ gst_gsttocsetter_LDADD = $(LDADD)
 gst_gsttocsetter_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+gst_gsttracerrecord_SOURCES = gst/gsttracerrecord.c
+gst_gsttracerrecord_OBJECTS =  \
+	gst/gst_gsttracerrecord-gsttracerrecord.$(OBJEXT)
+gst_gsttracerrecord_LDADD = $(LDADD)
+gst_gsttracerrecord_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
+gst_gsttracerrecord_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(gst_gsttracerrecord_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 gst_gsturi_SOURCES = gst/gsturi.c
 gst_gsturi_OBJECTS = gst/gsturi.$(OBJEXT)
 gst_gsturi_LDADD = $(LDADD)
@@ -898,9 +909,10 @@ SOURCES = elements/capsfilter.c elements/concat.c elements/fakesink.c \
 	gst/gstprotection.c gst/gstquery.c gst/gstregistry.c \
 	gst/gstsegment.c gst/gststructure.c gst/gstsystemclock.c \
 	gst/gsttag.c gst/gsttagsetter.c gst/gsttask.c gst/gsttoc.c \
-	gst/gsttocsetter.c gst/gsturi.c gst/gstutils.c gst/gstvalue.c \
-	libs/adapter.c libs/baseparse.c libs/basesink.c libs/basesrc.c \
-	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
+	gst/gsttocsetter.c gst/gsttracerrecord.c gst/gsturi.c \
+	gst/gstutils.c gst/gstvalue.c libs/adapter.c libs/baseparse.c \
+	libs/basesink.c libs/basesrc.c libs/bitreader.c \
+	libs/bitreader-noinline.c libs/bytereader.c \
 	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c libs/gstharness.c \
@@ -933,9 +945,10 @@ DIST_SOURCES = elements/capsfilter.c elements/concat.c \
 	gst/gstquery.c gst/gstregistry.c gst/gstsegment.c \
 	gst/gststructure.c gst/gstsystemclock.c gst/gsttag.c \
 	gst/gsttagsetter.c gst/gsttask.c gst/gsttoc.c \
-	gst/gsttocsetter.c gst/gsturi.c gst/gstutils.c gst/gstvalue.c \
-	libs/adapter.c libs/baseparse.c libs/basesink.c libs/basesrc.c \
-	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
+	gst/gsttocsetter.c gst/gsttracerrecord.c gst/gsturi.c \
+	gst/gstutils.c gst/gstvalue.c libs/adapter.c libs/baseparse.c \
+	libs/basesink.c libs/basesrc.c libs/bitreader.c \
+	libs/bitreader-noinline.c libs/bytereader.c \
 	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c libs/gstharness.c \
@@ -1261,6 +1274,7 @@ GST_API_VERSION = @GST_API_VERSION@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_ALLOC_TRACE_DEFINE = @GST_DISABLE_ALLOC_TRACE_DEFINE@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
+GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
 GST_DISABLE_OPTION_PARSING_DEFINE = @GST_DISABLE_OPTION_PARSING_DEFINE@
 GST_DISABLE_PARSE_DEFINE = @GST_DISABLE_PARSE_DEFINE@
 GST_DISABLE_PLUGIN_DEFINE = @GST_DISABLE_PLUGIN_DEFINE@
@@ -1297,6 +1311,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -1343,6 +1359,7 @@ LOCALEDIR = @LOCALEDIR@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -1467,6 +1484,12 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+AM_TESTS_ENVIRONMENT = CK_DEFAULT_TIMEOUT=20 \
+	GST_STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)" \
+	$(REGISTRY_ENVIRONMENT) \
+	GST_PLUGIN_SCANNER_1_0=$(top_builddir)/libs/gst/helpers/gst-plugin-scanner \
+	GST_PLUGIN_SYSTEM_PATH_1_0= \
+	GST_PLUGIN_PATH_1_0=$(top_builddir)/plugins
 
 # inspect every plugin feature
 GST_INSPECT = $(GST_TOOLS_DIR)/gst-inspect-$(GST_API_VERSION)
@@ -1474,13 +1497,6 @@ CHECK_REGISTRY = $(top_builddir)/tests/check/test-registry.reg
 GST_TOOLS_DIR = $(top_builddir)/tools
 REGISTRY_ENVIRONMENT = \
 	GST_REGISTRY=$(CHECK_REGISTRY)
-
-AM_TESTS_ENVIRONMENT = \
-        GST_STATE_IGNORE_ELEMENTS="$(STATE_IGNORE_ELEMENTS)"	\
-        $(REGISTRY_ENVIRONMENT)					\
-        GST_PLUGIN_SCANNER_1_0=$(top_builddir)/libs/gst/helpers/gst-plugin-scanner \
-        GST_PLUGIN_SYSTEM_PATH_1_0=					\
-        GST_PLUGIN_PATH_1_0=$(top_builddir)/plugins
 
 
 # the core dumps of some machines have PIDs appended, test registry and
@@ -1586,6 +1602,7 @@ LDADD = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 
 gst_gstcpp_SOURCES = gst/gstcpp.cc
 libs_gstlibscpp_SOURCES = libs/gstlibscpp.cc
+gst_gsttracerrecord_CFLAGS = $(GST_OBJ_CFLAGS) $(AM_CFLAGS) -DGST_USE_UNSTABLE_API
 gst_gstutils_LDADD = $(LDADD) $(GSL_LIBS) $(GMP_LIBS)
 gst_gstprintf_LDADD = \
 	$(top_builddir)/gst/printf/libgstprintf.la \
@@ -2098,6 +2115,12 @@ gst/gsttocsetter.$(OBJEXT): gst/$(am__dirstamp) \
 gst/gsttocsetter$(EXEEXT): $(gst_gsttocsetter_OBJECTS) $(gst_gsttocsetter_DEPENDENCIES) $(EXTRA_gst_gsttocsetter_DEPENDENCIES) gst/$(am__dirstamp)
 	@rm -f gst/gsttocsetter$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(gst_gsttocsetter_OBJECTS) $(gst_gsttocsetter_LDADD) $(LIBS)
+gst/gst_gsttracerrecord-gsttracerrecord.$(OBJEXT):  \
+	gst/$(am__dirstamp) gst/$(DEPDIR)/$(am__dirstamp)
+
+gst/gsttracerrecord$(EXEEXT): $(gst_gsttracerrecord_OBJECTS) $(gst_gsttracerrecord_DEPENDENCIES) $(EXTRA_gst_gsttracerrecord_DEPENDENCIES) gst/$(am__dirstamp)
+	@rm -f gst/gsttracerrecord$(EXEEXT)
+	$(AM_V_CCLD)$(gst_gsttracerrecord_LINK) $(gst_gsttracerrecord_OBJECTS) $(gst_gsttracerrecord_LDADD) $(LIBS)
 gst/gsturi.$(OBJEXT): gst/$(am__dirstamp) \
 	gst/$(DEPDIR)/$(am__dirstamp)
 
@@ -2358,6 +2381,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@generic/$(DEPDIR)/sinks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@generic/$(DEPDIR)/states.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gst.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstabi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstatomicqueue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstbin.Po@am__quote@
@@ -2490,6 +2514,20 @@ elements/elements_filesrc-filesrc.obj: elements/filesrc.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='elements/filesrc.c' object='elements/elements_filesrc-filesrc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(elements_filesrc_CFLAGS) $(CFLAGS) -c -o elements/elements_filesrc-filesrc.obj `if test -f 'elements/filesrc.c'; then $(CYGPATH_W) 'elements/filesrc.c'; else $(CYGPATH_W) '$(srcdir)/elements/filesrc.c'; fi`
+
+gst/gst_gsttracerrecord-gsttracerrecord.o: gst/gsttracerrecord.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_gsttracerrecord_CFLAGS) $(CFLAGS) -MT gst/gst_gsttracerrecord-gsttracerrecord.o -MD -MP -MF gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Tpo -c -o gst/gst_gsttracerrecord-gsttracerrecord.o `test -f 'gst/gsttracerrecord.c' || echo '$(srcdir)/'`gst/gsttracerrecord.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Tpo gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst/gsttracerrecord.c' object='gst/gst_gsttracerrecord-gsttracerrecord.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_gsttracerrecord_CFLAGS) $(CFLAGS) -c -o gst/gst_gsttracerrecord-gsttracerrecord.o `test -f 'gst/gsttracerrecord.c' || echo '$(srcdir)/'`gst/gsttracerrecord.c
+
+gst/gst_gsttracerrecord-gsttracerrecord.obj: gst/gsttracerrecord.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_gsttracerrecord_CFLAGS) $(CFLAGS) -MT gst/gst_gsttracerrecord-gsttracerrecord.obj -MD -MP -MF gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Tpo -c -o gst/gst_gsttracerrecord-gsttracerrecord.obj `if test -f 'gst/gsttracerrecord.c'; then $(CYGPATH_W) 'gst/gsttracerrecord.c'; else $(CYGPATH_W) '$(srcdir)/gst/gsttracerrecord.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Tpo gst/$(DEPDIR)/gst_gsttracerrecord-gsttracerrecord.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst/gsttracerrecord.c' object='gst/gst_gsttracerrecord-gsttracerrecord.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_gsttracerrecord_CFLAGS) $(CFLAGS) -c -o gst/gst_gsttracerrecord-gsttracerrecord.obj `if test -f 'gst/gsttracerrecord.c'; then $(CYGPATH_W) 'gst/gsttracerrecord.c'; else $(CYGPATH_W) '$(srcdir)/gst/gsttracerrecord.c'; fi`
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -2926,6 +2964,13 @@ gst/gststructure.log: gst/gststructure$(EXEEXT)
 gst/gsttag.log: gst/gsttag$(EXEEXT)
 	@p='gst/gsttag$(EXEEXT)'; \
 	b='gst/gsttag'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+gst/gsttracerrecord.log: gst/gsttracerrecord$(EXEEXT)
+	@p='gst/gsttracerrecord$(EXEEXT)'; \
+	b='gst/gsttracerrecord'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -3617,31 +3662,26 @@ LOOPS ?= 10
 # if the test fails, run it again at at least debug level 2
 %.check: %
 	@$(AM_TESTS_ENVIRONMENT)					\
-	CK_DEFAULT_TIMEOUT=20					\
 	$* ||							\
 	$(AM_TESTS_ENVIRONMENT)					\
 	GST_DEBUG=$$GST_DEBUG,*:2				\
-	CK_DEFAULT_TIMEOUT=20					\
 	$*
 
 # just like 'check', but don't run it again if it fails (useful for debugging)
 %.check-norepeat: %
 	@$(AM_TESTS_ENVIRONMENT)					\
-	CK_DEFAULT_TIMEOUT=20					\
 	$*
 
 # run any given test in a loop
 %.torture: %
 	@for i in `seq 1 $(LOOPS)`; do				\
 	$(AM_TESTS_ENVIRONMENT)					\
-	CK_DEFAULT_TIMEOUT=20					\
 	$*; done
 
 # run any given test in an infinite loop
 %.forever: %
 	@while true; do						\
 	$(AM_TESTS_ENVIRONMENT)					\
-	CK_DEFAULT_TIMEOUT=20					\
 	$* || break; done
 
 # valgrind any given test by running make test.valgrind
@@ -3657,7 +3697,7 @@ LOOPS ?= 10
 	--show-possibly-lost=no                                 \
 	--leak-resolution=high --num-callers=20			\
 	./$* 2>&1 | tee $$valgrind_log ;			\
-	if grep "==" $$valgrind_log > /dev/null 2>&1; then	\
+	if grep "^==" $$valgrind_log > /dev/null 2>&1; then	\
 	    rm $$valgrind_log;					\
 	    exit 1;						\
 	fi ;							\

@@ -90,6 +90,7 @@
 #include "gstutils.h"
 #include "gstinfo.h"
 #include "gstquark.h"
+#include "gsttracerutils.h"
 #include "gstvalue.h"
 #include "gst-i18n-lib.h"
 #include "glib-compat-private.h"
@@ -119,6 +120,7 @@ static void gst_element_init (GstElement * element);
 static void gst_element_base_class_init (gpointer g_class);
 static void gst_element_base_class_finalize (gpointer g_class);
 
+static void gst_element_constructed (GObject * object);
 static void gst_element_dispose (GObject * object);
 static void gst_element_finalize (GObject * object);
 
@@ -133,6 +135,8 @@ static gboolean gst_element_set_clock_func (GstElement * element,
 static void gst_element_set_bus_func (GstElement * element, GstBus * bus);
 static gboolean gst_element_post_message_default (GstElement * element,
     GstMessage * message);
+static void gst_element_set_context_default (GstElement * element,
+    GstContext * context);
 
 static gboolean gst_element_default_send_event (GstElement * element,
     GstEvent * event);
@@ -229,6 +233,7 @@ gst_element_class_init (GstElementClass * klass)
 
   gobject_class->dispose = gst_element_dispose;
   gobject_class->finalize = gst_element_finalize;
+  gobject_class->constructed = gst_element_constructed;
 
   klass->change_state = GST_DEBUG_FUNCPTR (gst_element_change_state_func);
   klass->set_state = GST_DEBUG_FUNCPTR (gst_element_set_state_func);
@@ -239,6 +244,7 @@ gst_element_class_init (GstElementClass * klass)
   klass->send_event = GST_DEBUG_FUNCPTR (gst_element_default_send_event);
   klass->numpadtemplates = 0;
   klass->post_message = GST_DEBUG_FUNCPTR (gst_element_post_message_default);
+  klass->set_context = GST_DEBUG_FUNCPTR (gst_element_set_context_default);
 
   klass->elementfactory = NULL;
 }
@@ -297,6 +303,13 @@ gst_element_init (GstElement * element)
 
   g_rec_mutex_init (&element->state_lock);
   g_cond_init (&element->state_cond);
+}
+
+static void
+gst_element_constructed (GObject * object)
+{
+  GST_TRACER_ELEMENT_NEW (GST_ELEMENT_CAST (object));
+  G_OBJECT_CLASS (parent_class)->constructed (object);
 }
 
 /**
@@ -634,7 +647,7 @@ gboolean
 gst_element_add_pad (GstElement * element, GstPad * pad)
 {
   gchar *pad_name;
-  gboolean flushing;
+  gboolean active;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
@@ -644,7 +657,7 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
   pad_name = g_strdup (GST_PAD_NAME (pad));
   GST_CAT_INFO_OBJECT (GST_CAT_ELEMENT_PADS, element, "adding pad '%s'",
       GST_STR_NULL (pad_name));
-  flushing = GST_PAD_IS_FLUSHING (pad);
+  active = GST_PAD_IS_ACTIVE (pad);
   GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_NEED_PARENT);
   GST_OBJECT_UNLOCK (pad);
 
@@ -658,16 +671,13 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
               GST_OBJECT_CAST (element))))
     goto had_parent;
 
-  /* check for flushing pads */
-  if (flushing && (GST_STATE (element) > GST_STATE_READY ||
+  /* check for active pads */
+  if (!active && (GST_STATE (element) > GST_STATE_READY ||
           GST_STATE_NEXT (element) == GST_STATE_PAUSED)) {
-    g_warning ("adding flushing pad '%s' to running element '%s', you need to "
+    g_warning ("adding inactive pad '%s' to running element '%s', you need to "
         "use gst_pad_set_active(pad,TRUE) before adding it.",
         GST_STR_NULL (pad_name), GST_ELEMENT_NAME (element));
-    /* unset flushing */
-    GST_OBJECT_LOCK (pad);
-    GST_PAD_UNSET_FLUSHING (pad);
-    GST_OBJECT_UNLOCK (pad);
+    gst_pad_set_active (pad, TRUE);
   }
 
   g_free (pad_name);
@@ -692,7 +702,7 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
 
   /* emit the PAD_ADDED signal */
   g_signal_emit (element, gst_element_signals[PAD_ADDED], 0, pad);
-
+  GST_TRACER_ELEMENT_ADD_PAD (element, pad);
   return TRUE;
 
   /* ERROR cases */
@@ -804,7 +814,7 @@ gst_element_remove_pad (GstElement * element, GstPad * pad)
 
   /* emit the PAD_REMOVED signal before unparenting and losing the last ref. */
   g_signal_emit (element, gst_element_signals[PAD_REMOVED], 0, pad);
-
+  GST_TRACER_ELEMENT_REMOVE_PAD (element, pad);
   gst_object_unparent (GST_OBJECT_CAST (pad));
 
   return TRUE;
@@ -1220,6 +1230,26 @@ gst_element_class_add_pad_template (GstElementClass * klass,
 }
 
 /**
+ * gst_element_class_add_static_pad_template:
+ * @klass: the #GstElementClass to add the pad template to.
+ * @static_templ: #GstStaticPadTemplate to add as pad template to the element class.
+ *
+ * Adds a pad template to an element class based on the static pad template
+ * @templ. This is mainly used in the _class_init functions of element
+ * implementations. If a pad template with the same name already exists,
+ * the old one is replaced by the new one.
+ *
+ * Since: 1.8
+ */
+void
+gst_element_class_add_static_pad_template (GstElementClass * klass,
+    GstStaticPadTemplate * static_templ)
+{
+  gst_element_class_add_pad_template (klass,
+      gst_static_pad_template_get (static_templ));
+}
+
+/**
  * gst_element_class_add_metadata:
  * @klass: class to set metadata for
  * @key: the key to set
@@ -1561,6 +1591,8 @@ gst_element_send_event (GstElement * element, GstEvent * event)
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send %s event on element %s",
         GST_EVENT_TYPE_NAME (event), GST_ELEMENT_NAME (element));
     result = oclass->send_event (element, event);
+  } else {
+    gst_event_unref (event);
   }
   GST_STATE_UNLOCK (element);
 
@@ -1653,18 +1685,22 @@ gboolean
 gst_element_query (GstElement * element, GstQuery * query)
 {
   GstElementClass *klass;
+  gboolean res = FALSE;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (query != NULL, FALSE);
+
+  GST_TRACER_ELEMENT_QUERY_PRE (element, query);
 
   klass = GST_ELEMENT_GET_CLASS (element);
   if (klass->query) {
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send query on element %s",
         GST_ELEMENT_NAME (element));
-    return klass->query (element, query);
+    res = klass->query (element, query);
   }
 
-  return FALSE;
+  GST_TRACER_ELEMENT_QUERY_POST (element, query, res);
+  return res;
 }
 
 static gboolean
@@ -1721,15 +1757,21 @@ gboolean
 gst_element_post_message (GstElement * element, GstMessage * message)
 {
   GstElementClass *klass;
+  gboolean res = FALSE;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (message != NULL, FALSE);
 
+  GST_TRACER_ELEMENT_POST_MESSAGE_PRE (element, message);
+
   klass = GST_ELEMENT_GET_CLASS (element);
   if (klass->post_message)
-    return klass->post_message (element, message);
+    res = klass->post_message (element, message);
+  else
+    gst_message_unref (message);
 
-  return FALSE;
+  GST_TRACER_ELEMENT_POST_MESSAGE_POST (element, res);
+  return res;
 }
 
 /**
@@ -2599,11 +2641,15 @@ gst_element_change_state (GstElement * element, GstStateChange transition)
 
   oclass = GST_ELEMENT_GET_CLASS (element);
 
+  GST_TRACER_ELEMENT_CHANGE_STATE_PRE (element, transition);
+
   /* call the state change function so it can set the state */
   if (oclass->change_state)
     ret = (oclass->change_state) (element, transition);
   else
     ret = GST_STATE_CHANGE_FAILURE;
+
+  GST_TRACER_ELEMENT_CHANGE_STATE_POST (element, transition, ret);
 
   switch (ret) {
     case GST_STATE_CHANGE_FAILURE:
@@ -2816,13 +2862,34 @@ gst_element_change_state_func (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
       break;
     case GST_STATE_CHANGE_PAUSED_TO_READY:
-    case GST_STATE_CHANGE_READY_TO_NULL:
+    case GST_STATE_CHANGE_READY_TO_NULL:{
+      GList *l;
+
       /* deactivate pads in both cases, since they are activated on
          ready->paused but the element might not have made it to paused */
       if (!gst_element_pads_activate (element, FALSE)) {
         result = GST_STATE_CHANGE_FAILURE;
       }
+
+      /* Remove all non-persistent contexts */
+      GST_OBJECT_LOCK (element);
+      for (l = element->contexts; l;) {
+        GstContext *context = l->data;
+
+        if (!gst_context_is_persistent (context)) {
+          GList *next;
+
+          gst_context_unref (context);
+          next = l->next;
+          element->contexts = g_list_delete_link (element->contexts, l);
+          l = next;
+        } else {
+          l = l->next;
+        }
+      }
+      GST_OBJECT_UNLOCK (element);
       break;
+    }
     default:
       /* this will catch real but unhandled state changes;
        * can only be caused by:
@@ -2919,6 +2986,7 @@ gst_element_dispose (GObject * object)
   bus_p = &element->bus;
   gst_object_replace ((GstObject **) clock_p, NULL);
   gst_object_replace ((GstObject **) bus_p, NULL);
+  g_list_free_full (element->contexts, (GDestroyNotify) gst_context_unref);
   GST_OBJECT_UNLOCK (element);
 
   GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "parent class dispose");
@@ -3029,6 +3097,35 @@ gst_element_get_bus (GstElement * element)
   return result;
 }
 
+static void
+gst_element_set_context_default (GstElement * element, GstContext * context)
+{
+  const gchar *context_type;
+  GList *l;
+
+  GST_OBJECT_LOCK (element);
+  context_type = gst_context_get_context_type (context);
+  for (l = element->contexts; l; l = l->next) {
+    GstContext *tmp = l->data;
+    const gchar *tmp_type = gst_context_get_context_type (tmp);
+
+    /* Always store newest context but never replace
+     * a persistent one by a non-persistent one */
+    if (strcmp (context_type, tmp_type) == 0 &&
+        (gst_context_is_persistent (context) ||
+            !gst_context_is_persistent (tmp))) {
+      gst_context_replace ((GstContext **) & l->data, context);
+      break;
+    }
+  }
+  /* Not found? Add */
+  if (l == NULL) {
+    element->contexts =
+        g_list_prepend (element->contexts, gst_context_ref (context));
+  }
+  GST_OBJECT_UNLOCK (element);
+}
+
 /**
  * gst_element_set_context:
  * @element: a #GstElement to set the context of.
@@ -3053,4 +3150,96 @@ gst_element_set_context (GstElement * element, GstContext * context)
 
   if (oclass->set_context)
     oclass->set_context (element, context);
+}
+
+/**
+ * gst_element_get_contexts:
+ * @element: a #GstElement to set the context of.
+ *
+ * Gets the contexts set on the element.
+ *
+ * MT safe.
+ *
+ * Returns: (element-type Gst.Context) (transfer full): List of #GstContext
+ *
+ * Since: 1.8
+ */
+GList *
+gst_element_get_contexts (GstElement * element)
+{
+  GList *ret;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  GST_OBJECT_LOCK (element);
+  ret = g_list_copy_deep (element->contexts, (GCopyFunc) gst_context_ref, NULL);
+  GST_OBJECT_UNLOCK (element);
+
+  return ret;
+}
+
+static gint
+_match_context_type (GstContext * c1, const gchar * context_type)
+{
+  const gchar *c1_type;
+
+  c1_type = gst_context_get_context_type (c1);
+
+  return g_strcmp0 (c1_type, context_type);
+}
+
+/**
+ * gst_element_get_context_unlocked:
+ * @element: a #GstElement to get the context of.
+ * @context_type: a name of a context to retrieve
+ *
+ * Gets the context with @context_type set on the element or NULL.
+ *
+ * Returns: (transfer full): A #GstContext or NULL
+ *
+ * Since: 1.8
+ */
+GstContext *
+gst_element_get_context_unlocked (GstElement * element,
+    const gchar * context_type)
+{
+  GstContext *ret = NULL;
+  GList *node;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  node =
+      g_list_find_custom (element->contexts, context_type,
+      (GCompareFunc) _match_context_type);
+  if (node && node->data)
+    ret = gst_context_ref (node->data);
+
+  return ret;
+}
+
+/**
+ * gst_element_get_context:
+ * @element: a #GstElement to get the context of.
+ * @context_type: a name of a context to retrieve
+ *
+ * Gets the context with @context_type set on the element or NULL.
+ *
+ * MT safe.
+ *
+ * Returns: (transfer full): A #GstContext or NULL
+ *
+ * Since: 1.8
+ */
+GstContext *
+gst_element_get_context (GstElement * element, const gchar * context_type)
+{
+  GstContext *ret = NULL;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  GST_OBJECT_LOCK (element);
+  ret = gst_element_get_context_unlocked (element, context_type);
+  GST_OBJECT_UNLOCK (element);
+
+  return ret;
 }

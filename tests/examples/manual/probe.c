@@ -15,20 +15,27 @@ cb_have_data (GstPad          *pad,
   buffer = GST_PAD_PROBE_INFO_BUFFER (info);
 
   buffer = gst_buffer_make_writable (buffer);
-  
-  gst_buffer_map (buffer, &map, GST_MAP_WRITE);
 
-  ptr = (guint16 *) map.data;
-  /* invert data */
-  for (y = 0; y < 288; y++) {
-    for (x = 0; x < 384 / 2; x++) {
-      t = ptr[384 - 1 - x];
-      ptr[384 - 1 - x] = ptr[x];
-      ptr[x] = t;
+  /* Making a buffer writable can fail (for example if it
+   * cannot be copied and is used more than once)
+   */
+  if (buffer == NULL)
+    return GST_PAD_PROBE_OK;
+
+  /* Mapping a buffer can fail (non-writable) */
+  if (gst_buffer_map (buffer, &map, GST_MAP_WRITE)) {
+    ptr = (guint16 *) map.data;
+    /* invert data */
+    for (y = 0; y < 288; y++) {
+      for (x = 0; x < 384 / 2; x++) {
+        t = ptr[384 - 1 - x];
+        ptr[384 - 1 - x] = ptr[x];
+        ptr[x] = t;
+      }
+      ptr += 384;
     }
-    ptr += 384;
+    gst_buffer_unmap (buffer, &map);
   }
-  gst_buffer_unmap (buffer, &map);
 
   GST_PAD_PROBE_INFO_DATA (info) = buffer;
 

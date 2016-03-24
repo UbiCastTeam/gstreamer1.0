@@ -38,7 +38,7 @@ main (int argc, char *argv[])
 
   if (error != NULL) {
     g_print ("could not construct pipeline: %s\n", error->message);
-    g_error_free (error);
+    g_clear_error (&error);
     exit (-1);
   }
 
@@ -118,16 +118,18 @@ main (int argc, char *argv[])
     /* create pixmap from buffer and save, gstreamer video buffers have a stride
      * that is rounded up to the nearest multiple of 4 */
     buffer = gst_sample_get_buffer (sample);
-    gst_buffer_map (buffer, &map, GST_MAP_READ);
+    /* Mapping a buffer can fail (non-readable) */
+    if (gst_buffer_map (buffer, &map, GST_MAP_READ)) {
 #ifdef HAVE_GTK
-    pixbuf = gdk_pixbuf_new_from_data (map.data,
-        GDK_COLORSPACE_RGB, FALSE, 8, width, height,
-        GST_ROUND_UP_4 (width * 3), NULL, NULL);
+      pixbuf = gdk_pixbuf_new_from_data (map.data,
+          GDK_COLORSPACE_RGB, FALSE, 8, width, height,
+          GST_ROUND_UP_4 (width * 3), NULL, NULL);
 
-    /* save the pixbuf */
-    gdk_pixbuf_save (pixbuf, "snapshot.png", "png", &error, NULL);
+      /* save the pixbuf */
+      gdk_pixbuf_save (pixbuf, "snapshot.png", "png", &error, NULL);
 #endif
-    gst_buffer_unmap (buffer, &map);
+      gst_buffer_unmap (buffer, &map);
+    }
     gst_sample_unref (sample);
   } else {
     g_print ("could not make snapshot\n");

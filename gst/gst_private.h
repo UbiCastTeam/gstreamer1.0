@@ -62,6 +62,8 @@ extern const char             g_log_domain_gstreamer[];
 
 #include "gstdatetime.h"
 
+#include "gsttracerutils.h"
+
 G_BEGIN_DECLS
 
 /* used by gstparse.c and grammar.y */
@@ -149,12 +151,24 @@ G_GNUC_INTERNAL
 gboolean  priv_gst_structure_append_to_gstring (const GstStructure * structure,
                                                 GString            * s);
 G_GNUC_INTERNAL
+gboolean priv__gst_structure_append_template_to_gstring (GQuark field_id,
+                                                        const GValue *value,
+                                                        gpointer user_data);
+
+G_GNUC_INTERNAL
 void priv_gst_caps_features_append_to_gstring (const GstCapsFeatures * features, GString *s);
 
 G_GNUC_INTERNAL
 gboolean priv_gst_structure_parse_name (gchar * str, gchar **start, gchar ** end, gchar ** next);
 G_GNUC_INTERNAL
 gboolean priv_gst_structure_parse_fields (gchar *str, gchar ** end, GstStructure *structure);
+
+/* used in gstvalue.c and gststructure.c */
+
+#define GST_WRAPPED_PTR_FORMAT     "p\aa"
+
+G_GNUC_INTERNAL
+gchar *priv_gst_string_take_and_wrap (gchar * s);
 
 /* registry cache backends */
 G_GNUC_INTERNAL
@@ -261,7 +275,7 @@ extern GstDebugCategory *_priv_GST_CAT_POLL;
 #define GST_CAT_PROTECTION _priv_GST_CAT_PROTECTION
 extern GstDebugCategory *_priv_GST_CAT_PROTECTION;
 
-extern GstClockTime _priv_gst_info_start_time;
+extern GstClockTime _priv_gst_start_time;
 
 #else
 
@@ -387,6 +401,27 @@ struct _GstTypeFindFactory {
 };
 
 struct _GstTypeFindFactoryClass {
+  GstPluginFeatureClass         parent;
+  /* <private> */
+
+  gpointer _gst_reserved[GST_PADDING];
+};
+
+struct _GstTracerFactory {
+  GstPluginFeature              feature;
+  /* <private> */
+
+  GType                         type;
+
+  /*
+  gpointer                      user_data;
+  GDestroyNotify                user_data_notify;
+  */
+
+  gpointer _gst_reserved[GST_PADDING];
+};
+
+struct _GstTracerFactoryClass {
   GstPluginFeatureClass         parent;
   /* <private> */
 

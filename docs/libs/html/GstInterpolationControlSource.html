@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstInterpolationControlSource: GStreamer 1.0 Library Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-control.html" title="GStreamer Dynamic Parameter Control">
 <link rel="prev" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource">
@@ -35,7 +35,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstInterpolationControlSource.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -52,7 +52,7 @@
 </div>
 <div class="refsect1">
 <a name="GstInterpolationControlSource.properties"></a><h2>Properties</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="properties_type">
 <col width="300px" class="properties_name">
@@ -67,7 +67,7 @@
 </div>
 <div class="refsect1">
 <a name="GstInterpolationControlSource.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -135,7 +135,7 @@ gst_interpolation_control_source_new (<em class="parameter"><code><span class="t
 <p>The various interpolation modes available.</p>
 <div class="refsect3">
 <a name="id-1.2.5.6.10.3.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -159,7 +159,17 @@ gst_interpolation_control_source_new (<em class="parameter"><code><span class="t
 <tr>
 <td class="enum_member_name"><p><a name="GST-INTERPOLATION-MODE-CUBIC:CAPS"></a>GST_INTERPOLATION_MODE_CUBIC</p></td>
 <td class="enum_member_description">
-<p>cubic interpolation</p>
+<p>cubic interpolation (natural), may overshoot
+  the min or max values set by the control point, but is more 'curvy'</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-INTERPOLATION-MODE-CUBIC-MONOTONIC:CAPS"></a>GST_INTERPOLATION_MODE_CUBIC_MONOTONIC</p></td>
+<td class="enum_member_description">
+<p>monotonic cubic interpolation, will not
+  produce any values outside of the min-max range set by the control points
+  (Since 1.8)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

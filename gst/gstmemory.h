@@ -47,7 +47,7 @@ typedef struct _GstAllocator GstAllocator;
  * made when this memory needs to be shared between buffers.
  * @GST_MEMORY_FLAG_ZERO_PREFIXED: the memory prefix is filled with 0 bytes
  * @GST_MEMORY_FLAG_ZERO_PADDED: the memory padding is filled with 0 bytes
- * @GST_MEMORY_FLAG_PHYSICALLY_CONTIGUOUS: the memory is physically contiguous. (Since 2.2)
+ * @GST_MEMORY_FLAG_PHYSICALLY_CONTIGUOUS: the memory is physically contiguous. (Since 1.2)
  * @GST_MEMORY_FLAG_NOT_MAPPABLE: the memory can't be mapped via gst_memory_map() without any preconditions. (Since 1.2)
  * @GST_MEMORY_FLAG_LAST: first flag that can be used for custom purposes
  *
@@ -323,10 +323,6 @@ gboolean       gst_memory_is_type      (GstMemory *mem, const gchar *mem_type);
  *
  * Returns: (transfer full): @memory (for convenience when doing assignments)
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstMemory * gst_memory_ref (GstMemory * memory);
-#endif
-
 static inline GstMemory *
 gst_memory_ref (GstMemory * memory)
 {
@@ -339,10 +335,6 @@ gst_memory_ref (GstMemory * memory)
  *
  * Decrease the refcount of an memory, freeing it if the refcount reaches 0.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC void gst_memory_unref (GstMemory * memory);
-#endif
-
 static inline void
 gst_memory_unref (GstMemory * memory)
 {
@@ -369,6 +361,14 @@ GstMemory *    gst_memory_share        (GstMemory *mem, gssize offset, gssize si
 
 /* span memory */
 gboolean       gst_memory_is_span      (GstMemory *mem1, GstMemory *mem2, gsize *offset);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstMemory, gst_memory_unref)
+#endif
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstAllocator, gst_object_unref)
+#endif
 
 G_END_DECLS
 

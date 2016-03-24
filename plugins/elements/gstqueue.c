@@ -200,8 +200,8 @@ static GstFlowReturn gst_queue_chain_list (GstPad * pad, GstObject * parent,
 static GstFlowReturn gst_queue_push_one (GstQueue * queue);
 static void gst_queue_loop (GstPad * pad);
 
-static gboolean gst_queue_handle_sink_event (GstPad * pad, GstObject * parent,
-    GstEvent * event);
+static GstFlowReturn gst_queue_handle_sink_event (GstPad * pad,
+    GstObject * parent, GstEvent * event);
 static gboolean gst_queue_handle_sink_query (GstPad * pad, GstObject * parent,
     GstQuery * query);
 
@@ -407,10 +407,8 @@ gst_queue_class_init (GstQueueClass * klass)
   gst_element_class_set_static_metadata (gstelement_class,
       "Queue",
       "Generic", "Simple data queue", "Erik Walthinsen <omega@cse.ogi.edu>");
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   /* Registering debug symbols for function pointers */
   GST_DEBUG_REGISTER_FUNCPTR (gst_queue_src_activate_mode);
@@ -431,7 +429,7 @@ gst_queue_init (GstQueue * queue)
   gst_pad_set_chain_list_function (queue->sinkpad, gst_queue_chain_list);
   gst_pad_set_activatemode_function (queue->sinkpad,
       gst_queue_sink_activate_mode);
-  gst_pad_set_event_function (queue->sinkpad, gst_queue_handle_sink_event);
+  gst_pad_set_event_full_function (queue->sinkpad, gst_queue_handle_sink_event);
   gst_pad_set_query_function (queue->sinkpad, gst_queue_handle_sink_query);
   GST_PAD_SET_PROXY_CAPS (queue->sinkpad);
   gst_element_add_pad (GST_ELEMENT (queue), queue->sinkpad);
@@ -601,7 +599,7 @@ apply_buffer (GstQueue * queue, GstBuffer * buffer, GstSegment * segment,
 {
   GstClockTime duration, timestamp;
 
-  timestamp = GST_BUFFER_TIMESTAMP (buffer);
+  timestamp = GST_BUFFER_DTS_OR_PTS (buffer);
   duration = GST_BUFFER_DURATION (buffer);
 
   /* if no timestamp is set, assume it's continuous with the previous
@@ -631,14 +629,16 @@ static gboolean
 buffer_list_apply_time (GstBuffer ** buf, guint idx, gpointer user_data)
 {
   GstClockTime *timestamp = user_data;
+  GstClockTime btime;
 
-  GST_TRACE ("buffer %u has ts %" GST_TIME_FORMAT
-      " duration %" GST_TIME_FORMAT, idx,
-      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (*buf)),
+  GST_TRACE ("buffer %u has pts %" GST_TIME_FORMAT " dts %" GST_TIME_FORMAT
+      " duration %" GST_TIME_FORMAT, idx, GST_TIME_ARGS (GST_BUFFER_DTS (*buf)),
+      GST_TIME_ARGS (GST_BUFFER_PTS (*buf)),
       GST_TIME_ARGS (GST_BUFFER_DURATION (*buf)));
 
-  if (GST_BUFFER_TIMESTAMP_IS_VALID (*buf))
-    *timestamp = GST_BUFFER_TIMESTAMP (*buf);
+  btime = GST_BUFFER_DTS_OR_PTS (*buf);
+  if (GST_CLOCK_TIME_IS_VALID (btime))
+    *timestamp = btime;
 
   if (GST_BUFFER_DURATION_IS_VALID (*buf))
     *timestamp += GST_BUFFER_DURATION (*buf);
@@ -895,7 +895,7 @@ no_item:
   }
 }
 
-static gboolean
+static GstFlowReturn
 gst_queue_handle_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
 {
   gboolean ret = TRUE;
@@ -983,7 +983,9 @@ gst_queue_handle_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
       }
       break;
   }
-  return ret;
+  if (ret == FALSE)
+    return GST_FLOW_ERROR;
+  return GST_FLOW_OK;
 
   /* ERRORS */
 out_eos:
@@ -991,7 +993,7 @@ out_eos:
     GST_CAT_LOG_OBJECT (queue_dataflow, queue, "refusing event, we are EOS");
     GST_QUEUE_MUTEX_UNLOCK (queue);
     gst_event_unref (event);
-    return FALSE;
+    return GST_FLOW_EOS;
   }
 out_flow_error:
   {
@@ -999,7 +1001,7 @@ out_flow_error:
         "refusing event, we have a downstream flow error: %s",
         gst_flow_get_name (queue->srcresult));
     gst_event_unref (event);
-    return FALSE;
+    return queue->srcresult;
   }
 }
 
@@ -1146,7 +1148,7 @@ gst_queue_chain_buffer_or_list (GstPad * pad, GstObject * parent,
     GstClockTime duration, timestamp;
     GstBuffer *buffer = GST_BUFFER_CAST (obj);
 
-    timestamp = GST_BUFFER_TIMESTAMP (buffer);
+    timestamp = GST_BUFFER_DTS_OR_PTS (buffer);
     duration = GST_BUFFER_DURATION (buffer);
 
     GST_CAT_LOG_OBJECT (queue_dataflow, queue, "received buffer %p of size %"
