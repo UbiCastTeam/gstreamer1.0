@@ -241,7 +241,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/common/release.mak \
 	$(top_srcdir)/common/win32.mak ABOUT-NLS AUTHORS COPYING \
 	ChangeLog INSTALL NEWS README TODO compile config.guess \
-	config.rpath config.sub depcomp install-sh ltmain.sh missing
+	config.rpath config.sub install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -368,6 +368,7 @@ GST_API_VERSION = @GST_API_VERSION@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_ALLOC_TRACE_DEFINE = @GST_DISABLE_ALLOC_TRACE_DEFINE@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
+GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
 GST_DISABLE_OPTION_PARSING_DEFINE = @GST_DISABLE_OPTION_PARSING_DEFINE@
 GST_DISABLE_PARSE_DEFINE = @GST_DISABLE_PARSE_DEFINE@
 GST_DISABLE_PLUGIN_DEFINE = @GST_DISABLE_PLUGIN_DEFINE@
@@ -404,6 +405,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -450,6 +453,7 @@ LOCALEDIR = @LOCALEDIR@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -1218,7 +1222,10 @@ check-exports:
 	  if test "x$$libso" != "x"; then \
 	    echo Checking symbols in $$libso; \
 	    if ! ($(top_srcdir)/common/check-exports $$libdef $$libso) ; then \
-	      fail=1; \
+	      echo "$$libdef"; \
+	      if test "$$libbase" != "libgstgl"; then \
+	        fail=1; \
+	      fi; \
 	    fi; \
 	  fi; \
 	done ; \
@@ -1262,6 +1269,9 @@ release: dist
 	@if [ -d ../www/data/src ]; then \
 	  mv -v $(PACKAGE)-$(VERSION).tar.xz ../www/data/src/$(PACKAGE)/ ; \
 	  mv -v $(PACKAGE)-$(VERSION).tar.xz.sha256sum ../www/data/src/$(PACKAGE)/ ; \
+	elif [ -d ../../www/data/src ]; then \
+	  mv -v $(PACKAGE)-$(VERSION).tar.xz ../../www/data/src/$(PACKAGE)/ ; \
+	  mv -v $(PACKAGE)-$(VERSION).tar.xz.sha256sum ../../www/data/src/$(PACKAGE)/ ; \
 	fi
 	@echo "================================================================================================="
 

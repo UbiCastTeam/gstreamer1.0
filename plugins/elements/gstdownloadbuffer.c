@@ -30,7 +30,7 @@
  * With max-size-bytes and max-size-time you can configure the buffering limits.
  * The downloadbuffer element will try to read-ahead these amounts of data. When
  * the amount of read-ahead data drops below low-percent of the configured max,
- * the element will start emiting BUFFERING messages until high-percent of max is
+ * the element will start emitting BUFFERING messages until high-percent of max is
  * reached again.
  *
  * The downloadbuffer provides push and pull based scheduling on its source pad
@@ -70,8 +70,6 @@
 #include <io.h>                 /* lseek, open, close, read */
 #undef lseek
 #define lseek _lseeki64
-#undef off_t
-#define off_t guint64
 #else
 #include <unistd.h>
 #endif
@@ -273,10 +271,8 @@ gst_download_buffer_class_init (GstDownloadBufferClass * klass)
   /* set several parent class virtual functions */
   gobject_class->finalize = gst_download_buffer_finalize;
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   gst_element_class_set_static_metadata (gstelement_class, "DownloadBuffer",
       "Generic", "Download Buffer element",
@@ -874,7 +870,7 @@ gst_download_buffer_open_temp_location_file (GstDownloadBuffer * dlbuf)
 
   GST_DEBUG_OBJECT (dlbuf, "opening temp file %s", dlbuf->temp_template);
 
-  /* If temp_template was set, allocate a filename and open that filen */
+  /* If temp_template was set, allocate a filename and open that file */
 
   /* nothing to do */
   if (dlbuf->temp_template == NULL)

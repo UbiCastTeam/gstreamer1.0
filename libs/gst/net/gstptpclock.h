@@ -43,7 +43,6 @@ typedef struct _GstPtpClockPrivate GstPtpClockPrivate;
 
 /**
  * GstPtpClock:
- * @clock: parented to #GstSystemClock
  *
  * Opaque #GstPtpClock structure.
  */
@@ -142,6 +141,10 @@ void            gst_ptp_statistics_callback_remove (gulong id);
 
 GstClock*       gst_ptp_clock_new                  (const gchar *name,
                                                     guint domain);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstPtpClock, gst_object_unref)
+#endif
 
 G_END_DECLS
 

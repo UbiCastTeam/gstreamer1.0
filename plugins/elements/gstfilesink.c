@@ -226,7 +226,7 @@ gst_file_sink_class_init (GstFileSinkClass * klass)
 
   /**
    * GstFileSink:append
-   * 
+   *
    * Append to an already existing file.
    */
   g_object_class_install_property (gobject_class, PROP_APPEND,
@@ -238,8 +238,7 @@ gst_file_sink_class_init (GstFileSinkClass * klass)
       "File Sink",
       "Sink/File", "Write stream to a file",
       "Thomas Vander Stichele <thomas at apestaart dot org>");
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   gstbasesink_class->start = GST_DEBUG_FUNCPTR (gst_file_sink_start);
   gstbasesink_class->stop = GST_DEBUG_FUNCPTR (gst_file_sink_stop);
@@ -446,22 +445,14 @@ gst_file_sink_close_file (GstFileSink * sink)
 {
   if (sink->file) {
     if (fclose (sink->file) != 0)
-      goto close_failed;
+      GST_ELEMENT_ERROR (sink, RESOURCE, CLOSE,
+          (_("Error closing file \"%s\"."), sink->filename), GST_ERROR_SYSTEM);
 
     GST_DEBUG_OBJECT (sink, "closed file");
     sink->file = NULL;
 
     g_free (sink->buffer);
     sink->buffer = NULL;
-  }
-  return;
-
-  /* ERRORS */
-close_failed:
-  {
-    GST_ELEMENT_ERROR (sink, RESOURCE, CLOSE,
-        (_("Error closing file \"%s\"."), sink->filename), GST_ERROR_SYSTEM);
-    return;
   }
 }
 

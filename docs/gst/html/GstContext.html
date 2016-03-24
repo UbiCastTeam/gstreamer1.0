@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstContext: GStreamer 1.0 Core Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstConfig.html" title="GstConfig">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstContext.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -135,7 +135,7 @@
 </div>
 <div class="refsect1">
 <a name="GstContext.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -180,6 +180,11 @@ on the bus.</p></li>
 <p>Bins will catch GST_MESSAGE_NEED_CONTEXT messages and will set any previously
 known context on the element that asks for it if possible. Otherwise the
 application should provide one if it can.</p>
+<p><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>s can be persistent.
+A persistent <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> is kept in elements when they reach
+<a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a>, non-persistent ones will be removed.
+Also, a non-persistent context won't override a previous persistent
+context set to an element.</p>
 </div>
 <div class="refsect1">
 <a name="GstContext.functions_details"></a><h2>Functions</h2>
@@ -191,7 +196,7 @@ gst_context_new (<em class="parameter"><code>const <a href="https://developer.gn
 <p>Create a new context.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -226,7 +231,7 @@ gst_context_ref (<em class="parameter"><code><a class="link" href="GstContext.ht
 <p>Convenience macro to increase the reference count of the context.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -254,7 +259,7 @@ gst_context_unref (<em class="parameter"><code><a class="link" href="GstContext.
 freeing it.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -276,7 +281,7 @@ gst_context_copy (<em class="parameter"><code>const <a class="link" href="GstCon
 <p>Creates a copy of the context. Returns a copy of the context.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -306,7 +311,7 @@ gst_context_get_context_type (<em class="parameter"><code>const <a class="link" 
 .</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -336,7 +341,7 @@ gst_context_has_context_type (<em class="parameter"><code>const <a class="link" 
 .</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -373,7 +378,7 @@ gst_context_is_persistent (<em class="parameter"><code>const <a class="link" hre
  is persistent.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -400,7 +405,7 @@ gst_context_get_structure (<em class="parameter"><code>const <a class="link" hre
 <p>Access the structure of the context.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.9.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -430,7 +435,7 @@ gst_context_writable_structure (<em class="parameter"><code><a class="link" href
 <p>Get a writable version of the structure.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -446,8 +451,8 @@ gst_context_writable_structure (<em class="parameter"><code><a class="link" href
 <div class="refsect3">
 <a name="id-1.3.17.8.10.6"></a><h4>Returns</h4>
 <p> The structure of the context. The structure is still
-owned by the event, which means that you should not free it and
-that the pointer becomes invalid when you free the event.
+owned by the context, which means that you should not free it and
+that the pointer becomes invalid when you free the context.
 This function checks if <em class="parameter"><code>context</code></em>
 is writable.</p>
 </div>
@@ -462,7 +467,7 @@ is writable.</p>
 returned.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.11.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -491,7 +496,7 @@ returned.</p>
 modify the seqnum and timestamp fields.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -520,7 +525,7 @@ context is unreffed, the new one is reffed).</p>
  may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.17.8.13.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">

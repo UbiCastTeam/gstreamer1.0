@@ -28,6 +28,8 @@ GST_START_TEST (test_deserialize_buffer)
 {
   GValue value = { 0 };
   GstBuffer *buf;
+  guint8 data[8];
+  guint64 val;
 
   g_value_init (&value, GST_TYPE_BUFFER);
   fail_unless (gst_value_deserialize (&value, "1234567890abcdef"));
@@ -38,6 +40,10 @@ GST_START_TEST (test_deserialize_buffer)
   /* does not increase the refcount */
   buf = gst_value_get_buffer (&value);
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
+
+  gst_buffer_extract (buf, 0, data, 8);
+  val = GST_READ_UINT64_BE (data);
+  fail_unless_equals_uint64 (val, G_GUINT64_CONSTANT (0x1234567890abcdef));
 
   /* cleanup */
   g_value_unset (&value);
@@ -51,13 +57,13 @@ GST_START_TEST (test_serialize_buffer)
   GValue value = { 0 };
   GstBuffer *buf;
   gchar *serialized;
-  static const char *buf_data = "1234567890abcdef";
+  const guint8 buf_data[8] = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xab, 0xcd, 0xef };
   gint len;
 
-  len = strlen (buf_data);
+  len = sizeof (buf_data);
   buf = gst_buffer_new_and_alloc (len);
 
-  gst_buffer_fill (buf, 0, buf_data, len);
+  gst_buffer_fill (buf, 0, (gchar *) buf_data, len);
 
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
 
@@ -70,6 +76,7 @@ GST_START_TEST (test_serialize_buffer)
   serialized = gst_value_serialize (&value);
   GST_DEBUG ("serialized buffer to %s", serialized);
   fail_unless (serialized != NULL);
+  fail_unless_equals_string (serialized, "1234567890abcdef");
 
   /* refcount should not change */
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
@@ -446,6 +453,8 @@ GST_START_TEST (test_deserialize_flags)
     "0",
     "GST_SEEK_FLAG_NONE",
     "GST_SEEK_FLAG_FLUSH",
+    "0xf",
+    "15",
     "GST_SEEK_FLAG_FLUSH+GST_SEEK_FLAG_ACCURATE",
   };
   GstSeekFlags results[] = {
@@ -453,6 +462,8 @@ GST_START_TEST (test_deserialize_flags)
     GST_SEEK_FLAG_NONE,
     GST_SEEK_FLAG_NONE,
     GST_SEEK_FLAG_FLUSH,
+    0xf,
+    15,
     GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
   };
   int i;
@@ -466,6 +477,14 @@ GST_START_TEST (test_deserialize_flags)
         "resulting value is %d, not %d, for string %s (%d)",
         g_value_get_flags (&value), results[i], strings[i], i);
   }
+
+  fail_if (gst_value_deserialize (&value, "foo"),
+      "flag deserializing for bogus value should have failed!");
+  fail_if (gst_value_deserialize (&value, "GST_SEEK_FLAG_FLUSH+foo"),
+      "flag deserializing for bogus value should have failed!");
+  fail_if (gst_value_deserialize (&value,
+          "GST_SEEK_FLAG_FLUSH+foo+GST_SEEK_FLAG_ACCURATE"),
+      "flag deserializing for bogus value should have failed!");
 }
 
 GST_END_TEST;

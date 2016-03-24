@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GstPreset: GStreamer 1.0 Core Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstPoll.html" title="GstPoll">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstPreset.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -132,7 +132,7 @@
 </div>
 <div class="refsect1">
 <a name="GstPreset.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -180,7 +180,9 @@ Applications can use <a class="link" href="GstPreset.html#gst-preset-is-editable
 application specific directory and in the users home directory. When getting
 a list of presets individual presets are read and overlaid in 1) system, 
 2) application and 3) user order. Whenever an earlier entry is newer, the
-later entries will be updated.</p>
+later entries will be updated. Since 1.8 you can also provide extra paths
+where to find presets through the GST_PRESET_PATH environment variable.
+Presets found in those paths will be concidered as "app presets".</p>
 </div>
 <div class="refsect1">
 <a name="GstPreset.functions_details"></a><h2>Functions</h2>
@@ -191,7 +193,7 @@ gst_preset_get_preset_names (<em class="parameter"><code><a class="link" href="G
 <p>Get a copy of preset names as a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated string array.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -218,7 +220,7 @@ gst_preset_get_property_names (<em class="parameter"><code><a class="link" href=
 <p>Get a the names of the GObject properties that can be used for presets.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -247,7 +249,7 @@ gst_preset_load_preset (<em class="parameter"><code><a class="link" href="GstPre
 <p>Load the given preset.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -284,7 +286,7 @@ is already a preset by this <em class="parameter"><code>name</code></em>
  it will be overwritten.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -321,7 +323,7 @@ gst_preset_rename_preset (<em class="parameter"><code><a class="link" href="GstP
 overwritten.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -361,7 +363,7 @@ gst_preset_delete_preset (<em class="parameter"><code><a class="link" href="GstP
 <p>Delete the given preset.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -403,7 +405,7 @@ data <em class="parameter"><code>tag</code></em>
  will unset an existing value.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -454,7 +456,7 @@ gst_preset_get_meta (<em class="parameter"><code><a class="link" href="GstPreset
 something like e.g. "comment". Returned values need to be released when done.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.9.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -501,7 +503,7 @@ looking for presets. Any presets in the application dir will shadow the
 system presets.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -541,7 +543,7 @@ gst_preset_is_editable (<em class="parameter"><code><a class="link" href="GstPre
 <p>Check if one can add new presets, change existing ones and remove presets.</p>
 <div class="refsect3">
 <a name="id-1.3.41.8.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -594,7 +596,7 @@ gst_preset_is_editable (<em class="parameter"><code><a class="link" href="GstPre
 <p><a class="link" href="GstPreset.html" title="GstPreset"><span class="type">GstPreset</span></a> interface.</p>
 <div class="refsect3">
 <a name="id-1.3.41.9.3.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">

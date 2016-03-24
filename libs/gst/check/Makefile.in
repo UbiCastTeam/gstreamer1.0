@@ -378,6 +378,7 @@ GST_API_VERSION = @GST_API_VERSION@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_ALLOC_TRACE_DEFINE = @GST_DISABLE_ALLOC_TRACE_DEFINE@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
+GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
 GST_DISABLE_OPTION_PARSING_DEFINE = @GST_DISABLE_OPTION_PARSING_DEFINE@
 GST_DISABLE_PARSE_DEFINE = @GST_DISABLE_PARSE_DEFINE@
 GST_DISABLE_PLUGIN_DEFINE = @GST_DISABLE_PLUGIN_DEFINE@
@@ -414,6 +415,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -460,6 +463,7 @@ LOCALEDIR = @LOCALEDIR@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -676,7 +680,9 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_consistency_checker_new \
 	gst_consistency_checker_reset \
 	gst_consistency_checker_free \
+	gst_harness_add_element_full \
 	gst_harness_add_element_src_pad \
+	gst_harness_add_parse \
 	gst_harness_add_probe \
 	gst_harness_add_sink \
 	gst_harness_add_sink_harness \
@@ -698,6 +704,7 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_harness_get_last_pushed_timestamp \
 	gst_harness_get_testclock \
 	gst_harness_new \
+	gst_harness_new_empty \
 	gst_harness_new_full \
 	gst_harness_new_parse \
 	gst_harness_new_with_element \
@@ -735,7 +742,9 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_harness_stress_push_buffer_start_full \
 	gst_harness_stress_push_buffer_with_cb_start_full \
 	gst_harness_stress_push_event_start_full \
+	gst_harness_stress_push_event_with_cb_start_full \
 	gst_harness_stress_push_upstream_event_start_full \
+	gst_harness_stress_push_upstream_event_with_cb_start_full \
 	gst_harness_stress_requestpad_start_full \
 	gst_harness_stress_statechange_start_full \
 	gst_harness_stress_thread_stop \
@@ -748,21 +757,22 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_harness_use_systemclock \
 	gst_harness_use_testclock \
 	gst_harness_wait_for_clock_id_waits \
+	gst_test_clock_advance_time \
+	gst_test_clock_crank \
+	gst_test_clock_get_next_entry_time \
 	gst_test_clock_get_type \
+	gst_test_clock_has_id \
+	gst_test_clock_id_list_get_latest_time \
 	gst_test_clock_new \
 	gst_test_clock_new_with_start_time \
-	gst_test_clock_set_time \
-	gst_test_clock_advance_time \
 	gst_test_clock_peek_id_count \
-	gst_test_clock_has_id \
 	gst_test_clock_peek_next_pending_id \
-	gst_test_clock_wait_for_next_pending_id \
-	gst_test_clock_wait_for_pending_id_count \
-	gst_test_clock_process_next_clock_id \
-	gst_test_clock_get_next_entry_time \
-	gst_test_clock_wait_for_multiple_pending_ids \
 	gst_test_clock_process_id_list \
-	gst_test_clock_id_list_get_latest_time
+	gst_test_clock_process_next_clock_id \
+	gst_test_clock_set_time \
+	gst_test_clock_wait_for_multiple_pending_ids \
+	gst_test_clock_wait_for_next_pending_id \
+	gst_test_clock_wait_for_pending_id_count
 
 
 # For backwards compatibility with GStreamer < 1.5
@@ -1341,7 +1351,8 @@ $(SYMBOLS_FILE): $(libgstcheck_@GST_API_VERSION@include_HEADERS) internal-check.
 @HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
 @HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace GstCheck \
 @HAVE_INTROSPECTION_TRUE@		--nsversion=@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--strip-prefix=Gst \
+@HAVE_INTROSPECTION_TRUE@		--identifier-prefix=Gst \
+@HAVE_INTROSPECTION_TRUE@		--symbol-prefix=gst \
 @HAVE_INTROSPECTION_TRUE@		--warn-all \
 @HAVE_INTROSPECTION_TRUE@		-I$(top_srcdir) \
 @HAVE_INTROSPECTION_TRUE@		-I$(top_srcdir)/libs \

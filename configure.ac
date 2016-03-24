@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.6.3],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.7.91],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 603, 0, 603)
+AS_LIBTOOL(GST, 791, 0, 791)
 
 dnl *** autotools stuff ****
 
@@ -81,11 +81,14 @@ AG_GST_GETTEXT([gstreamer-$GST_API_VERSION])
 dnl *** check for arguments to configure ***
 
 AG_GST_ARG_DISABLE_FATAL_WARNINGS
+AG_GST_ARG_ENABLE_EXTRA_CHECKS
 
 dnl subsystems - can influence other decisions so needs to be high up
 dnl we need to AM_CONDITIONAL them here for automake 1.6.x compatibility
 AG_GST_CHECK_SUBSYSTEM_DISABLE(GST_DEBUG,[debugging subsystem])
 AM_CONDITIONAL(GST_DISABLE_GST_DEBUG, test "x$GST_DISABLE_GST_DEBUG" = "xyes")
+AG_GST_CHECK_SUBSYSTEM_DISABLE(GST_TRACER_HOOKS,[tracing subsystem hooks])
+AM_CONDITIONAL(GST_DISABLE_GST_TRACER_HOOKS, test "x$GST_DISABLE_GST_TRACER_HOOKS" = "xyes")
 AG_GST_CHECK_SUBSYSTEM_DISABLE(PARSE,[command-line parser])
 AM_CONDITIONAL(GST_DISABLE_PARSE, test "x$GST_DISABLE_PARSE" = "xyes")
 if test "x$GST_DISABLE_PARSE" = xyes; then
@@ -98,7 +101,7 @@ if test "x$GST_DISABLE_OPTION_PARSING" = xyes; then
   AC_DEFINE(GST_DISABLE_OPTION_PARSING, 1,
     [Define if option parsing is disabled])
 fi
-AG_GST_CHECK_SUBSYSTEM_DISABLE(TRACE,[tracing subsystem])
+AG_GST_CHECK_SUBSYSTEM_DISABLE(TRACE,[historic tracing subsystem])
 AM_CONDITIONAL(GST_DISABLE_TRACE, test "x$GST_DISABLE_TRACE" = "xyes")
 AG_GST_CHECK_SUBSYSTEM_DISABLE(ALLOC_TRACE,[allocation tracing])
 AM_CONDITIONAL(GST_DISABLE_ALLOC_TRACE, test "x$GST_DISABLE_ALLOC_TRACE" = "xyes")
@@ -604,6 +607,9 @@ AC_CHECK_FUNCS([strcasestr])
 AC_CHECK_FUNCS([gmtime_r])
 AC_CHECK_FUNCS([localtime_r])
 AC_CHECK_FUNCS([sigaction])
+AC_CHECK_FUNCS([getrusage])
+AM_CONDITIONAL(HAVE_GETRUSAGE, test "x$ac_cv_func_getrusage" = "xyes")
+AC_CHECK_HEADERS([sys/resource.h])
 
 dnl check for fseeko()
 AC_FUNC_FSEEKO
@@ -768,12 +774,22 @@ fi
 dnl *** checks for dependency libraries ***
 
 dnl GLib
-GLIB_REQ=2.32.0
+GLIB_REQ=2.40.0
 AG_GST_GLIB_CHECK([$GLIB_REQ])
 
 dnl Check for documentation xrefs
 GLIB_PREFIX="`$PKG_CONFIG --variable=prefix glib-2.0`"
 AC_SUBST(GLIB_PREFIX)
+
+dnl GTK is optional and only used in examples
+HAVE_GTK=no
+GTK_REQ=3.10
+if test "x$BUILD_EXAMPLES" = "xyes"; then
+  PKG_CHECK_MODULES(GTK, gtk+-3.0 >= $GTK_REQ, HAVE_GTK=yes, HAVE_GTK=no)
+  AC_SUBST(GTK_LIBS)
+  AC_SUBST(GTK_CFLAGS)
+fi
+AM_CONDITIONAL(HAVE_GTK, test "x$HAVE_GTK" = "xyes")
 
 dnl building of unit test libraries
 AC_ARG_ENABLE(check,
@@ -810,7 +826,7 @@ AC_ARG_WITH([memory-alignment],
       esac
     fi
   ], [
-    AC_DEFINE(MEMORY_ALIGNMENT_MALLOC, 1, [Memory alignment by malloc default]) 
+    AC_DEFINE(MEMORY_ALIGNMENT_MALLOC, 1, [Memory alignment by malloc default])
   ]
 )
 
@@ -818,15 +834,16 @@ dnl Check for -Bsymbolic-functions linker flag used to avoid
 dnl intra-library PLT jumps, if available.
 AC_ARG_ENABLE(Bsymbolic,
               [AS_HELP_STRING([--disable-Bsymbolic],[avoid linking with -Bsymbolic])],,
-              [SAVED_LDFLAGS="${LDFLAGS}"
+              [SAVED_LDFLAGS="${LDFLAGS}" SAVED_LIBS="${LIBS}"
                AC_MSG_CHECKING([for -Bsymbolic-functions linker flag])
                LDFLAGS=-Wl,-Bsymbolic-functions
-               AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[int main (void) { return 0; }]])],[
+               LIBS=
+               AC_TRY_LINK([], [return 0],
                            AC_MSG_RESULT(yes)
-                           enable_Bsymbolic=yes],[
+                           enable_Bsymbolic=yes,
                            AC_MSG_RESULT(no)
-                           enable_Bsymbolic=no])
-               LDFLAGS="${SAVED_LDFLAGS}"])
+                           enable_Bsymbolic=no)
+               LDFLAGS="${SAVED_LDFLAGS}" LIBS="${SAVED_LIBS}"])
 
 
 dnl *** set variables based on configure arguments
@@ -980,6 +997,7 @@ libs/gst/helpers/Makefile
 libs/gst/net/Makefile
 plugins/Makefile
 plugins/elements/Makefile
+plugins/tracers/Makefile
 po/Makefile.in
 tests/Makefile
 tests/benchmarks/Makefile
@@ -1068,6 +1086,7 @@ AC_OUTPUT
 
 dnl negate for output
 if test "x${GST_DISABLE_GST_DEBUG}" = "xno"; then enable_gst_debug="yes"; fi
+if test "x${GST_DISABLE_GST_TRACER_HOOKS}" = "xno"; then enable_gst_tracer_hooks="yes"; fi
 if test "x${GST_DISABLE_PARSE}" = "xno"; then enable_parse="yes"; fi
 if test "x${GST_DISABLE_OPTION_PARSING}" = "xno"; then enable_option_parsing="yes"; fi
 if test "x${GST_DISABLE_TRACE}" = "xno"; then enable_trace="yes"; fi
@@ -1088,10 +1107,11 @@ Configuration
 	Documentation (manuals)    : ${enable_docbook}
 	Documentation (API)        : ${enable_gtk_doc}
 
-	Debug Logging              : ${enable_gst_debug}
+	Debug logging              : ${enable_gst_debug}
+	Tracing subsystem hooks    : ${enable_gst_tracer_hooks}
 	Command-line parser        : ${enable_parse}
 	Option parsing in gst_init : ${enable_option_parsing}
-	Tracing subsystem          : ${enable_trace}
+	Historic tracing subsystem : ${enable_trace}
 	Allocation tracing         : ${enable_alloc_trace}
 	Plugin registry            : ${enable_registry}
 	Plugin support	           : ${enable_plugin}

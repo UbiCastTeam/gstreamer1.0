@@ -113,6 +113,7 @@ enum
 #define DEFAULT_MAX_SIZE_BYTES     (2 * 1024 * 1024)    /* 2 MB */
 #define DEFAULT_MAX_SIZE_TIME      2 * GST_SECOND       /* 2 seconds */
 #define DEFAULT_USE_BUFFERING      FALSE
+#define DEFAULT_USE_TAGS_BITRATE   FALSE
 #define DEFAULT_USE_RATE_ESTIMATE  TRUE
 #define DEFAULT_LOW_PERCENT        10
 #define DEFAULT_HIGH_PERCENT       99
@@ -129,6 +130,7 @@ enum
   PROP_MAX_SIZE_BYTES,
   PROP_MAX_SIZE_TIME,
   PROP_USE_BUFFERING,
+  PROP_USE_TAGS_BITRATE,
   PROP_USE_RATE_ESTIMATE,
   PROP_LOW_PERCENT,
   PROP_HIGH_PERCENT,
@@ -136,6 +138,7 @@ enum
   PROP_TEMP_LOCATION,
   PROP_TEMP_REMOVE,
   PROP_RING_BUFFER_MAX_SIZE,
+  PROP_AVG_IN_RATE,
   PROP_LAST
 };
 
@@ -337,6 +340,12 @@ gst_queue2_class_init (GstQueue2Class * klass)
           "Emit GST_MESSAGE_BUFFERING based on low-/high-percent thresholds",
           DEFAULT_USE_BUFFERING, G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
           G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property (gobject_class, PROP_USE_TAGS_BITRATE,
+      g_param_spec_boolean ("use-tags-bitrate", "Use bitrate from tags",
+          "Use a bitrate from upstream tags to estimate buffer duration if not provided",
+          DEFAULT_USE_TAGS_BITRATE,
+          G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_USE_RATE_ESTIMATE,
       g_param_spec_boolean ("use-rate-estimate", "Use Rate Estimate",
           "Estimate the bitrate of the stream to calculate time level",
@@ -388,13 +397,21 @@ gst_queue2_class_init (GstQueue2Class * klass)
           0, G_MAXUINT64, DEFAULT_RING_BUFFER_MAX_SIZE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstQueue2:avg-in-rate
+   *
+   * The average input data rate.
+   */
+  g_object_class_install_property (gobject_class, PROP_AVG_IN_RATE,
+      g_param_spec_int64 ("avg-in-rate", "Input data rate (bytes/s)",
+          "Average input data rate (bytes/s)",
+          0, G_MAXINT64, 0, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
   /* set several parent class virtual functions */
   gobject_class->finalize = gst_queue2_finalize;
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   gst_element_class_set_static_metadata (gstelement_class, "Queue 2",
       "Generic",
@@ -705,7 +722,7 @@ apply_segment (GstQueue2 * queue, GstEvent * event, GstSegment * segment,
   /* now configure the values, we use these to track timestamps on the
    * sinkpad. */
   if (segment->format != GST_FORMAT_TIME) {
-    /* non-time format, pretent the current time segment is closed with a
+    /* non-time format, pretend the current time segment is closed with a
      * 0 start and unknown stop time. */
     segment->format = GST_FORMAT_TIME;
     segment->start = 0;
@@ -754,12 +771,20 @@ apply_gap (GstQueue2 * queue, GstEvent * event,
 /* take a buffer and update segment, updating the time level of the queue. */
 static void
 apply_buffer (GstQueue2 * queue, GstBuffer * buffer, GstSegment * segment,
-    gboolean is_sink)
+    guint64 size, gboolean is_sink)
 {
   GstClockTime duration, timestamp;
 
-  timestamp = GST_BUFFER_TIMESTAMP (buffer);
+  timestamp = GST_BUFFER_DTS_OR_PTS (buffer);
   duration = GST_BUFFER_DURATION (buffer);
+
+  /* If we have no duration, pick one from the bitrate if we can */
+  if (duration == GST_CLOCK_TIME_NONE && queue->use_tags_bitrate) {
+    guint bitrate =
+        is_sink ? queue->sink_tags_bitrate : queue->src_tags_bitrate;
+    if (bitrate)
+      duration = gst_util_uint64_scale (size, 8 * GST_SECOND, bitrate);
+  }
 
   /* if no timestamp is set, assume it's continuous with the previous
    * time */
@@ -784,21 +809,38 @@ apply_buffer (GstQueue2 * queue, GstBuffer * buffer, GstSegment * segment,
   update_time_level (queue);
 }
 
+struct BufListData
+{
+  GstClockTime timestamp;
+  guint bitrate;
+};
+
 static gboolean
 buffer_list_apply_time (GstBuffer ** buf, guint idx, gpointer data)
 {
-  GstClockTime *timestamp = data;
+  struct BufListData *bld = data;
+  GstClockTime *timestamp = &bld->timestamp;
+  GstClockTime btime;
 
-  GST_TRACE ("buffer %u has ts %" GST_TIME_FORMAT
+  GST_TRACE ("buffer %u has pts %" GST_TIME_FORMAT " dts %" GST_TIME_FORMAT
       " duration %" GST_TIME_FORMAT, idx,
-      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (*buf)),
+      GST_TIME_ARGS (GST_BUFFER_PTS (*buf)),
+      GST_TIME_ARGS (GST_BUFFER_DTS (*buf)),
       GST_TIME_ARGS (GST_BUFFER_DURATION (*buf)));
 
-  if (GST_BUFFER_TIMESTAMP_IS_VALID (*buf))
-    *timestamp = GST_BUFFER_TIMESTAMP (*buf);
+  btime = GST_BUFFER_DTS_OR_PTS (*buf);
+  if (GST_CLOCK_TIME_IS_VALID (btime))
+    *timestamp = btime;
 
   if (GST_BUFFER_DURATION_IS_VALID (*buf))
     *timestamp += GST_BUFFER_DURATION (*buf);
+  else if (bld->bitrate != 0) {
+    guint64 size = gst_buffer_get_size (*buf);
+
+    /* If we have no duration, pick one from the bitrate if we can */
+    *timestamp += gst_util_uint64_scale (bld->bitrate, 8 * GST_SECOND, size);
+  }
+
 
   GST_TRACE ("ts now %" GST_TIME_FORMAT, GST_TIME_ARGS (*timestamp));
   return TRUE;
@@ -809,17 +851,25 @@ static void
 apply_buffer_list (GstQueue2 * queue, GstBufferList * buffer_list,
     GstSegment * segment, gboolean is_sink)
 {
-  GstClockTime timestamp;
+  struct BufListData bld;
 
   /* if no timestamp is set, assume it's continuous with the previous time */
-  timestamp = segment->position;
+  bld.timestamp = segment->position;
 
-  gst_buffer_list_foreach (buffer_list, buffer_list_apply_time, &timestamp);
+  if (queue->use_tags_bitrate) {
+    if (is_sink)
+      bld.bitrate = queue->sink_tags_bitrate;
+    else
+      bld.bitrate = queue->src_tags_bitrate;
+  } else
+    bld.bitrate = 0;
+
+  gst_buffer_list_foreach (buffer_list, buffer_list_apply_time, &bld);
 
   GST_DEBUG_OBJECT (queue, "last_stop updated to %" GST_TIME_FORMAT,
-      GST_TIME_ARGS (timestamp));
+      GST_TIME_ARGS (bld.timestamp));
 
-  segment->position = timestamp;
+  segment->position = bld.timestamp;
 
   if (is_sink)
     queue->sink_tainted = TRUE;
@@ -850,7 +900,7 @@ static gboolean
 get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
     gint * percent)
 {
-  gint perc;
+  gint perc, perc2;
 
   if (queue->high_percent <= 0) {
     if (percent)
@@ -868,6 +918,11 @@ get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
     perc = 100;
     GST_LOG_OBJECT (queue, "we are EOS");
   } else {
+    GST_LOG_OBJECT (queue,
+        "Cur level bytes/time/buffers %u/%" GST_TIME_FORMAT "/%u",
+        queue->cur_level.bytes, GST_TIME_ARGS (queue->cur_level.time),
+        queue->cur_level.buffers);
+
     /* figure out the percent we are filled, we take the max of all formats. */
     if (!QUEUE_IS_USING_RING_BUFFER (queue)) {
       perc = GET_PERCENT (bytes, 0);
@@ -875,12 +930,22 @@ get_buffering_percent (GstQueue2 * queue, gboolean * is_buffering,
       guint64 rb_size = queue->ring_buffer_max_size;
       perc = GET_PERCENT (bytes, rb_size);
     }
-    perc = MAX (perc, GET_PERCENT (time, 0));
-    perc = MAX (perc, GET_PERCENT (buffers, 0));
+
+    perc2 = GET_PERCENT (time, 0);
+    perc = MAX (perc, perc2);
+
+    perc2 = GET_PERCENT (buffers, 0);
+    perc = MAX (perc, perc2);
 
     /* also apply the rate estimate when we need to */
-    if (queue->use_rate_estimate)
-      perc = MAX (perc, GET_PERCENT (rate_time, 0));
+    if (queue->use_rate_estimate) {
+      perc2 = GET_PERCENT (rate_time, 0);
+      perc = MAX (perc, perc2);
+    }
+
+    /* Don't get to 0% unless we're really empty */
+    if (queue->cur_level.bytes > 0)
+      perc = MAX (1, perc);
   }
 #undef GET_PERCENT
 
@@ -1000,6 +1065,7 @@ reset_rate_timer (GstQueue2 * queue)
   queue->byte_in_rate = 0.0;
   queue->byte_in_period = 0;
   queue->byte_out_rate = 0.0;
+  queue->last_update_in_rates_elapsed = 0.0;
   queue->last_in_elapsed = 0.0;
   queue->last_out_elapsed = 0.0;
   queue->in_timer_started = FALSE;
@@ -1030,7 +1096,8 @@ update_in_rates (GstQueue2 * queue)
     return;
   }
 
-  elapsed = g_timer_elapsed (queue->in_timer, NULL);
+  queue->last_update_in_rates_elapsed = elapsed =
+      g_timer_elapsed (queue->in_timer, NULL);
 
   /* recalc after each interval. */
   if (queue->last_in_elapsed + RATE_INTERVAL < elapsed) {
@@ -1313,7 +1380,8 @@ gst_queue2_create_read (GstQueue2 * queue, guint64 offset, guint length,
   else
     buf = *buffer;
 
-  gst_buffer_map (buf, &info, GST_MAP_WRITE);
+  if (!gst_buffer_map (buf, &info, GST_MAP_WRITE))
+    goto buffer_write_fail;
   data = info.data;
 
   GST_DEBUG_OBJECT (queue, "Reading %u bytes from %" G_GUINT64_FORMAT, length,
@@ -1464,6 +1532,14 @@ read_error:
       gst_buffer_unref (buf);
     return ret;
   }
+buffer_write_fail:
+  {
+    GST_ELEMENT_ERROR (queue, RESOURCE, WRITE, (NULL),
+        ("Can't write to buffer"));
+    if (*buffer == NULL)
+      gst_buffer_unref (buf);
+    return GST_FLOW_ERROR;
+  }
 }
 
 /* should be called with QUEUE_LOCK */
@@ -1517,7 +1593,7 @@ gst_queue2_open_temp_location_file (GstQueue2 * queue)
 
   GST_DEBUG_OBJECT (queue, "opening temp file %s", queue->temp_template);
 
-  /* If temp_template was set, allocate a filename and open that filen */
+  /* If temp_template was set, allocate a filename and open that file */
 
   /* nothing to do */
   if (queue->temp_template == NULL)
@@ -1715,7 +1791,8 @@ gst_queue2_create_write (GstQueue2 * queue, GstBuffer * buffer)
   ring_buffer = queue->ring_buffer;
   rb_size = queue->ring_buffer_max_size;
 
-  gst_buffer_map (buffer, &info, GST_MAP_READ);
+  if (!gst_buffer_map (buffer, &info, GST_MAP_READ))
+    goto buffer_read_error;
 
   size = info.size;
   data = info.data;
@@ -1991,6 +2068,12 @@ handle_error:
     gst_buffer_unmap (buffer, &info);
     return FALSE;
   }
+buffer_read_error:
+  {
+    GST_ELEMENT_ERROR (queue, RESOURCE, READ, (NULL),
+        ("Can't read from buffer"));
+    return FALSE;
+  }
 }
 
 static gboolean
@@ -2041,7 +2124,7 @@ gst_queue2_locked_enqueue (GstQueue2 * queue, gpointer item,
     queue->bytes_in += size;
 
     /* apply new buffer to segment stats */
-    apply_buffer (queue, buffer, &queue->sink_segment, TRUE);
+    apply_buffer (queue, buffer, &queue->sink_segment, size, TRUE);
     /* update the byterate stats */
     update_in_rates (queue);
 
@@ -2213,7 +2296,7 @@ gst_queue2_locked_dequeue (GstQueue2 * queue, GstQueue2ItemType * item_type)
     }
     queue->bytes_out += size;
 
-    apply_buffer (queue, buffer, &queue->src_segment, FALSE);
+    apply_buffer (queue, buffer, &queue->src_segment, size, FALSE);
     /* update the byterate stats */
     update_out_rates (queue);
     /* update the buffering */
@@ -2348,6 +2431,7 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
         queue->is_eos = FALSE;
         queue->unexpected = FALSE;
         queue->seeking = FALSE;
+        queue->src_tags_bitrate = queue->sink_tags_bitrate = 0;
         /* reset rate counters */
         reset_rate_timer (queue);
         gst_pad_start_task (queue->srcpad, (GstTaskFunction) gst_queue2_loop,
@@ -2360,11 +2444,28 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
         queue->unexpected = FALSE;
         queue->sinkresult = GST_FLOW_OK;
         queue->seeking = FALSE;
+        queue->src_tags_bitrate = queue->sink_tags_bitrate = 0;
         GST_QUEUE2_MUTEX_UNLOCK (queue);
 
         gst_event_unref (event);
       }
       break;
+    }
+    case GST_EVENT_TAG:{
+      if (queue->use_tags_bitrate) {
+        GstTagList *tags;
+        guint bitrate;
+
+        gst_event_parse_tag (event, &tags);
+        if (gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &bitrate) ||
+            gst_tag_list_get_uint (tags, GST_TAG_NOMINAL_BITRATE, &bitrate)) {
+          GST_QUEUE2_MUTEX_LOCK (queue);
+          queue->sink_tags_bitrate = bitrate;
+          GST_QUEUE2_MUTEX_UNLOCK (queue);
+          GST_LOG_OBJECT (queue, "Sink pad bitrate from tags now %u", bitrate);
+        }
+      }
+      /* Fall-through */
     }
     default:
       if (GST_EVENT_IS_SERIALIZED (event)) {
@@ -2736,6 +2837,22 @@ next:
   } else if (item_type == GST_QUEUE2_ITEM_TYPE_EVENT) {
     GstEvent *event = GST_EVENT_CAST (data);
     GstEventType type = GST_EVENT_TYPE (event);
+
+    if (type == GST_EVENT_TAG) {
+      if (queue->use_tags_bitrate) {
+        GstTagList *tags;
+        guint bitrate;
+
+        gst_event_parse_tag (event, &tags);
+        if (gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &bitrate) ||
+            gst_tag_list_get_uint (tags, GST_TAG_NOMINAL_BITRATE, &bitrate)) {
+          GST_QUEUE2_MUTEX_LOCK (queue);
+          queue->src_tags_bitrate = bitrate;
+          GST_QUEUE2_MUTEX_UNLOCK (queue);
+          GST_LOG_OBJECT (queue, "src pad bitrate from tags now %u", bitrate);
+        }
+      }
+    }
 
     gst_pad_push_event (queue->srcpad, event);
 
@@ -3544,6 +3661,9 @@ gst_queue2_set_property (GObject * object,
         update_buffering (queue);
       }
       break;
+    case PROP_USE_TAGS_BITRATE:
+      queue->use_tags_bitrate = g_value_get_boolean (value);
+      break;
     case PROP_USE_RATE_ESTIMATE:
       queue->use_rate_estimate = g_value_get_boolean (value);
       break;
@@ -3601,6 +3721,9 @@ gst_queue2_get_property (GObject * object,
     case PROP_USE_BUFFERING:
       g_value_set_boolean (value, queue->use_buffering);
       break;
+    case PROP_USE_TAGS_BITRATE:
+      g_value_set_boolean (value, queue->use_tags_bitrate);
+      break;
     case PROP_USE_RATE_ESTIMATE:
       g_value_set_boolean (value, queue->use_rate_estimate);
       break;
@@ -3622,6 +3745,19 @@ gst_queue2_get_property (GObject * object,
     case PROP_RING_BUFFER_MAX_SIZE:
       g_value_set_uint64 (value, queue->ring_buffer_max_size);
       break;
+    case PROP_AVG_IN_RATE:
+    {
+      gdouble in_rate = queue->byte_in_rate;
+
+      /* During the first RATE_INTERVAL, byte_in_rate will not have been
+       * calculated, so calculate it here. */
+      if (in_rate == 0.0 && queue->bytes_in
+          && queue->last_update_in_rates_elapsed > 0.0)
+        in_rate = queue->bytes_in / queue->last_update_in_rates_elapsed;
+
+      g_value_set_int64 (value, (gint64) in_rate);
+      break;
+    }
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;

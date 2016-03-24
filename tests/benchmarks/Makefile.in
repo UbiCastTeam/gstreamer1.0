@@ -92,7 +92,8 @@ target_triplet = @target@
 noinst_PROGRAMS = caps$(EXEEXT) capsnego$(EXEEXT) complexity$(EXEEXT) \
 	controller$(EXEEXT) init$(EXEEXT) mass-elements$(EXEEXT) \
 	gstpollstress$(EXEEXT) gstpoolstress$(EXEEXT) \
-	gstclockstress$(EXEEXT) gstbufferstress$(EXEEXT)
+	gstclockstress$(EXEEXT) gstbufferstress$(EXEEXT) \
+	$(am__EXEEXT_1)
 subdir = tests/benchmarks
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -138,6 +139,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+@GST_DISABLE_GST_DEBUG_FALSE@am__EXEEXT_1 = tracerserialize$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 caps_SOURCES = caps.c
 caps_OBJECTS = caps.$(OBJEXT)
@@ -188,6 +190,10 @@ mass_elements_SOURCES = mass-elements.c
 mass_elements_OBJECTS = mass-elements.$(OBJEXT)
 mass_elements_LDADD = $(LDADD)
 mass_elements_DEPENDENCIES = $(am__DEPENDENCIES_1)
+tracerserialize_SOURCES = tracerserialize.c
+tracerserialize_OBJECTS = tracerserialize.$(OBJEXT)
+tracerserialize_LDADD = $(LDADD)
+tracerserialize_DEPENDENCIES = $(am__DEPENDENCIES_1)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -224,10 +230,10 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = caps.c capsnego.c complexity.c controller.c \
 	gstbufferstress.c gstclockstress.c gstpollstress.c \
-	gstpoolstress.c init.c mass-elements.c
+	gstpoolstress.c init.c mass-elements.c tracerserialize.c
 DIST_SOURCES = caps.c capsnego.c complexity.c controller.c \
 	gstbufferstress.c gstclockstress.c gstpollstress.c \
-	gstpoolstress.c init.c mass-elements.c
+	gstpoolstress.c init.c mass-elements.c tracerserialize.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -336,6 +342,7 @@ GST_API_VERSION = @GST_API_VERSION@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_ALLOC_TRACE_DEFINE = @GST_DISABLE_ALLOC_TRACE_DEFINE@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
+GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
 GST_DISABLE_OPTION_PARSING_DEFINE = @GST_DISABLE_OPTION_PARSING_DEFINE@
 GST_DISABLE_PARSE_DEFINE = @GST_DISABLE_PARSE_DEFINE@
 GST_DISABLE_PLUGIN_DEFINE = @GST_DISABLE_PLUGIN_DEFINE@
@@ -372,6 +379,8 @@ GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
 GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
 HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
 HAVE_DVIPS = @HAVE_DVIPS@
@@ -418,6 +427,7 @@ LOCALEDIR = @LOCALEDIR@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -542,6 +552,8 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+@GST_DISABLE_GST_DEBUG_FALSE@TRACER_BENCH = tracerserialize
+@GST_DISABLE_GST_DEBUG_TRUE@TRACER_BENCH = 
 LDADD = $(GST_OBJ_LIBS)
 AM_CFLAGS = $(GST_OBJ_CFLAGS)
 controller_CFLAGS = $(GST_OBJ_CFLAGS) -I$(top_builddir)/libs
@@ -629,6 +641,10 @@ mass-elements$(EXEEXT): $(mass_elements_OBJECTS) $(mass_elements_DEPENDENCIES) $
 	@rm -f mass-elements$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(mass_elements_OBJECTS) $(mass_elements_LDADD) $(LIBS)
 
+tracerserialize$(EXEEXT): $(tracerserialize_OBJECTS) $(tracerserialize_DEPENDENCIES) $(EXTRA_tracerserialize_DEPENDENCIES) 
+	@rm -f tracerserialize$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tracerserialize_OBJECTS) $(tracerserialize_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -645,6 +661,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gstpoolstress.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/init.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mass-elements.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tracerserialize.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
