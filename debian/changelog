@@ -1,3 +1,13 @@
+gstreamer1.0 (1.8.0-2) unstable; urgency=medium
+
+  * debian/control.in:
+    + libgstreamer1.0-0 1.8.0 breaks gstreamer1.0-plugins-base << 1.8.0
+      because of a bug in the latter that is exposed by the new version of
+      core. See https://bugzilla.gnome.org/show_bug.cgi?id=760234
+      (Closes: #819958, #819960).
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 07 Apr 2016 12:23:58 +0300
+
 gstreamer1.0 (1.8.0-1) unstable; urgency=medium
 
   * New upstream stable release.

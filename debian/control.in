@@ -54,7 +54,7 @@ Depends: ${shlibs:Depends},
          ${misc:Depends},
          libcap2-bin [linux-any]
 Suggests: @GST_PKGNAME@-tools,
-          @GST_PKGNAME@-plugins-base
+Breaks: @GST_PKGNAME@-plugins-base (<< 1.8.0)
 Description: Core GStreamer libraries and elements
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do
