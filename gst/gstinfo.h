@@ -262,7 +262,15 @@ struct _GstDebugCategory {
 /**
  * GST_PTR_FORMAT:
  *
- * printf format type used to debug GStreamer types.
+ * printf format type used to debug GStreamer types. You can use this in
+ * combination with GStreamer's debug logging system as well as the functions
+ * gst_info_vasprintf(), gst_info_strdup_vprintf() and gst_info_strdup_printf()
+ * to pretty-print the following types: #GstCaps, #GstStructure,
+ * #GstCapsFeatures, #GstTagList, #GstDateTime, #GstBuffer, #GstBufferList,
+ * #GstMessage, #GstEvent, #GstQuery, #GstContext, #GstPad, #GstObject. All
+ * #GObject types will be printed as typename plus pointer, and everything
+ * else will simply be printed as pointer address.
+ *
  * This can only be used on types whose size is >= sizeof(gpointer).
  */
 #define GST_PTR_FORMAT     "p\aA"
@@ -270,7 +278,10 @@ struct _GstDebugCategory {
 /**
  * GST_SEGMENT_FORMAT:
  *
- * printf format type used to debug GStreamer segments.
+ * printf format type used to debug GStreamer segments. You can use this in
+ * combination with GStreamer's debug logging system as well as the functions
+ * gst_info_vasprintf(), gst_info_strdup_vprintf() and gst_info_strdup_printf()
+ * to pretty-print #GstSegment structures.
  * This can only be used on pointers to GstSegment structures.
  */
 #define GST_SEGMENT_FORMAT "p\aB"
@@ -404,9 +415,11 @@ gchar * gst_info_strdup_printf          (const gchar *format, ...) G_GNUC_PRINTF
 
 #ifndef GST_DISABLE_GST_DEBUG
 
+/* cast to void * avoids a warning with gcc 6
+ * see https://bugzilla.gnome.org/show_bug.cgi?id=764526 */
 #define gst_debug_add_log_function(func,data,notify) \
 G_STMT_START{                                        \
-  if (func == gst_debug_log_default) {               \
+  if (func == (void *) gst_debug_log_default) {               \
     gst_debug_add_log_function(NULL,data,notify);    \
   } else {                                           \
     gst_debug_add_log_function(func,data,notify);    \
@@ -414,7 +427,7 @@ G_STMT_START{                                        \
 }G_STMT_END
 
 #define gst_debug_remove_log_function(func)   \
-    (func == gst_debug_log_default) ?         \
+    (func == (void *) gst_debug_log_default) ?         \
         gst_debug_remove_log_function(NULL) : \
         gst_debug_remove_log_function(func)
 

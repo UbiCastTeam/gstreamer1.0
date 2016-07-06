@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.8.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.9.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 802, 0, 802)
+AS_LIBTOOL(GST, 901, 0, 901)
 
 dnl *** autotools stuff ****
 
@@ -187,6 +187,12 @@ else
 fi
 AC_SUBST(GST_PLUGIN_LIBTOOLFLAGS)
 AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
+
+dnl If only building static libraries, define GST_STATIC_COMPILATION. This is
+dnl needed only on Windows, but it doesn't hurt to have it everywhere.
+if test x$enable_static = xyes -a x$enable_shared = xno; then
+  GST_OBJ_STATIC_CFLAGS="-DGST_STATIC_COMPILATION"
+fi
 
 dnl building of tests
 AC_ARG_ENABLE(tests,
@@ -950,8 +956,8 @@ AC_SUBST(GST_LIB_LDFLAGS)
 dnl GST_OBJ_*
 dnl default vars for all internal objects built on libgstreamer
 dnl includes GST_ALL_*
-GST_OBJ_CFLAGS="\$(GST_ALL_CFLAGS)"
-GST_OBJ_CXXFLAGS="\$(GST_ALL_CXXFLAGS)"
+GST_OBJ_CFLAGS="\$(GST_ALL_CFLAGS) $GST_OBJ_STATIC_CFLAGS"
+GST_OBJ_CXXFLAGS="\$(GST_ALL_CXXFLAGS) $GST_OBJ_STATIC_CFLAGS"
 GST_OBJ_LIBS="\$(top_builddir)/gst/libgstreamer-$GST_API_VERSION.la \$(GST_ALL_LIBS)"
 AC_SUBST(GST_OBJ_CFLAGS)
 AC_SUBST(GST_OBJ_CXXFLAGS)
@@ -976,7 +982,7 @@ AC_SUBST(GST_PTP_HELPER_INSTALLED)
 
 dnl things for our internal libcheck (must be called even if building
 dnl libcheck is disabled because it defines conditionals)
-AG_GST_CHECK_CHECKS()
+AG_GST_CHECK_CHECKS
 
 AC_CONFIG_FILES(
 Makefile

@@ -902,7 +902,7 @@ gst_buffer_new_wrapped (gpointer data, gsize size)
  * Get the amount of memory blocks that this buffer has. This amount is never
  * larger than what gst_buffer_get_max_memory() returns.
  *
- * Returns: (transfer full): the amount of memory block in this buffer.
+ * Returns: the number of memory blocks this buffer is made of.
  */
 guint
 gst_buffer_n_memory (GstBuffer * buffer)
@@ -2091,7 +2091,14 @@ gst_buffer_add_meta (GstBuffer * buffer, const GstMetaInfo * info,
 
   /* create a new slice */
   size = ITEM_SIZE (info);
-  item = g_slice_alloc (size);
+  /* We warn in gst_meta_register() about metas without
+   * init function but let's play safe here and prevent
+   * uninitialized memory
+   */
+  if (!info->init_func)
+    item = g_slice_alloc0 (size);
+  else
+    item = g_slice_alloc (size);
   result = &item->meta;
   result->info = info;
   result->flags = GST_META_FLAG_NONE;

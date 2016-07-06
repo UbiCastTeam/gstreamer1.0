@@ -145,6 +145,15 @@ _priv_gst_caps_initialize (void)
       G_TYPE_STRING, gst_caps_transform_to_string);
 }
 
+void
+_priv_gst_caps_cleanup (void)
+{
+  gst_caps_unref (_gst_caps_any);
+  _gst_caps_any = NULL;
+  gst_caps_unref (_gst_caps_none);
+  _gst_caps_none = NULL;
+}
+
 GstCapsFeatures *
 __gst_caps_get_features_unchecked (const GstCaps * caps, guint idx)
 {
@@ -413,6 +422,9 @@ gst_static_caps_get (GstStaticCaps * static_caps)
       goto no_string;
 
     *caps = gst_caps_from_string (string);
+
+    /* Caps generated from static caps are usually leaked */
+    GST_MINI_OBJECT_FLAG_SET (*caps, GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED);
 
     /* convert to string */
     if (G_UNLIKELY (*caps == NULL))
