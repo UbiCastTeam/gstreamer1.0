@@ -952,23 +952,25 @@ gst_base_parse_queue_tag_event_update (GstBaseParse * parse)
     return;
   }
 
-  /* only add bitrate tags to non-empty taglists for now, and only if neither
-   * upstream tags nor the subclass sets the bitrate tag in question already */
-  if (parse->priv->min_bitrate != G_MAXUINT && parse->priv->post_min_bitrate) {
-    GST_LOG_OBJECT (parse, "adding min bitrate %u", parse->priv->min_bitrate);
-    gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP, GST_TAG_MINIMUM_BITRATE,
-        parse->priv->min_bitrate, NULL);
-  }
-  if (parse->priv->max_bitrate != 0 && parse->priv->post_max_bitrate) {
-    GST_LOG_OBJECT (parse, "adding max bitrate %u", parse->priv->max_bitrate);
-    gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP, GST_TAG_MAXIMUM_BITRATE,
-        parse->priv->max_bitrate, NULL);
-  }
-  if (parse->priv->avg_bitrate != 0 && parse->priv->post_avg_bitrate) {
-    parse->priv->posted_avg_bitrate = parse->priv->avg_bitrate;
-    GST_LOG_OBJECT (parse, "adding avg bitrate %u", parse->priv->avg_bitrate);
-    gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP, GST_TAG_BITRATE,
-        parse->priv->avg_bitrate, NULL);
+  if (parse->priv->framecount >= MIN_FRAMES_TO_POST_BITRATE) {
+    /* only add bitrate tags to non-empty taglists for now, and only if neither
+     * upstream tags nor the subclass sets the bitrate tag in question already */
+    if (parse->priv->min_bitrate != G_MAXUINT && parse->priv->post_min_bitrate) {
+      GST_LOG_OBJECT (parse, "adding min bitrate %u", parse->priv->min_bitrate);
+      gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP,
+          GST_TAG_MINIMUM_BITRATE, parse->priv->min_bitrate, NULL);
+    }
+    if (parse->priv->max_bitrate != 0 && parse->priv->post_max_bitrate) {
+      GST_LOG_OBJECT (parse, "adding max bitrate %u", parse->priv->max_bitrate);
+      gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP,
+          GST_TAG_MAXIMUM_BITRATE, parse->priv->max_bitrate, NULL);
+    }
+    if (parse->priv->avg_bitrate != 0 && parse->priv->post_avg_bitrate) {
+      parse->priv->posted_avg_bitrate = parse->priv->avg_bitrate;
+      GST_LOG_OBJECT (parse, "adding avg bitrate %u", parse->priv->avg_bitrate);
+      gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP,
+          GST_TAG_BITRATE, parse->priv->avg_bitrate, NULL);
+    }
   }
 
   parse->priv->pending_events =
@@ -1405,11 +1407,32 @@ gst_base_parse_sink_event_default (GstBaseParse * parse, GstEvent * event)
       if (!gst_pad_has_current_caps (GST_BASE_PARSE_SRC_PAD (parse))) {
         GstCaps *default_caps = NULL;
         if ((default_caps = gst_base_parse_negotiate_default_caps (parse))) {
+          GList *l;
+          GstEvent *caps_event = gst_event_new_caps (default_caps);
+
           GST_DEBUG_OBJECT (parse,
               "Store caps event to pending list for initial pre-rolling");
-          parse->priv->pending_events =
-              g_list_prepend (parse->priv->pending_events,
-              gst_event_new_caps (default_caps));
+
+          /* Events are in decreasing order. Go down the list until we
+           * find the first pre-CAPS event and insert our CAPS event there.
+           *
+           * There should be a SEGMENT event already, which is > CAPS */
+          for (l = parse->priv->pending_events; l; l = l->next) {
+            GstEvent *e = l->data;
+
+            if (GST_EVENT_TYPE (e) < GST_EVENT_CAPS) {
+              parse->priv->pending_events =
+                  g_list_insert_before (parse->priv->pending_events, l,
+                  caps_event);
+              break;
+            }
+          }
+          /* No pending event that is < CAPS, so we have to add it at the very
+           * end of the list */
+          if (!l) {
+            parse->priv->pending_events =
+                g_list_append (parse->priv->pending_events, caps_event);
+          }
           gst_caps_unref (default_caps);
         } else {
           gst_event_unref (event);
@@ -2202,6 +2225,12 @@ gst_base_parse_handle_buffer (GstBaseParse * parse, GstBuffer * buffer,
     gst_adapter_clear (parse->priv->adapter);
   }
 
+  if (*skip == 0 && *flushed == 0) {
+    /* Carry over discont if we need more data */
+    if (GST_BUFFER_IS_DISCONT (frame->buffer))
+      parse->priv->discont = TRUE;
+  }
+
   gst_base_parse_frame_free (frame);
 
   return ret;
@@ -2503,6 +2532,8 @@ gst_base_parse_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
 
   if (ret == GST_BASE_PARSE_FLOW_DROPPED) {
     GST_LOG_OBJECT (parse, "frame (%" G_GSIZE_FORMAT " bytes) dropped", size);
+    if (GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DISCONT))
+      parse->priv->discont = TRUE;
     gst_buffer_unref (buffer);
     ret = GST_FLOW_OK;
   } else if (ret == GST_FLOW_OK) {

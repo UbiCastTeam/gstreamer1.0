@@ -118,7 +118,6 @@ enum
 static void gst_element_class_init (GstElementClass * klass);
 static void gst_element_init (GstElement * element);
 static void gst_element_base_class_init (gpointer g_class);
-static void gst_element_base_class_finalize (gpointer g_class);
 
 static void gst_element_constructed (GObject * object);
 static void gst_element_dispose (GObject * object);
@@ -147,8 +146,12 @@ static GstPadTemplate
     * gst_element_class_get_request_pad_template (GstElementClass *
     element_class, const gchar * name);
 
+static void gst_element_call_async_func (gpointer data, gpointer user_data);
+
 static GstObjectClass *parent_class = NULL;
 static guint gst_element_signals[LAST_SIGNAL] = { 0 };
+
+static GThreadPool *gst_element_pool = NULL;
 
 /* this is used in gstelementfactory.c:gst_element_register() */
 GQuark __gst_elementclass_factory = 0;
@@ -163,7 +166,7 @@ gst_element_get_type (void)
     static const GTypeInfo element_info = {
       sizeof (GstElementClass),
       gst_element_base_class_init,
-      gst_element_base_class_finalize,
+      NULL,                     /* base_class_finalize */
       (GClassInitFunc) gst_element_class_init,
       NULL,
       NULL,
@@ -187,6 +190,7 @@ static void
 gst_element_class_init (GstElementClass * klass)
 {
   GObjectClass *gobject_class;
+  GError *err = NULL;
 
   gobject_class = (GObjectClass *) klass;
 
@@ -247,6 +251,15 @@ gst_element_class_init (GstElementClass * klass)
   klass->set_context = GST_DEBUG_FUNCPTR (gst_element_set_context_default);
 
   klass->elementfactory = NULL;
+
+  GST_DEBUG ("creating element thread pool");
+  gst_element_pool =
+      g_thread_pool_new ((GFunc) gst_element_call_async_func, NULL, -1, FALSE,
+      &err);
+  if (err != NULL) {
+    g_critical ("could not alloc threadpool %s", err->message);
+    g_clear_error (&err);
+  }
 }
 
 static void
@@ -279,17 +292,6 @@ gst_element_base_class_init (gpointer g_class)
       __gst_elementclass_factory);
   GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "type %s : factory %p",
       G_OBJECT_CLASS_NAME (element_class), element_class->elementfactory);
-}
-
-static void
-gst_element_base_class_finalize (gpointer g_class)
-{
-  GstElementClass *klass = GST_ELEMENT_CLASS (g_class);
-
-  g_list_foreach (klass->padtemplates, (GFunc) gst_object_unref, NULL);
-  g_list_free (klass->padtemplates);
-
-  gst_structure_free (klass->metadata);
 }
 
 static void
@@ -2944,7 +2946,7 @@ gst_element_dispose (GObject * object)
 
   oclass = GST_ELEMENT_GET_CLASS (element);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "dispose");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p dispose", element);
 
   if (GST_STATE (element) != GST_STATE_NULL)
     goto not_null;
@@ -2989,7 +2991,8 @@ gst_element_dispose (GObject * object)
   g_list_free_full (element->contexts, (GDestroyNotify) gst_context_unref);
   GST_OBJECT_UNLOCK (element);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "parent class dispose");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p parent class dispose",
+      element);
 
   G_OBJECT_CLASS (parent_class)->dispose (object);
 
@@ -3020,12 +3023,13 @@ gst_element_finalize (GObject * object)
 {
   GstElement *element = GST_ELEMENT_CAST (object);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "finalize");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p finalize", element);
 
   g_cond_clear (&element->state_cond);
   g_rec_mutex_clear (&element->state_lock);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "finalize parent");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p finalize parent",
+      element);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -3242,4 +3246,180 @@ gst_element_get_context (GstElement * element, const gchar * context_type)
   GST_OBJECT_UNLOCK (element);
 
   return ret;
+}
+
+static void
+gst_element_property_post_notify_msg (GstElement * element, GObject * obj,
+    GParamSpec * pspec, gboolean include_value)
+{
+  GValue val = G_VALUE_INIT;
+  GValue *v;
+
+  GST_LOG_OBJECT (element, "property '%s' of object %" GST_PTR_FORMAT " has "
+      "changed, posting message with%s value", pspec->name, obj,
+      include_value ? "" : "out");
+
+  if (include_value && (pspec->flags & G_PARAM_READABLE) != 0) {
+    g_value_init (&val, pspec->value_type);
+    g_object_get_property (obj, pspec->name, &val);
+    v = &val;
+  } else {
+    v = NULL;
+  }
+  gst_element_post_message (element,
+      gst_message_new_property_notify (GST_OBJECT_CAST (obj), pspec->name, v));
+}
+
+static void
+gst_element_property_deep_notify_cb (GstElement * element, GObject * prop_obj,
+    GParamSpec * pspec, gpointer user_data)
+{
+  gboolean include_value = GPOINTER_TO_INT (user_data);
+
+  gst_element_property_post_notify_msg (element, prop_obj, pspec,
+      include_value);
+}
+
+static void
+gst_element_property_notify_cb (GObject * obj, GParamSpec * pspec,
+    gpointer user_data)
+{
+  gboolean include_value = GPOINTER_TO_INT (user_data);
+
+  gst_element_property_post_notify_msg (GST_ELEMENT_CAST (obj), obj, pspec,
+      include_value);
+}
+
+/**
+ * gst_element_add_property_notify_watch:
+ * @element: a #GstElement to watch for property changes
+ * @property_name: (allow-none): name of property to watch for changes, or
+ *     NULL to watch all properties
+ * @include_value: whether to include the new property value in the message
+ *
+ * Returns: a watch id, which can be used in connection with
+ *     gst_element_remove_property_notify_watch() to remove the watch again.
+ *
+ * Since: 1.10
+ */
+gulong
+gst_element_add_property_notify_watch (GstElement * element,
+    const gchar * property_name, gboolean include_value)
+{
+  const gchar *sep;
+  gchar *signal_name;
+  gulong id;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), 0);
+
+  sep = (property_name != NULL) ? "::" : NULL;
+  signal_name = g_strconcat ("notify", sep, property_name, NULL);
+  id = g_signal_connect (element, signal_name,
+      G_CALLBACK (gst_element_property_notify_cb),
+      GINT_TO_POINTER (include_value));
+  g_free (signal_name);
+
+  return id;
+}
+
+/**
+ * gst_element_add_property_deep_notify_watch:
+ * @element: a #GstElement to watch (recursively) for property changes
+ * @property_name: (allow-none): name of property to watch for changes, or
+ *     NULL to watch all properties
+ * @include_value: whether to include the new property value in the message
+ *
+ * Returns: a watch id, which can be used in connection with
+ *     gst_element_remove_property_notify_watch() to remove the watch again.
+ *
+ * Since: 1.10
+ */
+gulong
+gst_element_add_property_deep_notify_watch (GstElement * element,
+    const gchar * property_name, gboolean include_value)
+{
+  const gchar *sep;
+  gchar *signal_name;
+  gulong id;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), 0);
+
+  sep = (property_name != NULL) ? "::" : NULL;
+  signal_name = g_strconcat ("deep-notify", sep, property_name, NULL);
+  id = g_signal_connect (element, signal_name,
+      G_CALLBACK (gst_element_property_deep_notify_cb),
+      GINT_TO_POINTER (include_value));
+  g_free (signal_name);
+
+  return id;
+}
+
+/**
+ * gst_element_remove_property_notify_watch:
+ * @element: a #GstElement being watched for property changes
+ * @watch_id: watch id to remove
+ *
+ * Since: 1.10
+ */
+void
+gst_element_remove_property_notify_watch (GstElement * element, gulong watch_id)
+{
+  g_signal_handler_disconnect (element, watch_id);
+}
+
+typedef struct
+{
+  GstElement *element;
+  GstElementCallAsyncFunc func;
+  gpointer user_data;
+  GDestroyNotify destroy_notify;
+} GstElementCallAsyncData;
+
+static void
+gst_element_call_async_func (gpointer data, gpointer user_data)
+{
+  GstElementCallAsyncData *async_data = data;
+
+  async_data->func (async_data->element, async_data->user_data);
+  if (async_data->destroy_notify)
+    async_data->destroy_notify (async_data->user_data);
+  gst_object_unref (async_data->element);
+  g_free (async_data);
+}
+
+/**
+ * gst_element_call_async:
+ * @element: a #GstElement
+ * @func: Function to call asynchronously from another thread
+ * @user_data: Data to pass to @func
+ * @destroy_notify: GDestroyNotify for @user_data
+ *
+ * Calls @func from another thread and passes @user_data to it. This is to be
+ * used for cases when a state change has to be performed from a streaming
+ * thread, directly via gst_element_set_state() or indirectly e.g. via SEEK
+ * events.
+ *
+ * Calling those functions directly from the streaming thread will cause
+ * deadlocks in many situations, as they might involve waiting for the
+ * streaming thread to shut down from this very streaming thread.
+ *
+ * MT safe.
+ *
+ * Since: 1.10
+ */
+void
+gst_element_call_async (GstElement * element, GstElementCallAsyncFunc func,
+    gpointer user_data, GDestroyNotify destroy_notify)
+{
+  GstElementCallAsyncData *async_data;
+
+  g_return_if_fail (GST_IS_ELEMENT (element));
+
+  async_data = g_new0 (GstElementCallAsyncData, 1);
+  async_data->element = gst_object_ref (element);
+  async_data->func = func;
+  async_data->user_data = user_data;
+  async_data->destroy_notify = destroy_notify;
+
+  g_thread_pool_push (gst_element_pool, async_data, NULL);
 }

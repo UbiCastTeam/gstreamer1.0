@@ -234,6 +234,17 @@ features:
   queues is filled.
   Both signals are emitted from the context of the streaming thread.
 </p>
+<p>
+  When using <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--sync-by-running-time" title="The “sync-by-running-time” property"><span class="type">“sync-by-running-time”</span></a> the unlinked streams will
+  be throttled by the highest running-time of linked streams. This allows
+  further relinking of those unlinked streams without them being in the
+  future (i.e. to achieve gapless playback).
+  When dealing with streams which have got different consumption requirements
+  downstream (ex: video decoders which will consume more buffer (in time) than
+  audio decoders), it is recommended to group streams of the same type
+  by using the pad "group-id" property. This will further throttle streams
+  in time within that group.
+</p>
 </div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>

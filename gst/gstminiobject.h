@@ -124,6 +124,9 @@ typedef void (*GstMiniObjectNotify) (gpointer user_data, GstMiniObject * obj);
  * gst_mini_object_lock() and gst_mini_object_unlock().
  * @GST_MINI_OBJECT_FLAG_LOCK_READONLY: the object is permanently locked in
  * READONLY mode. Only read locks can be performed on the object.
+ * @GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED: the object is expected to stay alive
+ * even after gst_deinit() has been called and so should be ignored by leak
+ * detection tools. (Since 1.10)
  * @GST_MINI_OBJECT_FLAG_LAST: first flag that can be used by subclasses.
  *
  * Flags for the mini object
@@ -132,6 +135,7 @@ typedef enum
 {
   GST_MINI_OBJECT_FLAG_LOCKABLE      = (1 << 0),
   GST_MINI_OBJECT_FLAG_LOCK_READONLY = (1 << 1),
+  GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED = (1 << 2),
   /* padding */
   GST_MINI_OBJECT_FLAG_LAST          = (1 << 4)
 } GstMiniObjectFlags;
@@ -237,10 +241,10 @@ gboolean        gst_mini_object_lock            (GstMiniObject *object, GstLockF
 void            gst_mini_object_unlock          (GstMiniObject *object, GstLockFlags flags);
 
 gboolean        gst_mini_object_is_writable     (const GstMiniObject *mini_object);
-GstMiniObject * gst_mini_object_make_writable	(GstMiniObject *mini_object);
+GstMiniObject * gst_mini_object_make_writable	(GstMiniObject *mini_object) G_GNUC_WARN_UNUSED_RESULT;
 
 /* copy */
-GstMiniObject * gst_mini_object_copy		(const GstMiniObject *mini_object) G_GNUC_MALLOC;
+GstMiniObject * gst_mini_object_copy		(const GstMiniObject *mini_object) G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
 
 
 void            gst_mini_object_set_qdata       (GstMiniObject *object, GQuark quark,
@@ -251,7 +255,7 @@ gpointer        gst_mini_object_steal_qdata     (GstMiniObject *object, GQuark q
 
 gboolean        gst_mini_object_replace         (GstMiniObject **olddata, GstMiniObject *newdata);
 gboolean        gst_mini_object_take            (GstMiniObject **olddata, GstMiniObject *newdata);
-GstMiniObject * gst_mini_object_steal           (GstMiniObject **olddata);
+GstMiniObject * gst_mini_object_steal           (GstMiniObject **olddata) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * GST_DEFINE_MINI_OBJECT_TYPE:

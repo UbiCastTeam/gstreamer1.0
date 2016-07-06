@@ -131,6 +131,7 @@ GST_START_TEST (test_launch_lines)
   type = gst_element_factory_get_element_type (efac);
   fail_unless (type != 0);
   g_object_unref (efac);
+  g_object_unref (efac);
   fail_unless (gst_element_register (NULL, "1__dentity", GST_RANK_NONE, type));
 
   for (s = test_lines; *s != NULL; s++) {
@@ -547,8 +548,8 @@ gst_parse_test_element_class_init (GstParseTestElementClass * klass)
 {
   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&test_element_pad_template));
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &test_element_pad_template);
 
   gst_element_class_set_metadata (gstelement_class,
       "Test element for parse launch tests", "Source",
