@@ -905,7 +905,11 @@ upload: $(FORMATS)
 
 @ENABLE_GTK_DOC_TRUE@sgml-build.stamp: setup-build.stamp $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(expand_content_files)
 @ENABLE_GTK_DOC_TRUE@	@echo '  DOC   Building XML'
-@ENABLE_GTK_DOC_TRUE@	@gtkdoc-mkdb --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
+@ENABLE_GTK_DOC_TRUE@	@_source_dir='' ;						\
+@ENABLE_GTK_DOC_TRUE@	for i in $(DOC_SOURCE_DIR) ; do					\
+@ENABLE_GTK_DOC_TRUE@	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
+@ENABLE_GTK_DOC_TRUE@	done ;							        \
+@ENABLE_GTK_DOC_TRUE@	gtkdoc-mkdb --module=$(DOC_MODULE) $$(_source_dir)  --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) --output-format=xml $(MKDB_OPTIONS)
 @ENABLE_GTK_DOC_TRUE@	@cp ../version.entities xml
 @ENABLE_GTK_DOC_TRUE@	@touch sgml-build.stamp
 

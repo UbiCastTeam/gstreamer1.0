@@ -915,8 +915,7 @@ oob_source_class_init (OOBSourceClass * klass)
   GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
   GstPushSrcClass *pushsrc_class = GST_PUSH_SRC_CLASS (klass);
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (element_class, &sinktemplate);
 
   pushsrc_class->create = GST_DEBUG_FUNCPTR (oob_source_create);
 }
@@ -1072,6 +1071,8 @@ GST_START_TEST (test_last_message_notify)
 
   fail_unless_equals_int (counter1, NUM_BUFFERS);
   fail_unless_equals_int (counter2, NUM_BUFFERS);
+
+  gst_object_unref (pipe);
 }
 
 GST_END_TEST;

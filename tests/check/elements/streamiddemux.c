@@ -63,9 +63,10 @@ release_test_objects (struct TestData *td)
 
   gst_caps_unref (td->mycaps);
 
-  if (active_srcpad)
+  if (active_srcpad) {
     gst_object_unref (active_srcpad);
-
+    active_srcpad = NULL;
+  }
   gst_object_unref (td->demux);
 }
 
@@ -265,15 +266,15 @@ GList *expected[NUM_SUBSTREAMS];
 static gboolean
 sink_event_func (GstPad * pad, GstObject * parent, GstEvent * event)
 {
-  GList **expected = GST_PAD_ELEMENT_PRIVATE (pad);
+  GList **expected = GST_PAD_ELEMENT_PRIVATE (pad), *l;
   GstEvent *exp;
 
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_CAPS:{
       GstCaps *recvcaps, *expectcaps;
 
-      *expected = g_list_first (*expected);
-      exp = GST_EVENT ((*expected)->data);
+      l = g_list_first (*expected);
+      exp = GST_EVENT (l->data);
 
       gst_event_parse_caps (event, &recvcaps);
       gst_event_parse_caps (exp, &expectcaps);
@@ -284,8 +285,8 @@ sink_event_func (GstPad * pad, GstObject * parent, GstEvent * event)
     case GST_EVENT_SEGMENT:{
       const GstSegment *recvseg, *expectseg;
 
-      *expected = g_list_last (*expected);
-      exp = GST_EVENT ((*expected)->data);
+      l = g_list_last (*expected);
+      exp = GST_EVENT (l->data);
 
       gst_event_parse_segment (event, &recvseg);
       gst_event_parse_segment (exp, &expectseg);
@@ -395,6 +396,8 @@ GST_START_TEST (test_streamiddemux_num_buffers)
 
   for (stream_cnt = 0; stream_cnt < NUM_SUBSTREAMS; ++stream_cnt) {
     gst_object_unref (td.mysink[stream_cnt]);
+
+    g_list_free_full (expected[stream_cnt], (GDestroyNotify) gst_event_unref);
   }
   gst_object_unref (td.mysrc);
 

@@ -45,8 +45,7 @@
  *
  *   // sinktemplate should be a #GstStaticPadTemplate with direction
  *   // %GST_PAD_SINK and name "sink"
- *   gst_element_class_add_pad_template (gstelement_class,
- *       gst_static_pad_template_get (&amp;sinktemplate));
+ *   gst_element_class_add_static_pad_template (gstelement_class, &amp;sinktemplate);
  *
  *   gst_element_class_set_static_metadata (gstelement_class,
  *       "Sink name",
@@ -2925,7 +2924,8 @@ gst_base_sink_update_start_time (GstBaseSink * basesink)
   GstClock *clock;
 
   GST_OBJECT_LOCK (basesink);
-  if ((clock = GST_ELEMENT_CLOCK (basesink))) {
+  if (GST_STATE (basesink) == GST_STATE_PLAYING
+      && (clock = GST_ELEMENT_CLOCK (basesink))) {
     GstClockTime now;
 
     gst_object_ref (clock);

@@ -275,8 +275,10 @@ gst_device_provider_factory_get (GstDeviceProviderFactory * factory)
     goto no_type;
 
   device_provider = g_atomic_pointer_get (&newfactory->provider);
-  if (device_provider)
+  if (device_provider) {
+    gst_object_unref (factory);
     return gst_object_ref (device_provider);
+  }
 
   /* create an instance of the device provider, cast so we don't assert on NULL
    * also set name as early as we can
@@ -292,8 +294,12 @@ gst_device_provider_factory_get (GstDeviceProviderFactory * factory)
    * an device provider at the same moment
    */
   oclass = GST_DEVICE_PROVIDER_GET_CLASS (device_provider);
-  if (!g_atomic_pointer_compare_and_exchange (&oclass->factory, NULL, factory))
+  if (!g_atomic_pointer_compare_and_exchange (&oclass->factory, NULL, factory)) {
     gst_object_unref (factory);
+  } else {
+    /* This ref will never be dropped as the class is never destroyed */
+    GST_OBJECT_FLAG_SET (factory, GST_OBJECT_FLAG_MAY_BE_LEAKED);
+  }
 
   gst_object_ref_sink (device_provider);
 

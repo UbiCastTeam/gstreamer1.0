@@ -118,10 +118,8 @@ gst_parser_tester_class_init (GstParserTesterClass * klass)
       GST_PAD_SRC, GST_PAD_ALWAYS,
       GST_STATIC_CAPS ("video/x-test-custom"));
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&sink_templ));
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&src_templ));
+  gst_element_class_add_static_pad_template (element_class, &sink_templ);
+  gst_element_class_add_static_pad_template (element_class, &src_templ);
 
   gst_element_class_set_metadata (element_class,
       "ParserTester", "Parser/Video", "yep", "me");
@@ -455,6 +453,23 @@ GST_START_TEST (parser_reverse_playback)
 
 GST_END_TEST;
 
+static void
+baseparse_setup (void)
+{
+  /* init/reset global state */
+  mysrcpad = mysinkpad = NULL;
+  parsetest = NULL;
+  bus = NULL;
+  loop = NULL;
+  have_eos = have_data = caps_set = FALSE;
+  buffer_count = 0;
+}
+
+static void
+baseparse_teardown (void)
+{
+}
+
 static Suite *
 gst_baseparse_suite (void)
 {
@@ -462,6 +477,7 @@ gst_baseparse_suite (void)
   TCase *tc = tcase_create ("general");
 
   suite_add_tcase (s, tc);
+  tcase_add_checked_fixture (tc, baseparse_setup, baseparse_teardown);
   tcase_add_test (tc, parser_playback);
   tcase_add_test (tc, parser_empty_stream);
   tcase_add_test (tc, parser_reverse_playback_on_passthrough);
