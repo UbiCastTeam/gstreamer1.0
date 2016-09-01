@@ -29,7 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GstSystemClock.top_of_page"></a>GstSystemClock</span></h2>
-<p>GstSystemClock</p>
+<p>GstSystemClock — Default clock that uses the current system time</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -110,6 +110,13 @@
 </div>
 <div class="refsect1">
 <a name="GstSystemClock.description"></a><h2>Description</h2>
+<p>The GStreamer core provides a GstSystemClock based on the system time.
+Asynchronous callbacks are scheduled from an internal thread.</p>
+<p>Clock implementors are encouraged to subclass this systemclock as it
+implements the async notification.</p>
+<p>Subclasses can however override all of the important methods for sync and
+async notifications to implement their own callback methods or blocking
+wait operations.</p>
 </div>
 <div class="refsect1">
 <a name="GstSystemClock.functions_details"></a><h2>Functions</h2>
@@ -117,18 +124,50 @@
 <a name="gst-system-clock-obtain"></a><h3>gst_system_clock_obtain ()</h3>
 <pre class="programlisting"><a class="link" href="GstClock.html" title="GstClock"><span class="returnvalue">GstClock</span></a> *
 gst_system_clock_obtain (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Get a handle to the default system clock. The refcount of the
+clock will be increased so you need to unref the clock after
+usage.</p>
+<div class="refsect3">
+<a name="gst-system-clock-obtain.returns"></a><h4>Returns</h4>
+<p> the default clock.</p>
+<p>MT safe. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-system-clock-set-default"></a><h3>gst_system_clock_set_default ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_system_clock_set_default (<em class="parameter"><code><a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> *new_clock</code></em>);</pre>
+<p>Sets the default system clock that can be obtained with
+<a class="link" href="GstSystemClock.html#gst-system-clock-obtain" title="gst_system_clock_obtain ()"><code class="function">gst_system_clock_obtain()</code></a>.</p>
+<p>This is mostly used for testing and debugging purposes when you
+want to have control over the time reported by the default system
+clock.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="gst-system-clock-set-default.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>new_clock</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">
 <a name="GstSystemClock.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstClockType"></a><h3>enum GstClockType</h3>
+<p>The different kind of clocks.</p>
 <div class="refsect3">
 <a name="GstClockType.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -140,18 +179,25 @@ gst_system_clock_set_default (<em class="parameter"><code><a class="link" href="
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-CLOCK-TYPE-REALTIME:CAPS"></a>GST_CLOCK_TYPE_REALTIME</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>time since Epoch</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-CLOCK-TYPE-MONOTONIC:CAPS"></a>GST_CLOCK_TYPE_MONOTONIC</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>monotonic time since some unspecified starting
+                           point</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-CLOCK-TYPE-OTHER:CAPS"></a>GST_CLOCK_TYPE_OTHER</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>some other time source is used (Since 1.0.5)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -161,6 +207,7 @@ gst_system_clock_set_default (<em class="parameter"><code><a class="link" href="
 <div class="refsect2">
 <a name="GstSystemClock-struct"></a><h3>struct GstSystemClock</h3>
 <pre class="programlisting">struct GstSystemClock;</pre>
+<p>The default implementation of a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> that uses the system time.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -172,6 +219,10 @@ gst_system_clock_set_default (<em class="parameter"><code><a class="link" href="
 <p>Flags: Read / Write</p>
 <p>Default value: GST_CLOCK_TYPE_MONOTONIC</p>
 </div>
+</div>
+<div class="refsect1">
+<a name="GstSystemClock.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a></p>
 </div>
 </div>
 <div class="footer">

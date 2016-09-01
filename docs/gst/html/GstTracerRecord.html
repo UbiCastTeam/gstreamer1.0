@@ -28,7 +28,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GstTracerRecord.top_of_page"></a>GstTracerRecord</span></h2>
-<p>GstTracerRecord</p>
+<p>GstTracerRecord — Trace log entry class</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -97,6 +97,8 @@
 </div>
 <div class="refsect1">
 <a name="GstTracerRecord.description"></a><h2>Description</h2>
+<p>Tracing modules will create instances of this class to announce the data they
+will log and create a log formatter.</p>
 </div>
 <div class="refsect1">
 <a name="GstTracerRecord.functions_details"></a><h2>Functions</h2>
@@ -106,6 +108,55 @@
 gst_tracer_record_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
                        <em class="parameter"><code>...</code></em>);</pre>
+<p>Create a new tracer record. The record instance can be used to efficiently
+log entries using <a class="link" href="GstTracerRecord.html#gst-tracer-record-log" title="gst_tracer_record_log ()"><code class="function">gst_tracer_record_log()</code></a>.</p>
+<p>The <em class="parameter"><code>name</code></em>
+ without the ".class" suffix will be used for the log records.
+There must be fields for each value that gets logged where the field name is
+the value name. The field must be a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> describing the value. The
+sub structure must contain a field called 'type' of <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-GTYPE:CAPS"><code class="literal">G_TYPE_GTYPE</code></a> that
+contains the GType of the value. The resulting <a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="type">GstTracerRecord</span></a> will take
+ownership of the field structures.</p>
+<p>The way to deal with optional values is to log an additional boolean before
+the optional field, that if <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> signals that the optional field is valid
+and <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> signals that the optional field should be ignored. One must still
+log a placeholder value for the optional field though. Please also note, that
+pointer type values must not be NULL - the underlying serialisation can not
+handle that right now.</p>
+<div class="note"><p>
+  Please note that this is still under discussion and subject to change.
+</p></div>
+<div class="refsect3">
+<a name="gst-tracer-record-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>name of new record, must end on ".class".</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>firstfield</p></td>
+<td class="parameter_description"><p>name of first field to set</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>additional arguments</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-tracer-record-new.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="type">GstTracerRecord</span></a></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -113,6 +164,34 @@ gst_tracer_record_new (<em class="parameter"><code>const <a href="/usr/share/gtk
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tracer_record_log (<em class="parameter"><code><a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="type">GstTracerRecord</span></a> *self</code></em>,
                        <em class="parameter"><code>...</code></em>);</pre>
+<p>Serialzes the trace event into the log.</p>
+<p>Right now this is using the gstreamer debug log with the level TRACE (7) and
+the category "GST_TRACER".</p>
+<div class="note"><p>
+  Please note that this is still under discussion and subject to change.
+</p></div>
+<div class="refsect3">
+<a name="gst-tracer-record-log.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the tracer-record</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the args as described in the spec-</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -124,6 +203,8 @@ gst_tracer_record_log (<em class="parameter"><code><a class="link" href="GstTrac
 <hr>
 <div class="refsect2">
 <a name="GstTracerValueFlags"></a><h3>enum GstTracerValueFlags</h3>
+<p>Flag that describe the value. These flags help applications processing the
+logs to understand the values.</p>
 <div class="refsect3">
 <a name="GstTracerValueFlags.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -135,18 +216,27 @@ gst_tracer_record_log (<em class="parameter"><code><a class="link" href="GstTrac
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-FLAGS-NONE:CAPS"></a>GST_TRACER_VALUE_FLAGS_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>no flags</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-FLAGS-OPTIONAL:CAPS"></a>GST_TRACER_VALUE_FLAGS_OPTIONAL</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the value is optional. When using this flag
+  one need to have an additional boolean arg before this value in the
+  var-args list passed to  <a class="link" href="GstTracerRecord.html#gst-tracer-record-log" title="gst_tracer_record_log ()"><code class="function">gst_tracer_record_log()</code></a>.</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-FLAGS-AGGREGATED:CAPS"></a>GST_TRACER_VALUE_FLAGS_AGGREGATED</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the value is combined since the start of
+  tracing</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -155,6 +245,11 @@ gst_tracer_record_log (<em class="parameter"><code><a class="link" href="GstTrac
 <hr>
 <div class="refsect2">
 <a name="GstTracerValueScope"></a><h3>enum GstTracerValueScope</h3>
+<p>Tracing record will contain fields that contain a meassured value or extra
+meta-data. One such meta data are values that tell where a measurement was
+taken. This enumerating declares to which scope such a meta data field
+relates to. If it is e.g. <a class="link" href="GstTracerRecord.html#GST-TRACER-VALUE-SCOPE-PAD:CAPS"><code class="literal">GST_TRACER_VALUE_SCOPE_PAD</code></a>, then each of the log
+events may contain values for different <a href="GstPad.html#GstPad-struct"><span class="type">GstPads</span></a>.</p>
 <div class="refsect3">
 <a name="GstTracerValueScope.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -166,27 +261,36 @@ gst_tracer_record_log (<em class="parameter"><code><a class="link" href="GstTrac
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-SCOPE-PROCESS:CAPS"></a>GST_TRACER_VALUE_SCOPE_PROCESS</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the value is related to the process</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-SCOPE-THREAD:CAPS"></a>GST_TRACER_VALUE_SCOPE_THREAD</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the value is related to a thread</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-SCOPE-ELEMENT:CAPS"></a>GST_TRACER_VALUE_SCOPE_ELEMENT</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the value is related to an <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a></p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-TRACER-VALUE-SCOPE-PAD:CAPS"></a>GST_TRACER_VALUE_SCOPE_PAD</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the value is related to a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+<p class="since">Since: 1.8</p>
 </div>
 </div>
 </div>

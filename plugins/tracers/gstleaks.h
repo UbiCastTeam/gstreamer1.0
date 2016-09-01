@@ -51,10 +51,24 @@ struct _GstLeaksTracer {
   GstTracer parent;
 
   /*< private >*/
-  /* Set of objects currently alive. Protected by object lock */
+  /* gpointer (object currently alive) -> gchar * (its creation trace, or
+   * NULL). Protected by object lock */
   GHashTable *objects;
   /* array of GType used as filtering */
   GArray *filter;
+  /* Set of owned ObjectLog.  Protected by object lock */
+  GHashTable *added;
+  /* Set of owned ObjectLog.  Protected by object lock */
+  GHashTable *removed;
+  /* If not NULL, contain a set of GQuark representing type filter not
+   * (yet?) known by the type system.
+   * Protected by object lock. */
+  GHashTable *unhandled_filter;
+  /* The number of elements in unhandled_filter */
+  gint unhandled_filter_count;
+  gboolean done;
+
+  gboolean log_stack_trace;
 };
 
 struct _GstLeaksTracerClass {

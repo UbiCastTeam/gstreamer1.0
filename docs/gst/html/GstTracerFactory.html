@@ -28,7 +28,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GstTracerFactory.top_of_page"></a>GstTracerFactory</span></h2>
-<p>GstTracerFactory</p>
+<p>GstTracerFactory — Information about registered tracer functions</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -78,6 +78,8 @@
 </div>
 <div class="refsect1">
 <a name="GstTracerFactory.description"></a><h2>Description</h2>
+<p>Use <a class="link" href="GstTracerFactory.html#gst-tracer-factory-get-list" title="gst_tracer_factory_get_list ()"><code class="function">gst_tracer_factory_get_list()</code></a> to get a list of tracer factories known to
+GStreamer.</p>
 </div>
 <div class="refsect1">
 <a name="GstTracerFactory.functions_details"></a><h2>Functions</h2>
@@ -85,6 +87,17 @@
 <a name="gst-tracer-factory-get-list"></a><h3>gst_tracer_factory_get_list ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 gst_tracer_factory_get_list (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Gets the list of all registered tracer factories. You must free the
+list using <a class="link" href="GstPluginFeature.html#gst-plugin-feature-list-free" title="gst_plugin_feature_list_free ()"><code class="function">gst_plugin_feature_list_free()</code></a>.</p>
+<p>The returned factories are sorted by factory name.</p>
+<p>Free-function: gst_plugin_feature_list_free</p>
+<div class="refsect3">
+<a name="gst-tracer-factory-get-list.returns"></a><h4>Returns</h4>
+<p> the list of all
+registered <a class="link" href="GstTracerFactory.html" title="GstTracerFactory"><span class="type">GstTracerFactory</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.TracerFactory]</span></p>
+</div>
+<p class="since">Since: 1.8</p>
 </div>
 </div>
 <div class="refsect1">
@@ -92,6 +105,8 @@ gst_tracer_factory_get_list (<em class="parameter"><code><span class="type">void
 <div class="refsect2">
 <a name="GstTracerFactory-struct"></a><h3>GstTracerFactory</h3>
 <pre class="programlisting">typedef struct _GstTracerFactory GstTracerFactory;</pre>
+<p>Opaque object that stores information about a tracer function.</p>
+<p class="since">Since: 1.8</p>
 </div>
 </div>
 </div>

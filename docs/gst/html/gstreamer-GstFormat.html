@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-GstFormat.top_of_page"></a>GstFormat</span></h2>
-<p>GstFormat</p>
+<p>GstFormat — Dynamically register new data formats</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -130,6 +130,9 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstFormat.description"></a><h2>Description</h2>
+<p>GstFormats functions are used to register a new format to the gstreamer
+core.  Formats can be used to perform seeking or conversions/query
+operations.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstFormat.functions_details"></a><h2>Functions</h2>
@@ -137,12 +140,55 @@
 <a name="gst-format-get-name"></a><h3>gst_format_get_name ()</h3>
 <pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_format_get_name (<em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
+<p>Get a printable name for the given format. Do not modify or free.</p>
+<div class="refsect3">
+<a name="gst-format-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-format-get-name.returns"></a><h4>Returns</h4>
+<p> a reference to the static name of the format
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the format is unknown. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-format-to-quark"></a><h3>gst_format_to_quark ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>
 gst_format_to_quark (<em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
+<p>Get the unique quark for the given format.</p>
+<div class="refsect3">
+<a name="gst-format-to-quark.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-format-to-quark.returns"></a><h4>Returns</h4>
+<p> the quark associated with the format or 0 if the format
+is unknown.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -150,12 +196,64 @@ gst_format_to_quark (<em class="parameter"><code><a class="link" href="gstreamer
 <pre class="programlisting"><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="returnvalue">GstFormat</span></a>
 gst_format_register (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nick</code></em>,
                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *description</code></em>);</pre>
+<p>Create a new GstFormat based on the nick or return an
+already registered format with that nick.</p>
+<div class="refsect3">
+<a name="gst-format-register.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>nick</p></td>
+<td class="parameter_description"><p>The nick of the new format</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>description</p></td>
+<td class="parameter_description"><p>The description of the new format</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-format-register.returns"></a><h4>Returns</h4>
+<p> A new GstFormat or an already registered format
+with the same nick.</p>
+<p>MT safe.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-format-get-by-nick"></a><h3>gst_format_get_by_nick ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="returnvalue">GstFormat</span></a>
 gst_format_get_by_nick (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nick</code></em>);</pre>
+<p>Return the format registered with the given nick.</p>
+<div class="refsect3">
+<a name="gst-format-get-by-nick.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>nick</p></td>
+<td class="parameter_description"><p>The nick of the format</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-format-get-by-nick.returns"></a><h4>Returns</h4>
+<p> The format with <em class="parameter"><code>nick</code></em>
+or GST_FORMAT_UNDEFINED
+if the format was not registered.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -163,24 +261,83 @@ gst_format_get_by_nick (<em class="parameter"><code>const <a href="/usr/share/gt
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_formats_contains (<em class="parameter"><code>const <a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *formats</code></em>,
                       <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
+<p>See if the given format is inside the format array.</p>
+<div class="refsect3">
+<a name="gst-formats-contains.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>formats</p></td>
+<td class="parameter_description"><p> The format array to search. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>the format to find</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-formats-contains.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the format is found inside the array</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-format-get-details"></a><h3>gst_format_get_details ()</h3>
 <pre class="programlisting">const <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="returnvalue">GstFormatDefinition</span></a> *
 gst_format_get_details (<em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
+<p>Get details about the given format.</p>
+<div class="refsect3">
+<a name="gst-format-get-details.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>The format to get details of</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-format-get-details.returns"></a><h4>Returns</h4>
+<p> The <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="type">GstFormatDefinition</span></a> for <em class="parameter"><code>format</code></em>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+on failure.</p>
+<p>MT safe. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-format-iterate-definitions"></a><h3>gst_format_iterate_definitions ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstIterator.html#GstIterator" title="struct GstIterator"><span class="returnvalue">GstIterator</span></a> *
 gst_format_iterate_definitions (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Iterate all the registered formats. The format definition is read
+only.</p>
+<div class="refsect3">
+<a name="gst-format-iterate-definitions.returns"></a><h4>Returns</h4>
+<p> a GstIterator of <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="type">GstFormatDefinition</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
 </div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstFormat.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstFormat"></a><h3>enum GstFormat</h3>
+<p>Standard predefined formats</p>
 <div class="refsect3">
 <a name="GstFormat.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -192,33 +349,51 @@ gst_format_iterate_definitions (<em class="parameter"><code><span class="type">v
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FORMAT-UNDEFINED:CAPS"></a>GST_FORMAT_UNDEFINED</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>undefined format</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FORMAT-DEFAULT:CAPS"></a>GST_FORMAT_DEFAULT</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the default format of the pad/element. This can be
+   samples for raw audio, frames/fields for raw video (some, but not all,
+   elements support this; use <em class="parameter"><code>GST_FORMAT_TIME</code></em>
+ if you don't have a good
+   reason to query for samples/frames)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FORMAT-BYTES:CAPS"></a>GST_FORMAT_BYTES</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>bytes</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FORMAT-TIME:CAPS"></a>GST_FORMAT_TIME</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>time in nanoseconds</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FORMAT-BUFFERS:CAPS"></a>GST_FORMAT_BUFFERS</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>buffers (few, if any, elements implement this as of
+    May 2009)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FORMAT-PERCENT:CAPS"></a>GST_FORMAT_PERCENT</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>percentage of stream (few, if any, elements implement
+    this as of May 2009)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -229,12 +404,15 @@ gst_format_iterate_definitions (<em class="parameter"><code><span class="type">v
 <a name="GST-FORMAT-PERCENT-MAX:CAPS"></a><h3>GST_FORMAT_PERCENT_MAX</h3>
 <pre class="programlisting">#define GST_FORMAT_PERCENT_MAX          G_GINT64_CONSTANT (1000000)
 </pre>
+<p>The PERCENT format is between 0 and this value</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-FORMAT-PERCENT-SCALE:CAPS"></a><h3>GST_FORMAT_PERCENT_SCALE</h3>
 <pre class="programlisting">#define GST_FORMAT_PERCENT_SCALE        G_GINT64_CONSTANT (10000)
 </pre>
+<p>The value used to scale down the reported PERCENT format value to
+its real value.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -246,7 +424,44 @@ gst_format_iterate_definitions (<em class="parameter"><code><span class="type">v
   GQuark       quark;
 };
 </pre>
+<p>A format definition</p>
+<div class="refsect3">
+<a name="GstFormatDefinition.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> <em class="structfield"><code><a name="GstFormatDefinition.value"></a>value</code></em>;</p></td>
+<td class="struct_member_description"><p>The unique id of this format</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstFormatDefinition.nick"></a>nick</code></em>;</p></td>
+<td class="struct_member_description"><p>A short nick of the format</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstFormatDefinition.description"></a>description</code></em>;</p></td>
+<td class="struct_member_description"><p>A longer description of the format</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Quarks.html#GQuark"><span class="type">GQuark</span></a> <em class="structfield"><code><a name="GstFormatDefinition.quark"></a>quark</code></em>;</p></td>
+<td class="struct_member_description"><p>A quark for the nick</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
 </div>
+</div>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstFormat.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a></p>
 </div>
 </div>
 <div class="footer">

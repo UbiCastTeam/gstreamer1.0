@@ -36,8 +36,6 @@ GST_QUARK
 GstQuarkId
 GstPluginLoader
 GstPluginLoaderFuncs
-GstAllocTrace
-GstAllocTraceFlags
 </SECTION>
 
 <SECTION>
@@ -259,6 +257,11 @@ gst_buffer_foreach_meta
 GstParentBufferMeta
 gst_buffer_add_parent_buffer_meta
 gst_buffer_get_parent_buffer_meta
+
+gst_buffer_get_flags
+gst_buffer_set_flags
+gst_buffer_unset_flags
+gst_buffer_has_flags
 
 <SUBSECTION Standard>
 GstBufferClass
@@ -698,8 +701,6 @@ gst_adapter_prev_timestamp
 <TITLE>GstConfig</TITLE>
 GST_DISABLE_GST_DEBUG
 GST_DISABLE_PARSE
-GST_DISABLE_TRACE
-GST_DISABLE_ALLOC_TRACE
 GST_DISABLE_REGISTRY
 GST_DISABLE_PLUGIN
 <SUBSECTION Private>
@@ -813,8 +814,12 @@ GST_ELEMENT_CLOCK
 GST_ELEMENT_PADS
 GST_ELEMENT_START_TIME
 GST_ELEMENT_ERROR
+GST_ELEMENT_ERROR_WITH_DETAILS
+GST_ELEMENT_FLOW_ERROR
 GST_ELEMENT_WARNING
+GST_ELEMENT_WARNING_WITH_DETAILS
 GST_ELEMENT_INFO
+GST_ELEMENT_INFO_WITH_DETAILS
 GST_ELEMENT_IS_LOCKED_STATE
 
 <SUBSECTION element-metadata>
@@ -899,6 +904,8 @@ gst_element_change_state
 
 <SUBSECTION element-messages>
 gst_element_message_full
+gst_element_message_full_with_details
+gst_make_element_message_details
 gst_element_post_message
 
 <SUBSECTION element-query>
@@ -1178,6 +1185,9 @@ gst_event_parse_select_streams
 
 gst_event_new_stream_collection
 gst_event_parse_stream_collection
+
+gst_event_new_stream_group_done
+gst_event_parse_stream_group_done
 <SUBSECTION Standard>
 GstEventClass
 GST_EVENT
@@ -1579,11 +1589,17 @@ gst_message_replace
 
 gst_message_new_eos
 gst_message_new_error
+gst_message_new_error_with_details
 gst_message_parse_error
+gst_message_parse_error_details
 gst_message_new_warning
+gst_message_new_warning_with_details
 gst_message_parse_warning
+gst_message_parse_warning_details
 gst_message_new_info
+gst_message_new_info_with_details
 gst_message_parse_info
+gst_message_parse_info_details
 gst_message_new_tag
 gst_message_parse_tag
 gst_message_new_buffering
@@ -1666,6 +1682,11 @@ gst_message_parse_streams_selected
 gst_message_streams_selected_add
 gst_message_streams_selected_get_size
 gst_message_streams_selected_get_stream
+
+gst_message_new_redirect
+gst_message_add_redirect_entry
+gst_message_parse_redirect_entry
+gst_message_get_num_redirect_entries
 
 <SUBSECTION Standard>
 GstMessageClass
