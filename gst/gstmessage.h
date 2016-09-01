@@ -114,6 +114,9 @@ typedef struct _GstMessage GstMessage;
  *     is available (Since 1.10)
  * @GST_MESSAGE_STREAMS_SELECTED: Message indicating the active selection of
  *     #GstStreams has changed (Since 1.10)
+ * @GST_MESSAGE_REDIRECT: Message indicating to request the application to
+ *     try to play the given URL(s). Useful if for example a HTTP 302/303
+ *     response is received with a non-HTTP URL inside. (Since 1.10)
  * @GST_MESSAGE_ANY: mask for all of the above messages.
  *
  * The different message types that are available.
@@ -165,6 +168,7 @@ typedef enum
   GST_MESSAGE_PROPERTY_NOTIFY   = GST_MESSAGE_EXTENDED + 3,
   GST_MESSAGE_STREAM_COLLECTION = GST_MESSAGE_EXTENDED + 4,
   GST_MESSAGE_STREAMS_SELECTED  = GST_MESSAGE_EXTENDED + 5,
+  GST_MESSAGE_REDIRECT          = GST_MESSAGE_EXTENDED + 6,
   GST_MESSAGE_ANY               = (gint) (0xffffffff)
 } GstMessageType;
 
@@ -445,15 +449,21 @@ GstMessage *    gst_message_new_eos             (GstObject * src) G_GNUC_MALLOC;
 /* ERROR */
 
 GstMessage *    gst_message_new_error           (GstObject * src, GError * error, const gchar * debug) G_GNUC_MALLOC;
+GstMessage *    gst_message_new_error_with_details (GstObject * src, GError * error, const gchar * debug, GstStructure * details) G_GNUC_MALLOC;
 void            gst_message_parse_error         (GstMessage *message, GError **gerror, gchar **debug);
+void            gst_message_parse_error_details (GstMessage *message, const GstStructure **structure);
 
 /* WARNING */
 GstMessage *    gst_message_new_warning         (GstObject * src, GError * error, const gchar * debug) G_GNUC_MALLOC;
+GstMessage *    gst_message_new_warning_with_details (GstObject * src, GError * error, const gchar * debug, GstStructure * details) G_GNUC_MALLOC;
 void            gst_message_parse_warning       (GstMessage *message, GError **gerror, gchar **debug);
+void            gst_message_parse_warning_details (GstMessage *message, const GstStructure **structure);
 
 /* INFO */
 GstMessage *    gst_message_new_info            (GstObject * src, GError * error, const gchar * debug) G_GNUC_MALLOC;
+GstMessage *    gst_message_new_info_with_details (GstObject * src, GError * error, const gchar * debug, GstStructure * details) G_GNUC_MALLOC;
 void            gst_message_parse_info          (GstMessage *message, GError **gerror, gchar **debug);
+void            gst_message_parse_info_details  (GstMessage *message, const GstStructure **structure);
 
 /* TAG */
 GstMessage *    gst_message_new_tag             (GstObject * src, GstTagList * tag_list) G_GNUC_MALLOC;
@@ -616,6 +626,12 @@ void            gst_message_streams_selected_add (GstMessage *message, GstStream
 void            gst_message_parse_streams_selected (GstMessage * message, GstStreamCollection **collection);
 guint           gst_message_streams_selected_get_size (GstMessage * message);
 GstStream      *gst_message_streams_selected_get_stream (GstMessage *message, guint idx);
+
+/* REDIRECT */
+GstMessage *    gst_message_new_redirect             (GstObject * src, const gchar * location, GstTagList * tag_list, const GstStructure * entry_struct) G_GNUC_MALLOC;
+void            gst_message_add_redirect_entry       (GstMessage * message, const gchar * location, GstTagList * tag_list, const GstStructure * entry_struct);
+void            gst_message_parse_redirect_entry     (GstMessage * message, gsize entry_index, const gchar ** location, GstTagList ** tag_list, const GstStructure ** entry_struct);
+gsize           gst_message_get_num_redirect_entries (GstMessage * message);
 
 #ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstMessage, gst_message_unref)

@@ -29,7 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GstInterpolationControlSource.top_of_page"></a>GstInterpolationControlSource</span></h2>
-<p>GstInterpolationControlSource</p>
+<p>GstInterpolationControlSource — interpolation control source</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -101,6 +101,12 @@
 </div>
 <div class="refsect1">
 <a name="GstInterpolationControlSource.description"></a><h2>Description</h2>
+<p><a class="link" href="GstInterpolationControlSource.html" title="GstInterpolationControlSource"><span class="type">GstInterpolationControlSource</span></a> is a <a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a>, that interpolates values between user-given
+control points. It supports several interpolation modes and property types.</p>
+<p>To use <a class="link" href="GstInterpolationControlSource.html" title="GstInterpolationControlSource"><span class="type">GstInterpolationControlSource</span></a> get a new instance by calling
+<a class="link" href="GstInterpolationControlSource.html#gst-interpolation-control-source-new" title="gst_interpolation_control_source_new ()"><code class="function">gst_interpolation_control_source_new()</code></a>, bind it to a <a href="/usr/share/gtk-doc/html/gobjectgobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> and set some
+control points by calling <a class="link" href="GstTimedValueControlSource.html#gst-timed-value-control-source-set" title="gst_timed_value_control_source_set ()"><code class="function">gst_timed_value_control_source_set()</code></a>.</p>
+<p>All functions are MT-safe.</p>
 </div>
 <div class="refsect1">
 <a name="GstInterpolationControlSource.functions_details"></a><h2>Functions</h2>
@@ -108,6 +114,12 @@
 <a name="gst-interpolation-control-source-new"></a><h3>gst_interpolation_control_source_new ()</h3>
 <pre class="programlisting"><a href="../html/GstControlSource.html#GstControlSource-struct"><span class="returnvalue">GstControlSource</span></a> *
 gst_interpolation_control_source_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>This returns a new, unbound <a class="link" href="GstInterpolationControlSource.html" title="GstInterpolationControlSource"><span class="type">GstInterpolationControlSource</span></a>.</p>
+<div class="refsect3">
+<a name="gst-interpolation-control-source-new.returns"></a><h4>Returns</h4>
+<p> a new, unbound <a class="link" href="GstInterpolationControlSource.html" title="GstInterpolationControlSource"><span class="type">GstInterpolationControlSource</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -115,10 +127,12 @@ gst_interpolation_control_source_new (<em class="parameter"><code><span class="t
 <div class="refsect2">
 <a name="GstInterpolationControlSource-struct"></a><h3>struct GstInterpolationControlSource</h3>
 <pre class="programlisting">struct GstInterpolationControlSource;</pre>
+<p>The instance structure of <a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a>.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstInterpolationMode"></a><h3>enum GstInterpolationMode</h3>
+<p>The various interpolation modes available.</p>
 <div class="refsect3">
 <a name="GstInterpolationMode.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -130,23 +144,34 @@ gst_interpolation_control_source_new (<em class="parameter"><code><span class="t
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-INTERPOLATION-MODE-NONE:CAPS"></a>GST_INTERPOLATION_MODE_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>steps-like interpolation, default</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-INTERPOLATION-MODE-LINEAR:CAPS"></a>GST_INTERPOLATION_MODE_LINEAR</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>linear interpolation</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-INTERPOLATION-MODE-CUBIC:CAPS"></a>GST_INTERPOLATION_MODE_CUBIC</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>cubic interpolation (natural), may overshoot
+  the min or max values set by the control point, but is more 'curvy'</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-INTERPOLATION-MODE-CUBIC-MONOTONIC:CAPS"></a>GST_INTERPOLATION_MODE_CUBIC_MONOTONIC</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>monotonic cubic interpolation, will not
+  produce any values outside of the min-max range set by the control points
+  (Since 1.8)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

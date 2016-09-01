@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-GstDevice.top_of_page"></a>GstDevice</span></h2>
-<p>GstDevice</p>
+<p>GstDevice — Object representing a device</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -132,6 +132,11 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstDevice.description"></a><h2>Description</h2>
+<p><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> are objects representing a device, they contain
+relevant metadata about the device, such as its class and the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>
+representing the media types it can produce or handle.</p>
+<p><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> are created by <a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a> objects which can be
+aggregated by <a class="link" href="gstreamer-GstDeviceMonitor.html#GstDeviceMonitor" title="struct GstDeviceMonitor"><span class="type">GstDeviceMonitor</span></a> objects.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstDevice.functions_details"></a><h2>Functions</h2>
@@ -140,24 +145,121 @@
 <pre class="programlisting"><a class="link" href="GstElement.html" title="GstElement"><span class="returnvalue">GstElement</span></a> *
 gst_device_create_element (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>,
                            <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Creates the element with all of the required parameters set to use
+this device.</p>
+<div class="refsect3">
+<a name="gst-device-create-element.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p> name of new element, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to automatically
+create a unique name. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-create-element.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> configured to use this device. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-device-get-caps"></a><h3>gst_device_get_caps ()</h3>
 <pre class="programlisting"><a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
 gst_device_get_caps (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>);</pre>
+<p>Getter for the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> that this device supports.</p>
+<div class="refsect3">
+<a name="gst-device-get-caps.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-get-caps.returns"></a><h4>Returns</h4>
+<p> The <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> supported by this device. Unref with
+<a class="link" href="GstCaps.html#gst-caps-unref" title="gst_caps_unref ()"><code class="function">gst_caps_unref()</code></a> when done.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-device-get-device-class"></a><h3>gst_device_get_device_class ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_device_get_device_class (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>);</pre>
+<p>Gets the "class" of a device. This is a "/" separated list of
+classes that represent this device. They are a subset of the
+classes of the <a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a> that produced this device.</p>
+<div class="refsect3">
+<a name="gst-device-get-device-class.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-get-device-class.returns"></a><h4>Returns</h4>
+<p> The device class. Free with <a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after use.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-device-get-display-name"></a><h3>gst_device_get_display_name ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_device_get_display_name (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>);</pre>
+<p>Gets the user-friendly name of the device.</p>
+<div class="refsect3">
+<a name="gst-device-get-display-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-get-display-name.returns"></a><h4>Returns</h4>
+<p> The device name. Free with <a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> after use.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -165,6 +267,37 @@ gst_device_get_display_name (<em class="parameter"><code><a class="link" href="g
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_device_has_classes (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>,
                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *classes</code></em>);</pre>
+<p>Check if <em class="parameter"><code>device</code></em>
+ matches all of the given classes</p>
+<div class="refsect3">
+<a name="gst-device-has-classes.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>classes</p></td>
+<td class="parameter_description"><p>a "/"-separated list of device classes to match, only match if
+all classes are matched</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-has-classes.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>device</code></em>
+matches.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -172,6 +305,37 @@ gst_device_has_classes (<em class="parameter"><code><a class="link" href="gstrea
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_device_has_classesv (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>,
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **classes</code></em>);</pre>
+<p>Check if <em class="parameter"><code>factory</code></em>
+ matches all of the given classes</p>
+<div class="refsect3">
+<a name="gst-device-has-classesv.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>classes</p></td>
+<td class="parameter_description"><p> a <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array of classes
+to match, only match if all classes are matched. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-has-classesv.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>device</code></em>
+matches.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -179,12 +343,67 @@ gst_device_has_classesv (<em class="parameter"><code><a class="link" href="gstre
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_device_reconfigure_element (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>,
                                 <em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>Tries to reconfigure an existing element to use the device. If this
+function fails, then one must destroy the element and create a new one
+using <a class="link" href="gstreamer-GstDevice.html#gst-device-create-element" title="gst_device_create_element ()"><code class="function">gst_device_create_element()</code></a>.</p>
+<p>Note: This should only be implemented for elements can change their
+device in the PLAYING state.</p>
+<div class="refsect3">
+<a name="gst-device-reconfigure-element.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-reconfigure-element.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the element could be reconfigured to use this device,
+<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-device-get-properties"></a><h3>gst_device_get_properties ()</h3>
 <pre class="programlisting"><a class="link" href="GstStructure.html" title="GstStructure"><span class="returnvalue">GstStructure</span></a> *
 gst_device_get_properties (<em class="parameter"><code><a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> *device</code></em>);</pre>
+<p>Gets the extra properties of a device.</p>
+<div class="refsect3">
+<a name="gst-device-get-properties.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-get-properties.returns"></a><h4>Returns</h4>
+<p> The extra properties or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there are none.
+Free with <a class="link" href="GstStructure.html#gst-structure-free" title="gst_structure_free ()"><code class="function">gst_structure_free()</code></a> after use.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -195,6 +414,23 @@ gst_device_get_properties (<em class="parameter"><code><a class="link" href="gst
   GstObject         parent;
 };
 </pre>
+<p>A device object.</p>
+<div class="refsect3">
+<a name="GstDevice.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> <em class="structfield"><code><a name="GstDevice.parent"></a>parent</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> strucuture.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -206,7 +442,38 @@ gst_device_get_properties (<em class="parameter"><code><a class="link" href="gst
   gboolean     (*reconfigure_element) (GstDevice * device, GstElement * element);
 };
 </pre>
+<p>The class structure for a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> object.</p>
+<div class="refsect3">
+<a name="GstDeviceClass.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstDeviceClass.create-element"></a>create_element</code></em> ()</p></td>
+<td class="struct_member_description"><p>Creates the fully configured element to access this device.
+Subclasses need to override this and return a new element.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstDeviceClass.reconfigure-element"></a>reconfigure_element</code></em> ()</p></td>
+<td class="struct_member_description"><p>This only needs to be implemented by subclasses if the
+element can be reconfigured to use a different device. See the documentation
+for <a class="link" href="gstreamer-GstDevice.html#gst-device-reconfigure-element" title="gst_device_reconfigure_element ()"><code class="function">gst_device_reconfigure_element()</code></a>.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
 </div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
+</div>
+</div>
+<div class="refsect1">
+<a name="gstreamer-GstDevice.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a></p>
 </div>
 </div>
 <div class="footer">

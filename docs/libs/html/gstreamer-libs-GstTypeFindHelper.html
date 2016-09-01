@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-libs-GstTypeFindHelper.top_of_page"></a>GstTypeFindHelper</span></h2>
-<p>GstTypeFindHelper</p>
+<p>GstTypeFindHelper — Utility functions for typefinding</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -97,6 +97,10 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstTypeFindHelper.description"></a><h2>Description</h2>
+<p>Utility functions for elements doing typefinding:
+<a class="link" href="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper" title="gst_type_find_helper ()"><code class="function">gst_type_find_helper()</code></a> does typefinding in pull mode, while
+<a class="link" href="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-for-buffer" title="gst_type_find_helper_for_buffer ()"><code class="function">gst_type_find_helper_for_buffer()</code></a> is useful for elements needing to do
+typefinding in push mode from a chain function.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstTypeFindHelper.functions_details"></a><h2>Functions</h2>
@@ -105,6 +109,36 @@
 <pre class="programlisting"><a href="../html/GstCaps.html#GstCaps-struct"><span class="returnvalue">GstCaps</span></a> *
 gst_type_find_helper (<em class="parameter"><code><a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> *src</code></em>,
                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a> size</code></em>);</pre>
+<p>Tries to find what type of data is flowing from the given source <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a>.</p>
+<p>Free-function: gst_caps_unref</p>
+<div class="refsect3">
+<a name="gst-type-find-helper.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>src</p></td>
+<td class="parameter_description"><p>A source <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>size</p></td>
+<td class="parameter_description"><p>The length in bytes</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-type-find-helper.returns"></a><h4>Returns</h4>
+<p> the <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> corresponding to the data
+stream.  Returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> matches the data stream. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -113,6 +147,51 @@ gst_type_find_helper (<em class="parameter"><code><a href="../html/GstPad.html#G
 gst_type_find_helper_for_buffer (<em class="parameter"><code><a href="../html/GstObject.html#GstObject-struct"><span class="type">GstObject</span></a> *obj</code></em>,
                                  <em class="parameter"><code><a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *buf</code></em>,
                                  <em class="parameter"><code><a href="../html/gstreamer-GstTypeFind.html#GstTypeFindProbability"><span class="type">GstTypeFindProbability</span></a> *prob</code></em>);</pre>
+<p>Tries to find what type of data is contained in the given <a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a>, the
+assumption being that the buffer represents the beginning of the stream or
+file.</p>
+<p>All available typefinders will be called on the data in order of rank. If
+a typefinding function returns a probability of <a href="../html/gstreamer-GstTypeFind.html#GST-TYPE-FIND-MAXIMUM:CAPS"><code class="literal">GST_TYPE_FIND_MAXIMUM</code></a>,
+typefinding is stopped immediately and the found caps will be returned
+right away. Otherwise, all available typefind functions will the tried,
+and the caps with the highest probability will be returned, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
+the content of the buffer could not be identified.</p>
+<p>Free-function: gst_caps_unref</p>
+<div class="refsect3">
+<a name="gst-type-find-helper-for-buffer.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>obj</p></td>
+<td class="parameter_description"><p> object doing the typefinding, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (used for logging). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>buf</p></td>
+<td class="parameter_description"><p> a <a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> with data to typefind. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>prob</p></td>
+<td class="parameter_description"><p> location to store the probability of the found
+caps, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-type-find-helper-for-buffer.returns"></a><h4>Returns</h4>
+<p> the <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> corresponding to the data,
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no type could be found. The caller should free the caps
+returned with <a href="../html/GstCaps.html#gst-caps-unref"><code class="function">gst_caps_unref()</code></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -120,6 +199,43 @@ gst_type_find_helper_for_buffer (<em class="parameter"><code><a href="../html/Gs
 <pre class="programlisting"><a href="../html/GstCaps.html#GstCaps-struct"><span class="returnvalue">GstCaps</span></a> *
 gst_type_find_helper_for_extension (<em class="parameter"><code><a href="../html/GstObject.html#GstObject-struct"><span class="type">GstObject</span></a> *obj</code></em>,
                                     <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extension</code></em>);</pre>
+<p>Tries to find the best <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> associated with <em class="parameter"><code>extension</code></em>
+.</p>
+<p>All available typefinders will be checked against the extension in order
+of rank. The caps of the first typefinder that can handle <em class="parameter"><code>extension</code></em>
+ will be
+returned.</p>
+<p>Free-function: gst_caps_unref</p>
+<div class="refsect3">
+<a name="gst-type-find-helper-for-extension.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>obj</p></td>
+<td class="parameter_description"><p> object doing the typefinding, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (used for logging). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>extension</p></td>
+<td class="parameter_description"><p>an extension</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-type-find-helper-for-extension.returns"></a><h4>Returns</h4>
+<p> the <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> corresponding to
+<em class="parameter"><code>extension</code></em>
+, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no type could be found. The caller should free
+the caps returned with <a href="../html/GstCaps.html#gst-caps-unref"><code class="function">gst_caps_unref()</code></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -129,6 +245,59 @@ gst_type_find_helper_for_data (<em class="parameter"><code><a href="../html/GstO
                                <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *data</code></em>,
                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
                                <em class="parameter"><code><a href="../html/gstreamer-GstTypeFind.html#GstTypeFindProbability"><span class="type">GstTypeFindProbability</span></a> *prob</code></em>);</pre>
+<p>Tries to find what type of data is contained in the given <em class="parameter"><code>data</code></em>
+, the
+assumption being that the data represents the beginning of the stream or
+file.</p>
+<p>All available typefinders will be called on the data in order of rank. If
+a typefinding function returns a probability of <a href="../html/gstreamer-GstTypeFind.html#GST-TYPE-FIND-MAXIMUM:CAPS"><code class="literal">GST_TYPE_FIND_MAXIMUM</code></a>,
+typefinding is stopped immediately and the found caps will be returned
+right away. Otherwise, all available typefind functions will the tried,
+and the caps with the highest probability will be returned, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
+the content of <em class="parameter"><code>data</code></em>
+ could not be identified.</p>
+<p>Free-function: gst_caps_unref</p>
+<div class="refsect3">
+<a name="gst-type-find-helper-for-data.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>obj</p></td>
+<td class="parameter_description"><p> object doing the typefinding, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> (used for logging). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p> a pointer with data to typefind. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>size</p></td>
+<td class="parameter_description"><p> the size of <em class="parameter"><code>data</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>prob</p></td>
+<td class="parameter_description"><p> location to store the probability of the found
+caps, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-type-find-helper-for-data.returns"></a><h4>Returns</h4>
+<p> the <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> corresponding to the data,
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no type could be found. The caller should free the caps
+returned with <a href="../html/GstCaps.html#gst-caps-unref"><code class="function">gst_caps_unref()</code></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -139,6 +308,56 @@ gst_type_find_helper_for_data (<em class="parameter"><code><a href="../html/GstO
                                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a> offset</code></em>,
                                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> length</code></em>,
                                       <em class="parameter"><code><a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> **buffer</code></em>);</pre>
+<p>This function will be called by <a class="link" href="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper-get-range" title="gst_type_find_helper_get_range ()"><code class="function">gst_type_find_helper_get_range()</code></a> when
+typefinding functions request to peek at the data of a stream at certain
+offsets. If this function returns GST_FLOW_OK, the result buffer will be
+stored in <em class="parameter"><code>buffer</code></em>
+. The  contents of <em class="parameter"><code>buffer</code></em>
+ is invalid for any other
+return value.</p>
+<p>This function is supposed to behave exactly like a <a href="../html/GstPad.html#GstPadGetRangeFunction"><span class="type">GstPadGetRangeFunction</span></a>.</p>
+<div class="refsect3">
+<a name="GstTypeFindHelperGetRangeFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>obj</p></td>
+<td class="parameter_description"><p>a <a href="../html/GstObject.html#GstObject-struct"><span class="type">GstObject</span></a> that will handle the getrange request</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>parent</p></td>
+<td class="parameter_description"><p> the parent of <em class="parameter"><code>obj</code></em>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>offset</p></td>
+<td class="parameter_description"><p>the offset of the range</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>length</p></td>
+<td class="parameter_description"><p>the length of the range</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a memory location to hold the result buffer</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstTypeFindHelperGetRangeFunction.returns"></a><h4>Returns</h4>
+<p> GST_FLOW_OK for success</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -150,6 +369,72 @@ gst_type_find_helper_get_range (<em class="parameter"><code><a href="../html/Gst
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a> size</code></em>,
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extension</code></em>,
                                 <em class="parameter"><code><a href="../html/gstreamer-GstTypeFind.html#GstTypeFindProbability"><span class="type">GstTypeFindProbability</span></a> *prob</code></em>);</pre>
+<p>Utility function to do pull-based typefinding. Unlike <a class="link" href="gstreamer-libs-GstTypeFindHelper.html#gst-type-find-helper" title="gst_type_find_helper ()"><code class="function">gst_type_find_helper()</code></a>
+however, this function will use the specified function <em class="parameter"><code>func</code></em>
+ to obtain the
+data needed by the typefind functions, rather than operating on a given
+source pad. This is useful mostly for elements like tag demuxers which
+strip off data at the beginning and/or end of a file and want to typefind
+the stripped data stream before adding their own source pad (the specified
+callback can then call the upstream peer pad with offsets adjusted for the
+tag size, for example).</p>
+<p>When <em class="parameter"><code>extension</code></em>
+ is not <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, this function will first try the typefind
+functions for the given extension, which might speed up the typefinding
+in many cases.</p>
+<p>Free-function: gst_caps_unref</p>
+<div class="refsect3">
+<a name="gst-type-find-helper-get-range.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>obj</p></td>
+<td class="parameter_description"><p>A <a href="../html/GstObject.html#GstObject-struct"><span class="type">GstObject</span></a> that will be passed as first argument to <em class="parameter"><code>func</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>parent</p></td>
+<td class="parameter_description"><p> the parent of <em class="parameter"><code>obj</code></em>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p> A generic <a class="link" href="gstreamer-libs-GstTypeFindHelper.html#GstTypeFindHelperGetRangeFunction" title="GstTypeFindHelperGetRangeFunction ()"><span class="type">GstTypeFindHelperGetRangeFunction</span></a> that will
+be used to access data at random offsets when doing the typefinding. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>size</p></td>
+<td class="parameter_description"><p>The length in bytes</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>extension</p></td>
+<td class="parameter_description"><p>extension of the media</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>prob</p></td>
+<td class="parameter_description"><p> location to store the probability of the found
+caps, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-type-find-helper-get-range.returns"></a><h4>Returns</h4>
+<p> the <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> corresponding to the data
+stream.  Returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> matches the data stream. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
 </div>
 </div>
 <div class="refsect1">

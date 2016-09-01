@@ -69,7 +69,6 @@ EXPORTS
 	_gst_tag_list_type DATA
 	_gst_toc_entry_type DATA
 	_gst_toc_type DATA
-	_gst_trace_mutex DATA
 	_gst_value_array_type DATA
 	_gst_value_list_type DATA
 	gst_allocation_params_copy
@@ -129,6 +128,7 @@ EXPORTS
 	gst_buffer_flags_get_type
 	gst_buffer_foreach_meta
 	gst_buffer_get_all_memory
+	gst_buffer_get_flags
 	gst_buffer_get_max_memory
 	gst_buffer_get_memory
 	gst_buffer_get_memory_range
@@ -137,6 +137,7 @@ EXPORTS
 	gst_buffer_get_sizes
 	gst_buffer_get_sizes_range
 	gst_buffer_get_type
+	gst_buffer_has_flags
 	gst_buffer_insert_memory
 	gst_buffer_is_all_memory_writable
 	gst_buffer_is_memory_range_writable
@@ -191,8 +192,10 @@ EXPORTS
 	gst_buffer_replace_memory_range
 	gst_buffer_resize
 	gst_buffer_resize_range
+	gst_buffer_set_flags
 	gst_buffer_set_size
 	gst_buffer_unmap
+	gst_buffer_unset_flags
 	gst_buffering_mode_get_type
 	gst_bus_add_signal_watch
 	gst_bus_add_signal_watch_full
@@ -538,6 +541,7 @@ EXPORTS
 	gst_element_lost_state
 	gst_element_make_from_uri
 	gst_element_message_full
+	gst_element_message_full_with_details
 	gst_element_no_more_pads
 	gst_element_post_message
 	gst_element_provide_clock
@@ -592,6 +596,7 @@ EXPORTS
 	gst_event_new_sink_message
 	gst_event_new_step
 	gst_event_new_stream_collection
+	gst_event_new_stream_group_done
 	gst_event_new_stream_start
 	gst_event_new_tag
 	gst_event_new_toc
@@ -613,6 +618,7 @@ EXPORTS
 	gst_event_parse_stream
 	gst_event_parse_stream_collection
 	gst_event_parse_stream_flags
+	gst_event_parse_stream_group_done
 	gst_event_parse_stream_start
 	gst_event_parse_tag
 	gst_event_parse_toc
@@ -683,6 +689,7 @@ EXPORTS
 	gst_library_error_get_type
 	gst_library_error_quark
 	gst_lock_flags_get_type
+	gst_make_element_message_details
 	gst_map_flags_get_type
 	gst_memory_alignment DATA
 	gst_memory_copy
@@ -698,6 +705,8 @@ EXPORTS
 	gst_memory_resize
 	gst_memory_share
 	gst_memory_unmap
+	gst_message_add_redirect_entry
+	gst_message_get_num_redirect_entries
 	gst_message_get_seqnum
 	gst_message_get_stream_status_object
 	gst_message_get_structure
@@ -716,14 +725,17 @@ EXPORTS
 	gst_message_new_element
 	gst_message_new_eos
 	gst_message_new_error
+	gst_message_new_error_with_details
 	gst_message_new_have_context
 	gst_message_new_info
+	gst_message_new_info_with_details
 	gst_message_new_latency
 	gst_message_new_need_context
 	gst_message_new_new_clock
 	gst_message_new_progress
 	gst_message_new_property_notify
 	gst_message_new_qos
+	gst_message_new_redirect
 	gst_message_new_request_state
 	gst_message_new_reset_time
 	gst_message_new_segment_done
@@ -740,6 +752,7 @@ EXPORTS
 	gst_message_new_tag
 	gst_message_new_toc
 	gst_message_new_warning
+	gst_message_new_warning_with_details
 	gst_message_parse_async_done
 	gst_message_parse_buffering
 	gst_message_parse_buffering_stats
@@ -749,15 +762,18 @@ EXPORTS
 	gst_message_parse_device_added
 	gst_message_parse_device_removed
 	gst_message_parse_error
+	gst_message_parse_error_details
 	gst_message_parse_group_id
 	gst_message_parse_have_context
 	gst_message_parse_info
+	gst_message_parse_info_details
 	gst_message_parse_new_clock
 	gst_message_parse_progress
 	gst_message_parse_property_notify
 	gst_message_parse_qos
 	gst_message_parse_qos_stats
 	gst_message_parse_qos_values
+	gst_message_parse_redirect_entry
 	gst_message_parse_request_state
 	gst_message_parse_reset_time
 	gst_message_parse_segment_done
@@ -772,6 +788,7 @@ EXPORTS
 	gst_message_parse_tag
 	gst_message_parse_toc
 	gst_message_parse_warning
+	gst_message_parse_warning_details
 	gst_message_set_buffering_stats
 	gst_message_set_group_id
 	gst_message_set_qos_stats

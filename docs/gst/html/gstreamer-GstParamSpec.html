@@ -27,7 +27,8 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-GstParamSpec.top_of_page"></a>GstParamSpec</span></h2>
-<p>GstParamSpec</p>
+<p>GstParamSpec — GParamSpec implementations specific
+to GStreamer</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -90,6 +91,7 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstParamSpec.description"></a><h2>Description</h2>
+<p>GParamSpec implementations specific to GStreamer.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstParamSpec.functions_details"></a><h2>Functions</h2>
@@ -106,6 +108,77 @@ gst_param_spec_fraction (<em class="parameter"><code>const <a href="/usr/share/g
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> default_num</code></em>,
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> default_denom</code></em>,
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-GParamSpec.html#GParamFlags"><span class="type">GParamFlags</span></a> flags</code></em>);</pre>
+<p>This function creates a fraction GParamSpec for use by objects/elements
+that want to expose properties of fraction type. This function is typically
+used in connection with <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#g-object-class-install-property"><code class="function">g_object_class_install_property()</code></a> in a GObjects's
+instance_init function.</p>
+<div class="refsect3">
+<a name="gst-param-spec-fraction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>canonical name of the property specified</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>nick</p></td>
+<td class="parameter_description"><p>nick name for the property specified</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>blurb</p></td>
+<td class="parameter_description"><p>description of the property specified</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>min_num</p></td>
+<td class="parameter_description"><p>minimum value (fraction numerator)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>min_denom</p></td>
+<td class="parameter_description"><p>minimum value (fraction denominator)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>max_num</p></td>
+<td class="parameter_description"><p>maximum value (fraction numerator)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>max_denom</p></td>
+<td class="parameter_description"><p>maximum value (fraction denominator)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>default_num</p></td>
+<td class="parameter_description"><p>default value (fraction numerator)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>default_denom</p></td>
+<td class="parameter_description"><p>default value (fraction denominator)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>flags for the property specified</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-param-spec-fraction.returns"></a><h4>Returns</h4>
+<p> a newly created parameter specification. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -114,30 +187,41 @@ gst_param_spec_fraction (<em class="parameter"><code>const <a href="/usr/share/g
 <a name="GST-PARAM-CONTROLLABLE:CAPS"></a><h3>GST_PARAM_CONTROLLABLE</h3>
 <pre class="programlisting">#define GST_PARAM_CONTROLLABLE (1 &lt;&lt; (G_PARAM_USER_SHIFT + 1))
 </pre>
+<p>Use this flag on GObject properties to signal they can make sense to be.
+controlled over time. This hint is used by the GstController.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-PARAM-USER-SHIFT:CAPS"></a><h3>GST_PARAM_USER_SHIFT</h3>
 <pre class="programlisting">#define GST_PARAM_USER_SHIFT (1 &lt;&lt; (G_PARAM_USER_SHIFT + 8))
 </pre>
+<p>Bits based on GST_PARAM_USER_SHIFT can be used by 3rd party applications.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-PARAM-MUTABLE-PAUSED:CAPS"></a><h3>GST_PARAM_MUTABLE_PAUSED</h3>
 <pre class="programlisting">#define GST_PARAM_MUTABLE_PAUSED  (1 &lt;&lt; (G_PARAM_USER_SHIFT + 3))
 </pre>
+<p>Use this flag on GObject properties of GstElements to indicate that
+they can be changed when the element is in the PAUSED or lower state.
+This flag implies GST_PARAM_MUTABLE_READY.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-PARAM-MUTABLE-PLAYING:CAPS"></a><h3>GST_PARAM_MUTABLE_PLAYING</h3>
 <pre class="programlisting">#define GST_PARAM_MUTABLE_PLAYING  (1 &lt;&lt; (G_PARAM_USER_SHIFT + 4))
 </pre>
+<p>Use this flag on GObject properties of GstElements to indicate that
+they can be changed when the element is in the PLAYING or lower state.
+This flag implies GST_PARAM_MUTABLE_PAUSED.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-PARAM-MUTABLE-READY:CAPS"></a><h3>GST_PARAM_MUTABLE_READY</h3>
 <pre class="programlisting">#define GST_PARAM_MUTABLE_READY  (1 &lt;&lt; (G_PARAM_USER_SHIFT + 2))
 </pre>
+<p>Use this flag on GObject properties of GstElements to indicate that
+they can be changed when the element is in the READY or lower state.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -150,6 +234,50 @@ gst_param_spec_fraction (<em class="parameter"><code>const <a href="/usr/share/g
   gint          def_num, def_den;
 };
 </pre>
+<p>A GParamSpec derived structure that contains the meta data for fractional
+properties.</p>
+<div class="refsect3">
+<a name="GstParamSpecFraction.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstParamSpecFraction.min-num"></a>min_num</code></em>;</p></td>
+<td class="struct_member_description"><p>minimal numerator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstParamSpecFraction.min-den"></a>min_den</code></em>;</p></td>
+<td class="struct_member_description"><p>minimal denominator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstParamSpecFraction.max-num"></a>max_num</code></em>;</p></td>
+<td class="struct_member_description"><p>maximal numerator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstParamSpecFraction.max-den"></a>max_den</code></em>;</p></td>
+<td class="struct_member_description"><p>maximal denominator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstParamSpecFraction.def-num"></a>def_num</code></em>;</p></td>
+<td class="struct_member_description"><p>default numerator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstParamSpecFraction.def-den"></a>def_den</code></em>;</p></td>
+<td class="struct_member_description"><p>default denominator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 </div>

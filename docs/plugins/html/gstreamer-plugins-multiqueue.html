@@ -103,6 +103,16 @@
 <td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--use-interleave" title="The “use-interleave” property">use-interleave</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--high-watermark" title="The “high-watermark” property">high-watermark</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--low-watermark" title="The “low-watermark” property">low-watermark</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -380,7 +390,7 @@ features:
 <p>Low threshold percent for buffering to start.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: [0,100]</p>
-<p>Default value: 10</p>
+<p>Default value: 1</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -442,6 +452,26 @@ emitted based on low-/high-percent thresholds.</p>
 <p>Adjust time limits based on input interleave.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMultiQueue--high-watermark"></a><h3>The <code class="literal">“high-watermark”</code> property</h3>
+<pre class="programlisting">  “high-watermark”           <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></pre>
+<p>High threshold watermark for buffering to finish.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 0.99</p>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMultiQueue--low-watermark"></a><h3>The <code class="literal">“low-watermark”</code> property</h3>
+<pre class="programlisting">  “low-watermark”            <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></pre>
+<p>Low threshold watermark for buffering to start.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 0.01</p>
+<p class="since">Since: 1.10</p>
 </div>
 </div>
 <div class="refsect1">

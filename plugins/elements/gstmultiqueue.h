@@ -65,9 +65,9 @@ struct _GstMultiQueue {
 
   GstDataQueueSize  max_size, extra_size;
   gboolean use_buffering;
-  gint low_percent, high_percent;
+  gint low_watermark, high_watermark;
   gboolean buffering;
-  gint percent;
+  gint buffering_percent;
 
   guint    counter;	/* incoming object counter, use atomic accesses */
   guint32  highid;	/* contains highest id of last outputted object */
@@ -79,7 +79,7 @@ struct _GstMultiQueue {
 
   gint numwaiting;	/* number of not-linked pads waiting */
 
-  gboolean percent_changed;
+  gboolean buffering_percent_changed;
   GMutex buffering_post_lock; /* assures only one posted at a time */
 
   GstClockTime interleave;	/* Input interleave */

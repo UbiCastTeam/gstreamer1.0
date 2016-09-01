@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.9.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.9.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 901, 0, 901)
+AS_LIBTOOL(GST, 902, 0, 902)
 
 dnl *** autotools stuff ****
 
@@ -101,10 +101,6 @@ if test "x$GST_DISABLE_OPTION_PARSING" = xyes; then
   AC_DEFINE(GST_DISABLE_OPTION_PARSING, 1,
     [Define if option parsing is disabled])
 fi
-AG_GST_CHECK_SUBSYSTEM_DISABLE(TRACE,[historic tracing subsystem])
-AM_CONDITIONAL(GST_DISABLE_TRACE, test "x$GST_DISABLE_TRACE" = "xyes")
-AG_GST_CHECK_SUBSYSTEM_DISABLE(ALLOC_TRACE,[allocation tracing])
-AM_CONDITIONAL(GST_DISABLE_ALLOC_TRACE, test "x$GST_DISABLE_ALLOC_TRACE" = "xyes")
 AG_GST_CHECK_SUBSYSTEM_DISABLE(REGISTRY,[plugin registry])
 AM_CONDITIONAL(GST_DISABLE_REGISTRY, test "x$GST_DISABLE_REGISTRY" = "xyes")
 dnl define a substitution to use in docs/gst/gstreamer.types
@@ -134,6 +130,11 @@ AG_GST_PKG_CONFIG_PATH
 AG_GST_SET_PACKAGE_RELEASE_DATETIME_WITH_NANO([$PACKAGE_VERSION_NANO],
   ["${srcdir}/gstreamer.doap"],
   [$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR.$PACKAGE_VERSION_MICRO])
+
+# We only use this when building with MSVC, which is only done with the
+# alternate Meson build system files
+GSTCONFIG_USE_MSVC_DECLSPEC=0
+AC_SUBST(GSTCONFIG_USE_MSVC_DECLSPEC)
 
 dnl check for bash completion
 AC_ARG_WITH([bash-completion-dir],
@@ -414,17 +415,6 @@ AG_GST_ARCH
 dnl substitution for win32/common/config.h
 HOST_CPU=$host_cpu
 AC_SUBST(HOST_CPU)
-
-dnl common/m4/gst-arch.m4
-dnl check for unaligned access
-AG_GST_UNALIGNED_ACCESS
-dnl create a configure variable for gst/gstconfig.h
-if test x${as_cv_unaligned_access} = xyes ; then
-  GST_HAVE_UNALIGNED_ACCESS_DEFINE="#define GST_HAVE_UNALIGNED_ACCESS 1"
-else
-  GST_HAVE_UNALIGNED_ACCESS_DEFINE="#define GST_HAVE_UNALIGNED_ACCESS 0"
-fi
-AC_SUBST(GST_HAVE_UNALIGNED_ACCESS_DEFINE)
 
 dnl check for platform specific settings
 AG_GST_PLATFORM
@@ -797,6 +787,20 @@ if test "x$BUILD_EXAMPLES" = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_GTK, test "x$HAVE_GTK" = "xyes")
 
+dnl libunwind is optionally used by the leaks tracer
+PKG_CHECK_MODULES(UNWIND, libunwind, HAVE_UNWIND=yes, HAVE_UNWIND=no)
+
+dnl Check for backtrace() from libc
+AC_CHECK_FUNC(backtrace, [
+  AC_CHECK_HEADERS([execinfo.h], [
+    AC_DEFINE(HAVE_BACKTRACE,1,[Have backtrace])
+  ], [], [])
+])
+
+if test "x$HAVE_UNWIND" = "xyes"; then
+  AC_DEFINE(HAVE_UNWIND, 1, [libunwind available])
+fi
+
 dnl building of unit test libraries
 AC_ARG_ENABLE(check,
   AS_HELP_STRING([--disable-check],[disable building unit test libraries]),
@@ -1095,8 +1099,6 @@ if test "x${GST_DISABLE_GST_DEBUG}" = "xno"; then enable_gst_debug="yes"; fi
 if test "x${GST_DISABLE_GST_TRACER_HOOKS}" = "xno"; then enable_gst_tracer_hooks="yes"; fi
 if test "x${GST_DISABLE_PARSE}" = "xno"; then enable_parse="yes"; fi
 if test "x${GST_DISABLE_OPTION_PARSING}" = "xno"; then enable_option_parsing="yes"; fi
-if test "x${GST_DISABLE_TRACE}" = "xno"; then enable_trace="yes"; fi
-if test "x${GST_DISABLE_ALLOC_TRACE}" = "xno"; then enable_alloc_trace="yes"; fi
 if test "x${GST_DISABLE_PLUGIN}" = "xno"; then enable_plugin="yes"; fi
 if test "x${GST_DISABLE_REGISTRY}" = "xno"; then enable_registry="yes"; fi
 
@@ -1117,13 +1119,12 @@ Configuration
 	Tracing subsystem hooks    : ${enable_gst_tracer_hooks}
 	Command-line parser        : ${enable_parse}
 	Option parsing in gst_init : ${enable_option_parsing}
-	Historic tracing subsystem : ${enable_trace}
-	Allocation tracing         : ${enable_alloc_trace}
 	Plugin registry            : ${enable_registry}
 	Plugin support	           : ${enable_plugin}
 	Static plugins             : ${enable_static_plugins}
 	Unit testing support       : ${BUILD_CHECK}
 	PTP clock support          : ${HAVE_PTP}
+	libunwind support          : ${HAVE_UNWIND}
 
 	Debug                      : ${USE_DEBUG}
 	Profiling                  : ${USE_PROFILING}

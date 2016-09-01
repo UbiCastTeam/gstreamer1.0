@@ -28,7 +28,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GstDeviceProviderFactory.top_of_page"></a>GstDeviceProviderFactory</span></h2>
-<p>GstDeviceProviderFactory</p>
+<p>GstDeviceProviderFactory — Create GstDeviceProviders from a factory</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -149,6 +149,13 @@
 </div>
 <div class="refsect1">
 <a name="GstDeviceProviderFactory.description"></a><h2>Description</h2>
+<p><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> is used to create instances of device providers. A
+GstDeviceProviderfactory can be added to a <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> as it is also a
+<a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>.</p>
+<p>Use the <a class="link" href="GstDeviceProviderFactory.html#gst-device-provider-factory-find" title="gst_device_provider_factory_find ()"><code class="function">gst_device_provider_factory_find()</code></a> and
+<a class="link" href="GstDeviceProviderFactory.html#gst-device-provider-factory-get" title="gst_device_provider_factory_get ()"><code class="function">gst_device_provider_factory_get()</code></a> functions to create device
+provider instances or use <a class="link" href="GstDeviceProviderFactory.html#gst-device-provider-factory-get-by-name" title="gst_device_provider_factory_get_by_name ()"><code class="function">gst_device_provider_factory_get_by_name()</code></a> as a
+convenient shortcut.</p>
 </div>
 <div class="refsect1">
 <a name="GstDeviceProviderFactory.functions_details"></a><h2>Functions</h2>
@@ -156,12 +163,60 @@
 <a name="gst-device-provider-factory-find"></a><h3>gst_device_provider_factory_find ()</h3>
 <pre class="programlisting"><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="returnvalue">GstDeviceProviderFactory</span></a> *
 gst_device_provider_factory_find (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Search for an device provider factory of the given name. Refs the returned
+device provider factory; caller is responsible for unreffing.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-find.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>name of factory to find</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-find.returns"></a><h4>Returns</h4>
+<p> <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> if
+found, <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> otherwise. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-device-provider-factory-get"></a><h3>gst_device_provider_factory_get ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="returnvalue">GstDeviceProvider</span></a> *
 gst_device_provider_factory_get (<em class="parameter"><code><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> *factory</code></em>);</pre>
+<p>Returns the device provider of the type defined by the given device
+providerfactory.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>factory</p></td>
+<td class="parameter_description"><p>factory to instantiate</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get.returns"></a><h4>Returns</h4>
+<p> the <a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+if the device provider couldn't be created. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -169,6 +224,30 @@ gst_device_provider_factory_get (<em class="parameter"><code><a class="link" hre
 <pre class="programlisting"><a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="returnvalue">GstDeviceProvider</span></a> *
 gst_device_provider_factory_get_by_name
                                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *factoryname</code></em>);</pre>
+<p>Returns the device provider of the type defined by the given device
+provider factory.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-by-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>factoryname</p></td>
+<td class="parameter_description"><p>a named factory to instantiate</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-by-name.returns"></a><h4>Returns</h4>
+<p> a <a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+if unable to create device provider. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -176,6 +255,29 @@ gst_device_provider_factory_get_by_name
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
 gst_device_provider_factory_get_device_provider_type
                                (<em class="parameter"><code><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> *factory</code></em>);</pre>
+<p>Get the <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GType"><span class="type">GType</span></a> for device providers managed by this factory. The type can
+only be retrieved if the device provider factory is loaded, which can be
+assured with <a class="link" href="GstPluginFeature.html#gst-plugin-feature-load" title="gst_plugin_feature_load ()"><code class="function">gst_plugin_feature_load()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-device-provider-type.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>factory</p></td>
+<td class="parameter_description"><p>factory to get managed <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GType"><span class="type">GType</span></a> from</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-device-provider-type.returns"></a><h4>Returns</h4>
+<p> the <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GType"><span class="type">GType</span></a> for device providers managed by this factory.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -184,6 +286,41 @@ gst_device_provider_factory_get_device_provider_type
 gst_device_provider_factory_get_metadata
                                (<em class="parameter"><code><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> *factory</code></em>,
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>);</pre>
+<p>Get the metadata on <em class="parameter"><code>factory</code></em>
+ with <em class="parameter"><code>key</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-metadata.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>factory</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>key</p></td>
+<td class="parameter_description"><p>a key</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-metadata.returns"></a><h4>Returns</h4>
+<p> the metadata with <em class="parameter"><code>key</code></em>
+on <em class="parameter"><code>factory</code></em>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+when there was no metadata with the given <em class="parameter"><code>key</code></em>
+. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -191,6 +328,30 @@ gst_device_provider_factory_get_metadata
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
 gst_device_provider_factory_get_metadata_keys
                                (<em class="parameter"><code><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> *factory</code></em>);</pre>
+<p>Get the available keys for the metadata on <em class="parameter"><code>factory</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-metadata-keys.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>factory</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-get-metadata-keys.returns"></a><h4>Returns</h4>
+<p>a <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated array of key strings, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there is no
+metadata. Free with <a href="/usr/share/gtk-doc/html/glibglib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a> when no longer needed. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -199,6 +360,39 @@ gst_device_provider_factory_get_metadata_keys
 gst_device_provider_factory_has_classes
                                (<em class="parameter"><code><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> *factory</code></em>,
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *classes</code></em>);</pre>
+<p>Check if <em class="parameter"><code>factory</code></em>
+ matches all of the given <em class="parameter"><code>classes</code></em>
+</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-has-classes.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>factory</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>classes</p></td>
+<td class="parameter_description"><p> a "/" separate list of classes to match, only match
+if all classes are matched. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-has-classes.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>factory</code></em>
+matches or if <em class="parameter"><code>classes</code></em>
+is <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -207,6 +401,37 @@ gst_device_provider_factory_has_classes
 gst_device_provider_factory_has_classesv
                                (<em class="parameter"><code><a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> *factory</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **classes</code></em>);</pre>
+<p>Check if <em class="parameter"><code>factory</code></em>
+ matches all of the given classes</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-has-classesv.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>factory</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>classes</p></td>
+<td class="parameter_description"><p> a <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array
+of classes to match, only match if all classes are matched. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-has-classesv.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>factory</code></em>
+matches.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -214,6 +439,31 @@ gst_device_provider_factory_has_classesv
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 gst_device_provider_factory_list_get_device_providers
                                (<em class="parameter"><code><a class="link" href="GstPluginFeature.html#GstRank" title="enum GstRank"><span class="type">GstRank</span></a> minrank</code></em>);</pre>
+<p>Get a list of factories with a rank greater or equal to <em class="parameter"><code>minrank</code></em>
+.
+The list of factories is returned by decreasing rank.</p>
+<div class="refsect3">
+<a name="gst-device-provider-factory-list-get-device-providers.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>minrank</p></td>
+<td class="parameter_description"><p>Minimum rank</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-factory-list-get-device-providers.returns"></a><h4>Returns</h4>
+<p>a <a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> device providers. Use
+<a class="link" href="GstPluginFeature.html#gst-plugin-feature-list-free" title="gst_plugin_feature_list_free ()"><code class="function">gst_plugin_feature_list_free()</code></a> after usage. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.DeviceProviderFactory]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -221,12 +471,20 @@ gst_device_provider_factory_list_get_device_providers
 <div class="refsect2">
 <a name="GstDeviceProviderFactory-struct"></a><h3>GstDeviceProviderFactory</h3>
 <pre class="programlisting">typedef struct _GstDeviceProviderFactory GstDeviceProviderFactory;</pre>
+<p>The opaque <a class="link" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory"><span class="type">GstDeviceProviderFactory</span></a> data structure.</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstDeviceProviderFactoryClass"></a><h3>GstDeviceProviderFactoryClass</h3>
 <pre class="programlisting">typedef struct _GstDeviceProviderFactoryClass GstDeviceProviderFactoryClass;</pre>
+<p>The opaque <a class="link" href="GstDeviceProviderFactory.html#GstDeviceProviderFactoryClass" title="GstDeviceProviderFactoryClass"><span class="type">GstDeviceProviderFactoryClass</span></a> data structure.</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.4">1.4</a></p>
 </div>
+</div>
+<div class="refsect1">
+<a name="GstDeviceProviderFactory.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a>, <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a>, <a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>, <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>.</p>
 </div>
 </div>
 <div class="footer">

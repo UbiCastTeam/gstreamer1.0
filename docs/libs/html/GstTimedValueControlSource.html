@@ -29,7 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="GstTimedValueControlSource.top_of_page"></a>GstTimedValueControlSource</span></h2>
-<p>GstTimedValueControlSource</p>
+<p>GstTimedValueControlSource — timed value control source base class</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -172,6 +172,10 @@
 </div>
 <div class="refsect1">
 <a name="GstTimedValueControlSource.description"></a><h2>Description</h2>
+<p>Base class for <a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a> that use time-stamped values.</p>
+<p>When overriding bind, chain up first to give this bind implementation a
+chance to setup things.</p>
+<p>All functions are MT-safe.</p>
 </div>
 <div class="refsect1">
 <a name="GstTimedValueControlSource.functions_details"></a><h2>Functions</h2>
@@ -181,6 +185,37 @@
 gst_timed_value_control_source_find_control_point_iter
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>,
                                 <em class="parameter"><code><a href="../html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);</pre>
+<p>Find last value before given timestamp in control point list.
+If all values in the control point list come after the given
+timestamp or no values exist, <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
+<p>For use in control source implementations.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-find-control-point-iter.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the control source to search in</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timestamp</p></td>
+<td class="parameter_description"><p>the search key</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-find-control-point-iter.returns"></a><h4>Returns</h4>
+<p> the found <a href="/usr/share/gtk-doc/html/glibglib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -189,6 +224,38 @@ gst_timed_value_control_source_find_control_point_iter
 gst_timed_value_control_source_set (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>,
                                     <em class="parameter"><code><a href="../html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
                                     <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> value</code></em>);</pre>
+<p>Set the value of given controller-handled property at a certain time.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-set.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timestamp</p></td>
+<td class="parameter_description"><p>the time the control-change is scheduled for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>value</p></td>
+<td class="parameter_description"><p>the control-value</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-set.returns"></a><h4>Returns</h4>
+<p> FALSE if the values couldn't be set, TRUE otherwise.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -197,6 +264,34 @@ gst_timed_value_control_source_set (<em class="parameter"><code><a class="link" 
 gst_timed_value_control_source_set_from_list
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>,
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *timedvalues</code></em>);</pre>
+<p>Sets multiple timed values at once.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-set-from-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timedvalues</p></td>
+<td class="parameter_description"><p> a list
+with <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> items. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstTimedValue]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-set-from-list.returns"></a><h4>Returns</h4>
+<p> FALSE if the values couldn't be set, TRUE otherwise.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -204,6 +299,29 @@ gst_timed_value_control_source_set_from_list
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 gst_timed_value_control_source_get_all
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
+<p>Returns a read-only copy of the list of <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> for the given property.
+Free the list after done with it.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-get-all.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> to get the list from</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-get-all.returns"></a><h4>Returns</h4>
+<p> a copy
+of the list, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the property isn't handled by the controller. </p>
+<p><span class="annotation">[<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstTimedValue]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -211,6 +329,34 @@ gst_timed_value_control_source_get_all
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_timed_value_control_source_unset (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>,
                                       <em class="parameter"><code><a href="../html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>);</pre>
+<p>Used to remove the value of given controller-handled property at a certain
+time.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-unset.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> object</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timestamp</p></td>
+<td class="parameter_description"><p>the time the control-change should be removed from</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-unset.returns"></a><h4>Returns</h4>
+<p> FALSE if the value couldn't be unset (i.e. not found, TRUE otherwise.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -218,6 +364,22 @@ gst_timed_value_control_source_unset (<em class="parameter"><code><a class="link
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_timed_value_control_source_unset_all
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
+<p>Used to remove all time-stamped values of given controller-handled property</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-unset-all.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> object</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -225,6 +387,26 @@ gst_timed_value_control_source_unset_all
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 gst_timed_value_control_source_get_count
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
+<p>Get the number of control points that are set.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-get-count.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> to get the number of values from</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-timed-value-control-source-get-count.returns"></a><h4>Returns</h4>
+<p> the number of control points that are set.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -232,6 +414,22 @@ gst_timed_value_control_source_get_count
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_timed_value_control_invalidate_cache
                                (<em class="parameter"><code><a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self</code></em>);</pre>
+<p>Reset the controlled value cache.</p>
+<div class="refsect3">
+<a name="gst-timed-value-control-invalidate-cache.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -239,6 +437,7 @@ gst_timed_value_control_invalidate_cache
 <div class="refsect2">
 <a name="GstTimedValueControlSource-struct"></a><h3>struct GstTimedValueControlSource</h3>
 <pre class="programlisting">struct GstTimedValueControlSource;</pre>
+<p>The instance structure of <a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a>.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -249,6 +448,31 @@ gst_timed_value_control_invalidate_cache
   gdouble value;
 };
 </pre>
+<p>An internal structure for value+time and various temporary
+values used for interpolation. This "inherits" from
+GstTimedValue.</p>
+<div class="refsect3">
+<a name="GstControlPoint.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a href="../html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> <em class="structfield"><code><a name="GstControlPoint.timestamp"></a>timestamp</code></em>;</p></td>
+<td class="struct_member_description"><p>timestamp of the value change</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> <em class="structfield"><code><a name="GstControlPoint.value"></a>value</code></em>;</p></td>
+<td class="struct_member_description"><p>the new value</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -256,28 +480,121 @@ gst_timed_value_control_invalidate_cache
 <div class="refsect2">
 <a name="GstTimedValueControlSource-value-added"></a><h3>The <code class="literal">“value-added”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *gsttimedvaluecontrolsource,
-               <a class="link" href="GstTimedValueControlSource.html#GstControlPoint" title="struct GstControlPoint"><span class="type">GstControlPoint</span></a>            *arg1,
+user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self,
+               <a class="link" href="GstTimedValueControlSource.html#GstControlPoint" title="struct GstControlPoint"><span class="type">GstControlPoint</span></a>            *timed_value,
                <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                    user_data)</pre>
+<p>Emited right after the new value has been added to <em class="parameter"><code>self</code></em>
+</p>
+<div class="refsect3">
+<a name="GstTimedValueControlSource-value-added.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> into which a <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> has been
+added</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timed_value</p></td>
+<td class="parameter_description"><p>The newly added <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstTimedValueControlSource-value-changed"></a><h3>The <code class="literal">“value-changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *gsttimedvaluecontrolsource,
-               <a class="link" href="GstTimedValueControlSource.html#GstControlPoint" title="struct GstControlPoint"><span class="type">GstControlPoint</span></a>            *arg1,
+user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self,
+               <a class="link" href="GstTimedValueControlSource.html#GstControlPoint" title="struct GstControlPoint"><span class="type">GstControlPoint</span></a>            *timed_value,
                <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                    user_data)</pre>
+<p>Emited right after the new value has been set on <em class="parameter"><code>timed_signals</code></em>
+</p>
+<div class="refsect3">
+<a name="GstTimedValueControlSource-value-changed.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> on which a <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> has changed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timed_value</p></td>
+<td class="parameter_description"><p>The <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> where the value changed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstTimedValueControlSource-value-removed"></a><h3>The <code class="literal">“value-removed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *gsttimedvaluecontrolsource,
-               <a class="link" href="GstTimedValueControlSource.html#GstControlPoint" title="struct GstControlPoint"><span class="type">GstControlPoint</span></a>            *arg1,
+user_function (<a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> *self,
+               <a class="link" href="GstTimedValueControlSource.html#GstControlPoint" title="struct GstControlPoint"><span class="type">GstControlPoint</span></a>            *timed_value,
                <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                    user_data)</pre>
+<p>Emited when <em class="parameter"><code>timed_value</code></em>
+ is removed from <em class="parameter"><code>self</code></em>
+</p>
+<div class="refsect3">
+<a name="GstTimedValueControlSource-value-removed.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="GstTimedValueControlSource.html" title="GstTimedValueControlSource"><span class="type">GstTimedValueControlSource</span></a> from which a <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a> has been
+removed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timed_value</p></td>
+<td class="parameter_description"><p>The removed <a href="../html/GstControlSource.html#GstTimedValue"><span class="type">GstTimedValue</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 </div>

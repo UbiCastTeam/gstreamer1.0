@@ -187,10 +187,24 @@ gst_element_get_type (void)
 }
 
 static void
+gst_element_setup_thread_pool (void)
+{
+  GError *err = NULL;
+
+  GST_DEBUG ("creating element thread pool");
+  gst_element_pool =
+      g_thread_pool_new ((GFunc) gst_element_call_async_func, NULL, -1, FALSE,
+      &err);
+  if (err != NULL) {
+    g_critical ("could not alloc threadpool %s", err->message);
+    g_clear_error (&err);
+  }
+}
+
+static void
 gst_element_class_init (GstElementClass * klass)
 {
   GObjectClass *gobject_class;
-  GError *err = NULL;
 
   gobject_class = (GObjectClass *) klass;
 
@@ -252,14 +266,7 @@ gst_element_class_init (GstElementClass * klass)
 
   klass->elementfactory = NULL;
 
-  GST_DEBUG ("creating element thread pool");
-  gst_element_pool =
-      g_thread_pool_new ((GFunc) gst_element_call_async_func, NULL, -1, FALSE,
-      &err);
-  if (err != NULL) {
-    g_critical ("could not alloc threadpool %s", err->message);
-    g_clear_error (&err);
-  }
+  gst_element_setup_thread_pool ();
 }
 
 static void
@@ -1812,7 +1819,7 @@ _gst_element_error_printf (const gchar * format, ...)
 }
 
 /**
- * gst_element_message_full:
+ * gst_element_message_full_with_details:
  * @element:  a #GstElement to send message from
  * @type:     the #GstMessageType
  * @domain:   the GStreamer GError domain this message belongs to
@@ -1826,18 +1833,20 @@ _gst_element_error_printf (const gchar * format, ...)
  * @file:     the source code file where the error was generated
  * @function: the source code function where the error was generated
  * @line:     the source code line where the error was generated
+ * @structure:(transfer full): optional details structure
  *
  * Post an error, warning or info message on the bus from inside an element.
  *
  * @type must be of #GST_MESSAGE_ERROR, #GST_MESSAGE_WARNING or
  * #GST_MESSAGE_INFO.
  *
- * MT safe.
+ * Since: 1.10
  */
-void gst_element_message_full
+void gst_element_message_full_with_details
     (GstElement * element, GstMessageType type,
     GQuark domain, gint code, gchar * text,
-    gchar * debug, const gchar * file, const gchar * function, gint line)
+    gchar * debug, const gchar * file, const gchar * function, gint line,
+    GstStructure * structure)
 {
   GError *gerror = NULL;
   gchar *name;
@@ -1884,20 +1893,24 @@ void gst_element_message_full
   switch (type) {
     case GST_MESSAGE_ERROR:
       message =
-          gst_message_new_error (GST_OBJECT_CAST (element), gerror, sent_debug);
+          gst_message_new_error_with_details (GST_OBJECT_CAST (element), gerror,
+          sent_debug, structure);
       break;
     case GST_MESSAGE_WARNING:
-      message = gst_message_new_warning (GST_OBJECT_CAST (element), gerror,
-          sent_debug);
+      message =
+          gst_message_new_warning_with_details (GST_OBJECT_CAST (element),
+          gerror, sent_debug, structure);
       break;
     case GST_MESSAGE_INFO:
-      message = gst_message_new_info (GST_OBJECT_CAST (element), gerror,
-          sent_debug);
+      message =
+          gst_message_new_info_with_details (GST_OBJECT_CAST (element), gerror,
+          sent_debug, structure);
       break;
     default:
       g_assert_not_reached ();
       break;
   }
+
   gst_element_post_message (element, message);
 
   GST_CAT_INFO_OBJECT (GST_CAT_ERROR_SYSTEM, element, "posted %s message: %s",
@@ -1907,6 +1920,38 @@ void gst_element_message_full
   g_error_free (gerror);
   g_free (sent_debug);
   g_free (sent_text);
+}
+
+/**
+ * gst_element_message_full:
+ * @element:  a #GstElement to send message from
+ * @type:     the #GstMessageType
+ * @domain:   the GStreamer GError domain this message belongs to
+ * @code:     the GError code belonging to the domain
+ * @text:     (allow-none) (transfer full): an allocated text string to be used
+ *            as a replacement for the default message connected to code,
+ *            or %NULL
+ * @debug:    (allow-none) (transfer full): an allocated debug message to be
+ *            used as a replacement for the default debugging information,
+ *            or %NULL
+ * @file:     the source code file where the error was generated
+ * @function: the source code function where the error was generated
+ * @line:     the source code line where the error was generated
+ *
+ * Post an error, warning or info message on the bus from inside an element.
+ *
+ * @type must be of #GST_MESSAGE_ERROR, #GST_MESSAGE_WARNING or
+ * #GST_MESSAGE_INFO.
+ *
+ * MT safe.
+ */
+void gst_element_message_full
+    (GstElement * element, GstMessageType type,
+    GQuark domain, gint code, gchar * text,
+    gchar * debug, const gchar * file, const gchar * function, gint line)
+{
+  gst_element_message_full_with_details (element, type, domain, code, text,
+      debug, file, function, line, NULL);
 }
 
 /**
@@ -3422,4 +3467,29 @@ gst_element_call_async (GstElement * element, GstElementCallAsyncFunc func,
   async_data->destroy_notify = destroy_notify;
 
   g_thread_pool_push (gst_element_pool, async_data, NULL);
+}
+
+void
+_priv_gst_element_cleanup (void)
+{
+  if (gst_element_pool) {
+    g_thread_pool_free (gst_element_pool, FALSE, TRUE);
+    gst_element_setup_thread_pool ();
+  }
+}
+
+GstStructure *
+gst_make_element_message_details (const char *name, ...)
+{
+  GstStructure *structure;
+  va_list varargs;
+
+  if (name == NULL)
+    return NULL;
+
+  va_start (varargs, name);
+  structure = gst_structure_new_valist ("details", name, varargs);
+  va_end (varargs);
+
+  return structure;
 }

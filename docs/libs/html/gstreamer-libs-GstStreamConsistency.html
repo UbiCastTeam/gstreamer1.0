@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-libs-GstStreamConsistency.top_of_page"></a>GstStreamConsistency</span></h2>
-<p>GstStreamConsistency</p>
+<p>GstStreamConsistency — Data flow consistency checker for GStreamer unit tests.</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -94,6 +94,8 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstStreamConsistency.description"></a><h2>Description</h2>
+<p>These macros and functions are for internal use of the unit tests found
+inside the 'check' directories of various GStreamer packages.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstStreamConsistency.functions_details"></a><h2>Functions</h2>
@@ -101,18 +103,73 @@
 <a name="gst-consistency-checker-new"></a><h3>gst_consistency_checker_new ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="returnvalue">GstStreamConsistency</span></a> *
 gst_consistency_checker_new (<em class="parameter"><code><a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Sets up a data probe on the given pad which will raise assertions if the
+data flow is inconsistent.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="gst-consistency-checker-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>The <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> on which the dataflow will be checked.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-consistency-checker-new.returns"></a><h4>Returns</h4>
+<p> A <a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> structure used to track data flow.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-consistency-checker-reset"></a><h3>gst_consistency_checker_reset ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_consistency_checker_reset (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> *consist</code></em>);</pre>
+<p>Reset the stream checker's internal variables.</p>
+<div class="refsect3">
+<a name="gst-consistency-checker-reset.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>consist</p></td>
+<td class="parameter_description"><p>The <a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> to reset.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-consistency-checker-free"></a><h3>gst_consistency_checker_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_consistency_checker_free (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> *consist</code></em>);</pre>
+<p>Frees the allocated data and probes associated with <em class="parameter"><code>consist</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-consistency-checker-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>consist</p></td>
+<td class="parameter_description"><p>The <a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> to free.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -120,6 +177,34 @@ gst_consistency_checker_free (<em class="parameter"><code><a class="link" href="
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_consistency_checker_add_pad (<em class="parameter"><code><a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> *consist</code></em>,
                                  <em class="parameter"><code><a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Sets up a data probe on the given pad which will raise assertions if the
+data flow is inconsistent.</p>
+<div class="refsect3">
+<a name="gst-consistency-checker-add-pad.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>consist</p></td>
+<td class="parameter_description"><p>The <a class="link" href="gstreamer-libs-GstStreamConsistency.html#GstStreamConsistency" title="GstStreamConsistency"><span class="type">GstStreamConsistency</span></a> handle</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>The <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> on which the dataflow will be checked.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-consistency-checker-add-pad.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the pad was added</p>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -127,6 +212,7 @@ gst_consistency_checker_add_pad (<em class="parameter"><code><a class="link" hre
 <div class="refsect2">
 <a name="GstStreamConsistency"></a><h3>GstStreamConsistency</h3>
 <pre class="programlisting">typedef struct _GstStreamConsistency GstStreamConsistency;</pre>
+<p>Opaque consistency checker handle.</p>
 </div>
 </div>
 </div>
