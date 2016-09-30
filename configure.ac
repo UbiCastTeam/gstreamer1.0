@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.9.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.9.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 902, 0, 902)
+AS_LIBTOOL(GST, 990, 0, 990)
 
 dnl *** autotools stuff ****
 
@@ -133,8 +133,8 @@ AG_GST_SET_PACKAGE_RELEASE_DATETIME_WITH_NANO([$PACKAGE_VERSION_NANO],
 
 # We only use this when building with MSVC, which is only done with the
 # alternate Meson build system files
-GSTCONFIG_USE_MSVC_DECLSPEC=0
-AC_SUBST(GSTCONFIG_USE_MSVC_DECLSPEC)
+GSTCONFIG_BUILT_WITH_MSVC=0
+AC_SUBST(GSTCONFIG_BUILT_WITH_MSVC)
 
 dnl check for bash completion
 AC_ARG_WITH([bash-completion-dir],
