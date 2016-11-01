@@ -217,10 +217,10 @@ gst_aggregator_class_init (GstAggregatorClass * klass)
 
   gobject_class->dispose = gst_aggregator_dispose;
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&gst_aggregator_src_template));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&gst_aggregator_sink_template));
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &gst_aggregator_src_template);
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &gst_aggregator_sink_template);
   gst_element_class_set_static_metadata (gstelement_class, "Aggregator",
       "Testing", "Combine N buffers", "Stefan Sauer <ensonic@users.sf.net>");
 
@@ -423,9 +423,14 @@ setup_buffer_cb (void)
 static void
 teardown (void)
 {
+  gst_object_unref (srcpad1);
+  gst_object_unref (srcpad2);
   gst_object_unref (sinkpad1);
   gst_object_unref (sinkpad2);
   gst_object_unref (collect);
+  srcpad1 = srcpad2 = NULL;
+  sinkpad1 = sinkpad2 = NULL;
+  collect = NULL;
 }
 
 GST_START_TEST (test_pad_add_remove)
@@ -857,6 +862,9 @@ flush_setup (void)
   g_atomic_int_set (&flush_start_events, 0);
   g_atomic_int_set (&flush_stop_events, 0);
   gst_element_set_state (agg, GST_STATE_PLAYING);
+  outbuf1 = NULL;
+  outbuf2 = NULL;
+  collected = FALSE;
 }
 
 static void
@@ -869,6 +877,10 @@ flush_teardown (void)
   gst_object_unref (srcpad2);
   g_free (data1);
   g_free (data2);
+  agg = NULL;
+  agg_srcpad = NULL;
+  srcpad1 = srcpad2 = NULL;
+  data1 = data2 = NULL;
 }
 
 GST_START_TEST (test_flushing_seek_failure)
@@ -1071,6 +1083,7 @@ gst_collect_pads_suite (void)
   suite_add_tcase (suite, general);
   tcase_add_checked_fixture (general, setup, teardown);
   tcase_add_test (general, test_pad_add_remove);
+
   tcase_add_test (general, test_collect);
   tcase_add_test (general, test_collect_eos);
   tcase_add_test (general, test_collect_twice);

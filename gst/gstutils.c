@@ -1389,20 +1389,20 @@ ghost_up (GstElement * e, GstPad * pad)
   gpad = gst_ghost_pad_new (name, pad);
   g_free (name);
 
-  GST_STATE_LOCK (e);
-  gst_element_get_state (e, &current, &next, 0);
+  GST_STATE_LOCK (parent);
+  gst_element_get_state (GST_ELEMENT (parent), &current, &next, 0);
 
-  if (current > GST_STATE_READY || next == GST_STATE_PAUSED)
+  if (current > GST_STATE_READY || next >= GST_STATE_PAUSED)
     gst_pad_set_active (gpad, TRUE);
 
   if (!gst_element_add_pad ((GstElement *) parent, gpad)) {
     g_warning ("Pad named %s already exists in element %s\n",
         GST_OBJECT_NAME (gpad), GST_OBJECT_NAME (parent));
     gst_object_unref ((GstObject *) gpad);
-    GST_STATE_UNLOCK (e);
+    GST_STATE_UNLOCK (parent);
     return NULL;
   }
-  GST_STATE_UNLOCK (e);
+  GST_STATE_UNLOCK (parent);
 
   return gpad;
 }
@@ -1518,6 +1518,65 @@ pad_link_maybe_ghosting (GstPad * src, GstPad * sink, GstPadLinkCheck flags)
   g_slist_free (pads_created);
 
   return ret;
+}
+
+/**
+ * gst_pad_link_maybe_ghosting_full:
+ * @src: a #GstPad
+ * @sink: a #GstPad
+ * @flags: some #GstPadLinkCheck flags
+ *
+ * Links @src to @sink, creating any #GstGhostPad's in between as necessary.
+ *
+ * This is a convenience function to save having to create and add intermediate
+ * #GstGhostPad's as required for linking across #GstBin boundaries.
+ *
+ * If @src or @sink pads don't have parent elements or do not share a common
+ * ancestor, the link will fail.
+ *
+ * Calling gst_pad_link_maybe_ghosting_full() with
+ * @flags == %GST_PAD_LINK_CHECK_DEFAULT is the recommended way of linking
+ * pads with safety checks applied.
+ *
+ * Returns: whether the link succeeded.
+ *
+ * Since: 1.10
+ */
+gboolean
+gst_pad_link_maybe_ghosting_full (GstPad * src, GstPad * sink,
+    GstPadLinkCheck flags)
+{
+  g_return_val_if_fail (GST_IS_PAD (src), FALSE);
+  g_return_val_if_fail (GST_IS_PAD (sink), FALSE);
+
+  return pad_link_maybe_ghosting (src, sink, flags);
+}
+
+/**
+ * gst_pad_link_maybe_ghosting:
+ * @src: a #GstPad
+ * @sink: a #GstPad
+ *
+ * Links @src to @sink, creating any #GstGhostPad's in between as necessary.
+ *
+ * This is a convenience function to save having to create and add intermediate
+ * #GstGhostPad's as required for linking across #GstBin boundaries.
+ *
+ * If @src or @sink pads don't have parent elements or do not share a common
+ * ancestor, the link will fail.
+ *
+ * Returns: whether the link succeeded.
+ *
+ * Since: 1.10
+ */
+gboolean
+gst_pad_link_maybe_ghosting (GstPad * src, GstPad * sink)
+{
+  g_return_val_if_fail (GST_IS_PAD (src), FALSE);
+  g_return_val_if_fail (GST_IS_PAD (sink), FALSE);
+
+  return gst_pad_link_maybe_ghosting_full (src, sink,
+      GST_PAD_LINK_CHECK_DEFAULT);
 }
 
 static void
@@ -2356,7 +2415,7 @@ gst_element_seek_simple (GstElement * element, GstFormat format,
   g_return_val_if_fail (seek_pos >= 0, FALSE);
 
   return gst_element_seek (element, 1.0, format, seek_flags,
-      GST_SEEK_TYPE_SET, seek_pos, GST_SEEK_TYPE_NONE, 0);
+      GST_SEEK_TYPE_SET, seek_pos, GST_SEEK_TYPE_SET, GST_CLOCK_TIME_NONE);
 }
 
 /**
@@ -3932,6 +3991,41 @@ gst_pad_get_stream_id (GstPad * pad)
   }
 
   return ret;
+}
+
+/**
+ * gst_pad_get_stream:
+ * @pad: A source #GstPad
+ *
+ * Returns the current #GstStream for the @pad, or %NULL if none has been
+ * set yet, i.e. the pad has not received a stream-start event yet.
+ *
+ * This is a convenience wrapper around gst_pad_get_sticky_event() and
+ * gst_event_parse_stream().
+ *
+ * Returns: (nullable) (transfer full): the current #GstStream for @pad, or %NULL.
+ *     unref the returned stream when no longer needed.
+ *
+ * Since: 1.10
+ */
+GstStream *
+gst_pad_get_stream (GstPad * pad)
+{
+  GstStream *stream = NULL;
+  GstEvent *event;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), NULL);
+
+  event = gst_pad_get_sticky_event (pad, GST_EVENT_STREAM_START, 0);
+  if (event != NULL) {
+    gst_event_parse_stream (event, &stream);
+    gst_event_unref (event);
+    GST_LOG_OBJECT (pad, "pad has stream object %p", stream);
+  } else {
+    GST_DEBUG_OBJECT (pad, "pad has not received a stream-start event yet");
+  }
+
+  return stream;
 }
 
 /**

@@ -39,9 +39,7 @@ endif
 # Do not run the abi test in case any option which causes the API to change has
 # been used
 if !GST_DISABLE_REGISTRY
-if !GST_DISABLE_TRACE
 ABI_CHECKS = gst/gstabi
-endif
 endif
 
 if !GST_DISABLE_GST_DEBUG
@@ -137,6 +135,7 @@ check_PROGRAMS =				\
 	gst/gstsegment				\
 	gst/gstsystemclock			\
 	gst/gstclock				\
+	gst/gststream				\
 	gst/gststructure			\
 	gst/gsttag				\
 	gst/gsttracerrecord		 		\
@@ -195,7 +194,7 @@ noinst_HEADERS = \
 EXTRA_DIST = \
 	libs/test_transform.c
 
-AM_CFLAGS = $(GST_OBJ_CFLAGS) -UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS \
+AM_CFLAGS = $(PTHREAD_CFLAGS) $(GST_OBJ_CFLAGS) -UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_STATE_IGNORE_ELEMENTS\""
 AM_CXXFLAGS = $(GST_OBJ_CXXFLAGS) -UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_STATE_IGNORE_ELEMENTS\""
@@ -234,7 +233,7 @@ libs_gstnettimeprovider_LDADD = \
 # these just need valgrind fixing, period
 VALGRIND_TO_FIX = \
 	gst/gstinfo \
-	pipelines/parse-launch \
+	gst/gsttracerrecord \
 	tools/gstinspect
 
 VALGRIND_IGNORE = \

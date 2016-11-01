@@ -101,11 +101,6 @@
 #include "gstparamspecs.h"
 #include "gstutils.h"
 
-#ifndef GST_DISABLE_TRACE
-#include "gsttrace.h"
-static GstAllocTrace *_gst_object_trace;
-#endif
-
 #define DEBUG_REFCOUNT
 
 /* Object signals and args */
@@ -154,14 +149,17 @@ static GParamSpec *properties[PROP_LAST];
 G_DEFINE_ABSTRACT_TYPE (GstObject, gst_object, G_TYPE_INITIALLY_UNOWNED);
 
 static void
+gst_object_constructed (GObject * object)
+{
+  GST_TRACER_OBJECT_CREATED (GST_OBJECT_CAST (object));
+
+  ((GObjectClass *) gst_object_parent_class)->constructed (object);
+}
+
+static void
 gst_object_class_init (GstObjectClass * klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-
-#ifndef GST_DISABLE_TRACE
-  _gst_object_trace =
-      _gst_alloc_trace_register (g_type_name (GST_TYPE_OBJECT), -2);
-#endif
 
   gobject_class->set_property = gst_object_set_property;
   gobject_class->get_property = gst_object_get_property;
@@ -208,6 +206,7 @@ gst_object_class_init (GstObjectClass * klass)
   gobject_class->dispatch_properties_changed
       = GST_DEBUG_FUNCPTR (gst_object_dispatch_properties_changed);
 
+  gobject_class->constructed = gst_object_constructed;
   gobject_class->dispose = gst_object_dispose;
   gobject_class->finalize = gst_object_finalize;
 }
@@ -219,10 +218,6 @@ gst_object_init (GstObject * object)
   object->parent = NULL;
   object->name = NULL;
   GST_CAT_TRACE_OBJECT (GST_CAT_REFCOUNTING, object, "%p new", object);
-
-#ifndef GST_DISABLE_TRACE
-  _gst_alloc_trace_new (_gst_object_trace, object);
-#endif
 
   object->flags = 0;
 
@@ -366,7 +361,7 @@ gst_object_dispose (GObject * object)
   GstObject *self = (GstObject *) object;
   GstObject *parent;
 
-  GST_CAT_TRACE_OBJECT (GST_CAT_REFCOUNTING, object, "dispose");
+  GST_CAT_TRACE_OBJECT (GST_CAT_REFCOUNTING, object, "%p dispose", object);
 
   GST_OBJECT_LOCK (object);
   if ((parent = GST_OBJECT_PARENT (object)))
@@ -408,16 +403,14 @@ gst_object_finalize (GObject * object)
 {
   GstObject *gstobject = GST_OBJECT_CAST (object);
 
-  GST_CAT_TRACE_OBJECT (GST_CAT_REFCOUNTING, object, "finalize");
+  GST_CAT_TRACE_OBJECT (GST_CAT_REFCOUNTING, object, "%p finalize", object);
 
   g_signal_handlers_destroy (object);
 
   g_free (gstobject->name);
   g_mutex_clear (&gstobject->lock);
 
-#ifndef GST_DISABLE_TRACE
-  _gst_alloc_trace_free (_gst_object_trace, object);
-#endif
+  GST_TRACER_OBJECT_DESTROYED (gstobject);
 
   ((GObjectClass *) gst_object_parent_class)->finalize (object);
 }
@@ -623,10 +616,8 @@ gst_object_set_name (GstObject * object, const gchar * name)
     GST_OBJECT_UNLOCK (object);
     result = gst_object_set_name_default (object);
   }
-  /* FIXME-0.11: this misses a g_object_notify (object, "name"); unless called
-   * from gst_object_set_property.
-   * Ideally remove such custom setters (or make it static).
-   */
+
+  g_object_notify (G_OBJECT (object), "name");
   return result;
 
   /* error */

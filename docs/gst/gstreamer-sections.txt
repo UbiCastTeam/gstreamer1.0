@@ -36,8 +36,6 @@ GST_QUARK
 GstQuarkId
 GstPluginLoader
 GstPluginLoaderFuncs
-GstAllocTrace
-GstAllocTraceFlags
 </SECTION>
 
 <SECTION>
@@ -259,6 +257,11 @@ gst_buffer_foreach_meta
 GstParentBufferMeta
 gst_buffer_add_parent_buffer_meta
 gst_buffer_get_parent_buffer_meta
+
+gst_buffer_get_flags
+gst_buffer_set_flags
+gst_buffer_unset_flags
+gst_buffer_has_flags
 
 <SUBSECTION Standard>
 GstBufferClass
@@ -698,8 +701,6 @@ gst_adapter_prev_timestamp
 <TITLE>GstConfig</TITLE>
 GST_DISABLE_GST_DEBUG
 GST_DISABLE_PARSE
-GST_DISABLE_TRACE
-GST_DISABLE_ALLOC_TRACE
 GST_DISABLE_REGISTRY
 GST_DISABLE_PLUGIN
 <SUBSECTION Private>
@@ -813,8 +814,12 @@ GST_ELEMENT_CLOCK
 GST_ELEMENT_PADS
 GST_ELEMENT_START_TIME
 GST_ELEMENT_ERROR
+GST_ELEMENT_ERROR_WITH_DETAILS
+GST_ELEMENT_FLOW_ERROR
 GST_ELEMENT_WARNING
+GST_ELEMENT_WARNING_WITH_DETAILS
 GST_ELEMENT_INFO
+GST_ELEMENT_INFO_WITH_DETAILS
 GST_ELEMENT_IS_LOCKED_STATE
 
 <SUBSECTION element-metadata>
@@ -899,6 +904,8 @@ gst_element_change_state
 
 <SUBSECTION element-messages>
 gst_element_message_full
+gst_element_message_full_with_details
+gst_make_element_message_details
 gst_element_post_message
 
 <SUBSECTION element-query>
@@ -911,6 +918,15 @@ gst_element_query_duration
 gst_element_send_event
 gst_element_seek_simple
 gst_element_seek
+
+<SUBSECTION element-property-notifications>
+gst_element_add_property_notify_watch
+gst_element_add_property_deep_notify_watch
+gst_element_remove_property_notify_watch
+
+<SUBSECTION element-call-async>
+GstElementCallAsyncFunc
+gst_element_call_async
 
 <SUBSECTION Standard>
 GST_ELEMENT
@@ -1114,6 +1130,9 @@ gst_event_parse_stream_flags
 gst_event_set_group_id
 gst_event_parse_group_id
 
+gst_event_set_stream
+gst_event_parse_stream
+
 gst_event_new_segment
 gst_event_parse_segment
 gst_event_copy_segment
@@ -1160,6 +1179,15 @@ gst_event_parse_segment_done
 
 gst_event_new_protection
 gst_event_parse_protection
+
+gst_event_new_select_streams
+gst_event_parse_select_streams
+
+gst_event_new_stream_collection
+gst_event_parse_stream_collection
+
+gst_event_new_stream_group_done
+gst_event_parse_stream_group_done
 <SUBSECTION Standard>
 GstEventClass
 GST_EVENT
@@ -1561,11 +1589,17 @@ gst_message_replace
 
 gst_message_new_eos
 gst_message_new_error
+gst_message_new_error_with_details
 gst_message_parse_error
+gst_message_parse_error_details
 gst_message_new_warning
+gst_message_new_warning_with_details
 gst_message_parse_warning
+gst_message_parse_warning_details
 gst_message_new_info
+gst_message_new_info_with_details
 gst_message_parse_info
+gst_message_parse_info_details
 gst_message_new_tag
 gst_message_parse_tag
 gst_message_new_buffering
@@ -1612,6 +1646,8 @@ gst_message_new_stream_start
 gst_message_set_group_id
 gst_message_parse_group_id
 
+gst_message_new_stream_collection
+gst_message_parse_stream_collection
 GstStructureChangeType
 gst_message_new_structure_change
 gst_message_parse_structure_change
@@ -1637,6 +1673,21 @@ gst_message_new_device_added
 gst_message_new_device_removed
 gst_message_parse_device_added
 gst_message_parse_device_removed
+
+gst_message_new_property_notify
+gst_message_parse_property_notify
+
+gst_message_new_streams_selected
+gst_message_parse_streams_selected
+gst_message_streams_selected_add
+gst_message_streams_selected_get_size
+gst_message_streams_selected_get_stream
+
+gst_message_new_redirect
+gst_message_add_redirect_entry
+gst_message_parse_redirect_entry
+gst_message_get_num_redirect_entries
+
 <SUBSECTION Standard>
 GstMessageClass
 GST_MESSAGE
@@ -1819,6 +1870,8 @@ gst_pad_get_pad_template
 
 gst_pad_link
 gst_pad_link_full
+gst_pad_link_maybe_ghosting
+gst_pad_link_maybe_ghosting_full
 gst_pad_unlink
 gst_pad_is_linked
 gst_pad_can_link
@@ -1963,6 +2016,7 @@ gst_pad_create_stream_id_printf
 gst_pad_create_stream_id_printf_valist
 
 gst_pad_get_stream_id
+gst_pad_get_stream
 
 GstPadForwardFunction
 gst_pad_forward
@@ -2602,6 +2656,60 @@ gst_segment_flags_get_type
 <SUBSECTION Private>
 </SECTION>
 
+<SECTION>
+<FILE>gststreams</FILE>
+<TITLE>GstStream</TITLE>
+GstStream
+GstStreamClass
+GstStreamType
+gst_stream_new
+gst_stream_get_caps
+gst_stream_get_stream_flags
+gst_stream_get_stream_id
+gst_stream_get_stream_type
+gst_stream_get_tags
+gst_stream_set_caps
+gst_stream_set_stream_flags
+gst_stream_set_stream_type
+gst_stream_set_tags
+gst_stream_type_get_name
+<SUBSECTION Standard>
+GST_IS_STREAM
+GST_IS_STREAM_CLASS
+GST_STREAM
+GST_STREAM_CAST
+GST_STREAM_CLASS
+GST_STREAM_GET_CLASS
+GST_TYPE_STREAM
+GST_TYPE_STREAM_TYPE
+gst_stream_get_type
+gst_stream_type_get_type
+<SUBSECTION Private>
+GstStreamPrivate
+</SECTION>
+
+<SECTION>
+<FILE>gststreamcollection</FILE>
+<TITLE>GstStreamCollection</TITLE>
+GstStreamCollection
+GstStreamCollectionClass
+gst_stream_collection_new
+gst_stream_collection_add_stream
+gst_stream_collection_get_upstream_id
+gst_stream_collection_get_size
+gst_stream_collection_get_stream
+<SUBSECTION Standard>
+gst_stream_collection_get_type
+GST_IS_STREAM_COLLECTION
+GST_IS_STREAM_COLLECTION_CLASS
+GST_STREAM_COLLECTION
+GST_STREAM_COLLECTION_CAST
+GST_STREAM_COLLECTION_CLASS
+GST_STREAM_COLLECTION_GET_CLASS
+GST_TYPE_STREAM_COLLECTION
+<SUBSECTION Private>
+GstStreamCollectionPrivate
+</SECTION>
 
 <SECTION>
 <FILE>gststructure</FILE>

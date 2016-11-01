@@ -339,6 +339,22 @@
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-set-stream" title="gst_event_set_stream ()">gst_event_set_stream</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-parse-stream" title="gst_event_parse_stream ()">gst_event_parse_stream</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
 </td>
 <td class="function_name">
@@ -567,6 +583,54 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstEvent.html#gst-event-parse-protection" title="gst_event_parse_protection ()">gst_event_parse_protection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-new-select-streams" title="gst_event_new_select_streams ()">gst_event_new_select_streams</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-parse-select-streams" title="gst_event_parse_select_streams ()">gst_event_parse_select_streams</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-new-stream-collection" title="gst_event_new_stream_collection ()">gst_event_new_stream_collection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-parse-stream-collection" title="gst_event_parse_stream_collection ()">gst_event_parse_stream_collection</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-new-stream-group-done" title="gst_event_new_stream_group_done ()">gst_event_new_stream_group_done</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstEvent.html#gst-event-parse-stream-group-done" title="gst_event_parse_stream_group_done ()">gst_event_parse_stream_group_done</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -1907,6 +1971,71 @@ gst_event_parse_group_id (<em class="parameter"><code><a class="link" href="GstE
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-event-set-stream"></a><h3>gst_event_set_stream ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_set_stream (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                      <em class="parameter"><code><a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> *stream</code></em>);</pre>
+<p>Set the <em class="parameter"><code>stream</code></em>
+ on the stream-start <em class="parameter"><code>event</code></em>
+</p>
+<div class="refsect3">
+<a name="gst-event-set-stream.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a stream-start event</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p> the stream object to set. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-stream"></a><h3>gst_event_parse_stream ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_parse_stream (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                        <em class="parameter"><code><a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> **stream</code></em>);</pre>
+<p>Parse a stream-start <em class="parameter"><code>event</code></em>
+ and extract the <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> from it.</p>
+<div class="refsect3">
+<a name="gst-event-parse-stream.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a stream-start event</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>stream</p></td>
+<td class="parameter_description"><p> adress of variable to store the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-event-new-segment"></a><h3>gst_event_new_segment ()</h3>
 <pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
 gst_event_new_segment (<em class="parameter"><code>const <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> *segment</code></em>);</pre>
@@ -3227,6 +3356,208 @@ from. </p></td>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-new-select-streams"></a><h3>gst_event_new_select_streams ()</h3>
+<pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+gst_event_new_select_streams (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *streams</code></em>);</pre>
+<p>Allocate a new select-streams event.</p>
+<p>The select-streams event requests the specified <em class="parameter"><code>streams</code></em>
+ to be activated.</p>
+<p>The list of <em class="parameter"><code>streams</code></em>
+ corresponds to the "Stream ID" of each stream to be
+activated. Those ID can be obtained via the <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> objects present
+in <a class="link" href="GstEvent.html#GST-EVENT-STREAM-START:CAPS"><span class="type">GST_EVENT_STREAM_START</span></a>, <a class="link" href="GstEvent.html#GST-EVENT-STREAM-COLLECTION:CAPS"><span class="type">GST_EVENT_STREAM_COLLECTION</span></a> or 
+<span class="type">GST_MESSSAGE_STREAM_COLLECTION</span>.</p>
+<div class="refsect3">
+<a name="gst-event-new-select-streams.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>streams</p></td>
+<td class="parameter_description"><p> the list of streams to
+activate. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-event-new-select-streams.returns"></a><h4>Returns</h4>
+<p> a new select-streams event. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-select-streams"></a><h3>gst_event_parse_select_streams ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_parse_select_streams (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> **streams</code></em>);</pre>
+<p>Parse the SELECT_STREAMS event and retrieve the contained streams.</p>
+<div class="refsect3">
+<a name="gst-event-parse-select-streams.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>The event to parse</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>streams</p></td>
+<td class="parameter_description"><p> the streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-new-stream-collection"></a><h3>gst_event_new_stream_collection ()</h3>
+<pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+gst_event_new_stream_collection (<em class="parameter"><code><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> *collection</code></em>);</pre>
+<p>Create a new STREAM_COLLECTION event. The stream collection event can only
+travel downstream synchronized with the buffer flow.</p>
+<p>Source elements, demuxers and other elements that manage collections
+of streams and post <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> messages on the bus also send
+this event downstream on each pad involved in the collection, so that
+activation of a new collection can be tracked through the downstream
+data flow.</p>
+<div class="refsect3">
+<a name="gst-event-new-stream-collection.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>collection</p></td>
+<td class="parameter_description"><p>Active collection for this data flow</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-event-new-stream-collection.returns"></a><h4>Returns</h4>
+<p> the new STREAM_COLLECTION event. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-stream-collection"></a><h3>gst_event_parse_stream_collection ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_parse_stream_collection (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                   <em class="parameter"><code><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> **collection</code></em>);</pre>
+<p>Retrieve new <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> from STREAM_COLLECTION event <em class="parameter"><code>event</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-event-parse-stream-collection.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a stream-collection event</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>collection</p></td>
+<td class="parameter_description"><p> pointer to store the collection. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-new-stream-group-done"></a><h3>gst_event_new_stream_group_done ()</h3>
+<pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
+gst_event_new_stream_group_done (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> group_id</code></em>);</pre>
+<p>Create a new Stream Group Done event. The stream-group-done event can
+only travel downstream synchronized with the buffer flow. Elements
+that receive the event on a pad should handle it mostly like EOS,
+and emit any data or pending buffers that would depend on more data
+arriving and unblock, since there won't be any more data.</p>
+<p>This event is followed by EOS at some point in the future, and is
+generally used when switching pads - to unblock downstream so that
+new pads can be exposed before sending EOS on the existing pads.</p>
+<div class="refsect3">
+<a name="gst-event-new-stream-group-done.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>group_id</p></td>
+<td class="parameter_description"><p>the group id of the stream group which is ending</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-event-new-stream-group-done.returns"></a><h4>Returns</h4>
+<p> the new stream-group-done event. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-event-parse-stream-group-done"></a><h3>gst_event_parse_stream_group_done ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_event_parse_stream_group_done (<em class="parameter"><code><a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> *event</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> *group_id</code></em>);</pre>
+<p>Parse a stream-group-done <em class="parameter"><code>event</code></em>
+ and store the result in the given
+<em class="parameter"><code>group_id</code></em>
+ location.</p>
+<div class="refsect3">
+<a name="gst-event-parse-stream-group-done.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>a stream-group-done event.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>group_id</p></td>
+<td class="parameter_description"><p> address of variable to store the group id into. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstEvent.other_details"></a><h2>Types and Values</h2>
@@ -3404,6 +3735,13 @@ Specific custom events are distinguished by the name of the structure.</p>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-EVENT-STREAM-COLLECTION:CAPS"></a>GST_EVENT_STREAM_COLLECTION</p></td>
+<td class="enum_member_description">
+<p>A new <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> is available (Since 1.10)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-EVENT-TAG:CAPS"></a>GST_EVENT_TAG</p></td>
 <td class="enum_member_description">
 <p>A new set of metadata tags has been found in the stream.</p>
@@ -3428,10 +3766,20 @@ Specific custom events are distinguished by the name of the structure.</p>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-EVENT-STREAM-GROUP-DONE:CAPS"></a>GST_EVENT_STREAM_GROUP_DONE</p></td>
+<td class="enum_member_description">
+<p>Indicates that there is no more data for
+                the stream group ID in the message. Sent before EOS
+                in some instances and should be handled mostly the same. (Since 1.10)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-EVENT-EOS:CAPS"></a>GST_EVENT_EOS</p></td>
 <td class="enum_member_description">
 <p>End-Of-Stream. No more data is to be expected to follow
-                without a SEGMENT event.</p>
+                without either a STREAM_START event, or a FLUSH_STOP and a SEGMENT
+                event.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3518,6 +3866,13 @@ Specific custom events are distinguished by the name of the structure.</p>
 <td class="enum_member_description">
 <p>A request for a new playback position based on TOC
                        entry's UID.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-EVENT-SELECT-STREAMS:CAPS"></a>GST_EVENT_SELECT_STREAMS</p></td>
+<td class="enum_member_description">
+<p>A request to select one or more streams (Since 1.10)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

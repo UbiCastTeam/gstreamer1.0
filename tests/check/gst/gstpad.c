@@ -893,6 +893,7 @@ GST_START_TEST (test_push_linked)
   buffers = NULL;
 
   /* teardown */
+  gst_check_drop_buffers ();
   gst_pad_unlink (src, sink);
   ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
   gst_object_unref (src);
@@ -988,6 +989,7 @@ GST_START_TEST (test_push_linked_flushing)
   gst_pad_remove_probe (src, id);
 
   /* cleanup */
+  gst_check_drop_buffers ();
   ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
   ASSERT_OBJECT_REFCOUNT (src, "src", 1);
   gst_pad_link (src, sink);
@@ -1085,6 +1087,7 @@ GST_START_TEST (test_push_buffer_list_compat)
   fail_unless (buffers == NULL);
 
   /* teardown */
+  gst_check_drop_buffers ();
   gst_pad_unlink (src, sink);
   gst_object_unref (src);
   gst_object_unref (sink);
@@ -1177,6 +1180,7 @@ GST_START_TEST (test_push_negotiation)
   fail_unless (gst_pad_set_caps (sink, caps) == FALSE);
 
   /* teardown */
+  gst_check_drop_buffers ();
   gst_pad_unlink (src, sink);
   gst_object_unref (src);
   gst_object_unref (sink);
@@ -1459,6 +1463,226 @@ GST_START_TEST (test_pad_blocking_with_probe_type_idle)
 
 GST_END_TEST;
 
+static gboolean pull_probe_called;
+static gboolean pull_probe_called_with_bad_type;
+static gboolean pull_probe_called_with_bad_data;
+
+static GstPadProbeReturn
+probe_pull_buffer_cb_check_buffer_return_ok (GstPad * pad,
+    GstPadProbeInfo * info, gpointer user_data)
+{
+  if (info->type & GST_PAD_PROBE_TYPE_BUFFER) {
+    if (GST_IS_BUFFER (info->data))
+      pull_probe_called = TRUE;
+    else
+      pull_probe_called_with_bad_data = TRUE;
+  } else {
+    /* shouldn't be called */
+    pull_probe_called_with_bad_type = TRUE;
+  }
+  return GST_PAD_PROBE_OK;
+}
+
+static GstFlowReturn
+test_probe_pull_getrange (GstPad * pad, GstObject * parent, guint64 offset,
+    guint length, GstBuffer ** buf)
+{
+  *buf = gst_buffer_new ();
+  return GST_FLOW_OK;
+}
+
+static gboolean
+test_probe_pull_activate_pull (GstPad * pad, GstObject * object)
+{
+  return gst_pad_activate_mode (pad, GST_PAD_MODE_PULL, TRUE);
+}
+
+static gpointer
+pull_range_async (GstPad * pad)
+{
+  GstBuffer *buf = NULL;
+  GstFlowReturn res = gst_pad_pull_range (pad, 0, 100, &buf);
+  if (buf)
+    gst_buffer_unref (buf);
+  return GINT_TO_POINTER (res);
+}
+
+GST_START_TEST (test_pad_probe_pull)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *thread;
+  GstFlowReturn ret;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_getrange_function (srcpad, test_probe_pull_getrange);
+  gst_pad_set_activate_function (sinkpad, test_probe_pull_activate_pull);
+  gst_pad_link (srcpad, sinkpad);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  id = gst_pad_add_probe (sinkpad,
+      GST_PAD_PROBE_TYPE_BLOCK | GST_PAD_PROBE_TYPE_PULL,
+      block_async_cb_return_ok, NULL, NULL);
+
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) pull_range_async,
+      sinkpad, NULL);
+
+  /* wait for the block */
+  while (!gst_pad_is_blocking (sinkpad)) {
+    g_usleep (10000);
+  }
+
+  /* stop with flushing */
+  gst_pad_push_event (srcpad, gst_event_new_flush_start ());
+
+  /* get return value from push */
+  ret = GPOINTER_TO_INT (g_thread_join (thread));
+  /* unflush now */
+  gst_pad_push_event (srcpad, gst_event_new_flush_stop (FALSE));
+  /* must be wrong state */
+  fail_unless (ret == GST_FLOW_FLUSHING);
+
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
+static gboolean idle_probe_called;
+static gboolean get_range_wait;
+static gboolean getrange_waiting;
+
+static GstPadProbeReturn
+idle_cb_return_ok (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
+{
+  idle_probe_called = TRUE;
+  return GST_PAD_PROBE_OK;
+}
+
+static GstFlowReturn
+test_probe_pull_getrange_wait (GstPad * pad, GstObject * parent, guint64 offset,
+    guint length, GstBuffer ** buf)
+{
+  getrange_waiting = TRUE;
+
+  *buf = gst_buffer_new ();
+  while (get_range_wait) {
+    g_usleep (10000);
+  }
+
+  getrange_waiting = FALSE;
+  return GST_FLOW_OK;
+}
+
+GST_START_TEST (test_pad_probe_pull_idle)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *thread;
+  GstFlowReturn ret;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_getrange_function (srcpad, test_probe_pull_getrange_wait);
+  gst_pad_set_activate_function (sinkpad, test_probe_pull_activate_pull);
+  gst_pad_link (srcpad, sinkpad);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  idle_probe_called = FALSE;
+  get_range_wait = TRUE;
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) pull_range_async,
+      sinkpad, NULL);
+
+  /* wait for the block */
+  while (!getrange_waiting) {
+    g_usleep (10000);
+  }
+
+  id = gst_pad_add_probe (sinkpad,
+      GST_PAD_PROBE_TYPE_IDLE | GST_PAD_PROBE_TYPE_PULL,
+      idle_cb_return_ok, NULL, NULL);
+
+  fail_if (idle_probe_called);
+
+  get_range_wait = FALSE;
+  while (getrange_waiting) {
+    g_usleep (10000);
+  }
+  while (!idle_probe_called) {
+    g_usleep (10000);
+  }
+
+  ret = GPOINTER_TO_INT (g_thread_join (thread));
+  fail_unless (ret == GST_FLOW_OK);
+  gst_pad_set_active (srcpad, FALSE);
+  gst_pad_set_active (sinkpad, FALSE);
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_pad_probe_pull_buffer)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *thread;
+  GstFlowReturn ret;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_getrange_function (srcpad, test_probe_pull_getrange);
+  gst_pad_set_activate_function (sinkpad, test_probe_pull_activate_pull);
+  gst_pad_link (srcpad, sinkpad);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  id = gst_pad_add_probe (sinkpad,
+      GST_PAD_PROBE_TYPE_BUFFER | GST_PAD_PROBE_TYPE_PULL,
+      probe_pull_buffer_cb_check_buffer_return_ok, NULL, NULL);
+
+  pull_probe_called = FALSE;
+  pull_probe_called_with_bad_type = FALSE;
+  pull_probe_called_with_bad_data = FALSE;
+
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) pull_range_async,
+      sinkpad, NULL);
+
+  /* wait for the block */
+  while (!pull_probe_called && !pull_probe_called_with_bad_data
+      && !pull_probe_called_with_bad_type) {
+    g_usleep (10000);
+  }
+
+  fail_unless (pull_probe_called);
+  fail_if (pull_probe_called_with_bad_data);
+  fail_if (pull_probe_called_with_bad_type);
+
+  /* get return value from push */
+  ret = GPOINTER_TO_INT (g_thread_join (thread));
+  fail_unless (ret == GST_FLOW_OK);
+
+  gst_pad_set_active (sinkpad, FALSE);
+  gst_pad_set_active (srcpad, FALSE);
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
 static gboolean pad_probe_remove_notifiy_called = FALSE;
 
 static GstPadProbeReturn
@@ -1577,6 +1801,7 @@ GST_START_TEST (test_pad_probe_block_and_drop_buffer)
   fail_if (buffers && buffers->data == NULL);
   fail_unless (buffers == NULL);
 
+  gst_check_drop_buffers ();
   gst_object_unref (src);
   gst_object_unref (sink);
 }
@@ -1756,6 +1981,7 @@ GST_START_TEST (test_pad_probe_flush_events)
   fail_unless (sink_flush_start_probe_called);
   fail_unless (sink_flush_stop_probe_called);
 
+  gst_check_drop_buffers ();
   gst_object_unref (src);
   gst_object_unref (sink);
 }
@@ -1807,6 +2033,7 @@ GST_START_TEST (test_pad_probe_flush_events_only)
   gst_pad_push_event (src, gst_event_new_flush_stop (TRUE));
   fail_unless (probe_was_called);
 
+  gst_check_drop_buffers ();
   gst_object_unref (src);
   gst_object_unref (sink);
 }
@@ -1857,6 +2084,7 @@ GST_START_TEST (test_pad_probe_call_order)
     fail_unless (counters[i] == i + 1);
   }
 
+  gst_check_drop_buffers ();
   gst_object_unref (src);
   gst_object_unref (sink);
 }
@@ -2597,8 +2825,8 @@ gst_proxytestelement_class_init (GstProxyTestElementClass * klass)
       "Proxy Test Element", "Test", "Proxy test element",
       "Thiago Santos <thiagoss@osg.samsung.com>");
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&proxytestelement_sink_template));
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &proxytestelement_sink_template);
 }
 
 static void
@@ -2736,6 +2964,253 @@ GST_START_TEST (test_proxy_accept_caps_with_incompatible_proxy)
 
 GST_END_TEST;
 
+static GstSegment sink_segment;
+static gint sink_segment_counter;
+
+static gboolean
+segment_event_func (GstPad * pad, GstObject * parent, GstEvent * event)
+{
+  switch (GST_EVENT_TYPE (event)) {
+    case GST_EVENT_SEGMENT:
+      gst_event_copy_segment (event, &sink_segment);
+      sink_segment_counter++;
+      break;
+    default:
+      break;
+  }
+
+  gst_event_unref (event);
+  return TRUE;
+}
+
+static void
+test_pad_offset (gboolean on_srcpad)
+{
+  GstPad *srcpad, *sinkpad, *offset_pad;
+  GstSegment segment;
+  GstBuffer *buffer;
+  GstQuery *query;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+
+  offset_pad = on_srcpad ? srcpad : sinkpad;
+
+  gst_segment_init (&sink_segment, GST_FORMAT_UNDEFINED);
+  sink_segment_counter = 0;
+  gst_pad_set_chain_function (sinkpad, gst_check_chain_func);
+  gst_pad_set_event_function (sinkpad, segment_event_func);
+
+  fail_unless (sinkpad != NULL);
+  fail_unless_equals_int (gst_pad_link (srcpad, sinkpad), GST_PAD_LINK_OK);
+  fail_unless (gst_pad_set_active (sinkpad, TRUE));
+  fail_unless (gst_pad_set_active (srcpad, TRUE));
+
+  /* Set an offset of 5s, meaning:
+   * segment position 0 gives running time 5s, stream time 0s
+   * segment start of 0 should stay 0
+   */
+  gst_pad_set_offset (offset_pad, 5 * GST_SECOND);
+
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_stream_start ("test")) == TRUE);
+  /* We should have no segment event yet */
+  fail_if (sink_segment.format != GST_FORMAT_UNDEFINED);
+  fail_unless_equals_int (sink_segment_counter, 0);
+
+  /* Send segment event, expect it to arrive with a modified start running time */
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_segment (&segment)) == TRUE);
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 1);
+
+  /* Send a buffer and check if all timestamps are as expected, and especially
+   * if the buffer timestamp was not changed */
+  buffer = gst_buffer_new ();
+  GST_BUFFER_PTS (buffer) = 0 * GST_SECOND;
+  fail_unless_equals_int (gst_pad_push (srcpad, buffer), GST_FLOW_OK);
+
+  fail_unless_equals_int (g_list_length (buffers), 1);
+  buffer = buffers->data;
+  buffers = g_list_delete_link (buffers, buffers);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (GST_BUFFER_PTS (buffer), 0 * GST_SECOND);
+  gst_buffer_unref (buffer);
+
+  fail_unless_equals_int (sink_segment_counter, 1);
+
+  /* Set a negative offset of -5s, meaning:
+   * segment position 5s gives running time 0s, stream time 5s
+   * segment start would have a negative running time!
+   */
+  gst_pad_set_offset (offset_pad, -5 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 1);
+
+  /* Send segment event, expect it to arrive with a modified start running time */
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_segment (&segment)) == TRUE);
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      0 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      5 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 2);
+
+  /* Send a buffer and check if all timestamps are as expected, and especially
+   * if the buffer timestamp was not changed */
+  buffer = gst_buffer_new ();
+  GST_BUFFER_PTS (buffer) = 5 * GST_SECOND;
+  fail_unless_equals_int (gst_pad_push (srcpad, buffer), GST_FLOW_OK);
+
+  fail_unless_equals_int (g_list_length (buffers), 1);
+  buffer = buffers->data;
+  buffers = g_list_delete_link (buffers, buffers);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (GST_BUFFER_PTS (buffer), 5 * GST_SECOND);
+  gst_buffer_unref (buffer);
+
+  fail_unless_equals_int (sink_segment_counter, 2);
+
+  /* Set offset to 5s again, same situation as above but don't send a new
+   * segment event. The segment should be adjusted *before* the buffer comes
+   * out of the srcpad */
+  gst_pad_set_offset (offset_pad, 5 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      0 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      5 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 2);
+
+  /* Send a buffer and check if a new segment event was sent and all buffer
+   * timestamps are as expected */
+  buffer = gst_buffer_new ();
+  GST_BUFFER_PTS (buffer) = 0 * GST_SECOND;
+  fail_unless_equals_int (gst_pad_push (srcpad, buffer), GST_FLOW_OK);
+
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 3);
+
+  fail_unless_equals_int (g_list_length (buffers), 1);
+  buffer = buffers->data;
+  buffers = g_list_delete_link (buffers, buffers);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (GST_BUFFER_PTS (buffer), 0 * GST_SECOND);
+  gst_buffer_unref (buffer);
+
+  fail_unless_equals_int (sink_segment_counter, 3);
+
+  /* Set offset to 10s and send another sticky event. In between a new
+   * segment event should've been sent */
+  gst_pad_set_offset (offset_pad, 10 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+  fail_unless_equals_int (sink_segment_counter, 3);
+
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_tag (gst_tag_list_new_empty ())) == TRUE);
+
+  /* Segment should be updated */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 10 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 4);
+
+  /* Set offset to 15s and do a serialized query. In between a new
+   * segment event should've been sent */
+  gst_pad_set_offset (offset_pad, 15 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 10 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+  fail_unless_equals_int (sink_segment_counter, 4);
+
+  query = gst_query_new_drain ();
+  gst_pad_peer_query (srcpad, query);
+  gst_query_unref (query);
+
+  /* Segment should be updated */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 15 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 5);
+
+  gst_check_drop_buffers ();
+
+  fail_unless (gst_pad_set_active (sinkpad, FALSE));
+  fail_unless (gst_pad_set_active (srcpad, FALSE));
+  gst_object_unref (sinkpad);
+  gst_object_unref (srcpad);
+}
+
+GST_START_TEST (test_pad_offset_src)
+{
+  test_pad_offset (TRUE);
+}
+
+GST_END_TEST;
+
 static Suite *
 gst_pad_suite (void)
 {
@@ -2769,6 +3244,9 @@ gst_pad_suite (void)
   tcase_add_test (tc_chain, test_pad_blocking_with_probe_type_block);
   tcase_add_test (tc_chain, test_pad_blocking_with_probe_type_blocking);
   tcase_add_test (tc_chain, test_pad_blocking_with_probe_type_idle);
+  tcase_add_test (tc_chain, test_pad_probe_pull);
+  tcase_add_test (tc_chain, test_pad_probe_pull_idle);
+  tcase_add_test (tc_chain, test_pad_probe_pull_buffer);
   tcase_add_test (tc_chain, test_pad_probe_remove);
   tcase_add_test (tc_chain, test_pad_probe_block_add_remove);
   tcase_add_test (tc_chain, test_pad_probe_block_and_drop_buffer);
@@ -2791,6 +3269,7 @@ gst_pad_suite (void)
   tcase_add_test (tc_chain, test_proxy_accept_caps_no_proxy);
   tcase_add_test (tc_chain, test_proxy_accept_caps_with_proxy);
   tcase_add_test (tc_chain, test_proxy_accept_caps_with_incompatible_proxy);
+  tcase_add_test (tc_chain, test_pad_offset_src);
 
   return s;
 }

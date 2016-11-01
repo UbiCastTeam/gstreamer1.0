@@ -731,6 +731,8 @@ used after adding or removing descriptors to <em class="parameter"><code>set</co
 .</p>
 <p>If <em class="parameter"><code>set</code></em>
  is not controllable, then this call will have no effect.</p>
+<p>This function only works for non-timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
+<a class="link" href="gstreamer-GstPoll.html#gst-poll-new" title="gst_poll_new ()"><code class="function">gst_poll_new()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-poll-restart.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -757,6 +759,8 @@ gst_poll_set_controllable (<em class="parameter"><code><a class="link" href="gst
  is <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, this function ensures that future calls to
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> will be affected by <a class="link" href="gstreamer-GstPoll.html#gst-poll-restart" title="gst_poll_restart ()"><code class="function">gst_poll_restart()</code></a> and
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-set-flushing" title="gst_poll_set_flushing ()"><code class="function">gst_poll_set_flushing()</code></a>.</p>
+<p>This function only works for non-timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
+<a class="link" href="gstreamer-GstPoll.html#gst-poll-new" title="gst_poll_new ()"><code class="function">gst_poll_new()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-poll-set-controllable.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -796,6 +800,8 @@ gst_poll_set_flushing (<em class="parameter"><code><a class="link" href="gstream
 to <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> will return -1, with errno set to EBUSY.</p>
 <p>Unsetting the flushing state will restore normal operation of <em class="parameter"><code>set</code></em>
 .</p>
+<p>This function only works for non-timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
+<a class="link" href="gstreamer-GstPoll.html#gst-poll-new" title="gst_poll_new ()"><code class="function">gst_poll_new()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-poll-set-flushing.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -872,8 +878,8 @@ and errno is set.</p>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_poll_read_control (<em class="parameter"><code><a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> *set</code></em>);</pre>
 <p>Read a byte from the control socket of the controllable <em class="parameter"><code>set</code></em>
-.
-This function is mostly useful for timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
+.</p>
+<p>This function only works for timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-new-timer" title="gst_poll_new_timer ()"><code class="function">gst_poll_new_timer()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-poll-read-control.parameters"></a><h4>Parameters</h4>
@@ -892,9 +898,10 @@ This function is mostly useful for timer <a class="link" href="gstreamer-GstPoll
 </div>
 <div class="refsect3">
 <a name="gst-poll-read-control.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success. <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <em class="parameter"><code>set</code></em>
-is not controllable or when there
-was no byte to read.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success. <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when when there was no byte to read or
+reading the byte failed. If there was no byte to read, and only then, errno
+will contain EWOULDBLOCK or EAGAIN. For all other values of errno this always signals a
+critical error.</p>
 </div>
 </div>
 <hr>
@@ -910,6 +917,8 @@ This function is mostly useful for timer <a class="link" href="gstreamer-GstPoll
 1, meaning the control socket is set. After an equal amount of calls to
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-read-control" title="gst_poll_read_control ()"><code class="function">gst_poll_read_control()</code></a> have been performed, calls to <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> will
 block again until their timeout expired.</p>
+<p>This function only works for timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
+<a class="link" href="gstreamer-GstPoll.html#gst-poll-new-timer" title="gst_poll_new_timer ()"><code class="function">gst_poll_new_timer()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-poll-write-control.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -927,9 +936,9 @@ block again until their timeout expired.</p>
 </div>
 <div class="refsect3">
 <a name="gst-poll-write-control.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success. <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when <em class="parameter"><code>set</code></em>
-is not controllable or when the
-byte could not be written.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success. <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when when the byte could not be written.
+errno contains the detailed error code but will never be EAGAIN, EINTR or
+EWOULDBLOCK. <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> always signals a critical error.</p>
 </div>
 </div>
 </div>

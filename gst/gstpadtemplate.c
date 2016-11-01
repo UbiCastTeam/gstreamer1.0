@@ -51,7 +51,7 @@
  *
  * A padtemplate can be used to create a pad (see gst_pad_new_from_template()
  * or gst_pad_new_from_static_template ()) or to add to an element class
- * (see gst_element_class_add_pad_template ()).
+ * (see gst_element_class_add_static_pad_template ()).
  *
  * The following code example shows the code to create a pad from a padtemplate.
  * |[<!-- language="C" -->
@@ -82,8 +82,7 @@
  *   {
  *     GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
  *
- *     gst_element_class_add_pad_template (gstelement_class,
- *         gst_static_pad_template_get (&amp;my_template));
+ *     gst_element_class_add_static_pad_template (gstelement_class, &amp;my_template);
  *   }
  * ]|
  */
@@ -201,6 +200,8 @@ gst_pad_template_class_init (GstPadTemplateClass * klass)
 static void
 gst_pad_template_init (GstPadTemplate * templ)
 {
+  /* GstPadTemplate objects are usually leaked */
+  GST_OBJECT_FLAG_SET (templ, GST_OBJECT_FLAG_MAY_BE_LEAKED);
 }
 
 static void
@@ -396,6 +397,9 @@ gst_pad_template_set_property (GObject * object, guint prop_id,
       break;
     case PROP_CAPS:
       GST_PAD_TEMPLATE_CAPS (object) = g_value_dup_boxed (value);
+      /* GstPadTemplate are usually leaked so are their caps */
+      GST_MINI_OBJECT_FLAG_SET (GST_PAD_TEMPLATE_CAPS (object),
+          GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

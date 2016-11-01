@@ -45,8 +45,7 @@
  *
  *   // sinktemplate should be a #GstStaticPadTemplate with direction
  *   // %GST_PAD_SINK and name "sink"
- *   gst_element_class_add_pad_template (gstelement_class,
- *       gst_static_pad_template_get (&amp;sinktemplate));
+ *   gst_element_class_add_static_pad_template (gstelement_class, &amp;sinktemplate);
  *
  *   gst_element_class_set_static_metadata (gstelement_class,
  *       "Sink name",
@@ -202,19 +201,8 @@ struct _GstBaseSinkPrivate
   GstClockTime last_left;
 
   /* running averages go here these are done on running time */
-  GstClockTime avg_pt;
-  GstClockTime avg_duration;
-  gdouble avg_rate;
-  GstClockTime avg_in_diff;
-
-  /* these are done on system time. avg_jitter and avg_render are
-   * compared to eachother to see if the rendering time takes a
-   * huge amount of the processing, If so we are flooded with
-   * buffers. */
-  GstClockTime last_left_systime;
-  GstClockTime avg_jitter;
-  GstClockTime start, stop;
-  GstClockTime avg_render;
+  GstClockTime avg_pt, avg_in_diff;
+  gdouble avg_rate;             /* average with infinite window */
 
   /* number of rendered and dropped frames */
   guint64 rendered;
@@ -2669,11 +2657,11 @@ gst_base_sink_perform_qos (GstBaseSink * sink, gboolean dropped)
     left = start + jitter;
   }
 
-  /* calculate duration of the buffer */
-  if (GST_CLOCK_TIME_IS_VALID (stop) && stop != start)
-    duration = stop - start;
-  else
-    duration = priv->avg_in_diff;
+  /* calculate duration of the buffer, only use buffer durations if not in
+   * trick mode or key-unit mode. Otherwise the buffer durations will be
+   * meaningless as frames are being dropped in-between without updating the
+   * durations. */
+  duration = priv->avg_in_diff;
 
   /* if we have the time when the last buffer left us, calculate
    * processing time */
@@ -2694,29 +2682,24 @@ gst_base_sink_perform_qos (GstBaseSink * sink, gboolean dropped)
       GST_TIME_ARGS (entered), GST_TIME_ARGS (left), GST_TIME_ARGS (pt),
       GST_TIME_ARGS (duration), jitter);
 
-  GST_CAT_DEBUG_OBJECT (GST_CAT_QOS, sink, "avg_duration: %" GST_TIME_FORMAT
-      ", avg_pt: %" GST_TIME_FORMAT ", avg_rate: %g",
-      GST_TIME_ARGS (priv->avg_duration), GST_TIME_ARGS (priv->avg_pt),
-      priv->avg_rate);
+  GST_CAT_DEBUG_OBJECT (GST_CAT_QOS, sink,
+      "avg_pt: %" GST_TIME_FORMAT ", avg_rate: %g",
+      GST_TIME_ARGS (priv->avg_pt), priv->avg_rate);
 
   /* collect running averages. for first observations, we copy the
    * values */
-  if (!GST_CLOCK_TIME_IS_VALID (priv->avg_duration))
-    priv->avg_duration = duration;
-  else
-    priv->avg_duration = UPDATE_RUNNING_AVG (priv->avg_duration, duration);
-
   if (!GST_CLOCK_TIME_IS_VALID (priv->avg_pt))
     priv->avg_pt = pt;
   else
     priv->avg_pt = UPDATE_RUNNING_AVG (priv->avg_pt, pt);
 
-  if (priv->avg_duration != 0)
+  if (duration != -1 && duration != 0) {
     rate =
         gst_guint64_to_gdouble (priv->avg_pt) /
-        gst_guint64_to_gdouble (priv->avg_duration);
-  else
+        gst_guint64_to_gdouble (duration);
+  } else {
     rate = 1.0;
+  }
 
   if (GST_CLOCK_TIME_IS_VALID (priv->last_left)) {
     if (dropped || priv->avg_rate < 0.0) {
@@ -2730,9 +2713,8 @@ gst_base_sink_perform_qos (GstBaseSink * sink, gboolean dropped)
   }
 
   GST_CAT_DEBUG_OBJECT (GST_CAT_QOS, sink,
-      "updated: avg_duration: %" GST_TIME_FORMAT ", avg_pt: %" GST_TIME_FORMAT
-      ", avg_rate: %g", GST_TIME_ARGS (priv->avg_duration),
-      GST_TIME_ARGS (priv->avg_pt), priv->avg_rate);
+      "updated: avg_pt: %" GST_TIME_FORMAT
+      ", avg_rate: %g", GST_TIME_ARGS (priv->avg_pt), priv->avg_rate);
 
 
   if (priv->avg_rate >= 0.0) {
@@ -2778,10 +2760,8 @@ gst_base_sink_reset_qos (GstBaseSink * sink)
   priv->prev_rstart = GST_CLOCK_TIME_NONE;
   priv->earliest_in_time = GST_CLOCK_TIME_NONE;
   priv->last_left = GST_CLOCK_TIME_NONE;
-  priv->avg_duration = GST_CLOCK_TIME_NONE;
   priv->avg_pt = GST_CLOCK_TIME_NONE;
   priv->avg_rate = -1.0;
-  priv->avg_render = GST_CLOCK_TIME_NONE;
   priv->avg_in_diff = GST_CLOCK_TIME_NONE;
   priv->rendered = 0;
   priv->dropped = 0;
@@ -2887,35 +2867,6 @@ no_timestamp:
   {
     GST_DEBUG_OBJECT (basesink, "buffer has no timestamp");
     return FALSE;
-  }
-}
-
-/* called before and after calling the render vmethod. It keeps track of how
- * much time was spent in the render method and is used to check if we are
- * flooded */
-static void
-gst_base_sink_do_render_stats (GstBaseSink * basesink, gboolean start)
-{
-  GstBaseSinkPrivate *priv;
-
-  priv = basesink->priv;
-
-  if (start) {
-    priv->start = gst_util_get_timestamp ();
-  } else {
-    GstClockTime elapsed;
-
-    priv->stop = gst_util_get_timestamp ();
-
-    elapsed = GST_CLOCK_DIFF (priv->start, priv->stop);
-
-    if (!GST_CLOCK_TIME_IS_VALID (priv->avg_render))
-      priv->avg_render = elapsed;
-    else
-      priv->avg_render = UPDATE_RUNNING_AVG (priv->avg_render, elapsed);
-
-    GST_CAT_DEBUG_OBJECT (GST_CAT_QOS, basesink,
-        "avg_render: %" GST_TIME_FORMAT, GST_TIME_ARGS (priv->avg_render));
   }
 }
 
@@ -3349,7 +3300,6 @@ gst_base_sink_chain_unlocked (GstBaseSink * basesink, GstPad * pad,
   GstClockTime start = GST_CLOCK_TIME_NONE, end = GST_CLOCK_TIME_NONE;
   GstSegment *segment;
   GstBuffer *sync_buf;
-  gint do_qos;
   gboolean late, step_end, prepared = FALSE;
 
   if (G_UNLIKELY (basesink->flushing))
@@ -3515,14 +3465,7 @@ again:
         8 * GST_SECOND, priv->max_bitrate);
   }
 
-  /* read once, to get same value before and after */
-  do_qos = g_atomic_int_get (&priv->qos_enabled);
-
   GST_DEBUG_OBJECT (basesink, "rendering object %p", obj);
-
-  /* record rendering time for QoS and stats */
-  if (do_qos)
-    gst_base_sink_do_render_stats (basesink, TRUE);
 
   if (!is_list) {
     /* For buffer lists do not set last buffer for now. */
@@ -3541,9 +3484,6 @@ again:
     gst_base_sink_set_last_buffer (basesink, sync_buf);
     gst_base_sink_set_last_buffer_list (basesink, buffer_list);
   }
-
-  if (do_qos)
-    gst_base_sink_do_render_stats (basesink, FALSE);
 
   if (ret == GST_FLOW_STEP)
     goto again;
@@ -4091,9 +4031,7 @@ paused:
        * flushing and posting an error message in that case is the
        * wrong thing to do, e.g. when basesrc is doing a flushing
        * seek. */
-      GST_ELEMENT_ERROR (basesink, STREAM, FAILED,
-          (_("Internal data stream error.")),
-          ("stream stopped, reason %s", gst_flow_get_name (result)));
+      GST_ELEMENT_FLOW_ERROR (basesink, result);
       gst_base_sink_event (pad, parent, gst_event_new_eos ());
     }
     return;

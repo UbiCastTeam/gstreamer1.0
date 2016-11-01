@@ -1,15 +1,13 @@
 
-Release notes for GStreamer 1.8.3
+Release notes for GStreamer 1.9.90
 
-The GStreamer team is proud to announce the third bugfix release in the stable
-1.8 release series of your favourite cross-platform multimedia framework!
-
-
-This release only contains bugfixes and it is safe to update from 1.8.x. For a
-full list of bugfixes see Bugzilla.
+The GStreamer team is pleased to announce the first release candidate of the
+stable 1.10 release series. The 1.10 release series is adding new features on
+top of the 1.0, 1.2, 1.4, 1.6 and 1.8 series and is part of the API and
+ABI-stable 1.x release series of the GStreamer multimedia framework.
 
 
-See /releases/1.8/ for the full release notes.
+Binaries for Android, iOS, Mac OS X and Windows will be provided in the next days.
 
 
 This module, gstreamer, only contains core functionality.
@@ -35,15 +33,14 @@ contains a set of codecs plugins based on libav (formerly gst-ffmpeg)
 
 Bugs fixed in this release
      
-      * 739289 : basesink: Stepping incorrectly updates start time when stepping in PAUSED, causing step amount to be calculated wrongly
-      * 762330 : Probe only flush events, is not possible
-      * 767413 : tee: Properly handle return value when only 1 pad
-      * 767688 : queue2: fix crash deleting current region for small ring buffers
-      * 768141 : bus: chain up constructed.
-      * 768326 : Building GStreamer for Android fails on Windows (new since 1.8.2)
-      * 768450 : pad: check caps not NULL before referring
-      * 768649 : queue2: Force final average input rate calculation on EOS
-      * 769802 : queue2: Post buffering messages earlier in ringbuffer mode
+      * 753922 : GValue types are registered after types that might use them (e.g. tags)
+      * 770731 : gstconfig.h: Need to add support for more platforms / PPC broken
+      * 770740 : No way to disable build of tests/misc
+      * 771104 : element: seek_simple() does not reset stop position
+      * 771210 : tests: new queue2: Add higher-resolution low/high-watermark properties unit test is flaky
+      * 771306 : basesink: Remove unused fields and always use the buffer timestamp difference for calculating the QoS proportion
+      * 771649 : gst_bin_sort_iterator_copy doesn't copy GstBinSortIterator::queue
+      * 771029 : MSVC can't link against autotools-build generated DLLs
 
 ==== Download ====
 
@@ -80,15 +77,16 @@ subscribe to the gstreamer-devel list.
         
 Contributors to this release
     
-      * Edward Hervey
-      * Guillaume Desmottes
+      * Arun Raghavan
+      * Carlos Rafael Giani
+      * Graham Leggett
       * Jan Schmidt
-      * Linus Svensson
-      * Miguel París Díaz
-      * Nicolas Dufresne
-      * Ray Strode
+      * Kouhei Sutou
+      * Nirbheek Chauhan
       * Sebastian Dröge
       * Thiago Santos
+      * Thibault Saunier
       * Tim-Philipp Müller
-      * Vincent Penquerc'h
+      * Wim Taymans
+      * Wonchul Lee
  

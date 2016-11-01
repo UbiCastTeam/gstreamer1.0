@@ -570,6 +570,38 @@
 <a class="link" href="GstBuffer.html#gst-buffer-get-parent-buffer-meta" title="gst_buffer_get_parent_buffer_meta()">gst_buffer_get_parent_buffer_meta</a><span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="returnvalue">GstBufferFlags</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-get-flags" title="gst_buffer_get_flags ()">gst_buffer_get_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-set-flags" title="gst_buffer_set_flags ()">gst_buffer_set_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-unset-flags" title="gst_buffer_unset_flags ()">gst_buffer_unset_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-has-flags" title="gst_buffer_has_flags ()">gst_buffer_has_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -1697,8 +1729,7 @@ larger than what <a class="link" href="GstBuffer.html#gst-buffer-get-max-memory"
 </div>
 <div class="refsect3">
 <a name="gst-buffer-n-memory.returns"></a><h4>Returns</h4>
-<p> the amount of memory block in this buffer. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p> the number of memory blocks this buffer is made of.</p>
 </div>
 </div>
 <hr>
@@ -3476,6 +3507,112 @@ buffer</p>
 </tr></tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-get-flags"></a><h3>gst_buffer_get_flags ()</h3>
+<pre class="programlisting"><a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="returnvalue">GstBufferFlags</span></a>
+gst_buffer_get_flags (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
+<p>Get the <a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="type">GstBufferFlags</span></a> flags set on this buffer.</p>
+<div class="refsect3">
+<a name="gst-buffer-get-flags.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-get-flags.returns"></a><h4>Returns</h4>
+<p> the flags set on this buffer.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-set-flags"></a><h3>gst_buffer_set_flags ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_buffer_set_flags (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                      <em class="parameter"><code><a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="type">GstBufferFlags</span></a> flags</code></em>);</pre>
+<p>Sets one or more buffer flags on a buffer.</p>
+<div class="refsect3">
+<a name="gst-buffer-set-flags.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="type">GstBufferFlags</span></a> to set.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-set-flags.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>flags</code></em>
+were successfully set on buffer.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-unset-flags"></a><h3>gst_buffer_unset_flags ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_buffer_unset_flags (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                        <em class="parameter"><code><a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="type">GstBufferFlags</span></a> flags</code></em>);</pre>
+<p>Clears one or more buffer flags.</p>
+<div class="refsect3">
+<a name="gst-buffer-unset-flags.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="type">GstBufferFlags</span></a> to clear</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-unset-flags.returns"></a><h4>Returns</h4>
+<p> true if <em class="parameter"><code>flags</code></em>
+is successfully cleared from buffer.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-has-flags"></a><h3>gst_buffer_has_flags ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_buffer_has_flags (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                      <em class="parameter"><code><a class="link" href="GstBuffer.html#GstBufferFlags" title="enum GstBufferFlags"><span class="type">GstBufferFlags</span></a> flags</code></em>);</pre>
 </div>
 </div>
 <div class="refsect1">

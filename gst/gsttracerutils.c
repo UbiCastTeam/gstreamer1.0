@@ -19,9 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/**
- * SECTION:gsttracerutils
- * @short_description: Tracing subsystem
+/* Tracing subsystem:
  *
  * The tracing subsystem provides hooks in the core library and API for modules
  * to attach to them.
@@ -55,7 +53,9 @@ static const gchar *_quark_strings[] = {
   "element-new", "element-add-pad", "element-remove-pad",
   "bin-add-pre", "bin-add-post", "bin-remove-pre", "bin-remove-post",
   "pad-link-pre", "pad-link-post", "pad-unlink-pre", "pad-unlink-post",
-  "element-change-state-pre", "element-change-state-post"
+  "element-change-state-pre", "element-change-state-post",
+  "mini-object-created", "mini-object-destroyed", "object-created",
+  "object-destroyed",
 };
 
 GQuark _priv_gst_tracer_quark_table[GST_TRACER_QUARK_MAX];

@@ -163,6 +163,8 @@ init_klass_pool (GstTaskClass * klass)
     gst_object_unref (klass->pool);
   }
   klass->pool = gst_task_pool_new ();
+  /* Classes are never destroyed so this ref will never be dropped */
+  GST_OBJECT_FLAG_SET (klass->pool, GST_OBJECT_FLAG_MAY_BE_LEAKED);
   gst_task_pool_prepare (klass->pool, NULL);
   g_mutex_unlock (&pool_lock);
 }
@@ -384,6 +386,9 @@ gst_task_cleanup_all (void)
   if ((klass = g_type_class_peek (GST_TYPE_TASK))) {
     init_klass_pool (klass);
   }
+
+  /* GstElement owns a GThreadPool */
+  _priv_gst_element_cleanup ();
 }
 
 /**

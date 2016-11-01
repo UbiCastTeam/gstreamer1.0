@@ -22,33 +22,27 @@
 #endif
 
 #include <gst/gst.h>
-#include <gst/check/gstcheck.h>
-
-#include <gst/base/gstadapter.h>
-#include <gst/base/gstbasesink.h>
-#include <gst/base/gstbasesrc.h>
-#include <gst/base/gstbasetransform.h>
-#include <gst/base/gstbitreader.h>
-#include <gst/base/gstbytereader.h>
-#include <gst/base/gstbytewriter.h>
-#include <gst/base/gstcollectpads.h>
-#include <gst/base/gstpushsrc.h>
-#include <gst/base/gsttypefindhelper.h>
-
-#include <gst/controller/gstinterpolationcontrolsource.h>
-#include <gst/controller/gstlfocontrolsource.h>
-#include <gst/controller/gsttriggercontrolsource.h>
-
-#include <gst/net/gstnetclientclock.h>
-#include <gst/net/gstnet.h>
-#include <gst/net/gstnettimepacket.h>
-#include <gst/net/gstnettimeprovider.h>
+#include <gst/check/check.h>
+#include <gst/base/base.h>
+#include <gst/controller/controller.h>
+#include <gst/net/net.h>
 
 /* we mostly just want to make sure that our library headers don't
  * contain anything a C++ compiler might not like */
 GST_START_TEST (test_nothing)
 {
   gst_init (NULL, NULL);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_init_macros)
+{
+  GstBitReader bit_reader = GST_BIT_READER_INIT (NULL, 0);
+  GstByteReader byte_reader = GST_BYTE_READER_INIT (NULL, 0);
+
+  fail_unless (bit_reader.data == NULL);
+  fail_unless (byte_reader.data == NULL);
 }
 
 GST_END_TEST;
@@ -61,6 +55,7 @@ libscpp_suite (void)
 
   suite_add_tcase (s, tc_chain);
   tcase_add_test (tc_chain, test_nothing);
+  tcase_add_test (tc_chain, test_init_macros);
 
   return s;
 }

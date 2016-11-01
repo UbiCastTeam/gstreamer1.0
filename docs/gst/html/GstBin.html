@@ -238,6 +238,16 @@
 </colgroup>
 <tbody>
 <tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GstBin.html#GstBin-deep-element-added" title="The “deep-element-added” signal">deep-element-added</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GstBin.html#GstBin-deep-element-removed" title="The “deep-element-removed” signal">deep-element-removed</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></td>
+</tr>
+<tr>
 <td class="signal_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
 <td class="signal_name"><a class="link" href="GstBin.html#GstBin-do-latency" title="The “do-latency” signal">do-latency</a></td>
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
@@ -1237,6 +1247,10 @@ changes</p></td>
   gboolean (*remove_element) (GstBin *bin, GstElement *element);
 
   void		(*handle_message) (GstBin *bin, GstMessage *message);
+
+  /* signal */
+  void          (*deep_element_added)   (GstBin *bin, GstBin *sub_bin, GstElement *child);
+  void          (*deep_element_removed) (GstBin *bin, GstBin *sub_bin, GstElement *child);
 };
 </pre>
 <p>Subclasses can override the <em class="parameter"><code>add_element</code></em>
@@ -1248,6 +1262,12 @@ update the list of children in the bin.</p>
 message handling.  <em class="parameter"><code>handle_message</code></em>
  takes ownership of the message, just like
 <a class="link" href="GstElement.html#gst-element-post-message" title="gst_element_post_message ()"><span class="type">gst_element_post_message</span></a>.</p>
+<p>The <em class="parameter"><code>element_added_deep</code></em>
+ vfunc will be called when a new element has been
+added to any bin inside this bin, so it will also be called if a new child
+was added to a sub-bin of this bin. <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> implementations that override
+this message should chain up to the parent class implementation so the
+element-added-deep signal is emitted on all parents.</p>
 <div class="refsect3">
 <a name="GstBinClass.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1271,6 +1291,16 @@ message handling.  <em class="parameter"><code>handle_message</code></em>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBinClass.handle-message"></a>handle_message</code></em> ()</p></td>
 <td class="struct_member_description"><p>method to handle a message from the children</p></td>
 <td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstBinClass.deep-element-added"></a>deep_element_added</code></em> ()</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstBinClass.deep-element-removed"></a>deep_element_removed</code></em> ()</p></td>
+<td> </td>
+<td> </td>
 </tr>
 </tbody>
 </table></div>
@@ -1340,6 +1370,96 @@ forwarded message.</p>
 </div>
 <div class="refsect1">
 <a name="GstBin.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="GstBin-deep-element-added"></a><h3>The <code class="literal">“deep-element-added”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>     *bin,
+               <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>     *sub_bin,
+               <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>Will be emitted after the element was added to sub_bin.</p>
+<div class="refsect3">
+<a name="GstBin-deep-element-added.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sub_bin</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> the element was added to</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> that was added to <em class="parameter"><code>sub_bin</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></p>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstBin-deep-element-removed"></a><h3>The <code class="literal">“deep-element-removed”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>     *bin,
+               <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a>     *sub_bin,
+               <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>Will be emitted after the element was removed from sub_bin.</p>
+<div class="refsect3">
+<a name="GstBin-deep-element-removed.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sub_bin</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> the element was removed from</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> that was removed from <em class="parameter"><code>sub_bin</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS">Run First</a></p>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
 <div class="refsect2">
 <a name="GstBin-do-latency"></a><h3>The <code class="literal">“do-latency”</code> signal</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>

@@ -230,7 +230,9 @@ the application has set.</p>
 43
 44
 45
-46</pre></td>
+46
+47
+48</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="gtkdoc kwb">static</span> gboolean
 <span class="function">my_bus_func</span> <span class="gtkdoc opt">(</span>GstBus <span class="gtkdoc opt">*</span> bus<span class="gtkdoc opt">,</span> GstMessage <span class="gtkdoc opt">*</span> message<span class="gtkdoc opt">,</span> gpointer user_data<span class="gtkdoc opt">)</span>
 <span class="gtkdoc opt">{</span>
@@ -243,12 +245,14 @@ the application has set.</p>
        name <span class="gtkdoc opt">=</span> <span class="function"><a href="gstreamer-GstDevice.html#gst-device-get-display-name">gst_device_get_display_name</a></span> <span class="gtkdoc opt">(</span>device<span class="gtkdoc opt">);</span>
        <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;Device added: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> name<span class="gtkdoc opt">);</span>
        <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>name<span class="gtkdoc opt">);</span>
+       <span class="function"><a href="GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>device<span class="gtkdoc opt">);</span>
        <span class="keyword">break</span><span class="gtkdoc opt">;</span>
      <span class="keyword">case</span> GST_MESSAGE_DEVICE_REMOVED<span class="gtkdoc opt">:</span>
        <span class="function"><a href="GstMessage.html#gst-message-parse-device-removed">gst_message_parse_device_removed</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">, &amp;</span>device<span class="gtkdoc opt">);</span>
        name <span class="gtkdoc opt">=</span> <span class="function"><a href="gstreamer-GstDevice.html#gst-device-get-display-name">gst_device_get_display_name</a></span> <span class="gtkdoc opt">(</span>device<span class="gtkdoc opt">);</span>
        <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="gtkdoc opt">(</span><span class="string">&quot;Device removed: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> name<span class="gtkdoc opt">);</span>
        <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free">g_free</a></span> <span class="gtkdoc opt">(</span>name<span class="gtkdoc opt">);</span>
+       <span class="function"><a href="GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>device<span class="gtkdoc opt">);</span>
        <span class="keyword">break</span><span class="gtkdoc opt">;</span>
      <span class="keyword">default</span><span class="gtkdoc opt">:</span>
        <span class="keyword">break</span><span class="gtkdoc opt">;</span>

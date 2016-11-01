@@ -296,6 +296,8 @@ GST_START_TEST (test_message_state_changed)
 
   ASSERT_OBJECT_REFCOUNT (bin, "bin", 1);
 
+  gst_bus_set_flushing (bus, TRUE);
+
   /* clean up */
   ret = gst_element_set_state (GST_ELEMENT (bin), GST_STATE_NULL);
   fail_unless (ret == GST_STATE_CHANGE_SUCCESS);
@@ -359,9 +361,12 @@ GST_START_TEST (test_message_state_changed_child)
   ASSERT_OBJECT_REFCOUNT (src, "src", 1);
   ASSERT_OBJECT_REFCOUNT (bin, "bin", 1);
 
+  gst_bus_set_flushing (bus, TRUE);
+
   /* clean up */
   ret = gst_element_set_state (GST_ELEMENT (bin), GST_STATE_NULL);
   fail_unless (ret == GST_STATE_CHANGE_SUCCESS);
+
   gst_object_unref (bus);
   gst_object_unref (bin);
 }
@@ -579,7 +584,8 @@ GST_START_TEST (test_watch_for_state_change)
   fail_unless (gst_bus_have_pending (bus) == FALSE,
       "Unexpected messages on bus");
 
-  /* setting bin to NULL flushes the bus automatically */
+  gst_bus_set_flushing (bus, TRUE);
+
   ret = gst_element_set_state (GST_ELEMENT (bin), GST_STATE_NULL);
   fail_unless (ret == GST_STATE_CHANGE_SUCCESS);
 
@@ -1422,6 +1428,7 @@ GST_START_TEST (test_duration_is_max)
   GstFormat format = GST_FORMAT_BYTES;
   gboolean res;
   gint64 duration;
+  GstBus *bus;
 
   GST_INFO ("preparing test");
 
@@ -1466,6 +1473,10 @@ GST_START_TEST (test_duration_is_max)
 
   ck_assert_int_eq (duration, 3000);
 
+  bus = gst_element_get_bus (bin);
+  gst_bus_set_flushing (bus, TRUE);
+  gst_object_unref (bus);
+
   gst_element_set_state (bin, GST_STATE_NULL);
   gst_object_unref (bin);
 }
@@ -1479,6 +1490,7 @@ GST_START_TEST (test_duration_unknown_overrides)
   GstFormat format = GST_FORMAT_BYTES;
   gboolean res;
   gint64 duration;
+  GstBus *bus;
 
   GST_INFO ("preparing test");
 
@@ -1523,13 +1535,165 @@ GST_START_TEST (test_duration_unknown_overrides)
 
   ck_assert_int_eq (duration, GST_CLOCK_TIME_NONE);
 
+  bus = gst_element_get_bus (bin);
+  gst_bus_set_flushing (bus, TRUE);
+  gst_object_unref (bus);
+
   gst_element_set_state (bin, GST_STATE_NULL);
   gst_object_unref (bin);
 }
 
 GST_END_TEST;
 
+static gboolean
+element_in_list (GList ** list, GstElement * element)
+{
+  GList *l = g_list_find (*list, element);
 
+  if (l == NULL)
+    return FALSE;
+
+  *list = g_list_delete_link (*list, l);
+  return TRUE;
+}
+
+#define element_was_added(e) element_in_list(&added,e)
+#define element_was_removed(e) element_in_list(&removed,e)
+
+static void
+add_cb (GstBin * pipeline, GstBin * bin, GstElement * element, GList ** list)
+{
+  fail_unless (GST_OBJECT_PARENT (element) == GST_OBJECT_CAST (bin));
+
+  *list = g_list_prepend (*list, element);
+}
+
+static void
+remove_cb (GstBin * pipeline, GstBin * bin, GstElement * element, GList ** list)
+{
+  *list = g_list_prepend (*list, element);
+}
+
+GST_START_TEST (test_deep_added_removed)
+{
+  GstElement *pipe, *e, *bin0, *bin1;
+  gulong id_removed, id_added;
+  GList *removed = NULL;
+  GList *added = NULL;
+
+  pipe = gst_pipeline_new (NULL);
+
+  id_added = g_signal_connect (pipe, "deep-element-added",
+      G_CALLBACK (add_cb), &added);
+  id_removed = g_signal_connect (pipe, "deep-element-removed",
+      G_CALLBACK (remove_cb), &removed);
+
+  /* simple add/remove */
+  e = gst_element_factory_make ("identity", NULL);
+  gst_bin_add (GST_BIN (pipe), e);
+  fail_unless (element_was_added (e));
+  gst_bin_remove (GST_BIN (pipe), e);
+  fail_unless (element_was_removed (e));
+
+  /* let's try with a deeper hierarchy, construct it from top-level down */
+  bin0 = gst_bin_new (NULL);
+  gst_bin_add (GST_BIN (pipe), bin0);
+  bin1 = gst_bin_new (NULL);
+  gst_bin_add (GST_BIN (bin0), bin1);
+  e = gst_element_factory_make ("identity", NULL);
+  gst_bin_add (GST_BIN (bin1), e);
+  fail_unless (element_was_added (bin0));
+  fail_unless (element_was_added (bin1));
+  fail_unless (element_was_added (e));
+  fail_unless (added == NULL);
+  fail_unless (removed == NULL);
+
+  gst_object_ref (e);           /* keep e alive */
+  gst_bin_remove (GST_BIN (bin1), e);
+  fail_unless (element_was_removed (e));
+  fail_unless (added == NULL);
+  fail_unless (removed == NULL);
+
+  /* now add existing bin hierarchy to pipeline (first remove it so we can re-add it) */
+  gst_object_ref (bin0);        /* keep bin0 alive */
+  gst_bin_remove (GST_BIN (pipe), bin0);
+  fail_unless (element_was_removed (bin0));
+  fail_unless (element_was_removed (bin1));
+  fail_unless (added == NULL);
+  fail_unless (removed == NULL);
+
+  /* re-adding element to removed bin should not trigger our callbacks */
+  gst_bin_add (GST_BIN (bin1), e);
+  fail_unless (added == NULL);
+  fail_unless (removed == NULL);
+
+  gst_bin_add (GST_BIN (pipe), bin0);
+  fail_unless (element_was_added (bin0));
+  fail_unless (element_was_added (bin1));
+  fail_unless (element_was_added (e));
+  fail_unless (added == NULL);
+  fail_unless (removed == NULL);
+  gst_object_unref (bin0);
+  gst_object_unref (e);
+
+  /* disconnect signals, unref will trigger remove callbacks otherwise */
+  g_signal_handler_disconnect (pipe, id_added);
+  g_signal_handler_disconnect (pipe, id_removed);
+
+  gst_object_unref (pipe);
+}
+
+GST_END_TEST;
+
+#define _GST_CHECK_BIN_SUPPRESSED_FLAGS(element_flags, suppressed_flags, \
+    expected_flags) \
+G_STMT_START { \
+  GstBin *bin = GST_BIN (gst_bin_new ("test-bin")); \
+  GstElement *element = gst_element_factory_make ("identity", "test-i"); \
+  GstElementFlags natural_flags = GST_OBJECT_FLAGS (bin); \
+  GST_OBJECT_FLAG_SET (element, element_flags); \
+  gst_bin_set_suppressed_flags (bin, suppressed_flags); \
+  gst_bin_add (bin, element); \
+  fail_unless ((natural_flags | GST_OBJECT_FLAGS (bin)) \
+      == expected_flags); \
+  gst_object_unref (bin); \
+} G_STMT_END
+
+GST_START_TEST (test_suppressed_flags)
+{
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SOURCE,
+      0, GST_ELEMENT_FLAG_SOURCE);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SOURCE,
+      GST_ELEMENT_FLAG_SOURCE, 0);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SOURCE,
+      GST_ELEMENT_FLAG_SINK, GST_ELEMENT_FLAG_SOURCE);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SOURCE |
+      GST_ELEMENT_FLAG_PROVIDE_CLOCK,
+      GST_ELEMENT_FLAG_PROVIDE_CLOCK, GST_ELEMENT_FLAG_SOURCE);
+
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SINK,
+      0, GST_ELEMENT_FLAG_SINK);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SINK,
+      GST_ELEMENT_FLAG_SINK, 0);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_SINK,
+      GST_ELEMENT_FLAG_SOURCE, GST_ELEMENT_FLAG_SINK);
+
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_PROVIDE_CLOCK,
+      0, GST_ELEMENT_FLAG_PROVIDE_CLOCK);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_PROVIDE_CLOCK,
+      GST_ELEMENT_FLAG_PROVIDE_CLOCK, 0);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_PROVIDE_CLOCK,
+      GST_ELEMENT_FLAG_REQUIRE_CLOCK, GST_ELEMENT_FLAG_PROVIDE_CLOCK);
+
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_REQUIRE_CLOCK,
+      0, GST_ELEMENT_FLAG_REQUIRE_CLOCK);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_REQUIRE_CLOCK,
+      GST_ELEMENT_FLAG_REQUIRE_CLOCK, 0);
+  _GST_CHECK_BIN_SUPPRESSED_FLAGS (GST_ELEMENT_FLAG_REQUIRE_CLOCK,
+      GST_ELEMENT_FLAG_PROVIDE_CLOCK, GST_ELEMENT_FLAG_REQUIRE_CLOCK);
+}
+
+GST_END_TEST;
 
 static Suite *
 gst_bin_suite (void)
@@ -1560,6 +1724,8 @@ gst_bin_suite (void)
   tcase_add_test (tc_chain, test_state_change_skip);
   tcase_add_test (tc_chain, test_duration_is_max);
   tcase_add_test (tc_chain, test_duration_unknown_overrides);
+  tcase_add_test (tc_chain, test_deep_added_removed);
+  tcase_add_test (tc_chain, test_suppressed_flags);
 
   /* fails on OSX build bot for some reason, and is a bit silly anyway */
   if (0)
