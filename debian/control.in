@@ -31,7 +31,6 @@ Build-Depends: debhelper (>= 9),
                libcap-dev [linux-any]
 Build-Depends-Indep: python (>= 2.2),
                      gtk-doc-tools (>= 1.12),
-                     jade (>= 1.2.1),
                      texlive-generic-recommended,
                      transfig (>= 3.2.3.c),
                      docbook-utils (>= 0.6.9),
@@ -110,6 +109,7 @@ Description: GStreamer core development files
 
 Package: @GST_PKGNAME@-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends},
          libglib2.0-doc
