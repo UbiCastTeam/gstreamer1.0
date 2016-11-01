@@ -110,7 +110,7 @@ class init
 Here the tracers describe the data the will emit.
 
 instance init
-Tracers attach handlers to one or more hooks using gst_tracer_register_hook().
+Tracers attach handlers to one or more hooks using gst_tracing_register_hook().
 In case the are configurable, they can read the options from the 'params'
 property. This is the extra detail from the environment var.
 
@@ -142,7 +142,7 @@ _tracer_class_init() function (except in the log tracer).
 
 // the name is the value name + ".class"
 // the content describes a single log record
-gst_structure_new ("thread-rusage.class",
+gst_tracer_record_new ("thread-rusage.class",
     // value in the log record (order does not matter)
     // 'thread-id' is a 'key' to related the record to something as indicated
     // by 'scope' substructure
@@ -180,15 +180,10 @@ A few ideas that are not yet in the above spec:
     - they add a unique 'ix' to each instance as the memory ptr can be reused
       for new instances, the data is attached to the objects as qdata
     - the latency tracer would like to also reference this metadata
-- enums and flags are logged as comma separated string to not require the front-
-  ends to know the flag values (is that okay?)
 - right now we log the classes as structures
   - this is important so that the log is self contained
   - it would be nice to add them to the registry, so that gst-inspect can show
     them
-
-In addition to the above spec, each log event will contain a "ts" field as a
-G_TYPE_UINT64 to specify the time of the event.
 
 We could also consider to add each value as a READABLE gobject property. The
 property has name/description. We could use qdata for scope and flags (or have
@@ -265,6 +260,17 @@ memory (not yet implemented)
 - use an atexit handler to dump leaked instance
 https://bugzilla.gnome.org/show_bug.cgi?id=756760#c6
 
+leaks
+-----
+- track creation/destruction of GstObject and GstMiniObject
+- log those which are still alive when app is exiting and raise an error if any
+- If the GST_LEAKS_TRACER_SIG env variable is defined:
+  - log alive objects when receiving the SIGUSR1 signal.
+  - create a checkpoint and print a list of objects created and destroyed since
+    the previous checkpoint.
+- If the GST_LEAKS_TRACER_STACK_TRACE env variable is defined log the creation
+  stack trace of leaked objects. This may significantly increase memory
+  consumption.
 
 User interfaces
 ===============
@@ -353,6 +359,12 @@ eog trace.log.*.png
 
 GST_DEBUG="GST_TRACER:7" GST_TRACERS=latency gst-launch-1.0 audiotestsrc num-buffers=10 ! audioconvert ! volume volume=0.7 ! autoaudiosink
 - print processing latencies
+
+GST_TRACERS="leaks" gst-launch-1.0 videotestsrc num-buffers=10 ! fakesink
+- Raise a warning if a leak is detected
+
+GST_DEBUG="GST_TRACER:7" GST_TRACERS="leaks(GstEvent,GstMessage)" gst-launch-1.0 videotestsrc num-buffers=10 ! fakesink
+- check if any GstEvent or GstMessage is leaked and raise a warning
 
 Performance
 ===========

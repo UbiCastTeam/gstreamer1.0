@@ -515,6 +515,12 @@ gst_collect_pads_clip_running_time (GstCollectPads * pads,
 
     time = GST_BUFFER_PTS (buf);
 
+    /* If PTS is not set, the best guess we can make is to assume that both
+     * PTS and DTS are the same. If it was possible, parsers should have fixed
+     * it already as explained in https://bugzilla.gnome.org/show_bug.cgi?id=659489 */
+    if (!GST_CLOCK_TIME_IS_VALID (time))
+      time = GST_BUFFER_DTS (buf);
+
     if (GST_CLOCK_TIME_IS_VALID (time)) {
       time =
           gst_segment_to_running_time (&cdata->segment, GST_FORMAT_TIME, time);
@@ -952,8 +958,8 @@ gst_collect_pads_stop (GstCollectPads * pads)
  *
  * MT safe.
  *
- * Returns: The buffer in @data or %NULL if no buffer is queued.
- *  should unref the buffer after usage.
+ * Returns: (transfer full) (nullable): The buffer in @data or %NULL if no
+ * buffer is queued. should unref the buffer after usage.
  */
 GstBuffer *
 gst_collect_pads_peek (GstCollectPads * pads, GstCollectData * data)
@@ -984,8 +990,8 @@ gst_collect_pads_peek (GstCollectPads * pads, GstCollectData * data)
  *
  * MT safe.
  *
- * Returns: (transfer full): The buffer in @data or %NULL if no buffer was
- *   queued. You should unref the buffer after usage.
+ * Returns: (transfer full) (nullable): The buffer in @data or %NULL if no
+ * buffer was queued. You should unref the buffer after usage.
  */
 GstBuffer *
 gst_collect_pads_pop (GstCollectPads * pads, GstCollectData * data)
@@ -1151,9 +1157,9 @@ gst_collect_pads_flush (GstCollectPads * pads, GstCollectData * data,
  *
  * MT safe.
  *
- * Returns: (transfer full): A sub buffer. The size of the buffer can be less that requested.
- * A return of %NULL signals that the pad is end-of-stream.
- * Unref the buffer after use.
+ * Returns: (transfer full) (nullable): A sub buffer. The size of the buffer can
+ * be less that requested. A return of %NULL signals that the pad is
+ * end-of-stream. Unref the buffer after use.
  */
 GstBuffer *
 gst_collect_pads_read_buffer (GstCollectPads * pads, GstCollectData * data,
@@ -1191,9 +1197,9 @@ gst_collect_pads_read_buffer (GstCollectPads * pads, GstCollectData * data,
  *
  * MT safe.
  *
- * Returns: A sub buffer. The size of the buffer can be less that requested.
- * A return of %NULL signals that the pad is end-of-stream.
- * Unref the buffer after use.
+ * Returns: (transfer full) (nullable): A sub buffer. The size of the buffer can
+ * be less that requested. A return of %NULL signals that the pad is
+ * end-of-stream. Unref the buffer after use.
  */
 GstBuffer *
 gst_collect_pads_take_buffer (GstCollectPads * pads, GstCollectData * data,

@@ -643,8 +643,8 @@ _apply_pad_offset (GstPad * pad, GstEvent * event, gboolean upstream)
 {
   gint64 offset;
 
-  GST_DEBUG_OBJECT (pad, "apply pad offset %" GST_TIME_FORMAT,
-      GST_TIME_ARGS (pad->offset));
+  GST_DEBUG_OBJECT (pad, "apply pad offset %" GST_STIME_FORMAT,
+      GST_STIME_ARGS (pad->offset));
 
   if (GST_EVENT_TYPE (event) == GST_EVENT_SEGMENT) {
     GstSegment segment;
@@ -699,7 +699,7 @@ gst_pad_dispose (GObject * object)
   GstPad *pad = GST_PAD_CAST (object);
   GstPad *peer;
 
-  GST_CAT_DEBUG_OBJECT (GST_CAT_REFCOUNTING, pad, "dispose");
+  GST_CAT_DEBUG_OBJECT (GST_CAT_REFCOUNTING, pad, "%p dispose", pad);
 
   /* unlink the peer pad */
   if ((peer = gst_pad_get_peer (pad))) {
@@ -3184,6 +3184,7 @@ done:
 /* Default latency implementation */
 typedef struct
 {
+  guint count;
   gboolean live;
   GstClockTime min, max;
 } LatencyFoldData;
@@ -3215,7 +3216,8 @@ query_latency_default_fold (const GValue * item, GValue * ret,
     GST_LOG_OBJECT (pad, "got latency live:%s min:%" G_GINT64_FORMAT
         " max:%" G_GINT64_FORMAT, live ? "true" : "false", min, max);
 
-    if (live) {
+    /* FIXME : Why do we only take values into account if it's live ? */
+    if (live || fold_data->count == 0) {
       if (min > fold_data->min)
         fold_data->min = min;
 
@@ -3224,8 +3226,9 @@ query_latency_default_fold (const GValue * item, GValue * ret,
       else if (max < fold_data->max)
         fold_data->max = max;
 
-      fold_data->live = TRUE;
+      fold_data->live = live;
     }
+    fold_data->count += 1;
   } else if (peer) {
     GST_DEBUG_OBJECT (pad, "latency query failed");
     g_value_set_boolean (ret, FALSE);
@@ -3256,6 +3259,7 @@ gst_pad_query_latency_default (GstPad * pad, GstQuery * query)
   g_value_init (&ret, G_TYPE_BOOLEAN);
 
 retry:
+  fold_data.count = 0;
   fold_data.live = FALSE;
   fold_data.min = 0;
   fold_data.max = GST_CLOCK_TIME_NONE;
@@ -3417,13 +3421,25 @@ probe_hook_marshal (GHook * hook, ProbeMarshall * data)
   type = info->type;
   original_data = info->data;
 
-  /* one of the data types for non-idle probes */
-  if ((type & GST_PAD_PROBE_TYPE_IDLE) == 0
-      && (flags & _PAD_PROBE_TYPE_ALL_BOTH_AND_FLUSH & type) == 0)
-    goto no_match;
   /* one of the scheduling types */
   if ((flags & GST_PAD_PROBE_TYPE_SCHEDULING & type) == 0)
     goto no_match;
+
+  if (type & GST_PAD_PROBE_TYPE_PUSH) {
+    /* one of the data types for non-idle probes */
+    if ((type & GST_PAD_PROBE_TYPE_IDLE) == 0
+        && (flags & _PAD_PROBE_TYPE_ALL_BOTH_AND_FLUSH & type) == 0)
+      goto no_match;
+  } else if (type & GST_PAD_PROBE_TYPE_PULL) {
+    /* one of the data types for non-idle probes */
+    if ((type & GST_PAD_PROBE_TYPE_BLOCKING) == 0
+        && (flags & _PAD_PROBE_TYPE_ALL_BOTH_AND_FLUSH & type) == 0)
+      goto no_match;
+  } else {
+    /* Type must have PULL or PUSH probe types */
+    g_assert_not_reached ();
+  }
+
   /* one of the blocking types must match */
   if ((type & GST_PAD_PROBE_TYPE_BLOCKING) &&
       (flags & GST_PAD_PROBE_TYPE_BLOCKING & type) == 0)
@@ -3740,7 +3756,8 @@ gst_pad_set_offset (GstPad * pad, gint64 offset)
     goto done;
 
   pad->offset = offset;
-  GST_DEBUG_OBJECT (pad, "changed offset to %" G_GINT64_FORMAT, offset);
+  GST_DEBUG_OBJECT (pad, "changed offset to %" GST_STIME_FORMAT,
+      GST_STIME_ARGS (offset));
 
   /* resend all sticky events with updated offset on next buffer push */
   events_foreach (pad, mark_event_not_received, NULL);
@@ -5018,8 +5035,9 @@ store_sticky_event (GstPad * pad, GstEvent * event)
   /* Unset the EOS flag when received STREAM_START event, so pad can
    * store sticky event and then push it later */
   if (type == GST_EVENT_STREAM_START) {
-    GST_LOG_OBJECT (pad, "Removing pending EOS events");
+    GST_LOG_OBJECT (pad, "Removing pending EOS and StreamGroupDone events");
     remove_event_by_type (pad, GST_EVENT_EOS);
+    remove_event_by_type (pad, GST_EVENT_STREAM_GROUP_DONE);
     GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_EOS);
   }
 
@@ -5115,7 +5133,7 @@ eos:
 /**
  * gst_pad_store_sticky_event:
  * @pad: a #GstPad
- * @event: a #GstEvent
+ * @event: (transfer none): a #GstEvent
  *
  * Store the sticky @event on @pad
  *
@@ -5185,6 +5203,7 @@ gst_pad_push_event_unchecked (GstPad * pad, GstEvent * event,
       /* Remove sticky EOS events */
       GST_LOG_OBJECT (pad, "Removing pending EOS events");
       remove_event_by_type (pad, GST_EVENT_EOS);
+      remove_event_by_type (pad, GST_EVENT_STREAM_GROUP_DONE);
       remove_event_by_type (pad, GST_EVENT_SEGMENT);
       GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_EOS);
       pad->ABI.abi.last_flowret = GST_FLOW_OK;
@@ -5509,6 +5528,7 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
       /* Remove pending EOS events */
       GST_LOG_OBJECT (pad, "Removing pending EOS and SEGMENT events");
       remove_event_by_type (pad, GST_EVENT_EOS);
+      remove_event_by_type (pad, GST_EVENT_STREAM_GROUP_DONE);
       remove_event_by_type (pad, GST_EVENT_SEGMENT);
       GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_EOS);
       pad->ABI.abi.last_flowret = GST_FLOW_OK;
@@ -5536,6 +5556,7 @@ gst_pad_send_event_unchecked (GstPad * pad, GstEvent * event,
           /* Remove sticky EOS events */
           GST_LOG_OBJECT (pad, "Removing pending EOS events");
           remove_event_by_type (pad, GST_EVENT_EOS);
+          remove_event_by_type (pad, GST_EVENT_STREAM_GROUP_DONE);
           GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_EOS);
           break;
         default:

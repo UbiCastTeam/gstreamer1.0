@@ -952,23 +952,25 @@ gst_base_parse_queue_tag_event_update (GstBaseParse * parse)
     return;
   }
 
-  /* only add bitrate tags to non-empty taglists for now, and only if neither
-   * upstream tags nor the subclass sets the bitrate tag in question already */
-  if (parse->priv->min_bitrate != G_MAXUINT && parse->priv->post_min_bitrate) {
-    GST_LOG_OBJECT (parse, "adding min bitrate %u", parse->priv->min_bitrate);
-    gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP, GST_TAG_MINIMUM_BITRATE,
-        parse->priv->min_bitrate, NULL);
-  }
-  if (parse->priv->max_bitrate != 0 && parse->priv->post_max_bitrate) {
-    GST_LOG_OBJECT (parse, "adding max bitrate %u", parse->priv->max_bitrate);
-    gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP, GST_TAG_MAXIMUM_BITRATE,
-        parse->priv->max_bitrate, NULL);
-  }
-  if (parse->priv->avg_bitrate != 0 && parse->priv->post_avg_bitrate) {
-    parse->priv->posted_avg_bitrate = parse->priv->avg_bitrate;
-    GST_LOG_OBJECT (parse, "adding avg bitrate %u", parse->priv->avg_bitrate);
-    gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP, GST_TAG_BITRATE,
-        parse->priv->avg_bitrate, NULL);
+  if (parse->priv->framecount >= MIN_FRAMES_TO_POST_BITRATE) {
+    /* only add bitrate tags to non-empty taglists for now, and only if neither
+     * upstream tags nor the subclass sets the bitrate tag in question already */
+    if (parse->priv->min_bitrate != G_MAXUINT && parse->priv->post_min_bitrate) {
+      GST_LOG_OBJECT (parse, "adding min bitrate %u", parse->priv->min_bitrate);
+      gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP,
+          GST_TAG_MINIMUM_BITRATE, parse->priv->min_bitrate, NULL);
+    }
+    if (parse->priv->max_bitrate != 0 && parse->priv->post_max_bitrate) {
+      GST_LOG_OBJECT (parse, "adding max bitrate %u", parse->priv->max_bitrate);
+      gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP,
+          GST_TAG_MAXIMUM_BITRATE, parse->priv->max_bitrate, NULL);
+    }
+    if (parse->priv->avg_bitrate != 0 && parse->priv->post_avg_bitrate) {
+      parse->priv->posted_avg_bitrate = parse->priv->avg_bitrate;
+      GST_LOG_OBJECT (parse, "adding avg bitrate %u", parse->priv->avg_bitrate);
+      gst_tag_list_add (merged_tags, GST_TAG_MERGE_KEEP,
+          GST_TAG_BITRATE, parse->priv->avg_bitrate, NULL);
+    }
   }
 
   parse->priv->pending_events =
@@ -2223,6 +2225,12 @@ gst_base_parse_handle_buffer (GstBaseParse * parse, GstBuffer * buffer,
     gst_adapter_clear (parse->priv->adapter);
   }
 
+  if (*skip == 0 && *flushed == 0) {
+    /* Carry over discont if we need more data */
+    if (GST_BUFFER_IS_DISCONT (frame->buffer))
+      parse->priv->discont = TRUE;
+  }
+
   gst_base_parse_frame_free (frame);
 
   return ret;
@@ -2524,6 +2532,8 @@ gst_base_parse_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
 
   if (ret == GST_BASE_PARSE_FLOW_DROPPED) {
     GST_LOG_OBJECT (parse, "frame (%" G_GSIZE_FORMAT " bytes) dropped", size);
+    if (GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DISCONT))
+      parse->priv->discont = TRUE;
     gst_buffer_unref (buffer);
     ret = GST_FLOW_OK;
   } else if (ret == GST_FLOW_OK) {
@@ -3595,8 +3605,7 @@ pause:
       /* for fatal errors we post an error message, wrong-state is
        * not fatal because it happens due to flushes and only means
        * that we should stop now. */
-      GST_ELEMENT_ERROR (parse, STREAM, FAILED, (NULL),
-          ("streaming stopped, reason %s", gst_flow_get_name (ret)));
+      GST_ELEMENT_FLOW_ERROR (parse, ret);
       push_eos = TRUE;
     }
     if (push_eos) {

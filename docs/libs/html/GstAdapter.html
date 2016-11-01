@@ -226,6 +226,46 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstAdapter.html#gst-adapter-prev-offset" title="gst_adapter_prev_offset ()">gst_adapter_prev_offset</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstAdapter.html#gst-adapter-pts-at-discont" title="gst_adapter_pts_at_discont ()">gst_adapter_pts_at_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstAdapter.html#gst-adapter-dts-at-discont" title="gst_adapter_dts_at_discont ()">gst_adapter_dts_at_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstAdapter.html#gst-adapter-offset-at-discont" title="gst_adapter_offset_at_discont ()">gst_adapter_offset_at_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstAdapter.html#gst-adapter-distance-from-discont" title="gst_adapter_distance_from_discont ()">gst_adapter_distance_from_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="returnvalue">gssize</span></a>
 </td>
 <td class="function_name">
@@ -362,6 +402,16 @@ you to calculate the timestamp of the current adapter position by using the
 last seen timestamp and the amount of bytes since.  Additionally, the
 <a class="link" href="GstAdapter.html#gst-adapter-prev-pts-at-offset" title="gst_adapter_prev_pts_at_offset ()"><code class="function">gst_adapter_prev_pts_at_offset()</code></a> can be used to determine the last
 seen timestamp at a particular offset in the adapter.</p>
+<p>The adapter will also keep track of the offset of the buffers
+(<a href="../html/GstBuffer.html#GST-BUFFER-OFFSET:CAPS"><span class="type">GST_BUFFER_OFFSET</span></a>) that were pushed. The last seen offset before the
+current position can be queried with <a class="link" href="GstAdapter.html#gst-adapter-prev-offset" title="gst_adapter_prev_offset ()"><code class="function">gst_adapter_prev_offset()</code></a>. This function
+can optionally return the number of bytes between the start of the buffer
+that carried the offset and the current adapter position.</p>
+<p>Additionally the adapter also keeps track of the PTS, DTS and buffer offset
+at the last discontinuity, which can be retrieved with
+<a class="link" href="GstAdapter.html#gst-adapter-pts-at-discont" title="gst_adapter_pts_at_discont ()"><code class="function">gst_adapter_pts_at_discont()</code></a>, <a class="link" href="GstAdapter.html#gst-adapter-dts-at-discont" title="gst_adapter_dts_at_discont ()"><code class="function">gst_adapter_dts_at_discont()</code></a> and
+<a class="link" href="GstAdapter.html#gst-adapter-offset-at-discont" title="gst_adapter_offset_at_discont ()"><code class="function">gst_adapter_offset_at_discont()</code></a>. The number of bytes that were consumed
+since then can be queried with <a class="link" href="GstAdapter.html#gst-adapter-distance-from-discont" title="gst_adapter_distance_from_discont ()"><code class="function">gst_adapter_distance_from_discont()</code></a>.</p>
 <p>A last thing to note is that while <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> is pretty optimized,
 merging buffers still might be an operation that requires a <code class="function">malloc()</code> and
 <code class="function">memcpy()</code> operation, and these operations are not the fastest. Because of
@@ -1326,6 +1376,138 @@ and distance returned are GST_CLOCK_TIME_NONE and 0 respectively.</p>
 <p> The previously seen dts at given offset.</p>
 </div>
 <p class="since">Since: <a class="link" href="ix05.html#api-index-1.2">1.2</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-adapter-prev-offset"></a><h3>gst_adapter_prev_offset ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+gst_adapter_prev_offset (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a> *distance</code></em>);</pre>
+<p>Get the offset that was before the current byte in the adapter. When
+<em class="parameter"><code>distance</code></em>
+ is given, the amount of bytes between the offset and the current
+position is returned.</p>
+<p>The offset is reset to GST_BUFFER_OFFSET_NONE and the distance is set to 0
+when the adapter is first created or when it is cleared. This also means that
+before the first byte with an offset is removed from the adapter, the offset
+and distance returned are GST_BUFFER_OFFSET_NONE and 0 respectively.</p>
+<div class="refsect3">
+<a name="gst-adapter-prev-offset.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>adapter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>distance</p></td>
+<td class="parameter_description"><p> pointer to a location for distance, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-adapter-prev-offset.returns"></a><h4>Returns</h4>
+<p> The previous seen offset.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-adapter-pts-at-discont"></a><h3>gst_adapter_pts_at_discont ()</h3>
+<pre class="programlisting"><a href="../html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+gst_adapter_pts_at_discont (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>);</pre>
+<p>Get the PTS that was on the last buffer with the GST_BUFFER_FLAG_DISCONT
+flag, or GST_CLOCK_TIME_NONE.</p>
+<div class="refsect3">
+<a name="gst-adapter-pts-at-discont.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>adapter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-adapter-pts-at-discont.returns"></a><h4>Returns</h4>
+<p> The PTS at the last discont or GST_CLOCK_TIME_NONE.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-adapter-dts-at-discont"></a><h3>gst_adapter_dts_at_discont ()</h3>
+<pre class="programlisting"><a href="../html/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+gst_adapter_dts_at_discont (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>);</pre>
+<p>Get the DTS that was on the last buffer with the GST_BUFFER_FLAG_DISCONT
+flag, or GST_CLOCK_TIME_NONE.</p>
+<div class="refsect3">
+<a name="gst-adapter-dts-at-discont.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>adapter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-adapter-dts-at-discont.returns"></a><h4>Returns</h4>
+<p> The DTS at the last discont or GST_CLOCK_TIME_NONE.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-adapter-offset-at-discont"></a><h3>gst_adapter_offset_at_discont ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+gst_adapter_offset_at_discont (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>);</pre>
+<p>Get the offset that was on the last buffer with the GST_BUFFER_FLAG_DISCONT
+flag, or GST_BUFFER_OFFSET_NONE.</p>
+<div class="refsect3">
+<a name="gst-adapter-offset-at-discont.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>adapter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-adapter-offset-at-discont.returns"></a><h4>Returns</h4>
+<p> The offset at the last discont or GST_BUFFER_OFFSET_NONE.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-adapter-distance-from-discont"></a><h3>gst_adapter_distance_from_discont ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+gst_adapter_distance_from_discont (<em class="parameter"><code><a class="link" href="GstAdapter.html" title="GstAdapter"><span class="type">GstAdapter</span></a> *adapter</code></em>);</pre>
 </div>
 <hr>
 <div class="refsect2">

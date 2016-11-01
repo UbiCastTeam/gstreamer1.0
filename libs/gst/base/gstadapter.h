@@ -75,6 +75,13 @@ GstClockTime            gst_adapter_prev_pts            (GstAdapter *adapter, gu
 GstClockTime            gst_adapter_prev_dts            (GstAdapter *adapter, guint64 *distance);
 GstClockTime            gst_adapter_prev_pts_at_offset  (GstAdapter * adapter, gsize offset, guint64 * distance);
 GstClockTime            gst_adapter_prev_dts_at_offset  (GstAdapter * adapter, gsize offset, guint64 * distance);
+guint64                 gst_adapter_prev_offset         (GstAdapter *adapter, guint64 *distance);
+
+GstClockTime            gst_adapter_pts_at_discont      (GstAdapter *adapter);
+GstClockTime            gst_adapter_dts_at_discont      (GstAdapter *adapter);
+guint64                 gst_adapter_offset_at_discont   (GstAdapter *adapter);
+
+guint64                 gst_adapter_distance_from_discont (GstAdapter *adapter);
 
 gssize                  gst_adapter_masked_scan_uint32  (GstAdapter * adapter, guint32 mask,
                                                          guint32 pattern, gsize offset, gsize size);

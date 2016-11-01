@@ -55,11 +55,8 @@
 #if 0
 #define GST_DISABLE_GST_DEBUG 1
 #define GST_DISABLE_PARSE 1
-#define GST_DISABLE_TRACE 1
-#define GST_DISABLE_ALLOC_TRACE 1
 #define GST_DISABLE_REGISTRY 1
 #define GST_DISABLE_PLUGIN 1
-#define GST_HAVE_GLIB_2_8 1
 #endif
 
 /***** default padding of structures *****/
@@ -86,22 +83,6 @@
 @GST_DISABLE_PARSE_DEFINE@
 
 /**
- * GST_DISABLE_TRACE:
- *
- * Configures the inclusion of a resource tracing facility
- * (seems to be unused)
- */
-@GST_DISABLE_TRACE_DEFINE@
-
-/**
- * GST_DISABLE_ALLOC_TRACE:
- *
- * Configures the use of a memory tracer based on the resource tracer
- * if TRACE is disabled, ALLOC_TRACE is disabled as well
- */
-@GST_DISABLE_ALLOC_TRACE_DEFINE@
-
-/**
  * GST_DISABLE_REGISTRY:
  *
  * Configures the use of the plugin registry.
@@ -114,8 +95,22 @@
 /* Configures the use of external plugins */
 @GST_DISABLE_PLUGIN_DEFINE@
 
-/* whether or not the CPU supports unaligned access */
-@GST_HAVE_UNALIGNED_ACCESS_DEFINE@
+/* Whether or not the CPU supports unaligned access
+ * The macros used are defined consistently by GCC, Clang, MSVC, Sun, and ICC
+ *
+ * References:
+ * https://sourceforge.net/p/predef/wiki/Architectures/
+ * https://msdn.microsoft.com/en-us/library/b0084kay.aspx
+ * http://docs.oracle.com/cd/E19205-01/820-4155/c++_faq.html#Vers6
+ * https://software.intel.com/en-us/node/583402
+ */
+#if defined(__alpha__) || defined(__arm__) || defined(__aarch64__) || defined(__bfin) || defined(__hppa__) || defined(__mips__) || defined(__sh__) || defined(__SH4__) || defined(__sparc__) || defined(__sparc) || defined(__ia64__) || defined(_M_ALPHA) || defined(_M_ARM) || defined(_M_IA64)
+#  define GST_HAVE_UNALIGNED_ACCESS 0
+#elif defined(__i386__) || defined(__i386) || defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__ppc__) || defined(__ppc64__) || defined(__powerpc__) || defined(__powerpc64__) || defined(__m68k__) || defined(_M_IX86) || defined(_M_AMD64) || defined(_M_X64) || defined(__s390__) || defined(__s390x__) || defined(__zarch__)
+#  define GST_HAVE_UNALIGNED_ACCESS 1
+#else
+#  error "Could not detect architecture; don't know whether it supports unaligned access! Please file a bug."
+#endif
 
 /**
  * GST_EXPORT:
@@ -133,20 +128,30 @@
  * On Windows, this exports the plugin definition from the DLL.
  * On other platforms, this gets defined as a no-op.
  */
-#ifdef _MSC_VER
-#define GST_PLUGIN_EXPORT __declspec(dllexport) extern
-#ifdef GST_EXPORTS
-#define GST_EXPORT __declspec(dllexport) extern
+/* Only use __declspec(dllexport/import) when we have been built with MSVC or
+ * the user is linking to us with MSVC. The only remaining case is when we were
+ * built with MinGW and are linking with MinGW in which case we rely on the
+ * linker to auto-export/import symbols. Of course all this is only used when
+ * not linking statically.
+ *
+ * NOTE: To link to GStreamer statically on Windows, you must define
+ * GST_STATIC_COMPILATION or the prototypes will cause the compiler to search
+ * for the symbol inside a DLL.
+ */
+#if (@GSTCONFIG_BUILT_WITH_MSVC@ || defined(_MSC_VER)) && !defined(GST_STATIC_COMPILATION)
+# define GST_PLUGIN_EXPORT __declspec(dllexport)
+# ifdef GST_EXPORTS
+#  define GST_EXPORT __declspec(dllexport)
+# else
+#  define GST_EXPORT __declspec(dllimport) extern
+# endif
 #else
-#define GST_EXPORT __declspec(dllimport) extern
-#endif
-#else /* not _MSC_VER */
-#define GST_PLUGIN_EXPORT
-#if (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
-#define GST_EXPORT extern __attribute__ ((visibility ("default")))
-#else
-#define GST_EXPORT extern
-#endif
+# define GST_PLUGIN_EXPORT
+# if (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
+#  define GST_EXPORT extern __attribute__ ((visibility ("default")))
+# else
+#  define GST_EXPORT extern
+# endif
 #endif
 
 #endif /* __GST_CONFIG_H__ */

@@ -541,7 +541,6 @@ print_element_properties_info (GstElement * element)
 static void
 print_pad_templates_info (GstElement * element, GstElementFactory * factory)
 {
-  GstElementClass *gstelement_class;
   const GList *pads;
   GstStaticPadTemplate *padtemplate;
 
@@ -550,8 +549,6 @@ print_pad_templates_info (GstElement * element, GstElementFactory * factory)
     n_print ("  none\n");
     return;
   }
-
-  gstelement_class = GST_ELEMENT_CLASS (G_OBJECT_GET_CLASS (element));
 
   pads = gst_element_factory_get_static_pad_templates (factory);
   while (pads) {
@@ -571,8 +568,6 @@ print_pad_templates_info (GstElement * element, GstElementFactory * factory)
       n_print ("    Availability: Sometimes\n");
     else if (padtemplate->presence == GST_PAD_REQUEST) {
       n_print ("    Availability: On request\n");
-      n_print ("      Has request_new_pad() function: %s\n",
-          GST_DEBUG_FUNCPTR_NAME (gstelement_class->request_new_pad));
     } else
       n_print ("    Availability: UNKNOWN!!!\n");
 
@@ -743,6 +738,19 @@ has_sometimes_template (GstElement * element)
   return FALSE;
 }
 
+static gboolean
+gtype_needs_ptr_marker (GType type)
+{
+  if (type == G_TYPE_POINTER)
+    return FALSE;
+
+  if (G_TYPE_FUNDAMENTAL (type) == G_TYPE_POINTER || G_TYPE_IS_BOXED (type)
+      || G_TYPE_IS_OBJECT (type))
+    return TRUE;
+
+  return FALSE;
+}
+
 static void
 print_signal_info (GstElement * element)
 {
@@ -813,12 +821,7 @@ print_signal_info (GstElement * element)
       indent_len = strlen (query->signal_name) +
           strlen (g_type_name (query->return_type)) + 24;
 
-
-      if (query->return_type == G_TYPE_POINTER) {
-        pmark = "";
-      } else if (G_TYPE_FUNDAMENTAL (query->return_type) == G_TYPE_POINTER
-          || G_TYPE_IS_BOXED (query->return_type)
-          || G_TYPE_IS_OBJECT (query->return_type)) {
+      if (gtype_needs_ptr_marker (query->return_type)) {
         pmark = "* ";
         indent_len += 2;
       } else {
@@ -833,17 +836,13 @@ print_signal_info (GstElement * element)
           g_type_name (type));
 
       for (j = 0; j < query->n_params; j++) {
+        const gchar *type_name, *asterisk;
+
+        type_name = g_type_name (query->param_types[j]);
+        asterisk = gtype_needs_ptr_marker (query->param_types[j]) ? "*" : "";
+
         g_print (",\n");
-        if (G_TYPE_IS_FUNDAMENTAL (query->param_types[j])) {
-          n_print ("%s%s arg%d", indent,
-              g_type_name (query->param_types[j]), j);
-        } else if (G_TYPE_IS_ENUM (query->param_types[j])) {
-          n_print ("%s%s arg%d", indent,
-              g_type_name (query->param_types[j]), j);
-        } else {
-          n_print ("%s%s* arg%d", indent,
-              g_type_name (query->param_types[j]), j);
-        }
+        n_print ("%s%s%s arg%d", indent, type_name, asterisk, j);
       }
 
       if (k == 0) {
@@ -1561,6 +1560,9 @@ main (int argc, char *argv[])
         } else {
           exit_code = 1;
         }
+
+        if (feature)
+          gst_object_unref (feature);
       } else {
         /* FIXME: support checking for plugins too */
         g_printerr ("Checking for plugins is not supported yet\n");

@@ -38,6 +38,9 @@ extern const char             g_log_domain_gstreamer[];
 #include <stdlib.h>
 #include <string.h>
 
+/* Needed for GST_EXPORT */
+#include "gst/gstconfig.h"
+
 /* Needed for GstRegistry * */
 #include "gstregistry.h"
 #include "gststructure.h"
@@ -126,6 +129,14 @@ G_GNUC_INTERNAL  void  _priv_gst_debug_init (void);
 G_GNUC_INTERNAL  void  _priv_gst_context_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_toc_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_date_time_initialize (void);
+
+/* cleanup functions called from gst_deinit(). */
+G_GNUC_INTERNAL  void  _priv_gst_allocator_cleanup (void);
+G_GNUC_INTERNAL  void  _priv_gst_caps_features_cleanup (void);
+G_GNUC_INTERNAL  void  _priv_gst_caps_cleanup (void);
+
+/* called from gst_task_cleanup_all(). */
+G_GNUC_INTERNAL  void  _priv_gst_element_cleanup (void);
 
 /* Private registry functions */
 G_GNUC_INTERNAL

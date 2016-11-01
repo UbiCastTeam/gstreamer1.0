@@ -207,6 +207,174 @@ GST_START_TEST (test_simple_create_destroy)
 
 GST_END_TEST;
 
+static gboolean
+queue2_dummypad_query (GstPad * sinkpad, GstObject * parent, GstQuery * query)
+{
+  gboolean res = TRUE;
+
+  switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_CAPS:
+    {
+      GstCaps *filter, *caps;
+
+      gst_query_parse_caps (query, &filter);
+      caps = (filter ? gst_caps_ref (filter) : gst_caps_new_any ());
+      gst_query_set_caps_result (query, caps);
+      gst_caps_unref (caps);
+      break;
+    }
+    default:
+      res = gst_pad_query_default (sinkpad, parent, query);
+      break;
+  }
+  return res;
+}
+
+static gpointer
+pad_push_datablock_thread (gpointer data)
+{
+  GstPad *pad = data;
+  GstBuffer *buf;
+
+  buf = gst_buffer_new_allocate (NULL, 80 * 1000, NULL);
+  gst_pad_push (pad, buf);
+
+  return NULL;
+}
+
+static GstPadProbeReturn
+block_probe (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
+{
+  return GST_PAD_PROBE_OK;
+}
+
+#define CHECK_FOR_BUFFERING_MSG(PIPELINE, EXPECTED_PERC) \
+  G_STMT_START { \
+    gint buf_perc; \
+    GstMessage *msg; \
+    GST_LOG ("waiting for %d%% buffering message", (EXPECTED_PERC)); \
+    msg = gst_bus_poll (GST_ELEMENT_BUS (PIPELINE), \
+        GST_MESSAGE_BUFFERING | GST_MESSAGE_ERROR, -1); \
+    fail_if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_ERROR, \
+        "Expected BUFFERING message, got ERROR message"); \
+    gst_message_parse_buffering (msg, &buf_perc); \
+    gst_message_unref (msg); \
+    fail_unless (buf_perc == (EXPECTED_PERC), \
+        "Got incorrect percentage: %d%% expected: %d%%", buf_perc, \
+        (EXPECTED_PERC)); \
+  } G_STMT_END
+
+GST_START_TEST (test_watermark_and_fill_level)
+{
+  /* This test checks the behavior of the fill level and
+   * the low/high watermarks. It also checks if the
+   * low/high-percent and low/high-watermark properties
+   * are coupled together properly. */
+
+  GstElement *pipe;
+  GstElement *queue2, *fakesink;
+  GstPad *inputpad;
+  GstPad *queue2_sinkpad;
+  GstPad *sinkpad;
+  GstSegment segment;
+  GThread *thread;
+  gint low_perc, high_perc;
+
+
+  /* Setup test pipeline with one multiqueue and one fakesink */
+
+  pipe = gst_pipeline_new ("pipeline");
+  queue2 = gst_element_factory_make ("queue2", NULL);
+  fail_unless (queue2 != NULL);
+  gst_bin_add (GST_BIN (pipe), queue2);
+
+  fakesink = gst_element_factory_make ("fakesink", NULL);
+  fail_unless (fakesink != NULL);
+  gst_bin_add (GST_BIN (pipe), fakesink);
+
+  /* Block fakesink sinkpad flow to ensure the queue isn't emptied
+   * by the prerolling sink */
+  sinkpad = gst_element_get_static_pad (fakesink, "sink");
+  gst_pad_add_probe (sinkpad, GST_PAD_PROBE_TYPE_BLOCK, block_probe, NULL,
+      NULL);
+  gst_object_unref (sinkpad);
+
+  g_object_set (queue2,
+      "use-buffering", (gboolean) TRUE,
+      "max-size-bytes", (guint) 1000 * 1000,
+      "max-size-buffers", (guint) 0,
+      "max-size-time", (guint64) 0,
+      "low-watermark", (gdouble) 0.01, "high-watermark", (gdouble) 0.10, NULL);
+
+  g_object_get (queue2, "low-percent", &low_perc,
+      "high-percent", &high_perc, NULL);
+
+  /* Check that low/high-watermark and low/high-percent are
+   * coupled properly. (low/high-percent are deprecated and
+   * exist for backwards compatibility.) */
+  fail_unless_equals_int (low_perc, 1);
+  fail_unless_equals_int (high_perc, 10);
+
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+
+  inputpad = gst_pad_new ("dummysrc", GST_PAD_SRC);
+  gst_pad_set_query_function (inputpad, queue2_dummypad_query);
+
+  queue2_sinkpad = gst_element_get_static_pad (queue2, "sink");
+  fail_unless (queue2_sinkpad != NULL);
+  fail_unless (gst_pad_link (inputpad, queue2_sinkpad) == GST_PAD_LINK_OK);
+
+  gst_pad_set_active (inputpad, TRUE);
+
+  gst_pad_push_event (inputpad, gst_event_new_stream_start ("test"));
+  gst_pad_push_event (inputpad, gst_event_new_segment (&segment));
+
+  gst_object_unref (queue2_sinkpad);
+
+  fail_unless (gst_element_link (queue2, fakesink));
+
+  /* Start pipeline in paused state to ensure the sink remains
+   * in preroll mode and blocks */
+  gst_element_set_state (pipe, GST_STATE_PAUSED);
+
+  /* When the use-buffering property is set to TRUE, a buffering
+   * message is posted. Since the queue is empty at that point,
+   * the buffering message contains a value of 0%. */
+  CHECK_FOR_BUFFERING_MSG (pipe, 0);
+
+  /* Feed data. queue will be filled to 80% (because it pushes 80000 bytes),
+   * which is below the high-threshold, provoking a buffering message. */
+  thread = g_thread_new ("push1", pad_push_datablock_thread, inputpad);
+  g_thread_join (thread);
+
+  /* Check for the buffering message; it should indicate 80% fill level
+   * (Note that the percentage from the message is normalized) */
+  CHECK_FOR_BUFFERING_MSG (pipe, 80);
+
+  /* Increase the buffer size and lower the watermarks to test
+   * if <1% watermarks are supported. */
+  g_object_set (queue2,
+      "max-size-bytes", (guint) 20 * 1000 * 1000,
+      "low-watermark", (gdouble) 0.0001, "high-watermark", (gdouble) 0.005,
+      NULL);
+
+  /* First buffering message is posted after the max-size-bytes limit
+   * is set to 20000000 bytes & the low-watermark is set. Since the
+   * queue contains 80000 bytes, and the high watermark still is
+   * 0.1 at this point, and the buffer level 80000 / 20000000 = 0.004 is
+   * normalized by 0.1: 0.004 / 0.1 => buffering percentage 4%. */
+  CHECK_FOR_BUFFERING_MSG (pipe, 4);
+  /* Second buffering message is posted after the high-watermark limit
+   * is set to 0.005. This time, the buffer level is normalized this way:
+   * 0.004 / 0.005 => buffering percentage 80%. */
+  CHECK_FOR_BUFFERING_MSG (pipe, 80);
+
+  gst_element_set_state (pipe, GST_STATE_NULL);
+  gst_object_unref (pipe);
+}
+
+GST_END_TEST;
+
 static gpointer
 push_buffer (GstPad * sinkpad)
 {
@@ -333,6 +501,45 @@ GST_START_TEST (test_percent_overflow)
 
 GST_END_TEST;
 
+GST_START_TEST (test_small_ring_buffer)
+{
+  GstElement *pipeline;
+  GstElement *queue2;
+  const gchar *desc;
+  GstBus *bus;
+  GstMessage *msg;
+
+  /* buffer too small to seek used to crash, test for regression */
+  desc = "fakesrc sizetype=2 sizemax=4096 num-buffers=100 datarate=1000 ! "
+      "queue2 ring-buffer-max-size=1000 name=q2 ! fakesink sync=true";
+
+  pipeline = gst_parse_launch (desc, NULL);
+  fail_if (pipeline == NULL);
+
+  queue2 = gst_bin_get_by_name (GST_BIN (pipeline), "q2");
+  fail_if (queue2 == NULL);
+
+  /* bring the pipeline to PLAYING, then start switching */
+  bus = gst_element_get_bus (pipeline);
+  fail_if (bus == NULL);
+  gst_element_set_state (pipeline, GST_STATE_PLAYING);
+  /* Wait for the pipeline to hit playing */
+  gst_element_get_state (pipeline, NULL, NULL, GST_CLOCK_TIME_NONE);
+
+  /* now wait for completion or error */
+  msg = gst_bus_poll (bus, GST_MESSAGE_EOS | GST_MESSAGE_ERROR, -1);
+  fail_if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_ERROR,
+      "Expected EOS message, got ERROR message");
+  gst_message_unref (msg);
+
+  gst_element_set_state (pipeline, GST_STATE_NULL);
+  gst_object_unref (queue2);
+  gst_object_unref (bus);
+  gst_object_unref (pipeline);
+}
+
+GST_END_TEST;
+
 static Suite *
 queue2_suite (void)
 {
@@ -345,8 +552,10 @@ queue2_suite (void)
   tcase_add_test (tc_chain, test_simple_pipeline_ringbuffer);
   tcase_add_test (tc_chain, test_simple_shutdown_while_running);
   tcase_add_test (tc_chain, test_simple_shutdown_while_running_ringbuffer);
+  tcase_add_test (tc_chain, test_watermark_and_fill_level);
   tcase_add_test (tc_chain, test_filled_read);
   tcase_add_test (tc_chain, test_percent_overflow);
+  tcase_add_test (tc_chain, test_small_ring_buffer);
 
   return s;
 }

@@ -399,6 +399,60 @@ typedef enum
  */
 #define GST_ELEMENT_START_TIME(elem)            (GST_ELEMENT_CAST(elem)->start_time)
 
+GstStructure *gst_make_element_message_details (const char *name, ...);
+#define GST_ELEMENT_MESSAGE_MAKE_DETAILS(args) gst_make_element_message_details args
+
+/**
+ * GST_ELEMENT_FLOW_ERROR:
+ * @el:           the element that generates the error
+ * @flow_return:  the GstFlowReturn leading to that ERROR message
+ *
+ * Utility function that elements can use in case they encountered a fatal
+ * data processing error due to wrong flow processing.
+ *
+ * Since: 1.10
+ */
+#define GST_ELEMENT_FLOW_ERROR(el,flow_return)  \
+G_STMT_START {                                                          \
+  GST_ELEMENT_ERROR_WITH_DETAILS (el, STREAM, FAILED, \
+      ("Internal data stream error."), \
+      ("streaming stopped, reason %s (%d)", gst_flow_get_name (flow_return), flow_return), \
+      ("flow-return", G_TYPE_INT, flow_return, NULL));\
+} G_STMT_END
+
+/**
+ * GST_ELEMENT_ERROR_WITH_DETAILS:
+ * @el:     the element that generates the error
+ * @domain: like CORE, LIBRARY, RESOURCE or STREAM (see #gstreamer-GstGError)
+ * @code:   error code defined for that domain (see #gstreamer-GstGError)
+ * @text:   the message to display (format string and args enclosed in
+            parentheses)
+ * @debug:  debugging information for the message (format string and args
+            enclosed in parentheses)
+ * @args    optional name, type, value triplets, which will be stored
+ *          in the associated GstStructure. NULL terminator required.
+ *          Must be enclosed within parentheses.
+ *
+ * Utility function that elements can use in case they encountered a fatal
+ * data processing error. The pipeline will post an error message and the
+ * application will be requested to stop further media processing.
+ *
+ * Since: 1.10
+ */
+#define GST_ELEMENT_ERROR_WITH_DETAILS(el,domain,code,text,debug,args)  \
+G_STMT_START {                                                          \
+  gchar *__txt = _gst_element_error_printf text;                        \
+  gchar *__dbg = _gst_element_error_printf debug;                       \
+  if (__txt)                                                            \
+    GST_WARNING_OBJECT (el, "error: %s", __txt);                        \
+  if (__dbg)                                                            \
+    GST_WARNING_OBJECT (el, "error: %s", __dbg);                        \
+  gst_element_message_full_with_details (GST_ELEMENT(el),               \
+    GST_MESSAGE_ERROR, GST_ ## domain ## _ERROR,                        \
+      GST_ ## domain ## _ERROR_ ## code, __txt, __dbg, __FILE__,        \
+      GST_FUNCTION, __LINE__, GST_ELEMENT_MESSAGE_MAKE_DETAILS(args));  \
+} G_STMT_END
+
 /**
  * GST_ELEMENT_ERROR:
  * @el:     the element that generates the error
@@ -413,7 +467,7 @@ typedef enum
  * data processing error. The pipeline will post an error message and the
  * application will be requested to stop further media processing.
  */
-#define GST_ELEMENT_ERROR(el, domain, code, text, debug)                \
+#define GST_ELEMENT_ERROR(el,domain,code,text,debug)                    \
 G_STMT_START {                                                          \
   gchar *__txt = _gst_element_error_printf text;                        \
   gchar *__dbg = _gst_element_error_printf debug;                       \
@@ -421,9 +475,43 @@ G_STMT_START {                                                          \
     GST_WARNING_OBJECT (el, "error: %s", __txt);                        \
   if (__dbg)                                                            \
     GST_WARNING_OBJECT (el, "error: %s", __dbg);                        \
-  gst_element_message_full (GST_ELEMENT(el), GST_MESSAGE_ERROR,         \
-    GST_ ## domain ## _ERROR, GST_ ## domain ## _ERROR_ ## code,        \
-    __txt, __dbg, __FILE__, GST_FUNCTION, __LINE__);                    \
+  gst_element_message_full (GST_ELEMENT(el),                            \
+    GST_MESSAGE_ERROR, GST_ ## domain ## _ERROR,                        \
+      GST_ ## domain ## _ERROR_ ## code, __txt, __dbg, __FILE__,        \
+      GST_FUNCTION, __LINE__);                                          \
+} G_STMT_END
+
+/**
+ * GST_ELEMENT_WARNING_WITH_DETAILS:
+ * @el:     the element that generates the warning
+ * @domain: like CORE, LIBRARY, RESOURCE or STREAM (see #gstreamer-GstGError)
+ * @code:   error code defined for that domain (see #gstreamer-GstGError)
+ * @text:   the message to display (format string and args enclosed in
+            parentheses)
+ * @debug:  debugging information for the message (format string and args
+            enclosed in parentheses)
+ * @args    optional name, type, value triplets, which will be stored
+ *          in the associated GstStructure. NULL terminator required.
+ *          Must be enclosed within parentheses.
+ *
+ * Utility function that elements can use in case they encountered a non-fatal
+ * data processing problem. The pipeline will post a warning message and the
+ * application will be informed.
+ *
+ * Since: 1.10
+ */
+#define GST_ELEMENT_WARNING_WITH_DETAILS(el, domain, code, text, debug, args)\
+G_STMT_START {                                                          \
+  gchar *__txt = _gst_element_error_printf text;                        \
+  gchar *__dbg = _gst_element_error_printf debug;                       \
+  if (__txt)                                                            \
+    GST_WARNING_OBJECT (el, "warning: %s", __txt);                      \
+  if (__dbg)                                                            \
+    GST_WARNING_OBJECT (el, "warning: %s", __dbg);                      \
+  gst_element_message_full_with_details (GST_ELEMENT(el),               \
+    GST_MESSAGE_WARNING, GST_ ## domain ## _ERROR,                      \
+    GST_ ## domain ## _ERROR_ ## code, __txt, __dbg, __FILE__,          \
+    GST_FUNCTION, __LINE__, GST_ELEMENT_MESSAGE_MAKE_DETAILS(args));    \
 } G_STMT_END
 
 /**
@@ -448,9 +536,46 @@ G_STMT_START {                                                          \
     GST_WARNING_OBJECT (el, "warning: %s", __txt);                      \
   if (__dbg)                                                            \
     GST_WARNING_OBJECT (el, "warning: %s", __dbg);                      \
-  gst_element_message_full (GST_ELEMENT(el), GST_MESSAGE_WARNING,       \
-    GST_ ## domain ## _ERROR, GST_ ## domain ## _ERROR_ ## code,        \
-  __txt, __dbg, __FILE__, GST_FUNCTION, __LINE__);                      \
+  gst_element_message_full (GST_ELEMENT(el),                            \
+    GST_MESSAGE_WARNING, GST_ ## domain ## _ERROR,                      \
+    GST_ ## domain ## _ERROR_ ## code, __txt, __dbg, __FILE__,          \
+    GST_FUNCTION, __LINE__);                                            \
+} G_STMT_END
+
+/**
+ * GST_ELEMENT_INFO_WITH_DETAILS:
+ * @el:     the element that generates the information
+ * @domain: like CORE, LIBRARY, RESOURCE or STREAM (see #gstreamer-GstGError)
+ * @code:   error code defined for that domain (see #gstreamer-GstGError)
+ * @text:   the message to display (format string and args enclosed in
+            parentheses)
+ * @debug:  debugging information for the message (format string and args
+            enclosed in parentheses)
+ * @args    optional name, type, value triplets, which will be stored
+ *          in the associated GstStructure. NULL terminator required.
+ *          Must be enclosed within parentheses.
+ *
+ * Utility function that elements can use in case they want to inform
+ * the application of something noteworthy that is not an error.
+ * The pipeline will post a info message and the
+ * application will be informed.
+ * Optional name, type, value triplets may be supplied, and will be stored
+ * in the associated GstStructure. NULL terminator required.
+ *
+ * Since: 1.10
+ */
+#define GST_ELEMENT_INFO_WITH_DETAILS(el, domain, code, text, debug, args)   \
+G_STMT_START {                                                          \
+  gchar *__txt = _gst_element_error_printf text;                        \
+  gchar *__dbg = _gst_element_error_printf debug;                       \
+  if (__txt)                                                            \
+    GST_INFO_OBJECT (el, "info: %s", __txt);                            \
+  if (__dbg)                                                            \
+    GST_INFO_OBJECT (el, "info: %s", __dbg);                            \
+  gst_element_message_full_with_details (GST_ELEMENT(el),               \
+    GST_MESSAGE_INFO, GST_ ## domain ## _ERROR,                         \
+    GST_ ## domain ## _ERROR_ ## code, __txt, __dbg, __FILE__,          \
+    GST_FUNCTION, __LINE__, GST_ELEMENT_MESSAGE_MAKE_DETAILS(args));    \
 } G_STMT_END
 
 /**
@@ -476,9 +601,10 @@ G_STMT_START {                                                          \
     GST_INFO_OBJECT (el, "info: %s", __txt);                            \
   if (__dbg)                                                            \
     GST_INFO_OBJECT (el, "info: %s", __dbg);                            \
-  gst_element_message_full (GST_ELEMENT(el), GST_MESSAGE_INFO,          \
-    GST_ ## domain ## _ERROR, GST_ ## domain ## _ERROR_ ## code,        \
-  __txt, __dbg, __FILE__, GST_FUNCTION, __LINE__);                      \
+  gst_element_message_full (GST_ELEMENT(el),                            \
+    GST_MESSAGE_INFO, GST_ ## domain ## _ERROR,                         \
+    GST_ ## domain ## _ERROR_ ## code, __txt, __dbg, __FILE__,          \
+    GST_FUNCTION, __LINE__);                                            \
 } G_STMT_END
 
 /* the state change mutexes and conds */
@@ -798,6 +924,12 @@ void                    gst_element_message_full        (GstElement * element, G
                                                          gchar * debug, const gchar * file,
                                                          const gchar * function, gint line);
 
+void                    gst_element_message_full_with_details (GstElement * element, GstMessageType type,
+                                                         GQuark domain, gint code, gchar * text,
+                                                         gchar * debug, const gchar * file,
+                                                         const gchar * function, gint line,
+                                                         GstStructure * structure);
+
 /* state management */
 gboolean                gst_element_is_locked_state     (GstElement *element);
 gboolean                gst_element_set_locked_state    (GstElement *element, gboolean locked_state);
@@ -816,8 +948,27 @@ GstStateChangeReturn    gst_element_continue_state      (GstElement * element,
                                                          GstStateChangeReturn ret);
 void                    gst_element_lost_state          (GstElement * element);
 
+typedef void          (*GstElementCallAsyncFunc)        (GstElement * element,
+                                                         gpointer     user_data);
+
+void                    gst_element_call_async          (GstElement * element,
+                                                         GstElementCallAsyncFunc func, gpointer user_data,
+                                                         GDestroyNotify destroy_notify);
+
 /* factory management */
 GstElementFactory*      gst_element_get_factory         (GstElement *element);
+
+/* utility functions */
+gulong                  gst_element_add_property_notify_watch (GstElement  * element,
+                                                               const gchar * property_name,
+                                                               gboolean      include_value);
+
+gulong                  gst_element_add_property_deep_notify_watch (GstElement  * element,
+                                                                    const gchar * property_name,
+                                                                    gboolean      include_value);
+
+void                    gst_element_remove_property_notify_watch (GstElement * element,
+                                                                  gulong       watch_id);
 
 #ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstElement, gst_object_unref)

@@ -125,6 +125,16 @@
 <td class="property_name"><a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--use-tags-bitrate" title="The “use-tags-bitrate” property">use-tags-bitrate</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--high-watermark" title="The “high-watermark” property">high-watermark</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-queue2.html#GstQueue2--low-watermark" title="The “low-watermark” property">low-watermark</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -305,7 +315,7 @@ allocated filename.</p>
 <div class="refsect2">
 <a name="GstQueue2--high-percent"></a><h3>The <code class="literal">“high-percent”</code> property</h3>
 <pre class="programlisting">  “high-percent”             <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
-<p>High threshold for buffering to finish. Only used if use-buffering is True.</p>
+<p>High threshold for buffering to finish. Only used if use-buffering is True (Deprecated: use high-watermark instead).</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: [0,100]</p>
 <p>Default value: 99</p>
@@ -314,10 +324,10 @@ allocated filename.</p>
 <div class="refsect2">
 <a name="GstQueue2--low-percent"></a><h3>The <code class="literal">“low-percent”</code> property</h3>
 <pre class="programlisting">  “low-percent”              <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
-<p>Low threshold for buffering to start. Only used if use-buffering is True.</p>
+<p>Low threshold for buffering to start. Only used if use-buffering is True (Deprecated: use low-watermark instead).</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: [0,100]</p>
-<p>Default value: 10</p>
+<p>Default value: 1</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -408,6 +418,24 @@ buffer is disabled. Default 0.</p>
 <p>Use a bitrate from upstream tags to estimate buffer duration if not provided.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstQueue2--high-watermark"></a><h3>The <code class="literal">“high-watermark”</code> property</h3>
+<pre class="programlisting">  “high-watermark”           <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></pre>
+<p>High threshold for buffering to finish. Only used if use-buffering is True.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 0.99</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstQueue2--low-watermark"></a><h3>The <code class="literal">“low-watermark”</code> property</h3>
+<pre class="programlisting">  “low-watermark”            <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></pre>
+<p>Low threshold for buffering to start. Only used if use-buffering is True.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 0.01</p>
 </div>
 </div>
 <div class="refsect1">

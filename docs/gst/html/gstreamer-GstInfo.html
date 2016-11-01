@@ -1195,8 +1195,9 @@ gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href=
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>func</p></td>
-<td class="parameter_description"><p> the log function to remove. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+<td class="parameter_description"><p> the log function to remove, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to
+remove the default log function. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -3792,15 +3793,25 @@ construct the matching arguments.</p>
 <a name="GST-PTR-FORMAT:CAPS"></a><h3>GST_PTR_FORMAT</h3>
 <pre class="programlisting">#define GST_PTR_FORMAT     "p\aA"
 </pre>
-<p>printf format type used to debug GStreamer types.
-This can only be used on types whose size is &gt;= sizeof(gpointer).</p>
+<p>printf format type used to debug GStreamer types. You can use this in
+combination with GStreamer's debug logging system as well as the functions
+<a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a>, <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-vprintf" title="gst_info_strdup_vprintf ()"><code class="function">gst_info_strdup_vprintf()</code></a> and <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()"><code class="function">gst_info_strdup_printf()</code></a>
+to pretty-print the following types: <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>, <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a>,
+<a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a>, <a class="link" href="GstTagList.html" title="GstTagList"><span class="type">GstTagList</span></a>, <a class="link" href="GstDateTime.html" title="GstDateTime"><span class="type">GstDateTime</span></a>, <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>, <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a>,
+<a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a>, <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>, <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>, <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>, <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>. All
+<a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> types will be printed as typename plus pointer, and everything
+else will simply be printed as pointer address.</p>
+<p>This can only be used on types whose size is &gt;= sizeof(gpointer).</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-SEGMENT-FORMAT:CAPS"></a><h3>GST_SEGMENT_FORMAT</h3>
 <pre class="programlisting">#define GST_SEGMENT_FORMAT "p\aB"
 </pre>
-<p>printf format type used to debug GStreamer segments.
+<p>printf format type used to debug GStreamer segments. You can use this in
+combination with GStreamer's debug logging system as well as the functions
+<a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a>, <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-vprintf" title="gst_info_strdup_vprintf ()"><code class="function">gst_info_strdup_vprintf()</code></a> and <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()"><code class="function">gst_info_strdup_printf()</code></a>
+to pretty-print <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> structures.
 This can only be used on pointers to GstSegment structures.</p>
 </div>
 </div>

@@ -274,7 +274,9 @@ can try to play the pipeline.</p>
 <p> a new element on success, <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. If
 more than one toplevel element is specified by the <em class="parameter"><code>pipeline_description</code></em>
 ,
-all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which then is returned. </p>
+all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which then is returned (unless
+the GST_PARSE_FLAG_PLACE_IN_BIN flag is set, in which case they are put
+in a <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> instead). </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
 </div>
 </div>
@@ -680,6 +682,15 @@ elements. Free with <a href="/usr/share/gtk-doc/html/glibglib-String-Utility-Fun
 <td class="enum_member_description">
 <p>If a bin only has a single element,
     just return the element.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-PARSE-FLAG-PLACE-IN-BIN:CAPS"></a>GST_PARSE_FLAG_PLACE_IN_BIN</p></td>
+<td class="enum_member_description">
+<p>If more than one toplevel element is described
+    by the pipeline description string, put them in a <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> instead of a
+    <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>. (Since 1.10)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

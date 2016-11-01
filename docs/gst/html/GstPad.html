@@ -149,6 +149,22 @@
 <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
+<a class="link" href="GstPad.html#gst-pad-link-maybe-ghosting" title="gst_pad_link_maybe_ghosting ()">gst_pad_link_maybe_ghosting</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#gst-pad-link-maybe-ghosting-full" title="gst_pad_link_maybe_ghosting_full ()">gst_pad_link_maybe_ghosting_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
 <a class="link" href="GstPad.html#gst-pad-unlink" title="gst_pad_unlink ()">gst_pad_unlink</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -944,6 +960,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="returnvalue">GstStream</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#gst-pad-get-stream" title="gst_pad_get_stream ()">gst_pad_get_stream</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -1676,8 +1700,8 @@ gst_pad_store_sticky_event (<em class="parameter"><code><a class="link" href="Gs
 </tr>
 <tr>
 <td class="parameter_name"><p>event</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a></p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> a <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1917,6 +1941,102 @@ for more information.</p>
 <p> A result code indicating if the connection worked or
 what went wrong.</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-link-maybe-ghosting"></a><h3>gst_pad_link_maybe_ghosting ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_pad_link_maybe_ghosting (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *src</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *sink</code></em>);</pre>
+<p>Links <em class="parameter"><code>src</code></em>
+ to <em class="parameter"><code>sink</code></em>
+, creating any <a class="link" href="GstGhostPad.html" title="GstGhostPad"><span class="type">GstGhostPad</span></a>'s in between as necessary.</p>
+<p>This is a convenience function to save having to create and add intermediate
+<a class="link" href="GstGhostPad.html" title="GstGhostPad"><span class="type">GstGhostPad</span></a>'s as required for linking across <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> boundaries.</p>
+<p>If <em class="parameter"><code>src</code></em>
+ or <em class="parameter"><code>sink</code></em>
+ pads don't have parent elements or do not share a common
+ancestor, the link will fail.</p>
+<div class="refsect3">
+<a name="gst-pad-link-maybe-ghosting.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>src</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sink</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-pad-link-maybe-ghosting.returns"></a><h4>Returns</h4>
+<p> whether the link succeeded.</p>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-link-maybe-ghosting-full"></a><h3>gst_pad_link_maybe_ghosting_full ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_pad_link_maybe_ghosting_full (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *src</code></em>,
+                                  <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *sink</code></em>,
+                                  <em class="parameter"><code><a class="link" href="GstPad.html#GstPadLinkCheck" title="enum GstPadLinkCheck"><span class="type">GstPadLinkCheck</span></a> flags</code></em>);</pre>
+<p>Links <em class="parameter"><code>src</code></em>
+ to <em class="parameter"><code>sink</code></em>
+, creating any <a class="link" href="GstGhostPad.html" title="GstGhostPad"><span class="type">GstGhostPad</span></a>'s in between as necessary.</p>
+<p>This is a convenience function to save having to create and add intermediate
+<a class="link" href="GstGhostPad.html" title="GstGhostPad"><span class="type">GstGhostPad</span></a>'s as required for linking across <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> boundaries.</p>
+<p>If <em class="parameter"><code>src</code></em>
+ or <em class="parameter"><code>sink</code></em>
+ pads don't have parent elements or do not share a common
+ancestor, the link will fail.</p>
+<p>Calling <a class="link" href="GstPad.html#gst-pad-link-maybe-ghosting-full" title="gst_pad_link_maybe_ghosting_full ()"><code class="function">gst_pad_link_maybe_ghosting_full()</code></a> with
+<em class="parameter"><code>flags</code></em>
+ == <a class="link" href="GstPad.html#GST-PAD-LINK-CHECK-DEFAULT:CAPS"><code class="literal">GST_PAD_LINK_CHECK_DEFAULT</code></a> is the recommended way of linking
+pads with safety checks applied.</p>
+<div class="refsect3">
+<a name="gst-pad-link-maybe-ghosting-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>src</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sink</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>some <a class="link" href="GstPad.html#GstPadLinkCheck" title="enum GstPadLinkCheck"><span class="type">GstPadLinkCheck</span></a> flags</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-pad-link-maybe-ghosting-full.returns"></a><h4>Returns</h4>
+<p> whether the link succeeded.</p>
+</div>
+<p class="since">Since: 1.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -5861,6 +5981,40 @@ needed. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="ix06.html#api-index-1.2">1.2</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-pad-get-stream"></a><h3>gst_pad_get_stream ()</h3>
+<pre class="programlisting"><a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="returnvalue">GstStream</span></a> *
+gst_pad_get_stream (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Returns the current <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> for the <em class="parameter"><code>pad</code></em>
+, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none has been
+set yet, i.e. the pad has not received a stream-start event yet.</p>
+<p>This is a convenience wrapper around <a class="link" href="GstPad.html#gst-pad-get-sticky-event" title="gst_pad_get_sticky_event ()"><code class="function">gst_pad_get_sticky_event()</code></a> and
+<a class="link" href="GstEvent.html#gst-event-parse-stream" title="gst_event_parse_stream ()"><code class="function">gst_event_parse_stream()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-pad-get-stream.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>A source <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-pad-get-stream.returns"></a><h4>Returns</h4>
+<p> the current <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> for <em class="parameter"><code>pad</code></em>
+, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
+unref the returned stream when no longer needed. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.10</p>
 </div>
 <hr>
 <div class="refsect2">
