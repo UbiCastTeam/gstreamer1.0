@@ -41,7 +41,8 @@ variables like <code class="envar">LANG</code>, <code class="envar">PATH</code> 
 <p><a name="GST_PLUGIN_SYSTEM_PATH"></a><b><code class="envar">GST_PLUGIN_SYSTEM_PATH</code>,
          <code class="envar">GST_PLUGIN_SYSTEM_PATH_1_0</code>. </b>
 
-This environment variable can be set to a colon-separated list of paths.
+This environment variable can be set to a colon-separated list of paths (or
+semicolon-separated list on Windows).
 If this variable is not set, GStreamer will fill in this list for you
 with
 </p>
@@ -78,7 +79,8 @@ system paths at all for plug-ins.  This can be useful if you're running
 uninstalled (for development purposes) or while running testsuites.
    </p>
 <p><a name="GST_PLUGIN_PATH"></a><b><code class="envar">GST_PLUGIN_PATH</code>, <code class="envar">GST_PLUGIN_PATH_1_0</code>. </b>
-This environment variable can be set to a colon-separated list of paths.
+This environment variable can be set to a colon-separated list of paths (or a
+semicolon-separated list on Windows).
 GStreamer will scan these paths for GStreamer plug-ins.  These plug-ins will
 be loaded in addition to, and before, the plug-ins in the system paths.
   

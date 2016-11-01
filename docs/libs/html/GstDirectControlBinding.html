@@ -100,8 +100,11 @@
 <div class="refsect1">
 <a name="GstDirectControlBinding.description"></a><h2>Description</h2>
 <p>A value mapping object that attaches control sources to gobject properties. It
-will map the control values [0.0 ... 1.0] to the target property range. If a
-control value is outside of the range, it will be clipped.</p>
+will map the control values directly to the target property range. If a
+non-absolute direct control binding is used, the value range [0.0 ... 1.0]
+is mapped to full target property range, and all values outside the range
+will be clipped. An absolute control binding will not do any value
+transformations.</p>
 </div>
 <div class="refsect1">
 <a name="GstDirectControlBinding.functions_details"></a><h2>Functions</h2>
@@ -112,7 +115,8 @@ gst_direct_control_binding_new (<em class="parameter"><code><a href="../html/Gst
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
                                 <em class="parameter"><code><a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a> *cs</code></em>);</pre>
 <p>Create a new control-binding that attaches the <a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a> to the
-<a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> property.</p>
+<a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> property. It will map the control source range [0.0 ... 1.0] to
+the full target property range, and clip all values outside this range.</p>
 <div class="refsect3">
 <a name="gst-direct-control-binding-new.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -155,7 +159,8 @@ gst_direct_control_binding_new_absolute
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
                                 <em class="parameter"><code><a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a> *cs</code></em>);</pre>
 <p>Create a new control-binding that attaches the <a href="../html/GstControlSource.html#GstControlSource-struct"><span class="type">GstControlSource</span></a> to the
-<a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> property.</p>
+<a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> property. It will directly map the control source values to the
+target property range without any transformations.</p>
 <div class="refsect3">
 <a name="gst-direct-control-binding-new-absolute.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -188,7 +193,7 @@ gst_direct_control_binding_new_absolute
 <p> the new <a class="link" href="GstDirectControlBinding.html" title="GstDirectControlBinding"><span class="type">GstDirectControlBinding</span></a>. </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
