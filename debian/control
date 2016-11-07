@@ -31,7 +31,6 @@ Build-Depends: debhelper (>= 9),
                libcap-dev [linux-any]
 Build-Depends-Indep: python (>= 2.2),
                      gtk-doc-tools (>= 1.12),
-                     jade (>= 1.2.1),
                      texlive-generic-recommended,
                      transfig (>= 3.2.3.c),
                      docbook-utils (>= 0.6.9),
@@ -110,6 +109,7 @@ Description: GStreamer core development files
 
 Package: gstreamer1.0-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends},
          libglib2.0-doc
@@ -134,7 +134,7 @@ Section: utils
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          pkg-config,
-         libgstreamer1.0-0 (>= 1.9.90)
+         libgstreamer1.0-0 (>= 1.10.0)
 Suggests: gstreamer1.0-plugins-base
 Description: Tools for use with GStreamer
  GStreamer is a streaming media framework, based on graphs of filters
