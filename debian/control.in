@@ -29,17 +29,7 @@ Build-Depends: debhelper (>= 9),
                gir1.2-glib-2.0,
                gir1.2-freedesktop,
                libcap-dev [linux-any]
-Build-Depends-Indep: python (>= 2.2),
-                     gtk-doc-tools (>= 1.12),
-                     texlive-generic-recommended,
-                     transfig (>= 3.2.3.c),
-                     docbook-utils (>= 0.6.9),
-                     docbook-xml,
-                     docbook-xsl,
-                     xsltproc (>= 1.0.21),
-                     ghostscript,
-                     xmlto,
-                     netpbm,
+Build-Depends-Indep: gtk-doc-tools (>= 1.12),
                      libglib2.0-doc
 Standards-Version: 3.9.3
 Homepage: http://gstreamer.freedesktop.org
@@ -53,7 +43,8 @@ Depends: ${shlibs:Depends},
          ${misc:Depends},
          libcap2-bin [linux-any]
 Suggests: @GST_PKGNAME@-tools,
-Breaks: @GST_PKGNAME@-plugins-base (<< 1.8.0)
+Breaks: @GST_PKGNAME@-plugins-base (<< 1.8.0),
+        @GST_PKGNAME@-plugins-bad (<< 1.11.1)
 Description: Core GStreamer libraries and elements
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do

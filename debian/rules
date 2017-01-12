@@ -53,7 +53,6 @@ PKGFILES=\
 	debian/$(gst_lib_dev).postrm \
 	debian/$(gst_pkgname)-doc.install \
 	debian/$(gst_pkgname)-doc.links \
-	debian/$(gst_pkgname)-doc.lintian \
 	debian/$(gst_pkgname)-tools.install \
 	debian/$(gst_pkgname)-tools.links \
 	debian/$(gst_pkgname)-tools.manpages \
@@ -153,14 +152,6 @@ debian/$(gst_pkgname)-doc.links: debian/gstreamer-doc.links debian/rules
 		sed 's/@GST_LIB_PREFIX@/$(gst_lib_prefix)/g' \
 		> $@
 
-debian/$(gst_pkgname)-doc.lintian: debian/gstreamer-doc.lintian debian/rules
-	rm -f $@
-	cat $< | \
-		sed 's/@GST_ABI@/$(gst_abi)/g' | \
-		sed 's/@GST_PKGNAME@/$(gst_pkgname)/g' | \
-		sed 's/@GST_LIB_PREFIX@/$(gst_lib_prefix)/g' \
-		> $@
-
 debian/$(gst_pkgname)-tools.install: debian/gstreamer-tools-abi.install debian/rules
 	rm -f $@
 	cat $< | \
@@ -223,18 +214,6 @@ indep_conf_flags += --enable-gtk-doc --enable-docbook
 endif
 
 DEB_CONFIGURE_EXTRA_FLAGS := $(common_conf_flags) $(indep_conf_flags)
-
-common-install-indep::
-	# move around the doc dirs
-	mkdir -p debian/tmp/usr/share/doc/$(gst_pkgname)-doc
-	-cp -r debian/tmp/usr/share/doc/gstreamer-$(gst_abi)/pwg \
-	   debian/tmp/usr/share/doc/gstreamer-$(gst_abi)/manual \
-	   debian/tmp/usr/share/doc/gstreamer-$(gst_abi)/faq \
-	   debian/tmp/usr/share/doc/$(gst_pkgname)-doc
-
-	# -doc lintian overrides
-	mkdir -p debian/$(gst_pkgname)-doc/usr/share/lintian/overrides/
-	cp -a debian/$(gst_pkgname)-doc.lintian debian/$(gst_pkgname)-doc/usr/share/lintian/overrides/$(gst_pkgname)-doc
 
 DEB_DH_MAKESHLIBS_ARGS_$(gst_lib) += -X "/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-$(gst_abi)" -V $(gst_shlibs_dep) -- -c4
 DEB_INSTALL_DOCS_ALL += debian/README.Debian NEWS
