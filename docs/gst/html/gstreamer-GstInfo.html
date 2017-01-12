@@ -562,6 +562,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-get-stack-trace" title="gst_debug_get_stack_trace ()">gst_debug_get_stack_trace</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS" title="GST_TIME_ARGS()">GST_TIME_ARGS</a><span class="c_punctuation">()</span>
@@ -621,6 +629,38 @@
 <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()">gst_info_strdup_printf</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-print" title="gst_print ()">gst_print</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-println" title="gst_println ()">gst_println</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-printerr" title="gst_printerr ()">gst_printerr</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-printerrln" title="gst_printerrln ()">gst_printerrln</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -663,6 +703,10 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-FUNCTION:CAPS" title="GST_FUNCTION">GST_FUNCTION</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags">GstStackTraceFlags</a></td>
 </tr>
 <tr>
 <td class="variable_type">extern</td>
@@ -3113,8 +3157,33 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 <a name="gst-debug-print-stack-trace"></a><h3>gst_debug_print_stack_trace ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_print_stack_trace (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>If GST_ENABLE_FUNC_INSTRUMENTATION is defined a stacktrace is available for
-gstreamer code, which can be printed with this function.</p>
+<p>If libunwind or glibc backtrace are present
+a stack trace is printed.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-get-stack-trace"></a><h3>gst_debug_get_stack_trace ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_debug_get_stack_trace (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags"><span class="type">GstStackTraceFlags</span></a> flags</code></em>);</pre>
+<p>If libunwind or glibc backtrace are present, a stack trace
+is returned.</p>
+<div class="refsect3">
+<a name="gst-debug-get-stack-trace.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>A set of <a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags"><span class="type">GstStackTraceFlags</span></a> to determine how the stack
+trace should look like. Pass 0 to retrieve a minimal backtrace.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3288,7 +3357,7 @@ gst_info_strdup_vprintf (<em class="parameter"><code>const <a href="/usr/share/g
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_info_strdup_printf (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                         <em class="parameter"><code>...</code></em>);</pre>
-<p>Allocates, fills and returns a null terminated string from the printf style
+<p>Allocates, fills and returns a 0-terminated string from the printf style
 <em class="parameter"><code>format</code></em>
  string and corresponding arguments.</p>
 <p>See <a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a> for when this function is required.</p>
@@ -3321,6 +3390,166 @@ gst_info_strdup_printf (<em class="parameter"><code>const <a href="/usr/share/gt
 <p> a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error</p>
 </div>
 <p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-print"></a><h3>gst_print ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_print (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+           <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib print handler. The default print
+handler simply outputs the message to stdout.</p>
+<p>This function will not append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-println" title="gst_println ()"><code class="function">gst_println()</code></a> which will.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print"><code class="function">g_print()</code></a> in that it supports all the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-print.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-println"></a><h3>gst_println ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_println (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+             <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib print handler. The default print
+handler simply outputs the message to stdout.</p>
+<p>This function will append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-print" title="gst_print ()"><code class="function">gst_print()</code></a> which will not.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print"><code class="function">g_print()</code></a> in that it supports all the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-println.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-printerr"></a><h3>gst_printerr ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_printerr (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+              <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib error message handler. The default
+handler simply outputs the message to stderr.</p>
+<p>This function will not append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-printerrln" title="gst_printerrln ()"><code class="function">gst_printerrln()</code></a> which will.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-printerr"><code class="function">g_printerr()</code></a> in that it supports the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-printerr.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-printerrln"></a><h3>gst_printerrln ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_printerrln (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib error message handler. The default
+handler simply outputs the message to stderr.</p>
+<p>This function will append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-printerr" title="gst_printerr ()"><code class="function">gst_printerr()</code></a> which will not.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-printerr"><code class="function">g_printerr()</code></a> in that it supports the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-printerrln.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 </div>
 <div class="refsect1">
@@ -3735,6 +3964,28 @@ is not defined, some default value is used. It is used to provide debugging
 output with the function name of the message.</p>
 <p>Note that this is different from G_STRFUNC as we do not want the full
 function signature in C++ code.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstStackTraceFlags"></a><h3>enum GstStackTraceFlags</h3>
+<div class="refsect3">
+<a name="GstStackTraceFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="enum_member_name"><p><a name="GST-STACK-TRACE-SHOW-FULL:CAPS"></a>GST_STACK_TRACE_SHOW_FULL</p></td>
+<td class="enum_member_description">
+<p>Try to retrieve as much information as
+                            possible when getting the stack trace</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">

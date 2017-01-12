@@ -43,8 +43,7 @@
 /* ********************** typefinding in pull mode ************************ */
 
 static void
-helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    GstCaps * caps);
+helper_find_suggest (gpointer data, guint probability, GstCaps * caps);
 
 typedef struct
 {
@@ -217,8 +216,7 @@ map_failed:
  * If given @probability is higher, replace previously store caps.
  */
 static void
-helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    GstCaps * caps)
+helper_find_suggest (gpointer data, guint probability, GstCaps * caps)
 {
   GstTypeFindHelper *helper = (GstTypeFindHelper *) data;
 
@@ -462,8 +460,7 @@ buf_helper_find_peek (gpointer data, gint64 off, guint size)
  * If given @probability is higher, replace previously store caps.
  */
 static void
-buf_helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    GstCaps * caps)
+buf_helper_find_suggest (gpointer data, guint probability, GstCaps * caps)
 {
   GstTypeFindBufHelper *helper = (GstTypeFindBufHelper *) data;
 

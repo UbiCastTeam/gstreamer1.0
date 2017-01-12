@@ -1821,6 +1821,8 @@ gst_structure_get_abbrs (gint * n_abbrs)
       {"sample", GST_TYPE_SAMPLE}
       ,
       {"taglist", GST_TYPE_TAG_LIST}
+      ,
+      {"type", G_TYPE_GTYPE}
     };
     _num = G_N_ELEMENTS (dyn_abbrs);
     /* permanently allocate and copy the array now */
@@ -1841,6 +1843,7 @@ gst_structure_gtype_from_abbr (const char *type_name)
   int i;
   GstStructureAbbreviation *abbrs;
   gint n_abbrs;
+  GType ret;
 
   g_return_val_if_fail (type_name != NULL, G_TYPE_INVALID);
 
@@ -1853,7 +1856,11 @@ gst_structure_gtype_from_abbr (const char *type_name)
   }
 
   /* this is the fallback */
-  return g_type_from_name (type_name);
+  ret = g_type_from_name (type_name);
+  /* If not found, try it as a dynamic type */
+  if (G_UNLIKELY (ret == 0))
+    ret = gst_dynamic_type_factory_load (type_name);
+  return ret;
 }
 
 static const char *
@@ -1977,7 +1984,9 @@ priv__gst_structure_append_template_to_gstring (GQuark field_id,
     g_string_append (s, "%" GST_WRAPPED_PTR_FORMAT);
   } else if (g_type_is_a (type, G_TYPE_ENUM)
       || g_type_is_a (type, G_TYPE_FLAGS)) {
-    g_string_append (s, "%i");
+    g_string_append_len (s, "%i", 2);
+  } else if (type == G_TYPE_GTYPE) {
+    g_string_append_len (s, "%s", 2);
   } else if (type == G_TYPE_POINTER) {
     g_string_append_len (s, "%p", 2);
   } else {
@@ -2030,11 +2039,19 @@ gst_structure_to_string (const GstStructure * structure)
 }
 
 /*
- * r will still point to the string. if end == next, the string will not be
+ * gst_structure_parse_string:
+ * @s: string to parse
+ * @end: out-pointer to char behind end of string
+ * @next: out-pointer to start of unread data
+ * @unescape: @TRUE if the substring is escaped.
+ *
+ * Find the end of a sub-string. If end == next, the string will not be
  * null-terminated. In all other cases it will be.
- * end = pointer to char behind end of string, next = pointer to start of
- * unread data.
- * THIS FUNCTION MODIFIES THE STRING AND DETECTS INSIDE A NONTERMINATED STRING
+ *
+ * Note: This function modifies the string in @s (if unescape == @TRUE).
+ *
+ * Returns: @TRUE if a sub-string was found and @FALSE if the string is not
+ * terminated.
  */
 static gboolean
 gst_structure_parse_string (gchar * s, gchar ** end, gchar ** next,
@@ -2046,14 +2063,13 @@ gst_structure_parse_string (gchar * s, gchar ** end, gchar ** next,
     return FALSE;
 
   if (*s != '"') {
-    int ret;
-
-    ret = gst_structure_parse_simple_string (s, end);
+    int ret = gst_structure_parse_simple_string (s, end);
     *next = *end;
 
     return ret;
   }
 
+  /* Find the closing quotes */
   if (unescape) {
     w = s;
     s++;
@@ -2071,7 +2087,6 @@ gst_structure_parse_string (gchar * s, gchar ** end, gchar ** next,
     }
     s++;
   } else {
-    /* Find the closing quotes */
     s++;
     while (*s != '"') {
       if (G_UNLIKELY (*s == 0))

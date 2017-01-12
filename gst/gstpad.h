@@ -196,6 +196,8 @@ const gchar*          gst_pad_link_get_name (GstPadLinkReturn ret);
  *   would be unsafe e.g. if one pad has %GST_CAPS_ANY.
  * @GST_PAD_LINK_CHECK_CAPS: Check if the pads are compatible by comparing the
  *   caps returned by gst_pad_query_caps().
+ * @GST_PAD_LINK_CHECK_NO_RECONFIGURE: Disables pushing a reconfigure event when pads are
+ *   linked.
  * @GST_PAD_LINK_CHECK_DEFAULT: The default checks done when linking
  *   pads (i.e. the ones used by gst_pad_link()).
  *
@@ -216,6 +218,11 @@ typedef enum {
   GST_PAD_LINK_CHECK_HIERARCHY     = 1 << 0,
   GST_PAD_LINK_CHECK_TEMPLATE_CAPS = 1 << 1,
   GST_PAD_LINK_CHECK_CAPS          = 1 << 2,
+
+
+  /* Not really checks, more like flags
+   * Added here to avoid creating a new gst_pad_link_variant */
+  GST_PAD_LINK_CHECK_NO_RECONFIGURE = 1 << 3,
 
   GST_PAD_LINK_CHECK_DEFAULT       = GST_PAD_LINK_CHECK_HIERARCHY | GST_PAD_LINK_CHECK_CAPS
 } GstPadLinkCheck;
@@ -531,8 +538,9 @@ typedef enum
  *        non-blocking probes).
  * @GST_PAD_PROBE_DROP: drop data in data probes. For push mode this means that
  *        the data item is not sent downstream. For pull mode, it means that
- *        the data item is not passed upstream. In both cases, no more probes
- *        are called and #GST_FLOW_OK or %TRUE is returned to the caller.
+ *        the data item is not passed upstream. In both cases, no other probes
+ *        are called for this item and #GST_FLOW_OK or %TRUE is returned to the
+ *        caller.
  * @GST_PAD_PROBE_REMOVE: remove this probe.
  * @GST_PAD_PROBE_PASS: pass the data item in the block probe and block on the
  *        next item.

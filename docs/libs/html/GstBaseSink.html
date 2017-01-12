@@ -734,6 +734,12 @@ gst_base_sink_wait_preroll (<em class="parameter"><code><a class="link" href="Gs
 <p>If the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> method performs its own synchronisation
 against the clock it must unblock when going from PLAYING to the PAUSED state
 and call this method before continuing to render the remaining data.</p>
+<p>If the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> method can block on something else than
+the clock, it must also be ready to unblock immediately on
+the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.unlock"><code class="function">GstBaseSinkClass.unlock()</code></a> method and cause the
+<a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> method to immediately call this function.
+In this case, the subclass must be prepared to continue rendering where it
+left off if this function returns <a href="../html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>.</p>
 <p>This function will block until a state change to PLAYING happens (in which
 case this function returns <a href="../html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>) or the processing must be stopped due
 to a state change to READY or a FLUSH event (in which case this function
@@ -1662,13 +1668,16 @@ the passed buffer to the clock</p></td>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSinkClass.unlock"></a>unlock</code></em> ()</p></td>
 <td class="struct_member_description"><p>Unlock any pending access to the resource. Subclasses should
-unblock any blocked function ASAP</p></td>
+unblock any blocked function ASAP and call <a class="link" href="GstBaseSink.html#gst-base-sink-wait-preroll" title="gst_base_sink_wait_preroll ()"><code class="function">gst_base_sink_wait_preroll()</code></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSinkClass.unlock-stop"></a>unlock_stop</code></em> ()</p></td>
 <td class="struct_member_description"><p>Clear the previous unlock request. Subclasses should clear
-any state they set during <code class="function">unlock()</code>, such as clearing command queues.</p></td>
+any state they set during <a class="link" href="GstBaseSink.html#GstBaseSinkClass.unlock"><code class="function">GstBaseSinkClass.unlock()</code></a>, and be ready to
+continue where they left off after <a class="link" href="GstBaseSink.html#gst-base-sink-wait-preroll" title="gst_base_sink_wait_preroll ()"><code class="function">gst_base_sink_wait_preroll()</code></a>,
+<a class="link" href="GstBaseSink.html#gst-base-sink-wait" title="gst_base_sink_wait ()"><code class="function">gst_base_sink_wait()</code></a> or <code class="function">gst_wait_sink_wait_clock()</code> return or
+<a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> is called again.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>

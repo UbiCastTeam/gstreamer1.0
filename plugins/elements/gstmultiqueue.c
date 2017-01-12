@@ -1133,7 +1133,7 @@ get_buffering_level (GstSingleQueue * sq)
     buffering_level = 0;
     if (sq->max_size.time > 0) {
       tmp =
-          gst_util_uint64_scale_int (sq->cur_time,
+          gst_util_uint64_scale (sq->cur_time,
           MAX_BUFFERING_LEVEL, sq->max_size.time);
       buffering_level = MAX (buffering_level, tmp);
     }
@@ -2408,7 +2408,8 @@ gst_multi_queue_sink_query (GstPad * pad, GstObject * parent, GstQuery * query)
            * pushed. If it is, we don't need to wait for the condition
            * variable, otherwise we wait for the condition variable to
            * be signaled. */
-          if (sq->last_handled_query != query)
+          while (!sq->flushing && sq->srcresult == GST_FLOW_OK
+              && sq->last_handled_query != query)
             g_cond_wait (&sq->query_handled, &mq->qlock);
           res = sq->last_query;
           sq->last_handled_query = NULL;

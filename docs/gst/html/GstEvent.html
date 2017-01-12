@@ -3381,7 +3381,7 @@ in <a class="link" href="GstEvent.html#GST-EVENT-STREAM-START:CAPS"><span class=
 <td class="parameter_name"><p>streams</p></td>
 <td class="parameter_description"><p> the list of streams to
 activate. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -3416,7 +3416,7 @@ gst_event_parse_select_streams (<em class="parameter"><code><a class="link" href
 <tr>
 <td class="parameter_name"><p>streams</p></td>
 <td class="parameter_description"><p> the streams. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -3493,7 +3493,7 @@ gst_event_parse_stream_collection (<em class="parameter"><code><a class="link" h
 <div class="refsect2">
 <a name="gst-event-new-stream-group-done"></a><h3>gst_event_new_stream_group_done ()</h3>
 <pre class="programlisting"><a class="link" href="GstEvent.html" title="GstEvent"><span class="returnvalue">GstEvent</span></a> *
-gst_event_new_stream_group_done (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> group_id</code></em>);</pre>
+gst_event_new_stream_group_done (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> group_id</code></em>);</pre>
 <p>Create a new Stream Group Done event. The stream-group-done event can
 only travel downstream synchronized with the buffer flow. Elements
 that receive the event on a pad should handle it mostly like EOS,

@@ -7993,6 +7993,14 @@ for linking the pads.
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-PAD-LINK-CHECK-NO-RECONFIGURE:CAPS"></a>GST_PAD_LINK_CHECK_NO_RECONFIGURE</p></td>
+<td class="enum_member_description">
+<p>Disables pushing a reconfigure event when pads are
+  linked.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-PAD-LINK-CHECK-DEFAULT:CAPS"></a>GST_PAD_LINK_CHECK_DEFAULT</p></td>
 <td class="enum_member_description">
 <p>The default checks done when linking
@@ -8181,8 +8189,9 @@ pad operates in push or pull mode.</p>
 <td class="enum_member_description">
 <p>drop data in data probes. For push mode this means that
        the data item is not sent downstream. For pull mode, it means that
-       the data item is not passed upstream. In both cases, no more probes
-       are called and <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the caller.</p>
+       the data item is not passed upstream. In both cases, no other probes
+       are called for this item and <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the
+       caller.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
