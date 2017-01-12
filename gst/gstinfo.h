@@ -176,6 +176,15 @@ typedef enum {
 } GstDebugColorFlags;
 
 /**
+ * GstStackTraceFlags:
+ * @GST_STACK_TRACE_SHOW_FULL: Try to retrieve as much information as
+ *                             possible when getting the stack trace
+ */
+typedef enum {
+    GST_STACK_TRACE_SHOW_FULL = 1 << 0
+} GstStackTraceFlags;
+
+/**
  * GstDebugColorMode:
  * @GST_DEBUG_COLOR_MODE_OFF: Do not use colors in logs.
  * @GST_DEBUG_COLOR_MODE_ON: Paint logs in a platform-specific way.
@@ -412,6 +421,12 @@ gint    gst_info_vasprintf              (gchar ** result,
                                          va_list args) G_GNUC_PRINTF (2, 0);
 gchar * gst_info_strdup_vprintf         (const gchar *format, va_list args) G_GNUC_PRINTF (1, 0);
 gchar * gst_info_strdup_printf          (const gchar *format, ...) G_GNUC_PRINTF (1, 2);
+
+void    gst_print                       (const gchar * format, ...) G_GNUC_PRINTF (1, 2);
+void    gst_println                     (const gchar * format, ...) G_GNUC_PRINTF (1, 2);
+
+void    gst_printerr                    (const gchar * format, ...) G_GNUC_PRINTF (1, 2);
+void    gst_printerrln                  (const gchar * format, ...) G_GNUC_PRINTF (1, 2);
 
 #ifndef GST_DISABLE_GST_DEBUG
 
@@ -1564,6 +1579,7 @@ GST_TRACE (const char *format, ...)
 
 
 void gst_debug_print_stack_trace (void);
+gchar * gst_debug_get_stack_trace (GstStackTraceFlags flags);
 
 G_END_DECLS
 

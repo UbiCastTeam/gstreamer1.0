@@ -479,8 +479,6 @@ static gboolean gst_base_parse_sink_query_default (GstBaseParse * parse,
 static gboolean gst_base_parse_src_query_default (GstBaseParse * parse,
     GstQuery * query);
 
-static void gst_base_parse_drain (GstBaseParse * parse);
-
 static gint64 gst_base_parse_find_offset (GstBaseParse * parse,
     GstClockTime time, gboolean before, GstClockTime * _ts);
 static GstFlowReturn gst_base_parse_locate_time (GstBaseParse * parse,
@@ -1713,6 +1711,14 @@ gst_base_parse_convert_default (GstBaseParse * parse,
     return TRUE;
   }
 
+  if (parse->priv->upstream_format != GST_FORMAT_BYTES) {
+    /* don't do byte format conversions if we're not really parsing
+     * a raw elementary stream, since we don't really have BYTES
+     * position / duration info */
+    if (src_format == GST_FORMAT_BYTES || dest_format == GST_FORMAT_BYTES)
+      goto no_slaved_conversions;
+  }
+
   /* need at least some frames */
   if (!parse->priv->framecount)
     goto no_framecount;
@@ -1776,7 +1782,12 @@ no_duration_bytes:
         G_GUINT64_FORMAT, duration, bytes);
     return FALSE;
   }
-
+no_slaved_conversions:
+  {
+    GST_DEBUG_OBJECT (parse,
+        "Can't do format conversions when upstream format is not BYTES");
+    return FALSE;
+  }
 }
 
 static void
@@ -2704,13 +2715,17 @@ exit:
   return ret;
 }
 
-/* gst_base_parse_drain:
+/**
+ * gst_base_parse_drain:
+ * @parse: a #GstBaseParse
  *
  * Drains the adapter until it is empty. It decreases the min_frame_size to
  * match the current adapter size and calls chain method until the adapter
  * is emptied or chain returns with error.
+ *
+ * Since: 1.12
  */
-static void
+void
 gst_base_parse_drain (GstBaseParse * parse)
 {
   guint avail;
@@ -2768,6 +2783,12 @@ gst_base_parse_send_buffers (GstBaseParse * parse)
     if (first) {
       GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
       first = FALSE;
+    } else {
+      /* likewise, subsequent buffers should never have DISCONT
+       * according to the "reverse fragment protocol", or such would
+       * confuse a downstream decoder
+       * (could be DISCONT due to aggregating upstream fragments by parsing) */
+      GST_BUFFER_FLAG_UNSET (buf, GST_BUFFER_FLAG_DISCONT);
     }
 
     /* iterate output queue an push downstream */
@@ -3654,6 +3675,8 @@ gst_base_parse_sink_activate (GstPad * sinkpad, GstObject * parent)
     goto baseparse_push;
 
   parse->priv->push_stream_start = TRUE;
+  /* In pull mode, upstream is BYTES */
+  parse->priv->upstream_format = GST_FORMAT_BYTES;
 
   return gst_pad_start_task (sinkpad, (GstTaskFunction) gst_base_parse_loop,
       sinkpad, NULL);
@@ -3692,6 +3715,7 @@ gst_base_parse_activate (GstBaseParse * parse, gboolean active)
       result = klass->stop (parse);
 
     parse->priv->pad_mode = GST_PAD_MODE_NONE;
+    parse->priv->upstream_format = GST_FORMAT_UNDEFINED;
   }
   GST_DEBUG_OBJECT (parse, "activate return: %d", result);
   return result;
@@ -4046,7 +4070,10 @@ gst_base_parse_src_query_default (GstBaseParse * parse, GstQuery * query)
       if (!res) {
         /* Fall back on interpreting segment */
         GST_OBJECT_LOCK (parse);
-        if (format == GST_FORMAT_BYTES) {
+        /* Only reply BYTES if upstream is in BYTES already, otherwise
+         * we're not in charge */
+        if (format == GST_FORMAT_BYTES
+            && parse->priv->upstream_format == GST_FORMAT_BYTES) {
           dest_value = parse->priv->offset;
           res = TRUE;
         } else if (format == parse->segment.format &&
@@ -4056,9 +4083,10 @@ gst_base_parse_src_query_default (GstBaseParse * parse, GstQuery * query)
           res = TRUE;
         }
         GST_OBJECT_UNLOCK (parse);
-        if (!res) {
+        if (!res && parse->priv->upstream_format == GST_FORMAT_BYTES) {
           /* no precise result, upstream no idea either, then best estimate */
-          /* priv->offset is updated in both PUSH/PULL modes */
+          /* priv->offset is updated in both PUSH/PULL modes, *iff* we're
+           * in charge of things */
           res = gst_base_parse_convert (parse,
               GST_FORMAT_BYTES, parse->priv->offset, format, &dest_value);
         }

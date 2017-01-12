@@ -131,6 +131,7 @@ HMODULE _priv_gst_dll_handle = NULL;
 #ifndef GST_DISABLE_REGISTRY
 GList *_priv_gst_plugin_paths = NULL;   /* for delayed processing in init_post */
 
+extern gboolean _priv_gst_disable_registry;
 extern gboolean _priv_gst_disable_registry_update;
 #endif
 
@@ -511,6 +512,15 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
   GST_INFO ("Using library installed in %s", libdir);
   g_free (libdir);
 
+#ifndef GST_DISABLE_REGISTRY
+  {
+    const gchar *disable_registry;
+    if ((disable_registry = g_getenv ("GST_REGISTRY_DISABLE"))) {
+      _priv_gst_disable_registry = (strcmp (disable_registry, "yes") == 0);
+    }
+  }
+#endif
+
   /* Print some basic system details if possible (OS/architecture) */
 #ifdef HAVE_SYS_UTSNAME_H
   {
@@ -680,6 +690,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_allocator_flags_get_type ());
   g_type_class_ref (gst_stream_flags_get_type ());
   g_type_class_ref (gst_stream_type_get_type ());
+  g_type_class_ref (gst_stack_trace_flags_get_type ());
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
@@ -899,7 +910,8 @@ parse_one_option (gint opt, const gchar * arg, GError ** err)
       break;
     case ARG_PLUGIN_PATH:
 #ifndef GST_DISABLE_REGISTRY
-      split_and_iterate (arg, G_SEARCHPATH_SEPARATOR_S, add_path_func, NULL);
+      if (!_priv_gst_disable_registry)
+        split_and_iterate (arg, G_SEARCHPATH_SEPARATOR_S, add_path_func, NULL);
 #endif /* GST_DISABLE_REGISTRY */
       break;
     case ARG_PLUGIN_LOAD:
@@ -910,7 +922,8 @@ parse_one_option (gint opt, const gchar * arg, GError ** err)
       break;
     case ARG_REGISTRY_UPDATE_DISABLE:
 #ifndef GST_DISABLE_REGISTRY
-      _priv_gst_disable_registry_update = TRUE;
+      if (!_priv_gst_disable_registry)
+        _priv_gst_disable_registry_update = TRUE;
 #endif
       break;
     case ARG_REGISTRY_FORK_DISABLE:
@@ -1125,6 +1138,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_allocator_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stream_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_debug_color_mode_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_stack_trace_flags_get_type ()));
 
   gst_deinitialized = TRUE;
   GST_INFO ("deinitialized GStreamer");

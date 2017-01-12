@@ -1005,6 +1005,8 @@ main (int argc, char *argv[])
 #endif
 
   g_set_prgname ("gst-launch-" GST_API_VERSION);
+  /* Ensure XInitThreads() is called if/when needed */
+  g_setenv ("GST_GL_XINITTHREADS", "1", TRUE);
 
 #ifndef GST_DISABLE_OPTION_PARSING
   ctx = g_option_context_new ("PIPELINE-DESCRIPTION");
@@ -1015,7 +1017,7 @@ main (int argc, char *argv[])
       g_printerr ("Error initializing: %s\n", GST_STR_NULL (err->message));
     else
       g_printerr ("Error initializing: Unknown error!\n");
-    g_clear_error (&error);
+    g_clear_error (&err);
     g_option_context_free (ctx);
     exit (1);
   }

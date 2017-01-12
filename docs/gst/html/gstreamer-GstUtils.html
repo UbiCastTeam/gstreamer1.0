@@ -1001,7 +1001,8 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <hr>
 <div class="refsect2">
 <a name="GST-WRITE-UINT16-LE:CAPS"></a><h3>GST_WRITE_UINT16_LE()</h3>
-<pre class="programlisting">#define             GST_WRITE_UINT16_LE(data, num)</pre>
+<pre class="programlisting">#  define GST_WRITE_UINT16_LE(data,val) _GST_FAST_WRITE_SWAP(16,data,val)
+</pre>
 <p>Store a 16 bit unsigned integer value in little endian format into the memory buffer.</p>
 <div class="refsect3">
 <a name="GST-WRITE-UINT16-LE.parameters"></a><h4>Parameters</h4>
@@ -1018,7 +1019,7 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>num</p></td>
+<td class="parameter_name"><p>val</p></td>
 <td class="parameter_description"><p>value to store</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1029,7 +1030,8 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <hr>
 <div class="refsect2">
 <a name="GST-WRITE-UINT16-BE:CAPS"></a><h3>GST_WRITE_UINT16_BE()</h3>
-<pre class="programlisting">#define             GST_WRITE_UINT16_BE(data, num)</pre>
+<pre class="programlisting">#  define GST_WRITE_UINT16_BE(data,val) _GST_FAST_WRITE(16,data,val)
+</pre>
 <p>Store a 16 bit unsigned integer value in big endian format into the memory buffer.</p>
 <div class="refsect3">
 <a name="GST-WRITE-UINT16-BE.parameters"></a><h4>Parameters</h4>
@@ -1046,7 +1048,7 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>num</p></td>
+<td class="parameter_name"><p>val</p></td>
 <td class="parameter_description"><p>value to store</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1113,7 +1115,8 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <hr>
 <div class="refsect2">
 <a name="GST-WRITE-UINT32-LE:CAPS"></a><h3>GST_WRITE_UINT32_LE()</h3>
-<pre class="programlisting">#define             GST_WRITE_UINT32_LE(data, num)</pre>
+<pre class="programlisting">#  define GST_WRITE_UINT32_LE(data,val) _GST_FAST_WRITE_SWAP(32,data,val)
+</pre>
 <p>Store a 32 bit unsigned integer value in little endian format into the memory buffer.</p>
 <div class="refsect3">
 <a name="GST-WRITE-UINT32-LE.parameters"></a><h4>Parameters</h4>
@@ -1130,7 +1133,7 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>num</p></td>
+<td class="parameter_name"><p>val</p></td>
 <td class="parameter_description"><p>value to store</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1141,7 +1144,8 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <hr>
 <div class="refsect2">
 <a name="GST-WRITE-UINT32-BE:CAPS"></a><h3>GST_WRITE_UINT32_BE()</h3>
-<pre class="programlisting">#define             GST_WRITE_UINT32_BE(data, num)</pre>
+<pre class="programlisting">#  define GST_WRITE_UINT32_BE(data,val) _GST_FAST_WRITE(32,data,val)
+</pre>
 <p>Store a 32 bit unsigned integer value in big endian format into the memory buffer.</p>
 <div class="refsect3">
 <a name="GST-WRITE-UINT32-BE.parameters"></a><h4>Parameters</h4>
@@ -1158,7 +1162,7 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>num</p></td>
+<td class="parameter_name"><p>val</p></td>
 <td class="parameter_description"><p>value to store</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1169,7 +1173,8 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <hr>
 <div class="refsect2">
 <a name="GST-WRITE-UINT64-LE:CAPS"></a><h3>GST_WRITE_UINT64_LE()</h3>
-<pre class="programlisting">#define             GST_WRITE_UINT64_LE(data, num)</pre>
+<pre class="programlisting">#  define GST_WRITE_UINT64_LE(data,val) _GST_FAST_WRITE_SWAP(64,data,val)
+</pre>
 <p>Store a 64 bit unsigned integer value in little endian format into the memory buffer.</p>
 <div class="refsect3">
 <a name="GST-WRITE-UINT64-LE.parameters"></a><h4>Parameters</h4>
@@ -1186,7 +1191,7 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>num</p></td>
+<td class="parameter_name"><p>val</p></td>
 <td class="parameter_description"><p>value to store</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1197,7 +1202,8 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <hr>
 <div class="refsect2">
 <a name="GST-WRITE-UINT64-BE:CAPS"></a><h3>GST_WRITE_UINT64_BE()</h3>
-<pre class="programlisting">#define             GST_WRITE_UINT64_BE(data, num)</pre>
+<pre class="programlisting">#  define GST_WRITE_UINT64_BE(data,val) _GST_FAST_WRITE(64,data,val)
+</pre>
 <p>Store a 64 bit unsigned integer value in big endian format into the memory buffer.</p>
 <div class="refsect3">
 <a name="GST-WRITE-UINT64-BE.parameters"></a><h4>Parameters</h4>
@@ -1214,7 +1220,7 @@ GST_READ_DOUBLE_BE (<em class="parameter"><code>const <a href="/usr/share/gtk-do
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
-<td class="parameter_name"><p>num</p></td>
+<td class="parameter_name"><p>val</p></td>
 <td class="parameter_description"><p>value to store</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
