@@ -308,17 +308,11 @@ automatically seekable in push mode as well. The following conditions must
 be met to make the element seekable in push mode when the format is not
 <a href="../html/gstreamer-GstFormat.html#GST-FORMAT-BYTES:CAPS"><code class="literal">GST_FORMAT_BYTES</code></a>:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
-  </p></li>
-<li class="listitem"><p>
-    <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.query"><code class="function">GstBaseSrcClass.query()</code></a> can convert all supported seek formats to the
-    internal format as set with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" title="gst_base_src_set_format ()"><code class="function">gst_base_src_set_format()</code></a>.
-  </p></li>
-<li class="listitem"><p>
-    <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.do-seek"><code class="function">GstBaseSrcClass.do_seek()</code></a> is implemented, performs the seek and returns
-     <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
-  </p></li>
+<li class="listitem"><p><a class="link" href="GstBaseSrc.html#GstBaseSrcClass.is-seekable"><code class="function">GstBaseSrcClass.is_seekable()</code></a> returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p></li>
+<li class="listitem"><p><a class="link" href="GstBaseSrc.html#GstBaseSrcClass.query"><code class="function">GstBaseSrcClass.query()</code></a> can convert all supported seek formats to the
+internal format as set with <a class="link" href="GstBaseSrc.html#gst-base-src-set-format" title="gst_base_src_set_format ()"><code class="function">gst_base_src_set_format()</code></a>.</p></li>
+<li class="listitem"><p><a class="link" href="GstBaseSrc.html#GstBaseSrcClass.do-seek"><code class="function">GstBaseSrcClass.do_seek()</code></a> is implemented, performs the seek and returns
+<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p></li>
 </ul></div>
 <p>When the element does not meet the requirements to operate in pull mode, the
 offset and length in the <a class="link" href="GstBaseSrc.html#GstBaseSrcClass.create"><code class="function">GstBaseSrcClass.create()</code></a> method should be ignored.
@@ -398,27 +392,23 @@ should install a pad template in its class_init function, like so:</p>
 </div>
 
 <p></p>
-<div class="refsect2">
-<a name="id-1.2.4.4.8.19"></a><h3>Controlled shutdown of live sources in applications</h3>
-<p>
-Applications that record from a live source may want to stop recording
+<div class="refsect3">
+<a name="id-1.2.4.4.8.19"></a><h4>Controlled shutdown of live sources in applications</h4>
+<p>Applications that record from a live source may want to stop recording
 in a controlled way, so that the recording is stopped, but the data
 already in the pipeline is processed to the end (remember that many live
 sources would go on recording forever otherwise). For that to happen the
 application needs to make the source stop recording and send an EOS
 event down the pipeline. The application would then wait for an
 EOS message posted on the pipeline's bus to know when all data has
-been processed and the pipeline can safely be stopped.
-
-An application may send an EOS event to a source element to make it
+been processed and the pipeline can safely be stopped.</p>
+<p>An application may send an EOS event to a source element to make it
 perform the EOS logic (send EOS event downstream or post a
 <a href="../html/GstMessage.html#GST-MESSAGE-SEGMENT-DONE:CAPS"><code class="literal">GST_MESSAGE_SEGMENT_DONE</code></a> on the bus). This can typically be done
-with the <a href="../html/GstElement.html#gst-element-send-event"><code class="function">gst_element_send_event()</code></a> function on the element or its parent bin.
-
-After the EOS has been sent to the element, the application should wait for
+with the <a href="../html/GstElement.html#gst-element-send-event"><code class="function">gst_element_send_event()</code></a> function on the element or its parent bin.</p>
+<p>After the EOS has been sent to the element, the application should wait for
 an EOS message to be posted on the pipeline's bus. Once this EOS message is
-received, it may safely shut down the entire pipeline.
-</p>
+received, it may safely shut down the entire pipeline.</p>
 </div>
 </div>
 <div class="refsect1">

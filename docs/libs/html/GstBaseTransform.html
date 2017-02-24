@@ -241,204 +241,127 @@ for more concrete use cases.</p>
 <p>It provides for:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>one sinkpad and one srcpad</p></li>
-<li class="listitem"><p>
-     Possible formats on sink and source pad implemented
-     with custom transform_caps function. By default uses
-     same format on sink and source.
-  </p></li>
+<li class="listitem"><p>Possible formats on sink and source pad implemented
+with custom transform_caps function. By default uses
+same format on sink and source.</p></li>
 <li class="listitem"><p>Handles state changes</p></li>
 <li class="listitem"><p>Does flushing</p></li>
 <li class="listitem"><p>Push mode</p></li>
-<li class="listitem"><p>
-      Pull mode if the sub-class transform can operate on arbitrary data
-   </p></li>
+<li class="listitem"><p>Pull mode if the sub-class transform can operate on arbitrary data</p></li>
 </ul></div>
 <div class="refsect2">
 <a name="id-1.2.4.6.8.5"></a><h3>Use Cases</h3>
-<p>
-</p>
-<div class="orderedlist"><ol class="orderedlist" type="1">
+<div class="refsect3">
+<a name="id-1.2.4.6.8.5.2"></a><h4>Passthrough mode</h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Element has no interest in modifying the buffer. It may want to inspect it,
+in which case the element should have a transform_ip function. If there
+is no transform_ip function in passthrough mode, the buffer is pushed
+intact.</p></li>
+<li class="listitem"><p>The <a class="link" href="GstBaseTransform.html#GstBaseTransformClass.passthrough-on-same-caps"><span class="type">GstBaseTransformClass.passthrough_on_same_caps</span></a> variable
+will automatically set/unset passthrough based on whether the
+element negotiates the same caps on both pads.</p></li>
+<li class="listitem"><p><a class="link" href="GstBaseTransform.html#GstBaseTransformClass.passthrough-on-same-caps"><span class="type">GstBaseTransformClass.passthrough_on_same_caps</span></a> on an element that
+doesn't implement a transform_caps function is useful for elements that
+only inspect data (such as level)</p></li>
 <li class="listitem">
-<div class="itemizedlist">
-<p class="title"><b>Passthrough mode</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Element has no interest in modifying the buffer. It may want to inspect it,
-    in which case the element should have a transform_ip function. If there
-    is no transform_ip function in passthrough mode, the buffer is pushed
-    intact.
-  </p></li>
-<li class="listitem"><p>
-    The <a class="link" href="GstBaseTransform.html#GstBaseTransformClass.passthrough-on-same-caps"><span class="type">GstBaseTransformClass.passthrough_on_same_caps</span></a> variable
-    will automatically set/unset passthrough based on whether the
-    element negotiates the same caps on both pads.
-  </p></li>
-<li class="listitem"><p>
-    <a class="link" href="GstBaseTransform.html#GstBaseTransformClass.passthrough-on-same-caps"><span class="type">GstBaseTransformClass.passthrough_on_same_caps</span></a> on an element that
-    doesn't implement a transform_caps function is useful for elements that
-    only inspect data (such as level)
-  </p></li>
-</ul>
-</div>
-<div class="itemizedlist">
-<p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">Level</li>
-<li class="listitem">Videoscale, audioconvert, videoconvert, audioresample in
-    certain modes.</li>
-</ul>
-</div>
+<p>Example elements</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>Level</p></li>
+<li class="listitem"><p>Videoscale, audioconvert, videoconvert, audioresample in certain modes.</p></li>
+</ul></div>
 </li>
+</ul></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.6.8.5.3"></a><h4>Modifications in-place - input buffer and output buffer are the same thing.</h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>The element must implement a transform_ip function.</p></li>
+<li class="listitem"><p>Output buffer size must &lt;= input buffer size</p></li>
+<li class="listitem"><p>If the always_in_place flag is set, non-writable buffers will be copied
+and passed to the transform_ip function, otherwise a new buffer will be
+created and the transform function called.</p></li>
+<li class="listitem"><p>Incoming writable buffers will be passed to the transform_ip function
+immediately.</p></li>
 <li class="listitem">
-<div class="itemizedlist">
-<p class="title"><b>Modifications in-place - input buffer and output buffer are the
-    same thing.</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    The element must implement a transform_ip function.
-  </p></li>
-<li class="listitem"><p>
-    Output buffer size must &lt;= input buffer size
-  </p></li>
-<li class="listitem"><p>
-    If the always_in_place flag is set, non-writable buffers will be copied
-    and passed to the transform_ip function, otherwise a new buffer will be
-    created and the transform function called.
-  </p></li>
-<li class="listitem"><p>
-    Incoming writable buffers will be passed to the transform_ip function
-    immediately.  </p></li>
-<li class="listitem"><p>
-    only implementing transform_ip and not transform implies always_in_place
-    = <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
-  </p></li>
-</ul>
-</div>
-<div class="itemizedlist">
-<p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">Volume</li>
-<li class="listitem">Audioconvert in certain modes (signed/unsigned
-    conversion)</li>
-<li class="listitem">videoconvert in certain modes (endianness
-    swapping)</li>
-</ul>
-</div>
+<p>only implementing transform_ip and not transform implies always_in_place = <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a></p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+<p>Example elements:</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; ">
+<li class="listitem"><p>Volume</p></li>
+<li class="listitem"><p>Audioconvert in certain modes (signed/unsigned conversion)</p></li>
+<li class="listitem"><p>videoconvert in certain modes (endianness swapping)</p></li>
+</ul></div>
+</li></ul></div>
 </li>
+</ul></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.6.8.5.4"></a><h4>Modifications only to the caps/metadata of a buffer</h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>The element does not require writable data, but non-writable buffers
+should be subbuffered so that the meta-information can be replaced.</p></li>
+<li class="listitem"><p>Elements wishing to operate in this mode should replace the
+prepare_output_buffer method to create subbuffers of the input buffer
+and set always_in_place to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a></p></li>
 <li class="listitem">
-<div class="itemizedlist">
-<p class="title"><b>Modifications only to the caps/metadata of a buffer</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    The element does not require writable data, but non-writable buffers
-    should be subbuffered so that the meta-information can be replaced.
-  </p></li>
-<li class="listitem"><p>
-    Elements wishing to operate in this mode should replace the
-    prepare_output_buffer method to create subbuffers of the input buffer
-    and set always_in_place to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
-  </p></li>
-</ul>
-</div>
-<div class="itemizedlist">
-<p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">Capsfilter when setting caps on outgoing buffers that have
-    none.</li>
-<li class="listitem">identity when it is going to re-timestamp buffers by
-    datarate.</li>
-</ul>
-</div>
+<p>Example elements</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>Capsfilter when setting caps on outgoing buffers that have
+none.</p></li>
+<li class="listitem"><p>identity when it is going to re-timestamp buffers by
+datarate.</p></li>
+</ul></div>
 </li>
+</ul></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.6.8.5.5"></a><h4>Normal mode</h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>always_in_place flag is not set, or there is no transform_ip function</p></li>
+<li class="listitem"><p>Element will receive an input buffer and output buffer to operate on.</p></li>
+<li class="listitem"><p>Output buffer is allocated by calling the prepare_output_buffer function.</p></li>
 <li class="listitem">
-<div class="itemizedlist">
-<p class="title"><b>Normal mode</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    always_in_place flag is not set, or there is no transform_ip function
-  </p></li>
-<li class="listitem"><p>
-    Element will receive an input buffer and output buffer to operate on.
-  </p></li>
-<li class="listitem"><p>
-    Output buffer is allocated by calling the prepare_output_buffer function.
-  </p></li>
-</ul>
-</div>
-<div class="itemizedlist">
-<p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Videoscale, videoconvert, audioconvert when doing
-    scaling/conversions</li></ul>
-</div>
+<p>Example elements:</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>Videoscale, videoconvert, audioconvert when doing
+scaling/conversions</p></li></ul></div>
 </li>
+</ul></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.4.6.8.5.6"></a><h4>Special output buffer allocations</h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Elements which need to do special allocation of their output buffers
+beyond allocating output buffers via the negotiated allocator or
+buffer pool should implement the prepare_output_buffer method.</p></li>
 <li class="listitem">
-<div class="itemizedlist">
-<p class="title"><b>Special output buffer allocations</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
-    Elements which need to do special allocation of their output buffers
-    beyond allocating output buffers via the negotiated allocator or
-    buffer pool should implement the prepare_output_buffer method.
-  </p></li></ul>
-</div>
-<div class="itemizedlist">
-<p class="title"><b>Example elements</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">efence</li></ul>
-</div>
+<p>Example elements:</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>efence</p></li></ul></div>
 </li>
-</ol></div>
-<p>
-</p>
+</ul></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="id-1.2.4.6.8.6"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
-<p>
-</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-<p>
-  </p>
-<div class="itemizedlist">
-<p class="title"><b>passthrough</b></p>
-<ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem"><p>
-      Implies that in the current configuration, the sub-class is not
-      interested in modifying the buffers.
-    </p></li>
-<li class="listitem"><p>
-      Elements which are always in passthrough mode whenever the same caps
-      has been negotiated on both pads can set the class variable
-      passthrough_on_same_caps to have this behaviour automatically.
-    </p></li>
-</ul>
-</div>
-<p>
-</p>
+<p>passthrough</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>Implies that in the current configuration, the sub-class is not interested in modifying the buffers.</p></li>
+<li class="listitem"><p>Elements which are always in passthrough mode whenever the same caps has been negotiated on both pads can set the class variable passthrough_on_same_caps to have this behaviour automatically.</p></li>
+</ul></div>
 </li>
 <li class="listitem">
-<p>
-  </p>
-<div class="itemizedlist">
-<p class="title"><b>always_in_place</b></p>
-<ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem"><p>
-      Determines whether a non-writable buffer will be copied before passing
-      to the transform_ip function.
-    </p></li>
-<li class="listitem"><p>
-      Implied <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if no transform function is implemented.
-    </p></li>
-<li class="listitem"><p>
-      Implied <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if ONLY transform function is implemented.
-    </p></li>
-</ul>
-</div>
-<p>
-</p>
+<p>always_in_place</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>Determines whether a non-writable buffer will be copied before passing
+to the transform_ip function.</p></li>
+<li class="listitem"><p>Implied <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if no transform function is implemented.</p></li>
+<li class="listitem"><p>Implied <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if ONLY transform function is implemented.</p></li>
+</ul></div>
 </li>
 </ul></div>
-<p>
-</p>
 </div>
 </div>
 <div class="refsect1">
@@ -583,8 +506,8 @@ gst_base_transform_set_in_place (<em class="parameter"><code><a class="link" hre
 <p>Determines whether a non-writable buffer will be copied before passing
 to the transform_ip function.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">Always <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if no transform function is implemented.</li>
-<li class="listitem">Always <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if ONLY transform function is implemented.</li>
+<li class="listitem"><p>Always <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if no transform function is implemented.</p></li>
+<li class="listitem"><p>Always <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if ONLY transform function is implemented.</p></li>
 </ul></div>
 <p>MT safe.</p>
 <div class="refsect3">

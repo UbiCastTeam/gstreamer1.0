@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstElement.html" title="GstElement">
-<link rel="next" href="gstreamer-GstGError.html" title="GstGError">
+<link rel="next" href="gstreamer-GstGError.html" title="GstError">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -312,7 +312,7 @@
 <pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GstObject.html" title="GstObject">GstObject</a>
-            <span class="lineart">╰──</span> <a class="link" href="GstPluginFeature.html" title="GstPluginFeature">GstPluginFeature</a>
+            <span class="lineart">╰──</span> <a class="link" href="GstPluginFeature.html" title="GstPluginfeature">GstPluginFeature</a>
                 <span class="lineart">╰──</span> GstElementFactory
 </pre>
 </div>
@@ -325,14 +325,14 @@
 <a name="GstElementFactory.description"></a><h2>Description</h2>
 <p><a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a> is used to create instances of elements. A
 GstElementFactory can be added to a <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> as it is also a
-<a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>.</p>
+<a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a>.</p>
 <p>Use the <a class="link" href="GstElementFactory.html#gst-element-factory-find" title="gst_element_factory_find ()"><code class="function">gst_element_factory_find()</code></a> and <a class="link" href="GstElementFactory.html#gst-element-factory-create" title="gst_element_factory_create ()"><code class="function">gst_element_factory_create()</code></a>
 functions to create element instances or use <a class="link" href="GstElementFactory.html#gst-element-factory-make" title="gst_element_factory_make ()"><code class="function">gst_element_factory_make()</code></a> as a
 convenient shortcut.</p>
 <p>The following code example shows you how to create a GstFileSrc element.</p>
-<div class="example">
-<a name="id-1.3.23.7.5"></a><p class="title"><b>Example 5. Using an element factory</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.3.23.7.5"></a><h4>Using an element factory</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -365,8 +365,8 @@ src <span class="gtkdoc opt">=</span> <span class="function"><a href="GstElement
   </table>
 </div>
 
+<p></p>
 </div>
-<br class="example-break">
 </div>
 <div class="refsect1">
 <a name="GstElementFactory.functions_details"></a><h2>Functions</h2>
@@ -1218,7 +1218,7 @@ GST_ELEMENT_FACTORY_TYPE_MEDIA flag.</p>
 </div>
 <div class="refsect1">
 <a name="GstElementFactory.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a>, <a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>, <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>.</p>
+<p><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a>, <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a>, <a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a>, <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>.</p>
 </div>
 </div>
 <div class="footer">

@@ -1,9 +1,432 @@
-=== release 1.11.1 ===
+=== release 1.11.2 ===
 
-2017-01-12  Sebastian Dröge <slomo@coaxion.net>
+2017-02-24  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.11.1
+	  releasing 1.11.2
+
+2017-02-23 20:52:39 +0200  Vivia Nikolaidou <vivia@toolsonair.com>
+
+	* gst/gstvalue.c:
+	* tests/check/gst/gstvalue.c:
+	  value: Add deserialization for arrays/lists outside GstStructures
+	  This is mostly useful for properties of those types when used in
+	  gst-launch or similar.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777375
+
+2017-02-23 20:50:38 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstvalue.c:
+	  value: Add a type abbreviation for GstFlagSet in serialization
+
+2017-02-23 20:47:30 +0200  Vivia Nikolaidou <vivia@toolsonair.com>
+
+	* gst/gst_private.h:
+	* gst/gststructure.c:
+	* gst/gstvalue.c:
+	  value: Always add the type name to elements when serializing arrays/lists
+	  But only when serializing outside of GstStructures, because in case of
+	  GstStructure the type is already preprended to the array/list and the
+	  GstStructure API makes sure that they have the same "generic" type so
+	  deserialization works properly.
+	  This keeps serialization of GstStructures the same as before, and the
+	  GstCaps unit tests already test for that. However when serializing
+	  standalone arrays/lists get the types added now.
+
+2017-02-23 20:22:03 +0200  Vivia Nikolaidou <vivia@toolsonair.com>
+
+	* gst/gst_private.h:
+	* gst/gststructure.c:
+	* gst/gstvalue.c:
+	  value: Move list/array serialization/deserialization functions from GstStructure to GstValue
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777375
+
+2017-02-23 20:16:17 +0200  Vivia Nikolaidou <vivia@toolsonair.com>
+
+	* gst/gstparamspecs.c:
+	* gst/gstparamspecs.h:
+	* win32/common/libgstreamer.def:
+	  paramspecs: Add GstParamSpecArray for GST_TYPE_ARRAY typed properties
+	  These are mostly useful to get our automatic
+	  serialization/deserialization from strings and simple usage from
+	  gst-launch or similar.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777375
+
+2017-02-21 20:23:51 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* libs/gst/base/gstbytereader.c:
+	* tests/check/libs/bytereader.c:
+	  bytereader: fix peek value when scanning for 00 00 01 with non-0 offset
+	  We would add the offset a second time in _scan_for_start_code()
+	  when we found a result, but it's already been added to the data
+	  pointer at the beginning of _masked_scan_uint32_peek(), so the
+	  peeked value would be wrong if the initial offset was >0, and
+	  we would potentially read memory out-of-bounds.
+	  Add unit test for all of this.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=778365
+
+2017-02-20 12:16:32 +0100  Wim Taymans <wtaymans@redhat.com>
+
+	* gst/gstinfo.h:
+	  info: put () around macro arguments
+	  Put braces around macro arguments or else we might run into problems
+	  with operater precedence.
+
+2017-02-20 10:45:57 +0100  Wim Taymans <wtaymans@redhat.com>
+
+	* gst/gstdeviceproviderfactory.c:
+	  deviceproviderfactory: ignore empty classes
+
+2017-02-20 10:25:50 +0100  Wim Taymans <wtaymans@redhat.com>
+
+	* gst/gstdeviceproviderfactory.c:
+	  deviceproviderfactory: compare class against NULL
+	  gstdeviceproviderfactory.c:501:20: error: comparison between pointer and zero character constant [-Werror=pointer-compare]
+	  if (classes[0] == '\0')
+
+2017-02-18 16:49:40 +0530  Nirbheek Chauhan <nirbheek@centricular.com>
+
+	* gst/meson.build:
+	  meson: Fix build with latest upstream git
+	  Trivial incorrect include_directories() call
+
+2017-02-18 10:03:24 +0100  Peter Korsgaard <peter@korsgaard.com>
+
+	* gst/gstconfig.h.in:
+	  gstconfig: Fix unaligned access support for the openrisc architecture
+	  Teach gstconfig.h.in about the openrisc (or1k) architecture.  Fixes
+	  buildroot autobuild failure:
+	  http://autobuild.buildroot.net/results/717/717d78ce0935749f477bdf3133b6f20057a28c01/build-end.log
+	  https://bugzilla.gnome.org/show_bug.cgi?id=778866
+
+2017-02-15 21:37:31 +0100  Stefan Sauer <ensonic@users.sf.net>
+
+	* libs/gst/base/gstbasesink.c:
+	  gstbasesink: xref symbol in docs
+
+2017-02-15 20:58:49 +0100  Stefan Sauer <ensonic@users.sf.net>
+
+	* gst/gstpad.h:
+	  pad: revert the content changes from previous commit
+	  The default behaviour when returning GST_PAD_PROBE_OK is unrelated to
+	  the other return code.
+
+2017-02-15 20:37:40 +0100  Stefan Sauer <ensonic@users.sf.net>
+
+	* gst/gstpad.h:
+	  pad: fix docs for GstPadProbeReturn
+	  There is no 'block' value, but we have 'drop'. Also fix the markup; it
+	  is '%' to link to constants (and enum values).
+
+2016-10-24 22:47:29 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* Makefile.am:
+	  meson: dist meson build files
+	  Ship meson build files in tarballs, so people who use tarballs
+	  in their builds can start playing with meson already.
+
+2017-01-31 09:55:59 +0000  Julien Isorce <jisorce@oblong.com>
+
+	* tests/check/pipelines/seek.c:
+	  tests: add 2 unit tests for non-flush seek with gstbaseparse
+	  The unit test defines a test parse element that inherit from GstBaseParse.
+	  The test pipeline is: fakesrc ! testparse ! fakesink sync=1
+	  Before the fix b2c05cac8 the first new test would have fail because the
+	  pipeline would have wait doing nothing just after proceeded the seek event.
+	  The second new test would have fail because the pipeline would have
+	  played the media instantly just after proceeded the seek event
+	  (like if sync was FALSE on the sink).
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777780
+
+2017-01-31 21:19:18 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/parse/grammar.y:
+	  parse: Don't translate the "bin" element name
+	  Otherwise we won't be able to create bins, there is no element called
+	  "Behälter" if you're using a German locale.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777998
+
+2016-04-15 20:54:42 +0900  Seungha Yang <sh.yang@lge.com>
+
+	* gst/gstsegment.c:
+	* tests/check/gst/gstsegment.c:
+	  segment: Modifiy inside segment condition
+	  There is a special case that segment_start == segment_stop == start.
+	  It's inside of segment
+	  https://bugzilla.gnome.org/show_bug.cgi?id=764707
+
+2017-01-26 16:35:27 +0000  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstinfo.c:
+	  info: Check libunwind return codes
+
+2017-01-18 18:16:26 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* libs/gst/controller/meson.build:
+	* libs/gst/net/meson.build:
+	  meson: libs: Add gir to the source list of the dependency
+
+2017-01-16 11:26:16 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gst.c:
+	* gst/gstallocator.c:
+	* gst/gstbin.c:
+	* gst/gstbuffer.c:
+	* gst/gstbufferlist.c:
+	* gst/gstbufferpool.c:
+	* gst/gstbufferpool.h:
+	* gst/gstbus.c:
+	* gst/gstcaps.c:
+	* gst/gstcapsfeatures.c:
+	* gst/gstchildproxy.c:
+	* gst/gstclock.c:
+	* gst/gstclock.h:
+	* gst/gstcompat.h:
+	* gst/gstcontext.c:
+	* gst/gstcontrolbinding.c:
+	* gst/gstcontrolsource.c:
+	* gst/gstdebugutils.h:
+	* gst/gstdevice.c:
+	* gst/gstdevicemonitor.c:
+	* gst/gstdeviceprovider.c:
+	* gst/gstdeviceproviderfactory.c:
+	* gst/gstdynamictypefactory.c:
+	* gst/gstelement.c:
+	* gst/gstelement.h:
+	* gst/gstelementfactory.c:
+	* gst/gsterror.c:
+	* gst/gstevent.c:
+	* gst/gstformat.c:
+	* gst/gstghostpad.c:
+	* gst/gstinfo.c:
+	* gst/gstinfo.h:
+	* gst/gstiterator.c:
+	* gst/gstmemory.c:
+	* gst/gstmessage.c:
+	* gst/gstmeta.c:
+	* gst/gstminiobject.c:
+	* gst/gstobject.c:
+	* gst/gstpad.c:
+	* gst/gstpad.h:
+	* gst/gstpadtemplate.c:
+	* gst/gstparamspecs.c:
+	* gst/gstparse.c:
+	* gst/gstpipeline.c:
+	* gst/gstplugin.c:
+	* gst/gstpluginfeature.c:
+	* gst/gstpoll.c:
+	* gst/gstpreset.c:
+	* gst/gstprotection.c:
+	* gst/gstquery.c:
+	* gst/gstregistry.c:
+	* gst/gstsample.c:
+	* gst/gstsegment.c:
+	* gst/gststreamcollection.c:
+	* gst/gststreams.c:
+	* gst/gststructure.c:
+	* gst/gstsystemclock.c:
+	* gst/gsttaglist.c:
+	* gst/gsttagsetter.c:
+	* gst/gsttask.c:
+	* gst/gsttaskpool.c:
+	* gst/gsttoc.c:
+	* gst/gsttocsetter.c:
+	* gst/gsttracer.c:
+	* gst/gsttracerfactory.c:
+	* gst/gsttracerrecord.c:
+	* gst/gsttypefind.c:
+	* gst/gsttypefindfactory.c:
+	* gst/gsturi.c:
+	* gst/gstutils.c:
+	* gst/gstvalue.c:
+	* gst/gstvalue.h:
+	* libs/gst/base/gstadapter.c:
+	* libs/gst/base/gstbaseparse.c:
+	* libs/gst/base/gstbasesink.c:
+	* libs/gst/base/gstbasesrc.c:
+	* libs/gst/base/gstbasetransform.c:
+	* libs/gst/base/gstbasetransform.h:
+	* libs/gst/base/gstbitreader.c:
+	* libs/gst/base/gstbytereader.c:
+	* libs/gst/base/gstbytewriter.c:
+	* libs/gst/base/gstcollectpads.c:
+	* libs/gst/base/gstdataqueue.c:
+	* libs/gst/base/gstdataqueue.h:
+	* libs/gst/base/gstflowcombiner.c:
+	* libs/gst/base/gstindex.c:
+	* libs/gst/base/gstpushsrc.c:
+	* libs/gst/base/gstqueuearray.c:
+	* libs/gst/base/gsttypefindhelper.c:
+	* libs/gst/check/gstbufferstraw.c:
+	* libs/gst/check/gstcheck.c:
+	* libs/gst/check/gstconsistencychecker.c:
+	* libs/gst/check/gstharness.c:
+	* libs/gst/check/gsttestclock.c:
+	* libs/gst/controller/gstargbcontrolbinding.c:
+	* libs/gst/controller/gstdirectcontrolbinding.c:
+	* libs/gst/controller/gstinterpolationcontrolsource.c:
+	* libs/gst/controller/gstlfocontrolsource.c:
+	* libs/gst/controller/gstproxycontrolbinding.c:
+	* libs/gst/controller/gsttimedvaluecontrolsource.c:
+	* libs/gst/controller/gsttriggercontrolsource.c:
+	* libs/gst/net/gstnetaddressmeta.c:
+	* libs/gst/net/gstnetclientclock.c:
+	* libs/gst/net/gstnetcontrolmessagemeta.c:
+	* libs/gst/net/gstnettimepacket.c:
+	* libs/gst/net/gstnettimeprovider.c:
+	* libs/gst/net/gstptpclock.c:
+	* plugins/elements/gstcapsfilter.c:
+	* plugins/elements/gstconcat.c:
+	* plugins/elements/gstdataurisrc.c:
+	* plugins/elements/gstdownloadbuffer.c:
+	* plugins/elements/gstfakesink.c:
+	* plugins/elements/gstfakesrc.c:
+	* plugins/elements/gstfakesrc.h:
+	* plugins/elements/gstfdsink.c:
+	* plugins/elements/gstfdsrc.c:
+	* plugins/elements/gstfilesink.c:
+	* plugins/elements/gstfilesrc.c:
+	* plugins/elements/gstfunnel.c:
+	* plugins/elements/gstidentity.c:
+	* plugins/elements/gstinputselector.c:
+	* plugins/elements/gstmultiqueue.c:
+	* plugins/elements/gstoutputselector.c:
+	* plugins/elements/gstqueue.c:
+	* plugins/elements/gstqueue2.c:
+	* plugins/elements/gststreamiddemux.c:
+	* plugins/elements/gsttee.c:
+	* plugins/elements/gsttypefindelement.c:
+	* plugins/elements/gstvalve.c:
+	  Port gtk-doc comments to their equivalent markdown syntax
+	  Modernizing our documentation and preparing a possible move to hotdoc.
+	  This commits also adds missing @title metadatas to all SECTIONs
+
+2017-01-11 17:25:08 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstbuffer.h:
+	* gst/gstcontrolbinding.h:
+	* gst/gstelement.h:
+	* gst/gstevent.h:
+	* gst/gstmemory.h:
+	* gst/gstmessage.h:
+	* gst/gstmeta.h:
+	* gst/gstquery.h:
+	* gst/gststreamcollection.h:
+	* gst/gststreams.h:
+	* gst/gsttracer.h:
+	* gst/gsturi.h:
+	  gst: Fix includes so that files can be built separately
+	  It used to work but it has broke in the 1.10 cycle.
+
+2017-01-18 10:56:38 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstpoll.c:
+	  gstpoll: Encode in utf-8
+
+2017-01-26 15:32:31 -0800  Brendan Shanks <brendan.shanks@teradek.com>
+
+	* gst/gststreamcollection.h:
+	* gst/gststreams.h:
+	  GstStream/GstStreamCollection: add g_autoptr() support
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777810
+
+2017-01-26 16:51:21 +0000  Julien Isorce <jisorce@oblong.com>
+
+	* libs/gst/base/gstbaseparse.c:
+	  baseparse: correctly handle non-flush seek
+	  Otherwise when seeking/looping to the start when reaching the end,
+	  the sink waits for the duration of the stream. So the user hears
+	  nothing for the duration of the stream before it actually loop again.
+	  See example attached to the bug for that.
+	  Existing test:
+	  gst-plugins-good/tests/icles/test-segment-seeks foo.flac
+	  Without the patch the user hears a crack/cut at each seek.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777780
+
+2016-05-24 14:57:54 +0200  Stian Selnes <stian@pexip.com>
+
+	* libs/gst/check/Makefile.am:
+	* libs/gst/check/gstcheck.c:
+	* libs/gst/check/gstcheck.h:
+	  check: Add API to filter g_warning/g_critical etc
+	  New API functions to filter log messages before they are processed by
+	  GstCheck. This can be used to discard specific messages that are
+	  accepted by the test or to add callbacks that test specific messages.
+	  Default bevavior when no callback is given to a filter is to discard the
+	  message, because it does not makes sense to have a filter with no
+	  callback which does not discard; that would be a noop.
+	  Discarded messages will in addition to bypass the GstCheck handling also
+	  return to GLib that the message is not fatal if it occurs.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=773091
+
+2017-01-18 22:39:33 +0100  Stefan Sauer <ensonic@users.sf.net>
+
+	* gst/gstbin.c:
+	  bin: update the docs for the event forwarding
+	  First this sends the events not only to the sources and 2nd this is not only
+	  for seek events.
+
+2017-01-18 15:07:58 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/parse/grammar.y:
+	  parse: Don't hold element's object lock while querying element pads' caps
+	  This can easily deadlock if the element uses the object lock for
+	  something internally, like posting an error message. Use an GstIterator
+	  for iterating over the pads instead.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777449
+
+2017-01-16 09:41:19 +1100  Jan Schmidt <jan@centricular.com>
+
+	* gst/gstbin.c:
+	  gstbin: Quieten a noisy FIXME about duration caching
+	  Only print this FIXME once per run, at it's pretty annoying in
+	  lots of logs otherwise.
+
+2015-07-14 13:11:11 +0000  Jan Schmidt <jan@centricular.com>
+
+	* plugins/elements/gstidentity.c:
+	* plugins/elements/gstidentity.h:
+	  identity: Add ts-offset property.
+	  Add a property to delay or advance sync time
+	  when sync=true, with the same behaviour as
+	  the ts-offset property in basesink
+
+2017-01-15 11:52:44 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstdatetime.c:
+	* tests/check/gst/gstdatetime.c:
+	  datetime: fix potential out-of-bound read on malformed datetime string
+	  https://bugzilla.gnome.org/show_bug.cgi?id=777263
+
+2017-01-13 12:34:43 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* meson.build:
+	  meson: bump version
+
+2017-01-12 16:32:38 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* configure.ac:
+	  Back to development
+
+=== release 1.11.1 ===
+
+2017-01-12 15:29:15 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	  Release 1.11.1
+
+2017-01-12 14:35:22 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/hr.po:
+	* po/id.po:
+	* po/pl.po:
+	* po/zh_CN.po:
+	  Update .po files
 
 2017-01-12 14:34:18 +0200  Sebastian Dröge <sebastian@centricular.com>
 

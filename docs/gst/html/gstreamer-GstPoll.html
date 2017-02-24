@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="GstPluginFeature.html" title="GstPluginFeature">
+<link rel="prev" href="GstPluginFeature.html" title="GstPluginfeature">
 <link rel="next" href="GstPreset.html" title="GstPreset">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -646,7 +646,7 @@ gst_poll_new_timer (<em class="parameter"><code><span class="type">void</span></
 <p>Create a new poll object that can be used for scheduling cancellable
 timeouts.</p>
 <p>A timeout is performed with <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a>. Multiple timeouts can be
-performed from different threads. </p>
+performed from different threads.</p>
 <p>Free-function: gst_poll_free</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
@@ -912,7 +912,7 @@ gst_poll_write_control (<em class="parameter"><code><a class="link" href="gstrea
 <p>Write a byte to the control socket of the controllable <em class="parameter"><code>set</code></em>
 .
 This function is mostly useful for timer <a class="link" href="gstreamer-GstPoll.html#GstPoll" title="GstPoll"><span class="type">GstPoll</span></a> objects created with
-<a class="link" href="gstreamer-GstPoll.html#gst-poll-new-timer" title="gst_poll_new_timer ()"><code class="function">gst_poll_new_timer()</code></a>. </p>
+<a class="link" href="gstreamer-GstPoll.html#gst-poll-new-timer" title="gst_poll_new_timer ()"><code class="function">gst_poll_new_timer()</code></a>.</p>
 <p>It will make any current and future <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> function return with
 1, meaning the control socket is set. After an equal amount of calls to
 <a class="link" href="gstreamer-GstPoll.html#gst-poll-read-control" title="gst_poll_read_control ()"><code class="function">gst_poll_read_control()</code></a> have been performed, calls to <a class="link" href="gstreamer-GstPoll.html#gst-poll-wait" title="gst_poll_wait ()"><code class="function">gst_poll_wait()</code></a> will

@@ -1640,7 +1640,7 @@ in the output arguments are copies; the caller must free them when done.</p>
   <span class="keyword">case</span> GST_MESSAGE_ERROR<span class="gtkdoc opt">: {</span>
     GError <span class="gtkdoc opt">*</span>err <span class="gtkdoc opt">=</span> NULL<span class="gtkdoc opt">;</span>
     gchar <span class="gtkdoc opt">*</span>dbg_info <span class="gtkdoc opt">=</span> NULL<span class="gtkdoc opt">;</span>
-    
+
     <span class="function"><a href="GstMessage.html#gst-message-parse-error">gst_message_parse_error</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>err<span class="gtkdoc opt">, &amp;</span>dbg_info<span class="gtkdoc opt">);</span>
     <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-printerr">g_printerr</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;ERROR from element %s: %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span>
         <span class="function"><a href="GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">),</span> err<span class="gtkdoc opt">-&gt;</span>message<span class="gtkdoc opt">);</span>
@@ -2122,7 +2122,7 @@ output argument is a copy; the caller must free it when done.</p>
 <span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
   <span class="keyword">case</span> GST_MESSAGE_TAG<span class="gtkdoc opt">: {</span>
     GstTagList <span class="gtkdoc opt">*</span>tags <span class="gtkdoc opt">=</span> NULL<span class="gtkdoc opt">;</span>
-    
+
     <span class="function"><a href="GstMessage.html#gst-message-parse-tag">gst_message_parse_tag</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>tags<span class="gtkdoc opt">);</span>
     <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Got tags from element %s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">));</span>
     <span class="function">handle_tags</span> <span class="gtkdoc opt">(</span>tags<span class="gtkdoc opt">);</span>
@@ -2269,7 +2269,7 @@ gst_message_set_buffering_stats (<em class="parameter"><code><a class="link" hre
 </tr>
 <tr>
 <td class="parameter_name"><p>mode</p></td>
-<td class="parameter_description"><p>a buffering mode </p></td>
+<td class="parameter_description"><p>a buffering mode</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2423,7 +2423,7 @@ gst_message_parse_state_changed (<em class="parameter"><code><a class="link" hre
 <span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
   <span class="keyword">case</span> GST_MESSAGE_STATE_CHANGED<span class="gtkdoc opt">: {</span>
     GstState old_state<span class="gtkdoc opt">,</span> new_state<span class="gtkdoc opt">;</span>
-    
+
     <span class="function"><a href="GstMessage.html#gst-message-parse-state-changed">gst_message_parse_state_changed</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>old_state<span class="gtkdoc opt">, &amp;</span>new_state<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
     <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Element %s changed state from %s to %s.</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span>
         <span class="function"><a href="GstObject.html#GST-OBJECT-NAME:CAPS">GST_OBJECT_NAME</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">-&gt;</span>src<span class="gtkdoc opt">),</span>
@@ -3340,7 +3340,7 @@ gst_message_new_step_start (<em class="parameter"><code><a class="link" href="Gs
 <p>This message is posted by elements when they accept or activate a new step
 event for <em class="parameter"><code>amount</code></em>
  in <em class="parameter"><code>format</code></em>
-. </p>
+.</p>
 <p><em class="parameter"><code>active</code></em>
  is set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> when the element accepted the new step event and has
 queued it for execution in the streaming threads.</p>
@@ -3399,7 +3399,7 @@ element.</p>
 </div>
 <div class="refsect3">
 <a name="gst-message-new-step-start.returns"></a><h4>Returns</h4>
-<p> The new step_start message. </p>
+<p> The new step_start message.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
