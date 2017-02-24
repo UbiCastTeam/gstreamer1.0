@@ -24,6 +24,7 @@
 
 /**
  * SECTION:gstinfo
+ * @title: GstInfo
  * @short_description: Debugging and logging facilities
  * @see_also: #gst-running for command line parameters
  * and environment variables that affect the debugging output.
@@ -1524,8 +1525,8 @@ gst_debug_get_color_mode (void)
  * If activated, debugging messages are sent to the debugging
  * handlers.
  * It makes sense to deactivate it for speed issues.
- * <note><para>This function is not threadsafe. It makes sense to only call it
- * during initialization.</para></note>
+ * > This function is not threadsafe. It makes sense to only call it
+ * during initialization.
  */
 void
 gst_debug_set_active (gboolean active)
@@ -1761,11 +1762,9 @@ gst_debug_category_free (GstDebugCategory * category)
  * Sets the threshold of the category to the given level. Debug information will
  * only be output if the threshold is lower or equal to the level of the
  * debugging message.
- * <note><para>
- * Do not use this function in production code, because other functions may
- * change the threshold of categories as side effect. It is however a nice
- * function to use when debugging (even from gdb).
- * </para></note>
+ * > Do not use this function in production code, because other functions may
+ * > change the threshold of categories as side effect. It is however a nice
+ * > function to use when debugging (even from gdb).
  */
 void
 gst_debug_category_set_threshold (GstDebugCategory * category,
@@ -2662,6 +2661,7 @@ append_debug_info (GString * trace, Dwfl * dwfl, const void *ip)
 static gchar *
 generate_unwind_trace (GstStackTraceFlags flags)
 {
+  gint unret;
   unw_context_t uc;
   unw_cursor_t cursor;
   gboolean use_libunwind = TRUE;
@@ -2678,15 +2678,31 @@ generate_unwind_trace (GstStackTraceFlags flags)
     dwfl = dwfl_begin (&callbacks);
 #endif /* HAVE_DW */
 
-  unw_getcontext (&uc);
-  unw_init_local (&cursor, &uc);
+  unret = unw_getcontext (&uc);
+  if (unret) {
+    GST_DEBUG ("Could not get libunwind context (%d)", unret);
+
+    goto done;
+  }
+  unret = unw_init_local (&cursor, &uc);
+  if (unret) {
+    GST_DEBUG ("Could not init libunwind context (%d)", unret);
+
+    goto done;
+  }
 
   while (unw_step (&cursor) > 0) {
 #ifdef HAVE_DW
     if (dwfl) {
       unw_word_t ip;
 
-      unw_get_reg (&cursor, UNW_REG_IP, &ip);
+      unret = unw_get_reg (&cursor, UNW_REG_IP, &ip);
+      if (unret) {
+        GST_DEBUG ("libunwind could read frame info (%d)", unret);
+
+        goto done;
+      }
+
       if (append_debug_info (trace, dwfl, (void *) (ip - 4))) {
         use_libunwind = FALSE;
         g_string_append (trace, ")\n");
@@ -2704,6 +2720,7 @@ generate_unwind_trace (GstStackTraceFlags flags)
     }
   }
 
+done:
 #ifdef HAVE_DW
   if (dwfl)
     dwfl_end (dwfl);

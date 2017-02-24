@@ -23,6 +23,7 @@
 
 /**
  * SECTION:gstdeviceproviderfactory
+ * @title: GstDeviceProviderFactory
  * @short_description: Create GstDeviceProviders from a factory
  * @see_also: #GstDeviceProvider, #GstPlugin, #GstPluginFeature, #GstPadTemplate.
  *
@@ -498,7 +499,7 @@ gst_device_provider_factory_has_classesv (GstDeviceProviderFactory * factory,
     const gchar *found;
     guint len;
 
-    if (classes[0] == '\0')
+    if (classes[0][0] == '\0')
       continue;
 
     found = strstr (klass, classes[0]);

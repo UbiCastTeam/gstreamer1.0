@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-check.html" title="GStreamer Check Unit Testing">
-<link rel="prev" href="gstreamer-libs-GstStreamConsistency.html" title="GstStreamConsistency">
+<link rel="prev" href="gstreamer-libs-GstStreamConsistency.html" title="GstStreamConsistencyChecker">
 <link rel="next" href="GstTestClock.html" title="GstTestClock">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -767,15 +767,28 @@ It can be thought of as a way of treating a <a href="../html/GstElement.html#Gst
 deterministically feeding it data, and controlling what data it outputs.</p>
 <p>The basic structure of <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is two "floating" <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPads</span></a> that connect
 to the harnessed <a href="../html/GstElement.html#GstElement-struct"><span class="type">GstElement</span></a> src and sink <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPads</span></a> like so:</p>
-<pre class="programlisting">
-          __________________________
- _____   |  _____            _____  |   _____
-|     |  | |     |          |     | |  |     |
-| src |--+-| sink|  Element | src |-+--| sink|
-|_____|  | |_____|          |_____| |  |_____|
-         |__________________________|
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6</pre></td>
+        <td class="listing_code"><pre class="programlisting">__________________________
+ _____   <span class="gtkdoc opt">|</span>  _____            _____  <span class="gtkdoc opt">|</span>   _____
+<span class="gtkdoc opt">|     |  | |     |          |     | |  |     |</span>
+<span class="gtkdoc opt">|</span> src <span class="gtkdoc opt">|--+-|</span> sink<span class="gtkdoc opt">|</span>  Element <span class="gtkdoc opt">|</span> src <span class="gtkdoc opt">|-+--|</span> sink<span class="gtkdoc opt">|</span>
+<span class="gtkdoc opt">|</span>_____<span class="gtkdoc opt">|  | |</span>_____<span class="gtkdoc opt">|          |</span>_____<span class="gtkdoc opt">| |  |</span>_____<span class="gtkdoc opt">|</span>
+         <span class="gtkdoc opt">|</span>__________________________<span class="gtkdoc opt">|</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-</pre>
+<p></p>
 <p>With this, you can now simulate any environment the <a href="../html/GstElement.html#GstElement-struct"><span class="type">GstElement</span></a> might find
 itself in. By specifying the <a href="../html/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> of the harness <a href="../html/GstPad.html#GstPad-struct"><span class="type">GstPads</span></a>, using
 functions like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-set-src-caps" title="gst_harness_set_src_caps ()"><code class="function">gst_harness_set_src_caps()</code></a> or <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-set-sink-caps-str" title="gst_harness_set_sink_caps_str ()"><code class="function">gst_harness_set_sink_caps_str()</code></a>,
@@ -787,9 +800,9 @@ easily test a whole pipeline instead of just one element.</p>
 using functions like <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-push" title="gst_harness_push ()"><code class="function">gst_harness_push()</code></a> and <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-push-event" title="gst_harness_push_event ()"><code class="function">gst_harness_push_event()</code></a>, and
 then pull them out to examine them with <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-pull" title="gst_harness_pull ()"><code class="function">gst_harness_pull()</code></a> and
 <a class="link" href="gstreamer-libs-GstHarness.html#gst-harness-pull-event" title="gst_harness_pull_event ()"><code class="function">gst_harness_pull_event()</code></a>.</p>
-<div class="example">
-<a name="id-1.2.7.6.6.8"></a><p class="title"><b>Example 1. A simple buffer-in buffer-out example</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.2.7.6.6.9"></a><h4>A simple buffer-in buffer-out example</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -852,8 +865,8 @@ out_buf <span class="gtkdoc opt">=</span> <span class="function"><a href="gstrea
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>Another main feature of the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is its integration with the
+<p></p>
+<p>Another main feature of the <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> is its integration with the
 <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>. Operating the <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> can be very challenging, but
 <a class="link" href="gstreamer-libs-GstHarness.html#GstHarness" title="struct GstHarness"><span class="type">GstHarness</span></a> simplifies some of the most desired actions a lot, like wanting
 to manually advance the clock while at the same time releasing a <a href="../html/GstClock.html#GstClockID"><span class="type">GstClockID</span></a>
@@ -867,9 +880,7 @@ or using the much more convenient <a class="link" href="gstreamer-libs-GstHarnes
 (like vp8dec) it can be very useful to add a src-harness with both a
 src-element (videotestsrc) and an encoder (vp8enc) to feed the decoder data
 with different configurations, by simply doing:</p>
-<div class="example">
-<a name="id-1.2.7.6.6.11"></a><p class="title"><b>Example 2. </b></p>
-<div class="example-contents">
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -882,11 +893,9 @@ with different configurations, by simply doing:</p>
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>and then feeding it data with:</p>
-<div class="example">
-<a name="id-1.2.7.6.6.13"></a><p class="title"><b>Example 3. </b></p>
-<div class="example-contents">
+<p></p>
+<p>and then feeding it data with:</p>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -897,8 +906,8 @@ with different configurations, by simply doing:</p>
   </table>
 </div>
 
+<p></p>
 </div>
-<br class="example-break">
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstHarness.functions_details"></a><h2>Functions</h2>

@@ -394,48 +394,32 @@
 <p>Manages a set of pads that operate in collect mode. This means that control
 is given to the manager of this object when all pads have data.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Collectpads are created with <a class="link" href="GstCollectPads.html#gst-collect-pads-new" title="gst_collect_pads_new ()"><code class="function">gst_collect_pads_new()</code></a>. A callback should then
-    be installed with <a class="link" href="GstCollectPads.html#gst-collect-pads-set-function" title="gst_collect_pads_set_function ()"><code class="function">gst_collect_pads_set_function()</code></a>.
-  </p></li>
-<li class="listitem"><p>
-    Pads are added to the collection with <a class="link" href="GstCollectPads.html#gst-collect-pads-add-pad" title="gst_collect_pads_add_pad ()"><code class="function">gst_collect_pads_add_pad()</code></a>/
-    <a class="link" href="GstCollectPads.html#gst-collect-pads-remove-pad" title="gst_collect_pads_remove_pad ()"><code class="function">gst_collect_pads_remove_pad()</code></a>. The pad
-    has to be a sinkpad. The chain and event functions of the pad are
-    overridden. The element_private of the pad is used to store
-    private information for the collectpads.
-  </p></li>
-<li class="listitem"><p>
-    For each pad, data is queued in the _chain function or by
-    performing a pull_range.
-  </p></li>
-<li class="listitem"><p>
-    When data is queued on all pads in waiting mode, the callback function is called.
-  </p></li>
-<li class="listitem"><p>
-    Data can be dequeued from the pad with the <a class="link" href="GstCollectPads.html#gst-collect-pads-pop" title="gst_collect_pads_pop ()"><code class="function">gst_collect_pads_pop()</code></a> method.
-    One can peek at the data with the <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a> function.
-    These functions will return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the pad received an EOS event. When all
-    pads return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> from a <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a>, the element can emit an EOS
-    event itself.
-  </p></li>
-<li class="listitem"><p>
-    Data can also be dequeued in byte units using the <a class="link" href="GstCollectPads.html#gst-collect-pads-available" title="gst_collect_pads_available ()"><code class="function">gst_collect_pads_available()</code></a>,
-    <a class="link" href="GstCollectPads.html#gst-collect-pads-read-buffer" title="gst_collect_pads_read_buffer ()"><code class="function">gst_collect_pads_read_buffer()</code></a> and <a class="link" href="GstCollectPads.html#gst-collect-pads-flush" title="gst_collect_pads_flush ()"><code class="function">gst_collect_pads_flush()</code></a> calls.
-  </p></li>
-<li class="listitem"><p>
-    Elements should call <a class="link" href="GstCollectPads.html#gst-collect-pads-start" title="gst_collect_pads_start ()"><code class="function">gst_collect_pads_start()</code></a> and <a class="link" href="GstCollectPads.html#gst-collect-pads-stop" title="gst_collect_pads_stop ()"><code class="function">gst_collect_pads_stop()</code></a> in
-    their state change functions to start and stop the processing of the collectpads.
-    The <a class="link" href="GstCollectPads.html#gst-collect-pads-stop" title="gst_collect_pads_stop ()"><code class="function">gst_collect_pads_stop()</code></a> call should be called before calling the parent
-    element state change function in the PAUSED_TO_READY state change to ensure
-    no pad is blocked and the element can finish streaming.
-  </p></li>
-<li class="listitem"><p>
-    <a class="link" href="GstCollectPads.html#gst-collect-pads-set-waiting" title="gst_collect_pads_set_waiting ()"><code class="function">gst_collect_pads_set_waiting()</code></a> sets a pad to waiting or non-waiting mode.
-    CollectPads element is not waiting for data to be collected on non-waiting pads.
-    Thus these pads may but need not have data when the callback is called.
-    All pads are in waiting mode by default.
-  </p></li>
+<li class="listitem"><p>Collectpads are created with <a class="link" href="GstCollectPads.html#gst-collect-pads-new" title="gst_collect_pads_new ()"><code class="function">gst_collect_pads_new()</code></a>. A callback should then
+be installed with <a class="link" href="GstCollectPads.html#gst-collect-pads-set-function" title="gst_collect_pads_set_function ()"><code class="function">gst_collect_pads_set_function()</code></a>.</p></li>
+<li class="listitem"><p>Pads are added to the collection with <a class="link" href="GstCollectPads.html#gst-collect-pads-add-pad" title="gst_collect_pads_add_pad ()"><code class="function">gst_collect_pads_add_pad()</code></a>/
+<a class="link" href="GstCollectPads.html#gst-collect-pads-remove-pad" title="gst_collect_pads_remove_pad ()"><code class="function">gst_collect_pads_remove_pad()</code></a>. The pad
+has to be a sinkpad. The chain and event functions of the pad are
+overridden. The element_private of the pad is used to store
+private information for the collectpads.</p></li>
+<li class="listitem"><p>For each pad, data is queued in the _chain function or by
+performing a pull_range.</p></li>
+<li class="listitem"><p>When data is queued on all pads in waiting mode, the callback function is called.</p></li>
+<li class="listitem"><p>Data can be dequeued from the pad with the <a class="link" href="GstCollectPads.html#gst-collect-pads-pop" title="gst_collect_pads_pop ()"><code class="function">gst_collect_pads_pop()</code></a> method.
+One can peek at the data with the <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a> function.
+These functions will return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the pad received an EOS event. When all
+pads return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> from a <a class="link" href="GstCollectPads.html#gst-collect-pads-peek" title="gst_collect_pads_peek ()"><code class="function">gst_collect_pads_peek()</code></a>, the element can emit an EOS
+event itself.</p></li>
+<li class="listitem"><p>Data can also be dequeued in byte units using the <a class="link" href="GstCollectPads.html#gst-collect-pads-available" title="gst_collect_pads_available ()"><code class="function">gst_collect_pads_available()</code></a>,
+<a class="link" href="GstCollectPads.html#gst-collect-pads-read-buffer" title="gst_collect_pads_read_buffer ()"><code class="function">gst_collect_pads_read_buffer()</code></a> and <a class="link" href="GstCollectPads.html#gst-collect-pads-flush" title="gst_collect_pads_flush ()"><code class="function">gst_collect_pads_flush()</code></a> calls.</p></li>
+<li class="listitem"><p>Elements should call <a class="link" href="GstCollectPads.html#gst-collect-pads-start" title="gst_collect_pads_start ()"><code class="function">gst_collect_pads_start()</code></a> and <a class="link" href="GstCollectPads.html#gst-collect-pads-stop" title="gst_collect_pads_stop ()"><code class="function">gst_collect_pads_stop()</code></a> in
+their state change functions to start and stop the processing of the collectpads.
+The <a class="link" href="GstCollectPads.html#gst-collect-pads-stop" title="gst_collect_pads_stop ()"><code class="function">gst_collect_pads_stop()</code></a> call should be called before calling the parent
+element state change function in the PAUSED_TO_READY state change to ensure
+no pad is blocked and the element can finish streaming.</p></li>
+<li class="listitem"><p>gst_collect_pads_set_waiting() sets a pad to waiting or non-waiting mode.
+CollectPads element is not waiting for data to be collected on non-waiting pads.
+Thus these pads may but need not have data when the callback is called.
+All pads are in waiting mode by default.</p></li>
 </ul></div>
 </div>
 <div class="refsect1">

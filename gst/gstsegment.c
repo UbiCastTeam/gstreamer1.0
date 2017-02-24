@@ -28,6 +28,7 @@
 
 /**
  * SECTION:gstsegment
+ * @title: GstSegment
  * @short_description: Structure describing the configured region of interest
  *                     in a media file.
  * @see_also: #GstEvent
@@ -36,10 +37,9 @@
  * interest in a media file, called a segment.
  *
  * The structure can be used for two purposes:
- * <itemizedlist>
- *   <listitem><para>performing seeks (handling seek events)</para></listitem>
- *   <listitem><para>tracking playback regions (handling newsegment events)</para></listitem>
- * </itemizedlist>
+ *
+ *   * performing seeks (handling seek events)
+ *   * tracking playback regions (handling newsegment events)
  *
  * The segment is usually configured by the application with a seek event which
  * is propagated upstream and eventually handled by an element that performs the seek.
@@ -884,8 +884,11 @@ gst_segment_clip (const GstSegment * segment, GstFormat format, guint64 start,
   g_return_val_if_fail (segment->format == format, FALSE);
 
   /* if we have a stop position and a valid start and start is bigger,
-   * we're outside of the segment */
-  if (G_UNLIKELY (segment->stop != -1 && start != -1 && start >= segment->stop))
+   * we're outside of the segment. (Special case) segment start and
+   * segment stop can be identical. In this case, if start is also identical,
+   * it's inside of segment */
+  if (G_UNLIKELY (segment->stop != -1 && start != -1 && (start > segment->stop
+              || (segment->start != segment->stop && start == segment->stop))))
     return FALSE;
 
   /* if a stop position is given and is before the segment start,
