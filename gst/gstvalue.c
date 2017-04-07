@@ -938,6 +938,45 @@ gst_value_transform_g_value_array_string (const GValue * src_value,
   _gst_value_transform_g_value_array_string (src_value, dest_value, "< ", " >");
 }
 
+static void
+gst_value_transform_g_value_array_any_list (const GValue * src_value,
+    GValue * dest_value)
+{
+  const GValueArray *varray;
+  GArray *array;
+  gint i;
+
+  /* GLib will unset the value, memset to 0 the data instead of doing a proper
+   * reset. That's why we need to allocate the array here */
+  gst_value_init_list_or_array (dest_value);
+
+  varray = g_value_get_boxed (src_value);
+  array = dest_value->data[0].v_pointer;
+
+  for (i = 0; i < varray->n_values; i++) {
+    GValue val = G_VALUE_INIT;
+    gst_value_init_and_copy (&val, &varray->values[i]);
+    g_array_append_vals (array, &val, 1);
+  }
+}
+
+static void
+gst_value_transform_any_list_g_value_array (const GValue * src_value,
+    GValue * dest_value)
+{
+  GValueArray *varray;
+  const GArray *array;
+  gint i;
+
+  array = src_value->data[0].v_pointer;
+  varray = g_value_array_new (array->len);
+
+  for (i = 0; i < array->len; i++)
+    g_value_array_append (varray, &g_array_index (array, GValue, i));
+
+  g_value_take_boxed (dest_value, varray);
+}
+
 /* Do an unordered compare of the contents of a list */
 static gint
 gst_value_compare_value_list (const GValue * value1, const GValue * value2)
@@ -4150,9 +4189,8 @@ gst_value_union_int_int_range (GValue * dest, const GValue * src1,
   /* check if it extends the range */
   if (v == (INT_RANGE_MIN (src2) - 1) * INT_RANGE_STEP (src2)) {
     if (dest) {
-      guint64 new_min =
-          (guint) ((INT_RANGE_MIN (src2) - 1) * INT_RANGE_STEP (src2));
-      guint64 new_max = (guint) (INT_RANGE_MAX (src2) * INT_RANGE_STEP (src2));
+      guint64 new_min = INT_RANGE_MIN (src2) - 1;
+      guint64 new_max = INT_RANGE_MAX (src2);
 
       gst_value_init_and_copy (dest, src2);
       dest->data[0].v_uint64 = (new_min << 32) | (new_max);
@@ -4161,9 +4199,8 @@ gst_value_union_int_int_range (GValue * dest, const GValue * src1,
   }
   if (v == (INT_RANGE_MAX (src2) + 1) * INT_RANGE_STEP (src2)) {
     if (dest) {
-      guint64 new_min = (guint) (INT_RANGE_MIN (src2) * INT_RANGE_STEP (src2));
-      guint64 new_max =
-          (guint) ((INT_RANGE_MAX (src2) + 1) * INT_RANGE_STEP (src2));
+      guint64 new_min = INT_RANGE_MIN (src2);
+      guint64 new_max = INT_RANGE_MAX (src2) + 1;
 
       gst_value_init_and_copy (dest, src2);
       dest->data[0].v_uint64 = (new_min << 32) | (new_max);
@@ -4314,7 +4351,7 @@ structure_field_union_into (GQuark field_id, GValue * val, gpointer user_data)
     return FALSE;
 
   g_value_unset (val);
-  gst_value_init_and_copy (val, &res_value);
+  gst_value_move (val, &res_value);
   return TRUE;
 }
 
@@ -7055,6 +7092,14 @@ gst_value_serialize_flagset (const GValue * value)
 }
 
 static gboolean
+is_valid_flags_string (const gchar * s)
+{
+  /* We're looking to match +this/that+other-thing/not-this-thing type strings */
+  return g_regex_match_simple ("^([\\+\\/][\\w\\d-]+)+$", s, G_REGEX_CASELESS,
+      0);
+}
+
+static gboolean
 gst_value_deserialize_flagset (GValue * dest, const gchar * s)
 {
   gboolean res = FALSE;
@@ -7088,21 +7133,45 @@ gst_value_deserialize_flagset (GValue * dest, const gchar * s)
   if (G_UNLIKELY ((mask == 0 && errno == EINVAL) || cur == next))
     goto try_as_flags_string;
 
-  /* Next char should be NULL terminator, or a ':' */
-  if (G_UNLIKELY (next[0] != 0 && next[0] != ':'))
-    goto try_as_flags_string;
+  /* Next char should be NULL terminator, or a ':'. If ':', we need the flag string after */
+  if (G_UNLIKELY (next[0] == 0)) {
+    res = TRUE;
+    goto done;
+  }
 
+  if (next[0] != ':')
+    return FALSE;
+
+  s = next + 1;
+
+  if (g_str_equal (g_type_name (G_VALUE_TYPE (dest)), "GstFlagSet")) {
+    /* If we're parsing a generic flag set, that can mean we're guessing
+     * at the type in deserialising a GstStructure so at least check that
+     * we have a valid-looking string, so we don't cause deserialisation of
+     * other types of strings like 00:01:00:00 - https://bugzilla.gnome.org/show_bug.cgi?id=779755 */
+    if (is_valid_flags_string (s)) {
+      res = TRUE;
+      goto done;
+    }
+    return FALSE;
+  }
+
+  /* Otherwise, we already got a hex string for a valid non-generic flagset type */
   res = TRUE;
+  goto done;
 
 try_as_flags_string:
 
-  if (!res) {
+  {
     const gchar *set_class = g_type_name (G_VALUE_TYPE (dest));
     GFlagsClass *flags_klass = NULL;
     const gchar *end;
 
-    if (g_str_equal (set_class, "GstFlagSet"))
-      goto done;                /* There's no hope to parse a generic flag set */
+    if (g_str_equal (set_class, "GstFlagSet")) {
+      /* There's no hope to parse the fields of generic flag set if we didn't already
+       * catch a hex-string above */
+      return FALSE;
+    }
 
     /* Flags class is the FlagSet class with 'Set' removed from the end */
     end = g_strrstr (set_class, "Set");
@@ -7128,9 +7197,9 @@ try_as_flags_string:
     }
   }
 
+done:
   if (res)
     gst_value_set_flagset (dest, flags, mask);
-done:
   return res;
 
 }
@@ -7495,10 +7564,18 @@ _priv_gst_value_initialize (void)
       gst_value_transform_fraction_range_string);
   g_value_register_transform_func (GST_TYPE_LIST, G_TYPE_STRING,
       gst_value_transform_list_string);
+  g_value_register_transform_func (GST_TYPE_LIST, G_TYPE_VALUE_ARRAY,
+      gst_value_transform_any_list_g_value_array);
   g_value_register_transform_func (GST_TYPE_ARRAY, G_TYPE_STRING,
       gst_value_transform_array_string);
+  g_value_register_transform_func (GST_TYPE_ARRAY, G_TYPE_VALUE_ARRAY,
+      gst_value_transform_any_list_g_value_array);
   g_value_register_transform_func (G_TYPE_VALUE_ARRAY, G_TYPE_STRING,
       gst_value_transform_g_value_array_string);
+  g_value_register_transform_func (G_TYPE_VALUE_ARRAY, GST_TYPE_ARRAY,
+      gst_value_transform_g_value_array_any_list);
+  g_value_register_transform_func (G_TYPE_VALUE_ARRAY, GST_TYPE_LIST,
+      gst_value_transform_g_value_array_any_list);
   g_value_register_transform_func (GST_TYPE_FRACTION, G_TYPE_STRING,
       gst_value_transform_fraction_string);
   g_value_register_transform_func (G_TYPE_STRING, GST_TYPE_FRACTION,

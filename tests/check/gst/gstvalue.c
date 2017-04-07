@@ -21,6 +21,7 @@
  */
 
 
+#define GLIB_DISABLE_DEPRECATION_WARNINGS
 #include <gst/check/gstcheck.h>
 
 
@@ -3081,7 +3082,14 @@ GST_START_TEST (test_stepped_int_range_ops)
     "[16, 32, 16]", "union", "[48, 96, 16]", "[16, 96, 16]"}, {
     "[112, 192, 16]", "union", "[48, 96, 16]", "[48, 192, 16]"}, {
     "[16, 32, 16]", "union", "[64, 96, 16]", NULL}, {
-  "[112, 192, 16]", "union", "[48, 96, 8]", NULL},};
+    "[112, 192, 16]", "union", "[48, 96, 8]", NULL}, {
+    "[10, 20, 5]", "union", "10", "[10, 20, 5]"}, {
+    "[10, 20, 5]", "union", "20", "[10, 20, 5]"}, {
+    "[10, 20, 5]", "union", "15", "[10, 20, 5]"}, {
+    "[10, 20, 5]", "union", "5", "[5, 20, 5]"}, {
+    "[10, 20, 5]", "union", "12", NULL}, {
+    "[10, 20, 5]", "union", "30", NULL}, {
+  "[10, 20, 5]", "union", "25", "[10, 25, 5]"},};
 
   for (n = 0; n < G_N_ELEMENTS (ranges); ++n) {
     gchar *end = NULL;
@@ -3304,6 +3312,85 @@ GST_START_TEST (test_structure_ops)
 
 GST_END_TEST;
 
+static void
+setup_test_value_array (GValue * value)
+{
+  GValueArray *array;
+  GValue v = G_VALUE_INIT;
+
+  g_value_init (&v, G_TYPE_INT);
+  g_value_init (value, G_TYPE_VALUE_ARRAY);
+
+  array = g_value_array_new (3);
+  g_value_set_int (&v, 1);
+  g_value_array_append (array, &v);
+  g_value_set_int (&v, 2);
+  g_value_array_append (array, &v);
+  g_value_set_int (&v, 3);
+  g_value_array_append (array, &v);
+
+  g_value_take_boxed (value, array);
+}
+
+static void
+test_revert_array_transform (GValue * v1, GValue * v2)
+{
+  GValueArray *array;
+
+  g_value_reset (v1);
+
+  fail_unless (g_value_transform (v2, v1));
+  array = g_value_get_boxed (v1);
+  fail_unless (array->n_values == 3);
+  fail_unless (g_value_get_int (g_value_array_get_nth (array, 0)) == 1);
+  fail_unless (g_value_get_int (g_value_array_get_nth (array, 1)) == 2);
+  fail_unless (g_value_get_int (g_value_array_get_nth (array, 2)) == 3);
+}
+
+GST_START_TEST (test_transform_array)
+{
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+
+  setup_test_value_array (&v1);
+
+  g_value_init (&v2, GST_TYPE_ARRAY);
+
+  fail_unless (g_value_transform (&v1, &v2));
+  fail_unless (gst_value_array_get_size (&v2) == 3);
+  fail_unless (g_value_get_int (gst_value_array_get_value (&v2, 0)) == 1);
+  fail_unless (g_value_get_int (gst_value_array_get_value (&v2, 1)) == 2);
+  fail_unless (g_value_get_int (gst_value_array_get_value (&v2, 2)) == 3);
+
+  test_revert_array_transform (&v1, &v2);
+
+  g_value_unset (&v1);
+  g_value_unset (&v2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_transform_list)
+{
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+
+  setup_test_value_array (&v1);
+
+  g_value_init (&v2, GST_TYPE_LIST);
+
+  fail_unless (g_value_transform (&v1, &v2));
+  fail_unless (gst_value_list_get_size (&v2) == 3);
+  fail_unless (g_value_get_int (gst_value_list_get_value (&v2, 0)) == 1);
+  fail_unless (g_value_get_int (gst_value_list_get_value (&v2, 1)) == 2);
+  fail_unless (g_value_get_int (gst_value_list_get_value (&v2, 2)) == 3);
+
+  test_revert_array_transform (&v1, &v2);
+
+  g_value_unset (&v1);
+  g_value_unset (&v2);
+}
+
+GST_END_TEST;
+
 static Suite *
 gst_value_suite (void)
 {
@@ -3353,6 +3440,8 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_structure_basic);
   tcase_add_test (tc_chain, test_structure_single_ops);
   tcase_add_test (tc_chain, test_structure_ops);
+  tcase_add_test (tc_chain, test_transform_array);
+  tcase_add_test (tc_chain, test_transform_list);
 
   return s;
 }

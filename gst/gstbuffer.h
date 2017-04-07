@@ -427,16 +427,16 @@ typedef enum {
 } GstBufferCopyFlags;
 
 /**
- * GST_BUFFER_COPY_METADATA:
+ * GST_BUFFER_COPY_METADATA: (value 7) (type GstBufferCopyFlags)
  *
  * Combination of all possible metadata fields that can be copied with
  * gst_buffer_copy_into().
  */
-#define GST_BUFFER_COPY_METADATA       (GST_BUFFER_COPY_FLAGS | GST_BUFFER_COPY_TIMESTAMPS |\
-                                        GST_BUFFER_COPY_META)
+#define GST_BUFFER_COPY_METADATA       ((GstBufferCopyFlags) (GST_BUFFER_COPY_FLAGS |\
+                                          GST_BUFFER_COPY_TIMESTAMPS | GST_BUFFER_COPY_META))
 
 /**
- * GST_BUFFER_COPY_ALL:
+ * GST_BUFFER_COPY_ALL: (value 15) (type GstBufferCopyFlags)
  *
  * Combination of all possible fields that can be copied with
  * gst_buffer_copy_into().

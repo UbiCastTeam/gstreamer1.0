@@ -113,6 +113,11 @@
 <td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--low-watermark" title="The “low-watermark” property">low-watermark</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--min-interleave-time" title="The “min-interleave-time” property">min-interleave-time</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -427,6 +432,14 @@ emitted based on low-/high-percent thresholds.</p>
 <p>Allowed values: [0,1]</p>
 <p>Default value: 0.01</p>
 <p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMultiQueue--min-interleave-time"></a><h3>The <code class="literal">“min-interleave-time”</code> property</h3>
+<pre class="programlisting">  “min-interleave-time”      <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a></pre>
+<p>Minimum extra buffering for deinterleaving (size of the queues) when use-interleave=true.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 250000000</p>
 </div>
 </div>
 <div class="refsect1">
