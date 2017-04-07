@@ -2463,35 +2463,35 @@ the jitter.</p></td>
 <hr>
 <div class="refsect2">
 <a name="GST-CLOCK-STIME-NONE:CAPS"></a><h3>GST_CLOCK_STIME_NONE</h3>
-<pre class="programlisting">#define GST_CLOCK_STIME_NONE             G_MININT64
+<pre class="programlisting">#define GST_CLOCK_STIME_NONE             ((GstClockTimeDiff)G_MININT64)
 </pre>
 <p>Constant to define an undefined clock time.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-SECOND:CAPS"></a><h3>GST_SECOND</h3>
-<pre class="programlisting">#define GST_SECOND  (G_USEC_PER_SEC * G_GINT64_CONSTANT (1000))
+<pre class="programlisting">#define GST_SECOND  ((GstClockTimeDiff)(G_USEC_PER_SEC * G_GINT64_CONSTANT (1000)))
 </pre>
 <p>Constant that defines one GStreamer second.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-MSECOND:CAPS"></a><h3>GST_MSECOND</h3>
-<pre class="programlisting">#define GST_MSECOND (GST_SECOND / G_GINT64_CONSTANT (1000))
+<pre class="programlisting">#define GST_MSECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000)))
 </pre>
 <p>Constant that defines one GStreamer millisecond.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-USECOND:CAPS"></a><h3>GST_USECOND</h3>
-<pre class="programlisting">#define GST_USECOND (GST_SECOND / G_GINT64_CONSTANT (1000000))
+<pre class="programlisting">#define GST_USECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000000)))
 </pre>
 <p>Constant that defines one GStreamer microsecond.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-NSECOND:CAPS"></a><h3>GST_NSECOND</h3>
-<pre class="programlisting">#define GST_NSECOND (GST_SECOND / G_GINT64_CONSTANT (1000000000))
+<pre class="programlisting">#define GST_NSECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000000000)))
 </pre>
 <p>Constant that defines one GStreamer nanosecond</p>
 </div>

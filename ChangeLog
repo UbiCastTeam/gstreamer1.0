@@ -1,9 +1,440 @@
-=== release 1.11.2 ===
+=== release 1.11.90 ===
 
-2017-02-24  Sebastian Dröge <slomo@coaxion.net>
+2017-04-07  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.11.2
+	  releasing 1.11.90
+
+2017-03-08 12:09:45 -0500  Olivier Crête <olivier.crete@collabora.com>
+
+	* gst/gststructure.c:
+	  structure: Don't print warning on NULL strings or pointers
+	  Putting NULL for those is a valid serialization for the NULL value.
+
+2017-04-05 16:32:38 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstclock.h:
+	  gst: Use GstClockTimeDiff instead of GstClockTime as type for GST_SECOND and friends
+	  They were (signed!) gint64 before because of G_GINT64_CONSTANT() already
+	  and they are actually used in signed calculations.
+	  With this change we at least ensure that an integer type of the correct
+	  size is used for GI (it was using gint before).
+
+2017-04-05 15:46:26 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstclock.h:
+	* gst/gstelementfactory.h:
+	* gst/gstevent.h:
+	* gst/gstquery.h:
+	  gst: Update some more types and values of combined-flags constants
+
+2017-04-05 14:45:00 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstbuffer.h:
+	* gst/gstmemory.h:
+	* gst/gstminiobject.h:
+	  gst: Cast combined-flags constants to their respective target types
+	  This makes C++ compilers a bit more happy without having the user of the
+	  constants cast. It also provides the correct type information to GI.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=780923
+
+2017-04-05 14:42:16 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstbuffer.h:
+	* gst/gstmemory.h:
+	* gst/gstminiobject.h:
+	  gst: Set values and types for combined-flags constants in GI annotations
+
+2017-04-05 14:26:33 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstvalue.h:
+	  value: Properly set value and type for GST_FLAG_SET_MASK_EXACT in GI annotations
+	  Storing a -1 inside an unsigned integer confuses GIR based bindings
+	  generators.
+
+2017-04-04 16:28:45 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* data/bash-completion/helpers/gst.in:
+	  completion: Try to avoid parsing summary
+	  In GES, the summary refers to options that are only available when built
+	  against gst-valdiate. Those where picked by our regex. This patch add a
+	  initial grep to try and filter-out as best as possible the content to
+	  which we will extract the command list.
+
+2017-04-04 14:25:52 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* data/bash-completion/helpers/meson.build:
+	* data/meson.build:
+	* libs/gst/helpers/meson.build:
+	* meson.build:
+	  meson: Add bash completion support
+
+2017-04-04 13:42:50 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* configure.ac:
+	* data/Makefile.am:
+	* data/bash-completion/completions/gst-inspect-1.0:
+	* data/bash-completion/completions/gst-launch-1.0:
+	* data/bash-completion/helpers/.gitignore:
+	* data/bash-completion/helpers/gst.in:
+	* libs/gst/helpers/.gitignore:
+	* libs/gst/helpers/Makefile.am:
+	* pkgconfig/gstreamer-uninstalled.pc.in:
+	* pkgconfig/gstreamer.pc.in:
+	  completion: Place the completion helper in libexec
+	  This patch reorganize the bash completion scripts in order to install
+	  the binary helper (gst-completion-helper) in libexec path rather then
+	  share folder. Most Linux hierarchy compliance requires that no binary
+	  executable are placed in share. We also cleanup the unused .pc entries
+	  and remove copy pasted parts of the script. Note that other project
+	  including the common helper, should now use $_GST_HELPER to read
+	  the binary executable gst-completion-helper. This helper is not longer
+	  version, as it is placed in a versionned subfolder
+	  (libexec/gstreamer.10) just like the other helpers (scanner and ptp).
+
+2017-03-31 11:22:49 +0100  Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+
+	* gst/gstvalue.c:
+	  gstvalue: fix GstValue leak in structure_field_union_into
+	  https://bugzilla.gnome.org/show_bug.cgi?id=780751
+
+2017-03-31 10:38:15 +0100  Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+
+	* gst/gststreamcollection.c:
+	  streamcollection: fix racy user-after-free
+	  The issue happens when the structure is printed by the logging
+	  subsystem: the object is included in the log, and this will cause the
+	  full object printout to be done there. However, after dispose, the queue
+	  was already cleared, so the access to it (to print the object) would
+	  assert, as the queue was already freed. The patch changes it so that the
+	  queue is merely empty, and only freed in _finalize.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=776293
+
+2017-03-27 18:30:35 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstdebugutils.c:
+	  debugutils: add pad EOS flag in pipeline dot file dumps
+	  But only if set. Helps debug issues with EOS propagation.
+
+2017-03-27 18:27:59 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* tools/gst-launch.c:
+	  tools: gst-launch: print structure property notifies nicer
+	  One less layer of escaping, but still lots of ugly \.
+
+2017-03-24 14:33:19 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* win32/common/libgstreamer.def:
+	  Fix win32 libgstreamer.def ordering
+	  This should fix make distcheck
+
+2017-03-15 17:31:39 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* gst/gstparamspecs.c:
+	  paramspec: Fix array validation logic
+	  A paramspec validation should modify the content to match what the spec
+	  requires and return TURE if a modification happened. This previous
+	  implementation would only fix the first element of the array and return.
+	  It was also return TRUE for empty array, while no modification was
+	  needed.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=780111
+
+2017-03-22 13:35:32 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* gst/gstparamspecs.c:
+	  array/fraction: In param types, use get_type() function directly
+	  The GST_TYPE macro points to global variables initialized by the
+	  first call to get_type. This is not an issue if you call gst_init()
+	  but unfortunatly pygi will need to acces the param type before
+	  init can be called. This removes an assertion.
+
+2017-03-22 13:33:47 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* gst/gstparamspecs.c:
+	  fraction/array: Make get_type() thread safe
+	  Those aren't suppose to be called from multiple thread, but all
+	  fundamental get_type() function are thread safe. Fix it to
+	  be consistent and it may help if we change the typing mechanism
+	  in GStreamer come day.
+
+2017-03-20 16:46:33 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* docs/gst/gstreamer-sections.txt:
+	* gst/gstutils.c:
+	* gst/gstutils.h:
+	* win32/common/libgstreamer.def:
+	  gstutils: Add helpers to get/set array properties
+	  This is to help bindings access properties of type GST_TYPE_ARRAY.
+	  This function will get/set the property and convert form/to
+	  GValueArray.
+	  New API:
+	  gst_util_set_object_array
+	  gst_util_get_object_array
+	  https://bugzilla.gnome.org/show_bug.cgi?id=753754
+
+2017-03-20 15:50:49 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* docs/gst/gstreamer-sections.txt:
+	* gst/gststructure.c:
+	* gst/gststructure.h:
+	* win32/common/libgstreamer.def:
+	  structure: Add get/set_array/list using GValueArray
+	  This adds a binding friendly interface to get and set arrays
+	  and list into GstStructure.
+	  New API:
+	  - gst_structure_set_array
+	  - gst_structure_set_list
+	  - gst_structure_get_array
+	  - gst_structure_get_list
+	  https://bugzilla.gnome.org/show_bug.cgi?id=753754
+
+2017-03-20 15:40:25 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* gst/gstvalue.c:
+	* tests/check/gst/gstvalue.c:
+	  gstvalue: Add transformation to/from GValueArray
+	  This allow transforming a GValue of type G_TYPE_VALUE_ARRAY to
+	  and from GST_TYPE_ARRAY/LIST.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=753754
+
+2017-03-24 14:21:30 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/base/gstqueuearray.h:
+	  queuearray: Add G_BEGIN_DECLS and G_END_DECLS to make it usable from C++ code
+
+2017-03-24 17:53:31 +1100  Jan Schmidt <jan@centricular.com>
+
+	* gst/gstparamspecs.c:
+	  paramspecs: Use gst_value_array_get_type() for GstParamSpecArray type
+	  When registering GstParamSpecArray, use the gst_value_array_get_type()
+	  function to get the type, rather than the GST_TYPE_ARRAY macro, which
+	  gets it from the _gst_value_array_type, which is in turn only
+	  initialised during gst_init()
+	  Fixes criticals with (python) bindings that look up all the
+	  types from the gobject-introspection info as soon as they
+	  are imported.
+	  /usr/lib64/python3.5/site-packages/gi/module.py:178: Warning: g_param_type_register_static: assertion 'g_type_name (pspec_info->value_type) != NULL' failed
+	  g_type = info.get_g_type()
+	  /usr/lib64/python3.5/site-packages/gi/module.py:212: Warning: g_type_get_qdata: assertion 'node != NULL' failed
+	  type_ = g_type.pytype
+	  /usr/lib64/python3.5/site-packages/gi/module.py:226: Warning: g_type_get_qdata: assertion 'node != NULL' failed
+	  g_type.pytype = wrapper
+	  /usr/lib64/python3.5/site-packages/gi/module.py:226: Warning: g_type_set_qdata: assertion 'node != NULL' failed
+	  g_type.pytype = wrapper
+
+2017-03-17 22:32:19 +1100  Jan Schmidt <jan@centricular.com>
+
+	* libs/gst/base/gstbaseparse.c:
+	  baseparse: Don't forget error returns when processing more
+	  If parsing returns a non-OK flow return in the middle
+	  of processing an input buffer, don't overwrite that
+	  if a later return is OK again - the subclass might
+	  return not-linked in the middle, and then discard
+	  subsequent data without pushing while returning OK.
+	  A later success doesn't invalidate the earlier failure,
+	  but we should continue processing after not-linked, so
+	  as to keep parse state consistent.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=779831
+
+2017-03-20 16:54:22 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* tools/gst-launch-1.0.1:
+	  tools: replace mentions of 'mad' on the gst-launch-1.0 man page
+	  The 'mad' plugin has been removed. Mention mpg123audiodec instead.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=776140
+
+2017-03-13 11:08:01 +0000  Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+
+	* gst/gstvalue.c:
+	* tests/check/gst/gstvalue.c:
+	  value: fix union of int range and int when extending on a side
+	  The internal representation uses bounds scaled by the step
+	  Add tests to catch those cases
+
+2017-03-14 22:18:36 -0700  Thiago Santos <thiagossantos@gmail.com>
+
+	* plugins/elements/gstqueue.c:
+	  queue: avoid return flushing if we have a not-linked
+	  Return the correct flow return instead of returning always flushing.
+	  This would cause queue to convert not-linked to flushing and making
+	  upstream elements stop.
+	  Based on the previous patch for queue2.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=776999
+
+2017-01-22 11:26:56 -0300  Thiago Santos <thiagossantos@gmail.com>
+
+	* plugins/elements/gstqueue2.c:
+	  queue2: avoid return flushing if we have a not-linked
+	  Return the correct flow return instead of returning always flushing.
+	  This would cause queue2 to convert not-linked to flushing and making
+	  upstream elements stop.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=776999
+
+2016-09-18 12:02:54 -0300  Thiago Santos <thiagossantos@gmail.com>
+
+	* tests/check/gst/gstbin.c:
+	  tests: bin: add more tests for suppressed flags
+	  Add tests to confirm flags are persisted even after removing
+	  elements that have those suppressed flags
+
+2017-03-10 10:13:05 +0100  Wim Taymans <wtaymans@redhat.com>
+
+	* libs/gst/check/gstharness.c:
+	* plugins/elements/gstdownloadbuffer.c:
+	  buffer: handle gst_buffer_map failures
+
+2017-03-10 10:12:49 +0100  Wim Taymans <wtaymans@redhat.com>
+
+	* plugins/elements/gstdownloadbuffer.c:
+	  downloadbuffer: unlock mutex in error case
+
+2017-03-09 12:09:57 +1100  Jan Schmidt <jan@centricular.com>
+
+	* gst/gstvalue.c:
+	* tests/check/gst/gstcaps.c:
+	* tests/check/gst/gststructure.c:
+	  gstvalue: Do more checks when guessing at flagset strings
+	  If guessing that a string matches a flagset, be more thorough
+	  at checking that the string following a string of hex:hex:
+	  actually looks like a flag set string. Add some unit tests
+	  to catch more cases.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=779755
+
+2017-03-09 12:09:57 +1100  Jan Schmidt <jan@centricular.com>
+
+	* plugins/elements/gstmultiqueue.c:
+	* plugins/elements/gstmultiqueue.h:
+	  multiqueue: Make min-interleave-time a configurable property
+	  Remove a FIXME about making the minimum interleave
+	  buffering a configurable property
+
+2017-03-08 14:51:42 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstelementfactory.c:
+	  elementfactory: promote factory not found log message to WARNING
+	  In most cases people really want to know when an element
+	  could not be created.
+
+2017-03-07 08:21:48 +0900  Seungha Yang <sh.yang@lge.com>
+
+	* plugins/elements/gstinputselector.c:
+	  inputselector: Always proxy position/duration query
+	  active-pad switch causes reconfigure event with lock taken,
+	  and upstream element might query the current position or duration
+	  before returning the reconfigure event.
+	  Meanwhile, gst_input_selector_get_linked_pad() is used to get srcpad
+	  inside of default query handle, and it takes also lock.
+	  Since inputselector is still locked by active-pad switch, and so the query
+	  cannot be handled further.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=775445
+
+2017-03-03 12:53:26 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstinfo.h:
+	  info: document that logging macros don't need newlines at the end
+	  https://bugzilla.gnome.org/show_bug.cgi?id=779459
+
+2017-02-24 21:35:27 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: add since marker to docs for new API
+
+2017-02-24 21:33:49 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* win32/common/libgstreamer.def:
+	  win32: update .def file for new API
+
+2017-02-24 10:23:01 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstregistry.c:
+	  registry: Only scan plugin files that end with an extension
+	  Not file that would for some reason end with 'so' or 'dll', etc...
+	  https://bugzilla.gnome.org/show_bug.cgi?id=779175
+
+2017-02-17 15:48:17 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* docs/gst/gstreamer-sections.txt:
+	* gst/gstpad.c:
+	* gst/gstpad.h:
+	  pad: Add API to get the current state of a task
+	  Avoiding the user to need to deal with the locking himself etc.
+	  API:
+	  gst_pad_task_get_state
+	  https://bugzilla.gnome.org/show_bug.cgi?id=778830
+
+2017-02-13 15:18:59 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/meson.build:
+	* meson.build:
+	* meson_options.txt:
+	  meson: Add an option to disable usage of libunwind
+	  Fixes https://bugzilla.gnome.org/show_bug.cgi?id=778193
+
+2017-02-24 15:59:35 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* meson.build:
+	  meson: Update version
+
+2017-02-24 15:37:30 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* configure.ac:
+	  Back to development
+
+=== release 1.11.2 ===
+
+2017-02-24 15:06:46 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/gstreamer-plugins.args:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	  Release 1.11.2
+
+2017-02-24 12:44:17 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
 
 2017-02-23 20:52:39 +0200  Vivia Nikolaidou <vivia@toolsonair.com>
 

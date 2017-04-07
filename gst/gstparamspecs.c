@@ -123,10 +123,11 @@ _gst_param_fraction_values_cmp (GParamSpec * pspec, const GValue * value1,
 GType
 gst_param_spec_fraction_get_type (void)
 {
-  static GType type;            /* 0 */
+  static volatile GType gst_faction_type = 0;
 
   /* register GST_TYPE_PARAM_FRACTION */
-  if (type == 0) {
+  if (g_once_init_enter (&gst_faction_type)) {
+    GType type;
     static GParamSpecTypeInfo pspec_info = {
       sizeof (GstParamSpecFraction),    /* instance_size     */
       0,                        /* n_preallocs       */
@@ -137,10 +138,12 @@ gst_param_spec_fraction_get_type (void)
       _gst_param_fraction_validate,     /* value_validate    */
       _gst_param_fraction_values_cmp,   /* values_cmp        */
     };
-    pspec_info.value_type = GST_TYPE_FRACTION;
+    pspec_info.value_type = gst_fraction_get_type ();
     type = g_param_type_register_static ("GstParamFraction", &pspec_info);
+    g_once_init_leave (&gst_faction_type, type);
   }
-  return type;
+
+  return gst_faction_type;
 }
 
 /**
@@ -230,6 +233,7 @@ static gboolean
 _gst_param_array_validate (GParamSpec * pspec, GValue * value)
 {
   GstParamSpecArray *aspec = GST_PARAM_SPEC_ARRAY_LIST (pspec);
+  gboolean ret = FALSE;
 
   /* ensure array values validity against a present element spec */
   if (aspec->element_spec) {
@@ -246,15 +250,16 @@ _gst_param_array_validate (GParamSpec * pspec, GValue * value)
           g_value_unset (element);
         g_value_init (element, G_PARAM_SPEC_VALUE_TYPE (element_spec));
         g_param_value_set_default (element_spec, element);
-        return FALSE;
+        ret = TRUE;
       }
+
       /* validate array value against element_spec */
-      if (!g_param_value_validate (element_spec, element))
-        return FALSE;
+      if (g_param_value_validate (element_spec, element))
+        ret = TRUE;
     }
   }
 
-  return TRUE;
+  return ret;
 }
 
 static gint
@@ -299,10 +304,11 @@ _gst_param_array_values_cmp (GParamSpec * pspec, const GValue * value1,
 GType
 gst_param_spec_array_get_type (void)
 {
-  static GType type;            /* 0 */
+  static volatile GType gst_array_type = 0;
 
   /* register GST_TYPE_PARAM_FRACTION */
-  if (type == 0) {
+  if (g_once_init_enter (&gst_array_type)) {
+    GType type;
     static GParamSpecTypeInfo pspec_info = {
       sizeof (GstParamSpecArray),       /* instance_size     */
       0,                        /* n_preallocs       */
@@ -313,10 +319,12 @@ gst_param_spec_array_get_type (void)
       _gst_param_array_validate,        /* value_validate    */
       _gst_param_array_values_cmp,      /* values_cmp        */
     };
-    pspec_info.value_type = GST_TYPE_ARRAY;
+    pspec_info.value_type = gst_value_array_get_type ();
     type = g_param_type_register_static ("GstParamArray", &pspec_info);
+    g_once_init_leave (&gst_array_type, type);
   }
-  return type;
+
+  return gst_array_type;
 }
 
 /**

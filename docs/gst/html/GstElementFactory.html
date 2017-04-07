@@ -1066,21 +1066,21 @@ is of <em class="parameter"><code>type</code></em>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-ANY:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_ANY</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_ANY ((G_GUINT64_CONSTANT (1) &lt;&lt; 49) - 1)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_ANY ((GstElementFactoryListType)((G_GUINT64_CONSTANT (1) &lt;&lt; 49) - 1))
 </pre>
 <p>Elements of any of the defined GST_ELEMENT_FACTORY_LIST types</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-AUDIOVIDEO-SINKS:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS</h3>
-<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS (GST_ELEMENT_FACTORY_TYPE_SINK | GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO | GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO | GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE)
+<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_AUDIOVIDEO_SINKS ((GstElementFactoryListType)(GST_ELEMENT_FACTORY_TYPE_SINK | GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO | GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO | GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE))
 </pre>
 <p>All sinks handling audio, video or image media types</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-AUDIO-ENCODER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_AUDIO_ENCODER</h3>
-<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_AUDIO_ENCODER (GST_ELEMENT_FACTORY_TYPE_ENCODER | GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO)
+<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_AUDIO_ENCODER ((GstElementFactoryListType)(GST_ELEMENT_FACTORY_TYPE_ENCODER | GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO))
 </pre>
 <p>All encoders handling audio media types</p>
 </div>
@@ -1093,85 +1093,85 @@ is of <em class="parameter"><code>type</code></em>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-DECODER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_DECODER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DECODER        (G_GUINT64_CONSTANT (1) &lt;&lt; 0)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DECODER        ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 0))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-DECRYPTOR:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_DECRYPTOR</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DECRYPTOR      (G_GUINT64_CONSTANT (1) &lt;&lt; 10)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DECRYPTOR      ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 10))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-DEMUXER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_DEMUXER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DEMUXER        (G_GUINT64_CONSTANT (1) &lt;&lt; 5)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DEMUXER        ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 5))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-DEPAYLOADER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER    (G_GUINT64_CONSTANT (1) &lt;&lt; 8)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_DEPAYLOADER    ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 8))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-ENCODER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_ENCODER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_ENCODER        (G_GUINT64_CONSTANT (1) &lt;&lt; 1)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_ENCODER        ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 1))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-ENCRYPTOR:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_ENCRYPTOR</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_ENCRYPTOR      (G_GUINT64_CONSTANT (1) &lt;&lt; 11)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_ENCRYPTOR      ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 11))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-FORMATTER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_FORMATTER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_FORMATTER      (G_GUINT64_CONSTANT (1) &lt;&lt; 9)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_FORMATTER      ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 9))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MAX-ELEMENTS:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS   (G_GUINT64_CONSTANT (1) &lt;&lt; 48)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS   ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 48))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MEDIA-AUDIO:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO    (G_GUINT64_CONSTANT (1) &lt;&lt; 50)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_AUDIO    ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 50))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MEDIA-IMAGE:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE    (G_GUINT64_CONSTANT (1) &lt;&lt; 51)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE    ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 51))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MEDIA-METADATA:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA (G_GUINT64_CONSTANT (1) &lt;&lt; 53)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_METADATA ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 53))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MEDIA-SUBTITLE:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE (G_GUINT64_CONSTANT (1) &lt;&lt; 52)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_SUBTITLE ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 52))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MEDIA-VIDEO:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO    (G_GUINT64_CONSTANT (1) &lt;&lt; 49)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO    ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 49))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MEDIA-ANY:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MEDIA_ANY</h3>
-<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_MEDIA_ANY (~G_GUINT64_CONSTANT (0) &lt;&lt; 48)
+<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_MEDIA_ANY ((GstElementFactoryListType)(~G_GUINT64_CONSTANT (0) &lt;&lt; 48))
 </pre>
 <p>Elements matching any of the defined GST_ELEMENT_FACTORY_TYPE_MEDIA types</p>
 <p>Note: Do not use this if you wish to not filter against any of the defined
@@ -1181,37 +1181,37 @@ GST_ELEMENT_FACTORY_TYPE_MEDIA flag.</p>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-MUXER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_MUXER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MUXER          (G_GUINT64_CONSTANT (1) &lt;&lt; 4)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_MUXER          ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 4))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-PARSER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_PARSER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_PARSER         (G_GUINT64_CONSTANT (1) &lt;&lt; 6)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_PARSER         ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 6))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-PAYLOADER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_PAYLOADER</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_PAYLOADER      (G_GUINT64_CONSTANT (1) &lt;&lt; 7)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_PAYLOADER      ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 7))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-SINK:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_SINK</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_SINK           (G_GUINT64_CONSTANT (1) &lt;&lt; 2)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_SINK           ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 2))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-SRC:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_SRC</h3>
-<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_SRC            (G_GUINT64_CONSTANT (1) &lt;&lt; 3)
+<pre class="programlisting">#define  GST_ELEMENT_FACTORY_TYPE_SRC            ((GstElementFactoryListType)(G_GUINT64_CONSTANT (1) &lt;&lt; 3))
 </pre>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-ELEMENT-FACTORY-TYPE-VIDEO-ENCODER:CAPS"></a><h3>GST_ELEMENT_FACTORY_TYPE_VIDEO_ENCODER</h3>
-<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_VIDEO_ENCODER (GST_ELEMENT_FACTORY_TYPE_ENCODER | GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO | GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE)
+<pre class="programlisting">#define GST_ELEMENT_FACTORY_TYPE_VIDEO_ENCODER ((GstElementFactoryListType)(GST_ELEMENT_FACTORY_TYPE_ENCODER | GST_ELEMENT_FACTORY_TYPE_MEDIA_VIDEO | GST_ELEMENT_FACTORY_TYPE_MEDIA_IMAGE))
 </pre>
 <p>All encoders handling video or image media types</p>
 </div>

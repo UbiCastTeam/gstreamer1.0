@@ -1,5 +1,5 @@
 project('gstreamer', 'c', 'cpp',
-  version : '1.11.1.1',
+  version : '1.11.90',
   meson_version : '>= 0.36.0',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
@@ -27,7 +27,7 @@ prefix = get_option('prefix')
 libtype = get_option('library_format')
 
 libexecdir = get_option('libexecdir')
-helpers_install_dir = libexecdir + '/gstreamer-1.0/'
+helpers_install_dir = join_paths(libexecdir, 'gstreamer-1.0')
 
 cc = meson.get_compiler('c')
 
@@ -275,20 +275,24 @@ if host_machine.system() == 'windows'
   platform_deps = [cc.find_library('ws2_32')]
 endif
 
-unwind_dep = dependency('libunwind', required : false)
-dw_dep = dependency('libdw', required: false)
-if unwind_dep.found()
-  cdata.set('HAVE_UNWIND', 1)
-  if dw_dep.found()
-    cdata.set('HAVE_DW', 1)
+backtrace_deps = []
+if not get_option('disable_libunwind')
+  unwind_dep = dependency('libunwind', required : false)
+  dw_dep = dependency('libdw', required: false)
+  backtrace_deps = [unwind_dep, dw_dep]
+  if unwind_dep.found()
+    cdata.set('HAVE_UNWIND', 1)
+    if dw_dep.found()
+      cdata.set('HAVE_DW', 1)
+    else
+      message('Support for backtraces is partial only.')
+    endif
   else
-    message('Support for backtraces is partial only.')
-  endif
-else
-  if cc.has_function('backtrace')
-    cdata.set('HAVE_BACKTRACE', 1)
-  else
-      message('NO backtraces support.')
+    if cc.has_function('backtrace')
+      cdata.set('HAVE_BACKTRACE', 1)
+    else
+        message('NO backtraces support.')
+    endif
   endif
 endif
 
@@ -371,6 +375,41 @@ if not py3.found()
   py3 = find_program('python')
 endif
 
+bashcomp_dep = dependency('bash-completion', version : '>= 2.0', required : false)
+
+bashcomp_found = bashcomp_dep.found()
+bash_completions_dir = ''
+bash_helpers_dir = ''
+
+if bashcomp_found
+  # get_pkgconfig_variable() won't let us set the prefix
+  pkgconfig = find_program('pkg-config')
+
+  runcmd = run_command(pkgconfig,
+      '--define-variable=prefix="."',
+      '--variable=completionsdir',
+      'bash-completion')
+
+  if (runcmd.returncode() == 0)
+    bash_completions_dir = runcmd.stdout().strip()
+  else
+    message('Found bash-completion but the .pc file did not set \'completionsdir\'.')
+    bashcomp_found = false
+  endif
+
+  runcmd = run_command(pkgconfig,
+      '--define-variable=prefix="."',
+      '--variable=helpersdir',
+      'bash-completion')
+
+  if (runcmd.returncode() == 0)
+    bash_helpers_dir = runcmd.stdout().strip()
+  else
+    message('Found bash-completion, but the .pc file did not set \'helpersdir\'.')
+    bashcomp_found = false
+  endif
+endif
+
 subdir('gst')
 subdir('libs')
 subdir('plugins')
@@ -378,6 +417,7 @@ subdir('tools')
 subdir('pkgconfig')
 subdir('tests')
 subdir('po')
+subdir('data')
 
 if build_machine.system() == 'windows'
   message('Disabling gtk-doc while building on Windows')

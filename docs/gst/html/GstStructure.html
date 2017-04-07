@@ -234,6 +234,22 @@
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
+<a class="link" href="GstStructure.html#gst-structure-set-array" title="gst_structure_set_array ()">gst_structure_set_array</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstStructure.html#gst-structure-set-list" title="gst_structure_set_list ()">gst_structure_set_list</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
 <a class="link" href="GstStructure.html#gst-structure-take-value" title="gst_structure_take_value ()">gst_structure_take_value</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -474,6 +490,22 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstStructure.html#gst-structure-get-fraction" title="gst_structure_get_fraction ()">gst_structure_get_fraction</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstStructure.html#gst-structure-get-array" title="gst_structure_get_array ()">gst_structure_get_array</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstStructure.html#gst-structure-get-list" title="gst_structure_get_list ()">gst_structure_get_list</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -1555,6 +1587,90 @@ value is replaced and freed.</p>
 <tr>
 <td class="parameter_name"><p>value</p></td>
 <td class="parameter_description"><p>the new value of the field</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-structure-set-array"></a><h3>gst_structure_set_array ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_structure_set_array (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> *array</code></em>);</pre>
+<p>This is useful in language bindings where unknown GValue types are not
+supported. This function will convert a <em class="parameter"><code>array</code></em>
+ to <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and set
+the field specified by <em class="parameter"><code>fieldname</code></em>
+.  Be aware that this is slower then using
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> in a <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+<p>Since 1.12</p>
+<div class="refsect3">
+<a name="gst-structure-set-array.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fieldname</p></td>
+<td class="parameter_description"><p>the name of a field</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>array</p></td>
+<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-structure-set-list"></a><h3>gst_structure_set_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_structure_set_list (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
+                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> *array</code></em>);</pre>
+<p>This is useful in language bindings where unknown GValue types are not
+supported. This function will convert a <em class="parameter"><code>array</code></em>
+ to <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and set
+the field specified by <em class="parameter"><code>fieldname</code></em>
+. Be aware that this is slower then using
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> in a <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+<p>Since 1.12</p>
+<div class="refsect3">
+<a name="gst-structure-set-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fieldname</p></td>
+<td class="parameter_description"><p>the name of a field</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>array</p></td>
+<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -2821,6 +2937,101 @@ for making sure the field exists and has the correct type.</p>
 with <em class="parameter"><code>fieldname</code></em>
 or the existing field did not contain a GstFraction, this
 function returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-structure-get-array"></a><h3>gst_structure_get_array ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_structure_get_array (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> **array</code></em>);</pre>
+<p>This is useful in language bindings where unknown <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> types are not
+supported. This function will convert the <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><code class="literal">GST_TYPE_LIST</code></a> into a newly allocated <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> and return it through
+<em class="parameter"><code>array</code></em>
+. Be aware that this is slower then getting the <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+<div class="refsect3">
+<a name="gst-structure-get-array.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fieldname</p></td>
+<td class="parameter_description"><p>the name of a field</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>array</p></td>
+<td class="parameter_description"><p> a pointer to a <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-structure-get-array.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
+with <em class="parameter"><code>fieldname</code></em>
+or the existing field did not contain an int, this function
+returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-structure-get-list"></a><h3>gst_structure_get_list ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_structure_get_list (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> **array</code></em>);</pre>
+<p>This is useful in language bindings where unknown <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> types are not
+supported. This function will convert the <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><code class="literal">GST_TYPE_LIST</code></a> into a newly allocated GValueArray and return it through
+<em class="parameter"><code>array</code></em>
+. Be aware that this is slower then getting the <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+<div class="refsect3">
+<a name="gst-structure-get-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fieldname</p></td>
+<td class="parameter_description"><p>the name of a field</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>array</p></td>
+<td class="parameter_description"><p> a pointer to a <a href="/usr/share/gtk-doc/html/gobjectgobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-structure-get-list.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the value could be set correctly. If there was no field
+with <em class="parameter"><code>fieldname</code></em>
+or the existing field did not contain an int, this function
+returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+<p>Since 1.12</p>
 </div>
 </div>
 <hr>
