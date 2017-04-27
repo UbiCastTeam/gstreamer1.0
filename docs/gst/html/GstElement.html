@@ -5192,13 +5192,35 @@ the parent class' handler to have it posted on the bus.</p></td>
 <hr>
 <div class="refsect2">
 <a name="GstStateChange"></a><h3>enum GstStateChange</h3>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<p>The element must check if the resources it needs are available. Device
+<p>These are the different state changes an element goes through.
+<a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> ⇒ <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a> is called an upwards state change
+and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a> ⇒ <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> a downwards state change.</p>
+<div class="refsect3">
+<a name="GstStateChange.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-NULL-TO-READY:CAPS"></a>GST_STATE_CHANGE_NULL_TO_READY</p></td>
+<td class="enum_member_description">
+<p>state change from NULL to READY.</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>The element must check if the resources it needs are available. Device
 sinks and -sources typically try to probe the device to constrain their
-caps.</p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>The element opens the device (in case feature need to be probed).</p></li></ul></div>
-</li></ul></div>
-<p><a class="link" href="GstElement.html#GST-STATE-CHANGE-READY-TO-PAUSED:CAPS"><span class="type">GST_STATE_CHANGE_READY_TO_PAUSED</span></a>  : state change from READY to PAUSED.</p>
+caps.</p></li>
+<li class="listitem"><p>The element opens the device (in case feature need to be probed).</p></li>
+</ul></div>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-READY-TO-PAUSED:CAPS"></a>GST_STATE_CHANGE_READY_TO_PAUSED</p></td>
+<td class="enum_member_description">
+<p>state change from READY to PAUSED.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>The element pads are activated in order to receive data in PAUSED.
 Streaming threads are started.</p></li>
@@ -5210,7 +5232,13 @@ Sinks also block the dataflow when in PAUSED.</p></li>
 <li class="listitem"><p>A pipeline resets the running_time to 0.</p></li>
 <li class="listitem"><p>Live sources return <a class="link" href="GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a> and don't generate data.</p></li>
 </ul></div>
-<p><a class="link" href="GstElement.html#GST-STATE-CHANGE-PAUSED-TO-PLAYING:CAPS"><span class="type">GST_STATE_CHANGE_PAUSED_TO_PLAYING</span></a>: state change from PAUSED to PLAYING.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PAUSED-TO-PLAYING:CAPS"></a>GST_STATE_CHANGE_PAUSED_TO_PLAYING</p></td>
+<td class="enum_member_description">
+<p>state change from PAUSED to PLAYING.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Most elements ignore this state change.</p></li>
 <li class="listitem"><p>The pipeline selects a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and distributes this to all the children
@@ -5227,7 +5255,13 @@ to post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class=
 sometimes pads.</p></li>
 <li class="listitem"><p>Live sources start generating data and return <a class="link" href="GstElement.html#GST-STATE-CHANGE-SUCCESS:CAPS"><code class="literal">GST_STATE_CHANGE_SUCCESS</code></a>.</p></li>
 </ul></div>
-<p><a class="link" href="GstElement.html#GST-STATE-CHANGE-PLAYING-TO-PAUSED:CAPS"><span class="type">GST_STATE_CHANGE_PLAYING_TO_PAUSED</span></a>: state change from PLAYING to PAUSED.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PLAYING-TO-PAUSED:CAPS"></a>GST_STATE_CHANGE_PLAYING_TO_PAUSED</p></td>
+<td class="enum_member_description">
+<p>state change from PLAYING to PAUSED.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Most elements ignore this state change.</p></li>
 <li class="listitem"><p>The pipeline calculates the running_time based on the last selected
@@ -5242,7 +5276,13 @@ when going back to the PLAYING state. The EOS messages are queued in
 <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> containers.</p></li>
 <li class="listitem"><p>Live sources stop generating data and return <a class="link" href="GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a>.</p></li>
 </ul></div>
-<p><a class="link" href="GstElement.html#GST-STATE-CHANGE-PAUSED-TO-READY:CAPS"><span class="type">GST_STATE_CHANGE_PAUSED_TO_READY</span></a>  : state change from PAUSED to READY.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PAUSED-TO-READY:CAPS"></a>GST_STATE_CHANGE_PAUSED_TO_READY</p></td>
+<td class="enum_member_description">
+<p>state change from PAUSED to READY.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Sinks unblock any waits in the preroll.</p></li>
 <li class="listitem"><p>Elements unblock any waits on devices</p></li>
@@ -5252,52 +5292,19 @@ all streaming threads are stopped.</p></li>
 <li class="listitem"><p>The sink forgets all negotiated formats</p></li>
 <li class="listitem"><p>Elements remove all sometimes pads</p></li>
 </ul></div>
-<p><a class="link" href="GstElement.html#GST-STATE-CHANGE-READY-TO-NULL:CAPS"><span class="type">GST_STATE_CHANGE_READY_TO_NULL</span></a>    : state change from READY to NULL.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-READY-TO-NULL:CAPS"></a>GST_STATE_CHANGE_READY_TO_NULL</p></td>
+<td class="enum_member_description">
+<p>state change from READY to NULL.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Elements close devices</p></li>
 <li class="listitem"><p>Elements reset any internal state.</p></li>
 </ul></div>
-<p>These are the different state changes an element goes through.
-<a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> ⇒ <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a> is called an upwards state change
-and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="literal">GST_STATE_PLAYING</code></a> ⇒ <a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a> a downwards state change.</p>
-<div class="refsect3">
-<a name="GstStateChange.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="enum_members_name">
-<col class="enum_members_description">
-<col width="200px" class="enum_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-NULL-TO-READY:CAPS"></a>GST_STATE_CHANGE_NULL_TO_READY</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-READY-TO-PAUSED:CAPS"></a>GST_STATE_CHANGE_READY_TO_PAUSED</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PAUSED-TO-PLAYING:CAPS"></a>GST_STATE_CHANGE_PAUSED_TO_PLAYING</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PLAYING-TO-PAUSED:CAPS"></a>GST_STATE_CHANGE_PLAYING_TO_PAUSED</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PAUSED-TO-READY:CAPS"></a>GST_STATE_CHANGE_PAUSED_TO_READY</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-READY-TO-NULL:CAPS"></a>GST_STATE_CHANGE_READY_TO_NULL</p></td>
-<td> </td>
-<td> </td>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

@@ -1,5 +1,5 @@
 project('gstreamer', 'c', 'cpp',
-  version : '1.11.90',
+  version : '1.11.91',
   meson_version : '>= 0.36.0',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
@@ -362,6 +362,9 @@ gir_init_section = [ '--add-init-section=extern void gst_init(gint*,gchar**);' +
     'g_setenv("GST_PLUGIN_SYSTEM_PATH_1_0", "", TRUE);' + \
     'gst_init(NULL,NULL);' ]
 vs_module_defs_dir = meson.current_source_dir() + '/win32/common/'
+
+# Used by the *_mkenum.py helper scripts
+glib_mkenums = find_program('glib-mkenums')
 
 gst_c_args = ['-DHAVE_CONFIG_H']
 if libtype == 'static'
