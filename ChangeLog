@@ -1,9 +1,256 @@
-=== release 1.11.90 ===
+=== release 1.11.91 ===
 
-2017-04-07  Sebastian Dröge <slomo@coaxion.net>
+2017-04-27  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.11.90
+	  releasing 1.11.91
+
+2017-04-27 15:21:26 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/LINGUAS:
+	* po/ast.po:
+	* po/fur.po:
+	  po: Update translations
+
+2017-04-24 20:27:33 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* common:
+	  Automatic update of common submodule
+	  From 60aeef6 to 48a5d85
+
+2017-04-21 15:04:32 +0200  Koop Mast <kwm@rainbow-runner.nl>
+
+	* tools/meson.build:
+	  Meson: also build and install gst-stats-1.0 and it's man page.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781585
+
+2017-04-21 15:03:18 +0200  Koop Mast <kwm@rainbow-runner.nl>
+
+	* tools/gst-stats-1.0.1:
+	  Add very simple man page for gst-stats.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781585
+
+2017-04-21 10:51:59 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstelement.h:
+	  doc: Fix some doctsing making GI happy
+
+2017-04-06 17:51:29 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstelement.h:
+	  doc: Fix GstChangeState docstring
+
+2017-04-19 17:31:38 +0100  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstinfo.c:
+	  info: Move debug output in for_each_threshold_by_entry() to TRACE level
+	  It's otherwise appearing many, many times in logs and usually is nothing
+	  you're interested in.
+
+2017-03-31 12:22:00 +0100  Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>
+
+	* tests/check/pipelines/seek.c:
+	  tests: fix message leak in seek test
+	  https://bugzilla.gnome.org/show_bug.cgi?id=780757
+
+2017-03-29 19:26:53 +0900  Yasushi SHOJI <yashi@atmark-techno.com>
+
+	* libs/gst/base/gstbasetransform.c:
+	  basetransform: fix typo in debug log output
+	  This unbalanced closing parenthesis is leftover from the commit
+	  8b739d91e7. It used to wrap the caps but we don't seem to do that in
+	  the current code.
+	  So, just remove it. No functionality has been changed.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781484
+
+2017-04-10 16:28:57 +0200  Rico Tzschichholz <ricotz@ubuntu.com>
+
+	* gst/meson.build:
+	* libs/gst/base/meson.build:
+	* libs/gst/controller/meson.build:
+	* libs/gst/net/meson.build:
+	  meson: A couple for GIR-generation fixes
+
+2017-04-12 09:48:53 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* libs/gst/controller/meson.build:
+	  meson: Add controller enum file as generated sources
+	  Avoiding build failure like
+	  https://ci.appveyor.com/project/thiblahute/gst-build-ge9m5/build/1.0.2857
+
+2017-04-11 20:19:03 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* Makefile.am:
+	  meson: dist new meson build script
+
+2017-04-11 20:16:53 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/libs/gstreamer-libs-sections.txt:
+	* libs/gst/controller/controller.h:
+	  controller: include new proxycontrolbinding header
+	  And fix includes in docs to just include the main header (the
+	  include for the proxycontrolbinding was wrong in the docs).
+
+2017-04-11 20:16:41 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* .gitignore:
+	  .gitignore: ignore more
+
+2017-04-11 11:52:20 -0400  Olivier Crete <olivier.crete@collabora.com>
+
+	* gst/parse/meson.build:
+	  meson: Only check the first parameter
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781155
+
+2017-04-11 10:17:40 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/parse/meson.build:
+	  meson: Check bison and flex are recent enough
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781155
+
+2017-04-10 23:48:53 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* common:
+	  Automatic update of common submodule
+	  From 39ac2f5 to 60aeef6
+
+2017-04-10 12:24:06 -0400  Olivier Crête <olivier.crete@collabora.com>
+
+	* gst/gstvalue.c:
+	* tests/check/gst/gstvalue.c:
+	  value: Accept NULL as a structure
+	  Some GstStructure properties default to NULL, so it should
+	  be a supported value.
+	  With unit test.
+
+2017-04-10 14:26:42 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/controller/Makefile.am:
+	  controller: Fix build with srcdir!=builddir
+
+2017-04-10 13:52:17 +0300  Rico Tzschichholz <ricotz@t-online.de>
+
+	* libs/gst/controller/Makefile.am:
+	  controller: Add missing sources/headers to the GIR build
+
+2017-04-09 12:16:39 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/controller/meson.build:
+	  meson: And actually make the controller mkenums rules work
+
+2017-04-09 12:09:33 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* meson.build:
+	  meson: Add check for glib-mkenums
+
+2017-04-09 12:02:43 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/controller/Makefile.am:
+	* libs/gst/controller/controller_mkenum.py:
+	* libs/gst/controller/gstinterpolationcontrolsource.c:
+	* libs/gst/controller/gstinterpolationcontrolsource.h:
+	* libs/gst/controller/gstlfocontrolsource.c:
+	* libs/gst/controller/gstlfocontrolsource.h:
+	* libs/gst/controller/meson.build:
+	  controller: Generate GLib enums automatically
+
+2017-04-04 17:53:39 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstbufferpool.c:
+	* gst/gstbus.c:
+	* gst/gstdeviceproviderfactory.c:
+	* gst/gstdynamictypefactory.c:
+	* gst/gstelementfactory.c:
+	* gst/gstplugin.c:
+	* gst/gstpluginloader.c:
+	* gst/gstregistry.c:
+	* gst/gstregistrychunks.c:
+	* gst/gsttask.c:
+	* gst/gsttaskpool.c:
+	* gst/gsttracer.c:
+	* gst/gsttracerrecord.c:
+	* gst/gsttypefind.c:
+	* libs/gst/base/gstadapter.c:
+	* libs/gst/base/gstdataqueue.c:
+	* libs/gst/base/gstindex.c:
+	* libs/gst/controller/gstinterpolationcontrolsource.c:
+	* libs/gst/controller/gstlfocontrolsource.c:
+	* libs/gst/controller/gsttriggercontrolsource.c:
+	* tests/check/gst/gstcontroller.c:
+	* tests/check/gst/gstelementfactory.c:
+	  Don't use deprecated g_object_newv()
+	  Use g_object_new() instead which nowadays has a shortcut for the
+	  no-properties check. It still does an extra GType check in the
+	  function guard, but there's a pending patch to remove that
+	  and it's hardly going to be a performance issue in practice,
+	  even less so on a system that's compiled without run-time checks.
+	  Alternative would be to move to the new g_object_new_properties()
+	  with a fallback define for older glib versions, but it makes the
+	  code look more unwieldy and doesn't seem worth it.
+	  Fixes deprecation warnings when building against newer GLib versions.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=780903
+
+2017-04-07 13:49:29 -0400  Olivier Crête <olivier.crete@collabora.com>
+
+	* tests/check/gst/gststructure.c:
+	  test: Add test for serializing/deserializing NULL strings
+
+=== release 1.11.90 ===
+
+2017-04-07 16:30:35 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/gstreamer-plugins.args:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.11.90
+
+2017-04-07 15:04:11 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
 
 2017-03-08 12:09:45 -0500  Olivier Crête <olivier.crete@collabora.com>
 

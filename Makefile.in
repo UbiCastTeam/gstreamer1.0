@@ -599,6 +599,7 @@ EXTRA_DIST = \
 	scripts/gst-uninstalled \
 	$(shell find "$(top_srcdir)" -type f -name meson.build ! -path "$(top_srcdir)/gstreamer-*" ) \
 	gst/gstenumtypes.c.template gst/gstenumtypes.h.template \
+	libs/gst/controller/controller_mkenum.py \
 	meson_options.txt config.h.meson  \
 	gst/parse/gen_lex.py.in gst/parse/gen_grammar.py.in \
 	$(win32)
@@ -1284,9 +1285,24 @@ distcheck-hook:
 	  find $(distdir) -name \*-marshal.[ch] && \
 	  false )
 
+dist-hook:
+	@if test -f meson.build && ! $(GREP) -e "version.*'$(VERSION)'" meson.build >/dev/null ; then \
+	  echo "*******************************************************"; \
+	  echo "* meson.build needs to be updated for version $(VERSION)"; \
+	  echo "*******************************************************"; \
+	  false; \
+	fi
+
 # rule to download the latest .po files
 download-po: $(top_srcdir)/common/download-translations
 	$(top_srcdir)/common/download-translations $(PACKAGE)
+	for f in po/*.po; do \
+	  num_changed=`git diff $$f | grep -e '^[+-][^+-]' | wc -l`; \
+	  num_date=`git diff $$f | grep -e '^[+-][^+-]' | grep POT-Creation-Date | wc -l`; \
+	  if [ $num_date == $num_changed ]; then \
+	    git checkout $$f; \
+	  fi; \
+	done
 
 @GST_GCOV_ENABLED_TRUE@clean-gcov:
 @GST_GCOV_ENABLED_TRUE@	find -name "*.da" -o -name "*.gcov" | xargs rm || true
