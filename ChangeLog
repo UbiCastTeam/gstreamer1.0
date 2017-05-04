@@ -1,9 +1,120 @@
-=== release 1.11.91 ===
+=== release 1.12.0 ===
 
-2017-04-27  Sebastian Dröge <slomo@coaxion.net>
+2017-05-04  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.11.91
+	  releasing 1.12.0
+
+2017-05-02 14:35:50 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstmessage.c:
+	  message: Don't pass a NULL debug string to g_utf8_validate()
+	  g_utf8_validate() crashes on NULL, but NULL is valid for the debug
+	  string nonetheless.
+
+2017-05-02 14:27:14 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/base/gstadapter.c:
+	  adapter: Check if meta transform_func is NULL before using it
+	  https://bugzilla.gnome.org/show_bug.cgi?id=782050
+
+2017-05-02 10:32:54 +0200  Frédéric Dalleau <frederic.dalleau@collabora.com>
+
+	* libs/gst/base/gstbasetransform.c:
+	  basetransform: Check if meta transform_func is NULL before using it
+	  An untested pointer segfaulted in webkit while playing video
+	  on imx6 sabrelite. It turned out that the imx plugin didn't
+	  implement the meta transform function.
+	  The following GST_DEBUG trace was visible:
+	  gstbasetransform.c:1779:foreach_metadata:<conv2> copy metadata
+	  GstImxVpuBufferMetaAPI
+	  Thread 26 vqueue:src received signal SIGSEGV, Segmentation fault.
+	  (gdb) bt
+	  0x00000000 in ?? ()
+	  0x73f8d7d8 in foreach_metadata (inbuf=0xc9b020, meta=0x474b2490,
+	  user_data=<optimized out>) at gstbasetransform.c:1781
+	  0x73eb3ea8 in gst_buffer_foreach_meta (buffer=buffer@entry=0xc9b020,
+	  func=0x73f8d705 <foreach_metadata>,
+	  user_data=user_data@entry=0x474b24d4)
+	  at gstbuffer.c:2234
+	  https://bugzilla.gnome.org/show_bug.cgi?id=782050
+
+2017-04-28 19:43:49 +0200  Víctor Manuel Jáquez Leal <vjaquez@igalia.com>
+
+	* gst/gst.c:
+	  gst: check non-null before dereference
+	  It is possible to use gst_deinit() without registering the base
+	  classes. For example, when using gst_init_get_option_group() and
+	  call the program with an invalid parameter. In that case,
+	  gst_deinit() will lead to a segmentation fault, since there is a
+	  dereference to a pointer that is null.
+	  This patch validates if the type is non-null before dereferencing
+	  it.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781914
+
+2017-04-28 11:57:41 +0200  Nicola Murino <nicola.murino@gmail.com>
+
+	* scripts/gst-uninstalled:
+	  gst-uninstalled: add opencv to bad libs
+	  https://bugzilla.gnome.org/show_bug.cgi?id=781889
+
+=== release 1.11.91 ===
+
+2017-04-27 17:24:05 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.11.91
+
+2017-04-27 15:48:33 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/ast.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/fur.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
 
 2017-04-27 15:21:26 +0300  Sebastian Dröge <sebastian@centricular.com>
 
