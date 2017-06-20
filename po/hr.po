@@ -6,13 +6,13 @@
 # https://gstreamer.freedesktop.org/data/doc/gstreamer/head/manual/html/index.html
 #
 # Tomislav Krznar <tomislav.krznar@gmail.com>, 2012.
-# Božidar Putanec <bozidarp@yahoo.com>, 2016.
+# Božidar Putanec <bozidarp@yahoo.com>, 2016, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer-1.10.0\n"
+"Project-Id-Version: gstreamer-1.12.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-05-04 14:58+0300\n"
-"PO-Revision-Date: 2016-11-19 09:55-0800\n"
+"POT-Creation-Date: 2017-06-20 11:01+0300\n"
+"PO-Revision-Date: 2017-05-04 15:59-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -22,16 +22,16 @@ msgstr ""
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Lokalize 2.0\n"
 
 msgid "Print the GStreamer version"
-msgstr "Ispiši inačicu GStreamer-a"
+msgstr "Inačica GStreamer-a"
 
 msgid "Make all warnings fatal"
-msgstr "Učini sva upozorenja fatalnim"
+msgstr "Sva upozorenja su fatalna"
 
 msgid "Print available debug categories and exit"
-msgstr "Ispiši dostupne kategorije debugiranja i iziđi"
+msgstr "Dostupne kategorije debugiranja"
 
 msgid ""
 "Default debug level from 1 (only error) to 9 (anything) or 0 for no output"
@@ -52,20 +52,20 @@ msgid "LIST"
 msgstr "POPIS"
 
 msgid "Disable colored debugging output"
-msgstr "Onemogući obojeni ispis debugiranja"
+msgstr "Onemogući obojeno debugiranje"
 
 msgid ""
 "Changes coloring mode of the debug log. Possible modes: off, on, disable, "
 "auto, unix"
 msgstr ""
-"Mijenja način bojenja dnevnika debugiranja. Mogući načini su: off, on, "
-"disable, auto, unix"
+"Mijenja mod bojanja dnevnika debugiranja. Mogući su: off, on, disable, auto, "
+"unix"
 
 msgid "Disable debugging"
 msgstr "Onemogući debugiranje"
 
 msgid "Enable verbose plugin loading diagnostics"
-msgstr "Omogući opširnu dijagnozu pri učitavanju plugina (plugin)"
+msgstr "Opširna dijagnoza tijeka učitavanja plugina"
 
 msgid "Colon-separated paths containing plugins"
 msgstr "Dvotočkom odvojene putanje koje sadržavaju plugin"
@@ -77,8 +77,8 @@ msgid ""
 "Comma-separated list of plugins to preload in addition to the list stored in "
 "environment variable GST_PLUGIN_PATH"
 msgstr ""
-"Zarezima odvojen popis priključaka koji će se učitati uz popis spremljen u "
-"varijablu okoline GST_PLUGIN_PATH"
+"Zarezima odvojen popis dodatnih plugina za učitati, prije onih navedenih u "
+"varijabli okoline GST_PLUGIN_PATH"
 
 msgid "PLUGINS"
 msgstr "PLUGINS"
@@ -881,17 +881,18 @@ msgstr "Nije moguće postaviti svojstvo „%s“ u elementu „%s“ sa „%s“
 msgid "Delayed linking failed."
 msgstr "Odgođeno povezivanje nije uspjelo."
 
-#, fuzzy, c-format
+#, c-format
 msgid "could not link %s to %s, %s can't handle caps %s"
-msgstr "nije moguće povezati %s sa %s"
+msgstr "nije moguće povezati %s na %s, %s ne može rukovati s caps %s"
 
-#, fuzzy, c-format
+#, c-format
 msgid "could not link %s to %s, neither element can handle caps %s"
-msgstr "ne mogu povezati prijamni element za URI „%s”"
+msgstr ""
+"nije moguće povezati %s na %s, nijedan element ne može rukovati s caps %s"
 
-#, fuzzy, c-format
+#, c-format
 msgid "could not link %s to %s with caps %s"
-msgstr "nije moguće povezati %s sa %s"
+msgstr "nije moguće povezati %s na %s s caps %s"
 
 #, c-format
 msgid "could not link %s to %s"
@@ -1122,6 +1123,8 @@ msgid ""
 "A slashes ('/') separated list of types of elements (also known as klass) to "
 "list. (unordered)"
 msgstr ""
+"Popis (kosim crtama (‘/’) odijeljenim) vrsta elemenata (znan kao klass) za "
+"izlistati. (neuređen)"
 
 msgid "Check if the specified element or plugin exists"
 msgstr "Provjerite ako specificirani element ili plugin postoji"

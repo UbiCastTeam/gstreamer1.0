@@ -1,9 +1,222 @@
-=== release 1.12.0 ===
+=== release 1.12.1 ===
 
-2017-05-04  Sebastian Dröge <slomo@coaxion.net>
+2017-06-20  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.12.0
+	  releasing 1.12.1
+
+2017-06-20 11:06:16 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/bg.po:
+	* po/da.po:
+	* po/de.po:
+	* po/fr.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/nb.po:
+	* po/pl.po:
+	* po/ru.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	  po: Update translations
+
+2017-06-20 11:04:33 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/ast.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/fur.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
+
+2017-06-20 15:57:47 +0900  Heekyoung Seo <heekyoung.seo@lge.com>
+
+	* gst/gstutils.c:
+	  utils: Fix leak in failed case of regression overflow checking
+	  https://bugzilla.gnome.org/show_bug.cgi?id=783978
+
+2017-06-20 16:10:07 +0900  Heekyoung Seo <heekyoung.seo@lge.com>
+
+	* gst/gstregistrychunks.c:
+	  registrychunk: Fix leak in failed case of reading plugin dependency string
+	  https://bugzilla.gnome.org/show_bug.cgi?id=783978
+
+2017-06-20 10:00:16 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/controller/gsttimedvaluecontrolsource.c:
+	* libs/gst/controller/gsttimedvaluecontrolsource.h:
+	* win32/common/libgstcontroller.def:
+	  controller: Export boxed type copy/free functions for GstControlPoint
+
+2017-06-20 09:57:01 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/base/gstbaseparse.c:
+	* libs/gst/base/gstbaseparse.h:
+	* libs/gst/base/gstflowcombiner.c:
+	* libs/gst/base/gstflowcombiner.h:
+	* win32/common/libgstbase.def:
+	  base: Export boxed type copy/free functions for the remaining types
+
+2017-06-16 13:34:00 +0000  Andrejs Vasiljevs <andrejs.vasiljevs@ubnt.com>
+
+	* libs/gst/net/gstptpclock.c:
+	  ptp: Unref timeout GSource for delay requests
+	  https://bugzilla.gnome.org/show_bug.cgi?id=783864
+
+2017-06-15 11:40:51 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gsturi.c:
+	  gsturi: Fixed incorrect escaping of path as a generic string
+	  The gst_uri_construct function was escaping the location string
+	  as a generic uri string. This is incorrect since the slash('/')
+	  characters are reserved for use in this exact case. The patch
+	  changes the escape_string function mode to handle the path correctly.
+	  In 1.14 this function will be deprecated.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=783787
+
+2017-05-23 00:51:12 +0200  Olivier Crête <olivier.crete@collabora.com>
+
+	* libs/gst/base/gstbasesrc.c:
+	  basesrc: Hold object lock while updating latency
+	  Otherwise in gst_base_src_query_latency(), it ended up
+	  sometimes thinking it wasn't -1 when it was actually.
+
+2017-05-22 12:01:41 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstobject.c:
+	  object: Add missing annotations to get_value_array() / get_value_g_array()
+	  Same as already used in GstControlBinding.
+
+2017-05-20 19:42:51 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* docs/gst/gstreamer-sections.txt:
+	* gst/gstparse.c:
+	* gst/gstparse.h:
+	* win32/common/libgstreamer.def:
+	  parse: Make gst_parse_context_copy() public for bindings
+
+2017-05-19 19:22:27 +0200  Matthew Waters <matthew@centricular.com>
+
+	* gst/gstdebugutils.c:
+	  debugutils: add missing E character to the legend
+	  The E character on pads indicates the presence of the EOS flag.
+
+2017-05-20 16:44:14 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* tools/Makefile.am:
+	  tools: dist new gst-stats man page
+	  Fixes meson build from tarball.
+
+2017-05-16 00:02:11 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* tests/check/meson.build:
+	  meson: fix gstprintf test linking
+	  Must link against gstprint helper lib to use private symbol.
+
+2017-05-13 18:30:27 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* meson.build:
+	* meson_options.txt:
+	  meson: add options to set package name and origin
+	  https://bugzilla.gnome.org/show_bug.cgi?id=782172
+
+=== release 1.12.0 ===
+
+2017-05-04 15:36:55 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.12.0
+
+2017-05-04 15:00:16 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/ast.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/fur.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
 
 2017-05-02 14:35:50 +0300  Sebastian Dröge <sebastian@centricular.com>
 
