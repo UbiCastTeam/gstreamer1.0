@@ -20,6 +20,7 @@
  */
 /**
  * SECTION:element-typefind
+ * @title: typefind
  *
  * Determines the media-type of a stream. It applies typefind functions in the
  * order of their rank. Once the type has been detected it sets its src pad caps
@@ -558,6 +559,7 @@ gst_type_find_element_src_event (GstPad * pad, GstObject * parent,
 
   if (typefind->mode != MODE_NORMAL) {
     /* need to do more? */
+    GST_LOG_OBJECT (typefind, "Still typefinding. Not passing event upstream");
     gst_event_unref (event);
     return FALSE;
   }
@@ -783,6 +785,8 @@ gst_type_find_element_setcaps (GstTypeFindElement * typefind, GstCaps * caps)
   if (gst_caps_is_any (caps))
     return TRUE;
 
+  /* Set to MODE_NORMAL before emitting have-type, in case it triggers a seek */
+  typefind->mode = MODE_NORMAL;
   gst_type_find_element_emit_have_type (typefind, GST_TYPE_FIND_MAXIMUM, caps);
 
   /* Shortcircuit typefinding if we get caps */
@@ -967,6 +971,8 @@ gst_type_find_element_chain_do_typefinding (GstTypeFindElement * typefind,
 
   /* probability is good enough too, so let's make it known ... emiting this
    * signal calls our object handler which sets the caps. */
+  /* Set to MODE_NORMAL before emitting have-type, in case it triggers a seek */
+  typefind->mode = MODE_NORMAL;
   gst_type_find_element_emit_have_type (typefind, probability, caps);
 
   /* .. and send out the accumulated data */
@@ -1158,8 +1164,9 @@ gst_type_find_element_loop (GstPad * pad)
     }
 
     GST_DEBUG ("Emiting found caps %" GST_PTR_FORMAT, found_caps);
-    gst_type_find_element_emit_have_type (typefind, probability, found_caps);
+    /* Set to MODE_NORMAL before emitting have-type, in case it triggers a seek */
     typefind->mode = MODE_NORMAL;
+    gst_type_find_element_emit_have_type (typefind, probability, found_caps);
     gst_caps_unref (found_caps);
   } else if (typefind->mode == MODE_NORMAL) {
     GstBuffer *outbuf = NULL;
@@ -1274,7 +1281,6 @@ gst_type_find_element_activate_sink (GstPad * pad, GstObject * parent)
 {
   GstQuery *query;
   gboolean pull_mode;
-  GstSchedulingFlags sched_flags;
 
   query = gst_query_new_scheduling ();
 
@@ -1283,10 +1289,8 @@ gst_type_find_element_activate_sink (GstPad * pad, GstObject * parent)
     goto typefind_push;
   }
 
-  gst_query_parse_scheduling (query, &sched_flags, NULL, NULL, NULL);
-
-  pull_mode = gst_query_has_scheduling_mode (query, GST_PAD_MODE_PULL)
-      && ((sched_flags & GST_SCHEDULING_FLAG_SEEKABLE) != 0);
+  pull_mode = gst_query_has_scheduling_mode_with_flags (query,
+      GST_PAD_MODE_PULL, GST_SCHEDULING_FLAG_SEEKABLE);
 
   gst_query_unref (query);
 

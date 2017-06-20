@@ -94,7 +94,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -102,7 +101,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -130,7 +128,8 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am \
-	$(am__dist_bashcompletion_DATA_DIST) $(am__DIST_COMMON)
+	$(am__dist_bashcompletion_DATA_DIST) \
+	$(am__dist_bashhelpers_DATA_DIST) $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
@@ -154,8 +153,9 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-am__dist_bashcompletion_DATA_DIST = completions/gst-inspect-1.0 \
-	completions/gst-launch-1.0
+am__dist_bashcompletion_DATA_DIST =  \
+	bash-completion/completions/gst-inspect-1.0 \
+	bash-completion/completions/gst-launch-1.0
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -183,8 +183,10 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(bashcompletiondir)"
-DATA = $(dist_bashcompletion_DATA)
+am__installdirs = "$(DESTDIR)$(bashcompletiondir)" \
+	"$(DESTDIR)$(bashhelpersdir)"
+am__dist_bashhelpers_DATA_DIST = bash-completion/helpers/gst
+DATA = $(dist_bashcompletion_DATA) $(dist_bashhelpers_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -204,8 +206,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -228,9 +228,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -268,6 +269,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -308,19 +310,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -413,9 +405,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -480,8 +469,12 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+@ENABLE_BASH_COMPLETION_TRUE@bashhelpersdir = $(BASH_HELPERS_DIR)
+@ENABLE_BASH_COMPLETION_TRUE@dist_bashhelpers_DATA = bash-completion/helpers/gst
 @ENABLE_BASH_COMPLETION_TRUE@bashcompletiondir = $(BASH_COMPLETION_DIR)
-@ENABLE_BASH_COMPLETION_TRUE@dist_bashcompletion_DATA = completions/gst-inspect-1.0 completions/gst-launch-1.0
+@ENABLE_BASH_COMPLETION_TRUE@dist_bashcompletion_DATA = bash-completion/completions/gst-inspect-1.0 \
+@ENABLE_BASH_COMPLETION_TRUE@			   bash-completion/completions/gst-launch-1.0
+
 all: all-am
 
 .SUFFIXES:
@@ -541,6 +534,27 @@ uninstall-dist_bashcompletionDATA:
 	@list='$(dist_bashcompletion_DATA)'; test -n "$(bashcompletiondir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(bashcompletiondir)'; $(am__uninstall_files_from_dir)
+install-dist_bashhelpersDATA: $(dist_bashhelpers_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_bashhelpers_DATA)'; test -n "$(bashhelpersdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(bashhelpersdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(bashhelpersdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(bashhelpersdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(bashhelpersdir)" || exit $$?; \
+	done
+
+uninstall-dist_bashhelpersDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_bashhelpers_DATA)'; test -n "$(bashhelpersdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(bashhelpersdir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -582,7 +596,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bashcompletiondir)"; do \
+	for dir in "$(DESTDIR)$(bashcompletiondir)" "$(DESTDIR)$(bashhelpersdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -635,7 +649,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_bashcompletionDATA
+install-data-am: install-dist_bashcompletionDATA \
+	install-dist_bashhelpersDATA
 
 install-dvi: install-dvi-am
 
@@ -679,7 +694,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_bashcompletionDATA
+uninstall-am: uninstall-dist_bashcompletionDATA \
+	uninstall-dist_bashhelpersDATA
 
 .MAKE: install-am install-strip
 
@@ -687,14 +703,16 @@ uninstall-am: uninstall-dist_bashcompletionDATA
 	cscopelist-am ctags-am distclean distclean-generic \
 	distclean-libtool distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
-	install-dist_bashcompletionDATA install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags-am uninstall \
-	uninstall-am uninstall-dist_bashcompletionDATA
+	install-dist_bashcompletionDATA install-dist_bashhelpersDATA \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags-am uninstall uninstall-am \
+	uninstall-dist_bashcompletionDATA \
+	uninstall-dist_bashhelpersDATA
 
 .PRECIOUS: Makefile
 

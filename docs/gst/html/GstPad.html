@@ -7943,12 +7943,10 @@ and <em class="parameter"><code>GST_PAD_LINK_CHECK_TEMPLATE_CAPS</code></em>
  are mutually exclusive. If both are
 specified, expensive but safe <em class="parameter"><code>GST_PAD_LINK_CHECK_CAPS</code></em>
  are performed.</p>
-<div class="warning"><p>
-Only disable some of the checks if you are 100% certain you know the link
+<div class="blockquote"><blockquote class="blockquote"><p>Only disable some of the checks if you are 100% certain you know the link
 will not fail because of hierarchy/caps compatibility failures. If uncertain,
 use the default checks (<a class="link" href="GstPad.html#GST-PAD-LINK-CHECK-DEFAULT:CAPS"><code class="literal">GST_PAD_LINK_CHECK_DEFAULT</code></a>) or the regular methods
-for linking the pads.
-</p></div>
+for linking the pads.</p></blockquote></div>
 <div class="refsect3">
 <a name="GstPadLinkCheck.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -7989,6 +7987,14 @@ for linking the pads.
 <td class="enum_member_description">
 <p>Check if the pads are compatible by comparing the
   caps returned by <a class="link" href="GstPad.html#gst-pad-query-caps" title="gst_pad_query_caps ()"><code class="function">gst_pad_query_caps()</code></a>.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-PAD-LINK-CHECK-NO-RECONFIGURE:CAPS"></a>GST_PAD_LINK_CHECK_NO_RECONFIGURE</p></td>
+<td class="enum_member_description">
+<p>Disables pushing a reconfigure event when pads are
+  linked.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -8181,8 +8187,9 @@ pad operates in push or pull mode.</p>
 <td class="enum_member_description">
 <p>drop data in data probes. For push mode this means that
        the data item is not sent downstream. For pull mode, it means that
-       the data item is not passed upstream. In both cases, no more probes
-       are called and <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the caller.</p>
+       the data item is not passed upstream. In both cases, no other probes
+       are called for this item and <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> is returned to the
+       caller.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -8192,8 +8199,8 @@ pad operates in push or pull mode.</p>
 <p>normal probe return value. This leaves the probe in
        place, and defers decisions about dropping or passing data to other
        probes, if any. If there are no other probes, the default behaviour
-       for the probe type applies (block for blocking probes, and pass for
-       non-blocking probes).</p>
+       for the probe type applies ('block' for blocking probes,
+       and 'pass' for non-blocking probes).</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -8217,8 +8224,7 @@ pad operates in push or pull mode.</p>
 <td class="enum_member_description">
 <p>Data has been handled in the probe and will not be
        forwarded further. For events and buffers this is the same behaviour as
-       <em class="parameter"><code>GST_PAD_PROBE_DROP</code></em>
- (except that in this case you need to unref the buffer
+       <a class="link" href="GstPad.html#GST-PAD-PROBE-DROP:CAPS"><code class="literal">GST_PAD_PROBE_DROP</code></a> (except that in this case you need to unref the buffer
        or event yourself). For queries it will also return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to the caller.
        The probe can also modify the <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> value by using the
        <a class="link" href="GstPad.html#GST-PAD-PROBE-INFO-FLOW-RETURN:CAPS" title="GST_PAD_PROBE_INFO_FLOW_RETURN()"><code class="function">GST_PAD_PROBE_INFO_FLOW_RETURN()</code></a> accessor.

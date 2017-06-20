@@ -84,7 +84,7 @@ typedef gpointer GstClockID;
  *
  * Constant to define an undefined clock time.
  */
-#define GST_CLOCK_STIME_NONE             G_MININT64
+#define GST_CLOCK_STIME_NONE             ((GstClockTimeDiff)G_MININT64)
 /**
  * GST_CLOCK_STIME_IS_VALID:
  * @time: signed clock time to validate
@@ -95,31 +95,30 @@ typedef gpointer GstClockID;
  */
 #define GST_CLOCK_STIME_IS_VALID(time)   (((GstClockTimeDiff)(time)) != GST_CLOCK_STIME_NONE)
 
-/* FIXME: still need to explicitly force types on the defines below */
 /**
- * GST_SECOND: (value 1000000000) (type GstClockTime)
+ * GST_SECOND: (value 1000000000) (type GstClockTimeDiff)
  *
  * Constant that defines one GStreamer second.
  */
-#define GST_SECOND  (G_USEC_PER_SEC * G_GINT64_CONSTANT (1000))
+#define GST_SECOND  ((GstClockTimeDiff)(G_USEC_PER_SEC * G_GINT64_CONSTANT (1000)))
 /**
- * GST_MSECOND: (value 1000000) (type GstClockTime)
+ * GST_MSECOND: (value 1000000) (type GstClockTimeDiff)
  *
  * Constant that defines one GStreamer millisecond.
  */
-#define GST_MSECOND (GST_SECOND / G_GINT64_CONSTANT (1000))
+#define GST_MSECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000)))
 /**
- * GST_USECOND: (value 1000) (type GstClockTime)
+ * GST_USECOND: (value 1000) (type GstClockTimeDiff)
  *
  * Constant that defines one GStreamer microsecond.
  */
-#define GST_USECOND (GST_SECOND / G_GINT64_CONSTANT (1000000))
+#define GST_USECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000000)))
 /**
- * GST_NSECOND: (value 1) (type GstClockTime)
+ * GST_NSECOND: (value 1) (type GstClockTimeDiff)
  *
  * Constant that defines one GStreamer nanosecond
  */
-#define GST_NSECOND (GST_SECOND / G_GINT64_CONSTANT (1000000000))
+#define GST_NSECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000000000)))
 
 
 /**
@@ -176,9 +175,9 @@ typedef gpointer GstClockID;
  *
  * Convert a #GstClockTime to a #GTimeVal
  *
- * <note>on 32-bit systems, a timeval has a range of only 2^32 - 1 seconds,
- * which is about 68 years.  Expect trouble if you want to schedule stuff
- * in your pipeline for 2038.</note>
+ * > on 32-bit systems, a timeval has a range of only 2^32 - 1 seconds,
+ * > which is about 68 years.  Expect trouble if you want to schedule stuff
+ * > in your pipeline for 2038.
  */
 #define GST_TIME_TO_TIMEVAL(t,tv)                               \
 G_STMT_START {                                                  \

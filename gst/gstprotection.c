@@ -19,6 +19,7 @@
 
 /**
  * SECTION:gstprotection
+ * @title: GstProtection
  * @short_description: Functions and classes to support encrypted streams.
  *
  * The GstProtectionMeta class enables the information needed to decrypt a
@@ -111,13 +112,14 @@ gst_protection_meta_get_info (void)
 {
   static const GstMetaInfo *protection_meta_info = NULL;
 
-  if (g_once_init_enter (&protection_meta_info)) {
+  if (g_once_init_enter ((GstMetaInfo **) & protection_meta_info)) {
     const GstMetaInfo *meta =
         gst_meta_register (GST_PROTECTION_META_API_TYPE, "GstProtectionMeta",
         sizeof (GstProtectionMeta), gst_protection_meta_init,
         gst_protection_meta_free, gst_protection_meta_transform);
 
-    g_once_init_leave (&protection_meta_info, meta);
+    g_once_init_leave ((GstMetaInfo **) & protection_meta_info,
+        (GstMetaInfo *) meta);
   }
   return protection_meta_info;
 }

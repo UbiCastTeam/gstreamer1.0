@@ -21,6 +21,7 @@
  */
 /**
  * SECTION:gstpad
+ * @title: GstPad
  * @short_description: Object contained by elements that allows links to
  *                     other elements
  * @see_also: #GstPadTemplate, #GstElement, #GstEvent, #GstQuery, #GstBuffer
@@ -2522,7 +2523,8 @@ gst_pad_link_full (GstPad * srcpad, GstPad * sinkpad, GstPadLinkCheck flags)
   GST_CAT_INFO (GST_CAT_PADS, "linked %s:%s and %s:%s, successful",
       GST_DEBUG_PAD_NAME (srcpad), GST_DEBUG_PAD_NAME (sinkpad));
 
-  gst_pad_send_event (srcpad, gst_event_new_reconfigure ());
+  if (!(flags & GST_PAD_LINK_CHECK_NO_RECONFIGURE))
+    gst_pad_send_event (srcpad, gst_event_new_reconfigure ());
 
 done:
   if (G_LIKELY (parent)) {
@@ -3076,12 +3078,13 @@ gst_pad_query_accept_caps_default (GstPad * pad, GstQuery * query)
 
   gst_query_parse_accept_caps (query, &caps);
   if (!allowed) {
-    GST_CAT_DEBUG_OBJECT (GST_CAT_PERFORMANCE, pad,
-        "fallback ACCEPT_CAPS query, consider implementing a specialized version");
-    if (GST_PAD_IS_ACCEPT_TEMPLATE (pad))
+    if (GST_PAD_IS_ACCEPT_TEMPLATE (pad)) {
       allowed = gst_pad_get_pad_template_caps (pad);
-    else
+    } else {
+      GST_CAT_DEBUG_OBJECT (GST_CAT_PERFORMANCE, pad,
+          "fallback ACCEPT_CAPS query, consider implementing a specialized version");
       allowed = gst_pad_query_caps (pad, caps);
+    }
   }
 
   if (allowed) {
@@ -6063,6 +6066,42 @@ no_task:
     GST_DEBUG_OBJECT (pad, "pad has no task");
     GST_OBJECT_UNLOCK (pad);
     return FALSE;
+  }
+}
+
+/**
+ * gst_pad_get_task_state:
+ * @pad: the #GstPad to get task state from
+ *
+ * Get @pad task state. If no task is currently
+ * set, #GST_TASK_STOPPED is returned.
+ *
+ * Returns: The current state of @pad's task.
+ *
+ * Since: 1.12
+ */
+GstTaskState
+gst_pad_get_task_state (GstPad * pad)
+{
+  GstTask *task;
+  GstTaskState res;
+
+  g_return_val_if_fail (GST_IS_PAD (pad), GST_TASK_STOPPED);
+
+  GST_OBJECT_LOCK (pad);
+  task = GST_PAD_TASK (pad);
+  if (task == NULL)
+    goto no_task;
+  res = gst_task_get_state (task);
+  GST_OBJECT_UNLOCK (pad);
+
+  return res;
+
+no_task:
+  {
+    GST_DEBUG_OBJECT (pad, "pad has no task");
+    GST_OBJECT_UNLOCK (pad);
+    return GST_TASK_STOPPED;
   }
 }
 

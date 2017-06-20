@@ -125,7 +125,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -133,7 +132,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -194,6 +192,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @GST_DISABLE_REGISTRY_FALSE@	generic/sinks$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/capsfilter$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/concat$(EXEEXT) \
+@GST_DISABLE_REGISTRY_FALSE@	elements/dataurisrc$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesink$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesrc$(EXEEXT) \
 @GST_DISABLE_REGISTRY_FALSE@	elements/fdsrc$(EXEEXT) \
@@ -236,6 +235,12 @@ elements_concat_SOURCES = elements/concat.c
 elements_concat_OBJECTS = elements/concat.$(OBJEXT)
 elements_concat_LDADD = $(LDADD)
 elements_concat_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
+elements_dataurisrc_SOURCES = elements/dataurisrc.c
+elements_dataurisrc_OBJECTS = elements/dataurisrc.$(OBJEXT)
+elements_dataurisrc_LDADD = $(LDADD)
+elements_dataurisrc_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
 elements_fakesink_SOURCES = elements/fakesink.c
@@ -896,13 +901,14 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = elements/capsfilter.c elements/concat.c elements/fakesink.c \
-	elements/fakesrc.c elements/fdsrc.c elements/filesink.c \
-	elements/filesrc.c elements/funnel.c elements/identity.c \
-	elements/multiqueue.c elements/queue.c elements/queue2.c \
-	elements/selector.c elements/streamiddemux.c elements/tee.c \
-	elements/valve.c generic/sinks.c generic/states.c gst/gst.c \
-	gst/gstabi.c gst/gstatomicqueue.c gst/gstbin.c gst/gstbuffer.c \
+SOURCES = elements/capsfilter.c elements/concat.c \
+	elements/dataurisrc.c elements/fakesink.c elements/fakesrc.c \
+	elements/fdsrc.c elements/filesink.c elements/filesrc.c \
+	elements/funnel.c elements/identity.c elements/multiqueue.c \
+	elements/queue.c elements/queue2.c elements/selector.c \
+	elements/streamiddemux.c elements/tee.c elements/valve.c \
+	generic/sinks.c generic/states.c gst/gst.c gst/gstabi.c \
+	gst/gstatomicqueue.c gst/gstbin.c gst/gstbuffer.c \
 	gst/gstbufferlist.c gst/gstbufferpool.c gst/gstbus.c \
 	gst/gstcaps.c gst/gstcapsfeatures.c gst/gstchildproxy.c \
 	gst/gstclock.c gst/gstcontext.c gst/gstcontroller.c \
@@ -932,31 +938,31 @@ SOURCES = elements/capsfilter.c elements/concat.c elements/fakesink.c \
 	pipelines/simple-launch-lines.c pipelines/stress.c \
 	tools/gstinspect.c
 DIST_SOURCES = elements/capsfilter.c elements/concat.c \
-	elements/fakesink.c elements/fakesrc.c elements/fdsrc.c \
-	elements/filesink.c elements/filesrc.c elements/funnel.c \
-	elements/identity.c elements/multiqueue.c elements/queue.c \
-	elements/queue2.c elements/selector.c elements/streamiddemux.c \
-	elements/tee.c elements/valve.c generic/sinks.c \
-	generic/states.c gst/gst.c gst/gstabi.c gst/gstatomicqueue.c \
-	gst/gstbin.c gst/gstbuffer.c gst/gstbufferlist.c \
-	gst/gstbufferpool.c gst/gstbus.c gst/gstcaps.c \
-	gst/gstcapsfeatures.c gst/gstchildproxy.c gst/gstclock.c \
-	gst/gstcontext.c gst/gstcontroller.c $(gst_gstcpp_SOURCES) \
-	gst/gstdatetime.c gst/gstdevice.c gst/gstelement.c \
-	gst/gstelementfactory.c gst/gstevent.c gst/gstghostpad.c \
-	gst/gstinfo.c gst/gstiterator.c gst/gstmemory.c \
-	gst/gstmessage.c gst/gstmeta.c gst/gstminiobject.c \
-	gst/gstobject.c gst/gstpad.c gst/gstparamspecs.c \
-	gst/gstpipeline.c gst/gstplugin.c gst/gstpoll.c \
-	gst/gstpreset.c gst/gstprintf.c gst/gstprotection.c \
-	gst/gstquery.c gst/gstregistry.c gst/gstsegment.c \
-	gst/gststream.c gst/gststructure.c gst/gstsystemclock.c \
-	gst/gsttag.c gst/gsttagsetter.c gst/gsttask.c gst/gsttoc.c \
-	gst/gsttocsetter.c gst/gsttracerrecord.c gst/gsturi.c \
-	gst/gstutils.c gst/gstvalue.c libs/adapter.c libs/baseparse.c \
-	libs/basesink.c libs/basesrc.c libs/bitreader.c \
-	libs/bitreader-noinline.c libs/bytereader.c \
-	libs/bytereader-noinline.c libs/bytewriter.c \
+	elements/dataurisrc.c elements/fakesink.c elements/fakesrc.c \
+	elements/fdsrc.c elements/filesink.c elements/filesrc.c \
+	elements/funnel.c elements/identity.c elements/multiqueue.c \
+	elements/queue.c elements/queue2.c elements/selector.c \
+	elements/streamiddemux.c elements/tee.c elements/valve.c \
+	generic/sinks.c generic/states.c gst/gst.c gst/gstabi.c \
+	gst/gstatomicqueue.c gst/gstbin.c gst/gstbuffer.c \
+	gst/gstbufferlist.c gst/gstbufferpool.c gst/gstbus.c \
+	gst/gstcaps.c gst/gstcapsfeatures.c gst/gstchildproxy.c \
+	gst/gstclock.c gst/gstcontext.c gst/gstcontroller.c \
+	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstdevice.c \
+	gst/gstelement.c gst/gstelementfactory.c gst/gstevent.c \
+	gst/gstghostpad.c gst/gstinfo.c gst/gstiterator.c \
+	gst/gstmemory.c gst/gstmessage.c gst/gstmeta.c \
+	gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
+	gst/gstparamspecs.c gst/gstpipeline.c gst/gstplugin.c \
+	gst/gstpoll.c gst/gstpreset.c gst/gstprintf.c \
+	gst/gstprotection.c gst/gstquery.c gst/gstregistry.c \
+	gst/gstsegment.c gst/gststream.c gst/gststructure.c \
+	gst/gstsystemclock.c gst/gsttag.c gst/gsttagsetter.c \
+	gst/gsttask.c gst/gsttoc.c gst/gsttocsetter.c \
+	gst/gsttracerrecord.c gst/gsturi.c gst/gstutils.c \
+	gst/gstvalue.c libs/adapter.c libs/baseparse.c libs/basesink.c \
+	libs/basesrc.c libs/bitreader.c libs/bitreader-noinline.c \
+	libs/bytereader.c libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c libs/gstharness.c \
 	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
@@ -1215,8 +1221,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -1239,9 +1243,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -1279,6 +1284,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -1319,19 +1325,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -1424,9 +1420,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -1544,6 +1537,7 @@ LIBSABI_CHECKS = libs/libsabi
 @GST_DISABLE_REGISTRY_FALSE@	generic/sinks				\
 @GST_DISABLE_REGISTRY_FALSE@	elements/capsfilter			\
 @GST_DISABLE_REGISTRY_FALSE@	elements/concat				\
+@GST_DISABLE_REGISTRY_FALSE@	elements/dataurisrc			\
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesink			\
 @GST_DISABLE_REGISTRY_FALSE@	elements/fakesrc			\
 @GST_DISABLE_REGISTRY_FALSE@	elements/fdsrc			  	\
@@ -1739,6 +1733,12 @@ elements/concat.$(OBJEXT): elements/$(am__dirstamp) \
 elements/concat$(EXEEXT): $(elements_concat_OBJECTS) $(elements_concat_DEPENDENCIES) $(EXTRA_elements_concat_DEPENDENCIES) elements/$(am__dirstamp)
 	@rm -f elements/concat$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(elements_concat_OBJECTS) $(elements_concat_LDADD) $(LIBS)
+elements/dataurisrc.$(OBJEXT): elements/$(am__dirstamp) \
+	elements/$(DEPDIR)/$(am__dirstamp)
+
+elements/dataurisrc$(EXEEXT): $(elements_dataurisrc_OBJECTS) $(elements_dataurisrc_DEPENDENCIES) $(EXTRA_elements_dataurisrc_DEPENDENCIES) elements/$(am__dirstamp)
+	@rm -f elements/dataurisrc$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(elements_dataurisrc_OBJECTS) $(elements_dataurisrc_LDADD) $(LIBS)
 elements/fakesink.$(OBJEXT): elements/$(am__dirstamp) \
 	elements/$(DEPDIR)/$(am__dirstamp)
 
@@ -2377,6 +2377,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/capsfilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/concat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/dataurisrc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/elements_fdsrc-fdsrc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/elements_filesrc-filesrc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/fakesink.Po@am__quote@
@@ -3188,6 +3189,13 @@ elements/capsfilter.log: elements/capsfilter$(EXEEXT)
 elements/concat.log: elements/concat$(EXEEXT)
 	@p='elements/concat$(EXEEXT)'; \
 	b='elements/concat'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+elements/dataurisrc.log: elements/dataurisrc$(EXEEXT)
+	@p='elements/dataurisrc$(EXEEXT)'; \
+	b='elements/dataurisrc'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

@@ -149,6 +149,22 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="GstElement.html#GstElementFlags" title="enum GstElementFlags"><span class="returnvalue">GstElementFlags</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBin.html#gst-bin-get-suppressed-flags" title="gst_bin_get_suppressed_flags ()">gst_bin_get_suppressed_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstBin.html#gst-bin-set-suppressed-flags" title="gst_bin_set_suppressed_flags ()">gst_bin_set_suppressed_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
@@ -332,120 +348,66 @@ elements in a bin.</p>
 <p>The <a class="link" href="GstBin.html#GstBin-element-added" title="The “element-added” signal"><span class="type">“element-added”</span></a> signal is fired whenever a new element is added to
 the bin. Likewise the <a class="link" href="GstBin.html#GstBin-element-removed" title="The “element-removed” signal"><span class="type">“element-removed”</span></a> signal is fired whenever an
 element is removed from the bin.</p>
-<div class="refsect2">
-<a name="id-1.3.6.10.9"></a><h3>Notes</h3>
-<p>
-A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> posted by its children and
-implements the following default behaviour for each of them:
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term">GST_MESSAGE_EOS</span></p></td>
-<td><p>This message is only posted by sinks in the PLAYING
-    state. If all sinks posted the EOS message, this bin will post and EOS
-    message upwards.</p></td>
-</tr>
-<tr>
-<td><p><span class="term">GST_MESSAGE_SEGMENT_START</span></p></td>
-<td><p>just collected and never forwarded upwards.
-    The messages are used to decide when all elements have completed playback
-    of their segment.</p></td>
-</tr>
-<tr>
-<td><p><span class="term">GST_MESSAGE_SEGMENT_DONE</span></p></td>
-<td><p> Is posted by <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> when all elements that posted
-    a SEGMENT_START have posted a SEGMENT_DONE.</p></td>
-</tr>
-<tr>
-<td><p><span class="term">GST_MESSAGE_DURATION_CHANGED</span></p></td>
-<td><p> Is posted by an element that detected a change
-    in the stream duration. The default bin behaviour is to clear any
-    cached duration values so that the next duration query will perform
-    a full duration recalculation. The duration change is posted to the
-    application so that it can refetch the new duration with a duration
-    query. Note that these messages can be posted before the bin is
-    prerolled, in which case the duration query might fail.
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">GST_MESSAGE_CLOCK_LOST</span></p></td>
-<td><p> This message is posted by an element when it
-    can no longer provide a clock. The default bin behaviour is to
-    check if the lost clock was the one provided by the bin. If so and
-    the bin is currently in the PLAYING state, the message is forwarded to
-    the bin parent.
-    This message is also generated when a clock provider is removed from
-    the bin. If this message is received by the application, it should
-    PAUSE the pipeline and set it back to PLAYING to force a new clock
-    distribution.
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">GST_MESSAGE_CLOCK_PROVIDE</span></p></td>
-<td><p> This message is generated when an element
-    can provide a clock. This mostly happens when a new clock
-    provider is added to the bin. The default behaviour of the bin is to
-    mark the currently selected clock as dirty, which will perform a clock
-    recalculation the next time the bin is asked to provide a clock.
-    This message is never sent tot the application but is forwarded to
-    the parent of the bin.
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">OTHERS</span></p></td>
-<td><p> posted upwards.</p></td>
-</tr>
-</tbody>
-</table></div>
-<p>
-
-
-A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> implements the following default behaviour for answering to a
-<a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>:
-</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term">GST_QUERY_DURATION</span></p></td>
-<td><p>If the query has been asked before with the same format
-    and the bin is a toplevel bin (ie. has no parent),
-    use the cached previous value. If no previous value was cached, the
-    query is sent to all sink elements in the bin and the MAXIMUM of all
-    values is returned. If the bin is a toplevel bin the value is cached.
-    If no sinks are available in the bin, the query fails.
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">GST_QUERY_POSITION</span></p></td>
-<td><p>The query is sent to all sink elements in the bin and the
-    MAXIMUM of all values is returned. If no sinks are available in the bin,
-    the query fails.
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">OTHERS</span></p></td>
-<td><p>the query is forwarded to all sink elements, the result
-    of the first sink that answers the query successfully is returned. If no
-    sink is in the bin, the query fails.</p></td>
-</tr>
-</tbody>
-</table></div>
-<p>
-
-A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> will by default forward any event sent to it to all sink elements.
-If all the sinks return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the bin will also return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is
-returned. If no sinks are in the bin, the event handler will return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.
-
-</p>
+<div class="refsect3">
+<a name="id-1.3.6.10.9"></a><h4>Notes</h4>
+<p>A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> internally intercepts every <a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> posted by its children and
+implements the following default behaviour for each of them:</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>GST_MESSAGE_EOS: This message is only posted by sinks in the PLAYING
+state. If all sinks posted the EOS message, this bin will post and EOS
+message upwards.</p></li>
+<li class="listitem"><p>GST_MESSAGE_SEGMENT_START: Just collected and never forwarded upwards.
+The messages are used to decide when all elements have completed playback
+of their segment.</p></li>
+<li class="listitem"><p>GST_MESSAGE_SEGMENT_DONE: Is posted by <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> when all elements that posted
+a SEGMENT_START have posted a SEGMENT_DONE.</p></li>
+<li class="listitem"><p>GST_MESSAGE_DURATION_CHANGED: Is posted by an element that detected a change
+in the stream duration. The default bin behaviour is to clear any
+cached duration values so that the next duration query will perform
+a full duration recalculation. The duration change is posted to the
+application so that it can refetch the new duration with a duration
+query. Note that these messages can be posted before the bin is
+prerolled, in which case the duration query might fail.</p></li>
+<li class="listitem"><p>GST_MESSAGE_CLOCK_LOST: This message is posted by an element when it
+can no longer provide a clock. The default bin behaviour is to
+check if the lost clock was the one provided by the bin. If so and
+the bin is currently in the PLAYING state, the message is forwarded to
+the bin parent.
+This message is also generated when a clock provider is removed from
+the bin. If this message is received by the application, it should
+PAUSE the pipeline and set it back to PLAYING to force a new clock
+distribution.</p></li>
+<li class="listitem"><p>GST_MESSAGE_CLOCK_PROVIDE: This message is generated when an element
+can provide a clock. This mostly happens when a new clock
+provider is added to the bin. The default behaviour of the bin is to
+mark the currently selected clock as dirty, which will perform a clock
+recalculation the next time the bin is asked to provide a clock.
+This message is never sent tot the application but is forwarded to
+the parent of the bin.</p></li>
+<li class="listitem"><p>OTHERS: posted upwards.</p></li>
+</ul></div>
+<p>A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> implements the following default behaviour for answering to a
+<a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>:</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>GST_QUERY_DURATION:If the query has been asked before with the same format
+and the bin is a toplevel bin (ie. has no parent),
+use the cached previous value. If no previous value was cached, the
+query is sent to all sink elements in the bin and the MAXIMUM of all
+values is returned. If the bin is a toplevel bin the value is cached.
+If no sinks are available in the bin, the query fails.</p></li>
+<li class="listitem"><p>GST_QUERY_POSITION:The query is sent to all sink elements in the bin and the
+MAXIMUM of all values is returned. If no sinks are available in the bin,
+the query fails.</p></li>
+<li class="listitem"><p>OTHERS:the query is forwarded to all sink elements, the result
+of the first sink that answers the query successfully is returned. If no
+sink is in the bin, the query fails.</p></li>
+</ul></div>
+<p>A <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> will by default forward any event sent to it to all sink
+(<a class="link" href="GstEvent.html#GST-EVENT-TYPE-DOWNSTREAM:CAPS"><span class="type">GST_EVENT_TYPE_DOWNSTREAM</span></a>) or source (<a class="link" href="GstEvent.html#GST-EVENT-TYPE-UPSTREAM:CAPS"><span class="type">GST_EVENT_TYPE_UPSTREAM</span></a>) elements
+depending on the event type.
+If all the elements return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the bin will also return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>
+is returned. If no elements of the required type are in the bin, the event
+handler will return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -486,13 +448,11 @@ gst_bin_add (<em class="parameter"><code><a class="link" href="GstBin.html" titl
 takes ownership of the element. An element can only be added to one bin.</p>
 <p>If the element's pads are linked to other pads, the pads will be unlinked
 before the element is added to the bin.</p>
-<div class="note">
-When you add an element to an already-running pipeline, you will have to
+<div class="blockquote"><blockquote class="blockquote"><p>When you add an element to an already-running pipeline, you will have to
 take care to set the state of the newly-added element to the desired
 state (usually PLAYING or PAUSED, same you set the pipeline to originally)
 with <a class="link" href="GstElement.html#gst-element-set-state" title="gst_element_set_state ()"><code class="function">gst_element_set_state()</code></a>, or use <a class="link" href="GstElement.html#gst-element-sync-state-with-parent" title="gst_element_sync_state_with_parent ()"><code class="function">gst_element_sync_state_with_parent()</code></a>.
-The bin or pipeline will not take care of this for you.
-</div>
+The bin or pipeline will not take care of this for you.</p></blockquote></div>
 <p>MT safe.</p>
 <div class="refsect3">
 <a name="gst-bin-add.parameters"></a><h4>Parameters</h4>
@@ -911,6 +871,69 @@ calculations will be performed.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-bin-get-suppressed-flags"></a><h3>gst_bin_get_suppressed_flags ()</h3>
+<pre class="programlisting"><a class="link" href="GstElement.html#GstElementFlags" title="enum GstElementFlags"><span class="returnvalue">GstElementFlags</span></a>
+gst_bin_get_suppressed_flags (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>);</pre>
+<p>Return the suppressed flags of the bin.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="gst-bin-get-suppressed-flags.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-bin-get-suppressed-flags.returns"></a><h4>Returns</h4>
+<p> the bin's suppressed <a class="link" href="GstElement.html#GstElementFlags" title="enum GstElementFlags"><span class="type">GstElementFlags</span></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-bin-set-suppressed-flags"></a><h3>gst_bin_set_suppressed_flags ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_bin_set_suppressed_flags (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                              <em class="parameter"><code><a class="link" href="GstElement.html#GstElementFlags" title="enum GstElementFlags"><span class="type">GstElementFlags</span></a> flags</code></em>);</pre>
+<p>Suppress the given flags on the bin. <a class="link" href="GstElement.html#GstElementFlags" title="enum GstElementFlags"><span class="type">GstElementFlags</span></a> of a
+child element are propagated when it is added to the bin.
+When suppressed flags are set, those specified flags will
+not be propagated to the bin.</p>
+<p>MT safe.</p>
+<div class="refsect3">
+<a name="gst-bin-set-suppressed-flags.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstElement.html#GstElementFlags" title="enum GstElementFlags"><span class="type">GstElementFlags</span></a> to suppress</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-bin-add-many"></a><h3>gst_bin_add_many ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_bin_add_many (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
@@ -1262,7 +1285,7 @@ update the list of children in the bin.</p>
 message handling.  <em class="parameter"><code>handle_message</code></em>
  takes ownership of the message, just like
 <a class="link" href="GstElement.html#gst-element-post-message" title="gst_element_post_message ()"><span class="type">gst_element_post_message</span></a>.</p>
-<p>The <em class="parameter"><code>element_added_deep</code></em>
+<p>The <em class="parameter"><code>deep_element_added</code></em>
  vfunc will be called when a new element has been
 added to any bin inside this bin, so it will also be called if a new child
 was added to a sub-bin of this bin. <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> implementations that override
@@ -1294,13 +1317,15 @@ element-added-deep signal is emitted on all parents.</p>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBinClass.deep-element-added"></a>deep_element_added</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>method called when an element was added somewhere
+in the bin hierarchy</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBinClass.deep-element-removed"></a>deep_element_removed</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>method called when an element was removed somewhere
+in the bin hierarchy</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

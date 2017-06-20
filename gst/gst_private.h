@@ -150,6 +150,15 @@ G_GNUC_INTERNAL  GstPlugin * _priv_gst_plugin_load_file_for_registry (const gcha
                                                                       GstRegistry * registry,
                                                                       GError** error);
 
+/* GValue serialization/deserialization */
+
+G_GNUC_INTERNAL const char * _priv_gst_value_gtype_to_abbr (GType type);
+
+G_GNUC_INTERNAL gboolean _priv_gst_value_parse_string (gchar * s, gchar ** end, gchar ** next, gboolean unescape);
+G_GNUC_INTERNAL gboolean _priv_gst_value_parse_simple_string (gchar * str, gchar ** end);
+G_GNUC_INTERNAL gboolean _priv_gst_value_parse_value (gchar * str, gchar ** after, GValue * value, GType default_type);
+G_GNUC_INTERNAL gchar * _priv_gst_value_serialize_any_list (const GValue * value, const gchar * begin, const gchar * end, gboolean print_type);
+
 /* Used in GstBin for manual state handling */
 G_GNUC_INTERNAL  void _priv_gst_element_state_changed (GstElement *element,
                       GstState oldstate, GstState newstate, GstState pending);
@@ -208,12 +217,6 @@ gint __gst_date_time_compare (const GstDateTime * dt1, const GstDateTime * dt2);
 
 G_GNUC_INTERNAL
 gchar * __gst_date_time_serialize (GstDateTime * datetime, gboolean with_usecs);
-
-/* Non-static, for access from the testsuite, but not for external use */
-gboolean
-_priv_gst_do_linear_regression (GstClockTime *times, guint n,
-    GstClockTime * m_num, GstClockTime * m_denom, GstClockTime * b,
-    GstClockTime * xbase, gdouble * r_squared);
 
 /* For use in gstdebugutils */
 G_GNUC_INTERNAL
@@ -482,6 +485,16 @@ struct _GstDeviceProviderFactoryClass {
   /* <private> */
 
   gpointer _gst_reserved[GST_PADDING];
+};
+
+struct _GstDynamicTypeFactory {
+  GstPluginFeature           feature;
+
+  GType                      type; /* GType of the type, when loaded. 0 if not */
+};
+
+struct _GstDynamicTypeFactoryClass {
+  GstPluginFeatureClass      parent;
 };
 
 /* privat flag used by GstBus / GstMessage */

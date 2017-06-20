@@ -3,7 +3,7 @@
   <description>GStreamer core elements</description>
   <filename>../../plugins/elements/.libs/libgstcoreelements.so</filename>
   <basename>libgstcoreelements.so</basename>
-  <version>1.10.4</version>
+  <version>1.12.0</version>
   <license>LGPL</license>
   <source>gstreamer</source>
   <package>GStreamer source release</package>
@@ -43,6 +43,21 @@
           <presence>request</presence>
           <details>ANY</details>
         </caps>
+        <caps>
+          <name>src</name>
+          <direction>source</direction>
+          <presence>always</presence>
+          <details>ANY</details>
+        </caps>
+      </pads>
+    </element>
+    <element>
+      <name>dataurisrc</name>
+      <longname>data: URI source element</longname>
+      <class>Source</class>
+      <description>Handles data: uris</description>
+      <author>Philippe Normand &lt;pnormand@igalia.com&gt;, Sebastian Dröge &lt;sebastian.droege@collabora.co.uk&gt;</author>
+      <pads>
         <caps>
           <name>src</name>
           <direction>source</direction>

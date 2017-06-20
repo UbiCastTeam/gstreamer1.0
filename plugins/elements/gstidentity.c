@@ -22,6 +22,7 @@
  */
 /**
  * SECTION:element-identity
+ * @title: identity
  *
  * Dummy element that passes incoming data through unmodified. It has some
  * useful diagnostic functions, such as offset and timestamp checking.
@@ -72,6 +73,7 @@ enum
 #define DEFAULT_CHECK_IMPERFECT_TIMESTAMP FALSE
 #define DEFAULT_CHECK_IMPERFECT_OFFSET    FALSE
 #define DEFAULT_SIGNAL_HANDOFFS           TRUE
+#define DEFAULT_TS_OFFSET               0
 
 enum
 {
@@ -86,6 +88,7 @@ enum
   PROP_LAST_MESSAGE,
   PROP_DUMP,
   PROP_SYNC,
+  PROP_TS_OFFSET,
   PROP_CHECK_IMPERFECT_TIMESTAMP,
   PROP_CHECK_IMPERFECT_OFFSET,
   PROP_SIGNAL_HANDOFFS
@@ -197,6 +200,11 @@ gst_identity_class_init (GstIdentityClass * klass)
       g_param_spec_boolean ("sync", "Synchronize",
           "Synchronize to pipeline clock", DEFAULT_SYNC,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property (gobject_class, PROP_TS_OFFSET,
+      g_param_spec_int64 ("ts-offset", "Timestamp offset for synchronisation",
+          "Timestamp offset in nanoseconds for synchronisation, negative for earlier sync",
+          G_MININT64, G_MAXINT64, DEFAULT_TS_OFFSET,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class,
       PROP_CHECK_IMPERFECT_TIMESTAMP,
       g_param_spec_boolean ("check-imperfect-timestamp",
@@ -274,6 +282,7 @@ gst_identity_init (GstIdentity * identity)
   identity->dump = DEFAULT_DUMP;
   identity->last_message = NULL;
   identity->signal_handoffs = DEFAULT_SIGNAL_HANDOFFS;
+  identity->ts_offset = DEFAULT_TS_OFFSET;
   g_cond_init (&identity->blocked_cond);
 
   gst_base_transform_set_gap_aware (GST_BASE_TRANSFORM_CAST (identity), TRUE);
@@ -303,9 +312,18 @@ gst_identity_do_sync (GstIdentity * identity, GstClockTime running_time)
     if ((clock = GST_ELEMENT (identity)->clock)) {
       GstClockReturn cret;
       GstClockTime timestamp;
+      GstClockTimeDiff ts_offset = identity->ts_offset;
 
       timestamp = running_time + GST_ELEMENT (identity)->base_time +
           identity->upstream_latency;
+      if (ts_offset < 0) {
+        ts_offset = -ts_offset;
+        if (ts_offset < timestamp)
+          timestamp -= ts_offset;
+        else
+          timestamp = 0;
+      } else
+        timestamp += ts_offset;
 
       /* save id if we need to unlock */
       identity->clock_id = gst_clock_new_single_shot_id (clock, timestamp);
@@ -537,23 +555,24 @@ gst_identity_update_last_message_for_buffer (GstIdentity * identity,
     const gchar * action, GstBuffer * buf, gsize size)
 {
   gchar dts_str[64], pts_str[64], dur_str[64];
-  gchar *flag_str;
+  gchar *flag_str, *meta_str;
 
   GST_OBJECT_LOCK (identity);
 
   flag_str = gst_buffer_get_flags_string (buf);
+  meta_str = gst_buffer_get_meta_string (buf);
 
   g_free (identity->last_message);
   identity->last_message = g_strdup_printf ("%s   ******* (%s:%s) "
       "(%" G_GSIZE_FORMAT " bytes, dts: %s, pts: %s, duration: %s, offset: %"
       G_GINT64_FORMAT ", " "offset_end: % " G_GINT64_FORMAT
-      ", flags: %08x %s) %p", action,
+      ", flags: %08x %s, meta: %s) %p", action,
       GST_DEBUG_PAD_NAME (GST_BASE_TRANSFORM_CAST (identity)->sinkpad), size,
       print_pretty_time (dts_str, sizeof (dts_str), GST_BUFFER_DTS (buf)),
       print_pretty_time (pts_str, sizeof (pts_str), GST_BUFFER_PTS (buf)),
       print_pretty_time (dur_str, sizeof (dur_str), GST_BUFFER_DURATION (buf)),
       GST_BUFFER_OFFSET (buf), GST_BUFFER_OFFSET_END (buf),
-      GST_BUFFER_FLAGS (buf), flag_str, buf);
+      GST_BUFFER_FLAGS (buf), flag_str, meta_str ? meta_str : "none", buf);
   g_free (flag_str);
 
   GST_OBJECT_UNLOCK (identity);
@@ -714,6 +733,9 @@ gst_identity_set_property (GObject * object, guint prop_id,
     case PROP_SYNC:
       identity->sync = g_value_get_boolean (value);
       break;
+    case PROP_TS_OFFSET:
+      identity->ts_offset = g_value_get_int64 (value);
+      break;
     case PROP_CHECK_IMPERFECT_TIMESTAMP:
       identity->check_imperfect_timestamp = g_value_get_boolean (value);
       break;
@@ -773,6 +795,9 @@ gst_identity_get_property (GObject * object, guint prop_id, GValue * value,
       break;
     case PROP_SYNC:
       g_value_set_boolean (value, identity->sync);
+      break;
+    case PROP_TS_OFFSET:
+      identity->ts_offset = g_value_get_int64 (value);
       break;
     case PROP_CHECK_IMPERFECT_TIMESTAMP:
       g_value_set_boolean (value, identity->check_imperfect_timestamp);

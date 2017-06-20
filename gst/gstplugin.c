@@ -22,6 +22,7 @@
 
 /**
  * SECTION:gstplugin
+ * @title: GstPlugin
  * @short_description: Container for features loaded from a shared object module
  * @see_also: #GstPluginFeature, #GstElementFactory
  *
@@ -219,7 +220,7 @@ gst_plugin_register_static (gint major_version, gint minor_version,
   g_return_val_if_fail (_gst_plugin_inited != FALSE, FALSE);
 
   GST_LOG ("attempting to load static plugin \"%s\" now...", name);
-  plugin = g_object_newv (GST_TYPE_PLUGIN, 0, NULL);
+  plugin = g_object_new (GST_TYPE_PLUGIN, NULL);
   if (gst_plugin_register_func (plugin, &desc, NULL) != NULL) {
     GST_INFO ("registered static plugin \"%s\"", name);
     res = gst_registry_add_plugin (gst_registry_get (), plugin);
@@ -286,7 +287,7 @@ gst_plugin_register_static_full (gint major_version, gint minor_version,
   g_return_val_if_fail (_gst_plugin_inited != FALSE, FALSE);
 
   GST_LOG ("attempting to load static plugin \"%s\" now...", name);
-  plugin = g_object_newv (GST_TYPE_PLUGIN, 0, NULL);
+  plugin = g_object_new (GST_TYPE_PLUGIN, NULL);
   if (gst_plugin_register_func (plugin, &desc, user_data) != NULL) {
     GST_INFO ("registered static plugin \"%s\"", name);
     res = gst_registry_add_plugin (gst_registry_get (), plugin);
@@ -671,7 +672,7 @@ static GMutex gst_plugin_loading_mutex;
  *
  * Loads the given plugin and refs it.  Caller needs to unref after use.
  *
- * Returns: (transfer full): a reference to the existing loaded GstPlugin, a 
+ * Returns: (transfer full): a reference to the existing loaded GstPlugin, a
  * reference to the newly-loaded GstPlugin, or %NULL if an error occurred.
  */
 GstPlugin *
@@ -780,7 +781,7 @@ _priv_gst_plugin_load_file_for_registry (const gchar * filename,
   }
 
   if (new_plugin) {
-    plugin = g_object_newv (GST_TYPE_PLUGIN, 0, NULL);
+    plugin = g_object_new (GST_TYPE_PLUGIN, NULL);
     plugin->file_mtime = file_status.st_mtime;
     plugin->file_size = file_status.st_size;
     plugin->filename = g_strdup (filename);
@@ -1285,13 +1286,13 @@ gst_plugin_load_by_name (const gchar * name)
  * Loads @plugin. Note that the *return value* is the loaded plugin; @plugin is
  * untouched. The normal use pattern of this function goes like this:
  *
- * <programlisting>
+ * |[
  * GstPlugin *loaded_plugin;
  * loaded_plugin = gst_plugin_load (plugin);
  * // presumably, we're no longer interested in the potentially-unloaded plugin
  * gst_object_unref (plugin);
  * plugin = loaded_plugin;
- * </programlisting>
+ * ]|
  *
  * Returns: (transfer full): a reference to a loaded plugin, or %NULL on error.
  */

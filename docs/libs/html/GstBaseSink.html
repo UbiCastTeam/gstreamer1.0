@@ -509,7 +509,7 @@ upstream.</p>
 <p>The <a class="link" href="GstBaseSink.html#GstBaseSinkClass.set-caps"><code class="function">GstBaseSinkClass.set_caps()</code></a> function will be called when the subclass
 should configure itself to process a specific media type.</p>
 <p>The <a class="link" href="GstBaseSink.html#GstBaseSinkClass.start"><code class="function">GstBaseSinkClass.start()</code></a> and <a class="link" href="GstBaseSink.html#GstBaseSinkClass.stop"><code class="function">GstBaseSinkClass.stop()</code></a> virtual methods
-will be called when resources should be allocated. Any 
+will be called when resources should be allocated. Any
 <a class="link" href="GstBaseSink.html#GstBaseSinkClass.preroll"><code class="function">GstBaseSinkClass.preroll()</code></a>, <a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> and
 <a class="link" href="GstBaseSink.html#GstBaseSinkClass.set-caps"><code class="function">GstBaseSinkClass.set_caps()</code></a> function will be called between the
 <a class="link" href="GstBaseSink.html#GstBaseSinkClass.start"><code class="function">GstBaseSinkClass.start()</code></a> and <a class="link" href="GstBaseSink.html#GstBaseSinkClass.stop"><code class="function">GstBaseSinkClass.stop()</code></a> calls.</p>
@@ -734,6 +734,12 @@ gst_base_sink_wait_preroll (<em class="parameter"><code><a class="link" href="Gs
 <p>If the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> method performs its own synchronisation
 against the clock it must unblock when going from PLAYING to the PAUSED state
 and call this method before continuing to render the remaining data.</p>
+<p>If the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> method can block on something else than
+the clock, it must also be ready to unblock immediately on
+the <a class="link" href="GstBaseSink.html#GstBaseSinkClass.unlock"><code class="function">GstBaseSinkClass.unlock()</code></a> method and cause the
+<a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> method to immediately call this function.
+In this case, the subclass must be prepared to continue rendering where it
+left off if this function returns <a href="../html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>.</p>
 <p>This function will block until a state change to PLAYING happens (in which
 case this function returns <a href="../html/GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a>) or the processing must be stopped due
 to a state change to READY or a FLUSH event (in which case this function
@@ -919,7 +925,7 @@ an unlimited time.</p>
 <a name="gst-base-sink-get-max-lateness"></a><h3>gst_base_sink_get_max_lateness ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>
 gst_base_sink_get_max_lateness (<em class="parameter"><code><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> *sink</code></em>);</pre>
-<p>Gets the max lateness value. See gst_base_sink_set_max_lateness for
+<p>Gets the max lateness value. See <a class="link" href="GstBaseSink.html#gst-base-sink-set-max-lateness" title="gst_base_sink_set_max_lateness ()"><code class="function">gst_base_sink_set_max_lateness()</code></a> for
 more details.</p>
 <div class="refsect3">
 <a name="gst-base-sink-get-max-lateness.parameters"></a><h4>Parameters</h4>
@@ -1290,7 +1296,7 @@ will pull in pull mode.</p>
 <a name="gst-base-sink-get-throttle-time"></a><h3>gst_base_sink_get_throttle_time ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
 gst_base_sink_get_throttle_time (<em class="parameter"><code><a class="link" href="GstBaseSink.html" title="GstBaseSink"><span class="type">GstBaseSink</span></a> *sink</code></em>);</pre>
-<p>Get the time that will be inserted between frames to control the 
+<p>Get the time that will be inserted between frames to control the
 maximum buffers per second.</p>
 <div class="refsect3">
 <a name="gst-base-sink-get-throttle-time.parameters"></a><h4>Parameters</h4>
@@ -1662,13 +1668,16 @@ the passed buffer to the clock</p></td>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSinkClass.unlock"></a>unlock</code></em> ()</p></td>
 <td class="struct_member_description"><p>Unlock any pending access to the resource. Subclasses should
-unblock any blocked function ASAP</p></td>
+unblock any blocked function ASAP and call <a class="link" href="GstBaseSink.html#gst-base-sink-wait-preroll" title="gst_base_sink_wait_preroll ()"><code class="function">gst_base_sink_wait_preroll()</code></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstBaseSinkClass.unlock-stop"></a>unlock_stop</code></em> ()</p></td>
 <td class="struct_member_description"><p>Clear the previous unlock request. Subclasses should clear
-any state they set during <code class="function">unlock()</code>, such as clearing command queues.</p></td>
+any state they set during <a class="link" href="GstBaseSink.html#GstBaseSinkClass.unlock"><code class="function">GstBaseSinkClass.unlock()</code></a>, and be ready to
+continue where they left off after <a class="link" href="GstBaseSink.html#gst-base-sink-wait-preroll" title="gst_base_sink_wait_preroll ()"><code class="function">gst_base_sink_wait_preroll()</code></a>,
+<a class="link" href="GstBaseSink.html#gst-base-sink-wait" title="gst_base_sink_wait ()"><code class="function">gst_base_sink_wait()</code></a> or <code class="function">gst_wait_sink_wait_clock()</code> return or
+<a class="link" href="GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> is called again.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>

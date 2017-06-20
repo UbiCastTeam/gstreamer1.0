@@ -23,6 +23,7 @@
 
 /**
  * SECTION:gstinterpolationcontrolsource
+ * @title: GstInterpolationControlSource
  * @short_description: interpolation control source
  *
  * #GstInterpolationControlSource is a #GstControlSource, that interpolates values between user-given
@@ -620,28 +621,6 @@ enum
   PROP_MODE = 1
 };
 
-GType
-gst_interpolation_mode_get_type (void)
-{
-  static gsize gtype = 0;
-  static const GEnumValue values[] = {
-    {GST_INTERPOLATION_MODE_NONE, "GST_INTERPOLATION_MODE_NONE", "none"},
-    {GST_INTERPOLATION_MODE_LINEAR, "GST_INTERPOLATION_MODE_LINEAR", "linear"},
-    {GST_INTERPOLATION_MODE_CUBIC, "GST_INTERPOLATION_MODE_CUBIC", "cubic"},
-    {GST_INTERPOLATION_MODE_CUBIC_MONOTONIC,
-        "GST_INTERPOLATION_MODE_CUBIC_MONOTONIC", "cubic-monotonic"},
-    {0, NULL, NULL}
-  };
-
-  if (g_once_init_enter (&gtype)) {
-    GType tmp = g_enum_register_static ("GstInterpolationMode", values);
-    g_once_init_leave (&gtype, tmp);
-  }
-
-  return (GType) gtype;
-}
-
-
 #define _do_init \
   GST_DEBUG_CATEGORY_INIT (GST_CAT_DEFAULT, "interpolation control source", 0, \
     "timeline value interpolating control source")
@@ -665,7 +644,7 @@ struct _GstInterpolationControlSourcePrivate
 GstControlSource *
 gst_interpolation_control_source_new (void)
 {
-  return g_object_newv (GST_TYPE_INTERPOLATION_CONTROL_SOURCE, 0, NULL);
+  return g_object_new (GST_TYPE_INTERPOLATION_CONTROL_SOURCE, NULL);
 }
 
 static gboolean

@@ -21,6 +21,7 @@
 
 /**
  * SECTION:element-downloadbuffer
+ * @title: downloadbuffer
  *
  * The downloadbuffer element provides on-disk buffering and caching of, typically,
  * a network file. temp-template should be set to a value such as
@@ -42,15 +43,12 @@
  * When the downloadbuffer has completely downloaded the media, it will
  * post an application message named  <classname>&quot;GstCacheDownloadComplete&quot;</classname>
  * with the following information:
- * <itemizedlist>
- * <listitem>
- *   <para>
+ *
+ * *
  *   G_TYPE_STRING
  *   <classname>&quot;location&quot;</classname>:
  *   the location of the completely downloaded file.
- *   </para>
- * </listitem>
- * </itemizedlist>
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -782,7 +780,8 @@ gst_download_buffer_read_buffer (GstDownloadBuffer * dlbuf, guint64 offset,
   else
     buf = *buffer;
 
-  gst_buffer_map (buf, &info, GST_MAP_WRITE);
+  if (!gst_buffer_map (buf, &info, GST_MAP_WRITE))
+    goto map_failed;
 
   GST_DEBUG_OBJECT (dlbuf, "Reading %u bytes from %" G_GUINT64_FORMAT, length,
       offset);
@@ -836,6 +835,14 @@ hit_eos:
   {
     GST_DEBUG_OBJECT (dlbuf, "EOS hit");
     return GST_FLOW_EOS;
+  }
+map_failed:
+  {
+    GST_ELEMENT_ERROR (dlbuf, RESOURCE, BUSY,
+        (_("Failed to map buffer.")), ("failed to map buffer in WRITE mode"));
+    if (*buffer == NULL)
+      gst_buffer_unref (buf);
+    return GST_FLOW_ERROR;
   }
 out_flushing:
   {
@@ -1165,7 +1172,8 @@ gst_download_buffer_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
         GST_BUFFER_OFFSET (buffer), offset);
   }
 
-  gst_buffer_map (buffer, &info, GST_MAP_READ);
+  if (!gst_buffer_map (buffer, &info, GST_MAP_READ))
+    goto map_error;
 
   GST_DEBUG_OBJECT (dlbuf, "Writing %" G_GSIZE_FORMAT " bytes to %"
       G_GUINT64_FORMAT, info.size, offset);
@@ -1250,8 +1258,17 @@ out_seeking:
     gst_buffer_unref (buffer);
     return GST_FLOW_OK;
   }
+map_error:
+  {
+    GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+    gst_buffer_unref (buffer);
+    GST_ELEMENT_ERROR (dlbuf, RESOURCE, BUSY,
+        (_("Failed to map buffer.")), ("failed to map buffer in READ mode"));
+    return GST_FLOW_ERROR;
+  }
 write_error:
   {
+    GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
     gst_buffer_unmap (buffer, &info);
     gst_buffer_unref (buffer);
     GST_ELEMENT_ERROR (dlbuf, RESOURCE, WRITE,

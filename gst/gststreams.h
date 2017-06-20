@@ -26,7 +26,6 @@
 #define __GST_STREAMS_H__
 
 #include <gst/gstobject.h>
-#include <gst/gstevent.h>
 
 G_BEGIN_DECLS
 
@@ -69,7 +68,7 @@ typedef struct _GstStreamPrivate GstStreamPrivate;
 /**
  * GstStream:
  * @stream_id: The Stream Identifier for this #GstStream
- * 
+ *
  * A high-level object representing a single stream. It might be backed, or
  * not, by an actual flow of data in a pipeline (#GstPad).
  *
@@ -103,12 +102,14 @@ struct _GstStream {
  */
 struct _GstStreamClass {
   GstObjectClass parent_class;
-  
+
   /*< private >*/
   gpointer _gst_reserved[GST_PADDING];
 };
 
 GType     gst_stream_get_type (void);
+
+#include <gst/gstevent.h>
 
 GstStream *gst_stream_new            (const gchar *stream_id,
 				      GstCaps *caps,
@@ -130,6 +131,11 @@ void     gst_stream_set_caps (GstStream *stream, GstCaps *caps);
 GstCaps *gst_stream_get_caps (GstStream *stream);
 
 const gchar *gst_stream_type_get_name (GstStreamType stype);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstStream, gst_object_unref)
+#endif
+
 G_END_DECLS
 
 #endif /* __GST_STREAMS_H__ */

@@ -106,7 +106,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -114,7 +113,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -147,7 +145,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = stamp.h gstreamer.spec
+CONFIG_CLEAN_FILES = data/bash-completion/helpers/gst stamp.h
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -235,13 +233,14 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/gstreamer.spec.in $(srcdir)/stamp.h.in \
-	$(top_srcdir)/common/coverage/lcov.mak \
+	$(srcdir)/stamp.h.in $(top_srcdir)/common/coverage/lcov.mak \
 	$(top_srcdir)/common/cruft.mak $(top_srcdir)/common/po.mak \
 	$(top_srcdir)/common/release.mak \
-	$(top_srcdir)/common/win32.mak ABOUT-NLS AUTHORS COPYING \
-	ChangeLog INSTALL NEWS README TODO compile config.guess \
-	config.rpath config.sub install-sh ltmain.sh missing
+	$(top_srcdir)/common/win32.mak \
+	$(top_srcdir)/data/bash-completion/helpers/gst.in ABOUT-NLS \
+	AUTHORS COPYING ChangeLog INSTALL NEWS README TODO compile \
+	config.guess config.rpath config.sub install-sh ltmain.sh \
+	missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -302,8 +301,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -326,9 +323,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -366,6 +364,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -406,19 +405,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -511,9 +500,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -578,7 +564,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-docbook
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 aclocaldir = $(datadir)/aclocal
 aclocal_DATA = gst-element-check-@GST_API_VERSION@.m4
 SUBDIRS = pkgconfig gst libs plugins tests docs po m4 common data \
@@ -607,11 +593,15 @@ win32crlf = $(shell find $(top_srcdir)/win32 -name '*.dsw' -o -name '*.dsp')
 
 # include before EXTRA_DIST for win32 assignment
 EXTRA_DIST = \
-	gstreamer.spec gstreamer.spec.in \
 	gst-element-check.m4 \
 	configure.ac autogen.sh depcomp \
 	MAINTAINERS ABOUT-NLS RELEASE gstreamer.doap \
 	scripts/gst-uninstalled \
+	$(shell find "$(top_srcdir)" -type f -name meson.build ! -path "$(top_srcdir)/gstreamer-*" ) \
+	gst/gstenumtypes.c.template gst/gstenumtypes.h.template \
+	libs/gst/controller/controller_mkenum.py \
+	meson_options.txt config.h.meson  \
+	gst/parse/gen_lex.py.in gst/parse/gen_grammar.py.in \
 	$(win32)
 
 CLEANFILES = gst-element-check-@GST_API_VERSION@.m4
@@ -624,6 +614,7 @@ DISTCLEANFILES = _stdint.h
 
 # cruft: plugins that have been merged or moved or renamed
 CRUFT_FILES = \
+	$(top_builddir)/win32/common/config.h-new \
 	$(top_builddir)/common/shave \
 	$(top_builddir)/common/shave-libtool \
 	$(top_builddir)/common/m4/codeset.m4 \
@@ -724,9 +715,9 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-stamp.h: $(top_builddir)/config.status $(srcdir)/stamp.h.in
+data/bash-completion/helpers/gst: $(top_builddir)/config.status $(top_srcdir)/data/bash-completion/helpers/gst.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-gstreamer.spec: $(top_builddir)/config.status $(srcdir)/gstreamer.spec.in
+stamp.h: $(top_builddir)/config.status $(srcdir)/stamp.h.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
@@ -1242,7 +1233,7 @@ update-exports:
 	if test -f "$(top_srcdir)/win32/common/libgstgl.def"; then \
 	  git checkout "$(top_srcdir)/win32/common/libgstgl.def";  \
 	fi
-	git add $(top_srcdir)/win32/common/libgst*.def
+	git add $(top_srcdir)/win32/common/lib*.def
 	git diff --cached -- $(top_srcdir)/win32/common/
 	echo '^^^--- updated and staged changes above'
 
@@ -1294,9 +1285,24 @@ distcheck-hook:
 	  find $(distdir) -name \*-marshal.[ch] && \
 	  false )
 
+dist-hook:
+	@if test -f meson.build && ! $(GREP) -e "version.*'$(VERSION)'" meson.build >/dev/null ; then \
+	  echo "*******************************************************"; \
+	  echo "* meson.build needs to be updated for version $(VERSION)"; \
+	  echo "*******************************************************"; \
+	  false; \
+	fi
+
 # rule to download the latest .po files
 download-po: $(top_srcdir)/common/download-translations
 	$(top_srcdir)/common/download-translations $(PACKAGE)
+	for f in po/*.po; do \
+	  num_changed=`git diff $$f | grep -e '^[+-][^+-]' | wc -l`; \
+	  num_date=`git diff $$f | grep -e '^[+-][^+-]' | grep POT-Creation-Date | wc -l`; \
+	  if [ $num_date == $num_changed ]; then \
+	    git checkout $$f; \
+	  fi; \
+	done
 
 @GST_GCOV_ENABLED_TRUE@clean-gcov:
 @GST_GCOV_ENABLED_TRUE@	find -name "*.da" -o -name "*.gcov" | xargs rm || true
@@ -1348,16 +1354,6 @@ download-po: $(top_srcdir)/common/download-translations
 
 @HAVE_CHECK_FALSE@build-checks:
 @HAVE_CHECK_FALSE@	echo "'check' library not installed, skipping"
-
-# FIXME: this target should be run every time we do "make release"
-# find a way of automating that
-win32-update:
-	for f in gstversion.h gstenumtypes.c gstenumtypes.h; do \
-		cp $(top_builddir)/gst/$$f win32/common; done
-	$(top_srcdir)/tools/gst-indent win32/common/gstenumtypes.c
-	$(top_srcdir)/tools/gst-indent win32/common/gstenumtypes.c
-	cp $(top_builddir)/win32/common/config.h-new \
-		$(top_srcdir)/win32/common/config.h
 
 check-enum-gettypes: $(top_builddir)/gst/gstenumtypes.h
 	@echo 'Checking if all enum and flag _get_type() funcs are inited in gst_init()';                        \

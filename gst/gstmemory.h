@@ -27,6 +27,7 @@
 
 #include <glib-object.h>
 #include <gst/gstminiobject.h>
+#include <gst/gstobject.h>
 
 G_BEGIN_DECLS
 
@@ -178,11 +179,11 @@ typedef enum {
 } GstMapFlags;
 
 /**
- * GST_MAP_READWRITE:
+ * GST_MAP_READWRITE: (value 3) (type GstMapFlags)
  *
  * GstMapFlags value alias for GST_MAP_READ | GST_MAP_WRITE
  */
-#define GST_MAP_READWRITE      (GST_MAP_READ | GST_MAP_WRITE)
+#define GST_MAP_READWRITE      ((GstMapFlags) (GST_MAP_READ | GST_MAP_WRITE))
 
 
 /**

@@ -562,6 +562,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-get-stack-trace" title="gst_debug_get_stack_trace ()">gst_debug_get_stack_trace</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS" title="GST_TIME_ARGS()">GST_TIME_ARGS</a><span class="c_punctuation">()</span>
@@ -621,6 +629,38 @@
 <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()">gst_info_strdup_printf</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-print" title="gst_print ()">gst_print</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-println" title="gst_println ()">gst_println</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-printerr" title="gst_printerr ()">gst_printerr</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-printerrln" title="gst_printerrln ()">gst_printerrln</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -663,6 +703,10 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-FUNCTION:CAPS" title="GST_FUNCTION">GST_FUNCTION</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags">GstStackTraceFlags</a></td>
 </tr>
 <tr>
 <td class="variable_type">extern</td>
@@ -1240,8 +1284,8 @@ gst_debug_set_active (<em class="parameter"><code><a href="/usr/share/gtk-doc/ht
 <p>If activated, debugging messages are sent to the debugging
 handlers.
 It makes sense to deactivate it for speed issues.</p>
-<div class="note"><p>This function is not threadsafe. It makes sense to only call it
-during initialization.</p></div>
+<div class="blockquote"><blockquote class="blockquote"><p>This function is not threadsafe. It makes sense to only call it
+during initialization.</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-debug-set-active.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1569,30 +1613,22 @@ This macro expands to nothing if debugging is disabled.</p>
 <pre class="programlisting">#define             GST_DEBUG_CATEGORY_INIT(cat,name,color,description)</pre>
 <p>Initializes a new <a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> with the given properties and set to
 the default threshold.</p>
-<div class="note">
-<p>
-This macro expands to nothing if debugging is disabled.
-</p>
-<p>
-When naming your category, please follow the following conventions to ensure
+<div class="blockquote"><blockquote class="blockquote">
+<p>This macro expands to nothing if debugging is disabled.</p>
+<p>When naming your category, please follow the following conventions to ensure
 that the pattern matching for categories works as expected. It is not
 earth-shattering if you don't follow these conventions, but it would be nice
-for everyone.
-</p>
-<p>
-If you define a category for a plugin or a feature of it, name the category
+for everyone.</p>
+<p>If you define a category for a plugin or a feature of it, name the category
 like the feature. So if you wanted to write a "filesrc" element, you would
 name the category "filesrc". Use lowercase letters only.
 If you define more than one category for the same element, append an
-underscore and an identifier to your categories, like this: "filesrc_cache"
-</p>
-<p>
-If you create a library or an application using debugging categories, use a
+underscore and an identifier to your categories, like this: "filesrc_cache"</p>
+<p>If you create a library or an application using debugging categories, use a
 common prefix followed by an underscore for all your categories. GStreamer
 uses the GST prefix so GStreamer categories look like "GST_STATES". Be sure
-to include uppercase letters.
-</p>
-</div>
+to include uppercase letters.</p>
+</blockquote></div>
 <div class="refsect3">
 <a name="GST-DEBUG-CATEGORY-INIT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1713,11 +1749,9 @@ gst_debug_category_set_threshold (<em class="parameter"><code><a class="link" hr
 <p>Sets the threshold of the category to the given level. Debug information will
 only be output if the threshold is lower or equal to the level of the
 debugging message.</p>
-<div class="note"><p>
-Do not use this function in production code, because other functions may
+<div class="blockquote"><blockquote class="blockquote"><p>Do not use this function in production code, because other functions may
 change the threshold of categories as side effect. It is however a nice
-function to use when debugging (even from gdb).
-</p></div>
+function to use when debugging (even from gdb).</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-debug-category-set-threshold.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1953,6 +1987,8 @@ ignore this attribute.</p>
 <p>Outputs a debugging message. This is the most general macro for outputting
 debugging messages. You will probably want to use one of the ones described
 below.</p>
+<p>There is no need to finish the end of the debug message with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-LEVEL-LOG.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1992,6 +2028,8 @@ below.</p>
 <pre class="programlisting">#define GST_CAT_ERROR_OBJECT(cat,obj,...) GST_CAT_LEVEL_LOG (cat, GST_LEVEL_ERROR,   obj,  __VA_ARGS__)
 </pre>
 <p>Output an error message belonging to the given object in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-ERROR-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2026,6 +2064,8 @@ below.</p>
 <pre class="programlisting">#define GST_CAT_WARNING_OBJECT(cat,obj,...) GST_CAT_LEVEL_LOG (cat, GST_LEVEL_WARNING, obj,  __VA_ARGS__)
 </pre>
 <p>Output a warning message belonging to the given object in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-WARNING-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2061,6 +2101,8 @@ below.</p>
 </pre>
 <p>Output an informational message belonging to the given object in the given
 category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-INFO-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2095,6 +2137,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_DEBUG_OBJECT(cat,obj,...) GST_CAT_LEVEL_LOG (cat, GST_LEVEL_DEBUG,   obj,  __VA_ARGS__)
 </pre>
 <p>Output an debugging message belonging to the given object in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-DEBUG-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2129,6 +2173,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_LOG_OBJECT(cat,obj,...)		GST_CAT_LEVEL_LOG (cat, GST_LEVEL_LOG,     obj,  __VA_ARGS__)
 </pre>
 <p>Output an logging message belonging to the given object in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-LOG-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2163,6 +2209,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_FIXME_OBJECT(cat,obj,...) GST_CAT_LEVEL_LOG (cat, GST_LEVEL_FIXME,   obj,  __VA_ARGS__)
 </pre>
 <p>Output a fixme message belonging to the given object in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-FIXME-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2198,6 +2246,8 @@ category.</p>
 </pre>
 <p>Output a tracing message belonging to the given object in the given
 category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-TRACE-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2233,6 +2283,8 @@ category.</p>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
  relating to the given object in the given
 category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-MEMDUMP-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2277,6 +2329,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_ERROR(cat,...)			GST_CAT_LEVEL_LOG (cat, GST_LEVEL_ERROR,   NULL, __VA_ARGS__)
 </pre>
 <p>Output an error message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-ERROR.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2306,6 +2360,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_WARNING(cat,...)		GST_CAT_LEVEL_LOG (cat, GST_LEVEL_WARNING, NULL, __VA_ARGS__)
 </pre>
 <p>Output an warning message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-WARNING.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2335,6 +2391,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_INFO(cat,...)			GST_CAT_LEVEL_LOG (cat, GST_LEVEL_INFO,    NULL, __VA_ARGS__)
 </pre>
 <p>Output an informational message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-INFO.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2364,6 +2422,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_DEBUG(cat,...)			GST_CAT_LEVEL_LOG (cat, GST_LEVEL_DEBUG,   NULL, __VA_ARGS__)
 </pre>
 <p>Output an debugging message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-DEBUG.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2393,6 +2453,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_LOG(cat,...)			GST_CAT_LEVEL_LOG (cat, GST_LEVEL_LOG,     NULL, __VA_ARGS__)
 </pre>
 <p>Output an logging message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-LOG.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2422,6 +2484,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_FIXME(cat,...)			GST_CAT_LEVEL_LOG (cat, GST_LEVEL_FIXME,   NULL, __VA_ARGS__)
 </pre>
 <p>Output an fixme message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-FIXME.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2451,6 +2515,8 @@ category.</p>
 <pre class="programlisting">#define GST_CAT_TRACE(cat,...)		GST_CAT_LEVEL_LOG (cat, GST_LEVEL_TRACE,   NULL, __VA_ARGS__)
 </pre>
 <p>Output a tracing message in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-TRACE.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2480,6 +2546,8 @@ category.</p>
 <pre class="programlisting">#define             GST_CAT_MEMDUMP(cat,msg,data,length)</pre>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
  in the given category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-CAT-MEMDUMP.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2519,6 +2587,8 @@ category.</p>
 <pre class="programlisting">#define GST_ERROR_OBJECT(obj,...) GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_ERROR,   obj,  __VA_ARGS__)
 </pre>
 <p>Output an error message belonging to the given object in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-ERROR-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2548,6 +2618,8 @@ category.</p>
 <pre class="programlisting">#define GST_WARNING_OBJECT(obj,...) GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_WARNING, obj,  __VA_ARGS__)
 </pre>
 <p>Output a warning message belonging to the given object in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-WARNING-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2578,6 +2650,8 @@ category.</p>
 </pre>
 <p>Output an informational message belonging to the given object in the default
 category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-INFO-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2608,6 +2682,8 @@ category.</p>
 </pre>
 <p>Output a debugging message belonging to the given object in the default
 category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-DEBUG-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2637,6 +2713,8 @@ category.</p>
 <pre class="programlisting">#define GST_LOG_OBJECT(obj,...)		GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_LOG,     obj,  __VA_ARGS__)
 </pre>
 <p>Output a logging message belonging to the given object in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-LOG-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2666,6 +2744,8 @@ category.</p>
 <pre class="programlisting">#define GST_FIXME_OBJECT(obj,...) GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_FIXME,   obj,  __VA_ARGS__)
 </pre>
 <p>Output a fixme message belonging to the given object in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-FIXME-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2695,6 +2775,8 @@ category.</p>
 <pre class="programlisting">#define GST_TRACE_OBJECT(obj,...) GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_TRACE,   obj,  __VA_ARGS__)
 </pre>
 <p>Output a tracing message belonging to the given object in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-TRACE-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2723,6 +2805,8 @@ category.</p>
 <a name="GST-MEMDUMP-OBJECT:CAPS"></a><h3>GST_MEMDUMP_OBJECT()</h3>
 <pre class="programlisting">#define             GST_MEMDUMP_OBJECT(obj,msg,data,length)</pre>
 <p>Output a logging message belonging to the given object in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-MEMDUMP-OBJECT.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2762,6 +2846,8 @@ category.</p>
 <pre class="programlisting">#define GST_ERROR(...)			GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_ERROR,   NULL, __VA_ARGS__)
 </pre>
 <p>Output an error message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-ERROR.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2784,6 +2870,8 @@ category.</p>
 <pre class="programlisting">#define GST_WARNING(...)		GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_WARNING, NULL, __VA_ARGS__)
 </pre>
 <p>Output a warning message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-WARNING.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2806,6 +2894,8 @@ category.</p>
 <pre class="programlisting">#define GST_INFO(...)			GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_INFO,    NULL, __VA_ARGS__)
 </pre>
 <p>Output an informational message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-INFO.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2828,6 +2918,8 @@ category.</p>
 <pre class="programlisting">#define GST_DEBUG(...)			GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_DEBUG,   NULL, __VA_ARGS__)
 </pre>
 <p>Output a debugging message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-DEBUG.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2850,6 +2942,8 @@ category.</p>
 <pre class="programlisting">#define GST_LOG(...)			GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_LOG,     NULL, __VA_ARGS__)
 </pre>
 <p>Output a logging message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-LOG.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2872,6 +2966,8 @@ category.</p>
 <pre class="programlisting">#define GST_FIXME(...)			GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_FIXME,   NULL, __VA_ARGS__)
 </pre>
 <p>Output a fixme message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-FIXME.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2894,6 +2990,8 @@ category.</p>
 <pre class="programlisting">#define GST_TRACE(...)		GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, GST_LEVEL_TRACE,   NULL, __VA_ARGS__)
 </pre>
 <p>Output a tracing message in the default category.</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-TRACE.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2916,6 +3014,8 @@ category.</p>
 <pre class="programlisting">#define             GST_MEMDUMP(msg,data,length)</pre>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
 .</p>
+<p>There is no need to finish the end of the message string with a newline
+character, a newline character will be added automatically.</p>
 <div class="refsect3">
 <a name="GST-MEMDUMP.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -3038,7 +3138,8 @@ This file can be processed with graphviz to get an image, like this:</p>
   </table>
 </div>
 
-<p>There is also a utility called xdot which allows you to view the dot file
+<p>
+There is also a utility called xdot which allows you to view the dot file
 directly without converting it first.</p>
 <p>The macro is only active if gstreamer is configured with
 "--gst-enable-gst-debug" and the environment variable
@@ -3113,8 +3214,33 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 <a name="gst-debug-print-stack-trace"></a><h3>gst_debug_print_stack_trace ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_print_stack_trace (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>If GST_ENABLE_FUNC_INSTRUMENTATION is defined a stacktrace is available for
-gstreamer code, which can be printed with this function.</p>
+<p>If libunwind or glibc backtrace are present
+a stack trace is printed.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-get-stack-trace"></a><h3>gst_debug_get_stack_trace ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_debug_get_stack_trace (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags"><span class="type">GstStackTraceFlags</span></a> flags</code></em>);</pre>
+<p>If libunwind or glibc backtrace are present, a stack trace
+is returned.</p>
+<div class="refsect3">
+<a name="gst-debug-get-stack-trace.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>A set of <a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags"><span class="type">GstStackTraceFlags</span></a> to determine how the stack
+trace should look like. Pass 0 to retrieve a minimal backtrace.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3288,7 +3414,7 @@ gst_info_strdup_vprintf (<em class="parameter"><code>const <a href="/usr/share/g
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_info_strdup_printf (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                         <em class="parameter"><code>...</code></em>);</pre>
-<p>Allocates, fills and returns a null terminated string from the printf style
+<p>Allocates, fills and returns a 0-terminated string from the printf style
 <em class="parameter"><code>format</code></em>
  string and corresponding arguments.</p>
 <p>See <a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a> for when this function is required.</p>
@@ -3321,6 +3447,166 @@ gst_info_strdup_printf (<em class="parameter"><code>const <a href="/usr/share/gt
 <p> a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error</p>
 </div>
 <p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-print"></a><h3>gst_print ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_print (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+           <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib print handler. The default print
+handler simply outputs the message to stdout.</p>
+<p>This function will not append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-println" title="gst_println ()"><code class="function">gst_println()</code></a> which will.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print"><code class="function">g_print()</code></a> in that it supports all the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-print.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-println"></a><h3>gst_println ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_println (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+             <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib print handler. The default print
+handler simply outputs the message to stdout.</p>
+<p>This function will append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-print" title="gst_print ()"><code class="function">gst_print()</code></a> which will not.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print"><code class="function">g_print()</code></a> in that it supports all the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-println.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-printerr"></a><h3>gst_printerr ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_printerr (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+              <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib error message handler. The default
+handler simply outputs the message to stderr.</p>
+<p>This function will not append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-printerrln" title="gst_printerrln ()"><code class="function">gst_printerrln()</code></a> which will.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-printerr"><code class="function">g_printerr()</code></a> in that it supports the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-printerr.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-printerrln"></a><h3>gst_printerrln ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_printerrln (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                <em class="parameter"><code>...</code></em>);</pre>
+<p>Outputs a formatted message via the GLib error message handler. The default
+handler simply outputs the message to stderr.</p>
+<p>This function will append a new-line character at the end, unlike
+<a class="link" href="gstreamer-GstInfo.html#gst-printerr" title="gst_printerr ()"><code class="function">gst_printerr()</code></a> which will not.</p>
+<p>All strings must be in ASCII or UTF-8 encoding.</p>
+<p>This function differs from <a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-printerr"><code class="function">g_printerr()</code></a> in that it supports the additional
+printf specifiers that are supported by GStreamer's debug logging system,
+such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.</p>
+<p>This function is primarily for printing debug output.</p>
+<div class="refsect3">
+<a name="gst-printerrln.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 </div>
 <div class="refsect1">
@@ -3735,6 +4021,28 @@ is not defined, some default value is used. It is used to provide debugging
 output with the function name of the message.</p>
 <p>Note that this is different from G_STRFUNC as we do not want the full
 function signature in C++ code.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstStackTraceFlags"></a><h3>enum GstStackTraceFlags</h3>
+<div class="refsect3">
+<a name="GstStackTraceFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="enum_member_name"><p><a name="GST-STACK-TRACE-SHOW-FULL:CAPS"></a>GST_STACK_TRACE_SHOW_FULL</p></td>
+<td class="enum_member_description">
+<p>Try to retrieve as much information as
+                            possible when getting the stack trace</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">

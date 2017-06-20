@@ -167,11 +167,11 @@ typedef enum {
 } GstLockFlags;
 
 /**
- * GST_LOCK_FLAG_READWRITE:
+ * GST_LOCK_FLAG_READWRITE: (value 3) (type GstLockFlags)
  *
  * GstLockFlags value alias for GST_LOCK_FLAG_READ | GST_LOCK_FLAG_WRITE
  */
-#define GST_LOCK_FLAG_READWRITE  (GST_LOCK_FLAG_READ | GST_LOCK_FLAG_WRITE)
+#define GST_LOCK_FLAG_READWRITE  ((GstLockFlags) (GST_LOCK_FLAG_READ | GST_LOCK_FLAG_WRITE))
 
 /**
  * GST_MINI_OBJECT_REFCOUNT:

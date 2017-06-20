@@ -23,7 +23,8 @@
 
 /**
  * SECTION:gsttypefindhelper
- * @short_description: Utility functions for typefinding 
+ * @title: GstTypeFindHelper
+ * @short_description: Utility functions for typefinding
  *
  * Utility functions for elements doing typefinding:
  * gst_type_find_helper() does typefinding in pull mode, while
@@ -43,8 +44,7 @@
 /* ********************** typefinding in pull mode ************************ */
 
 static void
-helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    GstCaps * caps);
+helper_find_suggest (gpointer data, guint probability, GstCaps * caps);
 
 typedef struct
 {
@@ -119,7 +119,7 @@ helper_find_peek (gpointer data, gint64 offset, guint size)
       buf_size = bmp->map.size;
 
       /* buffers are kept sorted by end offset (highest first) in the list, so
-       * at this point we save the current position and stop searching if 
+       * at this point we save the current position and stop searching if
        * we're after the searched end offset */
       if (buf_offset <= offset) {
         if ((offset + size) < (buf_offset + buf_size)) {
@@ -217,8 +217,7 @@ map_failed:
  * If given @probability is higher, replace previously store caps.
  */
 static void
-helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    GstCaps * caps)
+helper_find_suggest (gpointer data, guint probability, GstCaps * caps)
 {
   GstTypeFindHelper *helper = (GstTypeFindHelper *) data;
 
@@ -462,8 +461,7 @@ buf_helper_find_peek (gpointer data, gint64 off, guint size)
  * If given @probability is higher, replace previously store caps.
  */
 static void
-buf_helper_find_suggest (gpointer data, GstTypeFindProbability probability,
-    GstCaps * caps)
+buf_helper_find_suggest (gpointer data, guint probability, GstCaps * caps)
 {
   GstTypeFindBufHelper *helper = (GstTypeFindBufHelper *) data;
 

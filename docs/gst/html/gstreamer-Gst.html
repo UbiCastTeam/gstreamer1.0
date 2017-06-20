@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Gst: GStreamer 1.0 Core Reference Manual</title>
+<title>GStreamer: GStreamer 1.0 Core Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
@@ -26,8 +26,8 @@
 <a name="gstreamer-Gst"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="gstreamer-Gst.top_of_page"></a>Gst</span></h2>
-<p>Gst — Media library supporting arbitrary formats and filter
+<h2><span class="refentrytitle"><a name="gstreamer-Gst.top_of_page"></a>GStreamer</span></h2>
+<p>GStreamer — Media library supporting arbitrary formats and filter
                     graphs.</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
@@ -159,9 +159,9 @@ editing, serving streams, voice over ip and video calls.</p>
 <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a> before it can be used. You should pass pointers to the main argc
 and argv variables so that GStreamer can process its own command line
 options, as shown in the following example.</p>
-<div class="example">
-<a name="id-1.3.3.5.4"></a><p class="title"><b>Example 1. Initializing the gstreamer library</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.3.3.5.4"></a><h4>Initializing the gstreamer library</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -184,14 +184,15 @@ options, as shown in the following example.</p>
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>It's allowed to pass two <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> pointers to <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a> in case you don't want
+<p></p>
+<p>It's allowed to pass two <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> pointers to <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a> in case you don't want
 to pass the command line args to GStreamer.</p>
 <p>You can also use GOption to initialize your own parameters as shown in
 the next code fragment:</p>
-<div class="example">
-<a name="id-1.3.3.5.7"></a><p class="title"><b>Example 2. Initializing own parameters when initializing gstreamer</b></p>
-<div class="example-contents">
+</div>
+<div class="refsect3">
+<a name="id-1.3.3.5.5"></a><h4>Initializing own parameters when initializing gstreamer</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -240,13 +241,13 @@ the next code fragment:</p>
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>Use <a class="link" href="gstreamer-Gst.html#gst-version" title="gst_version ()"><code class="function">gst_version()</code></a> to query the library version at runtime or use the
+<p></p>
+<p>Use <a class="link" href="gstreamer-Gst.html#gst-version" title="gst_version ()"><code class="function">gst_version()</code></a> to query the library version at runtime or use the
 GST_VERSION_* macros to find the version at compile time. Optionally
 <a class="link" href="gstreamer-Gst.html#gst-version-string" title="gst_version_string ()"><code class="function">gst_version_string()</code></a> returns a printable string.</p>
 <p>The <a class="link" href="gstreamer-Gst.html#gst-deinit" title="gst_deinit ()"><code class="function">gst_deinit()</code></a> call is used to clean up all internal resources used
-by <span class="application">GStreamer</span>. It is mostly used in unit tests 
-to check for leaks.</p>
+by GStreamer. It is mostly used in unit tests to check for leaks.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-Gst.functions_details"></a><h2>Functions</h2>
@@ -262,11 +263,9 @@ loaded. By default this will also check if the registry cache needs to be
 updated and rescan all plugins if needed. See <a class="link" href="gstreamer-Gst.html#gst-update-registry" title="gst_update_registry ()"><code class="function">gst_update_registry()</code></a> for
 details and section</p>
 <a class="link" href="gst-running.html" title="Running GStreamer Applications">Running GStreamer Applications</a><p>for how to disable automatic registry updates.</p>
-<div class="note"><p>
-This function will terminate your program if it was unable to initialize
+<div class="blockquote"><blockquote class="blockquote"><p>This function will terminate your program if it was unable to initialize
 GStreamer for some reason.  If you want your program to fall back,
-use <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_check ()"><code class="function">gst_init_check()</code></a> instead.
-</p></div>
+use <a class="link" href="gstreamer-Gst.html#gst-init-check" title="gst_init_check ()"><code class="function">gst_init_check()</code></a> instead.</p></blockquote></div>
 <p>WARNING: This function does not work in the same way as corresponding
 functions in other glib-style libraries, such as <a href="/usr/share/gtk-doc/html/gtk3gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>. In
 particular, unknown command line options cause this function to

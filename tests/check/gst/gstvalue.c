@@ -21,6 +21,7 @@
  */
 
 
+#define GLIB_DISABLE_DEPRECATION_WARNINGS
 #include <gst/check/gstcheck.h>
 
 
@@ -485,6 +486,51 @@ GST_START_TEST (test_deserialize_flags)
   fail_if (gst_value_deserialize (&value,
           "GST_SEEK_FLAG_FLUSH+foo+GST_SEEK_FLAG_ACCURATE"),
       "flag deserializing for bogus value should have failed!");
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_deserialize_gtype)
+{
+  GValue value = { 0 };
+  const char *strings[] = {
+    "gchararray",
+    "gint",
+  };
+  GType results[] = {
+    G_TYPE_STRING,
+    G_TYPE_INT,
+  };
+  int i;
+
+  g_value_init (&value, G_TYPE_GTYPE);
+
+  for (i = 0; i < G_N_ELEMENTS (strings); ++i) {
+    fail_unless (gst_value_deserialize (&value, strings[i]),
+        "could not deserialize %s (%d)", strings[i], i);
+    fail_unless (g_value_get_gtype (&value) == results[i],
+        "resulting value is %" G_GSIZE_FORMAT ", not %" G_GSIZE_FORMAT
+        ", for string %s (%d)",
+        g_value_get_gtype (&value), results[i], strings[i], i);
+  }
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_deserialize_gtype_failures)
+{
+  GValue value = { 0 };
+  const char *strings[] = {
+    "-",                        /* not a gtype */
+  };
+  int i;
+
+  g_value_init (&value, G_TYPE_GTYPE);
+
+  for (i = 0; i < G_N_ELEMENTS (strings); ++i) {
+    fail_if (gst_value_deserialize (&value, strings[i]),
+        "deserialized %s (%d), while it should have failed", strings[i], i);
+  }
 }
 
 GST_END_TEST;
@@ -1002,6 +1048,23 @@ GST_START_TEST (test_value_compare)
   fail_unless (gst_value_compare (&value1, &value1) == GST_VALUE_EQUAL);
   g_value_unset (&value1);
   g_value_unset (&value2);
+
+  /* Check that we can compare structure */
+  {
+    GstStructure *s = gst_structure_new_empty ("test");
+
+    g_value_init (&value1, GST_TYPE_STRUCTURE);
+    g_value_init (&value2, GST_TYPE_STRUCTURE);
+    fail_unless (gst_value_compare (&value1, &value2) == GST_VALUE_EQUAL);
+
+    gst_value_set_structure (&value1, s);
+    fail_unless (gst_value_compare (&value1, &value2) == GST_VALUE_UNORDERED);
+    gst_value_set_structure (&value2, s);
+    fail_unless (gst_value_compare (&value1, &value2) == GST_VALUE_EQUAL);
+    g_value_unset (&value1);
+    g_value_unset (&value2);
+    gst_structure_free (s);
+  }
 }
 
 GST_END_TEST;
@@ -2624,6 +2687,37 @@ GST_START_TEST (test_serialize_deserialize_format_enum)
 
 GST_END_TEST;
 
+GST_START_TEST (test_serialize_deserialize_value_array)
+{
+  GValue v = G_VALUE_INIT, v2 = G_VALUE_INIT, v3 = G_VALUE_INIT;
+  gchar *str = NULL;
+
+  g_value_init (&v, GST_TYPE_ARRAY);
+  g_value_init (&v2, GST_TYPE_ARRAY);
+  g_value_init (&v3, G_TYPE_DOUBLE);
+  g_value_set_double (&v3, 1);
+  gst_value_array_append_value (&v2, &v3);
+  g_value_unset (&v3);
+  g_value_init (&v3, G_TYPE_DOUBLE);
+  g_value_set_double (&v3, 0);
+  gst_value_array_append_value (&v2, &v3);
+  g_value_unset (&v3);
+  gst_value_array_append_value (&v, &v2);
+  g_value_unset (&v2);
+
+  str = gst_value_serialize (&v);
+
+  g_value_init (&v2, GST_TYPE_ARRAY);
+  fail_unless (gst_value_deserialize (&v2, str));
+  fail_unless (gst_value_compare (&v, &v2) == 0);
+
+  g_value_unset (&v2);
+  g_value_unset (&v);
+  g_free (str);
+}
+
+GST_END_TEST;
+
 GST_START_TEST (test_serialize_deserialize_caps)
 {
   GValue value = { 0 }
@@ -3005,7 +3099,14 @@ GST_START_TEST (test_stepped_int_range_ops)
     "[16, 32, 16]", "union", "[48, 96, 16]", "[16, 96, 16]"}, {
     "[112, 192, 16]", "union", "[48, 96, 16]", "[48, 192, 16]"}, {
     "[16, 32, 16]", "union", "[64, 96, 16]", NULL}, {
-  "[112, 192, 16]", "union", "[48, 96, 8]", NULL},};
+    "[112, 192, 16]", "union", "[48, 96, 8]", NULL}, {
+    "[10, 20, 5]", "union", "10", "[10, 20, 5]"}, {
+    "[10, 20, 5]", "union", "20", "[10, 20, 5]"}, {
+    "[10, 20, 5]", "union", "15", "[10, 20, 5]"}, {
+    "[10, 20, 5]", "union", "5", "[5, 20, 5]"}, {
+    "[10, 20, 5]", "union", "12", NULL}, {
+    "[10, 20, 5]", "union", "30", NULL}, {
+  "[10, 20, 5]", "union", "25", "[10, 25, 5]"},};
 
   for (n = 0; n < G_N_ELEMENTS (ranges); ++n) {
     gchar *end = NULL;
@@ -3070,6 +3171,243 @@ GST_START_TEST (test_stepped_int_range_ops)
 
 GST_END_TEST;
 
+GST_START_TEST (test_structure_basic)
+{
+  GstStructure *s1, *s2;
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+
+  /* sanity test */
+  s1 = gst_structure_from_string ("foo,bar=1", NULL);
+  g_value_init (&v1, GST_TYPE_STRUCTURE);
+  gst_value_set_structure (&v1, s1);
+  fail_unless (gst_structure_is_equal (s1, gst_value_get_structure (&v1)));
+
+  s2 = gst_structure_copy (s1);
+  g_value_init (&v2, GST_TYPE_STRUCTURE);
+  gst_value_set_structure (&v2, s2);
+
+  /* can do everything but subtract */
+  fail_unless (gst_value_can_compare (&v1, &v2));
+  fail_unless (gst_value_can_intersect (&v1, &v2));
+  fail_unless (!gst_value_can_subtract (&v1, &v2));
+  fail_unless (gst_value_can_union (&v1, &v2));
+
+  gst_structure_free (s1);
+  gst_structure_free (s2);
+  g_value_unset (&v1);
+  g_value_unset (&v2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_structure_single_ops)
+{
+  static const struct
+  {
+    const gchar *str1;
+    gboolean is_fixed;
+    gboolean can_fixate;
+  } single_struct[] = {
+    {
+    "foo,bar=(int)1", TRUE, TRUE}, {
+  "foo,bar=(int)[1,2]", FALSE, TRUE},};
+  gint i;
+
+  for (i = 0; i < G_N_ELEMENTS (single_struct); i++) {
+    GstStructure *s1 = gst_structure_from_string (single_struct[i].str1, NULL);
+    GValue v1 = G_VALUE_INIT;
+    GValue v2 = G_VALUE_INIT;
+
+    fail_unless (s1 != NULL);
+
+    GST_DEBUG ("checking structure %" GST_PTR_FORMAT, s1);
+
+    g_value_init (&v1, GST_TYPE_STRUCTURE);
+    gst_value_set_structure (&v1, s1);
+
+    fail_unless (gst_value_is_fixed (&v1) == single_struct[i].is_fixed);
+    fail_unless (gst_value_fixate (&v2, &v1) == single_struct[i].can_fixate);
+    if (single_struct[i].can_fixate)
+      g_value_unset (&v2);
+
+    g_value_unset (&v1);
+    gst_structure_free (s1);
+  }
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_structure_ops)
+{
+  struct
+  {
+    const gchar *str1;
+    const gchar *str2;
+    const gchar *op;
+    gint ret;
+    GType str_type;
+    const gchar *str_result;
+  } comparisons[] = {
+    /* *INDENT-OFF* */
+    {"foo,bar=(int)1", "foo,bar=(int)1", "compare", GST_VALUE_EQUAL, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)1", "is_subset", TRUE, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)1", "intersect", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)1"},
+    {"foo,bar=(int)1", "foo,bar=(int)1", "union", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)1"},
+    {"foo,bar=(int)[1,2]", "foo,bar=(int)1", "compare", GST_VALUE_UNORDERED, 0, NULL},
+    {"foo,bar=(int)[1,2]", "foo,bar=(int)1", "is_subset", FALSE, 0, NULL},
+    {"foo,bar=(int)[1,2]", "foo,bar=(int)1", "intersect", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)1"},
+    {"foo,bar=(int)[1,2]", "foo,bar=(int)1", "union", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)[1,2]"},
+    {"foo,bar=(int)1", "foo,bar=(int)[1,2]", "compare", GST_VALUE_UNORDERED, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)[1,2]", "is_subset", TRUE, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)[1,2]", "intersect", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)1"},
+    {"foo,bar=(int)1", "foo,bar=(int)[1,2]", "union", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)[1,2]"},
+    {"foo,bar=(int)1", "foo,bar=(int)2", "compare", GST_VALUE_UNORDERED, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)2", "is_subset", FALSE, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)2", "intersect", FALSE, 0, NULL},
+    {"foo,bar=(int)1", "foo,bar=(int)2", "union", TRUE, GST_TYPE_STRUCTURE, "foo,bar=(int)[1,2]"},
+    {"foo,bar=(int)1", "baz,bar=(int)1", "compare", GST_VALUE_UNORDERED, 0, NULL},
+    {"foo,bar=(int)1", "baz,bar=(int)1", "is_subset", FALSE, 0, NULL},
+    {"foo,bar=(int)1", "baz,bar=(int)1", "intersect", FALSE, 0, NULL},
+#if 0
+    /* deserializing lists is not implemented (but this should still work!) */
+    {"foo,bar=(int)1", "baz,bar=(int)1", "union", TRUE, G_TYPE_LIST, "{foo,bar=(int)1;, baz,bar=(int)1;}"},
+#endif
+    /* *INDENT-ON* */
+  };
+  gint i;
+
+  for (i = 0; i < G_N_ELEMENTS (comparisons); i++) {
+    GstStructure *s1 = gst_structure_from_string (comparisons[i].str1, NULL);
+    GstStructure *s2 = gst_structure_from_string (comparisons[i].str2, NULL);
+    GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT, v3 = G_VALUE_INIT;
+
+    fail_unless (s1 != NULL);
+    fail_unless (s2 != NULL);
+
+    GST_DEBUG ("checking %s with structure1 %" GST_PTR_FORMAT " structure2 %"
+        GST_PTR_FORMAT " is %d, %s", comparisons[i].op, s1, s2,
+        comparisons[i].ret, comparisons[i].str_result);
+
+    g_value_init (&v1, GST_TYPE_STRUCTURE);
+    gst_value_set_structure (&v1, s1);
+    g_value_init (&v2, GST_TYPE_STRUCTURE);
+    gst_value_set_structure (&v2, s2);
+
+    if (g_strcmp0 (comparisons[i].op, "compare") == 0) {
+      fail_unless (gst_value_compare (&v1, &v2) == comparisons[i].ret);
+    } else if (g_strcmp0 (comparisons[i].op, "is_subset") == 0) {
+      fail_unless (gst_value_is_subset (&v1, &v2) == comparisons[i].ret);
+    } else {
+      if (g_strcmp0 (comparisons[i].op, "intersect") == 0) {
+        fail_unless (gst_value_intersect (&v3, &v1, &v2) == comparisons[i].ret);
+      } else if (g_strcmp0 (comparisons[i].op, "union") == 0) {
+        fail_unless (gst_value_union (&v3, &v1, &v2) == comparisons[i].ret);
+      }
+      if (comparisons[i].ret) {
+        GValue result = G_VALUE_INIT;
+        gchar *str;
+
+        str = gst_value_serialize (&v3);
+        GST_LOG ("result %s", str);
+        g_free (str);
+
+        g_value_init (&result, comparisons[i].str_type);
+        fail_unless (gst_value_deserialize (&result,
+                comparisons[i].str_result));
+        fail_unless (gst_value_compare (&result, &v3) == GST_VALUE_EQUAL);
+        g_value_unset (&v3);
+        g_value_unset (&result);
+      }
+    }
+
+    gst_structure_free (s1);
+    gst_structure_free (s2);
+    g_value_unset (&v1);
+    g_value_unset (&v2);
+  }
+}
+
+GST_END_TEST;
+
+static void
+setup_test_value_array (GValue * value)
+{
+  GValueArray *array;
+  GValue v = G_VALUE_INIT;
+
+  g_value_init (&v, G_TYPE_INT);
+  g_value_init (value, G_TYPE_VALUE_ARRAY);
+
+  array = g_value_array_new (3);
+  g_value_set_int (&v, 1);
+  g_value_array_append (array, &v);
+  g_value_set_int (&v, 2);
+  g_value_array_append (array, &v);
+  g_value_set_int (&v, 3);
+  g_value_array_append (array, &v);
+
+  g_value_take_boxed (value, array);
+}
+
+static void
+test_revert_array_transform (GValue * v1, GValue * v2)
+{
+  GValueArray *array;
+
+  g_value_reset (v1);
+
+  fail_unless (g_value_transform (v2, v1));
+  array = g_value_get_boxed (v1);
+  fail_unless (array->n_values == 3);
+  fail_unless (g_value_get_int (g_value_array_get_nth (array, 0)) == 1);
+  fail_unless (g_value_get_int (g_value_array_get_nth (array, 1)) == 2);
+  fail_unless (g_value_get_int (g_value_array_get_nth (array, 2)) == 3);
+}
+
+GST_START_TEST (test_transform_array)
+{
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+
+  setup_test_value_array (&v1);
+
+  g_value_init (&v2, GST_TYPE_ARRAY);
+
+  fail_unless (g_value_transform (&v1, &v2));
+  fail_unless (gst_value_array_get_size (&v2) == 3);
+  fail_unless (g_value_get_int (gst_value_array_get_value (&v2, 0)) == 1);
+  fail_unless (g_value_get_int (gst_value_array_get_value (&v2, 1)) == 2);
+  fail_unless (g_value_get_int (gst_value_array_get_value (&v2, 2)) == 3);
+
+  test_revert_array_transform (&v1, &v2);
+
+  g_value_unset (&v1);
+  g_value_unset (&v2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_transform_list)
+{
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+
+  setup_test_value_array (&v1);
+
+  g_value_init (&v2, GST_TYPE_LIST);
+
+  fail_unless (g_value_transform (&v1, &v2));
+  fail_unless (gst_value_list_get_size (&v2) == 3);
+  fail_unless (g_value_get_int (gst_value_list_get_value (&v2, 0)) == 1);
+  fail_unless (g_value_get_int (gst_value_list_get_value (&v2, 1)) == 2);
+  fail_unless (g_value_get_int (gst_value_list_get_value (&v2, 2)) == 3);
+
+  test_revert_array_transform (&v1, &v2);
+
+  g_value_unset (&v1);
+  g_value_unset (&v2);
+}
+
+GST_END_TEST;
+
 static Suite *
 gst_value_suite (void)
 {
@@ -3087,10 +3425,13 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_deserialize_guint64);
   tcase_add_test (tc_chain, test_deserialize_guchar);
   tcase_add_test (tc_chain, test_deserialize_gstfraction);
+  tcase_add_test (tc_chain, test_deserialize_gtype);
+  tcase_add_test (tc_chain, test_deserialize_gtype_failures);
   tcase_add_test (tc_chain, test_deserialize_bitmask);
   tcase_add_test (tc_chain, test_serialize_flags);
   tcase_add_test (tc_chain, test_deserialize_flags);
   tcase_add_test (tc_chain, test_serialize_deserialize_format_enum);
+  tcase_add_test (tc_chain, test_serialize_deserialize_value_array);
   tcase_add_test (tc_chain, test_string);
   tcase_add_test (tc_chain, test_deserialize_string);
   tcase_add_test (tc_chain, test_value_compare);
@@ -3113,6 +3454,11 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_stepped_int_range_parsing);
   tcase_add_test (tc_chain, test_stepped_int_range_ops);
   tcase_add_test (tc_chain, test_flagset);
+  tcase_add_test (tc_chain, test_structure_basic);
+  tcase_add_test (tc_chain, test_structure_single_ops);
+  tcase_add_test (tc_chain, test_structure_ops);
+  tcase_add_test (tc_chain, test_transform_array);
+  tcase_add_test (tc_chain, test_transform_list);
 
   return s;
 }

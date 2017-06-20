@@ -196,6 +196,8 @@ const gchar*          gst_pad_link_get_name (GstPadLinkReturn ret);
  *   would be unsafe e.g. if one pad has %GST_CAPS_ANY.
  * @GST_PAD_LINK_CHECK_CAPS: Check if the pads are compatible by comparing the
  *   caps returned by gst_pad_query_caps().
+ * @GST_PAD_LINK_CHECK_NO_RECONFIGURE: Disables pushing a reconfigure event when pads are
+ *   linked.
  * @GST_PAD_LINK_CHECK_DEFAULT: The default checks done when linking
  *   pads (i.e. the ones used by gst_pad_link()).
  *
@@ -203,12 +205,10 @@ const gchar*          gst_pad_link_get_name (GstPadLinkReturn ret);
  * and @GST_PAD_LINK_CHECK_TEMPLATE_CAPS are mutually exclusive. If both are
  * specified, expensive but safe @GST_PAD_LINK_CHECK_CAPS are performed.
  *
- * <warning><para>
- * Only disable some of the checks if you are 100% certain you know the link
- * will not fail because of hierarchy/caps compatibility failures. If uncertain,
- * use the default checks (%GST_PAD_LINK_CHECK_DEFAULT) or the regular methods
- * for linking the pads.
- * </para></warning>
+ * > Only disable some of the checks if you are 100% certain you know the link
+ * > will not fail because of hierarchy/caps compatibility failures. If uncertain,
+ * > use the default checks (%GST_PAD_LINK_CHECK_DEFAULT) or the regular methods
+ * > for linking the pads.
  */
 
 typedef enum {
@@ -216,6 +216,11 @@ typedef enum {
   GST_PAD_LINK_CHECK_HIERARCHY     = 1 << 0,
   GST_PAD_LINK_CHECK_TEMPLATE_CAPS = 1 << 1,
   GST_PAD_LINK_CHECK_CAPS          = 1 << 2,
+
+
+  /* Not really checks, more like flags
+   * Added here to avoid creating a new gst_pad_link_variant */
+  GST_PAD_LINK_CHECK_NO_RECONFIGURE = 1 << 3,
 
   GST_PAD_LINK_CHECK_DEFAULT       = GST_PAD_LINK_CHECK_HIERARCHY | GST_PAD_LINK_CHECK_CAPS
 } GstPadLinkCheck;
@@ -527,18 +532,19 @@ typedef enum
  * @GST_PAD_PROBE_OK: normal probe return value. This leaves the probe in
  *        place, and defers decisions about dropping or passing data to other
  *        probes, if any. If there are no other probes, the default behaviour
- *        for the probe type applies (block for blocking probes, and pass for
- *        non-blocking probes).
+ *        for the probe type applies ('block' for blocking probes,
+ *        and 'pass' for non-blocking probes).
  * @GST_PAD_PROBE_DROP: drop data in data probes. For push mode this means that
  *        the data item is not sent downstream. For pull mode, it means that
- *        the data item is not passed upstream. In both cases, no more probes
- *        are called and #GST_FLOW_OK or %TRUE is returned to the caller.
+ *        the data item is not passed upstream. In both cases, no other probes
+ *        are called for this item and %GST_FLOW_OK or %TRUE is returned to the
+ *        caller.
  * @GST_PAD_PROBE_REMOVE: remove this probe.
  * @GST_PAD_PROBE_PASS: pass the data item in the block probe and block on the
  *        next item.
  * @GST_PAD_PROBE_HANDLED: Data has been handled in the probe and will not be
  *        forwarded further. For events and buffers this is the same behaviour as
- *        @GST_PAD_PROBE_DROP (except that in this case you need to unref the buffer
+ *        %GST_PAD_PROBE_DROP (except that in this case you need to unref the buffer
  *        or event yourself). For queries it will also return %TRUE to the caller.
  *        The probe can also modify the #GstFlowReturn value by using the
  *        #GST_PAD_PROBE_INFO_FLOW_RETURN() accessor.
@@ -1411,6 +1417,7 @@ gboolean		gst_pad_start_task			(GstPad *pad, GstTaskFunction func,
 								 gpointer user_data, GDestroyNotify notify);
 gboolean		gst_pad_pause_task			(GstPad *pad);
 gboolean		gst_pad_stop_task			(GstPad *pad);
+GstTaskState	gst_pad_get_task_state		(GstPad *pad);
 
 /* internal links */
 void                    gst_pad_set_iterate_internal_links_function_full (GstPad * pad,

@@ -149,8 +149,11 @@ calculate_latency (GstElement * parent, GstPad * pad, guint64 ts)
       GST_OBJECT_FLAG_IS_SET (parent, GST_ELEMENT_FLAG_SINK)) {
     GstEvent *ev = g_object_get_qdata ((GObject *) pad, latency_probe_id);
 
-    log_latency (gst_event_get_structure (ev), pad, ts);
-    gst_event_unref (ev);
+    if (ev) {
+      g_object_set_qdata ((GObject *) pad, latency_probe_id, NULL);
+      log_latency (gst_event_get_structure (ev), pad, ts);
+      gst_event_unref (ev);
+    }
   }
 }
 
@@ -216,7 +219,6 @@ gst_latency_tracer_class_init (GstLatencyTracerClass * klass)
           "type", G_TYPE_GTYPE, G_TYPE_UINT64,
           "description", G_TYPE_STRING,
               "time it took for the buffer to go from src to sink ns",
-          "flags", GST_TYPE_TRACER_VALUE_FLAGS, GST_TRACER_VALUE_FLAGS_AGGREGATED,
           "min", G_TYPE_UINT64, G_GUINT64_CONSTANT (0),
           "max", G_TYPE_UINT64, G_MAXUINT64,
           NULL),

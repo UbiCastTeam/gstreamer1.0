@@ -52,7 +52,7 @@
 G_STATIC_ASSERT ((1 << BUFFER_FLAG_SHIFT) == GST_MINI_OBJECT_FLAG_LAST);
 
 /* Returns a newly allocated string describing the flags on this buffer */
-char *
+gchar *
 gst_buffer_get_flags_string (GstBuffer * buffer)
 {
   static const char flag_strings[] =
@@ -82,6 +82,28 @@ gst_buffer_get_flags_string (GstBuffer * buffer)
   }
 
   return flag_str;
+}
+
+/* Returns a newly-allocated string describing the metas on this buffer, or NULL */
+gchar *
+gst_buffer_get_meta_string (GstBuffer * buffer)
+{
+  gpointer state = NULL;
+  GstMeta *meta;
+  GString *s = NULL;
+
+  while ((meta = gst_buffer_iterate_meta (buffer, &state))) {
+    const gchar *desc = g_type_name (meta->info->type);
+
+    if (s == NULL)
+      s = g_string_new (NULL);
+    else
+      g_string_append (s, ", ");
+
+    g_string_append (s, desc);
+  }
+
+  return (s != NULL) ? g_string_free (s, FALSE) : NULL;
 }
 
 /* Define our own iovec structure here, so that we can use it unconditionally
@@ -193,7 +215,7 @@ fill_vectors (struct iovec *vecs, GstMapInfo * maps, guint n, GstBuffer * buf)
 GstFlowReturn
 gst_writev_buffers (GstObject * sink, gint fd, GstPoll * fdset,
     GstBuffer ** buffers, guint num_buffers, guint8 * mem_nums,
-    guint total_mem_num, guint64 * total_written, guint64 * cur_pos)
+    guint total_mem_num, guint64 * bytes_written, guint64 skip)
 {
   struct iovec *vecs;
   GstMapInfo *map_infos;
@@ -218,6 +240,13 @@ gst_writev_buffers (GstObject * sink, gint fd, GstPoll * fdset,
     guint n_vecs = total_mem_num;
 
     left = size;
+
+    if (skip) {
+      ret = skip;
+      errno = 0;
+      goto skip_first;
+    }
+
     do {
 #ifndef HAVE_WIN32
       if (fdset != NULL) {
@@ -239,11 +268,11 @@ gst_writev_buffers (GstObject * sink, gint fd, GstPoll * fdset,
       ret = gst_writev (fd, vecs, n_vecs, left);
 
       if (ret > 0) {
-        if (total_written)
-          *total_written += ret;
-        if (cur_pos)
-          *cur_pos += ret;
+        if (bytes_written)
+          *bytes_written += ret;
       }
+
+    skip_first:
 
       if (ret == left)
         break;

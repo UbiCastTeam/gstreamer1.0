@@ -27,19 +27,14 @@
 #define __GST_QUERY_H__
 
 #include <glib.h>
-
-#include <gst/gstiterator.h>
-#include <gst/gstminiobject.h>
-#include <gst/gststructure.h>
-#include <gst/gstformat.h>
-#include <gst/gstpad.h>
-#include <gst/gstallocator.h>
-#include <gst/gsttoc.h>
-#include <gst/gstcontext.h>
+#include <glib-object.h>
+#include <gst/gstconfig.h>
 
 G_BEGIN_DECLS
 
 typedef struct _GstQuery GstQuery;
+
+#include <gst/gstminiobject.h>
 
 /**
  * GstQueryTypeFlags:
@@ -59,12 +54,12 @@ typedef enum {
 } GstQueryTypeFlags;
 
 /**
- * GST_QUERY_TYPE_BOTH:
+ * GST_QUERY_TYPE_BOTH: (value 3) (type GstQueryTypeFlags)
  *
  * The same thing as #GST_QUERY_TYPE_UPSTREAM | #GST_QUERY_TYPE_DOWNSTREAM.
  */
 #define GST_QUERY_TYPE_BOTH \
-    (GST_QUERY_TYPE_UPSTREAM | GST_QUERY_TYPE_DOWNSTREAM)
+    ((GstQueryTypeFlags)(GST_QUERY_TYPE_UPSTREAM | GST_QUERY_TYPE_DOWNSTREAM))
 
 #define GST_QUERY_NUM_SHIFT     (8)
 
@@ -192,6 +187,30 @@ struct _GstQuery
   /*< public > *//* with COW */
   GstQueryType type;
 };
+
+/**
+ * GstBufferingMode:
+ * @GST_BUFFERING_STREAM: a small amount of data is buffered
+ * @GST_BUFFERING_DOWNLOAD: the stream is being downloaded
+ * @GST_BUFFERING_TIMESHIFT: the stream is being downloaded in a ringbuffer
+ * @GST_BUFFERING_LIVE: the stream is a live stream
+ *
+ * The different types of buffering methods.
+ */
+typedef enum {
+  GST_BUFFERING_STREAM,
+  GST_BUFFERING_DOWNLOAD,
+  GST_BUFFERING_TIMESHIFT,
+  GST_BUFFERING_LIVE
+} GstBufferingMode;
+
+#include <gst/gstiterator.h>
+#include <gst/gststructure.h>
+#include <gst/gstformat.h>
+#include <gst/gstpad.h>
+#include <gst/gstallocator.h>
+#include <gst/gsttoc.h>
+#include <gst/gstcontext.h>
 
 const gchar*    gst_query_type_get_name        (GstQueryType type);
 GQuark          gst_query_type_to_quark        (GstQueryType type);
@@ -338,22 +357,6 @@ void            gst_query_parse_n_formats       (GstQuery *query, guint *n_forma
 void            gst_query_parse_nth_format      (GstQuery *query, guint nth, GstFormat *format);
 
 /* buffering query */
-/**
- * GstBufferingMode:
- * @GST_BUFFERING_STREAM: a small amount of data is buffered
- * @GST_BUFFERING_DOWNLOAD: the stream is being downloaded
- * @GST_BUFFERING_TIMESHIFT: the stream is being downloaded in a ringbuffer
- * @GST_BUFFERING_LIVE: the stream is a live stream
- *
- * The different types of buffering methods.
- */
-typedef enum {
-  GST_BUFFERING_STREAM,
-  GST_BUFFERING_DOWNLOAD,
-  GST_BUFFERING_TIMESHIFT,
-  GST_BUFFERING_LIVE
-} GstBufferingMode;
-
 GstQuery*       gst_query_new_buffering           (GstFormat format) G_GNUC_MALLOC;
 void            gst_query_set_buffering_percent   (GstQuery *query, gboolean busy, gint percent);
 void            gst_query_parse_buffering_percent (GstQuery *query, gboolean *busy, gint *percent);

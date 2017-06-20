@@ -97,7 +97,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -105,7 +104,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -312,8 +310,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -336,9 +332,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -376,6 +373,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -416,19 +414,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -521,9 +509,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -635,6 +620,7 @@ LIBGSTCHECK_EXPORTED_VARS = \
 	_gst_check_raised_critical \
 	_gst_check_raised_warning \
 	_gst_check_expecting_log \
+	_gst_check_list_tests \
 	buffers \
 	check_cond \
 	check_debug \
@@ -657,6 +643,9 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_check_element_push_buffer \
 	gst_check_element_push_buffer_list \
 	gst_check_init \
+	gst_check_add_log_filter \
+	gst_check_remove_log_filter \
+	gst_check_clear_log_filter \
 	gst_check_message_error \
 	gst_check_run_suite \
 	gst_check_setup_element \

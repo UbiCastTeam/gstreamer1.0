@@ -25,6 +25,7 @@
 
 /**
  * SECTION:element-queue2
+ * @title: queue2
  *
  * Data is queued until one of the limits specified by the
  * #GstQueue2:max-size-buffers, #GstQueue2:max-size-bytes and/or
@@ -2579,7 +2580,7 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
         GST_QUEUE2_MUTEX_UNLOCK (queue);
         gst_queue2_post_buffering (queue);
       } else {
-        /* non-serialized events are passed upstream. */
+        /* non-serialized events are passed downstream. */
         ret = gst_pad_push_event (queue->srcpad, event);
       }
       break;
@@ -2591,10 +2592,12 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
   /* ERRORS */
 out_flushing:
   {
-    GST_DEBUG_OBJECT (queue, "refusing event, we are flushing");
+    GstFlowReturn ret = queue->sinkresult;
+    GST_DEBUG_OBJECT (queue, "refusing event, we are %s",
+        gst_flow_get_name (ret));
     GST_QUEUE2_MUTEX_UNLOCK (queue);
     gst_event_unref (event);
-    return GST_FLOW_FLUSHING;
+    return ret;
   }
 out_eos:
   {
@@ -2642,7 +2645,10 @@ gst_queue2_handle_sink_query (GstPad * pad, GstObject * parent,
                 GST_QUEUE2_ITEM_TYPE_QUERY);
 
             STATUS (queue, queue->sinkpad, "wait for QUERY");
-            g_cond_wait (&queue->query_handled, &queue->qlock);
+            while (queue->sinkresult == GST_FLOW_OK &&
+                queue->last_handled_query != query)
+              g_cond_wait (&queue->query_handled, &queue->qlock);
+            queue->last_handled_query = NULL;
             if (queue->sinkresult != GST_FLOW_OK)
               goto out_flushing;
             res = queue->last_query;
@@ -2667,7 +2673,8 @@ gst_queue2_handle_sink_query (GstPad * pad, GstObject * parent,
   /* ERRORS */
 out_flushing:
   {
-    GST_DEBUG_OBJECT (queue, "refusing query, we are flushing");
+    GST_DEBUG_OBJECT (queue, "refusing query, we are %s",
+        gst_flow_get_name (queue->sinkresult));
     GST_QUEUE2_MUTEX_UNLOCK (queue);
     return FALSE;
   }
@@ -2970,6 +2977,7 @@ next:
     GstQuery *query = GST_QUERY_CAST (data);
 
     GST_LOG_OBJECT (queue->srcpad, "Peering query %p", query);
+    queue->last_handled_query = query;
     queue->last_query = gst_pad_peer_query (queue->srcpad, query);
     GST_LOG_OBJECT (queue->srcpad, "Peered query");
     GST_CAT_LOG_OBJECT (queue_dataflow, queue,
@@ -2989,8 +2997,9 @@ no_item:
   }
 out_flushing:
   {
-    GST_CAT_LOG_OBJECT (queue_dataflow, queue, "exit because we are flushing");
-    return GST_FLOW_FLUSHING;
+    GST_CAT_LOG_OBJECT (queue_dataflow, queue, "exit because we are %s",
+        gst_flow_get_name (queue->srcresult));
+    return queue->srcresult;
   }
 }
 
@@ -3419,7 +3428,7 @@ out_flushing:
   {
     ret = queue->srcresult;
 
-    GST_DEBUG_OBJECT (queue, "we are flushing");
+    GST_DEBUG_OBJECT (queue, "we are %s", gst_flow_get_name (ret));
     GST_QUEUE2_MUTEX_UNLOCK (queue);
     return ret;
   }

@@ -755,6 +755,10 @@ as the first member of their structure.</p>
   GstMetaInitFunction        init_func;
   GstMetaFreeFunction        free_func;
   GstMetaTransformFunction   transform_func;
+
+  /* No padding needed, GstMetaInfo is always allocated by GStreamer and is
+   * not subclassable or stack-allocatable, so we can extend it as we please
+   * just like interfaces */
 };
 </pre>
 <p>The <a class="link" href="gstreamer-GstMeta.html#GstMetaInfo" title="struct GstMetaInfo"><span class="type">GstMetaInfo</span></a> provides information about a specific metadata

@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-GstProtectionMeta.html" title="GstProtectionMeta">
+<link rel="prev" href="gstreamer-GstProtectionMeta.html" title="GstProtection">
 <link rel="next" href="GstRegistry.html" title="GstRegistry">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -4086,13 +4086,11 @@ gst_query_has_scheduling_mode (<em class="parameter"><code><a class="link" href=
                                <em class="parameter"><code><a class="link" href="GstPad.html#GstPadMode" title="enum GstPadMode"><span class="type">GstPadMode</span></a> mode</code></em>);</pre>
 <p>Check if <em class="parameter"><code>query</code></em>
  has scheduling mode set.</p>
-<div class="note"><p>
-    When checking if upstream supports pull mode, it is usually not
-    enough to just check for GST_PAD_MODE_PULL with this function, you
-    also want to check whether the scheduling flags returned by
-    <a class="link" href="GstQuery.html#gst-query-parse-scheduling" title="gst_query_parse_scheduling ()"><code class="function">gst_query_parse_scheduling()</code></a> have the seeking flag set (meaning
-    random access is supported, not only sequential pulls).
-  </p></div>
+<div class="blockquote"><blockquote class="blockquote"><p>When checking if upstream supports pull mode, it is usually not
+enough to just check for GST_PAD_MODE_PULL with this function, you
+also want to check whether the scheduling flags returned by
+<a class="link" href="GstQuery.html#gst-query-parse-scheduling" title="gst_query_parse_scheduling ()"><code class="function">gst_query_parse_scheduling()</code></a> have the seeking flag set (meaning
+random access is supported, not only sequential pulls).</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-query-has-scheduling-mode.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
