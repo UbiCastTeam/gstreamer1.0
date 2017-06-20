@@ -577,7 +577,8 @@ gst_typefind_@GST_API_VERSION@_LDADD = $(GST_OBJ_LIBS)
 @GST_DISABLE_PARSE_FALSE@gst_launch_@GST_API_VERSION@_CFLAGS = $(GST_OBJ_CFLAGS)
 @GST_DISABLE_PARSE_FALSE@gst_launch_@GST_API_VERSION@_LDADD = $(GST_OBJ_LIBS)
 manpages = gst-inspect-@GST_API_VERSION@.1 \
-	gst-typefind-@GST_API_VERSION@.1 $(am__append_2)
+	gst-stats-@GST_API_VERSION@.1 gst-typefind-@GST_API_VERSION@.1 \
+	$(am__append_2)
 man_MANS = $(manpages)
 
 # developer helper tools, not meant for installation
@@ -587,6 +588,7 @@ EXTRA_DIST = \
 	gst-inspect-@GST_API_VERSION@.1 \
 	gst-typefind-@GST_API_VERSION@.1 \
 	gst-launch-@GST_API_VERSION@.1 \
+	gst-stats-@GST_API_VERSION@.1 \
 	$(noinst_SCRIPTS)
 
 all: all-am
