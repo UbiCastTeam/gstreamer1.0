@@ -51,6 +51,7 @@ LIBGSTCHECK_EXPORTED_VARS = \
 	_gst_check_raised_critical \
 	_gst_check_raised_warning \
 	_gst_check_expecting_log \
+	_gst_check_list_tests \
 	buffers \
 	check_cond \
 	check_debug \
@@ -73,6 +74,9 @@ LIBGSTCHECK_EXPORTED_FUNCS = \
 	gst_check_element_push_buffer \
 	gst_check_element_push_buffer_list \
 	gst_check_init \
+	gst_check_add_log_filter \
+	gst_check_remove_log_filter \
+	gst_check_clear_log_filter \
 	gst_check_message_error \
 	gst_check_run_suite \
 	gst_check_setup_element \

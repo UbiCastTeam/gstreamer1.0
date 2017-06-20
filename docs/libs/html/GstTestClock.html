@@ -228,9 +228,10 @@ when <a class="link" href="GstTestClock.html#gst-test-clock-set-time" title="gst
 called. <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> provides unit tests with the possibility to
 precisely advance the time in a deterministic manner, independent of the
 system time or any other external factors.</p>
-<div class="example">
-<a name="id-1.2.7.7.8.3"></a><p class="title"><b>Example 4. Advancing the time of a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a></b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.2.7.7.8.3"></a><h4>Advancing the time of a <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>
+</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -271,8 +272,8 @@ test_clock <span class="gtkdoc opt">=</span> <span class="function">GST_TEST_CLO
   </table>
 </div>
 
-</div>
-<br class="example-break"><p><a href="../html/GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> allows for setting up single shot or periodic clock notifications
+<p></p>
+<p><a href="../html/GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> allows for setting up single shot or periodic clock notifications
 as well as waiting for these notifications synchronously (using
 <a href="../html/GstClock.html#gst-clock-id-wait"><code class="function">gst_clock_id_wait()</code></a>) or asynchronously (using <a href="../html/GstClock.html#gst-clock-id-wait-async"><code class="function">gst_clock_id_wait_async()</code></a> or
 <a href="../html/GstClock.html#gst-clock-id-wait-async"><code class="function">gst_clock_id_wait_async()</code></a>). This is used by many GStreamer elements,
@@ -304,9 +305,11 @@ pad. Moreover it is assumed that the element will at some point call
 buffer sent will arrive exactly on time only delayed by the latency. The
 second buffer will arrive a little late (7ms) due to simulated jitter in the
 clock notification.</p>
-<div class="example">
-<a name="id-1.2.7.7.8.9"></a><p class="title"><b>Example 5. Demonstration of how to work with clock notifications and <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a></b></p>
-<div class="example-contents">
+</div>
+<div class="refsect3">
+<a name="id-1.2.7.7.8.4"></a><h4>Demonstration of how to work with clock notifications and <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a>
+</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -455,10 +458,11 @@ buf <span class="gtkdoc opt">=</span> <span class="function">get_buffer_pushed_b
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>Since <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> is only supposed to be used in unit tests it calls
+<p></p>
+<p>Since <a class="link" href="GstTestClock.html" title="GstTestClock"><span class="type">GstTestClock</span></a> is only supposed to be used in unit tests it calls
 <a href="/usr/share/gtk-doc/html/glibglib-Testing.html#g-assert"><code class="function">g_assert()</code></a>, <a href="/usr/share/gtk-doc/html/glibglib-Testing.html#g-assert-cmpint"><code class="function">g_assert_cmpint()</code></a> or <a href="/usr/share/gtk-doc/html/glibglib-Testing.html#g-assert-cmpuint"><code class="function">g_assert_cmpuint()</code></a> to validate all function
 arguments. This will highlight any issues with the unit test code itself.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstTestClock.functions_details"></a><h2>Functions</h2>

@@ -95,7 +95,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -103,7 +102,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -169,6 +167,7 @@ am__DEPENDENCIES_1 =
 am_libgstcoreelements_la_OBJECTS =  \
 	libgstcoreelements_la-gstcapsfilter.lo \
 	libgstcoreelements_la-gstconcat.lo \
+	libgstcoreelements_la-gstdataurisrc.lo \
 	libgstcoreelements_la-gstdownloadbuffer.lo \
 	libgstcoreelements_la-gstelements.lo \
 	libgstcoreelements_la-gstelements_private.lo \
@@ -278,8 +277,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -302,9 +299,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -342,6 +340,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -382,19 +381,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -487,9 +476,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -559,6 +545,7 @@ libgstcoreelements_la_DEPENDENCIES = $(top_builddir)/gst/libgstreamer-@GST_API_V
 libgstcoreelements_la_SOURCES = \
 	gstcapsfilter.c		\
 	gstconcat.c		\
+	gstdataurisrc.c         \
 	gstdownloadbuffer.c     \
 	gstelements.c		\
 	gstelements_private.c	\
@@ -591,6 +578,7 @@ libgstcoreelements_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 noinst_HEADERS = \
 	gstcapsfilter.h		\
 	gstconcat.h		\
+	gstdataurisrc.h         \
 	gstdownloadbuffer.h	\
 	gstelements_private.h	\
 	gstfakesink.h		\
@@ -696,6 +684,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstcapsfilter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstconcat.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstdataurisrc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstdownloadbuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstelements.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstcoreelements_la-gstelements_private.Plo@am__quote@
@@ -755,6 +744,13 @@ libgstcoreelements_la-gstconcat.lo: gstconcat.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstconcat.c' object='libgstcoreelements_la-gstconcat.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -c -o libgstcoreelements_la-gstconcat.lo `test -f 'gstconcat.c' || echo '$(srcdir)/'`gstconcat.c
+
+libgstcoreelements_la-gstdataurisrc.lo: gstdataurisrc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -MT libgstcoreelements_la-gstdataurisrc.lo -MD -MP -MF $(DEPDIR)/libgstcoreelements_la-gstdataurisrc.Tpo -c -o libgstcoreelements_la-gstdataurisrc.lo `test -f 'gstdataurisrc.c' || echo '$(srcdir)/'`gstdataurisrc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoreelements_la-gstdataurisrc.Tpo $(DEPDIR)/libgstcoreelements_la-gstdataurisrc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstdataurisrc.c' object='libgstcoreelements_la-gstdataurisrc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -c -o libgstcoreelements_la-gstdataurisrc.lo `test -f 'gstdataurisrc.c' || echo '$(srcdir)/'`gstdataurisrc.c
 
 libgstcoreelements_la-gstdownloadbuffer.lo: gstdownloadbuffer.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoreelements_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoreelements_la_CFLAGS) $(CFLAGS) -MT libgstcoreelements_la-gstdownloadbuffer.lo -MD -MP -MF $(DEPDIR)/libgstcoreelements_la-gstdownloadbuffer.Tpo -c -o libgstcoreelements_la-gstdownloadbuffer.lo `test -f 'gstdownloadbuffer.c' || echo '$(srcdir)/'`gstdownloadbuffer.c

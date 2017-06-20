@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstPipeline.html" title="GstPipeline">
-<link rel="next" href="GstPluginFeature.html" title="GstPluginFeature">
+<link rel="next" href="GstPluginFeature.html" title="GstPluginfeature">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -299,7 +299,7 @@
 <a name="GstPlugin.description"></a><h2>Description</h2>
 <p>GStreamer is extensible, so <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> instances can be loaded at runtime.
 A plugin system can provide one or more of the basic</p>
-<span class="application">GStreamer</span><a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a> subclasses.
+<span class="application">GStreamer</span><a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a> subclasses.
 <p>A plugin should export a symbol <span class="symbol">gst_plugin_desc</span> that is a
 struct of type <a class="link" href="GstPlugin.html#GstPluginDesc" title="struct GstPluginDesc"><span class="type">GstPluginDesc</span></a>.
 the plugin loader will check the version of the core library the plugin was
@@ -307,7 +307,7 @@ linked against and will create a new <a class="link" href="GstPlugin.html" title
 <a class="link" href="GstPlugin.html#GstPluginInitFunc" title="GstPluginInitFunc ()"><span class="type">GstPluginInitFunc</span></a> function that was provided in the</p>
 <span class="symbol">gst_plugin_desc</span>.
 <p>Once you have a handle to a <a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> (e.g. from the <a class="link" href="GstRegistry.html" title="GstRegistry"><span class="type">GstRegistry</span></a>), you
-can add any object that subclasses <a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>.</p>
+can add any object that subclasses <a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a>.</p>
 <p>Usually plugins are always automatically loaded so you don't need to call
 <a class="link" href="GstPlugin.html#gst-plugin-load" title="gst_plugin_load ()"><code class="function">gst_plugin_load()</code></a> explicitly to bring it into memory. There are options to
 statically link plugins to an app or even use GStreamer without a plugin
@@ -334,7 +334,7 @@ gst_plugin_error_quark (<em class="parameter"><code><span class="type">void</spa
 <p>A plugin should provide a pointer to a function of this type in the
 plugin_desc struct.
 This function will be called by the loader at startup. One would then
-register each <a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>.</p>
+register each <a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a>.</p>
 <div class="refsect3">
 <a name="GstPluginInitFunc.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -364,7 +364,7 @@ register each <a class="link" href="GstPluginFeature.html" title="GstPluginFeatu
 <p>A plugin should provide a pointer to a function of either <a class="link" href="GstPlugin.html#GstPluginInitFunc" title="GstPluginInitFunc ()"><span class="type">GstPluginInitFunc</span></a>
 or this type in the plugin_desc struct.
 The function will be called by the loader at startup. One would then
-register each <a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>. This version allows
+register each <a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a>. This version allows
 user data to be passed to init function (useful for bindings).</p>
 <div class="refsect3">
 <a name="GstPluginInitFullFunc.parameters"></a><h4>Parameters</h4>
@@ -926,13 +926,26 @@ gst_plugin_load (<em class="parameter"><code><a class="link" href="GstPlugin.htm
 . Note that the *return value* is the loaded plugin; <em class="parameter"><code>plugin</code></em>
  is
 untouched. The normal use pattern of this function goes like this:</p>
-<pre class="programlisting">
-GstPlugin *loaded_plugin;
-loaded_plugin = gst_plugin_load (plugin);
-// presumably, we're no longer interested in the potentially-unloaded plugin
-gst_object_unref (plugin);
-plugin = loaded_plugin;
-</pre>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5</pre></td>
+        <td class="listing_code"><pre class="programlisting">GstPlugin <span class="gtkdoc opt">*</span>loaded_plugin<span class="gtkdoc opt">;</span>
+loaded_plugin <span class="gtkdoc opt">=</span> <span class="function"><a href="GstPlugin.html#gst-plugin-load">gst_plugin_load</a></span> <span class="gtkdoc opt">(</span>plugin<span class="gtkdoc opt">);</span>
+<span class="gtkdoc slc">// presumably, we're no longer interested in the potentially-unloaded plugin</span>
+<span class="function"><a href="GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>plugin<span class="gtkdoc opt">);</span>
+plugin <span class="gtkdoc opt">=</span> loaded_plugin<span class="gtkdoc opt">;</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
 <div class="refsect3">
 <a name="gst-plugin-load.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1571,7 +1584,7 @@ preprocessor macro. </p></td>
 </div>
 <div class="refsect1">
 <a name="GstPlugin.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="GstPluginFeature.html" title="GstPluginFeature"><span class="type">GstPluginFeature</span></a>, <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a></p>
+<p><a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a>, <a class="link" href="GstElementFactory.html" title="GstElementFactory"><span class="type">GstElementFactory</span></a></p>
 </div>
 </div>
 <div class="footer">

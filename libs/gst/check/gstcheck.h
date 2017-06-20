@@ -47,6 +47,7 @@ extern gboolean _gst_check_threads_running;
 extern gboolean _gst_check_raised_critical;
 extern gboolean _gst_check_raised_warning;
 extern gboolean _gst_check_expecting_log;
+extern gboolean _gst_check_list_tests;
 
 /* global variables used in test methods */
 extern GList * buffers;
@@ -62,7 +63,32 @@ typedef struct
 }
 GstCheckABIStruct;
 
+typedef struct _GstCheckLogFilter GstCheckLogFilter;
+
+/**
+ * GstCheckLogFilterFunc:
+ * @log_domain: the log domain of the message
+ * @log_level: the log level of the message
+ * @message: the message that has occured
+ * @user_data: user data
+ *
+ * A function that is called for messages matching the filter added by
+ * @gst_check_add_log_filter.
+ *
+ * Returns: %TRUE if message should be discarded by GstCheck.
+ *
+ * Since: 1.12
+ */
+typedef gboolean (*GstCheckLogFilterFunc) (const gchar * log_domain,
+    GLogLevelFlags log_level, const gchar * message, gpointer user_data);
+
 void gst_check_init (int *argc, char **argv[]);
+
+GstCheckLogFilter * gst_check_add_log_filter (const gchar * log,
+    GLogLevelFlags log_level, GRegex * regex, GstCheckLogFilterFunc func,
+    gpointer user_data, GDestroyNotify destroy_data);
+void gst_check_remove_log_filter (GstCheckLogFilter * filter);
+void gst_check_clear_log_filter (void);
 
 GstFlowReturn gst_check_chain_func (GstPad * pad, GstObject * parent, GstBuffer * buffer);
 
@@ -83,9 +109,9 @@ GstPad *gst_check_setup_sink_pad (GstElement * element,
     GstStaticPadTemplate * tmpl);
 GstPad *gst_check_setup_sink_pad_from_template (GstElement * element,
     GstPadTemplate * tmpl);
-GstPad * gst_check_setup_sink_pad_by_name (GstElement * element, 
+GstPad * gst_check_setup_sink_pad_by_name (GstElement * element,
           GstStaticPadTemplate * tmpl, const gchar *name);
-GstPad * gst_check_setup_sink_pad_by_name_from_template (GstElement * element, 
+GstPad * gst_check_setup_sink_pad_by_name_from_template (GstElement * element,
           GstPadTemplate * tmpl, const gchar *name);
 void gst_check_teardown_pad_by_name (GstElement * element, const gchar *name);
 void gst_check_teardown_src_pad (GstElement * element);
@@ -601,14 +627,19 @@ static inline void
 __gst_tcase_add_test (TCase * tc, TFun tf, const char * fname, int signal,
     int allowed_exit_value, int start, int end)
 {
-  if (_gst_check_run_test_func (fname)) {
-    _tcase_add_test (tc, tf, fname, signal, allowed_exit_value, start, end);
-  }
+    if (_gst_check_list_tests) {
+        g_print ("Test: %s\n", fname);
+        return;
+    }
+
+    if (_gst_check_run_test_func (fname)) {
+        _tcase_add_test (tc, tf, fname, signal, allowed_exit_value, start, end);
+    }
 }
 
 #define _tcase_add_test __gst_tcase_add_test
 
-/* A special variant to add broken tests. These are normally skipped, but can be 
+/* A special variant to add broken tests. These are normally skipped, but can be
  * forced to run via GST_CHECKS */
 #define tcase_skip_broken_test(chain,test_func) \
 G_STMT_START {                                                  \

@@ -21,6 +21,7 @@
 
 /**
  * SECTION:gsttracerrecord
+ * @title: GstTracerRecord
  * @short_description: Trace log entry class
  *
  * Tracing modules will create instances of this class to announce the data they
@@ -175,9 +176,7 @@ gst_tracer_record_init (GstTracerRecord * self)
  * pointer type values must not be NULL - the underlying serialisation can not
  * handle that right now.
  *
- * <note><para>
- *   Please note that this is still under discussion and subject to change.
- * </para></note>
+ * > Please note that this is still under discussion and subject to change.
  *
  * Returns: a new #GstTracerRecord
  */
@@ -219,7 +218,7 @@ gst_tracer_record_new (const gchar * name, const gchar * firstfield, ...)
   }
   va_end (varargs);
 
-  self = g_object_newv (GST_TYPE_TRACER_RECORD, 0, NULL);
+  self = g_object_new (GST_TYPE_TRACER_RECORD, NULL);
   self->spec = structure;
   gst_tracer_record_build_format (self);
 
@@ -236,9 +235,8 @@ gst_tracer_record_new (const gchar * name, const gchar * firstfield, ...)
  *
  * Right now this is using the gstreamer debug log with the level TRACE (7) and
  * the category "GST_TRACER".
- * <note><para>
- *   Please note that this is still under discussion and subject to change.
- * </para></note>
+ *
+ * > Please note that this is still under discussion and subject to change.
  */
 void
 gst_tracer_record_log (GstTracerRecord * self, ...)

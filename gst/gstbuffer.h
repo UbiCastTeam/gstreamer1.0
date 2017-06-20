@@ -35,6 +35,8 @@ GST_EXPORT GType _gst_buffer_type;
 typedef struct _GstBuffer GstBuffer;
 typedef struct _GstBufferPool GstBufferPool;
 
+#include <gst/gstmeta.h>
+
 #define GST_TYPE_BUFFER                         (_gst_buffer_type)
 #define GST_IS_BUFFER(obj)                      (GST_IS_MINI_OBJECT_TYPE(obj, GST_TYPE_BUFFER))
 #define GST_BUFFER_CAST(obj)                    ((GstBuffer *)(obj))
@@ -425,16 +427,16 @@ typedef enum {
 } GstBufferCopyFlags;
 
 /**
- * GST_BUFFER_COPY_METADATA:
+ * GST_BUFFER_COPY_METADATA: (value 7) (type GstBufferCopyFlags)
  *
  * Combination of all possible metadata fields that can be copied with
  * gst_buffer_copy_into().
  */
-#define GST_BUFFER_COPY_METADATA       (GST_BUFFER_COPY_FLAGS | GST_BUFFER_COPY_TIMESTAMPS |\
-                                        GST_BUFFER_COPY_META)
+#define GST_BUFFER_COPY_METADATA       ((GstBufferCopyFlags) (GST_BUFFER_COPY_FLAGS |\
+                                          GST_BUFFER_COPY_TIMESTAMPS | GST_BUFFER_COPY_META))
 
 /**
- * GST_BUFFER_COPY_ALL:
+ * GST_BUFFER_COPY_ALL: (value 15) (type GstBufferCopyFlags)
  *
  * Combination of all possible fields that can be copied with
  * gst_buffer_copy_into().
@@ -544,6 +546,10 @@ GstMeta *       gst_buffer_add_meta             (GstBuffer *buffer, const GstMet
 gboolean        gst_buffer_remove_meta          (GstBuffer *buffer, GstMeta *meta);
 
 GstMeta *       gst_buffer_iterate_meta         (GstBuffer *buffer, gpointer *state);
+
+GstMeta *       gst_buffer_iterate_meta_filtered (GstBuffer * buffer,
+                                                  gpointer  * state,
+                                                  GType       meta_api_type);
 
 gboolean        gst_buffer_foreach_meta         (GstBuffer *buffer,
                                                  GstBufferForeachMetaFunc func,

@@ -23,6 +23,7 @@
 
 /**
  * SECTION:gstregistry
+ * @title: GstRegistry
  * @short_description: Abstract base class for management of #GstPlugin objects
  * @see_also: #GstPlugin, #GstPluginFeature
  *
@@ -44,48 +45,28 @@
  *
  * On startup, plugins are searched for in the plugin search path. The following
  * locations are checked in this order:
- * <itemizedlist>
- *   <listitem>
- *     <para>location from --gst-plugin-path commandline option.</para>
- *   </listitem>
- *   <listitem>
- *     <para>the GST_PLUGIN_PATH environment variable.</para>
- *   </listitem>
- *   <listitem>
- *     <para>the GST_PLUGIN_SYSTEM_PATH environment variable.</para>
- *   </listitem>
- *   <listitem>
- *     <para>default locations (if GST_PLUGIN_SYSTEM_PATH is not set). Those
- *       default locations are:
- *       <filename>$XDG_DATA_HOME/gstreamer-$GST_API_VERSION/plugins/</filename>
- *       and <filename>$prefix/libs/gstreamer-$GST_API_VERSION/</filename>.
- *       <ulink url="http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html">
- *       <filename>$XDG_DATA_HOME</filename></ulink> defaults to
- *       <filename>$HOME/.local/share</filename>.
- *     </para>
- *   </listitem>
- * </itemizedlist>
+ *
+ * * location from --gst-plugin-path commandline option.
+ * * the GST_PLUGIN_PATH environment variable.
+ * * the GST_PLUGIN_SYSTEM_PATH environment variable.
+ * * default locations (if GST_PLUGIN_SYSTEM_PATH is not set).
+ *   Those default locations are:
+ *   `$XDG_DATA_HOME/gstreamer-$GST_API_VERSION/plugins/`
+ *   and `$prefix/libs/gstreamer-$GST_API_VERSION/`.
+ *   [$XDG_DATA_HOME](http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html) defaults to
+ *   `$HOME/.local/share`.
+ *
  * The registry cache file is loaded from
- * <filename>$XDG_CACHE_HOME/gstreamer-$GST_API_VERSION/registry-$ARCH.bin</filename>
- * (where
- * <ulink url="http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html">
- * <filename>$XDG_CACHE_HOME</filename></ulink> defaults to
- * <filename>$HOME/.cache</filename>) or the file listed in the GST_REGISTRY
+ * `$XDG_CACHE_HOME/gstreamer-$GST_API_VERSION/registry-$ARCH.bin`
+ * (where $XDG_CACHE_HOME defaults to `$HOME/.cache`) or the file listed in the `GST_REGISTRY`
  * env var. One reason to change the registry location is for testing.
  *
  * For each plugin that is found in the plugin search path, there could be 3
  * possibilities for cached information:
- * <itemizedlist>
- *   <listitem>
- *     <para>the cache may not contain information about a given file.</para>
- *   </listitem>
- *   <listitem>
- *     <para>the cache may have stale information.</para>
- *   </listitem>
- *   <listitem>
- *     <para>the cache may have current information.</para>
- *   </listitem>
- * </itemizedlist>
+ *
+ *   * the cache may not contain information about a given file.
+ *   * the cache may have stale information.
+ *   * the cache may have current information.
  *
  * In the first two cases, the plugin is loaded and the cache updated. In
  * addition to these cases, the cache may have entries for plugins that are not
@@ -97,7 +78,7 @@
  * checked to make sure the information is minimally valid. If not, the entry is
  * simply dropped.
  *
- * <emphasis role="bold">Implementation notes:</emphasis>
+ * ## Implementation notes:
  *
  * The "cache" and "registry" are different concepts and can represent
  * different sets of plugins. For various reasons, at init time, the cache is
@@ -185,6 +166,8 @@ static gboolean _gst_enable_registry_fork = DEFAULT_FORK;
 extern GSList *_priv_gst_preload_plugins;
 
 #ifndef GST_DISABLE_REGISTRY
+/* Set to TRUE to disable registry, behaves similar to GST_DISABLE_REGISTRY */
+gboolean _priv_gst_disable_registry = FALSE;
 /*set to TRUE when registry needn't to be updated */
 gboolean _priv_gst_disable_registry_update = FALSE;
 extern GList *_priv_gst_plugin_paths;
@@ -344,7 +327,7 @@ gst_registry_get (void)
 
   g_mutex_lock (&_gst_registry_mutex);
   if (G_UNLIKELY (!_gst_registry_default)) {
-    _gst_registry_default = g_object_newv (GST_TYPE_REGISTRY, 0, NULL);
+    _gst_registry_default = g_object_new (GST_TYPE_REGISTRY, NULL);
     gst_object_ref_sink (GST_OBJECT_CAST (_gst_registry_default));
   }
   registry = _gst_registry_default;
@@ -1282,7 +1265,7 @@ gst_registry_scan_path_level (GstRegistryScanContext * context,
       g_free (filename);
       continue;
     }
-    if (!g_str_has_suffix (dirent, G_MODULE_SUFFIX)
+    if (!g_str_has_suffix (dirent, "." G_MODULE_SUFFIX)
 #ifdef GST_EXTRA_MODULE_SUFFIX
         && !g_str_has_suffix (dirent, GST_EXTRA_MODULE_SUFFIX)
 #endif
@@ -1838,14 +1821,19 @@ gst_update_registry (void)
   gboolean res;
 
 #ifndef GST_DISABLE_REGISTRY
-  GError *err = NULL;
+  if (!_priv_gst_disable_registry) {
+    GError *err = NULL;
 
-  res = ensure_current_registry (&err);
-  if (err) {
-    GST_WARNING ("registry update failed: %s", err->message);
-    g_error_free (err);
+    res = ensure_current_registry (&err);
+    if (err) {
+      GST_WARNING ("registry update failed: %s", err->message);
+      g_error_free (err);
+    } else {
+      GST_LOG ("registry update succeeded");
+    }
   } else {
-    GST_LOG ("registry update succeeded");
+    GST_INFO ("registry update disabled by environment");
+    res = TRUE;
   }
 
 #else

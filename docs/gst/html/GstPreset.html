@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstPoll.html" title="GstPoll">
-<link rel="next" href="gstreamer-GstProtectionMeta.html" title="GstProtectionMeta">
+<link rel="next" href="gstreamer-GstProtectionMeta.html" title="GstProtection">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -176,9 +176,9 @@ With that one can control which properties are saved and in which order.
 When implementing support for read-only presets, one should set the vmethods
 for <a class="link" href="GstPreset.html#gst-preset-save-preset" title="gst_preset_save_preset ()"><code class="function">gst_preset_save_preset()</code></a> and <a class="link" href="GstPreset.html#gst-preset-delete-preset" title="gst_preset_delete_preset ()"><code class="function">gst_preset_delete_preset()</code></a> to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
 Applications can use <a class="link" href="GstPreset.html#gst-preset-is-editable" title="gst_preset_is_editable ()"><code class="function">gst_preset_is_editable()</code></a> to check for that.</p>
-<p>The default implementation supports presets located in a system directory, 
+<p>The default implementation supports presets located in a system directory,
 application specific directory and in the users home directory. When getting
-a list of presets individual presets are read and overlaid in 1) system, 
+a list of presets individual presets are read and overlaid in 1) system,
 2) application and 3) user order. Whenever an earlier entry is newer, the
 later entries will be updated. Since 1.8 you can also provide extra paths
 where to find presets through the GST_PRESET_PATH environment variable.
@@ -499,7 +499,7 @@ or no value for the given <em class="parameter"><code>tag</code></em>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_preset_set_app_dir (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *app_dir</code></em>);</pre>
 <p>Sets an extra directory as an absolute path that should be considered when
-looking for presets. Any presets in the application dir will shadow the 
+looking for presets. Any presets in the application dir will shadow the
 system presets.</p>
 <div class="refsect3">
 <a name="gst-preset-set-app-dir.parameters"></a><h4>Parameters</h4>

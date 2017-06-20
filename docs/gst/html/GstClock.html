@@ -568,7 +568,7 @@ the thread registering the entry last.</p>
 for unreffing the ids itself. This holds for both periodic and single shot
 notifications. The reason being that the owner of the <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> has to
 keep a handle to the <a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> to unblock the wait on FLUSHING events or
-state changes and if the entry would be unreffed automatically, the handle 
+state changes and if the entry would be unreffed automatically, the handle
 might become invalid without any notification.</p>
 <p>These clock operations do not operate on the running time, so the callbacks
 will also occur when not in PLAYING state as if the clock just keeps on
@@ -582,7 +582,7 @@ clock with <a class="link" href="GstClock.html#gst-clock-set-calibration" title=
 plugins that have an internal clock but must operate with another clock
 selected by the <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>.  They can track the offset and rate difference
 of their internal clock relative to the master clock by using the
-<a class="link" href="GstClock.html#gst-clock-get-calibration" title="gst_clock_get_calibration ()"><code class="function">gst_clock_get_calibration()</code></a> function. </p>
+<a class="link" href="GstClock.html#gst-clock-get-calibration" title="gst_clock_get_calibration ()"><code class="function">gst_clock_get_calibration()</code></a> function.</p>
 <p>The master/slave synchronisation can be tuned with the <a class="link" href="GstClock.html#GstClock--timeout" title="The “timeout” property"><span class="type">“timeout”</span></a>,
 <a class="link" href="GstClock.html#GstClock--window-size" title="The “window-size” property"><span class="type">“window-size”</span></a> and <a class="link" href="GstClock.html#GstClock--window-threshold" title="The “window-threshold” property"><span class="type">“window-threshold”</span></a> properties.
 The <a class="link" href="GstClock.html#GstClock--timeout" title="The “timeout” property"><span class="type">“timeout”</span></a> property defines the interval to sample the master
@@ -783,9 +783,9 @@ The difference is calculated as <em class="parameter"><code>e</code></em>
 <a name="GST-TIME-TO-TIMEVAL:CAPS"></a><h3>GST_TIME_TO_TIMEVAL()</h3>
 <pre class="programlisting">#define             GST_TIME_TO_TIMEVAL(t,tv)</pre>
 <p>Convert a <a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> to a <a href="/usr/share/gtk-doc/html/glibglib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a></p>
-<div class="note">on 32-bit systems, a timeval has a range of only 2^32 - 1 seconds,
+<div class="blockquote"><blockquote class="blockquote"><p>on 32-bit systems, a timeval has a range of only 2^32 - 1 seconds,
 which is about 68 years.  Expect trouble if you want to schedule stuff
-in your pipeline for 2038.</div>
+in your pipeline for 2038.</p></blockquote></div>
 <div class="refsect3">
 <a name="GST-TIME-TO-TIMEVAL.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1075,7 +1075,7 @@ are available, a linear regression algorithm is run on the
 observations and <em class="parameter"><code>clock</code></em>
  is recalibrated.</p>
 <p>If this functions returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, <em class="parameter"><code>r_squared</code></em>
- will contain the 
+ will contain the
 correlation coefficient of the interpolation. A value of 1.0
 means a perfect regression was performed. This value can
 be used to control the sampling frequency of the master and slave
@@ -1091,7 +1091,7 @@ clocks.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>clock</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1201,13 +1201,13 @@ gst_clock_set_master (<em class="parameter"><code><a class="link" href="GstClock
 . <em class="parameter"><code>clock</code></em>
  will be automatically
 calibrated so that <a class="link" href="GstClock.html#gst-clock-get-time" title="gst_clock_get_time ()"><code class="function">gst_clock_get_time()</code></a> reports the same time as the
-master clock.  </p>
+master clock.</p>
 <p>A clock provider that slaves its clock to a master can get the current
 calibration values with <a class="link" href="GstClock.html#gst-clock-get-calibration" title="gst_clock_get_calibration ()"><code class="function">gst_clock_get_calibration()</code></a>.</p>
 <p><em class="parameter"><code>master</code></em>
  can be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in which case <em class="parameter"><code>clock</code></em>
  will not be slaved anymore. It will
-however keep reporting its time adjusted with the last configured rate 
+however keep reporting its time adjusted with the last configured rate
 and time offsets.</p>
 <div class="refsect3">
 <a name="gst-clock-set-master.parameters"></a><h4>Parameters</h4>
@@ -1220,7 +1220,7 @@ and time offsets.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>clock</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1257,7 +1257,7 @@ not slaved to any master clock.</p>
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>clock</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -1825,7 +1825,7 @@ caller is not interested in the values.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>clock</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1874,9 +1874,18 @@ This internal time should not be in the future; that is, it should be less
 than the value of <a class="link" href="GstClock.html#gst-clock-get-internal-time" title="gst_clock_get_internal_time ()"><code class="function">gst_clock_get_internal_time()</code></a> when this function is called.</p>
 <p>Subsequent calls to <a class="link" href="GstClock.html#gst-clock-get-time" title="gst_clock_get_time ()"><code class="function">gst_clock_get_time()</code></a> will return clock times computed as
 follows:</p>
-<pre class="programlisting">
-  time = (internal_time - internal) * rate_num / rate_denom + external
-</pre>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">time <span class="gtkdoc opt">= (</span>internal_time <span class="gtkdoc opt">-</span> internal<span class="gtkdoc opt">) *</span> rate_num <span class="gtkdoc opt">/</span> rate_denom <span class="gtkdoc opt">+</span> external</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
 <p>This formula is implemented in <a class="link" href="GstClock.html#gst-clock-adjust-unlocked" title="gst_clock_adjust_unlocked ()"><code class="function">gst_clock_adjust_unlocked()</code></a>. Of course, it
 tries to do the integer arithmetic as precisely as possible.</p>
 <p>Note that <a class="link" href="GstClock.html#gst-clock-get-time" title="gst_clock_get_time ()"><code class="function">gst_clock_get_time()</code></a> always returns increasing values so when you
@@ -1910,7 +1919,7 @@ until the clock catches up.</p>
 <tr>
 <td class="parameter_name"><p>rate_num</p></td>
 <td class="parameter_description"><p>the numerator of the rate of the clock relative to its
-internal time </p></td>
+internal time</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2119,21 +2128,21 @@ gst_clock_id_get_time (<em class="parameter"><code><a class="link" href="GstCloc
 gst_clock_id_wait (<em class="parameter"><code><a class="link" href="GstClock.html#GstClockID" title="GstClockID"><span class="type">GstClockID</span></a> id</code></em>,
                    <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> *jitter</code></em>);</pre>
 <p>Perform a blocking wait on <em class="parameter"><code>id</code></em>
-. 
+.
 <em class="parameter"><code>id</code></em>
  should have been created with <a class="link" href="GstClock.html#gst-clock-new-single-shot-id" title="gst_clock_new_single_shot_id ()"><code class="function">gst_clock_new_single_shot_id()</code></a>
 or <a class="link" href="GstClock.html#gst-clock-new-periodic-id" title="gst_clock_new_periodic_id ()"><code class="function">gst_clock_new_periodic_id()</code></a> and should not have been unscheduled
-with a call to <a class="link" href="GstClock.html#gst-clock-id-unschedule" title="gst_clock_id_unschedule ()"><code class="function">gst_clock_id_unschedule()</code></a>. </p>
+with a call to <a class="link" href="GstClock.html#gst-clock-id-unschedule" title="gst_clock_id_unschedule ()"><code class="function">gst_clock_id_unschedule()</code></a>.</p>
 <p>If the <em class="parameter"><code>jitter</code></em>
  argument is not <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> and this function returns <a class="link" href="GstClock.html#GST-CLOCK-OK:CAPS"><span class="type">GST_CLOCK_OK</span></a>
 or <a class="link" href="GstClock.html#GST-CLOCK-EARLY:CAPS"><span class="type">GST_CLOCK_EARLY</span></a>, it will contain the difference
 against the clock and the time of <em class="parameter"><code>id</code></em>
  when this method was
-called. 
+called.
 Positive values indicate how late <em class="parameter"><code>id</code></em>
  was relative to the clock
-(in which case this function will return <a class="link" href="GstClock.html#GST-CLOCK-EARLY:CAPS"><span class="type">GST_CLOCK_EARLY</span></a>). 
-Negative values indicate how much time was spent waiting on the clock 
+(in which case this function will return <a class="link" href="GstClock.html#GST-CLOCK-EARLY:CAPS"><span class="type">GST_CLOCK_EARLY</span></a>).
+Negative values indicate how much time was spent waiting on the clock
 before this function returned.</p>
 <div class="refsect3">
 <a name="gst-clock-id-wait.parameters"></a><h4>Parameters</h4>
@@ -2454,35 +2463,35 @@ the jitter.</p></td>
 <hr>
 <div class="refsect2">
 <a name="GST-CLOCK-STIME-NONE:CAPS"></a><h3>GST_CLOCK_STIME_NONE</h3>
-<pre class="programlisting">#define GST_CLOCK_STIME_NONE             G_MININT64
+<pre class="programlisting">#define GST_CLOCK_STIME_NONE             ((GstClockTimeDiff)G_MININT64)
 </pre>
 <p>Constant to define an undefined clock time.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-SECOND:CAPS"></a><h3>GST_SECOND</h3>
-<pre class="programlisting">#define GST_SECOND  (G_USEC_PER_SEC * G_GINT64_CONSTANT (1000))
+<pre class="programlisting">#define GST_SECOND  ((GstClockTimeDiff)(G_USEC_PER_SEC * G_GINT64_CONSTANT (1000)))
 </pre>
 <p>Constant that defines one GStreamer second.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-MSECOND:CAPS"></a><h3>GST_MSECOND</h3>
-<pre class="programlisting">#define GST_MSECOND (GST_SECOND / G_GINT64_CONSTANT (1000))
+<pre class="programlisting">#define GST_MSECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000)))
 </pre>
 <p>Constant that defines one GStreamer millisecond.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-USECOND:CAPS"></a><h3>GST_USECOND</h3>
-<pre class="programlisting">#define GST_USECOND (GST_SECOND / G_GINT64_CONSTANT (1000000))
+<pre class="programlisting">#define GST_USECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000000)))
 </pre>
 <p>Constant that defines one GStreamer microsecond.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-NSECOND:CAPS"></a><h3>GST_NSECOND</h3>
-<pre class="programlisting">#define GST_NSECOND (GST_SECOND / G_GINT64_CONSTANT (1000000000))
+<pre class="programlisting">#define GST_NSECOND ((GstClockTimeDiff)(GST_SECOND / G_GINT64_CONSTANT (1000000000)))
 </pre>
 <p>Constant that defines one GStreamer nanosecond</p>
 </div>

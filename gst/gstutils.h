@@ -34,6 +34,10 @@ G_BEGIN_DECLS
 
 void            gst_util_set_value_from_string  (GValue *value, const gchar *value_str);
 void            gst_util_set_object_arg         (GObject *object, const gchar *name, const gchar *value);
+gboolean        gst_util_set_object_array       (GObject * object, const gchar * name,
+                                                 const GValueArray * array);
+gboolean        gst_util_get_object_array       (GObject * object, const gchar * name,
+                                                 GValueArray ** array);
 void            gst_util_dump_mem               (const guchar *mem, guint size);
 
 guint64         gst_util_gdouble_to_guint64     (gdouble value)  G_GNUC_CONST;
@@ -135,6 +139,27 @@ static inline guint64 __gst_fast_read_swap64(const guint8 *v) {
 }
 # define _GST_FAST_READ(s, d) __gst_fast_read##s((const guint8 *)(d))
 # define _GST_FAST_READ_SWAP(s, d) __gst_fast_read_swap##s((const guint8 *)(d))
+
+static inline void __gst_fast_write16 (guint8 *p, guint16 v) {
+  *(guint16*)(void*)(p) = v;
+}
+static inline void __gst_fast_write32 (guint8 *p, guint32 v) {
+  *(guint32*)(void*)(p) = v;
+}
+static inline void __gst_fast_write64 (guint8 *p, guint64 v) {
+  *(guint64*)(void*)(p) = v;
+}
+static inline void __gst_fast_write_swap16 (guint8 *p, guint16 v) {
+  *(guint16*)(void*)(p) = GUINT16_SWAP_LE_BE (v);
+}
+static inline void __gst_fast_write_swap32 (guint8 *p, guint32 v) {
+  *(guint32*)(void*)(p) = GUINT32_SWAP_LE_BE (v);
+}
+static inline void __gst_fast_write_swap64 (guint8 *p, guint64 v) {
+  *(guint64*)(void*)(p) = GUINT64_SWAP_LE_BE (v);
+}
+# define _GST_FAST_WRITE(s, d, v) __gst_fast_write##s((guint8 *)(d), (v))
+# define _GST_FAST_WRITE_SWAP(s, d, v) __gst_fast_write_swap##s((guint8 *)(d), (v))
 #endif
 #endif
 
@@ -309,70 +334,94 @@ static inline guint16 __gst_slow_read16_le (const guint8 * data) {
 /**
  * GST_WRITE_UINT64_BE:
  * @data: memory location
- * @num: value to store
+ * @val: value to store
  *
  * Store a 64 bit unsigned integer value in big endian format into the memory buffer.
  */
-#define GST_WRITE_UINT64_BE(data, num)  do { \
-                                          gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 64, 56, num); \
-                                          _GST_PUT (__put_data, 1, 64, 48, num); \
-                                          _GST_PUT (__put_data, 2, 64, 40, num); \
-                                          _GST_PUT (__put_data, 3, 64, 32, num); \
-                                          _GST_PUT (__put_data, 4, 64, 24, num); \
-                                          _GST_PUT (__put_data, 5, 64, 16, num); \
-                                          _GST_PUT (__put_data, 6, 64,  8, num); \
-                                          _GST_PUT (__put_data, 7, 64,  0, num); \
-                                        } while (0)
-
 /**
  * GST_WRITE_UINT64_LE:
  * @data: memory location
- * @num: value to store
+ * @val: value to store
  *
  * Store a 64 bit unsigned integer value in little endian format into the memory buffer.
  */
-#define GST_WRITE_UINT64_LE(data, num)  do { \
+#if GST_HAVE_UNALIGNED_ACCESS
+# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+#  define GST_WRITE_UINT64_BE(data,val) _GST_FAST_WRITE(64,data,val)
+#  define GST_WRITE_UINT64_LE(data,val) _GST_FAST_WRITE_SWAP(64,data,val)
+# else
+#  define GST_WRITE_UINT64_BE(data,val) _GST_FAST_WRITE_SWAP(64,data,val)
+#  define GST_WRITE_UINT64_LE(data,val) _GST_FAST_WRITE(64,data,val)
+# endif
+#else
+#define GST_WRITE_UINT64_BE(data,val)   do { \
                                           gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 64,  0, num); \
-                                          _GST_PUT (__put_data, 1, 64,  8, num); \
-                                          _GST_PUT (__put_data, 2, 64, 16, num); \
-                                          _GST_PUT (__put_data, 3, 64, 24, num); \
-                                          _GST_PUT (__put_data, 4, 64, 32, num); \
-                                          _GST_PUT (__put_data, 5, 64, 40, num); \
-                                          _GST_PUT (__put_data, 6, 64, 48, num); \
-                                          _GST_PUT (__put_data, 7, 64, 56, num); \
+                                          guint64 __put_val = val; \
+                                          _GST_PUT (__put_data, 0, 64, 56, __put_val); \
+                                          _GST_PUT (__put_data, 1, 64, 48, __put_val); \
+                                          _GST_PUT (__put_data, 2, 64, 40, __put_val); \
+                                          _GST_PUT (__put_data, 3, 64, 32, __put_val); \
+                                          _GST_PUT (__put_data, 4, 64, 24, __put_val); \
+                                          _GST_PUT (__put_data, 5, 64, 16, __put_val); \
+                                          _GST_PUT (__put_data, 6, 64,  8, __put_val); \
+                                          _GST_PUT (__put_data, 7, 64,  0, __put_val); \
                                         } while (0)
+
+#define GST_WRITE_UINT64_LE(data,val)   do { \
+                                          gpointer __put_data = data; \
+                                          guint64 __put_val = val; \
+                                          _GST_PUT (__put_data, 0, 64,  0, __put_val); \
+                                          _GST_PUT (__put_data, 1, 64,  8, __put_val); \
+                                          _GST_PUT (__put_data, 2, 64, 16, __put_val); \
+                                          _GST_PUT (__put_data, 3, 64, 24, __put_val); \
+                                          _GST_PUT (__put_data, 4, 64, 32, __put_val); \
+                                          _GST_PUT (__put_data, 5, 64, 40, __put_val); \
+                                          _GST_PUT (__put_data, 6, 64, 48, __put_val); \
+                                          _GST_PUT (__put_data, 7, 64, 56, __put_val); \
+                                        } while (0)
+#endif /* !GST_HAVE_UNALIGNED_ACCESS */
 
 /**
  * GST_WRITE_UINT32_BE:
  * @data: memory location
- * @num: value to store
+ * @val: value to store
  *
  * Store a 32 bit unsigned integer value in big endian format into the memory buffer.
  */
-#define GST_WRITE_UINT32_BE(data, num)  do { \
-                                          gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 32, 24, num); \
-                                          _GST_PUT (__put_data, 1, 32, 16, num); \
-                                          _GST_PUT (__put_data, 2, 32,  8, num); \
-                                          _GST_PUT (__put_data, 3, 32,  0, num); \
-                                        } while (0)
-
 /**
  * GST_WRITE_UINT32_LE:
  * @data: memory location
- * @num: value to store
+ * @val: value to store
  *
  * Store a 32 bit unsigned integer value in little endian format into the memory buffer.
  */
-#define GST_WRITE_UINT32_LE(data, num)  do { \
+#if GST_HAVE_UNALIGNED_ACCESS
+# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+#  define GST_WRITE_UINT32_BE(data,val) _GST_FAST_WRITE(32,data,val)
+#  define GST_WRITE_UINT32_LE(data,val) _GST_FAST_WRITE_SWAP(32,data,val)
+# else
+#  define GST_WRITE_UINT32_BE(data,val) _GST_FAST_WRITE_SWAP(32,data,val)
+#  define GST_WRITE_UINT32_LE(data,val) _GST_FAST_WRITE(32,data,val)
+# endif
+#else
+#define GST_WRITE_UINT32_BE(data,val)   do { \
                                           gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 32,  0, num); \
-                                          _GST_PUT (__put_data, 1, 32,  8, num); \
-                                          _GST_PUT (__put_data, 2, 32, 16, num); \
-                                          _GST_PUT (__put_data, 3, 32, 24, num); \
+                                          guint32 __put_val = val; \
+                                          _GST_PUT (__put_data, 0, 32, 24, __put_val); \
+                                          _GST_PUT (__put_data, 1, 32, 16, __put_val); \
+                                          _GST_PUT (__put_data, 2, 32,  8, __put_val); \
+                                          _GST_PUT (__put_data, 3, 32,  0, __put_val); \
                                         } while (0)
+
+#define GST_WRITE_UINT32_LE(data,val)   do { \
+                                          gpointer __put_data = data; \
+                                          guint32 __put_val = val; \
+                                          _GST_PUT (__put_data, 0, 32,  0, __put_val); \
+                                          _GST_PUT (__put_data, 1, 32,  8, __put_val); \
+                                          _GST_PUT (__put_data, 2, 32, 16, __put_val); \
+                                          _GST_PUT (__put_data, 3, 32, 24, __put_val); \
+                                        } while (0)
+#endif /* !GST_HAVE_UNALIGNED_ACCESS */
 
 /**
  * GST_WRITE_UINT24_BE:
@@ -383,9 +432,10 @@ static inline guint16 __gst_slow_read16_le (const guint8 * data) {
  */
 #define GST_WRITE_UINT24_BE(data, num)  do { \
                                           gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 32,  16, num); \
-                                          _GST_PUT (__put_data, 1, 32,  8, num); \
-                                          _GST_PUT (__put_data, 2, 32,  0, num); \
+                                          guint32 __put_val = num; \
+                                          _GST_PUT (__put_data, 0, 32,  16, __put_val); \
+                                          _GST_PUT (__put_data, 1, 32,  8, __put_val); \
+                                          _GST_PUT (__put_data, 2, 32,  0, __put_val); \
                                         } while (0)
 
 /**
@@ -397,36 +447,49 @@ static inline guint16 __gst_slow_read16_le (const guint8 * data) {
  */
 #define GST_WRITE_UINT24_LE(data, num)  do { \
                                           gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 32,  0, num); \
-                                          _GST_PUT (__put_data, 1, 32,  8, num); \
-                                          _GST_PUT (__put_data, 2, 32,  16, num); \
+                                          guint32 __put_val = num; \
+                                          _GST_PUT (__put_data, 0, 32,  0, __put_val); \
+                                          _GST_PUT (__put_data, 1, 32,  8, __put_val); \
+                                          _GST_PUT (__put_data, 2, 32,  16, __put_val); \
                                         } while (0)
 
 /**
  * GST_WRITE_UINT16_BE:
  * @data: memory location
- * @num: value to store
+ * @val: value to store
  *
  * Store a 16 bit unsigned integer value in big endian format into the memory buffer.
  */
-#define GST_WRITE_UINT16_BE(data, num)  do { \
-                                          gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 16,  8, num); \
-                                          _GST_PUT (__put_data, 1, 16,  0, num); \
-                                        } while (0)
-
 /**
  * GST_WRITE_UINT16_LE:
  * @data: memory location
- * @num: value to store
+ * @val: value to store
  *
  * Store a 16 bit unsigned integer value in little endian format into the memory buffer.
  */
-#define GST_WRITE_UINT16_LE(data, num)  do { \
+#if GST_HAVE_UNALIGNED_ACCESS
+# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+#  define GST_WRITE_UINT16_BE(data,val) _GST_FAST_WRITE(16,data,val)
+#  define GST_WRITE_UINT16_LE(data,val) _GST_FAST_WRITE_SWAP(16,data,val)
+# else
+#  define GST_WRITE_UINT16_BE(data,val) _GST_FAST_WRITE_SWAP(16,data,val)
+#  define GST_WRITE_UINT16_LE(data,val) _GST_FAST_WRITE(16,data,val)
+# endif
+#else
+#define GST_WRITE_UINT16_BE(data,val)   do { \
                                           gpointer __put_data = data; \
-                                          _GST_PUT (__put_data, 0, 16,  0, num); \
-                                          _GST_PUT (__put_data, 1, 16,  8, num); \
+                                          guint16 __put_val = val; \
+                                          _GST_PUT (__put_data, 0, 16,  8, __put_val); \
+                                          _GST_PUT (__put_data, 1, 16,  0, __put_val); \
                                         } while (0)
+
+#define GST_WRITE_UINT16_LE(data,val)   do { \
+                                          gpointer __put_data = data; \
+                                          guint16 __put_val = val; \
+                                          _GST_PUT (__put_data, 0, 16,  0, __put_val); \
+                                          _GST_PUT (__put_data, 1, 16,  8, __put_val); \
+                                        } while (0)
+#endif /* !GST_HAVE_UNALIGNED_ACCESS */
 
 /**
  * GST_WRITE_UINT8:
@@ -995,6 +1058,12 @@ gboolean      gst_util_fraction_multiply        (gint a_n, gint a_d, gint b_n, g
 gboolean      gst_util_fraction_add             (gint a_n, gint a_d, gint b_n, gint b_d,
                                                  gint *res_n, gint *res_d);
 gint          gst_util_fraction_compare         (gint a_n, gint a_d, gint b_n, gint b_d);
+
+gboolean      gst_calculate_linear_regression   (const GstClockTime * xy,
+                                                 GstClockTime * temp, guint n,
+                                                 GstClockTime * m_num, GstClockTime * m_denom,
+                                                 GstClockTime * b, GstClockTime * xbase,
+                                                 gdouble * r_squared);
 
 
 G_END_DECLS

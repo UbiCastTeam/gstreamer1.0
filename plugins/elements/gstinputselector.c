@@ -25,6 +25,7 @@
 
 /**
  * SECTION:element-input-selector
+ * @title: input-selector
  * @see_also: #GstOutputSelector
  *
  * Direct one out of N input streams to the output pad.
@@ -32,21 +33,12 @@
  * The input pads are from a GstPad subclass and have additional
  * properties, which users may find useful, namely:
  *
- * <itemizedlist>
- * <listitem>
- * "running-time": Running time of stream on pad (#gint64)
- * </listitem>
- * <listitem>
- * "tags": The currently active tags on the pad (#GstTagList, boxed type)
- * </listitem>
- * <listitem>
- * "active": If the pad is currently active (#gboolean)
- * </listitem>
- * <listitem>
- * "always-ok" : Make an inactive pads return #GST_FLOW_OK instead of
+ * * "running-time": Running time of stream on pad (#gint64)
+ * * "tags": The currently active tags on the pad (#GstTagList, boxed type)
+ * * "active": If the pad is currently active (#gboolean)
+ * * "always-ok" : Make an inactive pads return #GST_FLOW_OK instead of
  * #GST_FLOW_NOT_LINKED
- * </listitem>
- * </itemizedlist>
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -672,7 +664,10 @@ gst_selector_pad_query (GstPad * pad, GstObject * parent, GstQuery * query)
 
   switch (GST_QUERY_TYPE (query)) {
     case GST_QUERY_CAPS:
-      /* always proxy caps query, regardless of active pad or not */
+    case GST_QUERY_POSITION:
+    case GST_QUERY_DURATION:
+      /* always proxy caps/position/duration query, regardless of active pad or not
+       * See https://bugzilla.gnome.org/show_bug.cgi?id=775445 */
       res = gst_pad_peer_query (self->srcpad, query);
       break;
     case GST_QUERY_ALLOCATION:{

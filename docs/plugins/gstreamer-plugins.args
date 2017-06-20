@@ -579,6 +579,16 @@
 </ARG>
 
 <ARG>
+<NAME>GstMultiQueue::min-interleave-time</NAME>
+<TYPE>guint64</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Minimum interleave time</NICK>
+<BLURB>Minimum extra buffering for deinterleaving (size of the queues) when use-interleave=true.</BLURB>
+<DEFAULT>250000000</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>GstInputSelector::active-pad</NAME>
 <TYPE>GstPad*</TYPE>
 <RANGE></RANGE>
@@ -756,6 +766,16 @@
 <NICK>Check flags to drop buffers</NICK>
 <BLURB>Drop buffers with the given flags.</BLURB>
 <DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstIdentity::ts-offset</NAME>
+<TYPE>gint64</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Timestamp offset for synchronisation</NICK>
+<BLURB>Timestamp offset in nanoseconds for synchronisation, negative for earlier sync.</BLURB>
+<DEFAULT>0</DEFAULT>
 </ARG>
 
 <ARG>
@@ -1089,6 +1109,16 @@
 </ARG>
 
 <ARG>
+<NAME>GstFakeSink::drop-out-of-segment</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Drop out-of-segment buffers</NICK>
+<BLURB>Drop and don't render / hand off out-of-segment buffers.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>GstCapsFilter::caps</NAME>
 <TYPE>GstCaps*</TYPE>
 <RANGE></RANGE>
@@ -1216,5 +1246,15 @@
 <NICK>Forward sticky events</NICK>
 <BLURB>Forward sticky events on stream changes.</BLURB>
 <DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GstDataURISrc::uri</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>URI</NICK>
+<BLURB>URI that should be used.</BLURB>
+<DEFAULT>NULL</DEFAULT>
 </ARG>
 

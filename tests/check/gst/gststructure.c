@@ -159,6 +159,32 @@ GST_START_TEST (test_from_string)
   fail_unless_equals_int (g_value_get_boolean (val), TRUE);
   gst_structure_free (structure);
 
+  /* Tests for flagset deserialisation */
+  s = "foobar,value=0010:ffff";
+  structure = gst_structure_from_string (s, NULL);
+  fail_if (structure == NULL, "Could not get structure from string %s", s);
+  fail_unless ((val = gst_structure_get_value (structure, "value")) != NULL);
+  fail_unless (GST_VALUE_HOLDS_FLAG_SET (val));
+  gst_structure_free (structure);
+
+  /* In the presence of the hex values, the strings don't matter as long as they
+   * have the right form */
+  s = "foobar,value=0010:ffff:+random+other/not-the-other";
+  structure = gst_structure_from_string (s, NULL);
+  fail_if (structure == NULL, "Could not get structure from string %s", s);
+  fail_unless ((val = gst_structure_get_value (structure, "value")) != NULL);
+  fail_unless (GST_VALUE_HOLDS_FLAG_SET (val));
+  gst_structure_free (structure);
+
+  /* Test that a timecode string is deserialised as a string, not a flagset:
+   * https://bugzilla.gnome.org/show_bug.cgi?id=779755 */
+  s = "foobar,timecode=00:01:00:00";
+  structure = gst_structure_from_string (s, NULL);
+  fail_if (structure == NULL, "Could not get structure from string %s", s);
+  fail_unless ((val = gst_structure_get_value (structure, "timecode")) != NULL);
+  fail_unless (G_VALUE_HOLDS_STRING (val));
+  gst_structure_free (structure);
+
   s = "0.10:decoder-video/mpeg, abc=(boolean)false";
   ASSERT_CRITICAL (structure = gst_structure_from_string (s, NULL));
   fail_unless (structure == NULL, "Could not get structure from string %s", s);
@@ -211,9 +237,8 @@ GST_END_TEST;
 
 GST_START_TEST (test_to_from_string)
 {
-  GstCaps *caps1, *caps2;
   GstStructure *st1, *st2;
-  gchar *str, *res1, *res2;
+  gchar *str;
 
   /* test escaping/unescaping */
   st1 = gst_structure_new ("FooBar-123/0_1", "num", G_TYPE_INT, 9173,
@@ -223,21 +248,30 @@ GST_START_TEST (test_to_from_string)
   g_free (str);
 
   fail_unless (st2 != NULL);
+  fail_unless (gst_structure_is_equal (st1, st2),
+      "Structures did not match:\n\tStructure 1: %" GST_PTR_FORMAT
+      "\n\tStructure 2: %" GST_PTR_FORMAT "\n", st1, st2);
 
-  /* need to put structures into caps to compare */
-  caps1 = gst_caps_new_empty ();
-  gst_caps_append_structure (caps1, st1);
-  caps2 = gst_caps_new_empty ();
-  gst_caps_append_structure (caps2, st2);
-  res1 = gst_caps_to_string (caps1);
-  res2 = gst_caps_to_string (caps2);
-  fail_unless (gst_caps_is_equal (caps1, caps2),
-      "Structures did not match:\n\tStructure 1: %s\n\tStructure 2: %s\n",
-      res1, res2);
-  gst_caps_unref (caps1);
-  gst_caps_unref (caps2);
-  g_free (res1);
-  g_free (res2);
+  gst_structure_free (st1);
+  gst_structure_free (st2);
+
+  /* Test NULL strings */
+  st1 = gst_structure_new ("test", "mynullstr", G_TYPE_STRING, NULL, NULL);
+  fail_unless (st1 != NULL);
+  str = gst_structure_to_string (st1);
+  fail_unless (strcmp (str, "test, mynullstr=(string)NULL;") == 0,
+      "Failed to serialize to right string: %s", str);
+
+  st2 = gst_structure_from_string (str, NULL);
+  fail_unless (st2 != NULL);
+  g_free (str);
+
+  fail_unless (gst_structure_is_equal (st1, st2),
+      "Structures did not match:\n\tStructure 1: %" GST_PTR_FORMAT
+      "\n\tStructure 2: %" GST_PTR_FORMAT "\n", st1, st2);
+
+  gst_structure_free (st1);
+  gst_structure_free (st2);
 }
 
 GST_END_TEST;
@@ -300,9 +334,8 @@ GST_END_TEST;
 
 GST_START_TEST (test_string_properties)
 {
-  GstCaps *caps1, *caps2;
   GstStructure *st1, *st2;
-  gchar *str, *res1, *res2;
+  gchar *str;
 
   /* test escaping/unescaping */
   st1 = gst_structure_new ("RandomStructure", "prop1", G_TYPE_STRING, "foo",
@@ -313,21 +346,12 @@ GST_START_TEST (test_string_properties)
   g_free (str);
 
   fail_unless (st2 != NULL);
+  fail_unless (gst_structure_is_equal (st1, st2),
+      "Structures did not match:\n\tStructure 1: %" GST_PTR_FORMAT
+      "\n\tStructure 2: %" GST_PTR_FORMAT "\n", st1, st2);
 
-  /* need to put structures into caps to compare */
-  caps1 = gst_caps_new_empty ();
-  gst_caps_append_structure (caps1, st1);
-  caps2 = gst_caps_new_empty ();
-  gst_caps_append_structure (caps2, st2);
-  res1 = gst_caps_to_string (caps1);
-  res2 = gst_caps_to_string (caps2);
-  fail_unless (gst_caps_is_equal (caps1, caps2),
-      "Structures did not match:\n\tStructure 1: %s\n\tStructure 2: %s\n",
-      res1, res2);
-  gst_caps_unref (caps1);
-  gst_caps_unref (caps2);
-  g_free (res1);
-  g_free (res2);
+  gst_structure_free (st1);
+  gst_structure_free (st2);
 }
 
 GST_END_TEST;
@@ -464,11 +488,83 @@ GST_START_TEST (test_fixate_frac_list)
 
 GST_END_TEST;
 
-GST_START_TEST (test_is_subset)
+GST_START_TEST (test_is_subset_equal_array_list)
 {
   GstStructure *s1, *s2;
 
   s1 = gst_structure_from_string ("test/test, channels=(int){ 1, 2 }", NULL);
+  fail_if (s1 == NULL);
+  s2 = gst_structure_from_string ("test/test, channels=(int)[ 1, 2 ]", NULL);
+  fail_if (s2 == NULL);
+
+  fail_unless (gst_structure_is_subset (s1, s2));
+
+  gst_structure_free (s1);
+  gst_structure_free (s2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_is_subset_different_name)
+{
+  GstStructure *s1, *s2;
+
+  s1 = gst_structure_from_string ("test/test, channels=(int)1", NULL);
+  fail_if (s1 == NULL);
+  s2 = gst_structure_from_string ("test/baz, channels=(int)1", NULL);
+  fail_if (s2 == NULL);
+
+  fail_unless (!gst_structure_is_subset (s1, s2));
+
+  gst_structure_free (s1);
+  gst_structure_free (s2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_is_subset_superset_missing_fields)
+{
+  GstStructure *s1, *s2;
+
+  /* a missing field is equivalent to any value */
+  s1 = gst_structure_from_string ("test/test, channels=(int)1, rate=(int)1",
+      NULL);
+  fail_if (s1 == NULL);
+  s2 = gst_structure_from_string ("test/test, channels=(int)1", NULL);
+  fail_if (s2 == NULL);
+
+  fail_unless (gst_structure_is_subset (s1, s2));
+
+  gst_structure_free (s1);
+  gst_structure_free (s2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_is_subset_superset_extra_fields)
+{
+  GstStructure *s1, *s2;
+
+  /* a missing field is equivalent to any value */
+  s1 = gst_structure_from_string ("test/test, channels=(int)1", NULL);
+  fail_if (s1 == NULL);
+  s2 = gst_structure_from_string ("test/test, channels=(int)1, rate=(int)1",
+      NULL);
+  fail_if (s2 == NULL);
+
+  fail_unless (!gst_structure_is_subset (s1, s2));
+
+  gst_structure_free (s1);
+  gst_structure_free (s2);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_is_subset_superset_extra_values)
+{
+  GstStructure *s1, *s2;
+
+  s1 = gst_structure_from_string ("test/test, channels=(int)1", NULL);
   fail_if (s1 == NULL);
   s2 = gst_structure_from_string ("test/test, channels=(int)[ 1, 2 ]", NULL);
   fail_if (s2 == NULL);
@@ -792,7 +888,11 @@ gst_structure_suite (void)
   tcase_add_test (tc_chain, test_structure_new);
   tcase_add_test (tc_chain, test_fixate);
   tcase_add_test (tc_chain, test_fixate_frac_list);
-  tcase_add_test (tc_chain, test_is_subset);
+  tcase_add_test (tc_chain, test_is_subset_equal_array_list);
+  tcase_add_test (tc_chain, test_is_subset_different_name);
+  tcase_add_test (tc_chain, test_is_subset_superset_missing_fields);
+  tcase_add_test (tc_chain, test_is_subset_superset_extra_fields);
+  tcase_add_test (tc_chain, test_is_subset_superset_extra_values);
   tcase_add_test (tc_chain, test_structure_nested);
   tcase_add_test (tc_chain, test_structure_nested_from_and_to_string);
   tcase_add_test (tc_chain, test_vararg_getters);

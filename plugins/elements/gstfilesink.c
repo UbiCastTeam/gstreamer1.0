@@ -22,16 +22,16 @@
  */
 /**
  * SECTION:element-filesink
+ * @title: filesink
  * @see_also: #GstFileSrc
  *
  * Write incoming data to a file in the local file system.
  *
- * <refsect2>
- * <title>Example launch line</title>
+ * ## Example launch line
  * |[
  * gst-launch-1.0 v4l2src num-buffers=1 ! jpegenc ! filesink location=capture1.jpeg
  * ]| Capture one frame from a v4l2 camera and save as jpeg image.
- * </refsect2>
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -662,7 +662,7 @@ gst_file_sink_render_buffers (GstFileSink * sink, GstBuffer ** buffers,
       num_buffers, total_mems, sink->current_pos);
 
   return gst_writev_buffers (GST_OBJECT_CAST (sink), fileno (sink->file), NULL,
-      buffers, num_buffers, mem_nums, total_mems, NULL, &sink->current_pos);
+      buffers, num_buffers, mem_nums, total_mems, &sink->current_pos, 0);
 }
 
 static GstFlowReturn

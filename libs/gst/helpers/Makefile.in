@@ -14,7 +14,6 @@
 
 @SET_MAKE@
 
-
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -90,16 +89,16 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@ENABLE_BASH_COMPLETION_TRUE@bin_PROGRAMS = gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
-helpers_PROGRAMS = gst-plugin-scanner$(EXEEXT) $(am__EXEEXT_1)
-@HAVE_PTP_TRUE@am__append_1 = gst-ptp-helper
-@ENABLE_BASH_COMPLETION_TRUE@am__append_2 = gst-completion-helper-@GST_API_VERSION@
+helpers_PROGRAMS = gst-plugin-scanner$(EXEEXT) $(am__EXEEXT_1) \
+	$(am__EXEEXT_2)
+@ENABLE_BASH_COMPLETION_TRUE@am__append_1 = gst-completion-helper
+@HAVE_PTP_TRUE@am__append_2 = gst-ptp-helper
+@ENABLE_BASH_COMPLETION_TRUE@am__append_3 = gst-completion-helper-@GST_API_VERSION@
 subdir = libs/gst/helpers
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -107,7 +106,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -134,32 +132,30 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(am__dist_bashhelpers_DATA_DIST) \
-	$(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(helpersdir)" \
-	"$(DESTDIR)$(bashhelpersdir)"
-@HAVE_PTP_TRUE@am__EXEEXT_1 = gst-ptp-helper$(EXEEXT)
-PROGRAMS = $(bin_PROGRAMS) $(helpers_PROGRAMS)
-am__gst_completion_helper_@GST_API_VERSION@_SOURCES_DIST =  \
-	gst-completion-helper.c
-@ENABLE_BASH_COMPLETION_TRUE@am_gst_completion_helper_@GST_API_VERSION@_OBJECTS = gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.$(OBJEXT)
-gst_completion_helper_@GST_API_VERSION@_OBJECTS =  \
-	$(am_gst_completion_helper_@GST_API_VERSION@_OBJECTS)
+@ENABLE_BASH_COMPLETION_TRUE@am__EXEEXT_1 =  \
+@ENABLE_BASH_COMPLETION_TRUE@	gst-completion-helper$(EXEEXT)
+@HAVE_PTP_TRUE@am__EXEEXT_2 = gst-ptp-helper$(EXEEXT)
+am__installdirs = "$(DESTDIR)$(helpersdir)"
+PROGRAMS = $(helpers_PROGRAMS)
+am__gst_completion_helper_SOURCES_DIST = gst-completion-helper.c
+@ENABLE_BASH_COMPLETION_TRUE@am_gst_completion_helper_OBJECTS = gst_completion_helper-gst-completion-helper.$(OBJEXT)
+gst_completion_helper_OBJECTS = $(am_gst_completion_helper_OBJECTS)
 am__DEPENDENCIES_1 =
-@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_@GST_API_VERSION@_DEPENDENCIES =  \
+@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_DEPENDENCIES =  \
 @ENABLE_BASH_COMPLETION_TRUE@	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-gst_completion_helper_@GST_API_VERSION@_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(gst_completion_helper_@GST_API_VERSION@_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+gst_completion_helper_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(gst_completion_helper_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am_gst_plugin_scanner_OBJECTS =  \
 	gst_plugin_scanner-gst-plugin-scanner.$(OBJEXT)
 gst_plugin_scanner_OBJECTS = $(am_gst_plugin_scanner_OBJECTS)
@@ -212,10 +208,9 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(gst_completion_helper_@GST_API_VERSION@_SOURCES) \
+SOURCES = $(gst_completion_helper_SOURCES) \
 	$(gst_plugin_scanner_SOURCES) $(gst_ptp_helper_SOURCES)
-DIST_SOURCES =  \
-	$(am__gst_completion_helper_@GST_API_VERSION@_SOURCES_DIST) \
+DIST_SOURCES = $(am__gst_completion_helper_SOURCES_DIST) \
 	$(gst_plugin_scanner_SOURCES) \
 	$(am__gst_ptp_helper_SOURCES_DIST)
 am__can_run_installinfo = \
@@ -223,35 +218,6 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-am__dist_bashhelpers_DATA_DIST = gst
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
-am__install_max = 40
-am__nobase_strip_setup = \
-  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
-am__nobase_strip = \
-  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
-am__nobase_list = $(am__nobase_strip_setup); \
-  for p in $$list; do echo "$$p $$p"; done | \
-  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
-  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
-    if (++n[$$2] == $(am__install_max)) \
-      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
-    END { for (dir in files) print dir, files[dir] }'
-am__base_list = \
-  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
-  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__uninstall_files_from_dir = { \
-  test -z "$$files" \
-    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
-    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
-         $(am__cd) "$$dir" && rm -f $$files; }; \
-  }
-DATA = $(dist_bashhelpers_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -289,8 +255,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -313,9 +277,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -353,6 +318,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -393,19 +359,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -498,9 +454,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -565,22 +518,20 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_@GST_API_VERSION@_SOURCES = gst-completion-helper.c
-@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_@GST_API_VERSION@_CFLAGS = $(GST_OBJ_CFLAGS)
-@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_@GST_API_VERSION@_LDADD = $(GST_OBJ_LIBS)
-@ENABLE_BASH_COMPLETION_TRUE@bashhelpersdir = $(BASH_HELPERS_DIR)
-@ENABLE_BASH_COMPLETION_TRUE@dist_bashhelpers_DATA = gst
 helpersdir = $(libexecdir)/gstreamer-$(GST_API_VERSION)
 gst_plugin_scanner_SOURCES = gst-plugin-scanner.c
 gst_plugin_scanner_CFLAGS = $(GST_OBJ_CFLAGS)
 gst_plugin_scanner_LDADD = $(GST_OBJ_LIBS)
+@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_SOURCES = gst-completion-helper.c
+@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_CFLAGS = $(GST_OBJ_CFLAGS)
+@ENABLE_BASH_COMPLETION_TRUE@gst_completion_helper_LDADD = $(GST_OBJ_LIBS)
 @HAVE_PTP_TRUE@gst_ptp_helper_SOURCES = gst-ptp-helper.c
 @HAVE_PTP_TRUE@gst_ptp_helper_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
 @HAVE_PTP_TRUE@gst_ptp_helper_LDADD = $(GST_OBJ_LIBS) $(GIO_LIBS) $(CAP_LIBS)
 
 # clean out the old one to make sure everything is udpated correctly
 # remove again after release
-CLEANFILES = plugin-scanner $(am__append_2)
+CLEANFILES = plugin-scanner $(am__append_3)
 all: all-am
 
 .SUFFIXES:
@@ -614,55 +565,6 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-binPROGRAMS: $(bin_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
-	fi; \
-	for p in $$list; do echo "$$p $$p"; done | \
-	sed 's/$(EXEEXT)$$//' | \
-	while read p p1; do if test -f $$p \
-	 || test -f $$p1 \
-	  ; then echo "$$p"; echo "$$p"; else :; fi; \
-	done | \
-	sed -e 'p;s,.*/,,;n;h' \
-	    -e 's|.*|.|' \
-	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
-	sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
-	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
-	    else { print "f", $$3 "/" $$4, $$1; } } \
-	  END { for (d in files) print "f", d, files[d] }' | \
-	while read type dir files; do \
-	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	    test -z "$$files" || { \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
-	    } \
-	; done
-
-uninstall-binPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
-	files=`for p in $$list; do echo "$$p"; done | \
-	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
-	      -e 's/$$/$(EXEEXT)/' \
-	`; \
-	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(bindir)" && rm -f $$files
-
-clean-binPROGRAMS:
-	@list='$(bin_PROGRAMS)'; test -n "$$list" || exit 0; \
-	echo " rm -f" $$list; \
-	rm -f $$list || exit $$?; \
-	test -n "$(EXEEXT)" || exit 0; \
-	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
-	echo " rm -f" $$list; \
-	rm -f $$list
 install-helpersPROGRAMS: $(helpers_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(helpers_PROGRAMS)'; test -n "$(helpersdir)" || list=; \
@@ -713,9 +615,9 @@ clean-helpersPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-gst-completion-helper-@GST_API_VERSION@$(EXEEXT): $(gst_completion_helper_@GST_API_VERSION@_OBJECTS) $(gst_completion_helper_@GST_API_VERSION@_DEPENDENCIES) $(EXTRA_gst_completion_helper_@GST_API_VERSION@_DEPENDENCIES) 
-	@rm -f gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
-	$(AM_V_CCLD)$(gst_completion_helper_@GST_API_VERSION@_LINK) $(gst_completion_helper_@GST_API_VERSION@_OBJECTS) $(gst_completion_helper_@GST_API_VERSION@_LDADD) $(LIBS)
+gst-completion-helper$(EXEEXT): $(gst_completion_helper_OBJECTS) $(gst_completion_helper_DEPENDENCIES) $(EXTRA_gst_completion_helper_DEPENDENCIES) 
+	@rm -f gst-completion-helper$(EXEEXT)
+	$(AM_V_CCLD)$(gst_completion_helper_LINK) $(gst_completion_helper_OBJECTS) $(gst_completion_helper_LDADD) $(LIBS)
 
 gst-plugin-scanner$(EXEEXT): $(gst_plugin_scanner_OBJECTS) $(gst_plugin_scanner_DEPENDENCIES) $(EXTRA_gst_plugin_scanner_DEPENDENCIES) 
 	@rm -f gst-plugin-scanner$(EXEEXT)
@@ -731,7 +633,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_completion_helper-gst-completion-helper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_plugin_scanner-gst-plugin-scanner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gst_ptp_helper-gst-ptp-helper.Po@am__quote@
 
@@ -759,19 +661,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.o: gst-completion-helper.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -MT gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.o -MD -MP -MF $(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Tpo -c -o gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.o `test -f 'gst-completion-helper.c' || echo '$(srcdir)/'`gst-completion-helper.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Tpo $(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-completion-helper.c' object='gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.o' libtool=no @AMDEPBACKSLASH@
+gst_completion_helper-gst-completion-helper.o: gst-completion-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_CFLAGS) $(CFLAGS) -MT gst_completion_helper-gst-completion-helper.o -MD -MP -MF $(DEPDIR)/gst_completion_helper-gst-completion-helper.Tpo -c -o gst_completion_helper-gst-completion-helper.o `test -f 'gst-completion-helper.c' || echo '$(srcdir)/'`gst-completion-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gst_completion_helper-gst-completion-helper.Tpo $(DEPDIR)/gst_completion_helper-gst-completion-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-completion-helper.c' object='gst_completion_helper-gst-completion-helper.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -c -o gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.o `test -f 'gst-completion-helper.c' || echo '$(srcdir)/'`gst-completion-helper.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_CFLAGS) $(CFLAGS) -c -o gst_completion_helper-gst-completion-helper.o `test -f 'gst-completion-helper.c' || echo '$(srcdir)/'`gst-completion-helper.c
 
-gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.obj: gst-completion-helper.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -MT gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.obj -MD -MP -MF $(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Tpo -c -o gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.obj `if test -f 'gst-completion-helper.c'; then $(CYGPATH_W) 'gst-completion-helper.c'; else $(CYGPATH_W) '$(srcdir)/gst-completion-helper.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Tpo $(DEPDIR)/gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-completion-helper.c' object='gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.obj' libtool=no @AMDEPBACKSLASH@
+gst_completion_helper-gst-completion-helper.obj: gst-completion-helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_CFLAGS) $(CFLAGS) -MT gst_completion_helper-gst-completion-helper.obj -MD -MP -MF $(DEPDIR)/gst_completion_helper-gst-completion-helper.Tpo -c -o gst_completion_helper-gst-completion-helper.obj `if test -f 'gst-completion-helper.c'; then $(CYGPATH_W) 'gst-completion-helper.c'; else $(CYGPATH_W) '$(srcdir)/gst-completion-helper.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gst_completion_helper-gst-completion-helper.Tpo $(DEPDIR)/gst_completion_helper-gst-completion-helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gst-completion-helper.c' object='gst_completion_helper-gst-completion-helper.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_@GST_API_VERSION@_CFLAGS) $(CFLAGS) -c -o gst_completion_helper_@GST_API_VERSION@-gst-completion-helper.obj `if test -f 'gst-completion-helper.c'; then $(CYGPATH_W) 'gst-completion-helper.c'; else $(CYGPATH_W) '$(srcdir)/gst-completion-helper.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_completion_helper_CFLAGS) $(CFLAGS) -c -o gst_completion_helper-gst-completion-helper.obj `if test -f 'gst-completion-helper.c'; then $(CYGPATH_W) 'gst-completion-helper.c'; else $(CYGPATH_W) '$(srcdir)/gst-completion-helper.c'; fi`
 
 gst_plugin_scanner-gst-plugin-scanner.o: gst-plugin-scanner.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(gst_plugin_scanner_CFLAGS) $(CFLAGS) -MT gst_plugin_scanner-gst-plugin-scanner.o -MD -MP -MF $(DEPDIR)/gst_plugin_scanner-gst-plugin-scanner.Tpo -c -o gst_plugin_scanner-gst-plugin-scanner.o `test -f 'gst-plugin-scanner.c' || echo '$(srcdir)/'`gst-plugin-scanner.c
@@ -806,27 +708,6 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-dist_bashhelpersDATA: $(dist_bashhelpers_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(dist_bashhelpers_DATA)'; test -n "$(bashhelpersdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(bashhelpersdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(bashhelpersdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(bashhelpersdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(bashhelpersdir)" || exit $$?; \
-	done
-
-uninstall-dist_bashhelpersDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_bashhelpers_DATA)'; test -n "$(bashhelpersdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(bashhelpersdir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -912,9 +793,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS) $(DATA)
+all-am: Makefile $(PROGRAMS)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(helpersdir)" "$(DESTDIR)$(bashhelpersdir)"; do \
+	for dir in "$(DESTDIR)$(helpersdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -948,12 +829,10 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-@ENABLE_BASH_COMPLETION_FALSE@install-exec-hook:
-@ENABLE_BASH_COMPLETION_FALSE@uninstall-hook:
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-helpersPROGRAMS \
-	clean-libtool mostlyclean-am
+clean-am: clean-generic clean-helpersPROGRAMS clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -973,16 +852,15 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_bashhelpersDATA install-helpersPROGRAMS
+install-data-am: install-helpersPROGRAMS
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
+install-exec-am:
+
 install-html: install-html-am
 
 install-html-am:
@@ -1021,43 +899,27 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
-	uninstall-helpersPROGRAMS
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
-.MAKE: install-am install-data-am install-exec-am install-strip \
-	uninstall-am
+uninstall-am: uninstall-helpersPROGRAMS
 
-.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
-	clean-binPROGRAMS clean-generic clean-helpersPROGRAMS \
-	clean-libtool cscopelist-am ctags ctags-am distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
-	install-data-am install-data-hook install-dist_bashhelpersDATA \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-exec-hook install-helpersPROGRAMS install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-binPROGRAMS uninstall-dist_bashhelpersDATA \
-	uninstall-helpersPROGRAMS uninstall-hook
+.MAKE: install-am install-data-am install-strip
+
+.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
+	clean-helpersPROGRAMS clean-libtool cscopelist-am ctags \
+	ctags-am distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-data-hook install-dvi install-dvi-am \
+	install-exec install-exec-am install-helpersPROGRAMS \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-helpersPROGRAMS
 
 .PRECIOUS: Makefile
 
-
-@ENABLE_BASH_COMPLETION_TRUE@install-exec-hook:
-@ENABLE_BASH_COMPLETION_TRUE@	$(MKDIR_P) $(DESTDIR)$(BASH_HELPERS_DIR) && \
-@ENABLE_BASH_COMPLETION_TRUE@	cd $(DESTDIR)$(bindir) && \
-@ENABLE_BASH_COMPLETION_TRUE@	$(INSTALL) `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT) \
-@ENABLE_BASH_COMPLETION_TRUE@        $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT) && \
-@ENABLE_BASH_COMPLETION_TRUE@	rm `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT)
-
-@ENABLE_BASH_COMPLETION_TRUE@uninstall-hook:
-@ENABLE_BASH_COMPLETION_TRUE@	rm -f $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
 
 install-data-hook:
 @HAVE_PTP_HELPER_SETUID_TRUE@@HAVE_PTP_TRUE@	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper

@@ -21,6 +21,7 @@
 
 /**
  * SECTION:gstdataqueue
+ * @title: GstDataQueue
  * @short_description: Threadsafe queueing object
  *
  * #GstDataQueue is an object that handles threadsafe queueing of objects. It
@@ -235,7 +236,7 @@ gst_data_queue_new (GstDataQueueCheckFullFunction checkfull,
 
   g_return_val_if_fail (checkfull != NULL, NULL);
 
-  ret = g_object_newv (GST_TYPE_DATA_QUEUE, 0, NULL);
+  ret = g_object_new (GST_TYPE_DATA_QUEUE, NULL);
   ret->priv->checkfull = checkfull;
   ret->priv->checkdata = checkdata;
   ret->priv->fullcallback = fullcallback;
@@ -386,7 +387,7 @@ gst_data_queue_is_full (GstDataQueue * queue)
  * Sets the queue to flushing state if @flushing is %TRUE. If set to flushing
  * state, any incoming data on the @queue will be discarded. Any call currently
  * blocking on #gst_data_queue_push or #gst_data_queue_pop will return straight
- * away with a return value of %FALSE. While the @queue is in flushing state, 
+ * away with a return value of %FALSE. While the @queue is in flushing state,
  * all calls to those two functions will return %FALSE.
  *
  * MT Safe.

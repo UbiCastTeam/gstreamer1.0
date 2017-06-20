@@ -50,12 +50,12 @@ typedef enum {
 } GstEventTypeFlags;
 
 /**
- * GST_EVENT_TYPE_BOTH:
+ * GST_EVENT_TYPE_BOTH: (value 3) (type GstEventTypeFlags)
  *
  * The same thing as #GST_EVENT_TYPE_UPSTREAM | #GST_EVENT_TYPE_DOWNSTREAM.
  */
 #define GST_EVENT_TYPE_BOTH \
-    (GST_EVENT_TYPE_UPSTREAM | GST_EVENT_TYPE_DOWNSTREAM)
+    ((GstEventTypeFlags)(GST_EVENT_TYPE_UPSTREAM | GST_EVENT_TYPE_DOWNSTREAM))
 
 #define GST_EVENT_NUM_SHIFT     (8)
 
@@ -216,6 +216,9 @@ typedef enum {
 #include <gst/gstsegment.h>
 #include <gst/gstmessage.h>
 #include <gst/gstcontext.h>
+#include <gst/gststreams.h>
+#include <gst/gsttoc.h>
+#include <gst/gststreamcollection.h>
 
 G_BEGIN_DECLS
 
@@ -501,7 +504,7 @@ GstEvent *      gst_event_new_select_streams    (GList *streams);
 void            gst_event_parse_select_streams  (GstEvent *event, GList **streams);
 
 /* stream-group-done event */
-GstEvent *      gst_event_new_stream_group_done (const guint group_id) G_GNUC_MALLOC;
+GstEvent *      gst_event_new_stream_group_done (guint group_id) G_GNUC_MALLOC;
 void            gst_event_parse_stream_group_done (GstEvent *event, guint *group_id);
 
 /* EOS event */

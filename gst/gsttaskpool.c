@@ -21,6 +21,7 @@
 
 /**
  * SECTION:gsttaskpool
+ * @title: GstTaskPool
  * @short_description: Pool of GStreamer streaming threads
  * @see_also: #GstTask, #GstPad
  *
@@ -165,7 +166,7 @@ gst_task_pool_new (void)
 {
   GstTaskPool *pool;
 
-  pool = g_object_newv (GST_TYPE_TASK_POOL, 0, NULL);
+  pool = g_object_new (GST_TYPE_TASK_POOL, NULL);
 
   return pool;
 }
@@ -255,7 +256,7 @@ not_supported:
  * @pool: a #GstTaskPool
  * @id: the id
  *
- * Join a task and/or return it to the pool. @id is the id obtained from 
+ * Join a task and/or return it to the pool. @id is the id obtained from
  * gst_task_pool_push().
  */
 void

@@ -113,6 +113,11 @@
 <td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--low-watermark" title="The “low-watermark” property">low-watermark</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a></td>
+<td class="property_name"><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--min-interleave-time" title="The “min-interleave-time” property">min-interleave-time</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -162,104 +167,59 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-multiqueue.description"></a><h2>Description</h2>
-<div class="refsect2">
-<a name="id-1.2.14.8.2"></a><p>
-Multiqueue is similar to a normal <a class="link" href="gstreamer-plugins-queue.html#GstQueue"><span class="type">GstQueue</span></a> with the following additional
-features:
-</p>
-<div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><div class="itemizedlist">
-<p class="title"><b>Multiple streamhandling</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<p>
-    The element handles queueing data on more than one stream at once. To
-    achieve such a feature it has request sink pads (sinku) and
-    'sometimes' src pads (srcu).
-  </p>
-<p>
-    When requesting a given sinkpad with <a href="../html/GstElement.html#gst-element-request-pad"><code class="function">gst_element_request_pad()</code></a>,
-    the associated srcpad for that stream will be created.
-    Example: requesting sink1 will generate src1.
-  </p>
-</li></ul>
-</div></li>
-<li class="listitem"><div class="itemizedlist">
-<p class="title"><b>Non-starvation on multiple streams</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<p>
-    If more than one stream is used with the element, the streams' queues
-    will be dynamically grown (up to a limit), in order to ensure that no
-    stream is risking data starvation. This guarantees that at any given
-    time there are at least N bytes queued and available for each individual
-    stream.
-  </p>
-<p>
-    If an EOS event comes through a srcpad, the associated queue will be
-    considered as 'not-empty' in the queue-size-growing algorithm.
-  </p>
-</li></ul>
-</div></li>
-<li class="listitem"><div class="itemizedlist">
-<p class="title"><b>Non-linked srcpads graceful handling</b></p>
-<ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<p>
-    In order to better support dynamic switching between streams, the multiqueue
-    (unlike the current GStreamer queue) continues to push buffers on non-linked
-    pads rather than shutting down.
-  </p>
-<p>
-    In addition, to prevent a non-linked stream from very quickly consuming all
-    available buffers and thus 'racing ahead' of the other streams, the element
-    must ensure that buffers and inlined events for a non-linked stream are pushed
-    in the same order as they were received, relative to the other streams
-    controlled by the element. This means that a buffer cannot be pushed to a
-    non-linked pad any sooner than buffers in any other stream which were received
-    before it.
-  </p>
-</li></ul>
-</div></li>
-</ol></div>
-<p>
-</p>
-<p>
-  Data is queued until one of the limits specified by the
-  <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--max-size-buffers" title="The “max-size-buffers” property"><span class="type">“max-size-buffers”</span></a>, <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--max-size-bytes" title="The “max-size-bytes” property"><span class="type">“max-size-bytes”</span></a> and/or
-  <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--max-size-time" title="The “max-size-time” property"><span class="type">“max-size-time”</span></a> properties has been reached. Any attempt to push
-  more buffers into the queue will block the pushing thread until more space
-  becomes available. <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--extra-size-buffers" title="The “extra-size-buffers” property"><span class="type">“extra-size-buffers”</span></a>,
-</p>
-<p>
-  <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--extra-size-bytes" title="The “extra-size-bytes” property"><span class="type">“extra-size-bytes”</span></a> and <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--extra-size-time" title="The “extra-size-time” property"><span class="type">“extra-size-time”</span></a> are
-  currently unused.
-</p>
-<p>
-  The default queue size limits are 5 buffers, 10MB of data, or
-  two second worth of data, whichever is reached first. Note that the number
-  of buffers will dynamically grow depending on the fill level of 
-  other queues.
-</p>
-<p>
-  The <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue-underrun" title="The “underrun” signal"><span class="type">“underrun”</span></a> signal is emitted when all of the queues
-  are empty. The <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue-overrun" title="The “overrun” signal"><span class="type">“overrun”</span></a> signal is emitted when one of the
-  queues is filled.
-  Both signals are emitted from the context of the streaming thread.
-</p>
-<p>
-  When using <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--sync-by-running-time" title="The “sync-by-running-time” property"><span class="type">“sync-by-running-time”</span></a> the unlinked streams will
-  be throttled by the highest running-time of linked streams. This allows
-  further relinking of those unlinked streams without them being in the
-  future (i.e. to achieve gapless playback).
-  When dealing with streams which have got different consumption requirements
-  downstream (ex: video decoders which will consume more buffer (in time) than
-  audio decoders), it is recommended to group streams of the same type
-  by using the pad "group-id" property. This will further throttle streams
-  in time within that group.
-</p>
-</div>
+<p>Multiqueue is similar to a normal <a class="link" href="gstreamer-plugins-queue.html#GstQueue"><span class="type">GstQueue</span></a> with the following additional
+features:</p>
+<p>1) Multiple streamhandling</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>The element handles queueing data on more than one stream at once. To
+achieve such a feature it has request sink pads (sink<code class="literal">u</code>) and
+'sometimes' src pads (src<code class="literal">u</code>). When requesting a given sinkpad with <a href="../html/GstElement.html#gst-element-request-pad"><code class="function">gst_element_request_pad()</code></a>,
+the associated srcpad for that stream will be created.
+Example: requesting sink1 will generate src1.</p></li></ul></div>
+<p>2) Non-starvation on multiple stream</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If more than one stream is used with the element, the streams' queues
+will be dynamically grown (up to a limit), in order to ensure that no
+stream is risking data starvation. This guarantees that at any given
+time there are at least N bytes queued and available for each individual
+stream. If an EOS event comes through a srcpad, the associated queue will be
+considered as 'not-empty' in the queue-size-growing algorithm.</p></li></ul></div>
+<p>3) Non-linked srcpads graceful handling</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>In order to better support dynamic switching between streams, the multiqueue
+(unlike the current GStreamer queue) continues to push buffers on non-linked
+pads rather than shutting down. In addition, to prevent a non-linked stream from very quickly consuming all
+available buffers and thus 'racing ahead' of the other streams, the element
+must ensure that buffers and inlined events for a non-linked stream are pushed
+in the same order as they were received, relative to the other streams
+controlled by the element. This means that a buffer cannot be pushed to a
+non-linked pad any sooner than buffers in any other stream which were received
+before it.</p></li></ul></div>
+<p>Data is queued until one of the limits specified by the
+<a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--max-size-buffers" title="The “max-size-buffers” property"><span class="type">“max-size-buffers”</span></a>, <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--max-size-bytes" title="The “max-size-bytes” property"><span class="type">“max-size-bytes”</span></a> and/or
+<a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--max-size-time" title="The “max-size-time” property"><span class="type">“max-size-time”</span></a> properties has been reached. Any attempt to push
+more buffers into the queue will block the pushing thread until more space
+becomes available. <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--extra-size-buffers" title="The “extra-size-buffers” property"><span class="type">“extra-size-buffers”</span></a>,</p>
+<p><a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--extra-size-bytes" title="The “extra-size-bytes” property"><span class="type">“extra-size-bytes”</span></a> and <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--extra-size-time" title="The “extra-size-time” property"><span class="type">“extra-size-time”</span></a> are
+currently unused.</p>
+<p>The default queue size limits are 5 buffers, 10MB of data, or
+two second worth of data, whichever is reached first. Note that the number
+of buffers will dynamically grow depending on the fill level of
+other queues.</p>
+<p>The <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue-underrun" title="The “underrun” signal"><span class="type">“underrun”</span></a> signal is emitted when all of the queues
+are empty. The <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue-overrun" title="The “overrun” signal"><span class="type">“overrun”</span></a> signal is emitted when one of the
+queues is filled.
+Both signals are emitted from the context of the streaming thread.</p>
+<p>When using <a class="link" href="gstreamer-plugins-multiqueue.html#GstMultiQueue--sync-by-running-time" title="The “sync-by-running-time” property"><span class="type">“sync-by-running-time”</span></a> the unlinked streams will
+be throttled by the highest running-time of linked streams. This allows
+further relinking of those unlinked streams without them being in the
+future (i.e. to achieve gapless playback).
+When dealing with streams which have got different consumption requirements
+downstream (ex: video decoders which will consume more buffer (in time) than
+audio decoders), it is recommended to group streams of the same type
+by using the pad "group-id" property. This will further throttle streams
+in time within that group.</p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.14.8.3.1"></a><h3>Element Information</h3>
+<a name="id-1.2.15.8.14.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -285,7 +245,7 @@ features:
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.14.8.3.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.15.8.14.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -472,6 +432,14 @@ emitted based on low-/high-percent thresholds.</p>
 <p>Allowed values: [0,1]</p>
 <p>Default value: 0.01</p>
 <p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMultiQueue--min-interleave-time"></a><h3>The <code class="literal">“min-interleave-time”</code> property</h3>
+<pre class="programlisting">  “min-interleave-time”      <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a></pre>
+<p>Minimum extra buffering for deinterleaving (size of the queues) when use-interleave=true.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 250000000</p>
 </div>
 </div>
 <div class="refsect1">

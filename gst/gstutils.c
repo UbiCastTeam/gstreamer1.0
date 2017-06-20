@@ -2,6 +2,8 @@
  * Copyright (C) 1999,2000 Erik Walthinsen <omega@cse.ogi.edu>
  *                    2000 Wim Taymans <wtay@chello.be>
  *                    2002 Thomas Vander Stichele <thomas@apestaart.org>
+ *                    2004 Wim Taymans <wim@fluendo.com>
+ *                    2015 Jan Schmidt <jan@centricular.com>
  *
  * gstutils.c: Utility functions
  *
@@ -23,9 +25,14 @@
 
 /**
  * SECTION:gstutils
+ * @title: GstUtils
  * @short_description: Various utility functions
  *
  */
+
+/* FIXME 2.0: suppress warnings for deprecated API such as GValueArray
+ * with newer GLib versions (>= 2.31.0) */
+#define GLIB_DISABLE_DEPRECATION_WARNINGS
 
 #include "gst_private.h"
 #include <stdio.h>
@@ -162,6 +169,75 @@ done:
 
   g_object_set_property (object, pspec->name, &v);
   g_value_unset (&v);
+}
+
+/**
+ * gst_util_set_object_array:
+ * @object: the object to set the array to
+ * @name: the name of the property to set
+ * @array: a #GValueArray containing the values
+ *
+ * Transfer a #GValueArray to %GST_TYPE_ARRAY and set this value on the
+ * specified property name. This allow language bindings to set GST_TYPE_ARRAY
+ * properties which are otherwise not an accessible type.
+ *
+ * Since: 1.12
+ */
+gboolean
+gst_util_set_object_array (GObject * object, const gchar * name,
+    const GValueArray * array)
+{
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+  gboolean ret = FALSE;
+
+  g_value_init (&v1, G_TYPE_VALUE_ARRAY);
+  g_value_init (&v2, GST_TYPE_ARRAY);
+
+  g_value_set_static_boxed (&v1, array);
+
+  if (g_value_transform (&v1, &v2)) {
+    g_object_set_property (object, name, &v2);
+    ret = TRUE;
+  }
+
+  g_value_unset (&v1);
+  g_value_unset (&v2);
+
+  return ret;
+}
+
+/**
+ * gst_util_get_object_array:
+ * @object: the object to set the array to
+ * @name: the name of the property to set
+ * @array: (out): a return #GValueArray
+ *
+ * Get a property of type %GST_TYPE_ARRAY and transform it into a
+ * #GValueArray. This allow language bindings to get GST_TYPE_ARRAY
+ * properties which are otherwise not an accessible type.
+ *
+ * Since: 1.12
+ */
+gboolean
+gst_util_get_object_array (GObject * object, const gchar * name,
+    GValueArray ** array)
+{
+  GValue v1 = G_VALUE_INIT, v2 = G_VALUE_INIT;
+  gboolean ret = FALSE;
+
+  g_value_init (&v1, G_TYPE_VALUE_ARRAY);
+  g_value_init (&v2, GST_TYPE_ARRAY);
+
+  g_object_get_property (object, name, &v2);
+
+  if (g_value_transform (&v2, &v1)) {
+    *array = g_value_get_boxed (&v1);
+    ret = TRUE;
+  }
+
+  g_value_unset (&v2);
+
+  return ret;
 }
 
 /* work around error C2520: conversion from unsigned __int64 to double
@@ -4045,4 +4121,265 @@ gst_util_group_id_next (void)
 {
   static gint counter = 0;
   return g_atomic_int_add (&counter, 1);
+}
+
+/* Compute log2 of the passed 64-bit number by finding the highest set bit */
+static guint
+gst_log2 (GstClockTime in)
+{
+  const guint64 b[] =
+      { 0x2, 0xC, 0xF0, 0xFF00, 0xFFFF0000, 0xFFFFFFFF00000000LL };
+  const guint64 S[] = { 1, 2, 4, 8, 16, 32 };
+  int i;
+
+  guint count = 0;
+  for (i = 5; i >= 0; i--) {
+    if (in & b[i]) {
+      in >>= S[i];
+      count |= S[i];
+    }
+  }
+
+  return count;
+}
+
+/**
+ * gst_calculate_linear_regression:
+ * @xy: Pairs of (x,y) values
+ * @temp: Temporary scratch space used by the function
+ * @n: number of (x,y) pairs
+ * @m_num: (out): numerator of calculated slope
+ * @m_denom: (out): denominator of calculated slope
+ * @b: (out): Offset at Y-axis
+ * @xbase: (out): Offset at X-axis
+ * @r_squared: (out): R-squared
+ *
+ * Calculates the linear regression of the values @xy and places the
+ * result in @m_num, @m_denom, @b and @xbase, representing the function
+ *   y(x) = m_num/m_denom * (x - xbase) + b
+ * that has the least-square distance from all points @x and @y.
+ *
+ * @r_squared will contain the remaining error.
+ *
+ * If @temp is not %NULL, it will be used as temporary space for the function,
+ * in which case the function works without any allocation at all. If @temp is
+ * %NULL, an allocation will take place. @temp should have at least the same
+ * amount of memory allocated as @xy, i.e. 2*n*sizeof(GstClockTime).
+ *
+ * > This function assumes (x,y) values with reasonable large differences
+ * > between them. It will not calculate the exact results if the differences
+ * > between neighbouring values are too small due to not being able to
+ * > represent sub-integer values during the calculations.
+ *
+ * Returns: %TRUE if the linear regression was successfully calculated
+ *
+ * Since: 1.12
+ */
+/* http://mathworld.wolfram.com/LeastSquaresFitting.html
+ * with SLAVE_LOCK
+ */
+gboolean
+gst_calculate_linear_regression (const GstClockTime * xy,
+    GstClockTime * temp, guint n,
+    GstClockTime * m_num, GstClockTime * m_denom,
+    GstClockTime * b, GstClockTime * xbase, gdouble * r_squared)
+{
+  const GstClockTime *x, *y;
+  GstClockTime *newx, *newy;
+  GstClockTime xmin, ymin, xbar, ybar, xbar4, ybar4;
+  GstClockTime xmax, ymax;
+  GstClockTimeDiff sxx, sxy, syy;
+  gint i, j;
+  gint pshift = 0;
+  gint max_bits;
+
+  g_return_val_if_fail (xy != NULL, FALSE);
+  g_return_val_if_fail (m_num != NULL, FALSE);
+  g_return_val_if_fail (m_denom != NULL, FALSE);
+  g_return_val_if_fail (b != NULL, FALSE);
+  g_return_val_if_fail (xbase != NULL, FALSE);
+  g_return_val_if_fail (r_squared != NULL, FALSE);
+
+  x = xy;
+  y = xy + 1;
+
+  xbar = ybar = sxx = syy = sxy = 0;
+
+  xmin = ymin = G_MAXUINT64;
+  xmax = ymax = 0;
+  for (i = j = 0; i < n; i++, j += 2) {
+    xmin = MIN (xmin, x[j]);
+    ymin = MIN (ymin, y[j]);
+
+    xmax = MAX (xmax, x[j]);
+    ymax = MAX (ymax, y[j]);
+  }
+
+  if (temp == NULL) {
+    /* Allocate up to 1kb on the stack, otherwise heap */
+    newx = n > 64 ? g_new (GstClockTime, 2 * n) : g_newa (GstClockTime, 2 * n);
+    newy = newx + 1;
+  } else {
+    newx = temp;
+    newy = temp + 1;
+  }
+
+  /* strip off unnecessary bits of precision */
+  for (i = j = 0; i < n; i++, j += 2) {
+    newx[j] = x[j] - xmin;
+    newy[j] = y[j] - ymin;
+  }
+
+#ifdef DEBUGGING_ENABLED
+  GST_CAT_DEBUG (GST_CAT_CLOCK, "reduced numbers:");
+  for (i = j = 0; i < n; i++, j += 2)
+    GST_CAT_DEBUG (GST_CAT_CLOCK,
+        "  %" G_GUINT64_FORMAT "  %" G_GUINT64_FORMAT, newx[j], newy[j]);
+#endif
+
+  /* have to do this precisely otherwise the results are pretty much useless.
+   * should guarantee that none of these accumulators can overflow */
+
+  /* quantities on the order of 1e10 to 1e13 -> 30-35 bits;
+   * window size a max of 2^10, so
+   this addition could end up around 2^45 or so -- ample headroom */
+  for (i = j = 0; i < n; i++, j += 2) {
+    /* Just in case assumptions about headroom prove false, let's check */
+    if ((newx[j] > 0 && G_MAXUINT64 - xbar <= newx[j]) ||
+        (newy[j] > 0 && G_MAXUINT64 - ybar <= newy[j])) {
+      GST_CAT_WARNING (GST_CAT_CLOCK,
+          "Regression overflowed in clock slaving! xbar %"
+          G_GUINT64_FORMAT " newx[j] %" G_GUINT64_FORMAT " ybar %"
+          G_GUINT64_FORMAT " newy[j] %" G_GUINT64_FORMAT, xbar, newx[j], ybar,
+          newy[j]);
+      return FALSE;
+    }
+
+    xbar += newx[j];
+    ybar += newy[j];
+  }
+  xbar /= n;
+  ybar /= n;
+
+  /* multiplying directly would give quantities on the order of 1e20-1e26 ->
+   * 60 bits to 70 bits times the window size that's 80 which is too much.
+   * Instead we (1) subtract off the xbar*ybar in the loop instead of after,
+   * to avoid accumulation; (2) shift off some estimated number of bits from
+   * each multiplicand to limit the expected ceiling. For strange
+   * distributions of input values, things can still overflow, in which
+   * case we drop precision and retry - at most a few times, in practice rarely
+   */
+
+  /* Guess how many bits we might need for the usual distribution of input,
+   * with a fallback loop that drops precision if things go pear-shaped */
+  max_bits = gst_log2 (MAX (xmax - xmin, ymax - ymin)) * 7 / 8 + gst_log2 (n);
+  if (max_bits > 64)
+    pshift = max_bits - 64;
+
+  i = 0;
+  do {
+#ifdef DEBUGGING_ENABLED
+    GST_CAT_DEBUG (GST_CAT_CLOCK,
+        "Restarting regression with precision shift %u", pshift);
+#endif
+
+    xbar4 = xbar >> pshift;
+    ybar4 = ybar >> pshift;
+    sxx = syy = sxy = 0;
+    for (i = j = 0; i < n; i++, j += 2) {
+      GstClockTime newx4, newy4;
+      GstClockTimeDiff tmp;
+
+      newx4 = newx[j] >> pshift;
+      newy4 = newy[j] >> pshift;
+
+      tmp = (newx4 + xbar4) * (newx4 - xbar4);
+      if (G_UNLIKELY (tmp > 0 && sxx > 0 && (G_MAXINT64 - sxx <= tmp))) {
+        do {
+          /* Drop some precision and restart */
+          pshift++;
+          sxx /= 4;
+          tmp /= 4;
+        } while (G_MAXINT64 - sxx <= tmp);
+        break;
+      } else if (G_UNLIKELY (tmp < 0 && sxx < 0 && (G_MAXINT64 - sxx >= tmp))) {
+        do {
+          /* Drop some precision and restart */
+          pshift++;
+          sxx /= 4;
+          tmp /= 4;
+        } while (G_MININT64 - sxx >= tmp);
+        break;
+      }
+      sxx += tmp;
+
+      tmp = newy4 * newy4 - ybar4 * ybar4;
+      if (G_UNLIKELY (tmp > 0 && syy > 0 && (G_MAXINT64 - syy <= tmp))) {
+        do {
+          pshift++;
+          syy /= 4;
+          tmp /= 4;
+        } while (G_MAXINT64 - syy <= tmp);
+        break;
+      } else if (G_UNLIKELY (tmp < 0 && syy < 0 && (G_MAXINT64 - syy >= tmp))) {
+        do {
+          pshift++;
+          syy /= 4;
+          tmp /= 4;
+        } while (G_MININT64 - syy >= tmp);
+        break;
+      }
+      syy += tmp;
+
+      tmp = newx4 * newy4 - xbar4 * ybar4;
+      if (G_UNLIKELY (tmp > 0 && sxy > 0 && (G_MAXINT64 - sxy <= tmp))) {
+        do {
+          pshift++;
+          sxy /= 4;
+          tmp /= 4;
+        } while (G_MAXINT64 - sxy <= tmp);
+        break;
+      } else if (G_UNLIKELY (tmp < 0 && sxy < 0 && (G_MININT64 - sxy >= tmp))) {
+        do {
+          pshift++;
+          sxy /= 4;
+          tmp /= 4;
+        } while (G_MININT64 - sxy >= tmp);
+        break;
+      }
+      sxy += tmp;
+    }
+  } while (i < n);
+
+  if (G_UNLIKELY (sxx == 0))
+    goto invalid;
+
+  *m_num = sxy;
+  *m_denom = sxx;
+  *b = (ymin + ybar) - gst_util_uint64_scale_round (xbar, *m_num, *m_denom);
+  /* Report base starting from the most recent observation */
+  *xbase = xmax;
+  *b += gst_util_uint64_scale_round (xmax - xmin, *m_num, *m_denom);
+
+  *r_squared = ((double) sxy * (double) sxy) / ((double) sxx * (double) syy);
+
+#ifdef DEBUGGING_ENABLED
+  GST_CAT_DEBUG (GST_CAT_CLOCK, "  m      = %g", ((double) *m_num) / *m_denom);
+  GST_CAT_DEBUG (GST_CAT_CLOCK, "  b      = %" G_GUINT64_FORMAT, *b);
+  GST_CAT_DEBUG (GST_CAT_CLOCK, "  xbase  = %" G_GUINT64_FORMAT, *xbase);
+  GST_CAT_DEBUG (GST_CAT_CLOCK, "  r2     = %g", *r_squared);
+#endif
+
+  if (temp == NULL && n > 64)
+    g_free (newx);
+
+  return TRUE;
+
+invalid:
+  {
+    GST_CAT_DEBUG (GST_CAT_CLOCK, "sxx == 0, regression failed");
+    if (temp == NULL && n > 64)
+      g_free (newx);
+    return FALSE;
+  }
 }

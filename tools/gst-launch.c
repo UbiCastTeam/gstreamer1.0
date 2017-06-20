@@ -865,6 +865,8 @@ event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
             val_str = gst_caps_to_string (g_value_get_boxed (val));
           else if (G_VALUE_TYPE (val) == GST_TYPE_TAG_LIST)
             val_str = gst_tag_list_to_string (g_value_get_boxed (val));
+          else if (G_VALUE_TYPE (val) == GST_TYPE_STRUCTURE)
+            val_str = gst_structure_to_string (g_value_get_boxed (val));
           else
             val_str = gst_value_serialize (val);
         } else {
@@ -1017,7 +1019,7 @@ main (int argc, char *argv[])
       g_printerr ("Error initializing: %s\n", GST_STR_NULL (err->message));
     else
       g_printerr ("Error initializing: Unknown error!\n");
-    g_clear_error (&error);
+    g_clear_error (&err);
     g_option_context_free (ctx);
     exit (1);
   }

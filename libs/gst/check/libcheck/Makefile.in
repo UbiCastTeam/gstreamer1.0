@@ -90,25 +90,28 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@HAVE_ALARM_FALSE@am__append_1 = alarm.c
-@HAVE_CLOCK_GETTIME_FALSE@am__append_2 = clock_gettime.c
-@HAVE_STRSIGNAL_FALSE@am__append_3 = strsignal.c
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@am__append_4 = \
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	timer_create.c	\
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	timer_settime.c	\
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	timer_delete.c
+@HAVE_ALARM_FALSE@am__append_1 = libcompat/alarm.c
+@HAVE_CLOCK_GETTIME_FALSE@am__append_2 = libcompat/clock_gettime.c
+@HAVE_GETTIMEOFDAY_FALSE@am__append_3 = libcompat/gettimeofday.c
+@HAVE_LOCALTIME_R_FALSE@am__append_4 = libcompat/localtime_r.c
+@HAVE_STRSIGNAL_FALSE@am__append_5 = libcompat/strsignal.c
+@HAVE_STRDUP_FALSE@am__append_6 = libcompat/strdup.c
+@HAVE_GETLINE_FALSE@am__append_7 = libcompat/getline.c
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@am__append_8 = \
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcompat/timer_create.c	\
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcompat/timer_settime.c	\
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcompat/timer_delete.c
 
 
 # define HAVE_PTHREAD here as well so we keep changes to the code to a minimum
-@HAVE_PTHREAD_TRUE@am__append_5 = $(PTHREAD_CFLAGS) -D_GNU_SOURCE -DHAVE_PTHREAD
-@HAVE_PTHREAD_TRUE@am__append_6 = $(PTHREAD_LIBS)
-@HAVE_PTHREAD_FALSE@am__append_7 = -D_GNU_SOURCE
+@HAVE_PTHREAD_TRUE@am__append_9 = $(PTHREAD_CFLAGS) -D_GNU_SOURCE -DHAVE_PTHREAD
+@HAVE_PTHREAD_TRUE@am__append_10 = $(PTHREAD_LIBS)
+@HAVE_PTHREAD_FALSE@am__append_11 = -D_GNU_SOURCE
 subdir = libs/gst/check/libcheck
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -116,7 +119,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -155,19 +157,29 @@ am__DEPENDENCIES_1 =
 libcheckinternal_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
 am__libcheckinternal_la_SOURCES_DIST = check.c check_error.c \
 	check_list.c check_log.c check_msg.c check_pack.c \
-	check_print.c check_run.c check_str.c libcompat.c alarm.c \
-	clock_gettime.c strsignal.c timer_create.c timer_settime.c \
-	timer_delete.c check_error.h check_impl.h check_list.h \
-	check_log.h check_msg.h check_pack.h check_print.h check_str.h \
-	libcompat.h
-@HAVE_ALARM_FALSE@am__objects_1 = libcheckinternal_la-alarm.lo
-@HAVE_CLOCK_GETTIME_FALSE@am__objects_2 = libcheckinternal_la-clock_gettime.lo
-@HAVE_STRSIGNAL_FALSE@am__objects_3 =  \
-@HAVE_STRSIGNAL_FALSE@	libcheckinternal_la-strsignal.lo
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@am__objects_4 = libcheckinternal_la-timer_create.lo \
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcheckinternal_la-timer_settime.lo \
-@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcheckinternal_la-timer_delete.lo
-am__objects_5 = libcheckinternal_la-check.lo \
+	check_print.c check_run.c check_str.c libcompat/libcompat.c \
+	libcompat/alarm.c libcompat/clock_gettime.c \
+	libcompat/gettimeofday.c libcompat/localtime_r.c \
+	libcompat/strsignal.c libcompat/strdup.c libcompat/getline.c \
+	libcompat/timer_create.c libcompat/timer_settime.c \
+	libcompat/timer_delete.c check_error.h check_impl.h \
+	check_list.h check_log.h check_msg.h check_pack.h \
+	check_print.h check_str.h libcompat/libcompat.h
+am__dirstamp = $(am__leading_dot)dirstamp
+@HAVE_ALARM_FALSE@am__objects_1 =  \
+@HAVE_ALARM_FALSE@	libcompat/libcheckinternal_la-alarm.lo
+@HAVE_CLOCK_GETTIME_FALSE@am__objects_2 = libcompat/libcheckinternal_la-clock_gettime.lo
+@HAVE_GETTIMEOFDAY_FALSE@am__objects_3 = libcompat/libcheckinternal_la-gettimeofday.lo
+@HAVE_LOCALTIME_R_FALSE@am__objects_4 = libcompat/libcheckinternal_la-localtime_r.lo
+@HAVE_STRSIGNAL_FALSE@am__objects_5 = libcompat/libcheckinternal_la-strsignal.lo
+@HAVE_STRDUP_FALSE@am__objects_6 =  \
+@HAVE_STRDUP_FALSE@	libcompat/libcheckinternal_la-strdup.lo
+@HAVE_GETLINE_FALSE@am__objects_7 =  \
+@HAVE_GETLINE_FALSE@	libcompat/libcheckinternal_la-getline.lo
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@am__objects_8 = libcompat/libcheckinternal_la-timer_create.lo \
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcompat/libcheckinternal_la-timer_settime.lo \
+@HAVE_TIMER_CREATE_SETTIME_DELETE_FALSE@	libcompat/libcheckinternal_la-timer_delete.lo
+am__objects_9 = libcheckinternal_la-check.lo \
 	libcheckinternal_la-check_error.lo \
 	libcheckinternal_la-check_list.lo \
 	libcheckinternal_la-check_log.lo \
@@ -176,10 +188,12 @@ am__objects_5 = libcheckinternal_la-check.lo \
 	libcheckinternal_la-check_print.lo \
 	libcheckinternal_la-check_run.lo \
 	libcheckinternal_la-check_str.lo \
-	libcheckinternal_la-libcompat.lo $(am__objects_1) \
-	$(am__objects_2) $(am__objects_3) $(am__objects_4)
-am__objects_6 =
-am_libcheckinternal_la_OBJECTS = $(am__objects_5) $(am__objects_6)
+	libcompat/libcheckinternal_la-libcompat.lo $(am__objects_1) \
+	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
+	$(am__objects_5) $(am__objects_6) $(am__objects_7) \
+	$(am__objects_8)
+am__objects_10 =
+am_libcheckinternal_la_OBJECTS = $(am__objects_9) $(am__objects_10)
 libcheckinternal_la_OBJECTS = $(am_libcheckinternal_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -268,8 +282,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -292,9 +304,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -332,6 +345,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -372,19 +386,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -477,9 +481,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -547,9 +548,10 @@ top_srcdir = @top_srcdir@
 noinst_LTLIBRARIES = libcheckinternal.la
 EXTRA_DIST = check.h.in
 CFILES = check.c check_error.c check_list.c check_log.c check_msg.c \
-	check_pack.c check_print.c check_run.c check_str.c libcompat.c \
-	$(am__append_1) $(am__append_2) $(am__append_3) \
-	$(am__append_4)
+	check_pack.c check_print.c check_run.c check_str.c \
+	libcompat/libcompat.c $(am__append_1) $(am__append_2) \
+	$(am__append_3) $(am__append_4) $(am__append_5) \
+	$(am__append_6) $(am__append_7) $(am__append_8)
 HFILES = \
 	check_error.h	\
 	check_impl.h	\
@@ -559,13 +561,17 @@ HFILES = \
 	check_pack.h	\
 	check_print.h	\
 	check_str.h	\
-	libcompat.h
+	libcompat/libcompat.h
 
 noinst_HEADERS = $(HFILES)
 libcheckinternal_la_SOURCES = $(CFILES) $(HFILES)
+
+# Don't want libcompat to think we don't have these and substitute replacements
+# See libcompat/libcompat.h
 libcheckinternal_la_CFLAGS = -I$(top_builddir)/libs/gst/check \
-	$(am__append_5) $(am__append_7)
-libcheckinternal_la_LIBADD = $(am__append_6)
+	$(am__append_9) $(am__append_11) -DHAVE_SNPRINTF \
+	-DHAVE_VSNPRINTF -DHAVE_MALLOC -DHAVE_REALLOC
+libcheckinternal_la_LIBADD = $(am__append_10)
 all: all-am
 
 .SUFFIXES:
@@ -610,17 +616,46 @@ clean-noinstLTLIBRARIES:
 	  echo rm -f $${locs}; \
 	  rm -f $${locs}; \
 	}
+libcompat/$(am__dirstamp):
+	@$(MKDIR_P) libcompat
+	@: > libcompat/$(am__dirstamp)
+libcompat/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) libcompat/$(DEPDIR)
+	@: > libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-libcompat.lo: libcompat/$(am__dirstamp) \
+	libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-alarm.lo: libcompat/$(am__dirstamp) \
+	libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-clock_gettime.lo:  \
+	libcompat/$(am__dirstamp) libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-gettimeofday.lo:  \
+	libcompat/$(am__dirstamp) libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-localtime_r.lo:  \
+	libcompat/$(am__dirstamp) libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-strsignal.lo: libcompat/$(am__dirstamp) \
+	libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-strdup.lo: libcompat/$(am__dirstamp) \
+	libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-getline.lo: libcompat/$(am__dirstamp) \
+	libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-timer_create.lo:  \
+	libcompat/$(am__dirstamp) libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-timer_settime.lo:  \
+	libcompat/$(am__dirstamp) libcompat/$(DEPDIR)/$(am__dirstamp)
+libcompat/libcheckinternal_la-timer_delete.lo:  \
+	libcompat/$(am__dirstamp) libcompat/$(DEPDIR)/$(am__dirstamp)
 
 libcheckinternal.la: $(libcheckinternal_la_OBJECTS) $(libcheckinternal_la_DEPENDENCIES) $(EXTRA_libcheckinternal_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcheckinternal_la_LINK)  $(libcheckinternal_la_OBJECTS) $(libcheckinternal_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f libcompat/*.$(OBJEXT)
+	-rm -f libcompat/*.lo
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-alarm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-check.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-check_error.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-check_list.Plo@am__quote@
@@ -630,12 +665,17 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-check_print.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-check_run.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-check_str.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-clock_gettime.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-libcompat.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-strsignal.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-timer_create.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-timer_delete.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcheckinternal_la-timer_settime.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-alarm.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-clock_gettime.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-getline.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-gettimeofday.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-libcompat.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-localtime_r.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-strdup.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-strsignal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-timer_create.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-timer_delete.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libcompat/$(DEPDIR)/libcheckinternal_la-timer_settime.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -724,60 +764,89 @@ libcheckinternal_la-check_str.lo: check_str.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-check_str.lo `test -f 'check_str.c' || echo '$(srcdir)/'`check_str.c
 
-libcheckinternal_la-libcompat.lo: libcompat.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-libcompat.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-libcompat.Tpo -c -o libcheckinternal_la-libcompat.lo `test -f 'libcompat.c' || echo '$(srcdir)/'`libcompat.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-libcompat.Tpo $(DEPDIR)/libcheckinternal_la-libcompat.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat.c' object='libcheckinternal_la-libcompat.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-libcompat.lo: libcompat/libcompat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-libcompat.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-libcompat.Tpo -c -o libcompat/libcheckinternal_la-libcompat.lo `test -f 'libcompat/libcompat.c' || echo '$(srcdir)/'`libcompat/libcompat.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-libcompat.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-libcompat.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/libcompat.c' object='libcompat/libcheckinternal_la-libcompat.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-libcompat.lo `test -f 'libcompat.c' || echo '$(srcdir)/'`libcompat.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-libcompat.lo `test -f 'libcompat/libcompat.c' || echo '$(srcdir)/'`libcompat/libcompat.c
 
-libcheckinternal_la-alarm.lo: alarm.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-alarm.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-alarm.Tpo -c -o libcheckinternal_la-alarm.lo `test -f 'alarm.c' || echo '$(srcdir)/'`alarm.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-alarm.Tpo $(DEPDIR)/libcheckinternal_la-alarm.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='alarm.c' object='libcheckinternal_la-alarm.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-alarm.lo: libcompat/alarm.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-alarm.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-alarm.Tpo -c -o libcompat/libcheckinternal_la-alarm.lo `test -f 'libcompat/alarm.c' || echo '$(srcdir)/'`libcompat/alarm.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-alarm.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-alarm.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/alarm.c' object='libcompat/libcheckinternal_la-alarm.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-alarm.lo `test -f 'alarm.c' || echo '$(srcdir)/'`alarm.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-alarm.lo `test -f 'libcompat/alarm.c' || echo '$(srcdir)/'`libcompat/alarm.c
 
-libcheckinternal_la-clock_gettime.lo: clock_gettime.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-clock_gettime.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-clock_gettime.Tpo -c -o libcheckinternal_la-clock_gettime.lo `test -f 'clock_gettime.c' || echo '$(srcdir)/'`clock_gettime.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-clock_gettime.Tpo $(DEPDIR)/libcheckinternal_la-clock_gettime.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='clock_gettime.c' object='libcheckinternal_la-clock_gettime.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-clock_gettime.lo: libcompat/clock_gettime.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-clock_gettime.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-clock_gettime.Tpo -c -o libcompat/libcheckinternal_la-clock_gettime.lo `test -f 'libcompat/clock_gettime.c' || echo '$(srcdir)/'`libcompat/clock_gettime.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-clock_gettime.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-clock_gettime.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/clock_gettime.c' object='libcompat/libcheckinternal_la-clock_gettime.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-clock_gettime.lo `test -f 'clock_gettime.c' || echo '$(srcdir)/'`clock_gettime.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-clock_gettime.lo `test -f 'libcompat/clock_gettime.c' || echo '$(srcdir)/'`libcompat/clock_gettime.c
 
-libcheckinternal_la-strsignal.lo: strsignal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-strsignal.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-strsignal.Tpo -c -o libcheckinternal_la-strsignal.lo `test -f 'strsignal.c' || echo '$(srcdir)/'`strsignal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-strsignal.Tpo $(DEPDIR)/libcheckinternal_la-strsignal.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strsignal.c' object='libcheckinternal_la-strsignal.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-gettimeofday.lo: libcompat/gettimeofday.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-gettimeofday.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-gettimeofday.Tpo -c -o libcompat/libcheckinternal_la-gettimeofday.lo `test -f 'libcompat/gettimeofday.c' || echo '$(srcdir)/'`libcompat/gettimeofday.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-gettimeofday.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-gettimeofday.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/gettimeofday.c' object='libcompat/libcheckinternal_la-gettimeofday.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-strsignal.lo `test -f 'strsignal.c' || echo '$(srcdir)/'`strsignal.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-gettimeofday.lo `test -f 'libcompat/gettimeofday.c' || echo '$(srcdir)/'`libcompat/gettimeofday.c
 
-libcheckinternal_la-timer_create.lo: timer_create.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-timer_create.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-timer_create.Tpo -c -o libcheckinternal_la-timer_create.lo `test -f 'timer_create.c' || echo '$(srcdir)/'`timer_create.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-timer_create.Tpo $(DEPDIR)/libcheckinternal_la-timer_create.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='timer_create.c' object='libcheckinternal_la-timer_create.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-localtime_r.lo: libcompat/localtime_r.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-localtime_r.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-localtime_r.Tpo -c -o libcompat/libcheckinternal_la-localtime_r.lo `test -f 'libcompat/localtime_r.c' || echo '$(srcdir)/'`libcompat/localtime_r.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-localtime_r.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-localtime_r.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/localtime_r.c' object='libcompat/libcheckinternal_la-localtime_r.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-timer_create.lo `test -f 'timer_create.c' || echo '$(srcdir)/'`timer_create.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-localtime_r.lo `test -f 'libcompat/localtime_r.c' || echo '$(srcdir)/'`libcompat/localtime_r.c
 
-libcheckinternal_la-timer_settime.lo: timer_settime.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-timer_settime.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-timer_settime.Tpo -c -o libcheckinternal_la-timer_settime.lo `test -f 'timer_settime.c' || echo '$(srcdir)/'`timer_settime.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-timer_settime.Tpo $(DEPDIR)/libcheckinternal_la-timer_settime.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='timer_settime.c' object='libcheckinternal_la-timer_settime.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-strsignal.lo: libcompat/strsignal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-strsignal.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-strsignal.Tpo -c -o libcompat/libcheckinternal_la-strsignal.lo `test -f 'libcompat/strsignal.c' || echo '$(srcdir)/'`libcompat/strsignal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-strsignal.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-strsignal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/strsignal.c' object='libcompat/libcheckinternal_la-strsignal.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-timer_settime.lo `test -f 'timer_settime.c' || echo '$(srcdir)/'`timer_settime.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-strsignal.lo `test -f 'libcompat/strsignal.c' || echo '$(srcdir)/'`libcompat/strsignal.c
 
-libcheckinternal_la-timer_delete.lo: timer_delete.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcheckinternal_la-timer_delete.lo -MD -MP -MF $(DEPDIR)/libcheckinternal_la-timer_delete.Tpo -c -o libcheckinternal_la-timer_delete.lo `test -f 'timer_delete.c' || echo '$(srcdir)/'`timer_delete.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcheckinternal_la-timer_delete.Tpo $(DEPDIR)/libcheckinternal_la-timer_delete.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='timer_delete.c' object='libcheckinternal_la-timer_delete.lo' libtool=yes @AMDEPBACKSLASH@
+libcompat/libcheckinternal_la-strdup.lo: libcompat/strdup.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-strdup.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-strdup.Tpo -c -o libcompat/libcheckinternal_la-strdup.lo `test -f 'libcompat/strdup.c' || echo '$(srcdir)/'`libcompat/strdup.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-strdup.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-strdup.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/strdup.c' object='libcompat/libcheckinternal_la-strdup.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcheckinternal_la-timer_delete.lo `test -f 'timer_delete.c' || echo '$(srcdir)/'`timer_delete.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-strdup.lo `test -f 'libcompat/strdup.c' || echo '$(srcdir)/'`libcompat/strdup.c
+
+libcompat/libcheckinternal_la-getline.lo: libcompat/getline.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-getline.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-getline.Tpo -c -o libcompat/libcheckinternal_la-getline.lo `test -f 'libcompat/getline.c' || echo '$(srcdir)/'`libcompat/getline.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-getline.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-getline.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/getline.c' object='libcompat/libcheckinternal_la-getline.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-getline.lo `test -f 'libcompat/getline.c' || echo '$(srcdir)/'`libcompat/getline.c
+
+libcompat/libcheckinternal_la-timer_create.lo: libcompat/timer_create.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-timer_create.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-timer_create.Tpo -c -o libcompat/libcheckinternal_la-timer_create.lo `test -f 'libcompat/timer_create.c' || echo '$(srcdir)/'`libcompat/timer_create.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-timer_create.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-timer_create.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/timer_create.c' object='libcompat/libcheckinternal_la-timer_create.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-timer_create.lo `test -f 'libcompat/timer_create.c' || echo '$(srcdir)/'`libcompat/timer_create.c
+
+libcompat/libcheckinternal_la-timer_settime.lo: libcompat/timer_settime.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-timer_settime.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-timer_settime.Tpo -c -o libcompat/libcheckinternal_la-timer_settime.lo `test -f 'libcompat/timer_settime.c' || echo '$(srcdir)/'`libcompat/timer_settime.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-timer_settime.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-timer_settime.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/timer_settime.c' object='libcompat/libcheckinternal_la-timer_settime.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-timer_settime.lo `test -f 'libcompat/timer_settime.c' || echo '$(srcdir)/'`libcompat/timer_settime.c
+
+libcompat/libcheckinternal_la-timer_delete.lo: libcompat/timer_delete.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -MT libcompat/libcheckinternal_la-timer_delete.lo -MD -MP -MF libcompat/$(DEPDIR)/libcheckinternal_la-timer_delete.Tpo -c -o libcompat/libcheckinternal_la-timer_delete.lo `test -f 'libcompat/timer_delete.c' || echo '$(srcdir)/'`libcompat/timer_delete.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libcompat/$(DEPDIR)/libcheckinternal_la-timer_delete.Tpo libcompat/$(DEPDIR)/libcheckinternal_la-timer_delete.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libcompat/timer_delete.c' object='libcompat/libcheckinternal_la-timer_delete.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcheckinternal_la_CFLAGS) $(CFLAGS) -c -o libcompat/libcheckinternal_la-timer_delete.lo `test -f 'libcompat/timer_delete.c' || echo '$(srcdir)/'`libcompat/timer_delete.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
 	-rm -rf .libs _libs
+	-rm -rf libcompat/.libs libcompat/_libs
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -891,6 +960,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f libcompat/$(DEPDIR)/$(am__dirstamp)
+	-rm -f libcompat/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -901,7 +972,7 @@ clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) libcompat/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -947,7 +1018,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) libcompat/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

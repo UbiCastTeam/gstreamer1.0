@@ -97,7 +97,6 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
-	$(top_srcdir)/common/m4/as-docbook.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
@@ -105,7 +104,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
-	$(top_srcdir)/common/m4/gst-doc.m4 \
 	$(top_srcdir)/common/m4/gst-error.m4 \
 	$(top_srcdir)/common/m4/gst-feature.m4 \
 	$(top_srcdir)/common/m4/gst-function.m4 \
@@ -178,21 +176,22 @@ am__DEPENDENCIES_3 =
 libgstreamer_@GST_API_VERSION@_la_DEPENDENCIES =  \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3) \
+	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_3)
 am__libgstreamer_@GST_API_VERSION@_la_SOURCES_DIST = gst.c gstobject.c \
 	gstallocator.c gstbin.c gstbuffer.c gstbufferlist.c \
 	gstbufferpool.c gstbus.c gstcaps.c gstcapsfeatures.c \
-	gstchildproxy.c gstclock.c gstclock-linreg.c gstcontext.c \
-	gstcontrolbinding.c gstcontrolsource.c gstdatetime.c \
-	gstdebugutils.c gstdevice.c gstdevicemonitor.c \
-	gstdeviceprovider.c gstdeviceproviderfactory.c gstelement.c \
-	gstelementfactory.c gsterror.c gstevent.c gstformat.c \
-	gstghostpad.c gstinfo.c gstiterator.c gstatomicqueue.c \
-	gstmessage.c gstmeta.c gstmemory.c gstminiobject.c gstpad.c \
-	gstpadtemplate.c gstparamspecs.c gstpipeline.c gstplugin.c \
-	gstpluginfeature.c gstpluginloader.c gstpoll.c gstpreset.c \
-	gstprotection.c gstquark.c gstquery.c gstregistry.c \
-	gstregistrychunks.c gstsample.c gstsegment.c \
+	gstchildproxy.c gstclock.c gstcontext.c gstcontrolbinding.c \
+	gstcontrolsource.c gstdatetime.c gstdebugutils.c gstdevice.c \
+	gstdevicemonitor.c gstdeviceprovider.c \
+	gstdeviceproviderfactory.c gstdynamictypefactory.c \
+	gstelement.c gstelementfactory.c gsterror.c gstevent.c \
+	gstformat.c gstghostpad.c gstinfo.c gstiterator.c \
+	gstatomicqueue.c gstmessage.c gstmeta.c gstmemory.c \
+	gstminiobject.c gstpad.c gstpadtemplate.c gstparamspecs.c \
+	gstpipeline.c gstplugin.c gstpluginfeature.c gstpluginloader.c \
+	gstpoll.c gstpreset.c gstprotection.c gstquark.c gstquery.c \
+	gstregistry.c gstregistrychunks.c gstsample.c gstsegment.c \
 	gststreamcollection.c gststreams.c gststructure.c \
 	gstsystemclock.c gsttaglist.c gsttagsetter.c gsttask.c \
 	gsttaskpool.c gsttoc.c gsttocsetter.c gsttracer.c \
@@ -213,7 +212,6 @@ am_libgstreamer_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstreamer_@GST_API_VERSION@_la-gstcapsfeatures.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstchildproxy.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstclock.lo \
-	libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstcontext.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstcontrolbinding.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstcontrolsource.lo \
@@ -223,6 +221,7 @@ am_libgstreamer_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstreamer_@GST_API_VERSION@_la-gstdevicemonitor.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstdeviceprovider.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstdeviceproviderfactory.lo \
+	libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstelement.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstelementfactory.lo \
 	libgstreamer_@GST_API_VERSION@_la-gsterror.lo \
@@ -412,8 +411,6 @@ BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 BASH_HELPERS_DIR = @BASH_HELPERS_DIR@
 BISON_PATH = @BISON_PATH@
 CAP_LIBS = @CAP_LIBS@
-CAT_ENTRY_END = @CAT_ENTRY_END@
-CAT_ENTRY_START = @CAT_ENTRY_START@
 CC = @CC@
 CCAS = @CCAS@
 CCASDEPMODE = @CCASDEPMODE@
@@ -436,9 +433,10 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
-DOCBOOK_ROOT = @DOCBOOK_ROOT@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
+DW_CFLAGS = @DW_CFLAGS@
+DW_LIBS = @DW_LIBS@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -476,6 +474,7 @@ GST_ALL_CXXFLAGS = @GST_ALL_CXXFLAGS@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
 GST_ALL_LIBS = @GST_ALL_LIBS@
 GST_API_VERSION = @GST_API_VERSION@
+GST_COMPLETION_HELPER_INSTALLED = @GST_COMPLETION_HELPER_INSTALLED@
 GST_CURRENT = @GST_CURRENT@
 GST_DISABLE_GST_DEBUG_DEFINE = @GST_DISABLE_GST_DEBUG_DEFINE@
 GST_DISABLE_GST_TRACER_HOOKS_DEFINE = @GST_DISABLE_GST_TRACER_HOOKS_DEFINE@
@@ -516,19 +515,9 @@ GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_CAP = @HAVE_CAP@
-HAVE_DOCBOOK2PS = @HAVE_DOCBOOK2PS@
-HAVE_DVIPS = @HAVE_DVIPS@
-HAVE_EPSTOPDF = @HAVE_EPSTOPDF@
 HAVE_FORK = @HAVE_FORK@
 HAVE_GMP = @HAVE_GMP@
 HAVE_GSL = @HAVE_GSL@
-HAVE_JADETEX = @HAVE_JADETEX@
-HAVE_PNGTOPNM = @HAVE_PNGTOPNM@
-HAVE_PNMTOPS = @HAVE_PNMTOPS@
-HAVE_PS2PDF = @HAVE_PS2PDF@
-HAVE_XMLLINT = @HAVE_XMLLINT@
-HAVE_XSLTPROC = @HAVE_XSLTPROC@
-HOST_CPU = @HOST_CPU@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -621,9 +610,6 @@ WIN32_LIBS = @WIN32_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-XML_CATALOG = @XML_CATALOG@
-XSLTPROC = @XSLTPROC@
-XSLTPROC_FLAGS = @XSLTPROC_FLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -728,7 +714,6 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstcapsfeatures.c	\
 	gstchildproxy.c		\
 	gstclock.c		\
-	gstclock-linreg.c	\
 	gstcontext.c \
 	gstcontrolbinding.c \
 	gstcontrolsource.c \
@@ -738,6 +723,7 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstdevicemonitor.c 	\
 	gstdeviceprovider.c	\
 	gstdeviceproviderfactory.c \
+	gstdynamictypefactory.c \
 	gstelement.c		\
 	gstelementfactory.c	\
 	gsterror.c		\
@@ -812,6 +798,8 @@ libgstreamer_@GST_API_VERSION@_la_CFLAGS = \
 	-DGST_API_VERSION=\""$(GST_API_VERSION)"\" 	\
 	-DGST_DISABLE_DEPRECATED			\
 	$(VALGRIND_CFLAGS)				\
+	$(UNWIND_CFLAGS)				\
+	$(DW_CFLAGS)				\
 	$(GST_ALL_CFLAGS)
 
 libgstreamer_@GST_API_VERSION@_la_LIBADD = \
@@ -820,6 +808,8 @@ libgstreamer_@GST_API_VERSION@_la_LIBADD = \
 	$(GST_ALL_LIBS)					\
 	$(WIN32_LIBS)					\
 	$(SOCKET_LIBS)					\
+	$(UNWIND_LIBS)					\
+	$(DW_LIBS)					\
 	$(LIBM)
 
 libgstreamer_@GST_API_VERSION@_la_LDFLAGS = \
@@ -851,6 +841,7 @@ gst_headers = \
 	gstdevice.h		\
 	gstdeviceprovider.h	\
 	gstdeviceproviderfactory.h \
+	gstdynamictypefactory.h \
 	gstelementfactory.h	\
 	gsterror.h		\
 	gstevent.h		\
@@ -1026,7 +1017,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcaps.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcapsfeatures.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstchildproxy.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstclock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcontext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcontrolbinding.Plo@am__quote@
@@ -1037,6 +1027,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdevicemonitor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdeviceprovider.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdeviceproviderfactory.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstelement.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstelementfactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstenumtypes.Plo@am__quote@
@@ -1197,13 +1188,6 @@ libgstreamer_@GST_API_VERSION@_la-gstclock.lo: gstclock.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstclock.lo `test -f 'gstclock.c' || echo '$(srcdir)/'`gstclock.c
 
-libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.lo: gstclock-linreg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.lo `test -f 'gstclock-linreg.c' || echo '$(srcdir)/'`gstclock-linreg.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstclock-linreg.c' object='libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstclock-linreg.lo `test -f 'gstclock-linreg.c' || echo '$(srcdir)/'`gstclock-linreg.c
-
 libgstreamer_@GST_API_VERSION@_la-gstcontext.lo: gstcontext.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstcontext.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcontext.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstcontext.lo `test -f 'gstcontext.c' || echo '$(srcdir)/'`gstcontext.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcontext.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstcontext.Plo
@@ -1266,6 +1250,13 @@ libgstreamer_@GST_API_VERSION@_la-gstdeviceproviderfactory.lo: gstdeviceprovider
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstdeviceproviderfactory.c' object='libgstreamer_@GST_API_VERSION@_la-gstdeviceproviderfactory.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstdeviceproviderfactory.lo `test -f 'gstdeviceproviderfactory.c' || echo '$(srcdir)/'`gstdeviceproviderfactory.c
+
+libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.lo: gstdynamictypefactory.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.lo `test -f 'gstdynamictypefactory.c' || echo '$(srcdir)/'`gstdynamictypefactory.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstdynamictypefactory.c' object='libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstdynamictypefactory.lo `test -f 'gstdynamictypefactory.c' || echo '$(srcdir)/'`gstdynamictypefactory.c
 
 libgstreamer_@GST_API_VERSION@_la-gstelement.lo: gstelement.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstelement.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstelement.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstelement.lo `test -f 'gstelement.c' || echo '$(srcdir)/'`gstelement.c

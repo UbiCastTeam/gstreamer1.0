@@ -22,6 +22,7 @@
 
 /**
  * SECTION:gst
+ * @title: GStreamer
  * @short_description: Media library supporting arbitrary formats and filter
  *                     graphs.
  *
@@ -40,9 +41,9 @@
  * and argv variables so that GStreamer can process its own command line
  * options, as shown in the following example.
  *
- * <example>
- * <title>Initializing the gstreamer library</title>
- * <programlisting language="c">
+ * ## Initializing the gstreamer library
+ *
+ * |[ <!-- language="C" -->
  * int
  * main (int argc, char *argv[])
  * {
@@ -50,17 +51,16 @@
  *   gst_init (&amp;argc, &amp;argv);
  *   ...
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
  * It's allowed to pass two %NULL pointers to gst_init() in case you don't want
  * to pass the command line args to GStreamer.
  *
  * You can also use GOption to initialize your own parameters as shown in
  * the next code fragment:
- * <example>
- * <title>Initializing own parameters when initializing gstreamer</title>
- * <programlisting>
+ *
+ * ## Initializing own parameters when initializing gstreamer
+ * |[ <!-- language="C" -->
  * static gboolean stats = FALSE;
  * ...
  * int
@@ -81,16 +81,14 @@
  *  g_option_context_free (ctx);
  * ...
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
  * Use gst_version() to query the library version at runtime or use the
  * GST_VERSION_* macros to find the version at compile time. Optionally
  * gst_version_string() returns a printable string.
  *
  * The gst_deinit() call is used to clean up all internal resources used
- * by <application>GStreamer</application>. It is mostly used in unit tests 
- * to check for leaks.
+ * by GStreamer. It is mostly used in unit tests to check for leaks.
  */
 
 #include "gst_private.h"
@@ -131,6 +129,7 @@ HMODULE _priv_gst_dll_handle = NULL;
 #ifndef GST_DISABLE_REGISTRY
 GList *_priv_gst_plugin_paths = NULL;   /* for delayed processing in init_post */
 
+extern gboolean _priv_gst_disable_registry;
 extern gboolean _priv_gst_disable_registry_update;
 #endif
 
@@ -380,11 +379,9 @@ gst_init_check (int *argc, char **argv[], GError ** err)
  * <link linkend="gst-running">Running GStreamer Applications</link>
  * for how to disable automatic registry updates.
  *
- * <note><para>
- * This function will terminate your program if it was unable to initialize
- * GStreamer for some reason.  If you want your program to fall back,
- * use gst_init_check() instead.
- * </para></note>
+ * > This function will terminate your program if it was unable to initialize
+ * > GStreamer for some reason.  If you want your program to fall back,
+ * > use gst_init_check() instead.
  *
  * WARNING: This function does not work in the same way as corresponding
  * functions in other glib-style libraries, such as gtk_init\(\). In
@@ -510,6 +507,15 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
   GST_INFO ("Initializing GStreamer Core Library version %s", VERSION);
   GST_INFO ("Using library installed in %s", libdir);
   g_free (libdir);
+
+#ifndef GST_DISABLE_REGISTRY
+  {
+    const gchar *disable_registry;
+    if ((disable_registry = g_getenv ("GST_REGISTRY_DISABLE"))) {
+      _priv_gst_disable_registry = (strcmp (disable_registry, "yes") == 0);
+    }
+  }
+#endif
 
   /* Print some basic system details if possible (OS/architecture) */
 #ifdef HAVE_SYS_UTSNAME_H
@@ -680,6 +686,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_allocator_flags_get_type ());
   g_type_class_ref (gst_stream_flags_get_type ());
   g_type_class_ref (gst_stream_type_get_type ());
+  g_type_class_ref (gst_stack_trace_flags_get_type ());
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
@@ -899,7 +906,8 @@ parse_one_option (gint opt, const gchar * arg, GError ** err)
       break;
     case ARG_PLUGIN_PATH:
 #ifndef GST_DISABLE_REGISTRY
-      split_and_iterate (arg, G_SEARCHPATH_SEPARATOR_S, add_path_func, NULL);
+      if (!_priv_gst_disable_registry)
+        split_and_iterate (arg, G_SEARCHPATH_SEPARATOR_S, add_path_func, NULL);
 #endif /* GST_DISABLE_REGISTRY */
       break;
     case ARG_PLUGIN_LOAD:
@@ -910,7 +918,8 @@ parse_one_option (gint opt, const gchar * arg, GError ** err)
       break;
     case ARG_REGISTRY_UPDATE_DISABLE:
 #ifndef GST_DISABLE_REGISTRY
-      _priv_gst_disable_registry_update = TRUE;
+      if (!_priv_gst_disable_registry)
+        _priv_gst_disable_registry_update = TRUE;
 #endif
       break;
     case ARG_REGISTRY_FORK_DISABLE:
@@ -978,7 +987,7 @@ parse_goption_arg (const gchar * opt,
  * This function is therefore mostly used by testsuites and other memory
  * profiling tools.
  *
- * After this call GStreamer (including this method) should not be used anymore. 
+ * After this call GStreamer (including this method) should not be used anymore.
  */
 void
 gst_deinit (void)
@@ -994,7 +1003,7 @@ gst_deinit (void)
   }
   g_thread_pool_set_max_unused_threads (0);
   bin_class = GST_BIN_CLASS (g_type_class_peek (gst_bin_get_type ()));
-  if (bin_class->pool != NULL) {
+  if (bin_class && bin_class->pool != NULL) {
     g_thread_pool_free (bin_class->pool, FALSE, TRUE);
     bin_class->pool = NULL;
   }
@@ -1125,6 +1134,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_allocator_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stream_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_debug_color_mode_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_stack_trace_flags_get_type ()));
 
   gst_deinitialized = TRUE;
   GST_INFO ("deinitialized GStreamer");

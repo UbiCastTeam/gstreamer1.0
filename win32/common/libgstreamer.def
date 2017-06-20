@@ -144,6 +144,7 @@ EXPORTS
 	gst_buffer_is_all_memory_writable
 	gst_buffer_is_memory_range_writable
 	gst_buffer_iterate_meta
+	gst_buffer_iterate_meta_filtered
 	gst_buffer_list_copy_deep
 	gst_buffer_list_foreach
 	gst_buffer_list_get
@@ -224,6 +225,7 @@ EXPORTS
 	gst_bus_sync_signal_handler
 	gst_bus_timed_pop
 	gst_bus_timed_pop_filtered
+	gst_calculate_linear_regression
 	gst_caps_append
 	gst_caps_append_structure
 	gst_caps_append_structure_full
@@ -409,6 +411,7 @@ EXPORTS
 	gst_debug_get_all_categories
 	gst_debug_get_color_mode
 	gst_debug_get_default_threshold
+	gst_debug_get_stack_trace
 	gst_debug_graph_details_get_type
 	gst_debug_is_active
 	gst_debug_is_colored
@@ -479,6 +482,9 @@ EXPORTS
 	gst_device_provider_unhide_provider
 	gst_device_reconfigure_element
 	gst_double_range_get_type
+	gst_dynamic_type_factory_get_type
+	gst_dynamic_type_factory_load
+	gst_dynamic_type_register
 	gst_element_abort_state
 	gst_element_add_pad
 	gst_element_add_property_deep_notify_watch
@@ -884,6 +890,7 @@ EXPORTS
 	gst_pad_get_sticky_event
 	gst_pad_get_stream
 	gst_pad_get_stream_id
+	gst_pad_get_task_state
 	gst_pad_get_type
 	gst_pad_has_current_caps
 	gst_pad_is_active
@@ -960,6 +967,8 @@ EXPORTS
 	gst_pad_template_pad_created
 	gst_pad_unlink
 	gst_pad_use_fixed_caps
+	gst_param_spec_array
+	gst_param_spec_array_get_type
 	gst_param_spec_fraction
 	gst_param_spec_fraction_get_type
 	gst_parent_buffer_meta_api_get_type
@@ -1060,6 +1069,10 @@ EXPORTS
 	gst_preset_save_preset
 	gst_preset_set_app_dir
 	gst_preset_set_meta
+	gst_print
+	gst_printerr
+	gst_printerrln
+	gst_println
 	gst_progress_type_get_type
 	gst_protection_meta_api_get_type
 	gst_protection_meta_get_info
@@ -1216,6 +1229,7 @@ EXPORTS
 	gst_segment_to_stream_time_full
 	gst_segtrap_is_enabled
 	gst_segtrap_set_enabled
+	gst_stack_trace_flags_get_type
 	gst_state_change_get_type
 	gst_state_change_return_get_type
 	gst_state_get_type
@@ -1263,6 +1277,7 @@ EXPORTS
 	gst_structure_free
 	gst_structure_from_string
 	gst_structure_get
+	gst_structure_get_array
 	gst_structure_get_boolean
 	gst_structure_get_clock_time
 	gst_structure_get_date
@@ -1274,6 +1289,7 @@ EXPORTS
 	gst_structure_get_fraction
 	gst_structure_get_int
 	gst_structure_get_int64
+	gst_structure_get_list
 	gst_structure_get_name
 	gst_structure_get_name_id
 	gst_structure_get_string
@@ -1311,6 +1327,8 @@ EXPORTS
 	gst_structure_remove_fields
 	gst_structure_remove_fields_valist
 	gst_structure_set
+	gst_structure_set_array
+	gst_structure_set_list
 	gst_structure_set_name
 	gst_structure_set_parent_refcount
 	gst_structure_set_valist
@@ -1484,6 +1502,7 @@ EXPORTS
 	gst_uri_get_fragment
 	gst_uri_get_host
 	gst_uri_get_location
+	gst_uri_get_media_fragment_table
 	gst_uri_get_path
 	gst_uri_get_path_segments
 	gst_uri_get_path_string
@@ -1536,6 +1555,7 @@ EXPORTS
 	gst_util_fraction_multiply
 	gst_util_fraction_to_double
 	gst_util_gdouble_to_guint64
+	gst_util_get_object_array
 	gst_util_get_timestamp
 	gst_util_greatest_common_divisor
 	gst_util_greatest_common_divisor_int64
@@ -1544,6 +1564,7 @@ EXPORTS
 	gst_util_seqnum_compare
 	gst_util_seqnum_next
 	gst_util_set_object_arg
+	gst_util_set_object_array
 	gst_util_set_value_from_string
 	gst_util_uint64_scale
 	gst_util_uint64_scale_ceil

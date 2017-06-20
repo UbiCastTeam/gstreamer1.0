@@ -24,94 +24,70 @@
 
 /**
  * SECTION:element-multiqueue
+ * @title: multiqueue
  * @see_also: #GstQueue
  *
- * <refsect2>
- * <para>
  * Multiqueue is similar to a normal #GstQueue with the following additional
  * features:
- * <orderedlist>
- * <listitem>
- *   <itemizedlist><title>Multiple streamhandling</title>
- *   <listitem><para>
- *     The element handles queueing data on more than one stream at once. To
- *     achieve such a feature it has request sink pads (sink&percnt;u) and
- *     'sometimes' src pads (src&percnt;u).
- *   </para><para>
- *     When requesting a given sinkpad with gst_element_request_pad(),
- *     the associated srcpad for that stream will be created.
- *     Example: requesting sink1 will generate src1.
- *   </para></listitem>
- *   </itemizedlist>
- * </listitem>
- * <listitem>
- *   <itemizedlist><title>Non-starvation on multiple streams</title>
- *   <listitem><para>
- *     If more than one stream is used with the element, the streams' queues
- *     will be dynamically grown (up to a limit), in order to ensure that no
- *     stream is risking data starvation. This guarantees that at any given
- *     time there are at least N bytes queued and available for each individual
- *     stream.
- *   </para><para>
- *     If an EOS event comes through a srcpad, the associated queue will be
- *     considered as 'not-empty' in the queue-size-growing algorithm.
- *   </para></listitem>
- *   </itemizedlist>
- * </listitem>
- * <listitem>
- *   <itemizedlist><title>Non-linked srcpads graceful handling</title>
- *   <listitem><para>
- *     In order to better support dynamic switching between streams, the multiqueue
- *     (unlike the current GStreamer queue) continues to push buffers on non-linked
- *     pads rather than shutting down.
- *   </para><para>
- *     In addition, to prevent a non-linked stream from very quickly consuming all
- *     available buffers and thus 'racing ahead' of the other streams, the element
- *     must ensure that buffers and inlined events for a non-linked stream are pushed
- *     in the same order as they were received, relative to the other streams
- *     controlled by the element. This means that a buffer cannot be pushed to a
- *     non-linked pad any sooner than buffers in any other stream which were received
- *     before it.
- *   </para></listitem>
- *   </itemizedlist>
- * </listitem>
- * </orderedlist>
- * </para>
- * <para>
- *   Data is queued until one of the limits specified by the
- *   #GstMultiQueue:max-size-buffers, #GstMultiQueue:max-size-bytes and/or
- *   #GstMultiQueue:max-size-time properties has been reached. Any attempt to push
- *   more buffers into the queue will block the pushing thread until more space
- *   becomes available. #GstMultiQueue:extra-size-buffers,
- * </para>
- * <para>
- *   #GstMultiQueue:extra-size-bytes and #GstMultiQueue:extra-size-time are
- *   currently unused.
- * </para>
- * <para>
- *   The default queue size limits are 5 buffers, 10MB of data, or
- *   two second worth of data, whichever is reached first. Note that the number
- *   of buffers will dynamically grow depending on the fill level of 
- *   other queues.
- * </para>
- * <para>
- *   The #GstMultiQueue::underrun signal is emitted when all of the queues
- *   are empty. The #GstMultiQueue::overrun signal is emitted when one of the
- *   queues is filled.
- *   Both signals are emitted from the context of the streaming thread.
- * </para>
- * <para>
- *   When using #GstMultiQueue:sync-by-running-time the unlinked streams will
- *   be throttled by the highest running-time of linked streams. This allows
- *   further relinking of those unlinked streams without them being in the
- *   future (i.e. to achieve gapless playback).
- *   When dealing with streams which have got different consumption requirements
- *   downstream (ex: video decoders which will consume more buffer (in time) than
- *   audio decoders), it is recommended to group streams of the same type
- *   by using the pad "group-id" property. This will further throttle streams
- *   in time within that group.
- * </para>
- * </refsect2>
+ *
+ * 1) Multiple streamhandling
+ *
+ *  * The element handles queueing data on more than one stream at once. To
+ * achieve such a feature it has request sink pads (sink%u) and
+ * 'sometimes' src pads (src%u). When requesting a given sinkpad with gst_element_request_pad(),
+ * the associated srcpad for that stream will be created.
+ * Example: requesting sink1 will generate src1.
+ *
+ * 2) Non-starvation on multiple stream
+ *
+ * * If more than one stream is used with the element, the streams' queues
+ * will be dynamically grown (up to a limit), in order to ensure that no
+ * stream is risking data starvation. This guarantees that at any given
+ * time there are at least N bytes queued and available for each individual
+ * stream. If an EOS event comes through a srcpad, the associated queue will be
+ * considered as 'not-empty' in the queue-size-growing algorithm.
+ *
+ * 3) Non-linked srcpads graceful handling
+ *
+ * * In order to better support dynamic switching between streams, the multiqueue
+ * (unlike the current GStreamer queue) continues to push buffers on non-linked
+ * pads rather than shutting down. In addition, to prevent a non-linked stream from very quickly consuming all
+ * available buffers and thus 'racing ahead' of the other streams, the element
+ * must ensure that buffers and inlined events for a non-linked stream are pushed
+ * in the same order as they were received, relative to the other streams
+ * controlled by the element. This means that a buffer cannot be pushed to a
+ * non-linked pad any sooner than buffers in any other stream which were received
+ * before it.
+ *
+ * Data is queued until one of the limits specified by the
+ * #GstMultiQueue:max-size-buffers, #GstMultiQueue:max-size-bytes and/or
+ * #GstMultiQueue:max-size-time properties has been reached. Any attempt to push
+ * more buffers into the queue will block the pushing thread until more space
+ * becomes available. #GstMultiQueue:extra-size-buffers,
+ *
+ *
+ * #GstMultiQueue:extra-size-bytes and #GstMultiQueue:extra-size-time are
+ * currently unused.
+ *
+ * The default queue size limits are 5 buffers, 10MB of data, or
+ * two second worth of data, whichever is reached first. Note that the number
+ * of buffers will dynamically grow depending on the fill level of
+ * other queues.
+ *
+ * The #GstMultiQueue::underrun signal is emitted when all of the queues
+ * are empty. The #GstMultiQueue::overrun signal is emitted when one of the
+ * queues is filled.
+ * Both signals are emitted from the context of the streaming thread.
+ *
+ * When using #GstMultiQueue:sync-by-running-time the unlinked streams will
+ * be throttled by the highest running-time of linked streams. This allows
+ * further relinking of those unlinked streams without them being in the
+ * future (i.e. to achieve gapless playback).
+ * When dealing with streams which have got different consumption requirements
+ * downstream (ex: video decoders which will consume more buffer (in time) than
+ * audio decoders), it is recommended to group streams of the same type
+ * by using the pad "group-id" property. This will further throttle streams
+ * in time within that group.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -227,6 +203,8 @@ static void recheck_buffering_status (GstMultiQueue * mq);
 
 static void gst_single_queue_flush_queue (GstSingleQueue * sq, gboolean full);
 
+static void calculate_interleave (GstMultiQueue * mq);
+
 static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink_%u",
     GST_PAD_SINK,
     GST_PAD_REQUEST,
@@ -273,6 +251,8 @@ enum
 #define DEFAULT_USE_INTERLEAVE FALSE
 #define DEFAULT_UNLINKED_CACHE_TIME 250 * GST_MSECOND
 
+#define DEFAULT_MINIMUM_INTERLEAVE (250 * GST_MSECOND)
+
 enum
 {
   PROP_0,
@@ -290,6 +270,7 @@ enum
   PROP_SYNC_BY_RUNNING_TIME,
   PROP_USE_INTERLEAVE,
   PROP_UNLINKED_CACHE_TIME,
+  PROP_MINIMUM_INTERLEAVE,
   PROP_LAST
 };
 
@@ -504,7 +485,7 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
    * size) is higher than the boundary values which can be set through the
    * GObject properties.
    *
-   * This can be used as an indicator of pre-roll. 
+   * This can be used as an indicator of pre-roll.
    */
   gst_multi_queue_signals[SIGNAL_OVERRUN] =
       g_signal_new ("overrun", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_FIRST,
@@ -551,8 +532,8 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstMultiQueue:use-buffering
-   * 
+   * GstMultiQueue:use-buffering:
+   *
    * Enable the buffering option in multiqueue so that BUFFERING messages are
    * emitted based on low-/high-percent thresholds.
    */
@@ -562,8 +543,8 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           DEFAULT_USE_BUFFERING, G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
           G_PARAM_STATIC_STRINGS));
   /**
-   * GstMultiQueue:low-percent
-   * 
+   * GstMultiQueue:low-percent:
+   *
    * Low threshold percent for buffering to start.
    */
   g_object_class_install_property (gobject_class, PROP_LOW_PERCENT,
@@ -573,8 +554,8 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           0, 100, DEFAULT_LOW_WATERMARK * 100,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   /**
-   * GstMultiQueue:high-percent
-   * 
+   * GstMultiQueue:high-percent:
+   *
    * High threshold percent for buffering to finish.
    */
   g_object_class_install_property (gobject_class, PROP_HIGH_PERCENT,
@@ -584,7 +565,7 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           0, 100, DEFAULT_HIGH_WATERMARK * 100,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   /**
-   * GstMultiQueue:low-watermark
+   * GstMultiQueue:low-watermark:
    *
    * Low threshold watermark for buffering to start.
    *
@@ -596,7 +577,7 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           0.0, 1.0, DEFAULT_LOW_WATERMARK,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   /**
-   * GstMultiQueue:high-watermark
+   * GstMultiQueue:high-watermark:
    *
    * High threshold watermark for buffering to finish.
    *
@@ -609,8 +590,8 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstMultiQueue:sync-by-running-time
-   * 
+   * GstMultiQueue:sync-by-running-time:
+   *
    * If enabled multiqueue will synchronize deactivated or not-linked streams
    * to the activated and linked streams by taking the running time.
    * Otherwise multiqueue will synchronize the deactivated or not-linked
@@ -635,6 +616,12 @@ gst_multi_queue_class_init (GstMultiQueueClass * klass)
           G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
           G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class, PROP_MINIMUM_INTERLEAVE,
+      g_param_spec_uint64 ("min-interleave-time", "Minimum interleave time",
+          "Minimum extra buffering for deinterleaving (size of the queues) when use-interleave=true",
+          0, G_MAXUINT64, DEFAULT_MINIMUM_INTERLEAVE,
+          G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
 
   gobject_class->finalize = gst_multi_queue_finalize;
 
@@ -672,6 +659,7 @@ gst_multi_queue_init (GstMultiQueue * mqueue)
 
   mqueue->sync_by_running_time = DEFAULT_SYNC_BY_RUNNING_TIME;
   mqueue->use_interleave = DEFAULT_USE_INTERLEAVE;
+  mqueue->min_interleave_time = DEFAULT_MINIMUM_INTERLEAVE;
   mqueue->unlinked_cache_time = DEFAULT_UNLINKED_CACHE_TIME;
 
   mqueue->counter = 1;
@@ -814,6 +802,13 @@ gst_multi_queue_set_property (GObject * object, guint prop_id,
       GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
       gst_multi_queue_post_buffering (mq);
       break;
+    case PROP_MINIMUM_INTERLEAVE:
+      GST_MULTI_QUEUE_MUTEX_LOCK (mq);
+      mq->min_interleave_time = g_value_get_uint64 (value);
+      if (mq->use_interleave)
+        calculate_interleave (mq);
+      GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -872,6 +867,9 @@ gst_multi_queue_get_property (GObject * object, guint prop_id,
       break;
     case PROP_UNLINKED_CACHE_TIME:
       g_value_set_uint64 (value, mq->unlinked_cache_time);
+      break;
+    case PROP_MINIMUM_INTERLEAVE:
+      g_value_set_uint64 (value, mq->min_interleave_time);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1302,8 +1300,7 @@ calculate_interleave (GstMultiQueue * mq)
   if (GST_CLOCK_STIME_IS_VALID (low) && GST_CLOCK_STIME_IS_VALID (high)) {
     interleave = high - low;
     /* Padding of interleave and minimum value */
-    /* FIXME : Make the minimum time interleave a property */
-    interleave = (150 * interleave / 100) + 250 * GST_MSECOND;
+    interleave = (150 * interleave / 100) + mq->min_interleave_time;
 
     /* Update the stored interleave if:
      * * No data has arrived yet (high == low)
@@ -1334,7 +1331,7 @@ beach:
 
 
 /* calculate the diff between running time on the sink and src of the queue.
- * This is the total amount of time in the queue. 
+ * This is the total amount of time in the queue.
  * WITH LOCK TAKEN */
 static void
 update_time_level (GstMultiQueue * mq, GstSingleQueue * sq)
@@ -1464,7 +1461,7 @@ apply_buffer (GstMultiQueue * mq, GstSingleQueue * sq, GstClockTime timestamp,
 {
   GST_MULTI_QUEUE_MUTEX_LOCK (mq);
 
-  /* if no timestamp is set, assume it's continuous with the previous 
+  /* if no timestamp is set, assume it's continuous with the previous
    * time */
   if (timestamp == GST_CLOCK_TIME_NONE)
     timestamp = segment->position;
@@ -2408,7 +2405,8 @@ gst_multi_queue_sink_query (GstPad * pad, GstObject * parent, GstQuery * query)
            * pushed. If it is, we don't need to wait for the condition
            * variable, otherwise we wait for the condition variable to
            * be signaled. */
-          if (sq->last_handled_query != query)
+          while (!sq->flushing && sq->srcresult == GST_FLOW_OK
+              && sq->last_handled_query != query)
             g_cond_wait (&sq->query_handled, &mq->qlock);
           res = sq->last_query;
           sq->last_handled_query = NULL;
@@ -2579,7 +2577,7 @@ compute_high_id (GstMultiQueue * mq)
         lowest = sq->nextid;
     } else if (!GST_PAD_IS_EOS (sq->srcpad) && sq->srcresult != GST_FLOW_EOS) {
       /* If we don't have a global highid, or the global highid is lower than
-       * this single queue's last outputted id, store the queue's one, 
+       * this single queue's last outputted id, store the queue's one,
        * unless the singlequeue output is at EOS */
       if ((highid == G_MAXUINT32) || (sq->oldid > highid))
         highid = sq->oldid;

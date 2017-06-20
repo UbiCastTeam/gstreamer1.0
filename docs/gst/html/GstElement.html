@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="GstDateTime.html" title="GstDateTime">
+<link rel="prev" href="GstDynamicTypeFactory.html" title="GstDynamicTypeFactory">
 <link rel="next" href="GstElementFactory.html" title="GstElementFactory">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -22,7 +22,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GstDateTime.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstDynamicTypeFactory.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstElementFactory.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -891,7 +891,7 @@
 <a name="GstElement.derived-interfaces"></a><h2>Known Derived Interfaces</h2>
 <p>
 GstElement is required by
- <a class="link" href="GstTagSetter.html" title="GstTagSetter">GstTagSetter</a>.</p>
+ <a class="link" href="GstTagSetter.html" title="GstTagsetter">GstTagSetter</a>.</p>
 </div>
 <div class="refsect1">
 <a name="GstElement.includes"></a><h2>Includes</h2>
@@ -1376,12 +1376,12 @@ application will be requested to stop further media processing.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>domain</p></td>
-<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>code</p></td>
-<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1423,12 +1423,12 @@ application will be requested to stop further media processing.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>domain</p></td>
-<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>code</p></td>
-<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1440,9 +1440,12 @@ parentheses)</p></td>
 <tr>
 <td class="parameter_name"><p>debug</p></td>
 <td class="parameter_description"><p>debugging information for the message (format string and args
-enclosed in parentheses)
-<em class="parameter"><code>args</code></em>
-optional name, type, value triplets, which will be stored
+enclosed in parentheses)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>optional name, type, value triplets, which will be stored
 in the associated GstStructure. NULL terminator required.
 Must be enclosed within parentheses.</p></td>
 <td class="parameter_annotations"> </td>
@@ -1505,12 +1508,12 @@ application will be informed.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>domain</p></td>
-<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>code</p></td>
-<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1552,12 +1555,12 @@ application will be informed.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>domain</p></td>
-<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>code</p></td>
-<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1569,9 +1572,12 @@ parentheses)</p></td>
 <tr>
 <td class="parameter_name"><p>debug</p></td>
 <td class="parameter_description"><p>debugging information for the message (format string and args
-enclosed in parentheses)
-<em class="parameter"><code>args</code></em>
-optional name, type, value triplets, which will be stored
+enclosed in parentheses)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>optional name, type, value triplets, which will be stored
 in the associated GstStructure. NULL terminator required.
 Must be enclosed within parentheses.</p></td>
 <td class="parameter_annotations"> </td>
@@ -1605,12 +1611,12 @@ application will be informed.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>domain</p></td>
-<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>code</p></td>
-<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1655,12 +1661,12 @@ in the associated GstStructure. NULL terminator required.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>domain</p></td>
-<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>like CORE, LIBRARY, RESOURCE or STREAM (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>code</p></td>
-<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstGError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
+<td class="parameter_description"><p>error code defined for that domain (see <a class="link" href="gstreamer-GstGError.html" title="GstError"><span class="type">gstreamer-GstGError</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1672,9 +1678,12 @@ parentheses)</p></td>
 <tr>
 <td class="parameter_name"><p>debug</p></td>
 <td class="parameter_description"><p>debugging information for the message (format string and args
-enclosed in parentheses)
-<em class="parameter"><code>args</code></em>
-optional name, type, value triplets, which will be stored
+enclosed in parentheses)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>optional name, type, value triplets, which will be stored
 in the associated GstStructure. NULL terminator required.
 Must be enclosed within parentheses.</p></td>
 <td class="parameter_annotations"> </td>
@@ -1783,9 +1792,9 @@ gst_element_class_get_pad_template (<em class="parameter"><code><a class="link" 
                                     <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Retrieves a padtemplate from <em class="parameter"><code>element_class</code></em>
  with the given name.</p>
-<div class="note">If you use this function in the <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> of an object class
+<div class="blockquote"><blockquote class="blockquote"><p>If you use this function in the <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> of an object class
 that has subclasses, make sure to pass the g_class parameter of the
-<a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> here.</div>
+<a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> here.</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-element-class-get-pad-template.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1825,9 +1834,9 @@ gst_element_class_get_pad_template_list
 <p>Retrieves a list of the pad templates associated with <em class="parameter"><code>element_class</code></em>
 . The
 list must not be modified by the calling code.</p>
-<div class="note">If you use this function in the <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> of an object class
+<div class="blockquote"><blockquote class="blockquote"><p>If you use this function in the <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> of an object class
 that has subclasses, make sure to pass the g_class parameter of the
-<a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> here.</div>
+<a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GInstanceInitFunc"><span class="type">GInstanceInitFunc</span></a> here.</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-element-class-get-pad-template-list.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1860,7 +1869,7 @@ gst_element_class_set_metadata (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *description</code></em>,
                                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *author</code></em>);</pre>
 <p>Sets the detailed information for a <a class="link" href="GstElement.html#GstElementClass" title="struct GstElementClass"><span class="type">GstElementClass</span></a>.</p>
-<div class="note">This function is for use in _class_init functions only.</div>
+<div class="blockquote"><blockquote class="blockquote"><p>This function is for use in _class_init functions only.</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-element-class-set-metadata.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1913,7 +1922,7 @@ gst_element_class_set_static_metadata (<em class="parameter"><code><a class="lin
                                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *description</code></em>,
                                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *author</code></em>);</pre>
 <p>Sets the detailed information for a <a class="link" href="GstElement.html#GstElementClass" title="struct GstElementClass"><span class="type">GstElementClass</span></a>.</p>
-<div class="note">This function is for use in _class_init functions only.</div>
+<div class="blockquote"><blockquote class="blockquote"><p>This function is for use in _class_init functions only.</p></blockquote></div>
 <p>Same as <a class="link" href="GstElement.html#gst-element-class-set-metadata" title="gst_element_class_set_metadata ()"><code class="function">gst_element_class_set_metadata()</code></a>, but <em class="parameter"><code>longname</code></em>
 , <em class="parameter"><code>classification</code></em>
 ,
@@ -3556,8 +3565,8 @@ pipeline is in the PLAYING state.</p>
 <pre class="programlisting"><a class="link" href="GstClock.html" title="GstClock"><span class="returnvalue">GstClock</span></a> *
 gst_element_provide_clock (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>Get the clock provided by the given element.</p>
-<div class="note">An element is only required to provide a clock in the PAUSED
-state. Some elements can provide a clock in other states.</div>
+<div class="blockquote"><blockquote class="blockquote"><p>An element is only required to provide a clock in the PAUSED
+state. Some elements can provide a clock in other states.</p></blockquote></div>
 <div class="refsect3">
 <a name="gst-element-provide-clock.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -4893,8 +4902,8 @@ state will yield the running_time against the clock.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstElement-struct.contexts"></a>contexts</code></em>;</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p> list of contexts. </p></td>
+<td class="struct_member_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Context]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -5200,14 +5209,10 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <td class="enum_member_description">
 <p>state change from NULL to READY.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    The element must check if the resources it needs are available. Device
-    sinks and -sources typically try to probe the device to constrain their
-    caps.
-  </p></li>
-<li class="listitem"><p>
-    The element opens the device (in case feature need to be probed).
-  </p></li>
+<li class="listitem"><p>The element must check if the resources it needs are available. Device
+sinks and -sources typically try to probe the device to constrain their
+caps.</p></li>
+<li class="listitem"><p>The element opens the device (in case feature need to be probed).</p></li>
 </ul></div>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -5217,23 +5222,15 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <td class="enum_member_description">
 <p>state change from READY to PAUSED.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    The element pads are activated in order to receive data in PAUSED.
-    Streaming threads are started.
-  </p></li>
-<li class="listitem"><p>
-    Some elements might need to return <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> and complete
-    the state change when they have enough information. It is a requirement
-    for sinks to return <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> and complete the state change
-    when they receive the first buffer or <a class="link" href="GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a> (preroll).
-    Sinks also block the dataflow when in PAUSED.
-  </p></li>
-<li class="listitem"><p>
-    A pipeline resets the running_time to 0.
-  </p></li>
-<li class="listitem"><p>
-    Live sources return <a class="link" href="GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a> and don't generate data.
-  </p></li>
+<li class="listitem"><p>The element pads are activated in order to receive data in PAUSED.
+Streaming threads are started.</p></li>
+<li class="listitem"><p>Some elements might need to return <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> and complete
+the state change when they have enough information. It is a requirement
+for sinks to return <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> and complete the state change
+when they receive the first buffer or <a class="link" href="GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a> (preroll).
+Sinks also block the dataflow when in PAUSED.</p></li>
+<li class="listitem"><p>A pipeline resets the running_time to 0.</p></li>
+<li class="listitem"><p>Live sources return <a class="link" href="GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a> and don't generate data.</p></li>
 </ul></div>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -5243,34 +5240,20 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <td class="enum_member_description">
 <p>state change from PAUSED to PLAYING.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Most elements ignore this state change.
-  </p></li>
-<li class="listitem"><p>
-    The pipeline selects a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and distributes this to all the children
-    before setting them to PLAYING. This means that it is only allowed to
-    synchronize on the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> in the PLAYING state.
-  </p></li>
-<li class="listitem"><p>
-    The pipeline uses the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and the running_time to calculate the
-    base_time. The base_time is distributed to all children when performing
-    the state change.
-  </p></li>
-<li class="listitem"><p>
-    Sink elements stop blocking on the preroll buffer or event and start
-    rendering the data.
-  </p></li>
-<li class="listitem"><p>
-    Sinks can post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> in the PLAYING state. It is not allowed
-    to post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> when not in the PLAYING state.
-  </p></li>
-<li class="listitem"><p>
-    While streaming in PAUSED or PLAYING elements can create and remove
-    sometimes pads.
-  </p></li>
-<li class="listitem"><p>
-    Live sources start generating data and return <a class="link" href="GstElement.html#GST-STATE-CHANGE-SUCCESS:CAPS"><code class="literal">GST_STATE_CHANGE_SUCCESS</code></a>.
-  </p></li>
+<li class="listitem"><p>Most elements ignore this state change.</p></li>
+<li class="listitem"><p>The pipeline selects a <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and distributes this to all the children
+before setting them to PLAYING. This means that it is only allowed to
+synchronize on the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> in the PLAYING state.</p></li>
+<li class="listitem"><p>The pipeline uses the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and the running_time to calculate the
+base_time. The base_time is distributed to all children when performing
+the state change.</p></li>
+<li class="listitem"><p>Sink elements stop blocking on the preroll buffer or event and start
+rendering the data.</p></li>
+<li class="listitem"><p>Sinks can post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> in the PLAYING state. It is not allowed
+to post <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> when not in the PLAYING state.</p></li>
+<li class="listitem"><p>While streaming in PAUSED or PLAYING elements can create and remove
+sometimes pads.</p></li>
+<li class="listitem"><p>Live sources start generating data and return <a class="link" href="GstElement.html#GST-STATE-CHANGE-SUCCESS:CAPS"><code class="literal">GST_STATE_CHANGE_SUCCESS</code></a>.</p></li>
 </ul></div>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -5280,30 +5263,18 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <td class="enum_member_description">
 <p>state change from PLAYING to PAUSED.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Most elements ignore this state change.
-  </p></li>
-<li class="listitem"><p>
-    The pipeline calculates the running_time based on the last selected
-    <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and the base_time. It stores this information to continue
-    playback when going back to the PLAYING state.
-  </p></li>
-<li class="listitem"><p>
-    Sinks unblock any <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> wait calls.
-  </p></li>
-<li class="listitem"><p>
-    When a sink does not have a pending buffer to play, it returns
-    <a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><code class="literal">GST_STATE_CHANGE_ASYNC</code></a> from this state change and completes the state
-    change when it receives a new buffer or an <a class="link" href="GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a>.
-  </p></li>
-<li class="listitem"><p>
-    Any queued <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> items are removed since they will be reposted
-    when going back to the PLAYING state. The EOS messages are queued in
-    <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> containers.
-  </p></li>
-<li class="listitem"><p>
-    Live sources stop generating data and return <a class="link" href="GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a>.
-  </p></li>
+<li class="listitem"><p>Most elements ignore this state change.</p></li>
+<li class="listitem"><p>The pipeline calculates the running_time based on the last selected
+<a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> and the base_time. It stores this information to continue
+playback when going back to the PLAYING state.</p></li>
+<li class="listitem"><p>Sinks unblock any <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> wait calls.</p></li>
+<li class="listitem"><p>When a sink does not have a pending buffer to play, it returns
+<a class="link" href="GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><span class="type">GST_STATE_CHANGE_ASYNC</span></a> from this state change and completes the state
+change when it receives a new buffer or an <a class="link" href="GstEvent.html#GST-EVENT-EOS:CAPS"><code class="literal">GST_EVENT_EOS</code></a>.</p></li>
+<li class="listitem"><p>Any queued <a class="link" href="GstMessage.html#GST-MESSAGE-EOS:CAPS"><code class="literal">GST_MESSAGE_EOS</code></a> items are removed since they will be reposted
+when going back to the PLAYING state. The EOS messages are queued in
+<a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> containers.</p></li>
+<li class="listitem"><p>Live sources stop generating data and return <a class="link" href="GstElement.html#GST-STATE-CHANGE-NO-PREROLL:CAPS"><code class="literal">GST_STATE_CHANGE_NO_PREROLL</code></a>.</p></li>
 </ul></div>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -5313,25 +5284,13 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <td class="enum_member_description">
 <p>state change from PAUSED to READY.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Sinks unblock any waits in the preroll.
-  </p></li>
-<li class="listitem"><p>
-    Elements unblock any waits on devices
-  </p></li>
-<li class="listitem"><p>
-    Chain or get_range functions return <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><code class="literal">GST_FLOW_FLUSHING</code></a>.
-  </p></li>
-<li class="listitem"><p>
-    The element pads are deactivated so that streaming becomes impossible and
-    all streaming threads are stopped.
-  </p></li>
-<li class="listitem"><p>
-    The sink forgets all negotiated formats
-  </p></li>
-<li class="listitem"><p>
-    Elements remove all sometimes pads
-  </p></li>
+<li class="listitem"><p>Sinks unblock any waits in the preroll.</p></li>
+<li class="listitem"><p>Elements unblock any waits on devices</p></li>
+<li class="listitem"><p>Chain or get_range functions return <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><code class="literal">GST_FLOW_FLUSHING</code></a>.</p></li>
+<li class="listitem"><p>The element pads are deactivated so that streaming becomes impossible and
+all streaming threads are stopped.</p></li>
+<li class="listitem"><p>The sink forgets all negotiated formats</p></li>
+<li class="listitem"><p>Elements remove all sometimes pads</p></li>
 </ul></div>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -5341,12 +5300,8 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <td class="enum_member_description">
 <p>state change from READY to NULL.</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Elements close devices
-  </p></li>
-<li class="listitem"><p>
-    Elements reset any internal state.
-  </p></li>
+<li class="listitem"><p>Elements close devices</p></li>
+<li class="listitem"><p>Elements reset any internal state.</p></li>
 </ul></div>
 </td>
 <td class="enum_member_annotations"> </td>
@@ -5358,7 +5313,7 @@ and <a class="link" href="GstElement.html#GST-STATE-PLAYING:CAPS"><code class="l
 <hr>
 <div class="refsect2">
 <a name="GstStateChangeReturn"></a><h3>enum GstStateChangeReturn</h3>
-<p>The possible return values from a state change function such as 
+<p>The possible return values from a state change function such as
 <a class="link" href="GstElement.html#gst-element-set-state" title="gst_element_set_state ()"><code class="function">gst_element_set_state()</code></a>. Only <em class="parameter"><code>GST_STATE_CHANGE_FAILURE</code></em>
  is a real failure.</p>
 <div class="refsect3">
