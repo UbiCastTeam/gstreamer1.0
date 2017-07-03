@@ -1,3 +1,18 @@
+gstreamer1.0 (1.12.1-2) unstable; urgency=high
+
+  * debian/patches/0001-registrybinary-Update-magic-version-string.patch:
+    + Force regeneration of the registry for blacklisted plugins that
+      were blacklisted due to broken dependencies.
+
+      Various 1.12 plugin packages were built against 1.12.1-1 and moved to
+      testing as such, but had dependencies on GStreamer < 1.12. This does not
+      work and causes the plugins to fail to load and be blacklisted.
+
+      While all dependencies should be correct, for some reason they were not,
+      which needs separate investigation (Closes: #866339, #866103).
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 03 Jul 2017 09:16:52 +0300
+
 gstreamer1.0 (1.12.1-1) unstable; urgency=medium
 
   * New upstream bugfix release
