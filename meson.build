@@ -1,5 +1,5 @@
 project('gstreamer', 'c', 'cpp',
-  version : '1.12.1',
+  version : '1.12.2',
   meson_version : '>= 0.36.0',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
@@ -85,13 +85,14 @@ endif
 gst_package_name = get_option('with-package-name')
 if gst_package_name == ''
   if gst_version_nano == 0
-    cdata.set_quoted('GST_PACKAGE_NAME', 'GStreamer source release')
+    gst_package_name = 'GStreamer source release'
   elif gst_version_nano == 1
-    cdata.set_quoted('GST_PACKAGE_NAME', 'GStreamer git')
+    gst_package_name = 'GStreamer git'
   else
-    cdata.set_quoted('GST_PACKAGE_NAME', 'GStreamer prerelease')
+    gst_package_name = 'GStreamer prerelease'
   endif
 endif
+cdata.set_quoted('GST_PACKAGE_NAME', gst_package_name)
 cdata.set_quoted('GST_PACKAGE_ORIGIN', get_option('with-package-origin'))
 
 # These are only needed/used by the ABI tests
@@ -165,6 +166,7 @@ check_functions = [
   'fseeko',
   'ftello',
   'poll',
+  'ppoll',
   'pselect',
   'getpagesize',
   'clock_gettime',
