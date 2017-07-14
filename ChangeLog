@@ -1,9 +1,81 @@
-=== release 1.12.1 ===
+=== release 1.12.2 ===
 
-2017-06-20  Sebastian Dröge <slomo@coaxion.net>
+2017-07-14  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.12.1
+	  releasing 1.12.2
+
+2017-07-13 21:52:34 +0800  Jason Lin <shangchieh@realtek.com>
+
+	* libs/gst/base/gstbasesink.c:
+	  basesink: fix buffer leaks if preroll failed
+	  buffer is not unreferened if preroll failed
+	  :Detailed Notes:
+	  - Problem : video freeze when switching from pause to 1/2-FF repeatedly
+	  - RootCause : buffer leaks in basesink
+	  - Solution : unref the buffer if prerolled failed
+	  :Testing Preformed:
+	  How to Test :
+	  pause -> 1/2 FF -> resume -> pause -> 1/2 FF ...
+	  https://bugzilla.gnome.org/show_bug.cgi?id=784932
+
+2017-06-29 09:10:04 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* meson.build:
+	  meson: check for ppoll() as well
+
+2017-06-27 09:59:52 -0400  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* tools/meson.build:
+	  meson: Add configinc as include_directory in tools/
+	  Otherwise when the glib is used as a subproject config.h is the glib
+	  one, not ours.
+
+2017-06-23 11:11:44 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* meson.build:
+	  meson: fix with-package-name option
+	  https://bugzilla.gnome.org/show_bug.cgi?id=784082
+
+2017-06-21 10:48:52 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* libs/gst/base/gstbaseparse.c:
+	  baseparse: sinkcaps can be NULL in default caps negotiation
+	  This was causing harmless assertion about the unreffed caps not being of
+	  type caps.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=784041
+
+=== release 1.12.1 ===
+
+2017-06-20 12:04:50 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.12.1
+
+2017-06-20 11:11:23 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/bg.po:
+	* po/da.po:
+	* po/de.po:
+	* po/fr.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/nb.po:
+	* po/pl.po:
+	* po/ru.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	  Update .po files
 
 2017-06-20 11:06:16 +0300  Sebastian Dröge <sebastian@centricular.com>
 
