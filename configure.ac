@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.12.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.12.3],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1202, 0, 1202)
+AS_LIBTOOL(GST, 1203, 0, 1203)
 
 dnl *** autotools stuff ****
 
@@ -821,15 +821,45 @@ fi
 AM_CONDITIONAL(HAVE_GTK, test "x$HAVE_GTK" = "xyes")
 
 dnl libunwind is optionally used by the leaks tracer
-PKG_CHECK_MODULES(UNWIND, libunwind, HAVE_UNWIND=yes, HAVE_UNWIND=no)
-if test "x$HAVE_UNWIND" = "xyes"; then
-  AC_DEFINE(HAVE_UNWIND, 1, [libunwind available])
+AC_ARG_WITH([unwind],[AS_HELP_STRING([--with-unwind=yes|no|auto],[use libunwind])],
+            [], [with_unwind=auto])
+if [ test "x${with_unwind}" != "xno" ]; then
+  PKG_CHECK_MODULES(UNWIND, [libunwind],
+      [
+        HAVE_UNWIND=yes
+        AC_DEFINE(HAVE_UNWIND, 1, [libunwind available])
+        UNWIND_REQUIRE=libunwind
+        AC_SUBST(UNWIND_REQUIRE)
+      ],
+      [
+        HAVE_UNWIND=no
+        if [ test "x${with_unwind}" = "xyes" ]; then
+          AC_MSG_ERROR([could not find libunwind])
+        fi
+      ])
+else
+  HAVE_UNWIND=no
 fi
 
 dnl libdw is optionally used to add source lines and numbers to backtraces
-PKG_CHECK_MODULES(DW, libdw, HAVE_DW=yes, HAVE_DW=no)
-if test "x$HAVE_DW" = "xyes"; then
-  AC_DEFINE(HAVE_DW, 1, [libdw available])
+AC_ARG_WITH([dw],[AS_HELP_STRING([--with-dw=yes|no|auto],[use libdw])],
+            [], [with_dw=auto])
+if [ test "x${with_dw}" != "xno" ]; then
+  PKG_CHECK_MODULES(DW, [libdw],
+      [
+        HAVE_DW=yes
+        AC_DEFINE(HAVE_DW, 1, [libdw available])
+        DW_REQUIRE=libdw
+        AC_SUBST(DW_REQUIRE)
+      ],
+      [
+        HAVE_DW=no
+        if [ test "x${with_dw}" = "xyes" ]; then
+          AC_MSG_ERROR([could not find libdw])
+        fi
+      ])
+else
+  HAVE_DW=no
 fi
 
 dnl Check for backtrace() from libc
