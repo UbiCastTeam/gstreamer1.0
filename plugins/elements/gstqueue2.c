@@ -958,11 +958,11 @@ get_buffering_level (GstQueue2 * queue, gboolean * is_buffering,
 #define GET_BUFFER_LEVEL_FOR_QUANTITY(format,alt_max) \
     normalize_to_buffering_level (queue->cur_level.format,queue->max_level.format,(alt_max))
 
-  if (queue->is_eos) {
-    /* on EOS we are always 100% full, we set the var here so that it we can
-     * reuse the logic below to stop buffering */
+  if (queue->is_eos || queue->srcresult == GST_FLOW_NOT_LINKED) {
+    /* on EOS and NOT_LINKED we are always 100% full, we set the var
+     * here so that we can reuse the logic below to stop buffering */
     buflevel = MAX_BUFFERING_LEVEL;
-    GST_LOG_OBJECT (queue, "we are EOS");
+    GST_LOG_OBJECT (queue, "we are %s", queue->is_eos ? "EOS" : "NOT_LINKED");
   } else {
     GST_LOG_OBJECT (queue,
         "Cur level bytes/time/buffers %u/%" GST_TIME_FORMAT "/%u",
@@ -2463,10 +2463,12 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
 
   queue = GST_QUEUE2 (parent);
 
+  GST_CAT_LOG_OBJECT (queue_dataflow, queue, "Received event '%s'",
+      GST_EVENT_TYPE_NAME (event));
+
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_FLUSH_START:
     {
-      GST_CAT_LOG_OBJECT (queue_dataflow, queue, "received flush start event");
       if (GST_PAD_MODE (queue->srcpad) == GST_PAD_MODE_PUSH) {
         /* forward event */
         ret = gst_pad_push_event (queue->srcpad, event);
@@ -2504,8 +2506,6 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
     }
     case GST_EVENT_FLUSH_STOP:
     {
-      GST_CAT_LOG_OBJECT (queue_dataflow, queue, "received flush stop event");
-
       if (GST_PAD_MODE (queue->srcpad) == GST_PAD_MODE_PUSH) {
         /* forward event */
         ret = gst_pad_push_event (queue->srcpad, event);
@@ -2556,6 +2556,14 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
     default:
       if (GST_EVENT_IS_SERIALIZED (event)) {
         /* serialized events go in the queue */
+
+        /* STREAM_START and SEGMENT reset the EOS status of a
+         * pad. Change the cached sinkpad flow result accordingly */
+        if (queue->sinkresult == GST_FLOW_EOS
+            && (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_START
+                || GST_EVENT_TYPE (event) == GST_EVENT_SEGMENT))
+          queue->sinkresult = GST_FLOW_OK;
+
         GST_QUEUE2_MUTEX_LOCK_CHECK (queue, queue->sinkresult, out_flushing);
         if (queue->srcresult != GST_FLOW_OK) {
           /* Errors in sticky event pushing are no problem and ignored here
@@ -2573,9 +2581,36 @@ gst_queue2_handle_sink_event (GstPad * pad, GstObject * parent,
             goto out_flow_error;
           }
         }
-        /* refuse more events on EOS */
-        if (queue->is_eos)
-          goto out_eos;
+
+        /* refuse more events on EOS unless they unset the EOS status */
+        if (queue->is_eos) {
+          switch (GST_EVENT_TYPE (event)) {
+            case GST_EVENT_STREAM_START:
+            case GST_EVENT_SEGMENT:
+              /* Restart the loop */
+              if (GST_PAD_MODE (queue->srcpad) == GST_PAD_MODE_PUSH) {
+                queue->srcresult = GST_FLOW_OK;
+                queue->is_eos = FALSE;
+                queue->unexpected = FALSE;
+                queue->seeking = FALSE;
+                queue->src_tags_bitrate = queue->sink_tags_bitrate = 0;
+                /* reset rate counters */
+                reset_rate_timer (queue);
+                gst_pad_start_task (queue->srcpad,
+                    (GstTaskFunction) gst_queue2_loop, queue->srcpad, NULL);
+              } else {
+                queue->is_eos = FALSE;
+                queue->unexpected = FALSE;
+                queue->seeking = FALSE;
+                queue->src_tags_bitrate = queue->sink_tags_bitrate = 0;
+              }
+
+              break;
+            default:
+              goto out_eos;
+          }
+        }
+
         gst_queue2_locked_enqueue (queue, event, GST_QUEUE2_ITEM_TYPE_EVENT);
         GST_QUEUE2_MUTEX_UNLOCK (queue);
         gst_queue2_post_buffering (queue);
@@ -2859,7 +2894,8 @@ gst_queue2_dequeue_on_eos (GstQueue2 * queue, GstQueue2ItemType * item_type)
       GstEvent *event = GST_EVENT_CAST (data);
       GstEventType type = GST_EVENT_TYPE (event);
 
-      if (type == GST_EVENT_EOS || type == GST_EVENT_SEGMENT) {
+      if (type == GST_EVENT_EOS || type == GST_EVENT_SEGMENT
+          || type == GST_EVENT_STREAM_START) {
         /* we found a pushable item in the queue, push it out */
         GST_CAT_LOG_OBJECT (queue_dataflow, queue,
             "pushing pushable event %s after EOS", GST_EVENT_TYPE_NAME (event));
@@ -3064,6 +3100,12 @@ out_flushing:
     GST_QUEUE2_MUTEX_UNLOCK (queue);
     GST_CAT_LOG_OBJECT (queue_dataflow, queue,
         "pause task, reason:  %s", gst_flow_get_name (queue->srcresult));
+    /* Recalculate buffering levels before stopping since the source flow
+     * might cause a different buffering level (like NOT_LINKED making
+     * the queue appear as full) */
+    if (queue->use_buffering)
+      update_buffering (queue);
+    gst_queue2_post_buffering (queue);
     /* let app know about us giving up if upstream is not expected to do so */
     /* EOS is already taken care of elsewhere */
     if (eos && (ret == GST_FLOW_NOT_LINKED || ret < GST_FLOW_EOS)) {

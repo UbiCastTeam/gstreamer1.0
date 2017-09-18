@@ -1,9 +1,262 @@
-=== release 1.12.2 ===
+=== release 1.12.3 ===
 
-2017-07-14  Sebastian Dröge <slomo@coaxion.net>
+2017-09-18  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.12.2
+	  releasing 1.12.3
+
+2017-09-18 15:59:55 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/cs.po:
+	  po: Update translations
+
+2017-09-18 15:54:00 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/ast.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/fur.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
+
+2017-09-17 18:55:19 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstinfo.h:
+	  info: GstStackTraceFlags were added in 1.12
+
+2017-05-16 13:31:06 -0400  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* gst/gstconfig.h.in:
+	  Also use default visibility for plugins symbol
+
+2017-05-10 13:03:31 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstconfig.h.in:
+	  gstconfig.h: use default visibility for GST_EXPORT for gcc/clang too
+	  This will be needed later when we switch to using -fvisibility=hidden.
+
+2017-08-11 21:17:06 +0200  Carlos Rafael Giani <dv@pseudoterminal.org>
+
+	* configure.ac:
+	  configure: Add switches for enabling/disabling libdw and libunwind
+	  https://bugzilla.gnome.org/show_bug.cgi?id=778193
+
+2017-07-11 16:15:16 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* pkgconfig/meson.build:
+	  meson: pkgconfig: add libunwind/libdw to gstreamer-1.0 Requires.private
+	  https://bugzilla.gnome.org/show_bug.cgi?id=784795
+
+2017-07-11 15:29:44 +0200  Edward Hervey <edward@centricular.com>
+
+	* configure.ac:
+	* pkgconfig/gstreamer-uninstalled.pc.in:
+	* pkgconfig/gstreamer.pc.in:
+	  pkgconfig: Add private requirements
+	  Add libunwind and dw to the .pc Requires.private. Fixes static library
+	  compilation if gstreamer was compiled with one of those dependencies
+	  https://bugzilla.gnome.org/show_bug.cgi?id=784795
+
+2017-08-24 16:00:42 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* libs/gst/base/gstbaseparse.c:
+	  baseparse: fix taglist update spam
+	  We would constantly re-post the taglist because
+	  posted_avg_rate only gets set to avg_bitrate if
+	  parse->priv->post_avg_bitrate is true, so if it's
+	  false the posted rate will always differ from the
+	  current average rate and we'd queue an update,
+	  which leads to us spamming downstream and the
+	  application with taglist updates.
+	  Fix this by only queuing an update if the average
+	  rate will actually be posted.
+	  These taglists updates could cause expensive
+	  operations on the application side, e.g. in Totem.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=786561
+
+2017-08-26 13:44:38 -0300  Thibault Saunier <thibault.saunier@osg.samsung.com>
+
+	* gst/gstvalue.c:
+	* tests/check/gst/gstvalue.c:
+	  value: Handle serializing NULL GValueArray
+	  Consider them as an empty array and do not segfault...
+	  https://bugzilla.gnome.org/show_bug.cgi?id=786670
+
+2017-08-17 12:13:31 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* README:
+	* common:
+	  Automatic update of common submodule
+	  From 48a5d85 to dd9d403
+
+2017-08-16 22:47:31 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* plugins/elements/gstidentity.c:
+	* plugins/elements/gstidentity.h:
+	  identity: Return FLUSHING instead of EOS and don't start waiting for anything if currently flushing
+	  Otherwise we might try unscheduling a clock id (that does not exist
+	  yet), then the streaming thread waits for id and the state change never
+	  continues because the streaming thread is blocked.
+	  Also shutting down and flushing and similar should return FLUSHING, not
+	  EOS. The stream is not over, we're just not accepting any buffers
+	  anymore.
+
+2017-08-11 11:12:09 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* plugins/elements/gstqueue.c:
+	  queue: Allow re-usability after EOS
+	  After EOS, it is possible for a pad to be resetted by sending
+	  either a STREAM_START or SEGMENT event
+	  Mimic the same behaviour when receiving STREAM_START/SEGMENT events
+	  in queue if we are EOS'd
+	  https://bugzilla.gnome.org/show_bug.cgi?id=786056
+
+2017-08-09 16:15:23 +0200  Edward Hervey <edward@centricular.com>
+
+	* plugins/elements/gstqueue2.c:
+	  queue2: Allow re-usability after EOS
+	  After EOS, it is possible for a pad to be resetted by sending
+	  either a STREAM_START or SEGMENT event
+	  Mimic the same behaviour when receiving STREAM_START/SEGMENT events
+	  in queue2 if we are EOS'd
+	  https://bugzilla.gnome.org/show_bug.cgi?id=786056
+
+2017-08-09 10:51:39 +0200  Edward Hervey <edward@centricular.com>
+
+	* plugins/elements/gstmultiqueue.c:
+	* plugins/elements/gstqueue.c:
+	* plugins/elements/gstqueue2.c:
+	  plugins: *queue* elements: Handle STREAM_START in EOS situation
+	  When queue-like elements are in "EOS" situation (received GST_FLOW_EOS
+	  from downstream or EOS was pushed), they drain buffers/events that
+	  wouldn't be processed anyway and let through events that might
+	  modify the EOS situation.
+	  Previously only GST_EVENT_EOS and GST_EVENT_SEGMENT events were let
+	  through, but we also need to allow GST_EVENT_STREAM_START to go
+	  through since it resets the EOS state of pads since 1.6
+	  https://bugzilla.gnome.org/show_bug.cgi?id=786034
+
+2017-08-07 12:24:37 +0200  Edward Hervey <edward@centricular.com>
+
+	* plugins/elements/gstqueue2.c:
+	  queue2: Handle buffering levels on NOT_LINKED
+	  When downstream returns NOT_LINKED, we return the buffering level
+	  as being 100%.
+	  Since the queue is no longer being consumed/used downstream, we
+	  want applications to essentially "ignore" this queue for buffering
+	  purposes.
+	  If other streams are still being used, those stream buffering levels
+	  will be used. If none are used, upstream will post an error message
+	  on the bus indicating no streams are used.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=785799
+
+2017-08-02 21:02:32 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: Recheck sticky events after non-blocking buffer probes and blocking event probes
+	  Without the former, event changes (e.g. setting a pad offset) does not
+	  take effect for the current buffer but only for the next one. Without
+	  the latter, non-blocking event probes would not see any updated events
+	  yet.
+
+2017-07-28 17:27:18 +0100  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstsegment.c:
+	  segment: Add missing out annotations for various parameters
+
+=== release 1.12.2 ===
+
+2017-07-14 14:01:13 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.12.2
+
+2017-07-14 13:19:58 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/af.po:
+	* po/ast.po:
+	* po/az.po:
+	* po/be.po:
+	* po/bg.po:
+	* po/ca.po:
+	* po/cs.po:
+	* po/da.po:
+	* po/de.po:
+	* po/el.po:
+	* po/en_GB.po:
+	* po/eo.po:
+	* po/es.po:
+	* po/eu.po:
+	* po/fi.po:
+	* po/fr.po:
+	* po/fur.po:
+	* po/gl.po:
+	* po/hr.po:
+	* po/hu.po:
+	* po/id.po:
+	* po/it.po:
+	* po/ja.po:
+	* po/lt.po:
+	* po/nb.po:
+	* po/nl.po:
+	* po/pl.po:
+	* po/pt_BR.po:
+	* po/ro.po:
+	* po/ru.po:
+	* po/rw.po:
+	* po/sk.po:
+	* po/sl.po:
+	* po/sq.po:
+	* po/sr.po:
+	* po/sv.po:
+	* po/tr.po:
+	* po/uk.po:
+	* po/vi.po:
+	* po/zh_CN.po:
+	* po/zh_TW.po:
+	  Update .po files
 
 2017-07-13 21:52:34 +0800  Jason Lin <shangchieh@realtek.com>
 
