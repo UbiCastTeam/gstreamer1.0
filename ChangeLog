@@ -1,9 +1,224 @@
-=== release 1.12.3 ===
+=== release 1.12.4 ===
 
-2017-09-18  Sebastian Dröge <slomo@coaxion.net>
+2017-12-07  Sebastian Dröge <slomo@coaxion.net>
 
 	* configure.ac:
-	  releasing 1.12.3
+	  releasing 1.12.4
+
+2017-12-07 18:56:12 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/nl.po:
+	  po: Update translations
+
+2017-12-06 17:07:29 +0100  Edward Hervey <edward@centricular.com>
+
+	* gst/gstpad.c:
+	  gstpad: Handle GST_PAD_PROBE_HANDLED on sticky event push
+	  When actually pushing an event, if we get GST_FLOW_CUSTOM_SUCCESS_1
+	  (which is the conversion of GST_PAD_PROBE_HANDLED return value),
+	  don't consider the stick event push as ignored, but as handled
+
+2017-09-04 12:20:43 +0200  Miguel París <mparisdiaz@gmail.com>
+
+	* tests/check/gst/gstpad.c:
+	  pad: add test to check handled and drop probes
+	  https://bugzilla.gnome.org/show_bug.cgi?id=787243
+
+2017-09-04 14:33:29 +0200  Edward Hervey <edward@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: Don't call remaining probes after they return DROPPED|HANDLED
+	  If multiple probes are set on a pad and one probe returns either
+	  GST_PAD_PROBE_HANDLED or GST_PAD_PROBE_DROPPED we need to stop
+	  calling the remaining probes.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=787243
+
+2017-10-02 17:59:17 +0200  Edward Hervey <edward@centricular.com>
+
+	* gst/gstbin.c:
+	* tests/check/gst/gstbin.c:
+	  bin: iterate_sorted: Ensure sources are always returned last
+	  For linked elements, the resulting gst_bin_iterate_sorted() will
+	  properly return elements from sink to sources.
+	  If we have some elements that are not linked, we *still* want to
+	  ensure that we return:
+	  * In priority any sinks
+	  * Last of all any sources
+	  * And in between any element which is neither source nor sink
+	  For this to work, when looking for the next candidate element,
+	  not only check the degree order, but if there are two candidates
+	  with the same degree order, prefer the non-source one.
+	  Amongst other things, this fixes the case where we activating a
+	  bin containing unlinked sources and other elements. Without this
+	  we could end up activating sources (which might start adding pads
+	  to be linked) before other (to which those new source element pads
+	  might be linked) are not activated
+	  https://bugzilla.gnome.org/show_bug.cgi?id=788434
+
+2017-12-06 13:36:30 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstquery.c:
+	  query: Add an empty structure in writable_structure() if there is none yet
+	  This is consistent with how it works for GstEvent already.
+
+2017-12-02 12:29:20 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstinfo.c:
+	  info: always check match patterns for new debug categories
+	  Not only if a match pattern was set originally via GST_DEBUG.
+	  Patterns might be set programmatically as well after all.
+
+2017-12-02 12:22:47 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstinfo.c:
+	  info: fix performance issue with registering categories after gst_init()
+	  When registering a new debug category after gst_init(), simply check
+	  the existing patterns against that new category.
+	  No need to iterate over all categories and recheck them all against
+	  the existing patterns.
+	  Also, no need to re-parse the existing pattern string set via GST_DEBUG
+	  and add the same set of match patterns all over again to the existing
+	  list of match patterns every time we register a new debug category.
+	  Combined with iterating all debug categories on a change this would
+	  make adding debug categories after gst_init() very very very slow.
+
+2017-11-25 13:07:12 +0100  Edward Hervey <edward@centricular.com>
+
+	* gst/gstinfo.c:
+	  gstinfo: Use free instead of g_free
+	  Because
+
+2017-11-25 12:44:11 +0100  Edward Hervey <edward@centricular.com>
+
+	* gst/gstinfo.c:
+	  gstinfo: Don't leak array of strings
+	  The array provided by backtrace_symbols needs to be freed.
+
+2017-11-24 12:05:26 +0100  Edward Hervey <edward@centricular.com>
+
+	* gst/gstutils.c:
+	  gstutils: Fix linear regression comparision
+	  The check for dropping precision was wrong when sxx and syy were negative.
+	  if they are negative then "G_MAXINT64 - val" would always overflow
+	  The check was meant to use G_MININT64 (like in the loop contained just
+	  after).
+
+2017-11-24 09:40:07 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstghostpad.c:
+	  ghostpad: access internal pad with lock held
+
+2017-03-30 09:17:08 +0200  Havard Graff <havard.graff@gmail.com>
+
+	* gst/gstghostpad.c:
+	* tests/check/gst/gstghostpad.c:
+	  ghostpad: fix race-condition while tearing down
+	  An upstream query will take a ref on the internal proxypad, and can
+	  hence end up owning the last reference to that pad, causing a crash.
+
+2017-11-23 15:28:39 +0100  Edward Hervey <edward@centricular.com>
+
+	* plugins/elements/gstqueue.c:
+	  queue: Only calculate level if we have valid levels
+	  Doing calculations with GST_CLOCK_STIME_NONE would result in
+	  completely bogus levels
+
+2017-11-16 10:47:46 +0100  Edward Hervey <edward@centricular.com>
+
+	  gstpad: Make pad (de)activation atomic
+	  The following could happen previously:
+	  * T1: calls gst_pad_set_active()
+	  * T2: currently (de)activating it
+	  * T1: gst_pad_set_active() returns, caller assumes that the pad has
+	  completed the requested (de)activation ... whereas it is not
+	  the case since the actual (de)activation in T2 might still be
+	  going on.
+	  To ensure atomicity of pad (de)activation, we use a internal
+	  variable (and cond) to ensure only one thread at a time goes through
+	  the actual (de)activation block
+	  https://bugzilla.gnome.org/show_bug.cgi?id=790431
+
+2017-11-16 08:26:12 +0100  Edward Hervey <edward@centricular.com>
+
+	* gst/gstpad.c:
+	  gstpad: Make calls to GstPadActivateFunction MT-safe
+	  checking whether we already were in the target GstPadMode was being
+	  done too early and there was the risk that we *would* end up
+	  (de)activating a pad more than once.
+	  Instead, re-do the check for pad mode when entering the final pad
+	  (de)activation block.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=790431
+
+2017-11-04 11:45:54 +0100  Edward Hervey <edward@centricular.com>
+
+	* libs/gst/base/gsttypefindhelper.c:
+	  typefindhelper: Fix overflow some more
+	  Nothing guaranteed that off+size wouldn't exceed a 2**64 value.
+	  Instead we reverse the operation and use a subtraction.
+
+2017-11-04 10:34:10 +0100  Edward Hervey <edward@centricular.com>
+
+	* libs/gst/base/gsttypefindhelper.c:
+	  typefindhelper: Fix signed integer overflow
+	  Make sure the whole calculation is done with 64bit unsigned values
+	  (To be ready for people want to typefind exabyte files).
+
+2017-10-31 11:39:23 +0100  Edward Hervey <edward@centricular.com>
+
+	* gst/gstvalue.h:
+	  gstvalue: Cast GST_MAKE_FOURCC arguments
+	  To make it explicit that we are dealing with uint32 targets
+	  Avoids erroneous  runtime error: left shift of negative value -1
+	  https://bugzilla.gnome.org/show_bug.cgi?id=789700
+
+2017-11-30 17:49:10 +0100  Michael Tretter <m.tretter@pengutronix.de>
+
+	* libs/gst/net/gstptpclock.c:
+	  ptpclock: do not require a name to create a clock
+	  The gst_ptp_clock_new() does not actually require a name. However, for
+	  example the rtpjitterbuffer may create a clock without a name, fail, and
+	  fall back to not using the PTP clock.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=791034
+
+2017-11-09 17:38:19 +0100  Edward Hervey <edward@centricular.com>
+
+	* plugins/elements/gstconcat.c:
+	  concat: Make QoS forward MT-safe
+	  In the same way it's done for other event forwarding.
+
+2017-10-06 21:59:03 +0200  Mathieu Duponchelle <mathieu@centricular.com>
+
+	* gst/gstbuffer.c:
+	* tests/check/gst/gstmeta.c:
+	  gstbuffer: fix meta removal in gst_buffer_foreach_meta
+	  When updating the linked list, prev->next = next is correct
+	  if prev is actually updated after being set to the head
+	  of the list at the start.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=788617
+
+2017-10-05 10:24:24 +0530  Ashish Kumar <kr.ashish@samsung.com>
+
+	* gst/gstdeviceprovider.c:
+	  device-provider: gst_device_provider_unhide_provider() always fails
+	  https://bugzilla.gnome.org/show_bug.cgi?id=788520
+
+=== release 1.12.3 ===
+
+2017-09-18 17:46:32 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.12.3
+
+2017-09-18 16:01:06 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* po/cs.po:
+	  Update .po files
 
 2017-09-18 15:59:55 +0300  Sebastian Dröge <sebastian@centricular.com>
 

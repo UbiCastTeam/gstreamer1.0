@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-net.html" title="GStreamer Network Classes">
 <link rel="prev" href="gstreamer-net.html" title="GStreamer Network Classes">
 <link rel="next" href="GstNetClientClock.html" title="GstNetClientClock">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -85,7 +85,7 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-libs-GstNetAddressMeta.description"></a><h2>Description</h2>
-<p><a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> can be used to store a network address (a <a href="/usr/share/gtk-doc/html/gioGSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a>)
+<p><a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> can be used to store a network address (a <a href="/usr/share/gtk-doc/html/gio/GSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a>)
 in a <a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> so that it network elements can track the to and from address
 of the buffer.</p>
 </div>
@@ -95,7 +95,7 @@ of the buffer.</p>
 <a name="gst-buffer-add-net-address-meta"></a><h3>gst_buffer_add_net_address_meta ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="returnvalue">GstNetAddressMeta</span></a> *
 gst_buffer_add_net_address_meta (<em class="parameter"><code><a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *buffer</code></em>,
-                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a> *addr</code></em>);</pre>
+                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a> *addr</code></em>);</pre>
 <p>Attaches <em class="parameter"><code>addr</code></em>
  as metadata in a <a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> to <em class="parameter"><code>buffer</code></em>
 .</p>
@@ -125,7 +125,7 @@ to connect to <em class="parameter"><code>buffer</code></em>
 </div>
 <div class="refsect3">
 <a name="gst-buffer-add-net-address-meta.returns"></a><h4>Returns</h4>
-<p> a <a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> connected to <em class="parameter"><code>buffer</code></em>
+<p>a <a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> connected to <em class="parameter"><code>buffer</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -154,7 +154,7 @@ gst_buffer_get_net_address_meta (<em class="parameter"><code><a href="../html/Gs
 </div>
 <div class="refsect3">
 <a name="gst-buffer-get-net-address-meta.returns"></a><h4>Returns</h4>
-<p> the <a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there
+<p>the <a class="link" href="gstreamer-libs-GstNetAddressMeta.html#GstNetAddressMeta" title="struct GstNetAddressMeta"><span class="type">GstNetAddressMeta</span></a> or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there
 is no such metadata on <em class="parameter"><code>buffer</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -193,8 +193,8 @@ gst_net_address_meta_get_info (<em class="parameter"><code><span class="type">vo
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gioGSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a> *<em class="structfield"><code><a name="GstNetAddressMeta.addr"></a>addr</code></em>;</p></td>
-<td class="struct_member_description"><p>a <a href="/usr/share/gtk-doc/html/gioGSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a> stored as metadata</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gio/GSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a> *<em class="structfield"><code><a name="GstNetAddressMeta.addr"></a>addr</code></em>;</p></td>
+<td class="struct_member_description"><p>a <a href="/usr/share/gtk-doc/html/gio/GSocketAddress.html#GSocketAddress-struct"><span class="type">GSocketAddress</span></a> stored as metadata</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -204,6 +204,6 @@ gst_net_address_meta_get_info (<em class="parameter"><code><span class="type">vo
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

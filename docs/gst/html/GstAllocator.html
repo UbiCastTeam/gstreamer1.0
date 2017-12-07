@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-Gst.html" title="GStreamer">
 <link rel="next" href="gstreamer-GstAtomicQueue.html" title="GstAtomicQueue">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -152,10 +152,10 @@
 </div>
 <div class="refsect1">
 <a name="GstAllocator.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-Boxed-Types.html">GBoxed</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Boxed-Types.html">GBoxed</a>
     <span class="lineart">╰──</span> GstAllocationParams
-    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GstObject.html" title="GstObject">GstObject</a>
             <span class="lineart">╰──</span> GstAllocator
 </pre>
@@ -168,7 +168,7 @@
 <div class="refsect1">
 <a name="GstAllocator.description"></a><h2>Description</h2>
 <p>Memory is usually created by allocators with a <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>
-method call. When <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
+method call. When <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
 be used.</p>
 <p>New allocators can be registered with <a class="link" href="GstAllocator.html#gst-allocator-register" title="gst_allocator_register ()"><code class="function">gst_allocator_register()</code></a>.
 Allocators are identified by name and can be retrieved with
@@ -182,10 +182,10 @@ allocated elsewhere.</p>
 <div class="refsect2">
 <a name="gst-allocator-find"></a><h3>gst_allocator_find ()</h3>
 <pre class="programlisting"><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="returnvalue">GstAllocator</span></a> *
-gst_allocator_find (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+gst_allocator_find (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Find a previously registered allocator with <em class="parameter"><code>name</code></em>
 . When <em class="parameter"><code>name</code></em>
- is <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the
+ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the
 default allocator will be returned.</p>
 <div class="refsect3">
 <a name="gst-allocator-find.parameters"></a><h4>Parameters</h4>
@@ -197,14 +197,14 @@ default allocator will be returned.</p>
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p> the name of the allocator. </p></td>
+<td class="parameter_description"><p>the name of the allocator. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="gst-allocator-find.returns"></a><h4>Returns</h4>
-<p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
+<p>a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
 the allocator with <em class="parameter"><code>name</code></em>
 was not registered. Use <a class="link" href="GstObject.html#gst-object-unref" title="gst_object_unref ()"><code class="function">gst_object_unref()</code></a>
 to release the allocator after usage. </p>
@@ -215,7 +215,7 @@ to release the allocator after usage. </p>
 <div class="refsect2">
 <a name="gst-allocator-register"></a><h3>gst_allocator_register ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_allocator_register (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+gst_allocator_register (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                         <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>);</pre>
 <p>Registers the memory <em class="parameter"><code>allocator</code></em>
  with <em class="parameter"><code>name</code></em>
@@ -238,7 +238,7 @@ gst_allocator_register (<em class="parameter"><code>const <a href="/usr/share/gt
 </tr>
 <tr>
 <td class="parameter_name"><p>allocator</p></td>
-<td class="parameter_description"><p> <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>. </p></td>
+<td class="parameter_description"><p><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -262,7 +262,7 @@ gst_allocator_set_default (<em class="parameter"><code><a class="link" href="Gst
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>allocator</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
@@ -309,14 +309,14 @@ gst_allocation_params_copy (<em class="parameter"><code>const <a class="link" hr
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>params</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="gst-allocation-params-copy.returns"></a><h4>Returns</h4>
-<p> a new #<a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>, free with
+<p>a new #<a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>, free with
 <a class="link" href="GstAllocator.html#gst-allocation-params-free" title="gst_allocation_params_free ()"><code class="function">gst_allocation_params_free()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -338,7 +338,7 @@ gst_allocation_params_free (<em class="parameter"><code><a class="link" href="Gs
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>params</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input. Default is transfer none."><span class="acronym">in</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
@@ -349,7 +349,7 @@ gst_allocation_params_free (<em class="parameter"><code><a class="link" href="Gs
 <a name="gst-allocator-alloc"></a><h3>gst_allocator_alloc ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_allocator_alloc (<em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
                      <em class="parameter"><code><a class="link" href="GstAllocator.html#GstAllocationParams"><span class="type">GstAllocationParams</span></a> *params</code></em>);</pre>
 <p>Use <em class="parameter"><code>allocator</code></em>
  to allocate a new memory block with memory that is at least
@@ -357,12 +357,12 @@ gst_allocator_alloc (<em class="parameter"><code><a class="link" href="GstAlloca
  big.</p>
 <p>The optional <em class="parameter"><code>params</code></em>
  can specify the prefix and padding for the memory. If
-<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is passed, no flags, no extra prefix/padding and a default alignment is
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is passed, no flags, no extra prefix/padding and a default alignment is
 used.</p>
 <p>The prefix/padding will be filled with 0 if flags contains
 <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> respectively.</p>
 <p>When <em class="parameter"><code>allocator</code></em>
- is <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the default allocator will be used.</p>
+ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the default allocator will be used.</p>
 <p>The alignment in <em class="parameter"><code>params</code></em>
  is given as a bitmask so that <em class="parameter"><code>align</code></em>
  + 1 equals
@@ -379,7 +379,7 @@ use an alignment of 7.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>allocator</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> to use. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> to use. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -389,7 +389,7 @@ use an alignment of 7.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>params</p></td>
-<td class="parameter_description"><p> optional parameters. </p></td>
+<td class="parameter_description"><p>optional parameters. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -397,7 +397,7 @@ use an alignment of 7.</p>
 </div>
 <div class="refsect3">
 <a name="gst-allocator-alloc.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>. </p>
+<p>a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -420,12 +420,12 @@ gst_allocator_free (<em class="parameter"><code><a class="link" href="GstAllocat
 <tbody>
 <tr>
 <td class="parameter_name"><p>allocator</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> to use. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> to use. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>memory</p></td>
-<td class="parameter_description"><p> the memory to free. </p></td>
+<td class="parameter_description"><p>the memory to free. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -437,12 +437,12 @@ gst_allocator_free (<em class="parameter"><code><a class="link" href="GstAllocat
 <a name="gst-memory-new-wrapped"></a><h3>gst_memory_new_wrapped ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> maxsize</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> offset</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> maxsize</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> offset</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Allocate a new memory block that wraps the given <em class="parameter"><code>data</code></em>
 .</p>
 <p>The prefix/padding must be filled with 0 if <em class="parameter"><code>flags</code></em>
@@ -464,7 +464,7 @@ gst_memory_new_wrapped (<em class="parameter"><code><a class="link" href="GstMem
 </tr>
 <tr>
 <td class="parameter_name"><p>data</p></td>
-<td class="parameter_description"><p> data to
+<td class="parameter_description"><p>data to
 wrap. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
@@ -487,12 +487,12 @@ wrap. </p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
-<td class="parameter_description"><p> user_data. </p></td>
+<td class="parameter_description"><p>user_data. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>notify</p></td>
-<td class="parameter_description"><p> called with <em class="parameter"><code>user_data</code></em>
+<td class="parameter_description"><p>called with <em class="parameter"><code>user_data</code></em>
 when the memory is freed. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="The callback is valid until first called."><span class="acronym">scope async</span></acronym>][<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data]</span></td>
 </tr>
@@ -501,7 +501,7 @@ when the memory is freed. </p></td>
 </div>
 <div class="refsect3">
 <a name="gst-memory-new-wrapped.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>. </p>
+<p>a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -680,17 +680,17 @@ if present. (Since 1.6)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.align"></a>align</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.align"></a>align</code></em>;</p></td>
 <td class="struct_member_description"><p>the desired alignment of the memory</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.prefix"></a>prefix</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.prefix"></a>prefix</code></em>;</p></td>
 <td class="struct_member_description"><p>the desired prefix</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.padding"></a>padding</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAllocationParams-struct.padding"></a>padding</code></em>;</p></td>
 <td class="struct_member_description"><p>the desired padding</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -712,6 +712,6 @@ if present. (Since 1.6)</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

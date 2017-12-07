@@ -240,8 +240,6 @@ dladdr (void *address, Dl_info * dl)
 #endif /* __sgi__ */
 #endif
 
-static const gchar *_gst_debug_filter = NULL;
-
 static void gst_debug_reset_threshold (gpointer category, gpointer unused);
 static void gst_debug_reset_all_thresholds (void);
 
@@ -464,10 +462,9 @@ _priv_gst_debug_init (void)
   if (env)
     gst_debug_set_color_mode_from_string (env);
 
-  _gst_debug_filter = g_getenv ("GST_DEBUG");
-  if (_gst_debug_filter) {
-    gst_debug_set_threshold_from_string (_gst_debug_filter, FALSE);
-  }
+  env = g_getenv ("GST_DEBUG");
+  if (env)
+    gst_debug_set_threshold_from_string (env, FALSE);
 }
 
 /* we can't do this further above, because we initialize the GST_CAT_DEFAULT struct */
@@ -1692,6 +1689,18 @@ gst_debug_unset_threshold_for_name (const gchar * name)
   gst_debug_reset_all_thresholds ();
 }
 
+static void
+gst_debug_apply_patterns_to_category (GstDebugCategory * cat)
+{
+  GSList *l;
+
+  g_mutex_lock (&__level_name_mutex);
+  for (l = __level_name; l != NULL; l = l->next) {
+    for_each_threshold_by_entry (cat, (LevelNameEntry *) l->data);
+  }
+  g_mutex_unlock (&__level_name_mutex);
+}
+
 GstDebugCategory *
 _gst_debug_category_new (const gchar * name, guint color,
     const gchar * description)
@@ -1725,9 +1734,7 @@ _gst_debug_category_new (const gchar * name, guint color,
   g_mutex_unlock (&__cat_mutex);
 
   /* ensure the filter is applied to categories registered after _debug_init */
-  if (_gst_debug_filter) {
-    gst_debug_set_threshold_from_string (_gst_debug_filter, FALSE);
-  }
+  gst_debug_apply_patterns_to_category (cat);
 
   return cat;
 }
@@ -2750,6 +2757,8 @@ generate_backtrace_trace (void)
 
   for (j = 0; j < nptrs; j++)
     g_string_append_printf (trace, "%s\n", strings[j]);
+
+  free (strings);
 
   return g_string_free (trace, FALSE);
 }
