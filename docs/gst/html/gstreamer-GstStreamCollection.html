@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstStream.html" title="GstStreams">
 <link rel="next" href="GstStructure.html" title="GstStructure">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -49,14 +49,14 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstStreamCollection.html#gst-stream-collection-add-stream" title="gst_stream_collection_add_stream ()">gst_stream_collection_add_stream</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstStreamCollection.html#gst-stream-collection-get-upstream-id" title="gst_stream_collection_get_upstream_id ()">gst_stream_collection_get_upstream_id</a> <span class="c_punctuation">()</span>
@@ -64,7 +64,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstStreamCollection.html#gst-stream-collection-get-size" title="gst_stream_collection_get_size ()">gst_stream_collection_get_size</a> <span class="c_punctuation">()</span>
@@ -102,7 +102,7 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstStreamCollection.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/gst.h&gt;
+<pre class="synopsis">#include &lt;gst/gstprotection.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -113,7 +113,7 @@
 <div class="refsect2">
 <a name="gst-stream-collection-new"></a><h3>gst_stream_collection_new ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="returnvalue">GstStreamCollection</span></a> *
-gst_stream_collection_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *upstream_id</code></em>);</pre>
+gst_stream_collection_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *upstream_id</code></em>);</pre>
 <p>Create a new <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a>.</p>
 <div class="refsect3">
 <a name="gst-stream-collection-new.parameters"></a><h4>Parameters</h4>
@@ -125,7 +125,7 @@ gst_stream_collection_new (<em class="parameter"><code>const <a href="/usr/share
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>upstream_id</p></td>
-<td class="parameter_description"><p> The stream id of the parent stream. </p></td>
+<td class="parameter_description"><p>The stream id of the parent stream. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
@@ -139,7 +139,7 @@ gst_stream_collection_new (<em class="parameter"><code>const <a href="/usr/share
 <hr>
 <div class="refsect2">
 <a name="gst-stream-collection-add-stream"></a><h3>gst_stream_collection_add_stream ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_stream_collection_add_stream (<em class="parameter"><code><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> *collection</code></em>,
                                   <em class="parameter"><code><a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> *stream</code></em>);</pre>
 <p>Add the given <em class="parameter"><code>stream</code></em>
@@ -161,7 +161,7 @@ gst_stream_collection_add_stream (<em class="parameter"><code><a class="link" hr
 </tr>
 <tr>
 <td class="parameter_name"><p>stream</p></td>
-<td class="parameter_description"><p> the <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> to add. </p></td>
+<td class="parameter_description"><p>the <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> to add. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -169,15 +169,15 @@ gst_stream_collection_add_stream (<em class="parameter"><code><a class="link" hr
 </div>
 <div class="refsect3">
 <a name="gst-stream-collection-add-stream.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>stream</code></em>
-was properly added, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a></p>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>stream</code></em>
+was properly added, else <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-stream-collection-get-upstream-id"></a><h3>gst_stream_collection_get_upstream_id ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_stream_collection_get_upstream_id (<em class="parameter"><code><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> *collection</code></em>);</pre>
 <p>Returns the upstream id of the <em class="parameter"><code>collection</code></em>
 .</p>
@@ -198,7 +198,7 @@ gst_stream_collection_get_upstream_id (<em class="parameter"><code><a class="lin
 </div>
 <div class="refsect3">
 <a name="gst-stream-collection-get-upstream-id.returns"></a><h4>Returns</h4>
-<p> The upstream id. </p>
+<p>The upstream id. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
@@ -206,7 +206,7 @@ gst_stream_collection_get_upstream_id (<em class="parameter"><code><a class="lin
 <hr>
 <div class="refsect2">
 <a name="gst-stream-collection-get-size"></a><h3>gst_stream_collection_get_size ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_stream_collection_get_size (<em class="parameter"><code><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> *collection</code></em>);</pre>
 <p>Get the number of streams this collection contains</p>
 <div class="refsect3">
@@ -236,7 +236,7 @@ contains</p>
 <a name="gst-stream-collection-get-stream"></a><h3>gst_stream_collection_get_stream ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="returnvalue">GstStream</span></a> *
 gst_stream_collection_get_stream (<em class="parameter"><code><a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a> *collection</code></em>,
-                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>Retrieve the <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> with index <em class="parameter"><code>index</code></em>
  from the collection.</p>
 <p>The caller should not modify the returned <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a></p>
@@ -264,7 +264,7 @@ gst_stream_collection_get_stream (<em class="parameter"><code><a class="link" hr
 </div>
 <div class="refsect3">
 <a name="gst-stream-collection-get-stream.returns"></a><h4>Returns</h4>
-<p> A <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a>. </p>
+<p>A <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
@@ -322,6 +322,6 @@ obsoleted.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstTagList.html" title="GstTagList">
 <link rel="next" href="GstTask.html" title="GstTask">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -145,7 +145,7 @@
 </div>
 <div class="refsect1">
 <a name="GstTagSetter.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/GTypeModule.html">GInterface</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/GTypeModule.html">GInterface</a>
     <span class="lineart">╰──</span> GstTagSetter
 </pre>
 </div>
@@ -157,7 +157,7 @@ GstTagSetter requires
 </div>
 <div class="refsect1">
 <a name="GstTagSetter.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/gst.h&gt;
+<pre class="synopsis">#include &lt;gst/gstprotection.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -292,10 +292,10 @@ gst_tag_setter_merge_tags (<em class="parameter"><code><a class="link" href="Gst
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tags (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagsetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
                          <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
-                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                          <em class="parameter"><code>...</code></em>);</pre>
 <p>Adds the given tag / value pairs on the setter using the given merge mode.
-The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+The list must be terminated with <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="gst-tag-setter-add-tags.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -335,8 +335,8 @@ The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Stand
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_value (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagsetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
                               <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
-                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Adds the given tag / GValue pair on the setter using the given merge mode.</p>
 <div class="refsect3">
 <a name="gst-tag-setter-add-tag-value.parameters"></a><h4>Parameters</h4>
@@ -377,10 +377,10 @@ gst_tag_setter_add_tag_value (<em class="parameter"><code><a class="link" href="
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_values (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagsetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
                                <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
-                               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+                               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                <em class="parameter"><code>...</code></em>);</pre>
 <p>Adds the given tag / GValue pairs on the setter using the given merge mode.
-The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+The list must be terminated with <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="gst-tag-setter-add-tag-values.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -420,10 +420,10 @@ The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Stand
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_valist (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagsetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
                                <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
-                               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+                               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
 <p>Adds the given tag / value pairs on the setter using the given merge mode.
-The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+The list must be terminated with <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="gst-tag-setter-add-tag-valist.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -463,10 +463,10 @@ The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Stand
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_tag_setter_add_tag_valist_values (<em class="parameter"><code><a class="link" href="GstTagSetter.html" title="GstTagsetter"><span class="type">GstTagSetter</span></a> *setter</code></em>,
                                       <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
-                                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
+                                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                                       <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
 <p>Adds the given tag / GValue pairs on the setter using the given merge mode.
-The list must be terminated with <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+The list must be terminated with <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
 <a name="gst-tag-setter-add-tag-valist-values.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -525,8 +525,8 @@ modified or freed.</p>
 </div>
 <div class="refsect3">
 <a name="gst-tag-setter-get-tag-list.returns"></a><h4>Returns</h4>
-<p> a current snapshot of the
-taglist used in the setter or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none is used. </p>
+<p>a current snapshot of the
+taglist used in the setter or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none is used. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
@@ -624,6 +624,6 @@ from events</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

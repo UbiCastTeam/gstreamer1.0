@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstPad.html" title="GstPad">
 <link rel="next" href="gstreamer-GstParamSpec.html" title="GstParamSpec">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -135,7 +135,7 @@
 </tr>
 <tr>
 <td class="property_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GstPadTemplate.html#GstPadTemplate--name-template" title="The “name-template” property">name-template</a></td>
 <td class="property_flags">Read / Write / Construct Only</td>
 </tr>
@@ -158,7 +158,7 @@
 <tbody><tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstPadTemplate.html#GstPadTemplate-pad-created" title="The “pad-created” signal">pad-created</a></td>
-<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -191,8 +191,8 @@
 </div>
 <div class="refsect1">
 <a name="GstPadTemplate.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GstObject.html" title="GstObject">GstObject</a>
             <span class="lineart">╰──</span> GstPadTemplate
 </pre>
@@ -361,7 +361,7 @@ gst_static_pad_template_get (<em class="parameter"><code><a class="link" href="G
 </div>
 <div class="refsect3">
 <a name="gst-static-pad-template-get.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>. </p>
+<p>a new <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -388,7 +388,7 @@ gst_static_pad_template_get_caps (<em class="parameter"><code><a class="link" hr
 </div>
 <div class="refsect3">
 <a name="gst-static-pad-template-get-caps.returns"></a><h4>Returns</h4>
-<p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> of the static pad template.
+<p>the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> of the static pad template.
 Unref after usage. Since the core holds an additional
 ref to the returned caps, use <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
 on the returned caps to modify it. </p>
@@ -509,7 +509,7 @@ on the returned caps to modify it. </p>
 <div class="refsect2">
 <a name="gst-pad-template-new"></a><h3>gst_pad_template_new ()</h3>
 <pre class="programlisting"><a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="returnvalue">GstPadTemplate</span></a> *
-gst_pad_template_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name_template</code></em>,
+gst_pad_template_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name_template</code></em>,
                       <em class="parameter"><code><a class="link" href="GstPad.html#GstPadDirection" title="enum GstPadDirection"><span class="type">GstPadDirection</span></a> direction</code></em>,
                       <em class="parameter"><code><a class="link" href="GstPadTemplate.html#GstPadPresence" title="enum GstPadPresence"><span class="type">GstPadPresence</span></a> presence</code></em>,
                       <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
@@ -541,7 +541,7 @@ and with the given arguments.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>caps</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> set for the template. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> set for the template. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -549,7 +549,7 @@ and with the given arguments.</p>
 </div>
 <div class="refsect3">
 <a name="gst-pad-template-new.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>. </p>
+<p>a new <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a>. </p>
 <p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
 </div>
 </div>
@@ -576,7 +576,7 @@ gst_pad_template_get_caps (<em class="parameter"><code><a class="link" href="Gst
 </div>
 <div class="refsect3">
 <a name="gst-pad-template-get-caps.returns"></a><h4>Returns</h4>
-<p> the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> of the pad template.
+<p>the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> of the pad template.
 Unref after usage. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -604,7 +604,7 @@ Unref after usage. </p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstStaticPadTemplate.name-template"></a>name_template</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstStaticPadTemplate.name-template"></a>name_template</code></em>;</p></td>
 <td class="struct_member_description"><p>the name of the template</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -714,7 +714,7 @@ Unref after usage. </p>
 <hr>
 <div class="refsect2">
 <a name="GstPadTemplate--name-template"></a><h3>The <code class="literal">“name-template”</code> property</h3>
-<pre class="programlisting">  “name-template”            <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “name-template”            <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The name template of the pad template.</p>
 <p>Flags: Read / Write / Construct Only</p>
 <p>Default value: NULL</p>
@@ -735,7 +735,7 @@ Unref after usage. </p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> *pad_template,
                <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>         *pad,
-               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
 <p>This signal is fired when an element creates a pad from this template.</p>
 <div class="refsect3">
 <a name="GstPadTemplate-pad-created.parameters"></a><h4>Parameters</h4>
@@ -764,7 +764,7 @@ user_function (<a class="link" href="GstPadTemplate.html" title="GstPadTemplate"
 </tbody>
 </table></div>
 </div>
-<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -773,6 +773,6 @@ user_function (<a class="link" href="GstPadTemplate.html" title="GstPadTemplate"
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

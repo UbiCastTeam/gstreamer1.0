@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstAllocator.html" title="GstAllocator">
 <link rel="next" href="GstBin.html" title="GstBin">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstAtomicQueue.html#gst-atomic-queue-peek" title="gst_atomic_queue_peek ()">gst_atomic_queue_peek</a> <span class="c_punctuation">()</span>
@@ -81,7 +81,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstAtomicQueue.html#gst-atomic-queue-pop" title="gst_atomic_queue_pop ()">gst_atomic_queue_pop</a> <span class="c_punctuation">()</span>
@@ -89,7 +89,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstAtomicQueue.html#gst-atomic-queue-length" title="gst_atomic_queue_length ()">gst_atomic_queue_length</a> <span class="c_punctuation">()</span>
@@ -126,7 +126,7 @@ threads without performing any blocking operations.</p>
 <div class="refsect2">
 <a name="gst-atomic-queue-new"></a><h3>gst_atomic_queue_new ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstAtomicQueue.html#GstAtomicQueue" title="GstAtomicQueue"><span class="returnvalue">GstAtomicQueue</span></a> *
-gst_atomic_queue_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> initial_size</code></em>);</pre>
+gst_atomic_queue_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> initial_size</code></em>);</pre>
 <p>Create a new atomic queue instance. <em class="parameter"><code>initial_size</code></em>
  will be rounded up to the
 nearest power of 2 and used as the initial size of the queue.</p>
@@ -201,7 +201,7 @@ gst_atomic_queue_unref (<em class="parameter"><code><a class="link" href="gstrea
 <a name="gst-atomic-queue-push"></a><h3>gst_atomic_queue_push ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_atomic_queue_push (<em class="parameter"><code><a class="link" href="gstreamer-GstAtomicQueue.html#GstAtomicQueue" title="GstAtomicQueue"><span class="type">GstAtomicQueue</span></a> *queue</code></em>,
-                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>Append <em class="parameter"><code>data</code></em>
  to the tail of the queue.</p>
 <div class="refsect3">
@@ -230,7 +230,7 @@ gst_atomic_queue_push (<em class="parameter"><code><a class="link" href="gstream
 <hr>
 <div class="refsect2">
 <a name="gst-atomic-queue-peek"></a><h3>gst_atomic_queue_peek ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 gst_atomic_queue_peek (<em class="parameter"><code><a class="link" href="gstreamer-GstAtomicQueue.html#GstAtomicQueue" title="GstAtomicQueue"><span class="type">GstAtomicQueue</span></a> *queue</code></em>);</pre>
 <p>Peek the head element of the queue without removing it from the queue.</p>
 <div class="refsect3">
@@ -250,16 +250,16 @@ gst_atomic_queue_peek (<em class="parameter"><code><a class="link" href="gstream
 </div>
 <div class="refsect3">
 <a name="gst-atomic-queue-peek.returns"></a><h4>Returns</h4>
-<p> the head element of <em class="parameter"><code>queue</code></em>
+<p>the head element of <em class="parameter"><code>queue</code></em>
 or
-<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the queue is empty. </p>
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when the queue is empty. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-atomic-queue-pop"></a><h3>gst_atomic_queue_pop ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 gst_atomic_queue_pop (<em class="parameter"><code><a class="link" href="gstreamer-GstAtomicQueue.html#GstAtomicQueue" title="GstAtomicQueue"><span class="type">GstAtomicQueue</span></a> *queue</code></em>);</pre>
 <p>Get the head element of the queue.</p>
 <div class="refsect3">
@@ -279,8 +279,8 @@ gst_atomic_queue_pop (<em class="parameter"><code><a class="link" href="gstreame
 </div>
 <div class="refsect3">
 <a name="gst-atomic-queue-pop.returns"></a><h4>Returns</h4>
-<p> the head element of <em class="parameter"><code>queue</code></em>
-or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
+<p>the head element of <em class="parameter"><code>queue</code></em>
+or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
 the queue is empty. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -288,7 +288,7 @@ the queue is empty. </p>
 <hr>
 <div class="refsect2">
 <a name="gst-atomic-queue-length"></a><h3>gst_atomic_queue_length ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_atomic_queue_length (<em class="parameter"><code><a class="link" href="gstreamer-GstAtomicQueue.html#GstAtomicQueue" title="GstAtomicQueue"><span class="type">GstAtomicQueue</span></a> *queue</code></em>);</pre>
 <p>Get the amount of items in the queue.</p>
 <div class="refsect3">
@@ -323,6 +323,6 @@ gst_atomic_queue_length (<em class="parameter"><code><a class="link" href="gstre
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="GstTracerFactory.html" title="GstTracerFactory">
 <link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -84,15 +84,15 @@
 </div>
 <div class="refsect1">
 <a name="GstTracerRecord.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GstObject.html" title="GstObject">GstObject</a>
             <span class="lineart">╰──</span> GstTracerRecord
 </pre>
 </div>
 <div class="refsect1">
 <a name="GstTracerRecord.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/gst.h&gt;
+<pre class="synopsis">#include &lt;gst/gstprotection.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -105,8 +105,8 @@ will log and create a log formatter.</p>
 <div class="refsect2">
 <a name="gst-tracer-record-new"></a><h3>gst_tracer_record_new ()</h3>
 <pre class="programlisting"><a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="returnvalue">GstTracerRecord</span></a> *
-gst_tracer_record_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                       <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
+gst_tracer_record_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                       <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *firstfield</code></em>,
                        <em class="parameter"><code>...</code></em>);</pre>
 <p>Create a new tracer record. The record instance can be used to efficiently
 log entries using <a class="link" href="GstTracerRecord.html#gst-tracer-record-log" title="gst_tracer_record_log ()"><code class="function">gst_tracer_record_log()</code></a>.</p>
@@ -114,12 +114,12 @@ log entries using <a class="link" href="GstTracerRecord.html#gst-tracer-record-l
  without the ".class" suffix will be used for the log records.
 There must be fields for each value that gets logged where the field name is
 the value name. The field must be a <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> describing the value. The
-sub structure must contain a field called 'type' of <a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-GTYPE:CAPS"><code class="literal">G_TYPE_GTYPE</code></a> that
+sub structure must contain a field called 'type' of <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#G-TYPE-GTYPE:CAPS"><code class="literal">G_TYPE_GTYPE</code></a> that
 contains the GType of the value. The resulting <a class="link" href="GstTracerRecord.html" title="GstTracerRecord"><span class="type">GstTracerRecord</span></a> will take
 ownership of the field structures.</p>
 <p>The way to deal with optional values is to log an additional boolean before
-the optional field, that if <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> signals that the optional field is valid
-and <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> signals that the optional field should be ignored. One must still
+the optional field, that if <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> signals that the optional field is valid
+and <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> signals that the optional field should be ignored. One must still
 log a placeholder value for the optional field though. Please also note, that
 pointer type values must not be NULL - the underlying serialisation can not
 handle that right now.</p>
@@ -291,6 +291,6 @@ events may contain values for different <a href="GstPad.html#GstPad-struct"><spa
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

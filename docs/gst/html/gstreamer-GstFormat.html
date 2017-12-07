@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstEvent.html" title="GstEvent">
 <link rel="next" href="GstGhostPad.html" title="GstGhostPad">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -40,7 +40,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstFormat.html#gst-format-get-name" title="gst_format_get_name ()">gst_format_get_name</a> <span class="c_punctuation">()</span>
@@ -48,7 +48,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstFormat.html#gst-format-to-quark" title="gst_format_to_quark ()">gst_format_to_quark</a> <span class="c_punctuation">()</span>
@@ -72,7 +72,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstFormat.html#gst-formats-contains" title="gst_formats_contains ()">gst_formats_contains</a> <span class="c_punctuation">()</span>
@@ -138,7 +138,7 @@ operations.</p>
 <a name="gstreamer-GstFormat.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="gst-format-get-name"></a><h3>gst_format_get_name ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_format_get_name (<em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
 <p>Get a printable name for the given format. Do not modify or free.</p>
 <div class="refsect3">
@@ -158,15 +158,15 @@ gst_format_get_name (<em class="parameter"><code><a class="link" href="gstreamer
 </div>
 <div class="refsect3">
 <a name="gst-format-get-name.returns"></a><h4>Returns</h4>
-<p> a reference to the static name of the format
-or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the format is unknown. </p>
+<p>a reference to the static name of the format
+or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the format is unknown. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-format-to-quark"></a><h3>gst_format_to_quark ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="returnvalue">GQuark</span></a>
 gst_format_to_quark (<em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
 <p>Get the unique quark for the given format.</p>
 <div class="refsect3">
@@ -194,8 +194,8 @@ is unknown.</p>
 <div class="refsect2">
 <a name="gst-format-register"></a><h3>gst_format_register ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="returnvalue">GstFormat</span></a>
-gst_format_register (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nick</code></em>,
-                     <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *description</code></em>);</pre>
+gst_format_register (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nick</code></em>,
+                     <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *description</code></em>);</pre>
 <p>Create a new GstFormat based on the nick or return an
 already registered format with that nick.</p>
 <div class="refsect3">
@@ -231,7 +231,7 @@ with the same nick.</p>
 <div class="refsect2">
 <a name="gst-format-get-by-nick"></a><h3>gst_format_get_by_nick ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="returnvalue">GstFormat</span></a>
-gst_format_get_by_nick (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nick</code></em>);</pre>
+gst_format_get_by_nick (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nick</code></em>);</pre>
 <p>Return the format registered with the given nick.</p>
 <div class="refsect3">
 <a name="gst-format-get-by-nick.parameters"></a><h4>Parameters</h4>
@@ -258,7 +258,7 @@ if the format was not registered.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-formats-contains"></a><h3>gst_formats_contains ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_formats_contains (<em class="parameter"><code>const <a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> *formats</code></em>,
                       <em class="parameter"><code><a class="link" href="gstreamer-GstFormat.html#GstFormat" title="enum GstFormat"><span class="type">GstFormat</span></a> format</code></em>);</pre>
 <p>See if the given format is inside the format array.</p>
@@ -273,7 +273,7 @@ gst_formats_contains (<em class="parameter"><code>const <a class="link" href="gs
 <tbody>
 <tr>
 <td class="parameter_name"><p>formats</p></td>
-<td class="parameter_description"><p> The format array to search. </p></td>
+<td class="parameter_description"><p>The format array to search. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span></td>
 </tr>
 <tr>
@@ -286,7 +286,7 @@ gst_formats_contains (<em class="parameter"><code>const <a class="link" href="gs
 </div>
 <div class="refsect3">
 <a name="gst-formats-contains.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the format is found inside the array</p>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the format is found inside the array</p>
 </div>
 </div>
 <hr>
@@ -312,8 +312,8 @@ gst_format_get_details (<em class="parameter"><code><a class="link" href="gstrea
 </div>
 <div class="refsect3">
 <a name="gst-format-get-details.returns"></a><h4>Returns</h4>
-<p> The <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="type">GstFormatDefinition</span></a> for <em class="parameter"><code>format</code></em>
-or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<p>The <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="type">GstFormatDefinition</span></a> for <em class="parameter"><code>format</code></em>
+or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 on failure.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -328,7 +328,7 @@ gst_format_iterate_definitions (<em class="parameter"><code><span class="type">v
 only.</p>
 <div class="refsect3">
 <a name="gst-format-iterate-definitions.returns"></a><h4>Returns</h4>
-<p> a GstIterator of <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="type">GstFormatDefinition</span></a>. </p>
+<p>a GstIterator of <a class="link" href="gstreamer-GstFormat.html#GstFormatDefinition" title="struct GstFormatDefinition"><span class="type">GstFormatDefinition</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -440,17 +440,17 @@ its real value.</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstFormatDefinition.nick"></a>nick</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstFormatDefinition.nick"></a>nick</code></em>;</p></td>
 <td class="struct_member_description"><p>A short nick of the format</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstFormatDefinition.description"></a>description</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstFormatDefinition.description"></a>description</code></em>;</p></td>
 <td class="struct_member_description"><p>A longer description of the format</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Quarks.html#GQuark"><span class="type">GQuark</span></a> <em class="structfield"><code><a name="GstFormatDefinition.quark"></a>quark</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> <em class="structfield"><code><a name="GstFormatDefinition.quark"></a>quark</code></em>;</p></td>
 <td class="struct_member_description"><p>A quark for the nick</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -465,6 +465,6 @@ its real value.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

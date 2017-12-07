@@ -506,13 +506,16 @@ gst_ghost_pad_dispose (GObject * object)
 
   GST_OBJECT_LOCK (pad);
   internal = GST_PROXY_PAD_INTERNAL (pad);
+  if (internal) {
+    gst_pad_set_activatemode_function (internal, NULL);
 
-  gst_pad_set_activatemode_function (internal, NULL);
+    GST_PROXY_PAD_INTERNAL (pad) = NULL;
+    GST_PROXY_PAD_INTERNAL (internal) = NULL;
 
-  /* disposes of the internal pad, since the ghostpad is the only possible object
-   * that has a refcount on the internal pad. */
-  gst_object_unparent (GST_OBJECT_CAST (internal));
-  GST_PROXY_PAD_INTERNAL (pad) = NULL;
+    /* disposes of the internal pad, since the ghostpad is the only possible object
+     * that has a refcount on the internal pad. */
+    gst_object_unparent (GST_OBJECT_CAST (internal));
+  }
 
   GST_OBJECT_UNLOCK (pad);
 
@@ -832,10 +835,16 @@ gst_ghost_pad_set_target (GstGhostPad * gpad, GstPad * newtarget)
 
   g_return_val_if_fail (GST_IS_GHOST_PAD (gpad), FALSE);
   g_return_val_if_fail (GST_PAD_CAST (gpad) != newtarget, FALSE);
-  g_return_val_if_fail (newtarget != GST_PROXY_PAD_INTERNAL (gpad), FALSE);
 
   GST_OBJECT_LOCK (gpad);
   internal = GST_PROXY_PAD_INTERNAL (gpad);
+
+  if (newtarget == internal) {
+    GST_OBJECT_UNLOCK (gpad);
+    GST_WARNING_OBJECT (gpad, "Target has already been set to %s:%s",
+        GST_DEBUG_PAD_NAME (newtarget));
+    return FALSE;
+  }
 
   if (newtarget)
     GST_DEBUG_OBJECT (gpad, "set target %s:%s", GST_DEBUG_PAD_NAME (newtarget));

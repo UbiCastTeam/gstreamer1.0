@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="next" href="GstBaseSrc.html" title="GstBaseSrc">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -147,7 +147,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstBaseParse.html#gst-base-parse-convert-default" title="gst_base_parse_convert_default ()">gst_base_parse_convert_default</a> <span class="c_punctuation">()</span>
@@ -155,7 +155,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstBaseParse.html#gst-base-parse-add-index-entry" title="gst_base_parse_add_index_entry ()">gst_base_parse_add_index_entry</a> <span class="c_punctuation">()</span>
@@ -237,7 +237,7 @@
 <col width="200px" class="properties_flags">
 </colgroup>
 <tbody><tr>
-<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GstBaseParse.html#GstBaseParse--disable-passthrough" title="The “disable-passthrough” property">disable-passthrough</a></td>
 <td class="property_flags">Read / Write</td>
 </tr></tbody>
@@ -284,8 +284,8 @@
 </div>
 <div class="refsect1">
 <a name="GstBaseParse.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a href="../html/GstObject.html#GstObject-struct">GstObject</a>
             <span class="lineart">╰──</span> <a href="../html/GstElement.html#GstElement-struct">GstElement</a>
                 <span class="lineart">╰──</span> GstBaseParse
@@ -464,7 +464,7 @@ not required to use this and can still do tag handling on its own.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>tags</p></td>
-<td class="parameter_description"><p> a <a href="../html/GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a> to merge, or NULL to unset
+<td class="parameter_description"><p>a <a href="../html/GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a> to merge, or NULL to unset
 previously-set tags. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -484,8 +484,8 @@ previously-set tags. </p></td>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_duration (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
                              <em class="parameter"><code><a href="../html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a> fmt</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a> duration</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> interval</code></em>);</pre>
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> duration</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> interval</code></em>);</pre>
 <p>Sets the duration of the currently playing media. Subclass can use this
 when it is able to determine duration and/or notices a change in the media
 duration.  Alternatively, if <em class="parameter"><code>interval</code></em>
@@ -531,7 +531,7 @@ frames.</p>
 <a name="gst-base-parse-set-average-bitrate"></a><h3>gst_base_parse_set_average_bitrate ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_average_bitrate (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> bitrate</code></em>);</pre>
+                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> bitrate</code></em>);</pre>
 <p>Optionally sets the average bitrate detected in media (if non-zero),
 e.g. based on metadata, as it will be posted to the application.</p>
 <p>By default, announced average bitrate is estimated. The average bitrate
@@ -566,7 +566,7 @@ a seek position, if there's no index and the format is syncable
 <a name="gst-base-parse-set-min-frame-size"></a><h3>gst_base_parse_set_min_frame_size ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_min_frame_size (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> min_size</code></em>);</pre>
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> min_size</code></em>);</pre>
 <p>Subclass can use this function to tell the base class that it needs to
 give at least <span class="type">min_size</span> buffers.</p>
 <div class="refsect3">
@@ -598,7 +598,7 @@ subclass.</p></td>
 <a name="gst-base-parse-set-passthrough"></a><h3>gst_base_parse_set_passthrough ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_passthrough (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> passthrough</code></em>);</pre>
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> passthrough</code></em>);</pre>
 <p>Set if the nature of the format or configuration does not allow (much)
 parsing, and the parser should operate in passthrough mode (which only
 applies when operating in push mode). That is, incoming buffers are
@@ -626,7 +626,7 @@ passthrough semantics in <em class="parameter"><code>pre_push_frame</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>passthrough</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parser should run in passthrough mode</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parser should run in passthrough mode</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -638,7 +638,7 @@ passthrough semantics in <em class="parameter"><code>pre_push_frame</code></em>
 <a name="gst-base-parse-set-syncable"></a><h3>gst_base_parse_set_syncable ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_syncable (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> syncable</code></em>);</pre>
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> syncable</code></em>);</pre>
 <p>Set if frame starts can be identified. This is set by default and
 determines whether seeking based on bitrate averages
 is possible for a format/stream.</p>
@@ -670,7 +670,7 @@ is possible for a format/stream.</p>
 <a name="gst-base-parse-set-has-timing-info"></a><h3>gst_base_parse_set_has_timing_info ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_has_timing_info (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> has_timing</code></em>);</pre>
+                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> has_timing</code></em>);</pre>
 <p>Set if frames carry timing information which the subclass can (generally)
 parse and provide.  In particular, intrinsic (rather than estimated) time
 can be obtained following a seek.</p>
@@ -727,10 +727,10 @@ is emptied or chain returns with error.</p>
 <a name="gst-base-parse-set-frame-rate"></a><h3>gst_base_parse_set_frame_rate ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_frame_rate (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_num</code></em>,
-                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_den</code></em>,
-                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> lead_in</code></em>,
-                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> lead_out</code></em>);</pre>
+                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_num</code></em>,
+                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_den</code></em>,
+                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> lead_in</code></em>,
+                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> lead_out</code></em>);</pre>
 <p>If frames per second is configured, parser can take care of buffer duration
 and timestamping.  When performing segment clipping, or seeking to a specific
 location, a corresponding decoder might need an initial <em class="parameter"><code>lead_in</code></em>
@@ -819,7 +819,7 @@ particular parsing of the format, it typically corresponds to 1 frame duration.<
 <a name="gst-base-parse-set-infer-ts"></a><h3>gst_base_parse_set_infer_ts ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_infer_ts (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> infer_ts</code></em>);</pre>
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> infer_ts</code></em>);</pre>
 <p>By default, the base class might try to infer PTS from DTS and vice
 versa.  While this is generally correct for audio data, it may not
 be otherwise. Sub-classes implementing such formats should disable
@@ -840,7 +840,7 @@ timestamp inferring.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>infer_ts</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parser should infer DTS/PTS from each other</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parser should infer DTS/PTS from each other</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -852,7 +852,7 @@ timestamp inferring.</p>
 <a name="gst-base-parse-set-pts-interpolation"></a><h3>gst_base_parse_set_pts_interpolation ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_pts_interpolation (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> pts_interpolate</code></em>);</pre>
+                                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> pts_interpolate</code></em>);</pre>
 <p>By default, the base class will guess PTS timestamps using a simple
 interpolation (previous timestamp + duration), which is incorrect for
 data streams with reordering, where PTS can go backward. Sub-classes
@@ -873,7 +873,7 @@ implementing such formats should disable PTS interpolation.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>pts_interpolate</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parser should interpolate PTS timestamps</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parser should interpolate PTS timestamps</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -885,7 +885,7 @@ implementing such formats should disable PTS interpolation.</p>
 <a name="gst-base-parse-set-ts-at-offset"></a><h3>gst_base_parse_set_ts_at_offset ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_base_parse_set_ts_at_offset (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> offset</code></em>);</pre>
+                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> offset</code></em>);</pre>
 <p>This function should only be called from a <em class="parameter"><code>handle_frame</code></em>
  implementation.</p>
 <p><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> creates initial timestamps for frames by using the last
@@ -921,12 +921,12 @@ into the frame data that the picture starts.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-base-parse-convert-default"></a><h3>gst_base_parse_convert_default ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_base_parse_convert_default (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
                                 <em class="parameter"><code><a href="../html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a> src_format</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a> src_value</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> src_value</code></em>,
                                 <em class="parameter"><code><a href="../html/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a> dest_format</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *dest_value</code></em>);</pre>
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> *dest_value</code></em>);</pre>
 <p>Default implementation of "convert" vmethod in <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> class.</p>
 <div class="refsect3">
 <a name="gst-base-parse-convert-default.parameters"></a><h4>Parameters</h4>
@@ -967,18 +967,18 @@ gst_base_parse_convert_default (<em class="parameter"><code><a class="link" href
 </div>
 <div class="refsect3">
 <a name="gst-base-parse-convert-default.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if conversion was successful.</p>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if conversion was successful.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-base-parse-add-index-entry"></a><h3>gst_base_parse_add_index_entry ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_base_parse_add_index_entry (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a> offset</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> offset</code></em>,
                                 <em class="parameter"><code><a href="../html/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> ts</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> key</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> force</code></em>);</pre>
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> key</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> force</code></em>);</pre>
 <p>Adds an entry to the index associating <em class="parameter"><code>offset</code></em>
  to <em class="parameter"><code>ts</code></em>
 .  It is recommended
@@ -1025,7 +1025,7 @@ to the new entry, etc.</p>
 </div>
 <div class="refsect3">
 <a name="gst-base-parse-add-index-entry.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating whether entry was added</p>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating whether entry was added</p>
 </div>
 </div>
 <hr>
@@ -1034,7 +1034,7 @@ to the new entry, etc.</p>
 <pre class="programlisting"><a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="returnvalue">GstBaseParseFrame</span></a> *
 gst_base_parse_frame_new (<em class="parameter"><code><a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *buffer</code></em>,
                           <em class="parameter"><code><a class="link" href="GstBaseParse.html#GstBaseParseFrameFlags" title="enum GstBaseParseFrameFlags"><span class="type">GstBaseParseFrameFlags</span></a> flags</code></em>,
-                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> overhead</code></em>);</pre>
+                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> overhead</code></em>);</pre>
 <p>Allocates a new <a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>. This function is mainly for bindings,
 elements written in C should usually allocate the frame on the stack and
 then use <a class="link" href="GstBaseParse.html#gst-base-parse-frame-init" title="gst_base_parse_frame_init ()"><code class="function">gst_base_parse_frame_init()</code></a> to initialise it.</p>
@@ -1049,7 +1049,7 @@ then use <a class="link" href="GstBaseParse.html#gst-base-parse-frame-init" titl
 <tbody>
 <tr>
 <td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p> a <a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a>. </p></td>
+<td class="parameter_description"><p>a <a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1132,7 +1132,7 @@ frame's buffer, though caller retains ownership of <em class="parameter"><code>f
 </tr>
 <tr>
 <td class="parameter_name"><p>frame</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -1149,7 +1149,7 @@ frame's buffer, though caller retains ownership of <em class="parameter"><code>f
 <pre class="programlisting"><a href="../html/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 gst_base_parse_finish_frame (<em class="parameter"><code><a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> *parse</code></em>,
                              <em class="parameter"><code><a class="link" href="GstBaseParse.html#GstBaseParseFrame" title="GstBaseParseFrame"><span class="type">GstBaseParseFrame</span></a> *frame</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> size</code></em>);</pre>
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> size</code></em>);</pre>
 <p>Collects parsed data and pushes this downstream.
 Source pad caps must be set when this is called.</p>
 <p>If <em class="parameter"><code>frame</code></em>
@@ -1505,20 +1505,20 @@ of each frame's processing, i.e. parsing virtual method invocation sequence.</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstBaseParseFrame.flags"></a>flags</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstBaseParseFrame.flags"></a>flags</code></em>;</p></td>
 <td class="struct_member_description"><p>a combination of input and output <a class="link" href="GstBaseParse.html#GstBaseParseFrameFlags" title="enum GstBaseParseFrameFlags"><span class="type">GstBaseParseFrameFlags</span></a> that
 convey additional context to subclass or allow subclass to tune
 subsequent <a class="link" href="GstBaseParse.html" title="GstBaseParse"><span class="type">GstBaseParse</span></a> actions.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a> <em class="structfield"><code><a name="GstBaseParseFrame.offset"></a>offset</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> <em class="structfield"><code><a name="GstBaseParseFrame.offset"></a>offset</code></em>;</p></td>
 <td class="struct_member_description"><p>media specific offset of input frame
 Note that a converter may have a different one on the frame's buffer.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstBaseParseFrame.overhead"></a>overhead</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstBaseParseFrame.overhead"></a>overhead</code></em>;</p></td>
 <td class="struct_member_description"><p>subclass can set this to indicates the metadata overhead
 for the given frame, which is then used to enable more accurate bitrate
 computations. If this is -1, it is assumed that this frame should be
@@ -1627,12 +1627,12 @@ to forego pushing buffer.</p>
 <a name="GstBaseParse.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GstBaseParse--disable-passthrough"></a><h3>The <code class="literal">“disable-passthrough”</code> property</h3>
-<pre class="programlisting">  “disable-passthrough”      <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, baseparse will unconditionally force parsing of the
+<pre class="programlisting">  “disable-passthrough”      <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, baseparse will unconditionally force parsing of the
 incoming data. This can be required in the rare cases where the incoming
 side-data (caps, pts, dts, ...) is not trusted by the user and wants to
 force validation and parsing of the incoming data.
-If set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, decision of whether to parse the data or not is up to
+If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, decision of whether to parse the data or not is up to
 the implementation (standard behaviour).</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -1644,6 +1644,6 @@ the implementation (standard behaviour).</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-identity.html" title="identity">
 <link rel="next" href="gstreamer-plugins-multiqueue.html" title="multiqueue">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -49,12 +49,12 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-input-selector.html#GstInputSelector--cache-buffers" title="The “cache-buffers” property">cache-buffers</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-input-selector.html#GstInputSelector--n-pads" title="The “n-pads” property">n-pads</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -64,7 +64,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-input-selector.html#GstInputSelector--sync-streams" title="The “sync-streams” property">sync-streams</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -92,8 +92,8 @@
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-input-selector.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a href="../html/GstObject.html#GstObject-struct">GstObject</a>
             <span class="lineart">╰──</span> <a href="../html/GstElement.html#GstElement-struct">GstElement</a>
                 <span class="lineart">╰──</span> GstInputSelector
@@ -105,9 +105,9 @@
 <p>The input pads are from a GstPad subclass and have additional
 properties, which users may find useful, namely:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>"running-time": Running time of stream on pad (<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a>)</p></li>
+<li class="listitem"><p>"running-time": Running time of stream on pad (<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a>)</p></li>
 <li class="listitem"><p>"tags": The currently active tags on the pad (<a href="../html/GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a>, boxed type)</p></li>
-<li class="listitem"><p>"active": If the pad is currently active (<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>)</p></li>
+<li class="listitem"><p>"active": If the pad is currently active (<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>)</p></li>
 <li class="listitem"><p>"always-ok" : Make an inactive pads return <a href="../html/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> instead of
 <a href="../html/GstPad.html#GST-FLOW-NOT-LINKED:CAPS"><span class="type">GST_FLOW_NOT_LINKED</span></a></p></li>
 </ul></div>
@@ -245,8 +245,8 @@ properties, which users may find useful, namely:</p>
 <hr>
 <div class="refsect2">
 <a name="GstInputSelector--cache-buffers"></a><h3>The <code class="literal">“cache-buffers”</code> property</h3>
-<pre class="programlisting">  “cache-buffers”            <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> and GstInputSelector:sync-streams is also set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>,
+<pre class="programlisting">  “cache-buffers”            <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> and GstInputSelector:sync-streams is also set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>,
 the active pad will cache the buffers still considered valid (after current
 running time, see sync-mode) to avoid missing frames if/when the pad is
 reactivated.</p>
@@ -259,7 +259,7 @@ reactivate that pad without loosing the already consumed buffers is to enable ca
 <hr>
 <div class="refsect2">
 <a name="GstInputSelector--n-pads"></a><h3>The <code class="literal">“n-pads”</code> property</h3>
-<pre class="programlisting">  “n-pads”                   <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<pre class="programlisting">  “n-pads”                   <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>The number of sink pads.</p>
 <p>Flags: Read</p>
 <p>Default value: 0</p>
@@ -279,8 +279,8 @@ which may cause delays and some missing buffers.</p>
 <hr>
 <div class="refsect2">
 <a name="GstInputSelector--sync-streams"></a><h3>The <code class="literal">“sync-streams”</code> property</h3>
-<pre class="programlisting">  “sync-streams”             <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> all inactive streams will be synced to the
+<pre class="programlisting">  “sync-streams”             <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> all inactive streams will be synced to the
 running time of the active stream or to the current clock.</p>
 <p>To make sure no buffers are dropped by input-selector
 that might be needed when switching the active pad,
@@ -295,6 +295,6 @@ sync-mode should be set to "clock" and cache-buffers to TRUE.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>
