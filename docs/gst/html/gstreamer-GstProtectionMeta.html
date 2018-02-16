@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="GstPreset.html" title="GstPreset">
+<link rel="prev" href="GstPromise.html" title="GstPromise">
 <link rel="next" href="GstQuery.html" title="GstQuery">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -19,7 +19,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GstPreset.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstPromise.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstQuery.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -58,6 +58,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstProtectionMeta.html#gst-protection-select-system" title="gst_protection_select_system ()">gst_protection_select_system</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstProtectionMeta.html#gst-protection-filter-systems-by-available-decryptors" title="gst_protection_filter_systems_by_available_decryptors ()">gst_protection_filter_systems_by_available_decryptors</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -143,7 +151,7 @@ function takes ownership of <em class="parameter"><code>info</code></em>
 unsuccessful. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -171,19 +179,55 @@ element matches, the system ID of the highest ranked element is selected.</p>
 <td class="parameter_description"><p>A null terminated array of strings
 that contains the UUID values of each protection system that is to be
 checked. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span></td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="gst-protection-select-system.returns"></a><h4>Returns</h4>
-<p>One of the strings from <em class="parameter"><code>system_identifiers</code></em>
-that
-indicates the highest ranked element that implements the protection system
-indicated by that system ID, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no element has been found. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p>One of the strings from
+<em class="parameter"><code>system_identifiers</code></em>
+that indicates the highest ranked element that
+implements the protection system indicated by that system ID, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no
+element has been found. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-protection-filter-systems-by-available-decryptors"></a><h3>gst_protection_filter_systems_by_available_decryptors ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+gst_protection_filter_systems_by_available_decryptors
+                               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **system_identifiers</code></em>);</pre>
+<p>Iterates the supplied list of UUIDs and checks the GstRegistry for
+all the decryptors supporting one of the supplied UUIDs.</p>
+<div class="refsect3">
+<a name="gst-protection-filter-systems-by-available-decryptors.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>system_identifiers</p></td>
+<td class="parameter_description"><p>A null terminated array of strings
+that contains the UUID values of each protection system that is to be
+checked. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-protection-filter-systems-by-available-decryptors.returns"></a><h4>Returns</h4>
+<p>A null terminated array containing all
+the <em class="parameter"><code>system_identifiers</code></em>
+supported by the set of available decryptors, or
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no matches were found. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -220,7 +264,7 @@ track, including the information needed to decrypt it (if it is encrypted).</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -229,11 +273,11 @@ track, including the information needed to decrypt it (if it is encrypted).</p>
 </pre>
 <p>The field name in a GstCaps that is used to signal the UUID of the protection
 system.</p>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

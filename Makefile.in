@@ -335,6 +335,7 @@ EGREP = @EGREP@
 ENABLE_SUBUNIT = @ENABLE_SUBUNIT@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 FLEX_PATH = @FLEX_PATH@
@@ -389,7 +390,6 @@ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
 GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
@@ -568,7 +568,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 aclocaldir = $(datadir)/aclocal
-aclocal_DATA = gst-element-check-@GST_API_VERSION@.m4
+aclocal_DATA = gst-element-check-1.0.m4
 SUBDIRS = pkgconfig gst libs plugins tests docs po m4 common data \
 	$(am__append_1)
 
@@ -595,18 +595,17 @@ win32crlf = $(shell find $(top_srcdir)/win32 -name '*.dsw' -o -name '*.dsp')
 
 # include before EXTRA_DIST for win32 assignment
 EXTRA_DIST = \
-	gst-element-check.m4 \
+	gst-element-check-1.0.m4 \
 	configure.ac autogen.sh depcomp \
 	MAINTAINERS ABOUT-NLS RELEASE gstreamer.doap \
 	scripts/gst-uninstalled \
 	$(shell find "$(top_srcdir)" -type f -name meson.build ! -path "$(top_srcdir)/gstreamer-*" ) \
 	gst/gstenumtypes.c.template gst/gstenumtypes.h.template \
 	libs/gst/controller/controller_mkenum.py \
-	meson_options.txt config.h.meson  \
+	meson_options.txt \
 	gst/parse/gen_lex.py.in gst/parse/gen_grammar.py.in \
 	$(win32)
 
-CLEANFILES = gst-element-check-@GST_API_VERSION@.m4
 DISTCLEANFILES = _stdint.h
 @GST_GCOV_ENABLED_TRUE@GCOV_DIRS = gst libs
 
@@ -1079,7 +1078,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -1434,9 +1432,6 @@ lcov:
 
 check: $(CHECK_EXPORTS) check-enum-gettypes
 
-gst-element-check-@GST_API_VERSION@.m4: gst-element-check.m4
-	$(AM_V_GEN)cp $(srcdir)/gst-element-check.m4 gst-element-check-@GST_API_VERSION@.m4
-
 check-cruft:
 	@cruft_files=""; cruft_dirs=""; \
 	for f in $(CRUFT_FILES); do \
@@ -1487,7 +1482,7 @@ clean-cruft: clean-cruft-dirs clean-cruft-files
 #
 # all-local: check-cruft
 
-all-local: gst-element-check-@GST_API_VERSION@.m4 check-cruft
+all-local: check-cruft
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="next" href="GstTracer.html" title="GstTracer">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -119,6 +119,30 @@
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-log-function-by-data" title="gst_debug_remove_log_function_by_data ()">gst_debug_remove_log_function_by_data</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-add-ring-buffer-logger" title="gst_debug_add_ring_buffer_logger ()">gst_debug_add_ring_buffer_logger</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-ring-buffer-logger" title="gst_debug_remove_ring_buffer_logger ()">gst_debug_remove_ring_buffer_logger</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-ring-buffer-logger-get-logs" title="gst_debug_ring_buffer_logger_get_logs ()">gst_debug_ring_buffer_logger_get_logs</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -1081,7 +1105,8 @@ in debug handlers to extract the message.</p>
 </div>
 <div class="refsect3">
 <a name="gst-debug-message-get.returns"></a><h4>Returns</h4>
-<p> the string representation of a <span class="type">GstDebugMessage</span>.</p>
+<p>the string representation of a <span class="type">GstDebugMessage</span>. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1278,6 +1303,68 @@ gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="/usr
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-debug-add-ring-buffer-logger"></a><h3>gst_debug_add_ring_buffer_logger ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_debug_add_ring_buffer_logger (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> max_size_per_thread</code></em>,
+                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> thread_timeout</code></em>);</pre>
+<p>Adds a memory ringbuffer based debug logger that stores up to
+<em class="parameter"><code>max_size_per_thread</code></em>
+ bytes of logs per thread and times out threads after
+<em class="parameter"><code>thread_timeout</code></em>
+ seconds of inactivity.</p>
+<p>Logs can be fetched with <a class="link" href="gstreamer-GstInfo.html#gst-debug-ring-buffer-logger-get-logs" title="gst_debug_ring_buffer_logger_get_logs ()"><code class="function">gst_debug_ring_buffer_logger_get_logs()</code></a> and the
+logger can be removed again with <a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-ring-buffer-logger" title="gst_debug_remove_ring_buffer_logger ()"><code class="function">gst_debug_remove_ring_buffer_logger()</code></a>.
+Only one logger at a time is possible.</p>
+<div class="refsect3">
+<a name="gst-debug-add-ring-buffer-logger.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>max_size_per_thread</p></td>
+<td class="parameter_description"><p>Maximum size of log per thread in bytes</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>thread_timeout</p></td>
+<td class="parameter_description"><p>Timeout for threads in seconds</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-remove-ring-buffer-logger"></a><h3>gst_debug_remove_ring_buffer_logger ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_debug_remove_ring_buffer_logger (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Removes any previously added ring buffer logger with
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-add-ring-buffer-logger" title="gst_debug_add_ring_buffer_logger ()"><code class="function">gst_debug_add_ring_buffer_logger()</code></a>.</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-ring-buffer-logger-get-logs"></a><h3>gst_debug_ring_buffer_logger_get_logs ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+gst_debug_ring_buffer_logger_get_logs (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Fetches the current logs per thread from the ring buffer logger. See
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-add-ring-buffer-logger" title="gst_debug_add_ring_buffer_logger ()"><code class="function">gst_debug_add_ring_buffer_logger()</code></a> for details.</p>
+<div class="refsect3">
+<a name="gst-debug-ring-buffer-logger-get-logs.returns"></a><h4>Returns</h4>
+<p>NULL-terminated array of
+strings with the debug output per thread. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-debug-set-active"></a><h3>gst_debug_set_active ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_set_active (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
@@ -1361,7 +1448,7 @@ gst_debug_set_color_mode (<em class="parameter"><code><a class="link" href="gstr
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1386,7 +1473,7 @@ gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href=
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1410,7 +1497,7 @@ gst_debug_get_color_mode (<em class="parameter"><code><span class="type">void</s
 <p> see <em class="parameter"><code>GstDebugColorMode</code></em>
 for possible values.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1472,7 +1559,7 @@ to the one already set.</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3222,8 +3309,6 @@ a stack trace is printed.</p>
 <a name="gst-debug-get-stack-trace"></a><h3>gst_debug_get_stack_trace ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_debug_get_stack_trace (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstStackTraceFlags" title="enum GstStackTraceFlags"><span class="type">GstStackTraceFlags</span></a> flags</code></em>);</pre>
-<p>If libunwind or glibc backtrace are present, a stack trace
-is returned.</p>
 <div class="refsect3">
 <a name="gst-debug-get-stack-trace.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -3240,7 +3325,13 @@ trace should look like. Pass 0 to retrieve a minimal backtrace.</p></td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<div class="refsect3">
+<a name="gst-debug-get-stack-trace.returns"></a><h4>Returns</h4>
+<p>a stack trace, if libunwind or glibc backtrace are
+present, else <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3289,7 +3380,7 @@ evaluated more than once.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3365,7 +3456,7 @@ alternatives such as <a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-F
 <p> the length of the string allocated into <em class="parameter"><code>result</code></em>
 or -1 on any error</p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3404,9 +3495,10 @@ gst_info_strdup_vprintf (<em class="parameter"><code>const <a href="/usr/share/g
 </div>
 <div class="refsect3">
 <a name="gst-info-strdup-vprintf.returns"></a><h4>Returns</h4>
-<p> a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error</p>
+<p>a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3444,9 +3536,10 @@ gst_info_strdup_printf (<em class="parameter"><code>const <a href="/usr/share/gt
 </div>
 <div class="refsect3">
 <a name="gst-info-strdup-printf.returns"></a><h4>Returns</h4>
-<p> a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error</p>
+<p>a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3486,7 +3579,7 @@ such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3526,7 +3619,7 @@ such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3566,7 +3659,7 @@ such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3606,7 +3699,7 @@ such as <a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -3747,7 +3840,7 @@ it is set such that all debugging statements will be enabled.</p>
 <p>If you wish to compile GStreamer and plugins with only some debugging statements
 (Such as just warnings and errors), you can define it at compile time to the
 maximum debug level. Any debug statements above that level will be compiled out.</p>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4043,7 +4136,7 @@ function signature in C++ code.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4095,7 +4188,7 @@ construct the matching arguments.</p>
 </div>
 
 <p></p>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4131,6 +4224,6 @@ and environment variables that affect the debugging output.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

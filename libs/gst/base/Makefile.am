@@ -4,6 +4,7 @@ libgstbase_@GST_API_VERSION@_la_DEPENDENCIES = \
 	$(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la
 libgstbase_@GST_API_VERSION@_la_SOURCES = \
 	gstadapter.c		\
+	gstaggregator.c		\
 	gstbaseparse.c		\
 	gstbasesink.c		\
 	gstbasesrc.c		\
@@ -28,6 +29,7 @@ libgstbase_@GST_API_VERSION@includedir =		\
 libgstbase_@GST_API_VERSION@include_HEADERS =	\
 	base.h			\
 	gstadapter.h		\
+	gstaggregator.h		\
 	gstbaseparse.h		\
 	gstbasesink.h		\
 	gstbasesrc.h		\
@@ -65,7 +67,7 @@ gir_sources=$(patsubst %,$(srcdir)/%, $(libgstbase_@GST_API_VERSION@_la_SOURCES)
 
 GstBase-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstbase-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes \
 		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 		$(INTROSPECTION_SCANNER) -v --namespace GstBase \
 		--nsversion=@GST_API_VERSION@ \

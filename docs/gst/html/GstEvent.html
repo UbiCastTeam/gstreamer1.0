@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstGError.html" title="GstError">
 <link rel="next" href="gstreamer-GstFormat.html" title="GstFormat">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1363,7 +1363,7 @@ take ownership of the structure. </p></td>
 <div class="refsect3">
 <a name="gst-event-new-custom.returns"></a><h4>Returns</h4>
 <p>the new custom event. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1389,10 +1389,11 @@ gst_event_get_structure (<em class="parameter"><code><a class="link" href="GstEv
 </div>
 <div class="refsect3">
 <a name="gst-event-get-structure.returns"></a><h4>Returns</h4>
-<p> The structure of the event. The structure is still
-owned by the event, which means that you should not free it and
-that the pointer becomes invalid when you free the event.</p>
-<p>MT safe.</p>
+<p>The structure of the event. The
+structure is still owned by the event, which means that you should not free
+it and that the pointer becomes invalid when you free the event.</p>
+<p>MT safe. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1535,7 +1536,7 @@ before usage with this offset.</p>
 <p> The event's running time offset</p>
 <p>MT safe.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1568,7 +1569,7 @@ gst_event_set_running_time_offset (<em class="parameter"><code><a class="link" h
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1866,7 +1867,7 @@ gst_event_set_stream_flags (<em class="parameter"><code><a class="link" href="Gs
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1896,7 +1897,7 @@ gst_event_parse_stream_flags (<em class="parameter"><code><a class="link" href="
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1932,7 +1933,7 @@ each time a file is played for example.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1967,7 +1968,7 @@ gst_event_parse_group_id (<em class="parameter"><code><a class="link" href="GstE
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a group id was set on the event and could be parsed,
 <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2000,7 +2001,7 @@ gst_event_set_stream (<em class="parameter"><code><a class="link" href="GstEvent
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2032,7 +2033,7 @@ gst_event_parse_stream (<em class="parameter"><code><a class="link" href="GstEve
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2099,7 +2100,7 @@ with <em class="parameter"><code>rate</code></em>
 <div class="refsect3">
 <a name="gst-event-new-segment.returns"></a><h4>Returns</h4>
 <p>the new SEGMENT event. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2434,7 +2435,7 @@ event and implement custom application specific QoS handling.</p>
 <div class="refsect3">
 <a name="gst-event-new-qos.returns"></a><h4>Returns</h4>
 <p>a new QOS event. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2583,7 +2584,7 @@ this, PAUSE the pipeline, query the current playback position with
 <div class="refsect3">
 <a name="gst-event-new-seek.returns"></a><h4>Returns</h4>
 <p>a new seek event. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2809,7 +2810,7 @@ part of a larger step operation.</p>
 <div class="refsect3">
 <a name="gst-event-new-step.returns"></a><h4>Returns</h4>
 <p>a new <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2979,7 +2980,7 @@ that will follow after the event.</p>
 <div class="refsect3">
 <a name="gst-event-new-caps.returns"></a><h4>Returns</h4>
 <p>the new CAPS event. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3297,7 +3298,7 @@ of this string will depend upon the protection scheme.</p></td>
 <p> a <a class="link" href="GstEvent.html#GST-EVENT-PROTECTION:CAPS"><span class="type">GST_EVENT_PROTECTION</span></a> event, if successful; <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 if unsuccessful.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3354,7 +3355,7 @@ from. </p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3368,7 +3369,9 @@ gst_event_new_select_streams (<em class="parameter"><code><a href="/usr/share/gt
  corresponds to the "Stream ID" of each stream to be
 activated. Those ID can be obtained via the <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> objects present
 in <a class="link" href="GstEvent.html#GST-EVENT-STREAM-START:CAPS"><span class="type">GST_EVENT_STREAM_START</span></a>, <a class="link" href="GstEvent.html#GST-EVENT-STREAM-COLLECTION:CAPS"><span class="type">GST_EVENT_STREAM_COLLECTION</span></a> or
-<span class="type">GST_MESSSAGE_STREAM_COLLECTION</span>.</p>
+<a class="link" href="GstMessage.html#GST-MESSAGE-STREAM-COLLECTION:CAPS"><span class="type">GST_MESSAGE_STREAM_COLLECTION</span></a>.</p>
+<p>Note: The list of <em class="parameter"><code>streams</code></em>
+ can not be empty.</p>
 <div class="refsect3">
 <a name="gst-event-new-select-streams.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -3387,10 +3390,11 @@ activate. </p></td>
 </div>
 <div class="refsect3">
 <a name="gst-event-new-select-streams.returns"></a><h4>Returns</h4>
-<p>a new select-streams event. </p>
+<p>a new select-streams event or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> in case of
+an error (like an empty streams list). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3421,7 +3425,7 @@ gst_event_parse_select_streams (<em class="parameter"><code><a class="link" href
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3455,7 +3459,7 @@ data flow.</p>
 <p>the new STREAM_COLLECTION event. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3487,7 +3491,7 @@ gst_event_parse_stream_collection (<em class="parameter"><code><a class="link" h
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3522,7 +3526,7 @@ new pads can be exposed before sending EOS on the existing pads.</p>
 <p>the new stream-group-done event. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3556,7 +3560,7 @@ gst_event_parse_stream_group_done (<em class="parameter"><code><a class="link" h
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -3975,7 +3979,7 @@ Specific custom events are distinguished by the name of the structure.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4218,6 +4222,6 @@ elements that handle them.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

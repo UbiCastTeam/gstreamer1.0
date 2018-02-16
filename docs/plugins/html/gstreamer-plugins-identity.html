@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="gstreamer Elements">
 <link rel="prev" href="gstreamer-plugins-funnel.html" title="funnel">
 <link rel="next" href="gstreamer-plugins-input-selector.html" title="input-selector">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -105,7 +105,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="../html/GstBuffer.html#GstBufferFlags"><span class="type">GstBufferFlags</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBufferFlags"><span class="type">GstBufferFlags</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-identity.html#GstIdentity--drop-buffer-flags" title="The “drop-buffer-flags” property">drop-buffer-flags</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -149,9 +149,9 @@
 <a name="gstreamer-plugins-identity.object-hierarchy"></a><h2>Object Hierarchy</h2>
 <pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-        <span class="lineart">╰──</span> <a href="../html/GstObject.html#GstObject-struct">GstObject</a>
-            <span class="lineart">╰──</span> <a href="../html/GstElement.html#GstElement-struct">GstElement</a>
-                <span class="lineart">╰──</span> <a href="../html/GstBaseTransform.html#GstBaseTransform-struct">GstBaseTransform</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstElement-struct">GstElement</a>
+                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseTransform.html#GstBaseTransform-struct">GstBaseTransform</a>
                     <span class="lineart">╰──</span> GstIdentity
 </pre>
 </div>
@@ -315,8 +315,8 @@ useful diagnostic functions, such as offset and timestamp checking.</p>
 <div class="refsect2">
 <a name="GstIdentity--signal-handoffs"></a><h3>The <code class="literal">“signal-handoffs”</code> property</h3>
 <pre class="programlisting">  “signal-handoffs”          <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>, the identity will emit a handoff signal when handling a buffer.
-When set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>, no signal will be emitted, which might improve performance.</p>
+<p>If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the identity will emit a handoff signal when handling a buffer.
+When set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, no signal will be emitted, which might improve performance.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: TRUE</p>
 </div>
@@ -355,7 +355,7 @@ When set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALS
 <hr>
 <div class="refsect2">
 <a name="GstIdentity--drop-buffer-flags"></a><h3>The <code class="literal">“drop-buffer-flags”</code> property</h3>
-<pre class="programlisting">  “drop-buffer-flags”        <a href="../html/GstBuffer.html#GstBufferFlags"><span class="type">GstBufferFlags</span></a></pre>
+<pre class="programlisting">  “drop-buffer-flags”        <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBufferFlags"><span class="type">GstBufferFlags</span></a></pre>
 <p>Drop buffers with the given flags.</p>
 <p>Flags: Read / Write</p>
 <p class="since">Since: 1.8</p>
@@ -375,7 +375,7 @@ When set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALS
 <a name="GstIdentity-handoff"></a><h3>The <code class="literal">“handoff”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="gstreamer-plugins-identity.html#GstIdentity"><span class="type">GstIdentity</span></a> *identity,
-               <a href="../html/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a>   *buffer,
+               <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a>   *buffer,
                <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
 <p>This signal gets emitted before passing the buffer downstream.</p>
 <div class="refsect3">
@@ -415,6 +415,6 @@ user_function (<a class="link" href="gstreamer-plugins-identity.html#GstIdentity
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

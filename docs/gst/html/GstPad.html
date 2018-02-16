@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstObject.html" title="GstObject">
 <link rel="next" href="GstPadTemplate.html" title="GstPadTemplate">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1024,6 +1024,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="GstTask.html#GstTaskState" title="enum GstTaskState"><span class="returnvalue">GstTaskState</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstPad.html#gst-pad-get-task-state" title="gst_pad_get_task_state ()">gst_pad_get_task_state</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -1547,7 +1555,7 @@ gst_pad_link_get_name (<em class="parameter"><code><a class="link" href="GstPad.
 <a name="gst-pad-link-get-name.returns"></a><h4>Returns</h4>
 <p> a static string with the name of the pad-link return.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1711,7 +1719,7 @@ gst_pad_store_sticky_event (<em class="parameter"><code><a class="link" href="Gs
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> on success, <a class="link" href="GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a> when the pad
 was flushing or <a class="link" href="GstPad.html#GST-FLOW-EOS:CAPS"><span class="type">GST_FLOW_EOS</span></a> when the pad was EOS.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1983,7 +1991,7 @@ ancestor, the link will fail.</p>
 <a name="gst-pad-link-maybe-ghosting.returns"></a><h4>Returns</h4>
 <p> whether the link succeeded.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2036,7 +2044,7 @@ pads with safety checks applied.</p>
 <a name="gst-pad-link-maybe-ghosting-full.returns"></a><h4>Returns</h4>
 <p> whether the link succeeded.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2261,7 +2269,7 @@ you need to unref it after use.</p>
 <a name="gst-pad-get-peer.returns"></a><h4>Returns</h4>
 <p>the peer <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>. Unref after usage.</p>
 <p>MT safe. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2504,7 +2512,7 @@ gst_pad_get_last_flow_return (<em class="parameter"><code><a class="link" href="
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2571,7 +2579,7 @@ gst_pad_probe_info_get_buffer (<em class="parameter"><code><a class="link" href=
 <div class="refsect3">
 <a name="gst-pad-probe-info-get-buffer.returns"></a><h4>Returns</h4>
 <p>The <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> from the probe. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2597,7 +2605,7 @@ gst_pad_probe_info_get_buffer_list (<em class="parameter"><code><a class="link" 
 <div class="refsect3">
 <a name="gst-pad-probe-info-get-buffer-list.returns"></a><h4>Returns</h4>
 <p>The <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a> from the probe. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2623,7 +2631,7 @@ gst_pad_probe_info_get_event (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="gst-pad-probe-info-get-event.returns"></a><h4>Returns</h4>
 <p>The <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a> from the probe. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2649,7 +2657,7 @@ gst_pad_probe_info_get_query (<em class="parameter"><code><a class="link" href="
 <div class="refsect3">
 <a name="gst-pad-probe-info-get-query.returns"></a><h4>Returns</h4>
 <p>The <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a> from the probe. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3753,7 +3761,7 @@ will not be used anymore.</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3802,7 +3810,7 @@ during the execution of this function. </p></td>
 <p> <a class="link" href="GstPad.html#GST-FLOW-OK:CAPS"><code class="literal">GST_FLOW_OK</code></a> if the event was handled properly, or any other
 <a class="link" href="GstPad.html#GstFlowReturn" title="enum GstFlowReturn"><span class="type">GstFlowReturn</span></a> dependent on downstream state.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -5744,7 +5752,7 @@ No locking is performed in this function.</p>
 <div class="refsect3">
 <a name="gst-pad-get-element-private.returns"></a><h4>Returns</h4>
 <p>a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> to the private data. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -5980,7 +5988,7 @@ contents should not be interpreted.</p>
 needed. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -6014,7 +6022,7 @@ set yet, i.e. the pad has not received a stream-start event yet.</p>
 unref the returned stream when no longer needed. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -6319,6 +6327,36 @@ released so as to ensure that streaming through this pad has finished.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-pad-get-task-state"></a><h3>gst_pad_get_task_state ()</h3>
+<pre class="programlisting"><a class="link" href="GstTask.html#GstTaskState" title="enum GstTaskState"><span class="returnvalue">GstTaskState</span></a>
+gst_pad_get_task_state (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>);</pre>
+<p>Get <em class="parameter"><code>pad</code></em>
+ task state. If no task is currently
+set, <a class="link" href="GstTask.html#GST-TASK-STOPPED:CAPS"><span class="type">GST_TASK_STOPPED</span></a> is returned.</p>
+<div class="refsect3">
+<a name="gst-pad-get-task-state.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to get task state from</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-pad-get-task-state.returns"></a><h4>Returns</h4>
+<p> The current state of <em class="parameter"><code>pad</code></em>
+'s task.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-pad-set-active"></a><h3>gst_pad_set_active ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_pad_set_active (<em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
@@ -6597,7 +6635,7 @@ a <em class="parameter"><code>pad</code></em>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -6793,7 +6831,7 @@ class, use the base class's virtual functions instead.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -7605,7 +7643,7 @@ recursive accept-caps handling.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -7630,7 +7668,7 @@ the accept caps instead of using a caps query result.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -7653,7 +7691,7 @@ the accept caps instead of using a caps query result.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -8498,7 +8536,7 @@ contains
 <p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= 0</p>
 <p>Default value: 0</p>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -8590,6 +8628,6 @@ user_function (<a class="link" href="GstPad.html" title="GstPad"><span class="ty
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

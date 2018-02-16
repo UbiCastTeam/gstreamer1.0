@@ -17,8 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-
-#include <unistd.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/check/gstcheck.h>
 
@@ -880,21 +881,25 @@ block_probe (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
   return GST_PAD_PROBE_OK;
 }
 
-#define CHECK_FOR_BUFFERING_MSG(PIPELINE, EXPECTED_PERC) \
-  G_STMT_START { \
-    gint buf_perc; \
-    GstMessage *msg; \
-    GST_LOG ("waiting for %d%% buffering message", (EXPECTED_PERC)); \
-    msg = gst_bus_poll (GST_ELEMENT_BUS (PIPELINE), \
-        GST_MESSAGE_BUFFERING | GST_MESSAGE_ERROR, -1); \
-    fail_if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_ERROR, \
-        "Expected BUFFERING message, got ERROR message"); \
-    gst_message_parse_buffering (msg, &buf_perc); \
-    gst_message_unref (msg); \
-    fail_unless (buf_perc == (EXPECTED_PERC), \
-        "Got incorrect percentage: %d%% expected: %d%%", buf_perc, \
-        (EXPECTED_PERC)); \
-  } G_STMT_END
+static void
+check_for_buffering_msg (GstElement * pipeline, gint expected_perc)
+{
+  gint buf_perc;
+  GstMessage *msg;
+
+  GST_LOG ("waiting for %d%% buffering message", expected_perc);
+
+  msg = gst_bus_poll (GST_ELEMENT_BUS (pipeline),
+      GST_MESSAGE_BUFFERING | GST_MESSAGE_ERROR, -1);
+  fail_if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_ERROR,
+      "Expected BUFFERING message, got ERROR message");
+
+  gst_message_parse_buffering (msg, &buf_perc);
+  fail_unless (buf_perc == expected_perc,
+      "Got incorrect percentage: %d%% expected: %d%%", buf_perc, expected_perc);
+
+  gst_message_unref (msg);
+}
 
 GST_START_TEST (test_initial_fill_above_high_threshold)
 {
@@ -967,7 +972,7 @@ GST_START_TEST (test_initial_fill_above_high_threshold)
    * produce a 100% buffering message. */
   thread = g_thread_new ("push1", pad_push_datablock_thread, inputpad);
   g_thread_join (thread);
-  CHECK_FOR_BUFFERING_MSG (pipe, 100);
+  check_for_buffering_msg (pipe, 100);
 
   gst_element_set_state (pipe, GST_STATE_NULL);
   gst_object_unref (inputpad);
@@ -1057,7 +1062,7 @@ GST_START_TEST (test_watermark_and_fill_level)
 
   /* Check for the buffering message; it should indicate 80% fill level
    * (Note that the percentage from the message is normalized) */
-  CHECK_FOR_BUFFERING_MSG (pipe, 80);
+  check_for_buffering_msg (pipe, 80);
 
   /* Increase the buffer size and lower the watermarks to test
    * if <1% watermarks are supported. */
@@ -1070,11 +1075,11 @@ GST_START_TEST (test_watermark_and_fill_level)
    * multiqueue contains 80000 bytes, and the high watermark still is
    * 0.1 at this point, and the buffer level 80000 / 20000000 = 0.004 is
    * normalized by 0.1: 0.004 / 0.1 => buffering percentage 4%. */
-  CHECK_FOR_BUFFERING_MSG (pipe, 4);
+  check_for_buffering_msg (pipe, 4);
   /* Second buffering message is posted after the high-watermark limit
    * is set to 0.005. This time, the buffer level is normalized this way:
    * 0.004 / 0.005 => buffering percentage 80%. */
-  CHECK_FOR_BUFFERING_MSG (pipe, 80);
+  check_for_buffering_msg (pipe, 80);
 
 
   gst_element_set_state (pipe, GST_STATE_NULL);
@@ -1156,19 +1161,19 @@ GST_START_TEST (test_high_threshold_change)
   /* Check for the buffering message; it should indicate 8% fill level
    * (Note that the percentage from the message is normalized, but since
    * the high threshold is at 99%, it should still apply) */
-  CHECK_FOR_BUFFERING_MSG (pipe, 8);
+  check_for_buffering_msg (pipe, 8);
 
   /* Set high threshold to half of what it was before. This means that the
    * relative fill level doubles. As a result, this should trigger a buffering
    * message with a percentage of 16%. */
   g_object_set (mq, "high-percent", (gint) 50, NULL);
-  CHECK_FOR_BUFFERING_MSG (pipe, 16);
+  check_for_buffering_msg (pipe, 16);
 
   /* Set high threshold to a value that lies below the current fill level.
    * This should trigger a 100% buffering message immediately, even without
    * pushing in extra data. */
   g_object_set (mq, "high-percent", (gint) 5, NULL);
-  CHECK_FOR_BUFFERING_MSG (pipe, 100);
+  check_for_buffering_msg (pipe, 100);
 
   gst_element_set_state (pipe, GST_STATE_NULL);
   gst_object_unref (inputpad);
@@ -1251,14 +1256,14 @@ GST_START_TEST (test_low_threshold_change)
 
   /* Check for the buffering message; it should indicate 100% relative fill
    * level (Note that the percentage from the message is normalized) */
-  CHECK_FOR_BUFFERING_MSG (pipe, 100);
+  check_for_buffering_msg (pipe, 100);
 
   /* Set low threshold to a 10%, which is above the current fill level of 8%.
    * As a result, the queue must re-enable its buffering mode, and post the
    * current relative fill level of 40% (since high-percent is also set to 20%
    * and 8%/20% = 40%). */
   g_object_set (mq, "high-percent", (gint) 20, "low-percent", (gint) 10, NULL);
-  CHECK_FOR_BUFFERING_MSG (pipe, 40);
+  check_for_buffering_msg (pipe, 40);
 
   gst_element_set_state (pipe, GST_STATE_NULL);
   gst_object_unref (inputpad);
@@ -1339,7 +1344,7 @@ GST_START_TEST (test_limit_changes)
 
   /* Wait until we are actually blocking... we unfortunately can't
    * know that without sleeping */
-  sleep (1);
+  g_usleep (G_USEC_PER_SEC);
   g_object_set (mq, "max-size-buffers", (guint) 3, NULL);
   g_thread_join (thread);
 
@@ -1594,6 +1599,68 @@ GST_START_TEST (test_initial_events_nodelay)
 
 GST_END_TEST;
 
+static void
+check_for_stream_status_msg (GstElement * pipeline, GstElement * multiqueue,
+    GstStreamStatusType expected_type)
+{
+  GEnumClass *klass;
+  const gchar *expected_nick, *nick;
+  GstMessage *msg;
+  GstStreamStatusType type;
+  GstElement *owner;
+
+  klass = g_type_class_ref (GST_TYPE_STREAM_STATUS_TYPE);
+  expected_nick = g_enum_get_value (klass, expected_type)->value_nick;
+
+  GST_LOG ("waiting for stream-status %s message", expected_nick);
+
+  msg = gst_bus_poll (GST_ELEMENT_BUS (pipeline),
+      GST_MESSAGE_STREAM_STATUS | GST_MESSAGE_ERROR, -1);
+  fail_if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_ERROR,
+      "Expected stream-status message, got error message");
+
+  gst_message_parse_stream_status (msg, &type, &owner);
+  nick = g_enum_get_value (klass, type)->value_nick;
+  fail_unless (owner == multiqueue,
+      "Got incorrect owner: %" GST_PTR_FORMAT " expected: %" GST_PTR_FORMAT,
+      owner, multiqueue);
+  fail_unless (type == expected_type,
+      "Got incorrect type: %s expected: %s", nick, expected_nick);
+
+  gst_message_unref (msg);
+  g_type_class_unref (klass);
+}
+
+GST_START_TEST (test_stream_status_messages)
+{
+  GstElement *pipe, *mq;
+  GstPad *pad;
+
+  pipe = gst_pipeline_new ("pipeline");
+  mq = gst_element_factory_make ("multiqueue", NULL);
+
+  gst_bin_add (GST_BIN (pipe), mq);
+
+  pad = gst_element_get_request_pad (mq, "sink_%u");
+  gst_object_unref (pad);
+
+  gst_element_set_state (pipe, GST_STATE_PAUSED);
+
+  check_for_stream_status_msg (pipe, mq, GST_STREAM_STATUS_TYPE_CREATE);
+  check_for_stream_status_msg (pipe, mq, GST_STREAM_STATUS_TYPE_ENTER);
+
+  pad = gst_element_get_request_pad (mq, "sink_%u");
+  gst_object_unref (pad);
+
+  check_for_stream_status_msg (pipe, mq, GST_STREAM_STATUS_TYPE_CREATE);
+  check_for_stream_status_msg (pipe, mq, GST_STREAM_STATUS_TYPE_ENTER);
+
+  gst_element_set_state (pipe, GST_STATE_NULL);
+  gst_object_unref (pipe);
+}
+
+GST_END_TEST;
+
 static Suite *
 multiqueue_suite (void)
 {
@@ -1623,6 +1690,8 @@ multiqueue_suite (void)
 
   tcase_add_test (tc_chain, test_buffering_with_none_pts);
   tcase_add_test (tc_chain, test_initial_events_nodelay);
+
+  tcase_add_test (tc_chain, test_stream_status_messages);
 
   return s;
 }

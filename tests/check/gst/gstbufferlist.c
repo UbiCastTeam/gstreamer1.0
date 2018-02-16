@@ -20,6 +20,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/check/gstcheck.h>
 #include <gst/gstbufferlist.h>
@@ -427,6 +430,50 @@ GST_START_TEST (test_expand_and_remove)
 
 GST_END_TEST;
 
+GST_START_TEST (test_get_writable)
+{
+  GstBuffer *buf, *writable_buf;
+
+  /* buffer list is initially empty */
+  fail_unless (gst_buffer_list_length (list) == 0);
+
+  /* Add 2 buffers */
+  buf = gst_buffer_new ();
+  ASSERT_BUFFER_REFCOUNT (buf, "buf", 1);
+  gst_buffer_list_add (list, buf);
+  ASSERT_BUFFER_REFCOUNT (buf, "buf", 1);       /* list takes ownership */
+  fail_unless (gst_buffer_list_length (list) == 1);
+  fail_unless (buf == gst_buffer_list_get_writable (list, 0));
+  fail_unless (buf == gst_buffer_list_get (list, 0));
+
+  /* extra ref to make buffer no longer writable */
+  gst_buffer_ref (buf);
+  ASSERT_BUFFER_REFCOUNT (buf, "buf", 2);
+  fail_unless (buf == gst_buffer_list_get (list, 0));
+  ASSERT_BUFFER_REFCOUNT (buf, "buf", 2);
+
+  /* should make a copy to make it writable */
+  writable_buf = gst_buffer_list_get_writable (list, 0);
+  fail_if (buf == writable_buf);
+  ASSERT_BUFFER_REFCOUNT (buf, "buf", 1);
+  ASSERT_BUFFER_REFCOUNT (writable_buf, "writable_buf", 1);
+
+  gst_buffer_unref (buf);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_calc_size)
+{
+  gst_buffer_list_add (list, gst_buffer_new_wrapped (g_strdup ("Hello"), 5));
+  gst_buffer_list_add (list, gst_buffer_new_wrapped (g_strdup (", "), 2));
+  gst_buffer_list_add (list, gst_buffer_new_wrapped (g_strdup ("world!"), 6));
+
+  fail_unless_equals_int (5 + 2 + 6, gst_buffer_list_calculate_size (list));
+}
+
+GST_END_TEST;
+
 static Suite *
 gst_buffer_list_suite (void)
 {
@@ -442,6 +489,8 @@ gst_buffer_list_suite (void)
   tcase_add_test (tc_chain, test_copy_deep);
   tcase_add_test (tc_chain, test_foreach);
   tcase_add_test (tc_chain, test_expand_and_remove);
+  tcase_add_test (tc_chain, test_get_writable);
+  tcase_add_test (tc_chain, test_calc_size);
 
   return s;
 }

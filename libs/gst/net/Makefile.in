@@ -179,7 +179,8 @@ am_libgstnet_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstnet_@GST_API_VERSION@_la-gstnettimepacket.lo \
 	libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.lo \
 	libgstnet_@GST_API_VERSION@_la-gstptpclock.lo \
-	libgstnet_@GST_API_VERSION@_la-gstntppacket.lo
+	libgstnet_@GST_API_VERSION@_la-gstntppacket.lo \
+	libgstnet_@GST_API_VERSION@_la-gstnetutils.lo
 libgstnet_@GST_API_VERSION@_la_OBJECTS =  \
 	$(am_libgstnet_@GST_API_VERSION@_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -305,6 +306,7 @@ EGREP = @EGREP@
 ENABLE_SUBUNIT = @ENABLE_SUBUNIT@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 FLEX_PATH = @FLEX_PATH@
@@ -359,7 +361,6 @@ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
 GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
@@ -555,9 +556,10 @@ libgstnet_@GST_API_VERSION@_la_SOURCES = \
     gstnettimepacket.c \
     gstnettimeprovider.c \
     gstptpclock.c \
-    gstntppacket.c
+    gstntppacket.c \
+    gstnetutils.c
 
-noinst_HEADERS = gstptp_private.h gstntppacket.h
+noinst_HEADERS = gstptp_private.h gstntppacket.h gstnetutils.h
 libgstnet_@GST_API_VERSION@_la_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
 libgstnet_@GST_API_VERSION@_la_LIBADD = $(GST_OBJ_LIBS) $(GIO_LIBS) \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la
@@ -658,6 +660,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetcontrolmessagemeta.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimepacket.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnettimeprovider.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetutils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstntppacket.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstptpclock.Plo@am__quote@
 
@@ -733,6 +736,13 @@ libgstnet_@GST_API_VERSION@_la-gstntppacket.lo: gstntppacket.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstntppacket.c' object='libgstnet_@GST_API_VERSION@_la-gstntppacket.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstntppacket.lo `test -f 'gstntppacket.c' || echo '$(srcdir)/'`gstntppacket.c
+
+libgstnet_@GST_API_VERSION@_la-gstnetutils.lo: gstnetutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstnet_@GST_API_VERSION@_la-gstnetutils.lo -MD -MP -MF $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetutils.Tpo -c -o libgstnet_@GST_API_VERSION@_la-gstnetutils.lo `test -f 'gstnetutils.c' || echo '$(srcdir)/'`gstnetutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetutils.Tpo $(DEPDIR)/libgstnet_@GST_API_VERSION@_la-gstnetutils.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstnetutils.c' object='libgstnet_@GST_API_VERSION@_la-gstnetutils.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstnet_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstnet_@GST_API_VERSION@_la-gstnetutils.lo `test -f 'gstnetutils.c' || echo '$(srcdir)/'`gstnetutils.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1041,7 +1051,7 @@ gcov: $(libgstnet_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
 @HAVE_INTROSPECTION_TRUE@GstNet-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstnet-@GST_API_VERSION@.la
 @HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-@HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+@HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes \
 @HAVE_INTROSPECTION_TRUE@		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 @HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace GstNet \
 @HAVE_INTROSPECTION_TRUE@		--identifier-prefix=Gst \

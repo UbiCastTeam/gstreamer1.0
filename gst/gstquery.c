@@ -663,7 +663,7 @@ gst_query_parse_segment (GstQuery * query, gdouble * rate, GstFormat * format,
  *
  * Free-function: gst_query_unref()
  *
- * Returns: (transfer full): a new #GstQuery
+ * Returns: (transfer full) (nullable): a new #GstQuery
  */
 GstQuery *
 gst_query_new_custom (GstQueryType type, GstStructure * structure)
@@ -705,9 +705,9 @@ had_parent:
  *
  * Get the structure of a query.
  *
- * Returns: (transfer none): the #GstStructure of the query. The structure is
- *     still owned by the query and will therefore be freed when the query
- *     is unreffed.
+ * Returns: (transfer none) (nullable): the #GstStructure of the query. The
+ *     structure is still owned by the query and will therefore be freed when the
+ *     query is unreffed.
  */
 const GstStructure *
 gst_query_get_structure (GstQuery * query)
@@ -1702,7 +1702,7 @@ gst_query_parse_nth_allocation_pool (GstQuery * query, guint index,
  * @index: index to modify
  * @query: A valid #GstQuery of type GST_QUERY_ALLOCATION.
  * @pool: (transfer none) (allow-none): the #GstBufferPool
- * @size: the size
+ * @size: the buffer size
  * @min_buffers: the min buffers
  * @max_buffers: the max buffers
  *

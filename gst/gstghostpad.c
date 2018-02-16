@@ -618,7 +618,6 @@ parent_failed:
     g_critical ("Could not set internal pad %s:%s",
         GST_DEBUG_PAD_NAME (internal));
     GST_OBJECT_UNLOCK (pad);
-    gst_object_unref (internal);
     return FALSE;
   }
 }
@@ -662,7 +661,7 @@ construct_failed:
  *
  * The created ghostpad will not have a padtemplate.
  *
- * Returns: (transfer full) (nullable): a new #GstPad, or %NULL in
+ * Returns: (transfer floating) (nullable): a new #GstPad, or %NULL in
  * case of an error.
  */
 GstPad *
@@ -730,7 +729,7 @@ set_target_failed:
  *
  * Will ref the target.
  *
- * Returns: (transfer full) (nullable): a new #GstPad, or %NULL in
+ * Returns: (transfer floating) (nullable): a new #GstPad, or %NULL in
  * case of an error.
  */
 
@@ -773,7 +772,7 @@ set_target_failed:
  * Create a new ghostpad based on @templ, without setting a target. The
  * direction will be taken from the @templ.
  *
- * Returns: (transfer full) (nullable): a new #GstPad, or %NULL in
+ * Returns: (transfer floating) (nullable): a new #GstPad, or %NULL in
  * case of an error.
  */
 GstPad *
@@ -843,7 +842,7 @@ gst_ghost_pad_set_target (GstGhostPad * gpad, GstPad * newtarget)
     GST_OBJECT_UNLOCK (gpad);
     GST_WARNING_OBJECT (gpad, "Target has already been set to %s:%s",
         GST_DEBUG_PAD_NAME (newtarget));
-    return FALSE;
+    return TRUE;
   }
 
   if (newtarget)

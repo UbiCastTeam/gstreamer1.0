@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstProtectionMeta.html" title="GstProtection">
 <link rel="next" href="GstRegistry.html" title="GstRegistry">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -1342,7 +1342,7 @@ when done with it.</p>
 <div class="refsect3">
 <a name="gst-query-new-custom.returns"></a><h4>Returns</h4>
 <p>a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1368,10 +1368,10 @@ gst_query_get_structure (<em class="parameter"><code><a class="link" href="GstQu
 </div>
 <div class="refsect3">
 <a name="gst-query-get-structure.returns"></a><h4>Returns</h4>
-<p>the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> of the query. The structure is
-still owned by the query and will therefore be freed when the query
-is unreffed. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p>the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> of the query. The
+structure is still owned by the query and will therefore be freed when the
+query is unreffed. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3097,7 +3097,7 @@ Free the string with <a href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocatio
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3128,7 +3128,7 @@ gst_query_set_uri_redirection (<em class="parameter"><code><a class="link" href=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3165,7 +3165,7 @@ they should make all future requests to the original URI.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3198,7 +3198,7 @@ to permanent or not.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3449,7 +3449,7 @@ gst_query_set_nth_allocation_pool (<em class="parameter"><code><a class="link" h
 </tr>
 <tr>
 <td class="parameter_name"><p>size</p></td>
-<td class="parameter_description"><p>the size</p></td>
+<td class="parameter_description"><p>the buffer size</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -3496,7 +3496,7 @@ gst_query_remove_nth_allocation_pool (<em class="parameter"><code><a class="link
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3685,7 +3685,7 @@ gst_query_remove_nth_allocation_param (<em class="parameter"><code><a class="lin
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4206,7 +4206,7 @@ gst_query_new_context (<em class="parameter"><code>const <a href="/usr/share/gtk
 <p>a new <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4237,7 +4237,7 @@ gst_query_set_context (<em class="parameter"><code><a class="link" href="GstQuer
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4271,7 +4271,7 @@ gst_query_parse_context (<em class="parameter"><code><a class="link" href="GstQu
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4306,7 +4306,7 @@ gst_query_parse_context_type (<em class="parameter"><code><a class="link" href="
 <a name="gst-query-parse-context-type.returns"></a><h4>Returns</h4>
 <p> a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if the parsing succeeded.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -4631,6 +4631,6 @@ values. You can get the type flags of a <a class="link" href="GstQuery.html#GstQ
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

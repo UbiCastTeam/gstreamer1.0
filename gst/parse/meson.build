@@ -4,13 +4,7 @@ cc = meson.get_compiler('c')
 flex_cdata = configuration_data()
 
 flex_min_version='2.5.31'
-flex = find_program('flex', required : false)
-if not flex.found()
-  flex = find_program('win_flex', required : false)
-  if not flex.found()
-    error('flex not found')
-  endif
-endif
+flex = find_program('flex', 'win_flex')
 
 flexversion_res = run_command([flex, '--version'])
 if flexversion_res.returncode() != 0
@@ -39,13 +33,7 @@ gen_lex = configure_file(input : 'gen_lex.py.in',
 bison_cdata = configuration_data()
 
 bison_min_version='2.4'
-bison = find_program('bison', required : false)
-if not bison.found()
-  bison = find_program('win_bison', required : false)
-  if not bison.found()
-    error('GNU bison not found')
-  endif
-endif
+bison = find_program('bison', 'win_bison')
 
 bversion_res = run_command([bison, '--version'])
 if bversion_res.returncode() != 0
@@ -72,12 +60,12 @@ gen_grammar = configure_file(input : 'gen_grammar.py.in',
 parser = custom_target('parselex',
   input : 'parse.l',
   output : ['lex.priv_gst_parse_yy.c', 'parse_lex.h'],
-  command : [py3, gen_lex, '@OUTPUT0@', '@OUTPUT1@', '@INPUT@', 'DUMMY']
+  command : [python3, gen_lex, '@OUTPUT0@', '@OUTPUT1@', '@INPUT@', 'DUMMY']
 )
 
 grammar = custom_target('parsegrammar',
   input : 'grammar.y',
   output : ['grammar.tab.c', 'grammar.tab.h'],
-  command : [py3, gen_grammar, '@OUTPUT0@', '@OUTPUT1@', '@INPUT@'],
+  command : [python3, gen_grammar, '@OUTPUT0@', '@OUTPUT1@', '@INPUT@'],
   depends : [parser],
 )

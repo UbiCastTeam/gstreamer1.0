@@ -163,8 +163,7 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(plugin_LTLIBRARIES)
-@GST_DISABLE_GST_DEBUG_FALSE@am__DEPENDENCIES_1 = $(top_builddir)/gst/printf/libgstprintf.la
-am__DEPENDENCIES_2 =
+am__DEPENDENCIES_1 =
 am__libgstcoretracers_la_SOURCES_DIST = gstlatency.c gstleaks.c \
 	gstlog.c gstrusage.c gststats.c gsttracers.c
 @GST_DISABLE_GST_DEBUG_FALSE@am__objects_1 =  \
@@ -181,8 +180,8 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
 libgstcoretracers_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libgstcoretracers_la_CFLAGS) $(CFLAGS) \
 	$(libgstcoretracers_la_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -297,6 +296,7 @@ EGREP = @EGREP@
 ENABLE_SUBUNIT = @ENABLE_SUBUNIT@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 FLEX_PATH = @FLEX_PATH@
@@ -351,7 +351,6 @@ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
 GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
@@ -533,8 +532,6 @@ plugin_LTLIBRARIES = libgstcoretracers.la
 @HAVE_GETRUSAGE_TRUE@RUSAGE_SOURCES = gstrusage.c
 @GST_DISABLE_GST_DEBUG_FALSE@LOG_SOURCES = gstlog.c
 @GST_DISABLE_GST_DEBUG_TRUE@LOG_SOURCES = 
-@GST_DISABLE_GST_DEBUG_FALSE@GST_PRINTF_LA = $(top_builddir)/gst/printf/libgstprintf.la
-@GST_DISABLE_GST_DEBUG_TRUE@GST_PRINTF_LA = 
 libgstcoretracers_la_DEPENDENCIES = $(top_builddir)/gst/libgstreamer-@GST_API_VERSION@.la
 libgstcoretracers_la_SOURCES = \
   gstlatency.c \
@@ -547,12 +544,8 @@ libgstcoretracers_la_SOURCES = \
 libgstcoretracers_la_CFLAGS = $(GST_OBJ_CFLAGS) \
   -DGST_USE_UNSTABLE_API
 
-libgstcoretracers_la_LIBADD = \
-	$(GST_PRINTF_LA) \
-	$(GST_OBJ_LIBS)
-
+libgstcoretracers_la_LIBADD = $(GST_OBJ_LIBS)
 libgstcoretracers_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
-libgstcoretracers_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 noinst_HEADERS = \
   gstlatency.h \
   gstleaks.h \
@@ -671,46 +664,46 @@ distclean-compile:
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
 libgstcoretracers_la-gstlatency.lo: gstlatency.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstlatency.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstlatency.Tpo -c -o libgstcoretracers_la-gstlatency.lo `test -f 'gstlatency.c' || echo '$(srcdir)/'`gstlatency.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstlatency.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstlatency.Tpo -c -o libgstcoretracers_la-gstlatency.lo `test -f 'gstlatency.c' || echo '$(srcdir)/'`gstlatency.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoretracers_la-gstlatency.Tpo $(DEPDIR)/libgstcoretracers_la-gstlatency.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstlatency.c' object='libgstcoretracers_la-gstlatency.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstlatency.lo `test -f 'gstlatency.c' || echo '$(srcdir)/'`gstlatency.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstlatency.lo `test -f 'gstlatency.c' || echo '$(srcdir)/'`gstlatency.c
 
 libgstcoretracers_la-gstleaks.lo: gstleaks.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstleaks.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstleaks.Tpo -c -o libgstcoretracers_la-gstleaks.lo `test -f 'gstleaks.c' || echo '$(srcdir)/'`gstleaks.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstleaks.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstleaks.Tpo -c -o libgstcoretracers_la-gstleaks.lo `test -f 'gstleaks.c' || echo '$(srcdir)/'`gstleaks.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoretracers_la-gstleaks.Tpo $(DEPDIR)/libgstcoretracers_la-gstleaks.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstleaks.c' object='libgstcoretracers_la-gstleaks.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstleaks.lo `test -f 'gstleaks.c' || echo '$(srcdir)/'`gstleaks.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstleaks.lo `test -f 'gstleaks.c' || echo '$(srcdir)/'`gstleaks.c
 
 libgstcoretracers_la-gstlog.lo: gstlog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstlog.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstlog.Tpo -c -o libgstcoretracers_la-gstlog.lo `test -f 'gstlog.c' || echo '$(srcdir)/'`gstlog.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstlog.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstlog.Tpo -c -o libgstcoretracers_la-gstlog.lo `test -f 'gstlog.c' || echo '$(srcdir)/'`gstlog.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoretracers_la-gstlog.Tpo $(DEPDIR)/libgstcoretracers_la-gstlog.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstlog.c' object='libgstcoretracers_la-gstlog.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstlog.lo `test -f 'gstlog.c' || echo '$(srcdir)/'`gstlog.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstlog.lo `test -f 'gstlog.c' || echo '$(srcdir)/'`gstlog.c
 
 libgstcoretracers_la-gstrusage.lo: gstrusage.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstrusage.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstrusage.Tpo -c -o libgstcoretracers_la-gstrusage.lo `test -f 'gstrusage.c' || echo '$(srcdir)/'`gstrusage.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gstrusage.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gstrusage.Tpo -c -o libgstcoretracers_la-gstrusage.lo `test -f 'gstrusage.c' || echo '$(srcdir)/'`gstrusage.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoretracers_la-gstrusage.Tpo $(DEPDIR)/libgstcoretracers_la-gstrusage.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstrusage.c' object='libgstcoretracers_la-gstrusage.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstrusage.lo `test -f 'gstrusage.c' || echo '$(srcdir)/'`gstrusage.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gstrusage.lo `test -f 'gstrusage.c' || echo '$(srcdir)/'`gstrusage.c
 
 libgstcoretracers_la-gststats.lo: gststats.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gststats.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gststats.Tpo -c -o libgstcoretracers_la-gststats.lo `test -f 'gststats.c' || echo '$(srcdir)/'`gststats.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gststats.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gststats.Tpo -c -o libgstcoretracers_la-gststats.lo `test -f 'gststats.c' || echo '$(srcdir)/'`gststats.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoretracers_la-gststats.Tpo $(DEPDIR)/libgstcoretracers_la-gststats.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gststats.c' object='libgstcoretracers_la-gststats.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gststats.lo `test -f 'gststats.c' || echo '$(srcdir)/'`gststats.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gststats.lo `test -f 'gststats.c' || echo '$(srcdir)/'`gststats.c
 
 libgstcoretracers_la-gsttracers.lo: gsttracers.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gsttracers.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gsttracers.Tpo -c -o libgstcoretracers_la-gsttracers.lo `test -f 'gsttracers.c' || echo '$(srcdir)/'`gsttracers.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -MT libgstcoretracers_la-gsttracers.lo -MD -MP -MF $(DEPDIR)/libgstcoretracers_la-gsttracers.Tpo -c -o libgstcoretracers_la-gsttracers.lo `test -f 'gsttracers.c' || echo '$(srcdir)/'`gsttracers.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstcoretracers_la-gsttracers.Tpo $(DEPDIR)/libgstcoretracers_la-gsttracers.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsttracers.c' object='libgstcoretracers_la-gsttracers.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstcoretracers_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gsttracers.lo `test -f 'gsttracers.c' || echo '$(srcdir)/'`gsttracers.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstcoretracers_la_CFLAGS) $(CFLAGS) -c -o libgstcoretracers_la-gsttracers.lo `test -f 'gsttracers.c' || echo '$(srcdir)/'`gsttracers.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

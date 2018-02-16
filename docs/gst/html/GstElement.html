@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstDynamicTypeFactory.html" title="GstDynamicTypeFactory">
 <link rel="next" href="GstElementFactory.html" title="GstElementFactory">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -210,6 +210,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-class-add-static-pad-template-with-gtype" title="gst_element_class_add_static_pad_template_with_gtype ()">gst_element_class_add_static_pad_template_with_gtype</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="returnvalue">GstPadTemplate</span></a> *
 </td>
 <td class="function_name">
@@ -365,6 +373,38 @@
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstElement.html#GstElementForeachPadFunc" title="GstElementForeachPadFunc ()">*GstElementForeachPadFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-foreach-pad" title="gst_element_foreach_pad ()">gst_element_foreach_pad</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-foreach-sink-pad" title="gst_element_foreach_sink_pad ()">gst_element_foreach_sink_pad</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-foreach-src-pad" title="gst_element_foreach_src_pad ()">gst_element_foreach_src_pad</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
 <a class="link" href="GstElement.html#gst-element-link" title="gst_element_link ()">gst_element_link</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -437,6 +477,13 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstElement.html#gst-element-class-get-metadata" title="gst_element_class_get_metadata ()">gst_element_class_get_metadata</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-get-metadata" title="gst_element_get_metadata ()">gst_element_get_metadata</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -553,6 +600,22 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="returnvalue">GstPadTemplate</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-get-pad-template" title="gst_element_get_pad_template ()">gst_element_get_pad_template</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-element-get-pad-template-list" title="gst_element_get_pad_template_list ()">gst_element_get_pad_template_list</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -659,6 +722,13 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstElement.html#gst-element-change-state" title="gst_element_change_state ()">gst_element_change_state</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstElement.html#gst-state-change-get-name" title="gst_state_change_get_name ()">gst_state_change_get_name</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -1453,7 +1523,7 @@ Must be enclosed within parentheses.</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1483,7 +1553,7 @@ data processing error due to wrong flow processing.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1585,7 +1655,7 @@ Must be enclosed within parentheses.</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1691,7 +1761,7 @@ Must be enclosed within parentheses.</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1725,6 +1795,9 @@ gst_element_class_add_pad_template (<em class="parameter"><code><a class="link" 
 <p>Adds a padtemplate to an element class. This is mainly used in the _class_init
 functions of classes. If a pad template with the same name as an already
 existing one is added the old one is replaced by the new one.</p>
+<p><em class="parameter"><code>templ</code></em>
+'s reference count will be incremented, and any floating
+reference will be removed (see <a class="link" href="GstObject.html#gst-object-ref-sink" title="gst_object_ref_sink ()"><code class="function">gst_object_ref_sink()</code></a>)</p>
 <div class="refsect3">
 <a name="gst-element-class-add-pad-template.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1742,7 +1815,7 @@ existing one is added the old one is replaced by the new one.</p>
 <tr>
 <td class="parameter_name"><p>templ</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> to add to the element class. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1782,7 +1855,49 @@ the old one is replaced by the new one.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-class-add-static-pad-template-with-gtype"></a><h3>gst_element_class_add_static_pad_template_with_gtype ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_element_class_add_static_pad_template_with_gtype
+                               (<em class="parameter"><code><a class="link" href="GstElement.html#GstElementClass" title="struct GstElementClass"><span class="type">GstElementClass</span></a> *klass</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstPadTemplate.html#GstStaticPadTemplate" title="struct GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> *static_templ</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> pad_type</code></em>);</pre>
+<p>Adds a pad template to an element class based on the static pad template
+<em class="parameter"><code>templ</code></em>
+. This is mainly used in the _class_init functions of element
+implementations. If a pad template with the same name already exists,
+the old one is replaced by the new one.</p>
+<div class="refsect3">
+<a name="gst-element-class-add-static-pad-template-with-gtype.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>klass</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstElement.html#GstElementClass" title="struct GstElementClass"><span class="type">GstElementClass</span></a> to add the pad template to.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>static_templ</p></td>
+<td class="parameter_description"><p><a class="link" href="GstPadTemplate.html#GstStaticPadTemplate" title="struct GstStaticPadTemplate"><span class="type">GstStaticPadTemplate</span></a> to add as pad template to the element class.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>pad_type</p></td>
+<td class="parameter_description"><p>The <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the pad to create</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2089,7 +2204,7 @@ state. See <a class="link" href="GstPad.html#gst-pad-set-active" title="gst_pad_
 <tr>
 <td class="parameter_name"><p>pad</p></td>
 <td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to add to the element. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -2453,7 +2568,7 @@ deactivating pads.</p>
 <tr>
 <td class="parameter_name"><p>pad</p></td>
 <td class="parameter_description"><p>the <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> to remove from the element. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -2559,6 +2674,211 @@ the pads were added to the element.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstElementForeachPadFunc"></a><h3>GstElementForeachPadFunc ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstElementForeachPadFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a> *pad</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Function called for each pad when using <a class="link" href="GstElement.html#gst-element-foreach-sink-pad" title="gst_element_foreach_sink_pad ()"><code class="function">gst_element_foreach_sink_pad()</code></a>,
+<a class="link" href="GstElement.html#gst-element-foreach-src-pad" title="gst_element_foreach_src_pad ()"><code class="function">gst_element_foreach_src_pad()</code></a>, or <a class="link" href="GstElement.html#gst-element-foreach-pad" title="gst_element_foreach_pad ()"><code class="function">gst_element_foreach_pad()</code></a>.</p>
+<div class="refsect3">
+<a name="GstElementForeachPadFunc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>pad</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to the foreach function</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstElementForeachPadFunc.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> to stop iterating pads, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to continue</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-foreach-pad"></a><h3>gst_element_foreach_pad ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_element_foreach_pad (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                         <em class="parameter"><code><a class="link" href="GstElement.html#GstElementForeachPadFunc" title="GstElementForeachPadFunc ()"><span class="type">GstElementForeachPadFunc</span></a> func</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Call <em class="parameter"><code>func</code></em>
+ with <em class="parameter"><code>user_data</code></em>
+ for each of <em class="parameter"><code>element</code></em>
+'s pads. <em class="parameter"><code>func</code></em>
+ will be called
+exactly once for each pad that exists at the time of this call, unless
+one of the calls to <em class="parameter"><code>func</code></em>
+ returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> in which case we will stop
+iterating pads and return early. If new pads are added or pads are removed
+while pads are being iterated, this will not be taken into account until
+next time this function is used.</p>
+<div class="refsect3">
+<a name="gst-element-foreach-pad.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to iterate pads of</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>function to call for each pad. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to <em class="parameter"><code>func</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-element-foreach-pad.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if <em class="parameter"><code>element</code></em>
+had no pads or if one of the calls to <em class="parameter"><code>func</code></em>
+returned <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-foreach-sink-pad"></a><h3>gst_element_foreach_sink_pad ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_element_foreach_sink_pad (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                              <em class="parameter"><code><a class="link" href="GstElement.html#GstElementForeachPadFunc" title="GstElementForeachPadFunc ()"><span class="type">GstElementForeachPadFunc</span></a> func</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Call <em class="parameter"><code>func</code></em>
+ with <em class="parameter"><code>user_data</code></em>
+ for each of <em class="parameter"><code>element</code></em>
+'s sink pads. <em class="parameter"><code>func</code></em>
+ will be
+called exactly once for each sink pad that exists at the time of this call,
+unless one of the calls to <em class="parameter"><code>func</code></em>
+ returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> in which case we will stop
+iterating pads and return early. If new sink pads are added or sink pads
+are removed while the sink pads are being iterated, this will not be taken
+into account until next time this function is used.</p>
+<div class="refsect3">
+<a name="gst-element-foreach-sink-pad.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to iterate sink pads of</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>function to call for each sink pad. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to <em class="parameter"><code>func</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-element-foreach-sink-pad.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if <em class="parameter"><code>element</code></em>
+had no sink pads or if one of the calls to <em class="parameter"><code>func</code></em>
+returned <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-foreach-src-pad"></a><h3>gst_element_foreach_src_pad ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_element_foreach_src_pad (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstElement.html#GstElementForeachPadFunc" title="GstElementForeachPadFunc ()"><span class="type">GstElementForeachPadFunc</span></a> func</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Call <em class="parameter"><code>func</code></em>
+ with <em class="parameter"><code>user_data</code></em>
+ for each of <em class="parameter"><code>element</code></em>
+'s source pads. <em class="parameter"><code>func</code></em>
+ will be
+called exactly once for each source pad that exists at the time of this call,
+unless one of the calls to <em class="parameter"><code>func</code></em>
+ returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> in which case we will stop
+iterating pads and return early. If new source pads are added or source pads
+are removed while the source pads are being iterated, this will not be taken
+into account until next time this function is used.</p>
+<div class="refsect3">
+<a name="gst-element-foreach-src-pad.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to iterate source pads of</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>function to call for each source pad. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to <em class="parameter"><code>func</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-element-foreach-src-pad.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if <em class="parameter"><code>element</code></em>
+had no source pads or if one of the calls
+to <em class="parameter"><code>func</code></em>
+returned <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3017,6 +3337,44 @@ gst_element_class_get_metadata (<em class="parameter"><code><a class="link" href
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-element-get-metadata"></a><h3>gst_element_get_metadata ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_element_get_metadata (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>);</pre>
+<p>Get metadata with <em class="parameter"><code>key</code></em>
+ in <em class="parameter"><code>klass</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-element-get-metadata.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>class to get metadata for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>key</p></td>
+<td class="parameter_description"><p>the key to get</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-element-get-metadata.returns"></a><h4>Returns</h4>
+<p> the metadata for <em class="parameter"><code>key</code></em>
+.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-element-set-base-time"></a><h3>gst_element_set_base_time ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_element_set_base_time (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
@@ -3171,7 +3529,7 @@ For internal use only, unless you're testing elements.</p>
 <tr>
 <td class="parameter_name"><p>bus</p></td>
 <td class="parameter_description"><p>the <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> to set. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -3201,9 +3559,10 @@ bus for the application.</p>
 </div>
 <div class="refsect3">
 <a name="gst-element-get-bus.returns"></a><h4>Returns</h4>
-<p>the element's <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. unref after usage.</p>
+<p>the element's <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. unref after
+usage.</p>
 <p>MT safe. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3273,7 +3632,7 @@ gst_element_get_context (<em class="parameter"><code><a class="link" href="GstEl
 <p>A <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> or NULL. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3308,9 +3667,9 @@ gst_element_get_context_unlocked (<em class="parameter"><code><a class="link" hr
 <div class="refsect3">
 <a name="gst-element-get-context-unlocked.returns"></a><h4>Returns</h4>
 <p>A <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> or NULL. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3339,7 +3698,7 @@ gst_element_get_contexts (<em class="parameter"><code><a class="link" href="GstE
 <p>List of <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>. </p>
 <p><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.Context][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3490,6 +3849,76 @@ after usage. MT safe. </p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-element-get-pad-template"></a><h3>gst_element_get_pad_template ()</h3>
+<pre class="programlisting"><a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="returnvalue">GstPadTemplate</span></a> *
+gst_element_get_pad_template (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
+                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Retrieves a padtemplate from <em class="parameter"><code>element</code></em>
+ with the given name.</p>
+<div class="refsect3">
+<a name="gst-element-get-pad-template.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to get the pad template of.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>the name of the <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> to get.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-element-get-pad-template.returns"></a><h4>Returns</h4>
+<p>the <a class="link" href="GstPadTemplate.html" title="GstPadTemplate"><span class="type">GstPadTemplate</span></a> with the
+given name, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none was found. No unreferencing is
+necessary. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-element-get-pad-template-list"></a><h3>gst_element_get_pad_template_list ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+gst_element_get_pad_template_list (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<p>Retrieves a list of the pad templates associated with <em class="parameter"><code>element</code></em>
+. The
+list must not be modified by the calling code.</p>
+<div class="refsect3">
+<a name="gst-element-get-pad-template-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> to get pad templates of.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-element-get-pad-template-list.returns"></a><h4>Returns</h4>
+<p>the <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of
+pad templates. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.PadTemplate]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-element-set-clock"></a><h3>gst_element_set_clock ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_element_set_clock (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
@@ -3513,8 +3942,8 @@ is unreffed.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>clock</p></td>
-<td class="parameter_description"><p>the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> to set for the element.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> to set for the element. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -3556,7 +3985,7 @@ pipeline is in the PLAYING state.</p>
 <a name="gst-element-get-clock.returns"></a><h4>Returns</h4>
 <p>the <a class="link" href="GstClock.html" title="GstClock"><span class="type">GstClock</span></a> of the element. unref after usage.</p>
 <p>MT safe. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3813,6 +4242,7 @@ element returned <a class="link" href="GstElement.html#GST-STATE-CHANGE-SUCCESS:
 the pending state, the next state change is performed.</p>
 <p>This method is used internally and should normally not be called by plugins
 or applications.</p>
+<p>This function must be called with STATE_LOCK held.</p>
 <div class="refsect3">
 <a name="gst-element-continue-state.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -3999,6 +4429,35 @@ internally.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-state-change-get-name"></a><h3>gst_state_change_get_name ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_state_change_get_name (<em class="parameter"><code><a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a> transition</code></em>);</pre>
+<p>Gets a string representing the given state transition.</p>
+<div class="refsect3">
+<a name="gst-state-change-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>transition</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstElement.html#GstStateChange" title="enum GstStateChange"><span class="type">GstStateChange</span></a> to get the name of.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-state-change-get-name.returns"></a><h4>Returns</h4>
+<p>a string with the name of the state
+result. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-element-message-full"></a><h3>gst_element_message_full ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_element_message_full (<em class="parameter"><code><a class="link" href="GstElement.html" title="GstElement"><span class="type">GstElement</span></a> *element</code></em>,
@@ -4161,7 +4620,7 @@ or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><c
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4612,7 +5071,7 @@ NULL to watch all properties. </p></td>
 <p> a watch id, which can be used in connection with
 <a class="link" href="GstElement.html#gst-element-remove-property-notify-watch" title="gst_element_remove_property_notify_watch ()"><code class="function">gst_element_remove_property_notify_watch()</code></a> to remove the watch again.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4655,7 +5114,7 @@ NULL to watch all properties. </p></td>
 <p> a watch id, which can be used in connection with
 <a class="link" href="GstElement.html#gst-element-remove-property-notify-watch" title="gst_element_remove_property_notify_watch ()"><code class="function">gst_element_remove_property_notify_watch()</code></a> to remove the watch again.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4686,7 +5145,7 @@ gst_element_remove_property_notify_watch
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4747,7 +5206,7 @@ streaming thread to shut down from this very streaming thread.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -5306,6 +5765,38 @@ all streaming threads are stopped.</p></li>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-NULL-TO-NULL:CAPS"></a>GST_STATE_CHANGE_NULL_TO_NULL</p></td>
+<td class="enum_member_description">
+<p>state change from NULL to NULL. (Since 1.14)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-READY-TO-READY:CAPS"></a>GST_STATE_CHANGE_READY_TO_READY</p></td>
+<td class="enum_member_description">
+<p>state change from READY to READY,
+This might happen when going to PAUSED asynchronously failed, in that case
+elements should make sure they are in a proper, coherent READY state. (Since 1.14)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PAUSED-TO-PAUSED:CAPS"></a>GST_STATE_CHANGE_PAUSED_TO_PAUSED</p></td>
+<td class="enum_member_description">
+<p>state change from PAUSED to PAUSED.
+This might happen when elements were in PLAYING state and 'lost state',
+they should make sure to go back to real 'PAUSED' state (prerolling for example). (Since 1.14)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-STATE-CHANGE-PLAYING-TO-PLAYING:CAPS"></a>GST_STATE_CHANGE_PLAYING_TO_PLAYING</p></td>
+<td class="enum_member_description">
+<p>state change from PLAYING to PLAYING. (Since 1.14)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -5529,6 +6020,6 @@ user_function (<a class="link" href="GstElement.html" title="GstElement"><span c
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

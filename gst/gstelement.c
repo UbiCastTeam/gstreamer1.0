@@ -403,7 +403,7 @@ gst_element_set_clock_func (GstElement * element, GstClock * clock)
 /**
  * gst_element_set_clock:
  * @element: a #GstElement to set the clock for.
- * @clock: the #GstClock to set for the element.
+ * @clock: (transfer none) (allow-none): the #GstClock to set for the element.
  *
  * Sets the clock for the element. This function increases the
  * refcount on the clock. Any previously set clock on the object
@@ -444,7 +444,7 @@ gst_element_set_clock (GstElement * element, GstClock * clock)
  * Elements in a pipeline will only have their clock set when the
  * pipeline is in the PLAYING state.
  *
- * Returns: (transfer full): the #GstClock of the element. unref after usage.
+ * Returns: (transfer full) (nullable): the #GstClock of the element. unref after usage.
  *
  * MT safe.
  */
@@ -635,7 +635,7 @@ gst_element_get_index (GstElement * element)
 /**
  * gst_element_add_pad:
  * @element: a #GstElement to add the pad to.
- * @pad: (transfer full): the #GstPad to add to the element.
+ * @pad: (transfer floating): the #GstPad to add to the element.
  *
  * Adds a pad (link point) to @element. @pad's parent will be set to @element;
  * see gst_object_set_parent() for refcounting information.
@@ -723,6 +723,8 @@ name_exists:
         pad_name, GST_ELEMENT_NAME (element));
     GST_OBJECT_UNLOCK (element);
     g_free (pad_name);
+    gst_object_ref_sink (pad);
+    gst_object_unref (pad);
     return FALSE;
   }
 had_parent:
@@ -749,7 +751,7 @@ no_direction:
 /**
  * gst_element_remove_pad:
  * @element: a #GstElement to remove pad from.
- * @pad: (transfer full): the #GstPad to remove from the element.
+ * @pad: (transfer none): the #GstPad to remove from the element.
  *
  * Removes @pad from @element. @pad will be destroyed if it has not been
  * referenced elsewhere using gst_object_unparent().
@@ -1245,14 +1247,132 @@ gst_element_iterate_sink_pads (GstElement * element)
   return gst_element_iterate_pad_list (element, &element->sinkpads);
 }
 
+static gboolean
+gst_element_do_foreach_pad (GstElement * element,
+    GstElementForeachPadFunc func, gpointer user_data,
+    GList ** p_pads, guint16 * p_npads)
+{
+  gboolean ret = TRUE;
+  GstPad **pads;
+  guint n_pads, i;
+  GList *l;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
+  g_return_val_if_fail (func != NULL, FALSE);
+
+  GST_OBJECT_LOCK (element);
+  n_pads = *p_npads;
+  pads = g_newa (GstPad *, n_pads + 1);
+  for (l = *p_pads, i = 0; l != NULL; l = l->next) {
+    g_assert (i < n_pads);
+    pads[i++] = gst_object_ref (l->data);
+  }
+  GST_OBJECT_UNLOCK (element);
+
+  if (n_pads == 0)
+    return FALSE;
+
+  for (i = 0; i < n_pads; ++i) {
+    ret = func (element, pads[i], user_data);
+    if (!ret)
+      break;
+  }
+
+  for (i = 0; i < n_pads; ++i)
+    gst_object_unref (pads[i]);
+
+  return ret;
+}
+
+/**
+ * gst_element_foreach_sink_pad:
+ * @element: a #GstElement to iterate sink pads of
+ * @func: (scope call): function to call for each sink pad
+ * @user_data: (closure): user data passed to @func
+ *
+ * Call @func with @user_data for each of @element's sink pads. @func will be
+ * called exactly once for each sink pad that exists at the time of this call,
+ * unless one of the calls to @func returns %FALSE in which case we will stop
+ * iterating pads and return early. If new sink pads are added or sink pads
+ * are removed while the sink pads are being iterated, this will not be taken
+ * into account until next time this function is used.
+ *
+ * Returns: %FALSE if @element had no sink pads or if one of the calls to @func
+ *   returned %FALSE.
+ *
+ * Since: 1.14
+ */
+gboolean
+gst_element_foreach_sink_pad (GstElement * element,
+    GstElementForeachPadFunc func, gpointer user_data)
+{
+  return gst_element_do_foreach_pad (element, func, user_data,
+      &element->sinkpads, &element->numsinkpads);
+}
+
+/**
+ * gst_element_foreach_src_pad:
+ * @element: a #GstElement to iterate source pads of
+ * @func: (scope call): function to call for each source pad
+ * @user_data: (closure): user data passed to @func
+ *
+ * Call @func with @user_data for each of @element's source pads. @func will be
+ * called exactly once for each source pad that exists at the time of this call,
+ * unless one of the calls to @func returns %FALSE in which case we will stop
+ * iterating pads and return early. If new source pads are added or source pads
+ * are removed while the source pads are being iterated, this will not be taken
+ * into account until next time this function is used.
+ *
+ * Returns: %FALSE if @element had no source pads or if one of the calls
+ *   to @func returned %FALSE.
+ *
+ * Since: 1.14
+ */
+gboolean
+gst_element_foreach_src_pad (GstElement * element,
+    GstElementForeachPadFunc func, gpointer user_data)
+{
+  return gst_element_do_foreach_pad (element, func, user_data,
+      &element->srcpads, &element->numsrcpads);
+}
+
+/**
+ * gst_element_foreach_pad:
+ * @element: a #GstElement to iterate pads of
+ * @func: (scope call): function to call for each pad
+ * @user_data: (closure): user data passed to @func
+ *
+ * Call @func with @user_data for each of @element's pads. @func will be called
+ * exactly once for each pad that exists at the time of this call, unless
+ * one of the calls to @func returns %FALSE in which case we will stop
+ * iterating pads and return early. If new pads are added or pads are removed
+ * while pads are being iterated, this will not be taken into account until
+ * next time this function is used.
+ *
+ * Returns: %FALSE if @element had no pads or if one of the calls to @func
+ *   returned %FALSE.
+ *
+ * Since: 1.14
+ */
+gboolean
+gst_element_foreach_pad (GstElement * element, GstElementForeachPadFunc func,
+    gpointer user_data)
+{
+  return gst_element_do_foreach_pad (element, func, user_data,
+      &element->pads, &element->numpads);
+}
+
 /**
  * gst_element_class_add_pad_template:
  * @klass: the #GstElementClass to add the pad template to.
- * @templ: (transfer full): a #GstPadTemplate to add to the element class.
+ * @templ: (transfer floating): a #GstPadTemplate to add to the element class.
  *
  * Adds a padtemplate to an element class. This is mainly used in the _class_init
  * functions of classes. If a pad template with the same name as an already
  * existing one is added the old one is replaced by the new one.
+ *
+ * @templ's reference count will be incremented, and any floating
+ * reference will be removed (see gst_object_ref_sink())
  *
  */
 void
@@ -1271,6 +1391,7 @@ gst_element_class_add_pad_template (GstElementClass * klass,
 
     /* Found pad with the same name, replace and return */
     if (strcmp (templ->name_template, padtempl->name_template) == 0) {
+      gst_object_ref_sink (padtempl);
       gst_object_unref (padtempl);
       template_list->data = templ;
       return;
@@ -1303,6 +1424,28 @@ gst_element_class_add_static_pad_template (GstElementClass * klass,
 {
   gst_element_class_add_pad_template (klass,
       gst_static_pad_template_get (static_templ));
+}
+
+/**
+ * gst_element_class_add_static_pad_template_with_gtype:
+ * @klass: the #GstElementClass to add the pad template to.
+ * @static_templ: #GstStaticPadTemplate to add as pad template to the element class.
+ * @pad_type: The #GType of the pad to create
+ *
+ * Adds a pad template to an element class based on the static pad template
+ * @templ. This is mainly used in the _class_init functions of element
+ * implementations. If a pad template with the same name already exists,
+ * the old one is replaced by the new one.
+ *
+ * Since: 1.14
+ */
+void
+gst_element_class_add_static_pad_template_with_gtype (GstElementClass * klass,
+    GstStaticPadTemplate * static_templ, GType pad_type)
+{
+  gst_element_class_add_pad_template (klass,
+      gst_pad_template_new_from_static_pad_template_with_gtype (static_templ,
+          pad_type));
 }
 
 /**
@@ -1456,6 +1599,26 @@ gst_element_class_get_metadata (GstElementClass * klass, const gchar * key)
 }
 
 /**
+ * gst_element_get_metadata:
+ * @element: class to get metadata for
+ * @key: the key to get
+ *
+ * Get metadata with @key in @klass.
+ *
+ * Returns: the metadata for @key.
+ *
+ * Since: 1.14
+ */
+const gchar *
+gst_element_get_metadata (GstElement * element, const gchar * key)
+{
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+  g_return_val_if_fail (key != NULL, NULL);
+
+  return gst_element_class_get_metadata (GST_ELEMENT_GET_CLASS (element), key);
+}
+
+/**
  * gst_element_class_get_pad_template_list:
  * @element_class: a #GstElementClass to get pad templates of.
  *
@@ -1474,6 +1637,27 @@ gst_element_class_get_pad_template_list (GstElementClass * element_class)
   g_return_val_if_fail (GST_IS_ELEMENT_CLASS (element_class), NULL);
 
   return element_class->padtemplates;
+}
+
+/**
+ * gst_element_get_pad_template_list:
+ * @element: a #GstElement to get pad templates of.
+ *
+ * Retrieves a list of the pad templates associated with @element. The
+ * list must not be modified by the calling code.
+ *
+ * Returns: (transfer none) (element-type Gst.PadTemplate): the #GList of
+ *     pad templates.
+ *
+ * Since: 1.14
+ */
+GList *
+gst_element_get_pad_template_list (GstElement * element)
+{
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  return
+      gst_element_class_get_pad_template_list (GST_ELEMENT_GET_CLASS (element));
 }
 
 /**
@@ -1511,6 +1695,29 @@ gst_element_class_get_pad_template (GstElementClass *
   }
 
   return NULL;
+}
+
+/**
+ * gst_element_get_pad_template:
+ * @element: a #GstElement to get the pad template of.
+ * @name: the name of the #GstPadTemplate to get.
+ *
+ * Retrieves a padtemplate from @element with the given name.
+ *
+ * Returns: (transfer none) (nullable): the #GstPadTemplate with the
+ *     given name, or %NULL if none was found. No unreferencing is
+ *     necessary.
+ *
+ * Since: 1.14
+ */
+GstPadTemplate *
+gst_element_get_pad_template (GstElement * element, const gchar * name)
+{
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+  g_return_val_if_fail (name != NULL, NULL);
+
+  return gst_element_class_get_pad_template (GST_ELEMENT_GET_CLASS (element),
+      name);
 }
 
 static GstPadTemplate *
@@ -2396,6 +2603,8 @@ _priv_gst_element_state_changed (GstElement * element, GstState oldstate,
  * This method is used internally and should normally not be called by plugins
  * or applications.
  *
+ * This function must be called with STATE_LOCK held.
+ *
  * Returns: The result of the commit state change.
  *
  * MT safe.
@@ -3145,7 +3354,7 @@ gst_element_set_bus_func (GstElement * element, GstBus * bus)
 /**
  * gst_element_set_bus:
  * @element: a #GstElement to set the bus of.
- * @bus: (transfer none): the #GstBus to set.
+ * @bus: (transfer none) (allow-none): the #GstBus to set.
  *
  * Sets the bus of the element. Increases the refcount on the bus.
  * For internal use only, unless you're testing elements.
@@ -3172,7 +3381,8 @@ gst_element_set_bus (GstElement * element, GstBus * bus)
  * Returns the bus of the element. Note that only a #GstPipeline will provide a
  * bus for the application.
  *
- * Returns: (transfer full): the element's #GstBus. unref after usage.
+ * Returns: (transfer full) (nullable): the element's #GstBus. unref after
+ * usage.
  *
  * MT safe.
  */
@@ -3296,7 +3506,7 @@ _match_context_type (GstContext * c1, const gchar * context_type)
  *
  * Gets the context with @context_type set on the element or NULL.
  *
- * Returns: (transfer full): A #GstContext or NULL
+ * Returns: (transfer full) (nullable): A #GstContext or NULL
  *
  * Since: 1.8
  */

@@ -170,7 +170,7 @@ gst_trigger_control_source_get_type
 <SECTION>
 <FILE>gstadapter</FILE>
 <TITLE>GstAdapter</TITLE>
-<INCLUDE>gst/base/gstadapter.h</INCLUDE>
+<INCLUDE>gst/base/adapter.h</INCLUDE>
 GstAdapter
 gst_adapter_new
 gst_adapter_clear
@@ -213,6 +213,46 @@ GST_IS_ADAPTER_CLASS
 GST_ADAPTER_GET_CLASS
 <SUBSECTION Private>
 gst_adapter_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gstaggregator</FILE>
+<TITLE>GstAggregator</TITLE>
+<INCLUDE>gst/base/base.h</INCLUDE>
+GstAggregator
+GstAggregatorClass
+gst_aggregator_finish_buffer
+gst_aggregator_set_src_caps
+gst_aggregator_get_latency
+gst_aggregator_get_buffer_pool
+gst_aggregator_get_allocator
+<SUBSECTION Standard>
+GST_IS_AGGREGATOR
+GST_IS_AGGREGATOR_CLASS
+GST_TYPE_AGGREGATOR
+GST_AGGREGATOR
+GST_AGGREGATOR_CLASS
+GST_AGGREGATOR_GET_CLASS
+gst_aggregator_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gstaggregatorpad</FILE>
+<TITLE>GstAggregatorPad</TITLE>
+GstAggregatorPad
+GstAggregatorPadClass
+gst_aggregator_pad_pop_buffer
+gst_aggregator_pad_peek_buffer
+gst_aggregator_pad_drop_buffer
+gst_aggregator_pad_is_eos
+<SUBSECTION Standard>
+GST_IS_AGGREGATOR_PAD
+GST_IS_AGGREGATOR_PAD_CLASS
+GST_TYPE_AGGREGATOR_PAD
+GST_AGGREGATOR_PAD
+GST_AGGREGATOR_PAD_CLASS
+GST_AGGREGATOR_PAD_GET_CLASS
+gst_aggregator_pad_get_type
 </SECTION>
 
 <SECTION>
@@ -295,6 +335,7 @@ gst_base_src_get_allocator
 gst_base_src_get_buffer_pool
 gst_base_src_is_async
 gst_base_src_set_async
+gst_base_src_submit_buffer_list
 
 GST_BASE_SRC_PAD
 GST_BASE_SRC_IS_STARTED
@@ -798,6 +839,8 @@ gst_collect_pads_get_type
 GstFlowCombiner
 gst_flow_combiner_new
 gst_flow_combiner_free
+gst_flow_combiner_ref
+gst_flow_combiner_unref
 gst_flow_combiner_update_flow
 gst_flow_combiner_add_pad
 gst_flow_combiner_remove_pad
@@ -1280,6 +1323,9 @@ gst_harness_buffers_received
 gst_harness_buffers_in_queue
 gst_harness_set_drop_buffers
 gst_harness_dump_to_file
+gst_harness_take_all_data
+gst_harness_take_all_data_as_buffer
+gst_harness_take_all_data_as_bytes
 gst_harness_get_last_pushed_timestamp
 
 gst_harness_push_event

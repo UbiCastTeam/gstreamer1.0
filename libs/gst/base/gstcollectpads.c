@@ -33,10 +33,10 @@
  *     be installed with gst_collect_pads_set_function ().
  *
  *   * Pads are added to the collection with gst_collect_pads_add_pad()/
- *     gst_collect_pads_remove_pad(). The pad
- *     has to be a sinkpad. The chain and event functions of the pad are
- *     overridden. The element_private of the pad is used to store
- *     private information for the collectpads.
+ *     gst_collect_pads_remove_pad(). The pad has to be a sinkpad. When added,
+ *     the chain, event and query functions of the pad are overridden. The
+ *     element_private of the pad is used to store private information for the
+ *     collectpads.
  *
  *   * For each pad, data is queued in the _chain function or by
  *     performing a pull_range.
@@ -94,7 +94,7 @@ struct _GstCollectPadsPrivate
   gboolean started;
 
   /* with STREAM_LOCK */
-  guint32 cookie;               /* @data list cookie */
+  guint32 cookie;               /* pad_list cookie */
   guint numpads;                /* number of pads in @data */
   guint queuedpads;             /* number of pads with a buffer */
   guint eospads;                /* number of pads that are EOS */
@@ -102,7 +102,7 @@ struct _GstCollectPadsPrivate
   GstCollectData *earliest_data;        /* Pad data for current earliest time */
 
   /* with LOCK */
-  GSList *pad_list;             /* updated pad list */
+  GSList *pad_list;             /* list of GstCollectData* */
   guint32 pad_cookie;           /* updated cookie */
 
   GstCollectPadsFunction func;  /* function and user_data for callback */
@@ -255,9 +255,6 @@ gst_collect_pads_init (GstCollectPads * pads)
   pads->priv->seeking = FALSE;
   pads->priv->pending_flush_start = FALSE;
   pads->priv->pending_flush_stop = FALSE;
-
-  /* clear floating flag */
-  gst_object_ref_sink (pads);
 }
 
 static void
@@ -296,6 +293,9 @@ gst_collect_pads_new (void)
   GstCollectPads *newcoll;
 
   newcoll = g_object_new (GST_TYPE_COLLECT_PADS, NULL);
+
+  /* clear floating flag */
+  gst_object_ref_sink (newcoll);
 
   return newcoll;
 }
@@ -783,6 +783,8 @@ gst_collect_pads_set_flushing_unlocked (GstCollectPads * pads,
     gboolean flushing)
 {
   GSList *walk = NULL;
+
+  GST_DEBUG ("sink-pads flushing=%d", flushing);
 
   /* Update the pads flushing flag */
   for (walk = pads->priv->pad_list; walk; walk = g_slist_next (walk)) {
@@ -1677,6 +1679,8 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
   pad = data->pad;
   parent = GST_OBJECT_PARENT (pad);
 
+  GST_DEBUG_OBJECT (pad, "Got '%s' event", GST_EVENT_TYPE_NAME (event));
+
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_FLUSH_START:
     {
@@ -1707,7 +1711,9 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
       } else {
         /* forward event to unblock check_collected */
         GST_DEBUG_OBJECT (pad, "forwarding flush start");
-        res = gst_pad_event_default (pad, parent, event);
+        if (!(res = gst_pad_event_default (pad, parent, event))) {
+          GST_WARNING_OBJECT (pad, "forwarding flush start failed");
+        }
         event = NULL;
 
         /* now unblock the chain function.
@@ -1857,6 +1863,7 @@ gst_collect_pads_event_default (GstCollectPads * pads, GstCollectData * data,
   }
 
 eat:
+  GST_DEBUG_OBJECT (pads, "dropping event: %" GST_PTR_FORMAT, event);
   if (event)
     gst_event_unref (event);
   return res;
@@ -1864,8 +1871,10 @@ eat:
 forward:
   if (discard)
     goto eat;
-  else
+  else {
+    GST_DEBUG_OBJECT (pads, "forward event: %" GST_PTR_FORMAT, event);
     return gst_pad_event_default (pad, parent, event);
+  }
 }
 
 typedef struct

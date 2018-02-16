@@ -293,7 +293,7 @@ gst_event_init (GstEventImpl * event, GstEventType type)
  * New custom events can also be created by subclassing the event type if
  * needed.
  *
- * Returns: (transfer full): the new custom event.
+ * Returns: (transfer full) (nullable): the new custom event.
  */
 GstEvent *
 gst_event_new_custom (GstEventType type, GstStructure * structure)
@@ -333,9 +333,9 @@ had_parent:
  *
  * Access the structure of the event.
  *
- * Returns: The structure of the event. The structure is still
- * owned by the event, which means that you should not free it and
- * that the pointer becomes invalid when you free the event.
+ * Returns: (transfer none) (nullable): The structure of the event. The
+ * structure is still owned by the event, which means that you should not free
+ * it and that the pointer becomes invalid when you free the event.
  *
  * MT safe.
  */
@@ -591,9 +591,12 @@ gst_event_parse_flush_stop (GstEvent * event, gboolean * reset_time)
  * The list of @streams corresponds to the "Stream ID" of each stream to be
  * activated. Those ID can be obtained via the #GstStream objects present
  * in #GST_EVENT_STREAM_START, #GST_EVENT_STREAM_COLLECTION or
- * #GST_MESSSAGE_STREAM_COLLECTION.
+ * #GST_MESSAGE_STREAM_COLLECTION.
  *
- * Returns: (transfer full): a new select-streams event.
+ * Note: The list of @streams can not be empty.
+ *
+ * Returns: (transfer full): a new select-streams event or %NULL in case of
+ * an error (like an empty streams list).
  *
  * Since: 1.10
  */
@@ -604,6 +607,8 @@ gst_event_new_select_streams (GList * streams)
   GValue val = G_VALUE_INIT;
   GstStructure *struc;
   GList *tmpl;
+
+  g_return_val_if_fail (streams != NULL, NULL);
 
   GST_CAT_INFO (GST_CAT_EVENT, "Creating new select-streams event");
   struc = gst_structure_new_id_empty (GST_QUARK (EVENT_SELECT_STREAMS));
@@ -796,7 +801,7 @@ gst_event_parse_gap (GstEvent * event, GstClockTime * timestamp,
  * synchronized with the buffer flow and contains the format of the buffers
  * that will follow after the event.
  *
- * Returns: (transfer full): the new CAPS event.
+ * Returns: (transfer full) (nullable): the new CAPS event.
  */
 GstEvent *
 gst_event_new_caps (GstCaps * caps)
@@ -874,7 +879,7 @@ gst_event_parse_caps (GstEvent * event, GstCaps ** caps)
  *
  *   time + (TIMESTAMP(buf) - start) * ABS (rate * applied_rate)
  *
- * Returns: (transfer full): the new SEGMENT event.
+ * Returns: (transfer full) (nullable): the new SEGMENT event.
  */
 GstEvent *
 gst_event_new_segment (const GstSegment * segment)
@@ -1123,7 +1128,7 @@ gst_event_parse_buffer_size (GstEvent * event, GstFormat * format,
  * The application can use general event probes to intercept the QoS
  * event and implement custom application specific QoS handling.
  *
- * Returns: (transfer full): a new QOS event.
+ * Returns: (transfer full) (nullable): a new QOS event.
  */
 GstEvent *
 gst_event_new_qos (GstQOSType type, gdouble proportion,
@@ -1249,7 +1254,7 @@ gst_event_parse_qos (GstEvent * event, GstQOSType * type,
  * #GST_QUERY_POSITION and update the playback segment current position with a
  * #GST_SEEK_TYPE_SET to the desired position.
  *
- * Returns: (transfer full): a new seek event.
+ * Returns: (transfer full) (nullable): a new seek event.
  */
 GstEvent *
 gst_event_new_seek (gdouble rate, GstFormat format, GstSeekFlags flags,
@@ -1430,7 +1435,7 @@ gst_event_parse_latency (GstEvent * event, GstClockTime * latency)
  * The @intermediate flag instructs the pipeline that this step operation is
  * part of a larger step operation.
  *
- * Returns: (transfer full): a new #GstEvent
+ * Returns: (transfer full) (nullable): a new #GstEvent
  */
 GstEvent *
 gst_event_new_step (GstFormat format, guint64 amount, gdouble rate,

@@ -1080,7 +1080,7 @@ _get_mapped (GstBuffer * buffer, guint idx, GstMapInfo * info,
  * the memory block in @buffer is removed, replaced or merged, typically with
  * any call that modifies the memory in @buffer.
  *
- * Returns: (transfer none): the #GstMemory at @idx.
+ * Returns: (transfer none) (nullable): the #GstMemory at @idx.
  */
 GstMemory *
 gst_buffer_peek_memory (GstBuffer * buffer, guint idx)
@@ -1101,7 +1101,7 @@ gst_buffer_peek_memory (GstBuffer * buffer, guint idx)
  *
  * Get the memory block at index @idx in @buffer.
  *
- * Returns: (transfer full): a #GstMemory that contains the data of the
+ * Returns: (transfer full) (nullable): a #GstMemory that contains the data of the
  * memory block at @idx. Use gst_memory_unref () after usage.
  */
 GstMemory *
@@ -1117,7 +1117,7 @@ gst_buffer_get_memory (GstBuffer * buffer, guint idx)
  * Get all the memory block in @buffer. The memory blocks will be merged
  * into one large #GstMemory.
  *
- * Returns: (transfer full): a #GstMemory that contains the merged memory.
+ * Returns: (transfer full) (nullable): a #GstMemory that contains the merged memory.
  * Use gst_memory_unref () after usage.
  */
 GstMemory *
@@ -1137,7 +1137,7 @@ gst_buffer_get_all_memory (GstBuffer * buffer)
  *
  * If @length is -1, all memory starting from @idx is merged.
  *
- * Returns: (transfer full): a #GstMemory that contains the merged data of @length
+ * Returns: (transfer full) (nullable): a #GstMemory that contains the merged data of @length
  *    blocks starting at @idx. Use gst_memory_unref () after usage.
  */
 GstMemory *
@@ -2140,6 +2140,28 @@ gst_buffer_get_meta (GstBuffer * buffer, GType api)
 }
 
 /**
+ * gst_buffer_get_n_meta:
+ * @buffer: a #GstBuffer
+ * @api_type: the #GType of an API
+ *
+ * Returns: number of metas of type @api_type on @buffer.
+ *
+ * Since: 1.14
+ */
+guint
+gst_buffer_get_n_meta (GstBuffer * buffer, GType api_type)
+{
+  gpointer state = NULL;
+  GstMeta *meta;
+  guint n = 0;
+
+  while ((meta = gst_buffer_iterate_meta_filtered (buffer, &state, api_type)))
+    ++n;
+
+  return n;
+}
+
+/**
  * gst_buffer_add_meta:
  * @buffer: a #GstBuffer
  * @info: a #GstMetaInfo
@@ -2147,7 +2169,7 @@ gst_buffer_get_meta (GstBuffer * buffer, GType api)
  *
  * Add metadata for @info to @buffer using the parameters in @params.
  *
- * Returns: (transfer none): the metadata for the api in @info on @buffer.
+ * Returns: (transfer none) (nullable): the metadata for the api in @info on @buffer.
  */
 GstMeta *
 gst_buffer_add_meta (GstBuffer * buffer, const GstMetaInfo * info,
@@ -2393,7 +2415,7 @@ gst_buffer_foreach_meta (GstBuffer * buffer, GstBufferForeachMetaFunc func,
  * @offset: the offset to extract
  * @size: the size to extract
  * @dest: (array length=dest_size) (element-type guint8) (out): A pointer where
- *  the destination array will be written.
+ *  the destination array will be written. Might be %NULL if the size is 0.
  * @dest_size: (out): A location where the size of @dest can be written
  *
  * Extracts a copy of at most @size bytes the data at @offset into
@@ -2406,13 +2428,18 @@ void
 gst_buffer_extract_dup (GstBuffer * buffer, gsize offset, gsize size,
     gpointer * dest, gsize * dest_size)
 {
-  gsize real_size;
+  gsize real_size, alloc_size;
 
   real_size = gst_buffer_get_size (buffer);
 
-  *dest = g_malloc (MIN (real_size - offset, size));
-
-  *dest_size = gst_buffer_extract (buffer, offset, *dest, size);
+  alloc_size = MIN (real_size - offset, size);
+  if (alloc_size == 0) {
+    *dest = NULL;
+    *dest_size = 0;
+  } else {
+    *dest = g_malloc (alloc_size);
+    *dest_size = gst_buffer_extract (buffer, offset, *dest, size);
+  }
 }
 
 GST_DEBUG_CATEGORY_STATIC (gst_parent_buffer_meta_debug);
@@ -2425,7 +2452,7 @@ GST_DEBUG_CATEGORY_STATIC (gst_parent_buffer_meta_debug);
  * Add a #GstParentBufferMeta to @buffer that holds a reference on
  * @ref until the buffer is freed.
  *
- * Returns: (transfer none): The #GstParentBufferMeta that was added to the buffer
+ * Returns: (transfer none) (nullable): The #GstParentBufferMeta that was added to the buffer
  *
  * Since: 1.6
  */
@@ -2537,6 +2564,175 @@ gst_parent_buffer_meta_get_info (void)
         (GstMetaInitFunction) _gst_parent_buffer_meta_init,
         (GstMetaFreeFunction) _gst_parent_buffer_meta_free,
         _gst_parent_buffer_meta_transform);
+    g_once_init_leave ((GstMetaInfo **) & meta_info, (GstMetaInfo *) meta);
+  }
+
+  return meta_info;
+}
+
+GST_DEBUG_CATEGORY_STATIC (gst_reference_timestamp_meta_debug);
+
+/**
+ * gst_buffer_add_reference_timestamp_meta:
+ * @buffer: (transfer none): a #GstBuffer
+ * @reference: (transfer none): identifier for the timestamp reference.
+ * @timestamp: timestamp
+ * @duration: duration, or %GST_CLOCK_TIME_NONE
+ *
+ * Add a #GstReferenceTimestampMeta to @buffer that holds a @timestamp and
+ * optionally @duration based on a specific timestamp @reference. See the
+ * documentation of #GstReferenceTimestampMeta for details.
+ *
+ * Returns: (transfer none) (nullable): The #GstReferenceTimestampMeta that was added to the buffer
+ *
+ * Since: 1.14
+ */
+GstReferenceTimestampMeta *
+gst_buffer_add_reference_timestamp_meta (GstBuffer * buffer,
+    GstCaps * reference, GstClockTime timestamp, GstClockTime duration)
+{
+  GstReferenceTimestampMeta *meta;
+
+  g_return_val_if_fail (GST_IS_CAPS (reference), NULL);
+  g_return_val_if_fail (timestamp != GST_CLOCK_TIME_NONE, NULL);
+
+  meta =
+      (GstReferenceTimestampMeta *) gst_buffer_add_meta (buffer,
+      GST_REFERENCE_TIMESTAMP_META_INFO, NULL);
+
+  if (!meta)
+    return NULL;
+
+  meta->reference = gst_caps_ref (reference);
+  meta->timestamp = timestamp;
+  meta->duration = duration;
+
+  return meta;
+}
+
+/**
+ * gst_buffer_get_reference_timestamp_meta:
+ * @buffer: a #GstBuffer
+ * @reference: (allow-none): a reference #GstCaps
+ *
+ * Find the first #GstReferenceTimestampMeta on @buffer that conforms to
+ * @reference. Conformance is tested by checking if the meta's reference is a
+ * subset of @reference.
+ *
+ * Buffers can contain multiple #GstReferenceTimestampMeta metadata items.
+ *
+ * Returns: (transfer none) (nullable): the #GstReferenceTimestampMeta or %NULL when there
+ * is no such metadata on @buffer.
+ *
+ * Since: 1.14
+ */
+GstReferenceTimestampMeta *
+gst_buffer_get_reference_timestamp_meta (GstBuffer * buffer,
+    GstCaps * reference)
+{
+  gpointer state = NULL;
+  GstMeta *meta;
+  const GstMetaInfo *info = GST_REFERENCE_TIMESTAMP_META_INFO;
+
+  while ((meta = gst_buffer_iterate_meta (buffer, &state))) {
+    if (meta->info->api == info->api) {
+      GstReferenceTimestampMeta *rmeta = (GstReferenceTimestampMeta *) meta;
+
+      if (!reference)
+        return rmeta;
+      if (gst_caps_is_subset (rmeta->reference, reference))
+        return rmeta;
+    }
+  }
+  return NULL;
+}
+
+static gboolean
+_gst_reference_timestamp_meta_transform (GstBuffer * dest, GstMeta * meta,
+    GstBuffer * buffer, GQuark type, gpointer data)
+{
+  GstReferenceTimestampMeta *dmeta, *smeta;
+
+  /* we copy over the reference timestamp meta, independent of transformation
+   * that happens. If it applied to the original buffer, it still applies to
+   * the new buffer as it refers to the time when the media was captured */
+  smeta = (GstReferenceTimestampMeta *) meta;
+  dmeta =
+      gst_buffer_add_reference_timestamp_meta (dest, smeta->reference,
+      smeta->timestamp, smeta->duration);
+  if (!dmeta)
+    return FALSE;
+
+  GST_CAT_DEBUG (gst_reference_timestamp_meta_debug,
+      "copy reference timestamp metadata from buffer %p to %p", buffer, dest);
+
+  return TRUE;
+}
+
+static void
+_gst_reference_timestamp_meta_free (GstReferenceTimestampMeta * meta,
+    GstBuffer * buffer)
+{
+  if (meta->reference)
+    gst_caps_unref (meta->reference);
+}
+
+static gboolean
+_gst_reference_timestamp_meta_init (GstReferenceTimestampMeta * meta,
+    gpointer params, GstBuffer * buffer)
+{
+  static volatile gsize _init;
+
+  if (g_once_init_enter (&_init)) {
+    GST_DEBUG_CATEGORY_INIT (gst_reference_timestamp_meta_debug,
+        "referencetimestampmeta", 0, "referencetimestampmeta");
+    g_once_init_leave (&_init, 1);
+  }
+
+  meta->reference = NULL;
+  meta->timestamp = GST_CLOCK_TIME_NONE;
+  meta->duration = GST_CLOCK_TIME_NONE;
+
+  return TRUE;
+}
+
+GType
+gst_reference_timestamp_meta_api_get_type (void)
+{
+  static volatile GType type = 0;
+  static const gchar *tags[] = { NULL };
+
+  if (g_once_init_enter (&type)) {
+    GType _type =
+        gst_meta_api_type_register ("GstReferenceTimestampMetaAPI", tags);
+    g_once_init_leave (&type, _type);
+  }
+
+  return type;
+}
+
+/**
+ * gst_reference_timestamp_meta_get_info:
+ *
+ * Get the global #GstMetaInfo describing  the #GstReferenceTimestampMeta meta.
+ *
+ * Returns: (transfer none): The #GstMetaInfo
+ *
+ * Since: 1.14
+ */
+const GstMetaInfo *
+gst_reference_timestamp_meta_get_info (void)
+{
+  static const GstMetaInfo *meta_info = NULL;
+
+  if (g_once_init_enter ((GstMetaInfo **) & meta_info)) {
+    const GstMetaInfo *meta =
+        gst_meta_register (gst_reference_timestamp_meta_api_get_type (),
+        "GstReferenceTimestampMeta",
+        sizeof (GstReferenceTimestampMeta),
+        (GstMetaInitFunction) _gst_reference_timestamp_meta_init,
+        (GstMetaFreeFunction) _gst_reference_timestamp_meta_free,
+        _gst_reference_timestamp_meta_transform);
     g_once_init_leave ((GstMetaInfo **) & meta_info, (GstMetaInfo *) meta);
   }
 

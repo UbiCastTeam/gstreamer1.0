@@ -38,7 +38,11 @@ main (int argc, char *argv[])
   char **my_argv;
   int my_argc;
 
-  if (argc != 2 || strcmp (argv[1], "-l"))
+  /* We may or may not have an executable path */
+  if (argc != 2 && argc != 3)
+    return 1;
+
+  if (strcmp (argv[1], "-l"))
     return 1;
 
   my_argc = 2;
@@ -49,6 +53,9 @@ main (int argc, char *argv[])
 #ifndef GST_DISABLE_REGISTRY
   _gst_disable_registry_cache = TRUE;
 #endif
+
+  if (argc == 3)
+    _gst_executable_path = g_strdup (argv[2]);
 
   res = gst_init_check (&my_argc, &my_argv, NULL);
 

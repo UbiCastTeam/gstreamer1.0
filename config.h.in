@@ -34,6 +34,9 @@
 /* data dir */
 #undef GST_DATADIR
 
+/* Define if tracing subsystem hooks is disabled */
+#undef GST_DISABLE_GST_TRACER_HOOKS
+
 /* Define if option parsing is disabled */
 #undef GST_DISABLE_OPTION_PARSING
 
@@ -70,11 +73,12 @@
 /* GStreamer package release date/time for plugins as YYYY-MM-DD */
 #undef GST_PACKAGE_RELEASE_DATETIME
 
-/* Define if static plugins should be built */
-#undef GST_PLUGIN_BUILD_STATIC
-
 /* location of the installed gst-plugin-scanner */
 #undef GST_PLUGIN_SCANNER_INSTALLED
+
+/* libexecdir path component, used to find plugin-scanner on relocatable
+   builds on windows */
+#undef GST_PLUGIN_SCANNER_SUBDIR
 
 /* location of the installed gst-ptp-helper */
 #undef GST_PTP_HELPER_INSTALLED

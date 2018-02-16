@@ -81,6 +81,12 @@
  * info to stream time (which is always between 0 and the duration of the stream).
  */
 
+/* FIXME 2.0: remove unused format parameter.
+ * Most of the methods in gstsegment.c take and extra GstFormat format, just to
+ * verify segment->format == format.
+ * See https://bugzilla.gnome.org/show_bug.cgi?id=788979
+ */
+
 /**
  * gst_segment_copy:
  * @segment: (transfer none): a #GstSegment
@@ -1081,10 +1087,6 @@ gst_segment_position_from_running_time_full (const GstSegment * segment,
  * Deprecated. Use gst_segment_position_from_running_time() instead.
  */
 #ifndef GST_REMOVE_DEPRECATED
-#ifdef GST_DISABLE_DEPRECATED
-guint64 gst_segment_to_position (const GstSegment * segment, GstFormat format,
-    guint64 running_time);
-#endif
 guint64
 gst_segment_to_position (const GstSegment * segment, GstFormat format,
     guint64 running_time)

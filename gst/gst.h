@@ -69,6 +69,7 @@
 #include <gst/gstprotection.h>
 #include <gst/gstquery.h>
 #include <gst/gstregistry.h>
+#include <gst/gstpromise.h>
 #include <gst/gstsample.h>
 #include <gst/gstsegment.h>
 #include <gst/gststreams.h>
@@ -96,24 +97,44 @@
 
 G_BEGIN_DECLS
 
+GST_EXPORT
 void		gst_init			(int *argc, char **argv[]);
+
+GST_EXPORT
 gboolean	gst_init_check			(int *argc, char **argv[],
 						 GError ** err);
+GST_EXPORT
 gboolean        gst_is_initialized              (void);
+
+GST_EXPORT
 GOptionGroup *	gst_init_get_option_group	(void);
+
+GST_EXPORT
 void		gst_deinit			(void);
 
+GST_EXPORT
 void		gst_version			(guint *major, guint *minor,
 						 guint *micro, guint *nano);
+GST_EXPORT
 gchar *		gst_version_string		(void);
 
+GST_EXPORT
 gboolean        gst_segtrap_is_enabled          (void);
+
+GST_EXPORT
 void            gst_segtrap_set_enabled         (gboolean enabled);
 
+GST_EXPORT
 gboolean        gst_registry_fork_is_enabled    (void);
+
+GST_EXPORT
 void            gst_registry_fork_set_enabled   (gboolean enabled);
 
+GST_EXPORT
 gboolean        gst_update_registry             (void);
+
+GST_EXPORT
+const gchar *   gst_get_main_executable_path    (void);
 
 G_END_DECLS
 

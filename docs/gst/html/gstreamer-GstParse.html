@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstParamSpec.html" title="GstParamSpec">
 <link rel="next" href="GstPipeline.html" title="GstPipeline">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -224,11 +224,12 @@ can try to play the pipeline.</p>
 </div>
 <div class="refsect3">
 <a name="gst-parse-launch.returns"></a><h4>Returns</h4>
-<p>a new element on success, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. If
-more than one toplevel element is specified by the <em class="parameter"><code>pipeline_description</code></em>
-,
-all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which than is returned. </p>
-<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
+<p>a new element on success, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on
+failure. If more than one toplevel element is specified by the
+<em class="parameter"><code>pipeline_description</code></em>
+, all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which
+than is returned. </p>
+<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -279,13 +280,13 @@ can try to play the pipeline.</p>
 </div>
 <div class="refsect3">
 <a name="gst-parse-launch-full.returns"></a><h4>Returns</h4>
-<p>a new element on success, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. If
-more than one toplevel element is specified by the <em class="parameter"><code>pipeline_description</code></em>
-,
-all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which then is returned (unless
-the GST_PARSE_FLAG_PLACE_IN_BIN flag is set, in which case they are put
-in a <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> instead). </p>
-<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
+<p>a new element on success, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on
+failure. If more than one toplevel element is specified by the
+<em class="parameter"><code>pipeline_description</code></em>
+, all elements are put into a <a class="link" href="GstPipeline.html" title="GstPipeline"><span class="type">GstPipeline</span></a>, which
+then is returned (unless the GST_PARSE_FLAG_PLACE_IN_BIN flag is set, in
+which case they are put in a <a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> instead). </p>
+<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -322,8 +323,9 @@ An error does not mean that the pipeline could not be constructed.</p>
 </div>
 <div class="refsect3">
 <a name="gst-parse-launchv.returns"></a><h4>Returns</h4>
-<p>a new element on success and <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. </p>
-<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
+<p>a new element on success and <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+on failure. </p>
+<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -373,13 +375,14 @@ An error does not mean that the pipeline could not be constructed.</p>
 </div>
 <div class="refsect3">
 <a name="gst-parse-launchv-full.returns"></a><h4>Returns</h4>
-<p>a new element on success; on failure, either <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
-or a partially-constructed bin or element will be returned and <em class="parameter"><code>error</code></em>
-will
-be set (unless you passed <a class="link" href="gstreamer-GstParse.html#GST-PARSE-FLAG-FATAL-ERRORS:CAPS"><span class="type">GST_PARSE_FLAG_FATAL_ERRORS</span></a> in <em class="parameter"><code>flags</code></em>
-, then
-<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will always be returned on failure). </p>
-<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
+<p>a new element on success; on
+failure, either <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> or a partially-constructed bin or element will be
+returned and <em class="parameter"><code>error</code></em>
+will be set (unless you passed
+<a class="link" href="gstreamer-GstParse.html#GST-PARSE-FLAG-FATAL-ERRORS:CAPS"><span class="type">GST_PARSE_FLAG_FATAL_ERRORS</span></a> in <em class="parameter"><code>flags</code></em>
+, then <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will always be returned
+on failure). </p>
+<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -496,7 +499,7 @@ for unlinked source or sink pads within the bin</p></td>
 element, which is guaranteed to be a bin unless
 GST_FLAG_NO_SINGLE_ELEMENT_BINS was passed, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if an error
 occurred. </p>
-<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gst.Element]</span></p>
+<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>][<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gst.Element][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -509,9 +512,9 @@ gst_parse_context_new (<em class="parameter"><code><span class="type">void</span
 <p>Free-function: gst_parse_context_free</p>
 <div class="refsect3">
 <a name="gst-parse-context-new.returns"></a><h4>Returns</h4>
-<p>a newly-allocated parse context. Free with
-<a class="link" href="gstreamer-GstParse.html#gst-parse-context-free" title="gst_parse_context_free ()"><code class="function">gst_parse_context_free()</code></a> when no longer needed. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p>a newly-allocated parse context. Free
+with <a class="link" href="gstreamer-GstParse.html#gst-parse-context-free" title="gst_parse_context_free ()"><code class="function">gst_parse_context_free()</code></a> when no longer needed. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -539,7 +542,7 @@ gst_parse_context_copy (<em class="parameter"><code>const <a class="link" href="
 <div class="refsect3">
 <a name="gst-parse-context-copy.returns"></a><h4>Returns</h4>
 <p>A copied <a class="link" href="gstreamer-GstParse.html#GstParseContext"><span class="type">GstParseContext</span></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -593,7 +596,7 @@ of <a class="link" href="gstreamer-GstParse.html#GST-PARSE-ERROR-NO-SUCH-ELEMENT
 <p>a
 <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated array of element factory name strings of missing
 elements. Free with <a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-strfreev"><code class="function">g_strfreev()</code></a> when no longer needed. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar*]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar*][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 </div>
@@ -737,6 +740,6 @@ elements. Free with <a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Fu
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

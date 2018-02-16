@@ -1,14 +1,14 @@
-project('gstreamer', 'c', 'cpp',
-  version : '1.12.4',
-  meson_version : '>= 0.36.0',
+project('gstreamer', 'c',
+  version : '1.13.1',
+  meson_version : '>= 0.40.1',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
 
 gst_version = meson.project_version()
 version_arr = gst_version.split('.')
-gst_version_major = version_arr[0]
-gst_version_minor = version_arr[1]
-gst_version_micro = version_arr[2]
+gst_version_major = version_arr[0].to_int()
+gst_version_minor = version_arr[1].to_int()
+gst_version_micro = version_arr[2].to_int()
 if version_arr.length() == 4
   gst_version_nano = version_arr[3].to_int()
 else
@@ -21,7 +21,7 @@ apiversion = '1.0'
 soversion = 0
 # maintaining compatibility with the previous libtool versioning
 # current = minor * 100 + micro
-libversion = '@0@.@1@.0'.format(soversion, gst_version_minor.to_int() * 100 + gst_version_micro.to_int())
+libversion = '@0@.@1@.0'.format(soversion, gst_version_minor * 100 + gst_version_micro)
 
 prefix = get_option('prefix')
 libtype = get_option('library_format')
@@ -48,31 +48,40 @@ elif cc.has_argument('-Wl,-Bsymbolic-functions')
   # FIXME: Add FATAL_WARNINGS from configure.ac
 endif
 
+# Symbol visibility
+have_visibility_hidden = cc.has_argument('-fvisibility=hidden')
+if have_visibility_hidden
+  add_project_arguments('-fvisibility=hidden', language: 'c')
+endif
+
+# Disable strict aliasing
+if cc.has_argument('-fno-strict-aliasing')
+  add_project_arguments('-fno-strict-aliasing', language: 'c')
+endif
+
 cdata = configuration_data()
-cdata.set('GST_VERSION_MAJOR', gst_version_major)
-cdata.set('GST_VERSION_MINOR', gst_version_minor)
-cdata.set('GST_VERSION_MICRO', gst_version_micro)
-cdata.set('GST_VERSION_NANO', gst_version_nano)
-cdata.set('GST_API_VERSION', '"@0@"'.format(apiversion))
-cdata.set('GST_DATADIR', '"@0@/@1@"'.format(prefix, get_option('datadir')))
-cdata.set('LOCALEDIR', '"@0@/@1@"'.format(prefix, get_option('localedir')))
-cdata.set('LIBDIR', '"@0@/@1@"'.format(prefix, get_option('libdir')))
-cdata.set('GST_API_VERSION', '"1.0"')
-cdata.set('GETTEXT_PACKAGE', '"gstreamer-1.0"')
-cdata.set('GST_LICENSE', '"LGPL"')
-cdata.set('PACKAGE', '"gstreamer"')
-cdata.set('PACKAGE_NAME', '"GStreamer"')
-cdata.set('PACKAGE_STRING', '"GStreamer @0@"'.format(gst_version))
-cdata.set('PACKAGE_TARNAME', '"gstreamer"')
-cdata.set('PACKAGE_BUGREPORT', '"http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer"')
-cdata.set('PACKAGE_URL', '""')
-cdata.set('PACKAGE_VERSION', '"@0@"'.format(gst_version))
-cdata.set('PLUGINDIR', '"@0@/@1@/gstreamer-1.0"'.format(get_option('prefix'),get_option('libdir')))
-cdata.set('VERSION', '"@0@"'.format(gst_version))
+cdata.set_quoted('GST_API_VERSION', apiversion)
+cdata.set_quoted('GST_DATADIR', join_paths(prefix, get_option('datadir')))
+cdata.set_quoted('LOCALEDIR', join_paths(prefix, get_option('localedir')))
+cdata.set_quoted('LIBDIR', join_paths(prefix, get_option('libdir')))
+cdata.set_quoted('GST_API_VERSION', '1.0')
+cdata.set_quoted('GETTEXT_PACKAGE', 'gstreamer-1.0')
+cdata.set_quoted('GST_LICENSE', 'LGPL')
+cdata.set_quoted('PACKAGE', 'gstreamer')
+cdata.set_quoted('PACKAGE_NAME', 'GStreamer')
+cdata.set_quoted('PACKAGE_STRING', 'GStreamer @0@'.format(gst_version))
+cdata.set_quoted('PACKAGE_TARNAME', 'gstreamer')
+cdata.set_quoted('PACKAGE_BUGREPORT', 'http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer')
+cdata.set_quoted('PACKAGE_URL', '')
+cdata.set_quoted('PACKAGE_VERSION', gst_version)
+cdata.set_quoted('PLUGINDIR', join_paths(get_option('prefix'), get_option('libdir'), 'gstreamer-1.0'))
+cdata.set_quoted('VERSION', gst_version)
 # FIXME: --with-memory-alignment],[8,N,malloc,pagesize (default is 32)]) option
 cdata.set('MEMORY_ALIGNMENT_MALLOC', 1)
-cdata.set('GST_PLUGIN_SCANNER_INSTALLED', '"@0@/@1@/gst-plugin-scanner"'.format(prefix, helpers_install_dir))
-cdata.set('GST_PTP_HELPER_INSTALLED', '"@0@/@1@/gst-ptp-helper"'.format(prefix, helpers_install_dir))
+cdata.set_quoted('GST_PLUGIN_SCANNER_INSTALLED', join_paths(prefix, helpers_install_dir, 'gst-plugin-scanner'))
+cdata.set_quoted('GST_PTP_HELPER_INSTALLED', join_paths(prefix, helpers_install_dir, 'gst-ptp-helper'))
+cdata.set_quoted('GST_PLUGIN_SCANNER_SUBDIR', libexecdir,
+  description: 'libexecdir path component, used to find plugin-scanner on relocatable builds on windows')
 
 if gst_version_nano > 0
     # Have GST_ERROR message printed when running from git
@@ -117,7 +126,7 @@ foreach h : host_defines
   endif
 endforeach
 # FIXME: should really be called HOST_CPU or such
-cdata.set('TARGET_CPU', '"@0@"'.format(host_machine.cpu()))
+cdata.set_quoted('TARGET_CPU', host_machine.cpu())
 
 check_headers = [
   'dlfcn.h',
@@ -191,10 +200,10 @@ if cc.has_function('localtime_r', prefix : '#include<time.h>')
 endif
 
 if cc.links('''#include <pthread.h>
-							 int main() {
-								 pthread_setname_np("example");
-							 }''', name : 'pthread_setname_np(const char*)')
-	cdata.set('HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID', 1)
+               int main() {
+                 pthread_setname_np("example"); return 0;
+               }''', name : 'pthread_setname_np(const char*)')
+  cdata.set('HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID', 1)
 endif
 
 # Check for posix timers and the monotonic clock
@@ -322,8 +331,7 @@ if cc.has_header('execinfo.h')
 endif
 
 disable_gst_debug = get_option('disable_gst_debug')
-if get_option('disable_gst_debug')
-    cdata.set('GST_DISABLE_GST_DEBUG_DEFINE', '#define GST_DISABLE_GST_DEBUG 1')
+if disable_gst_debug
   add_project_arguments(['-Wno-unused'], language: 'c')
 endif
 
@@ -339,23 +347,26 @@ test_deps = [gmp_dep, gsl_dep, gslcblas_dep]
 dl_dep = cc.find_library('dl', required : false)
 cdata.set('HAVE_DLADDR', cc.has_function('dladdr', dependencies : dl_dep))
 
-configure_file(input : 'config.h.meson',
-  output : 'config.h',
-  configuration : cdata)
-
 
 configinc = include_directories('.')
 libsinc = include_directories('libs')
 privinc = include_directories('gst')
 
 # Find dependencies
-glib_dep = dependency('glib-2.0', version : '>=2.32.0')
-gobject_dep = dependency('gobject-2.0')
-gmodule_dep = dependency('gmodule-2.0')
+glib_dep = dependency('glib-2.0', version : '>=2.32.0',
+  fallback: ['glib', 'libglib_dep'])
+gobject_dep = dependency('gobject-2.0',
+  fallback: ['glib', 'libgobject_dep'])
+gmodule_dep = dependency('gmodule-2.0',
+  fallback: ['glib', 'libgmodule_dep'])
 if host_machine.system() == 'windows'
-    gio_dep = dependency('gio-2.0')
+    gio_dep = dependency('gio-2.0',
+        fallback: ['glib', 'libgio_dep'])
 else
-    gio_dep = [dependency('gio-2.0'), dependency('gio-unix-2.0')]
+    gio_dep = [dependency('gio-2.0',
+                  fallback: ['glib', 'libgio_dep']),
+               dependency('gio-unix-2.0',
+                  fallback: ['glib', 'libgio_dep'])]
 endif
 
 mathlib = cc.find_library('m', required : false)
@@ -370,11 +381,11 @@ gnome = import('gnome')
 build_gir = gir.found() and not meson.is_cross_build() and not get_option('disable_introspection')
 
 gir_init_section = [ '--add-init-section=extern void gst_init(gint*,gchar**);' + \
+    'g_setenv("GST_REGISTRY_DISABLE", "yes", TRUE);' + \
     'g_setenv("GST_REGISTRY_1.0", "/no/way/this/exists.reg", TRUE);' + \
     'g_setenv("GST_PLUGIN_PATH_1_0", "", TRUE);' + \
     'g_setenv("GST_PLUGIN_SYSTEM_PATH_1_0", "", TRUE);' + \
     'gst_init(NULL,NULL);' ]
-vs_module_defs_dir = meson.current_source_dir() + '/win32/common/'
 
 # Used by the *_mkenum.py helper scripts
 glib_mkenums = find_program('glib-mkenums')
@@ -385,11 +396,7 @@ if libtype == 'static'
 endif
 
 # Used in gst/parse/meson.build and below
-py3 = find_program('python3', required : false)
-if not py3.found()
-  # Maybe 'python' is Python 3
-  py3 = find_program('python')
-endif
+python3 = import('python3').find_python()
 
 bashcomp_dep = dependency('bash-completion', version : '>= 2.0', required : false)
 
@@ -402,7 +409,7 @@ if bashcomp_found
   pkgconfig = find_program('pkg-config')
 
   runcmd = run_command(pkgconfig,
-      '--define-variable=prefix="."',
+      '--define-variable=prefix=.',
       '--variable=completionsdir',
       'bash-completion')
 
@@ -414,7 +421,7 @@ if bashcomp_found
   endif
 
   runcmd = run_command(pkgconfig,
-      '--define-variable=prefix="."',
+      '--define-variable=prefix=.',
       '--variable=helpersdir',
       'bash-completion')
 
@@ -432,8 +439,14 @@ subdir('plugins')
 subdir('tools')
 subdir('pkgconfig')
 subdir('tests')
-subdir('po')
 subdir('data')
+
+# xgettext is optional (on Windows for instance)
+if find_program('xgettext', required : false).found()
+  subdir('po')
+endif
+
+configure_file(output : 'config.h', configuration : cdata)
 
 if build_machine.system() == 'windows'
   message('Disabling gtk-doc while building on Windows')
@@ -447,4 +460,6 @@ else
   endif
 endif
 
-run_command(py3, '-c', 'import shutil; shutil.copy("hooks/pre-commit.hook", ".git/hooks/pre-commit")')
+run_command(python3, '-c', 'import shutil; shutil.copy("hooks/pre-commit.hook", ".git/hooks/pre-commit")')
+
+install_data('gst-element-check-1.0.m4', install_dir : join_paths(get_option('datadir'), 'aclocal'))

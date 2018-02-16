@@ -4,7 +4,7 @@ dnl initialize autoconf
 dnl when going to/from release please set the nano (fourth number) right !
 dnl releases only do Wall, git and prerelease does Werror too
 dnl
-AC_INIT([GStreamer],[1.12.4],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
+AC_INIT([GStreamer],[1.13.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gstreamer])
 AG_GST_INIT
 
 dnl initialize automake (we require GNU make)
@@ -62,7 +62,7 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1204, 0, 1204)
+AS_LIBTOOL(GST, 1301, 0, 1301)
 
 dnl *** autotools stuff ****
 
@@ -89,6 +89,10 @@ AG_GST_CHECK_SUBSYSTEM_DISABLE(GST_DEBUG,[debugging subsystem])
 AM_CONDITIONAL(GST_DISABLE_GST_DEBUG, test "x$GST_DISABLE_GST_DEBUG" = "xyes")
 AG_GST_CHECK_SUBSYSTEM_DISABLE(GST_TRACER_HOOKS,[tracing subsystem hooks])
 AM_CONDITIONAL(GST_DISABLE_GST_TRACER_HOOKS, test "x$GST_DISABLE_GST_TRACER_HOOKS" = "xyes")
+if test "x$GST_DISABLE_GST_TRACER_HOOKS" = xyes; then
+  AC_DEFINE(GST_DISABLE_GST_TRACER_HOOKS, 1,
+    [Define if tracing subsystem hooks is disabled])
+fi
 AG_GST_CHECK_SUBSYSTEM_DISABLE(PARSE,[command-line parser])
 AM_CONDITIONAL(GST_DISABLE_PARSE, test "x$GST_DISABLE_PARSE" = "xyes")
 if test "x$GST_DISABLE_PARSE" = xyes; then
@@ -169,28 +173,6 @@ fi
 AC_SUBST([BASH_COMPLETION_DIR])
 AC_SUBST([BASH_HELPERS_DIR])
 AM_CONDITIONAL([ENABLE_BASH_COMPLETION],[test "x$with_bash_completion_dir" != "xno"])
-
-dnl build static plugins or not
-AC_MSG_CHECKING([whether to build static plugins or not])
-AC_ARG_ENABLE(
-  static-plugins,
-  AC_HELP_STRING(
-    [--enable-static-plugins],
-    [build static plugins @<:@default=no@:>@]),
-  [AS_CASE(
-    [$enableval], [no], [], [yes], [],
-    [AC_MSG_ERROR([bad value "$enableval" for --enable-static-plugins])])],
-  [enable_static_plugins=no])
-AC_MSG_RESULT([$enable_static_plugins])
-if test "x$enable_static_plugins" = xyes; then
-  AC_DEFINE(GST_PLUGIN_BUILD_STATIC, 1,
-    [Define if static plugins should be built])
-  GST_PLUGIN_LIBTOOLFLAGS=""
-else
-  GST_PLUGIN_LIBTOOLFLAGS="--tag=disable-static"
-fi
-AC_SUBST(GST_PLUGIN_LIBTOOLFLAGS)
-AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
 
 dnl If only building static libraries, define GST_STATIC_COMPILATION. This is
 dnl needed only on Windows, but it doesn't hurt to have it everywhere.
@@ -953,6 +935,10 @@ dnl special warning flags for gst/printf
 AS_COMPILER_FLAG([-Wno-format-nonliteral], [PRINTF_CFLAGS="-Wno-format-nonliteral"])
 AC_SUBST(PRINTF_CFLAGS)
 
+dnl disable strict aliasing
+AS_COMPILER_FLAG([-fno-strict-aliasing], [EXTRA_CFLAGS="-fno-strict-aliasing"])
+AC_SUBST(EXTRA_CFLAGS)
+
 dnl define correct level for debugging messages
 AG_GST_SET_LEVEL_DEFAULT($GST_GIT)
 
@@ -1000,8 +986,8 @@ dnl - src and build dirs need to be added because every piece that gets built
 dnl   will need the GStreamer source and generated headers
 dnl LIBS: XML doesn't need to be added because we don't explicitly use symbols
 dnl       from LibXML except for in the core library
-GST_ALL_CXXFLAGS="-I\$(top_srcdir)/libs -I\$(top_srcdir) -I\$(top_builddir)/libs -I\$(top_builddir) $GLIB_CFLAGS \$(GLIB_EXTRA_CFLAGS) $XML_CFLAGS \$(GST_OPTION_CXXFLAGS) \$(ERROR_CXXFLAGS)"
-GST_ALL_CFLAGS="-I\$(top_srcdir)/libs -I\$(top_srcdir) -I\$(top_builddir)/libs -I\$(top_builddir) $GLIB_CFLAGS \$(GLIB_EXTRA_CFLAGS) $XML_CFLAGS \$(GST_OPTION_CFLAGS) \$(ERROR_CFLAGS)"
+GST_ALL_CXXFLAGS="-I\$(top_srcdir)/libs -I\$(top_srcdir) -I\$(top_builddir)/libs -I\$(top_builddir) $GLIB_CFLAGS \$(GLIB_EXTRA_CFLAGS) $EXTRA_CFLAGS \$(GST_OPTION_CXXFLAGS) \$(ERROR_CXXFLAGS)"
+GST_ALL_CFLAGS="-I\$(top_srcdir)/libs -I\$(top_srcdir) -I\$(top_builddir)/libs -I\$(top_builddir) $GLIB_CFLAGS \$(GLIB_EXTRA_CFLAGS) $EXTRA_CFLAGS \$(GST_OPTION_CFLAGS) \$(ERROR_CFLAGS)"
 
 dnl FIXME: check if LTLIBINTL is needed everywhere
 dnl I presume it is given that it contains the symbols that _() stuff maps to
@@ -1045,6 +1031,23 @@ AS_AC_EXPAND(GST_PLUGIN_SCANNER_INSTALLED,${libexecdir}/gstreamer-$GST_API_VERSI
 AC_DEFINE_UNQUOTED(GST_PLUGIN_SCANNER_INSTALLED,
     "$GST_PLUGIN_SCANNER_INSTALLED", [location of the installed gst-plugin-scanner])
 AC_SUBST(GST_PLUGIN_SCANNER_INSTALLED)
+
+case "${libexecdir}" in
+  *libexec)
+    GST_PLUGIN_SCANNER_SUBDIR="libexec";;
+  *lib)
+    GST_PLUGIN_SCANNER_SUBDIR="lib";;
+  *)
+    GST_PLUGIN_SCANNER_SUBDIR=`basename ${libexecdir}`;
+    if test -z "$GST_PLUGIN_SCANNER_SUBDIR"; then
+      AC_MSG_WARN([Couldn't determined libexecdir suffix, using "lib"])
+      GST_PLUGIN_SCANNER_SUBDIR="lib";
+    fi
+    ;;
+esac
+AC_DEFINE_UNQUOTED(GST_PLUGIN_SCANNER_SUBDIR,
+    "$GST_PLUGIN_SCANNER_SUBDIR", [libexecdir path component, used to find plugin-scanner on relocatable builds on windows])
+
 
 dnl completion helper locations
 AS_AC_EXPAND(GST_COMPLETION_HELPER_INSTALLED,${libexecdir}/gstreamer-$GST_API_VERSION/gst-completion-helper)

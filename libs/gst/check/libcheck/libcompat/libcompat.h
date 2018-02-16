@@ -51,13 +51,15 @@
  * on the command line.
  */
 #ifndef CK_DLL_EXP
-#define CK_DLL_EXP
+#define CK_DLL_EXP extern
 #endif
 
 #if _MSC_VER
 #include <WinSock2.h>           /* struct timeval, API used in gettimeofday implementation */
 #include <io.h>                 /* read, write */
 #include <process.h>            /* getpid */
+#include <BaseTsd.h>            /* for ssize_t */
+typedef SSIZE_T ssize_t;
 #endif /* _MSC_VER */
 
 /* defines size_t */
