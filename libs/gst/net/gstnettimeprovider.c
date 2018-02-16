@@ -40,12 +40,14 @@
 
 #include "gstnettimeprovider.h"
 #include "gstnettimepacket.h"
+#include "gstnetutils.h"
 
 GST_DEBUG_CATEGORY_STATIC (ntp_debug);
 #define GST_CAT_DEFAULT (ntp_debug)
 
 #define DEFAULT_ADDRESS         "0.0.0.0"
 #define DEFAULT_PORT            5637
+#define DEFAULT_QOS_DSCP        -1
 
 #define IS_ACTIVE(self) (g_atomic_int_get (&((self)->priv->active)))
 
@@ -55,7 +57,8 @@ enum
   PROP_PORT,
   PROP_ADDRESS,
   PROP_CLOCK,
-  PROP_ACTIVE
+  PROP_ACTIVE,
+  PROP_QOS_DSCP
 };
 
 #define GST_NET_TIME_PROVIDER_GET_PRIVATE(obj)  \
@@ -65,6 +68,7 @@ struct _GstNetTimeProviderPrivate
 {
   gchar *address;
   int port;
+  gint qos_dscp;                /* ATOMIC */
 
   GThread *thread;
 
@@ -131,6 +135,11 @@ gst_net_time_provider_class_init (GstNetTimeProviderClass * klass)
       g_param_spec_boolean ("active", "Active",
           "TRUE if the clock will respond to queries over the network", TRUE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property (gobject_class, PROP_QOS_DSCP,
+      g_param_spec_int ("qos-dscp", "QoS diff srv code point",
+          "Quality of Service, differentiated services code point (-1 default)",
+          -1, 63, DEFAULT_QOS_DSCP,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -140,6 +149,7 @@ gst_net_time_provider_init (GstNetTimeProvider * self)
 
   self->priv->port = DEFAULT_PORT;
   self->priv->address = g_strdup (DEFAULT_ADDRESS);
+  self->priv->qos_dscp = DEFAULT_QOS_DSCP;
   self->priv->thread = NULL;
   self->priv->active = TRUE;
 }
@@ -172,11 +182,14 @@ gst_net_time_provider_thread (gpointer data)
   GSocket *socket = self->priv->socket;
   GstNetTimePacket *packet;
   GError *err = NULL;
+  gint cur_qos_dscp = DEFAULT_QOS_DSCP;
+  gint new_qos_dscp;
 
   GST_INFO_OBJECT (self, "time provider thread is running");
 
   while (TRUE) {
     GSocketAddress *sender_addr = NULL;
+
 
     GST_LOG_OBJECT (self, "waiting on socket");
     if (!g_socket_condition_wait (socket, G_IO_IN, cancel, &err)) {
@@ -201,6 +214,14 @@ gst_net_time_provider_thread (gpointer data)
       g_error_free (err);
       err = NULL;
       continue;
+    }
+
+    /* before next sending check if need to change QoS */
+    new_qos_dscp = self->priv->qos_dscp;
+    if (cur_qos_dscp != new_qos_dscp &&
+        gst_net_utils_set_socket_dscp (socket, new_qos_dscp)) {
+      GST_DEBUG_OBJECT (self, "changed QoS DSCP to: %d", new_qos_dscp);
+      cur_qos_dscp = new_qos_dscp;
     }
 
     if (IS_ACTIVE (self)) {
@@ -245,6 +266,9 @@ gst_net_time_provider_set_property (GObject * object, guint prop_id,
     case PROP_ACTIVE:
       g_atomic_int_set (&self->priv->active, g_value_get_boolean (value));
       break;
+    case PROP_QOS_DSCP:
+      g_atomic_int_set (&self->priv->qos_dscp, g_value_get_int (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -269,6 +293,9 @@ gst_net_time_provider_get_property (GObject * object, guint prop_id,
       break;
     case PROP_ACTIVE:
       g_value_set_boolean (value, IS_ACTIVE (self));
+      break;
+    case PROP_QOS_DSCP:
+      g_value_set_int (value, self->priv->qos_dscp);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -434,7 +461,7 @@ gst_net_time_provider_initable_iface_init (gpointer g_iface)
  *
  * Allows network clients to get the current time of @clock.
  *
- * Returns: the new #GstNetTimeProvider, or NULL on error
+ * Returns: (transfer full): the new #GstNetTimeProvider, or NULL on error
  */
 GstNetTimeProvider *
 gst_net_time_provider_new (GstClock * clock, const gchar * address, gint port)
@@ -447,6 +474,9 @@ gst_net_time_provider_new (GstClock * clock, const gchar * address, gint port)
   ret =
       g_initable_new (GST_TYPE_NET_TIME_PROVIDER, NULL, NULL, "clock", clock,
       "address", address, "port", port, NULL);
+
+  /* Clear floating flag */
+  g_object_ref_sink (ret);
 
   return ret;
 }

@@ -21,8 +21,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-
-#include <unistd.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/base/gstpushsrc.h>
 #include <gst/check/gstcheck.h>
@@ -952,12 +953,13 @@ test_notify_race_setup_pipeline (NotifyRacePipeline * p)
   gst_bin_add (GST_BIN (p->pipe), p->sink);
   gst_element_link_many (p->src, p->queue, p->sink, NULL);
 
-  GST_DEBUG ("Setting pipeline to PLAYING");
-  fail_unless_equals_int (gst_element_set_state (p->pipe, GST_STATE_PLAYING),
+  GST_DEBUG ("Setting pipeline to PAUSED..");
+  fail_unless_equals_int (gst_element_set_state (p->pipe, GST_STATE_PAUSED),
       GST_STATE_CHANGE_ASYNC);
-  GST_DEBUG ("Getting state");
+  GST_DEBUG ("Waiting for pipeline to preroll..");
   fail_unless_equals_int (gst_element_get_state (p->pipe, NULL, NULL, -1),
       GST_STATE_CHANGE_SUCCESS);
+  GST_DEBUG ("Ready to party!");
 }
 
 static void
@@ -976,8 +978,13 @@ GST_START_TEST (test_notify_race)
   int i;
 
   for (i = 0; i < G_N_ELEMENTS (pipelines); ++i) {
-    GST_DEBUG ("Starting up pipeline %d", i);
+    GST_DEBUG ("Setting up pipeline %d", i);
     test_notify_race_setup_pipeline (&pipelines[i]);
+  }
+
+  for (i = 0; i < G_N_ELEMENTS (pipelines); ++i) {
+    GST_DEBUG ("Starting pipeline %d", i);
+    gst_element_set_state (pipelines[i].pipe, GST_STATE_PLAYING);
   }
 
   g_usleep (2 * G_USEC_PER_SEC);

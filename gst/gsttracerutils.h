@@ -358,7 +358,7 @@ typedef void (*GstTracerHookElementQueryPost) (GObject *self, GstClockTime ts,
  * @ts: the current timestamp
  * @element: the element
  *
- * Hook for gst_element_new() named "element-new".
+ * Hook for whenever a new element is created, named "element-new".
  */
 typedef void (*GstTracerHookElementNew) (GObject *self, GstClockTime ts,
     GstElement *element);
@@ -697,6 +697,17 @@ typedef void (*GstTracerHookObjectDestroyed) (GObject *self, GstClockTime ts,
 
 #else /* !GST_DISABLE_GST_TRACER_HOOKS */
 
+static inline void
+_priv_gst_tracing_init (void)
+{
+  GST_DEBUG ("Tracing hooks are disabled");
+}
+
+static inline void
+_priv_gst_tracing_deinit (void)
+{
+}
+
 #define GST_TRACER_PAD_PUSH_PRE(pad, buffer)
 #define GST_TRACER_PAD_PUSH_POST(pad, res)
 #define GST_TRACER_PAD_PUSH_LIST_PRE(pad, list)
@@ -727,7 +738,7 @@ typedef void (*GstTracerHookObjectDestroyed) (GObject *self, GstClockTime ts,
 #define GST_TRACER_MINI_OBJECT_CREATED(object)
 #define GST_TRACER_MINI_OBJECT_DESTROYED(object)
 #define GST_TRACER_MINI_OBJECT_REFFED(object, new_refcount)
-#define GST_TRACER_MINI_OBJECT_UNREF(object, new_refcount)
+#define GST_TRACER_MINI_OBJECT_UNREFFED(object, new_refcount)
 #define GST_TRACER_OBJECT_CREATED(object)
 #define GST_TRACER_OBJECT_DESTROYED(object)
 #define GST_TRACER_OBJECT_REFFED(object, new_refcount)

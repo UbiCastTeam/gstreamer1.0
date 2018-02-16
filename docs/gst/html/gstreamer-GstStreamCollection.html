@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstStream.html" title="GstStreams">
 <link rel="next" href="GstStructure.html" title="GstStructure">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -132,9 +132,10 @@ gst_stream_collection_new (<em class="parameter"><code>const <a href="/usr/share
 </div>
 <div class="refsect3">
 <a name="gst-stream-collection-new.returns"></a><h4>Returns</h4>
-<p> The new <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a>.</p>
+<p>The new <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -172,7 +173,7 @@ gst_stream_collection_add_stream (<em class="parameter"><code><a class="link" hr
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>stream</code></em>
 was properly added, else <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -201,7 +202,7 @@ gst_stream_collection_get_upstream_id (<em class="parameter"><code><a class="lin
 <p>The upstream id. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -229,7 +230,7 @@ gst_stream_collection_get_size (<em class="parameter"><code><a class="link" href
 <p> The number of streams that <em class="parameter"><code>collection</code></em>
 contains</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -265,9 +266,9 @@ gst_stream_collection_get_stream (<em class="parameter"><code><a class="link" hr
 <div class="refsect3">
 <a name="gst-stream-collection-get-stream.returns"></a><h4>Returns</h4>
 <p>A <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a>. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -275,7 +276,6 @@ gst_stream_collection_get_stream (<em class="parameter"><code><a class="link" hr
 <div class="refsect2">
 <a name="GstStreamCollection"></a><h3>struct GstStreamCollection</h3>
 <pre class="programlisting">struct GstStreamCollection {
-  GstObject object;
 };
 </pre>
 <p>A collection of <a class="link" href="gstreamer-GstStream.html#GstStream" title="struct GstStream"><span class="type">GstStream</span></a> that are available.</p>
@@ -290,7 +290,7 @@ obsoleted.</p>
 <p>Several elements in a pipeline can provide <a class="link" href="gstreamer-GstStreamCollection.html#GstStreamCollection" title="struct GstStreamCollection"><span class="type">GstStreamCollection</span></a>.</p>
 <p>Applications can activate streams from a collection by using the
 <a class="link" href="GstEvent.html#GST-EVENT-SELECT-STREAMS:CAPS"><span class="type">GST_EVENT_SELECT_STREAMS</span></a> event on a pipeline, bin or element.</p>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -322,6 +322,6 @@ obsoleted.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

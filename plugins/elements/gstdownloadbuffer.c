@@ -1122,8 +1122,7 @@ gst_download_buffer_handle_sink_query (GstPad * pad, GstObject * parent,
   switch (GST_QUERY_TYPE (query)) {
     default:
       if (GST_QUERY_IS_SERIALIZED (query)) {
-        GST_LOG_OBJECT (dlbuf, "received query %p", query);
-        GST_DEBUG_OBJECT (dlbuf, "refusing query, we are not using the dlbuf");
+        GST_DEBUG_OBJECT (dlbuf, "refusing serialized query %p", query);
         res = FALSE;
       } else {
         res = gst_pad_query_default (pad, parent, query);
@@ -1278,19 +1277,19 @@ write_error:
   }
 completed:
   {
+    GstMessage *complete_message;
+
     GST_LOG_OBJECT (dlbuf, "we completed the download");
     dlbuf->write_pos = dlbuf->upstream_size;
     dlbuf->filling = FALSE;
     update_levels (dlbuf, dlbuf->max_level.bytes);
     msg = update_buffering (dlbuf);
-
-    gst_element_post_message (GST_ELEMENT_CAST (dlbuf),
-        gst_message_new_element (GST_OBJECT_CAST (dlbuf),
-            gst_structure_new ("GstCacheDownloadComplete",
-                "location", G_TYPE_STRING, dlbuf->temp_location, NULL)));
-
+    complete_message = gst_message_new_element (GST_OBJECT_CAST (dlbuf),
+        gst_structure_new ("GstCacheDownloadComplete",
+            "location", G_TYPE_STRING, dlbuf->temp_location, NULL));
     GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
 
+    gst_element_post_message (GST_ELEMENT_CAST (dlbuf), complete_message);
     if (msg != NULL)
       gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
 
@@ -1329,14 +1328,12 @@ gst_download_buffer_loop (GstPad * pad)
   /* update the buffering */
   msg = update_buffering (dlbuf);
 
-  g_atomic_int_set (&dlbuf->downstream_may_block, 1);
   GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
 
   if (msg != NULL)
     gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
 
   ret = gst_pad_push (dlbuf->srcpad, buffer);
-  g_atomic_int_set (&dlbuf->downstream_may_block, 0);
 
   /* need to check for srcresult here as well */
   GST_DOWNLOAD_BUFFER_MUTEX_LOCK_CHECK (dlbuf, dlbuf->srcresult, out_flushing);

@@ -293,7 +293,7 @@ gst_system_clock_get_property (GObject * object, guint prop_id, GValue * value,
 
 /**
  * gst_system_clock_set_default:
- * @new_clock: a #GstClock
+ * @new_clock: (allow-none): a #GstClock
  *
  * Sets the default system clock that can be obtained with
  * gst_system_clock_obtain().
@@ -355,8 +355,8 @@ gst_system_clock_obtain (void)
     clock = g_object_new (GST_TYPE_SYSTEM_CLOCK,
         "name", "GstSystemClock", NULL);
 
-    g_assert (!g_object_is_floating (G_OBJECT (clock)));
-
+    /* Clear floating flag */
+    gst_object_ref_sink (clock);
     _the_system_clock = clock;
     g_mutex_unlock (&_gst_sysclock_mutex);
   } else {

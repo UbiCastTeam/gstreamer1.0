@@ -105,7 +105,8 @@ enum
   PROP_NAME_TEMPLATE = 1,
   PROP_DIRECTION,
   PROP_PRESENCE,
-  PROP_CAPS
+  PROP_CAPS,
+  PROP_GTYPE,
 };
 
 enum
@@ -195,6 +196,19 @@ gst_pad_template_class_init (GstPadTemplateClass * klass)
           GST_TYPE_CAPS,
           G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstPadTemplate:gtype:
+   *
+   * The type of the pad described by the pad template.
+   *
+   * Since: 1.14
+   */
+  g_object_class_install_property (gobject_class, PROP_GTYPE,
+      g_param_spec_gtype ("gtype", "GType",
+          "The GType of the pad described by the pad template",
+          G_TYPE_NONE,
+          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+
   gstobject_class->path_string_separator = "*";
 }
 
@@ -203,6 +217,7 @@ gst_pad_template_init (GstPadTemplate * templ)
 {
   /* GstPadTemplate objects are usually leaked */
   GST_OBJECT_FLAG_SET (templ, GST_OBJECT_FLAG_MAY_BE_LEAKED);
+  GST_PAD_TEMPLATE_GTYPE (templ) = G_TYPE_NONE;
 }
 
 static void
@@ -284,7 +299,7 @@ G_DEFINE_POINTER_TYPE (GstStaticPadTemplate, gst_static_pad_template);
  *
  * Converts a #GstStaticPadTemplate into a #GstPadTemplate.
  *
- * Returns: (transfer full): a new #GstPadTemplate.
+ * Returns: (transfer floating) (nullable): a new #GstPadTemplate.
  */
 /* FIXME0.11: rename to gst_pad_template_new_from_static_pad_template() */
 GstPadTemplate *
@@ -310,6 +325,41 @@ gst_static_pad_template_get (GstStaticPadTemplate * pad_template)
 }
 
 /**
+ * gst_pad_template_new_from_static_pad_template_with_gtype:
+ * @pad_template: the static pad template
+ * @pad_type: The #GType of the pad to create
+ *
+ * Converts a #GstStaticPadTemplate into a #GstPadTemplate with a type.
+ *
+ * Returns: (transfer floating): a new #GstPadTemplate.
+ *
+ * Since: 1.14
+ */
+GstPadTemplate *
+gst_pad_template_new_from_static_pad_template_with_gtype (GstStaticPadTemplate *
+    pad_template, GType pad_type)
+{
+  GstPadTemplate *new;
+  GstCaps *caps;
+
+  if (!name_is_valid (pad_template->name_template, pad_template->presence))
+    return NULL;
+
+  caps = gst_static_caps_get (&pad_template->static_caps);
+
+  new = g_object_new (gst_pad_template_get_type (),
+      "name", pad_template->name_template,
+      "name-template", pad_template->name_template,
+      "direction", pad_template->direction,
+      "presence", pad_template->presence, "caps", caps, "gtype", pad_type,
+      NULL);
+
+  gst_caps_unref (caps);
+
+  return new;
+}
+
+/**
  * gst_pad_template_new:
  * @name_template: the name template.
  * @direction: the #GstPadDirection of the template.
@@ -319,7 +369,7 @@ gst_static_pad_template_get (GstStaticPadTemplate * pad_template)
  * Creates a new pad template with a name according to the given template
  * and with the given arguments.
  *
- * Returns: (transfer floating): a new #GstPadTemplate.
+ * Returns: (transfer floating) (nullable): a new #GstPadTemplate.
  */
 GstPadTemplate *
 gst_pad_template_new (const gchar * name_template,
@@ -341,6 +391,47 @@ gst_pad_template_new (const gchar * name_template,
   new = g_object_new (gst_pad_template_get_type (),
       "name", name_template, "name-template", name_template,
       "direction", direction, "presence", presence, "caps", caps, NULL);
+
+  return new;
+}
+
+/**
+ * gst_pad_template_new_with_gtype:
+ * @name_template: the name template.
+ * @direction: the #GstPadDirection of the template.
+ * @presence: the #GstPadPresence of the pad.
+ * @caps: (transfer none): a #GstCaps set for the template.
+ * @pad_type: The #GType of the pad to create
+ *
+ * Creates a new pad template with a name according to the given template
+ * and with the given arguments.
+ *
+ * Returns: (transfer floating): a new #GstPadTemplate.
+ *
+ * Since: 1.14
+ */
+GstPadTemplate *
+gst_pad_template_new_with_gtype (const gchar * name_template,
+    GstPadDirection direction, GstPadPresence presence, GstCaps * caps,
+    GType pad_type)
+{
+  GstPadTemplate *new;
+
+  g_return_val_if_fail (name_template != NULL, NULL);
+  g_return_val_if_fail (caps != NULL, NULL);
+  g_return_val_if_fail (direction == GST_PAD_SRC
+      || direction == GST_PAD_SINK, NULL);
+  g_return_val_if_fail (presence == GST_PAD_ALWAYS
+      || presence == GST_PAD_SOMETIMES || presence == GST_PAD_REQUEST, NULL);
+
+  if (!name_is_valid (name_template, presence)) {
+    return NULL;
+  }
+
+  new = g_object_new (gst_pad_template_get_type (),
+      "name", name_template, "name-template", name_template,
+      "direction", direction, "presence", presence, "caps", caps,
+      "gtype", pad_type, NULL);
 
   return new;
 }
@@ -422,6 +513,9 @@ gst_pad_template_set_property (GObject * object, guint prop_id,
             GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED);
       }
       break;
+    case PROP_GTYPE:
+      GST_PAD_TEMPLATE_GTYPE (object) = g_value_get_gtype (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -445,6 +539,9 @@ gst_pad_template_get_property (GObject * object, guint prop_id, GValue * value,
       break;
     case PROP_CAPS:
       g_value_set_boxed (value, GST_PAD_TEMPLATE_CAPS (object));
+      break;
+    case PROP_GTYPE:
+      g_value_set_gtype (value, GST_PAD_TEMPLATE_GTYPE (object));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

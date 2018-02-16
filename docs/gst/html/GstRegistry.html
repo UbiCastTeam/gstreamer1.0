@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstQuery.html" title="GstQuery">
 <link rel="next" href="GstSegment.html" title="GstSegment">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -291,7 +291,7 @@ dirty.</p>
 checked to make sure the information is minimally valid. If not, the entry is
 simply dropped.</p>
 <div class="refsect3">
-<a name="id-1.3.45.8.13"></a><h4>Implementation notes:</h4>
+<a name="id-1.3.46.8.13"></a><h4>Implementation notes:</h4>
 <p>The "cache" and "registry" are different concepts and can represent
 different sets of plugins. For various reasons, at init time, the cache is
 stored in the default registry, and plugins not relevant to the current
@@ -454,9 +454,10 @@ Use <a class="link" href="GstPlugin.html#gst-plugin-list-free" title="gst_plugin
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_registry_add_plugin (<em class="parameter"><code><a class="link" href="GstRegistry.html" title="GstRegistry"><span class="type">GstRegistry</span></a> *registry</code></em>,
                          <em class="parameter"><code><a class="link" href="GstPlugin.html" title="GstPlugin"><span class="type">GstPlugin</span></a> *plugin</code></em>);</pre>
-<p>Add the plugin to the registry. The plugin-added signal will be emitted.
-This function will sink <em class="parameter"><code>plugin</code></em>
-.</p>
+<p>Add the plugin to the registry. The plugin-added signal will be emitted.</p>
+<p><em class="parameter"><code>plugin</code></em>
+'s reference count will be incremented, and any floating
+reference will be removed (see <a class="link" href="GstObject.html#gst-object-ref-sink" title="gst_object_ref_sink ()"><code class="function">gst_object_ref_sink()</code></a>)</p>
 <div class="refsect3">
 <a name="gst-registry-add-plugin.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -474,7 +475,7 @@ This function will sink <em class="parameter"><code>plugin</code></em>
 <tr>
 <td class="parameter_name"><p>plugin</p></td>
 <td class="parameter_description"><p>the plugin to add. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -828,8 +829,8 @@ path is specific to the registry.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>path</p></td>
-<td class="parameter_description"><p>the path to scan</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the path to scan. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> filename]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -913,9 +914,10 @@ gst_registry_remove_feature (<em class="parameter"><code><a class="link" href="G
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_registry_add_feature (<em class="parameter"><code><a class="link" href="GstRegistry.html" title="GstRegistry"><span class="type">GstRegistry</span></a> *registry</code></em>,
                           <em class="parameter"><code><a class="link" href="GstPluginFeature.html" title="GstPluginfeature"><span class="type">GstPluginFeature</span></a> *feature</code></em>);</pre>
-<p>Add the feature to the registry. The feature-added signal will be emitted.
-This function sinks <em class="parameter"><code>feature</code></em>
-.</p>
+<p>Add the feature to the registry. The feature-added signal will be emitted.</p>
+<p><em class="parameter"><code>feature</code></em>
+'s reference count will be incremented, and any floating
+reference will be removed (see <a class="link" href="GstObject.html#gst-object-ref-sink" title="gst_object_ref_sink ()"><code class="function">gst_object_ref_sink()</code></a>)</p>
 <div class="refsect3">
 <a name="gst-registry-add-feature.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -933,7 +935,7 @@ This function sinks <em class="parameter"><code>feature</code></em>
 <tr>
 <td class="parameter_name"><p>feature</p></td>
 <td class="parameter_description"><p>the feature to add. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1093,6 +1095,6 @@ replacing a previously-added one by the same name)</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

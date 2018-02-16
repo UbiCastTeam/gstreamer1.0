@@ -191,8 +191,8 @@ am__libgstreamer_@GST_API_VERSION@_la_SOURCES_DIST = gst.c gstobject.c \
 	gstminiobject.c gstpad.c gstpadtemplate.c gstparamspecs.c \
 	gstpipeline.c gstplugin.c gstpluginfeature.c gstpluginloader.c \
 	gstpoll.c gstpreset.c gstprotection.c gstquark.c gstquery.c \
-	gstregistry.c gstregistrychunks.c gstsample.c gstsegment.c \
-	gststreamcollection.c gststreams.c gststructure.c \
+	gstregistry.c gstregistrychunks.c gstpromise.c gstsample.c \
+	gstsegment.c gststreamcollection.c gststreams.c gststructure.c \
 	gstsystemclock.c gsttaglist.c gsttagsetter.c gsttask.c \
 	gsttaskpool.c gsttoc.c gsttocsetter.c gsttracer.c \
 	gsttracerfactory.c gsttracerrecord.c gsttracerutils.c \
@@ -249,6 +249,7 @@ am_libgstreamer_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstreamer_@GST_API_VERSION@_la-gstquery.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstregistry.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstregistrychunks.lo \
+	libgstreamer_@GST_API_VERSION@_la-gstpromise.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstsample.lo \
 	libgstreamer_@GST_API_VERSION@_la-gstsegment.lo \
 	libgstreamer_@GST_API_VERSION@_la-gststreamcollection.lo \
@@ -445,6 +446,7 @@ EGREP = @EGREP@
 ENABLE_SUBUNIT = @ENABLE_SUBUNIT@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 FLEX_PATH = @FLEX_PATH@
@@ -499,7 +501,6 @@ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
 GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
@@ -753,6 +754,7 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstquery.c		\
 	gstregistry.c		\
 	gstregistrychunks.c	\
+	gstpromise.c	\
 	gstsample.c		\
 	gstsegment.c		\
 	gststreamcollection.c	\
@@ -868,6 +870,7 @@ gst_headers = \
 	gstpreset.h             \
 	gstprotection.h         \
 	gstquery.h		\
+	gstpromise.h   \
 	gstsample.h		\
 	gstsegment.h		\
 	gststreamcollection.h	\
@@ -1054,6 +1057,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpluginloader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpoll.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpreset.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpromise.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstprotection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstquark.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstquery.Plo@am__quote@
@@ -1448,6 +1452,13 @@ libgstreamer_@GST_API_VERSION@_la-gstregistrychunks.lo: gstregistrychunks.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstregistrychunks.c' object='libgstreamer_@GST_API_VERSION@_la-gstregistrychunks.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstregistrychunks.lo `test -f 'gstregistrychunks.c' || echo '$(srcdir)/'`gstregistrychunks.c
+
+libgstreamer_@GST_API_VERSION@_la-gstpromise.lo: gstpromise.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstpromise.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpromise.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstpromise.lo `test -f 'gstpromise.c' || echo '$(srcdir)/'`gstpromise.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpromise.Tpo $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstpromise.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstpromise.c' object='libgstreamer_@GST_API_VERSION@_la-gstpromise.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstreamer_@GST_API_VERSION@_la-gstpromise.lo `test -f 'gstpromise.c' || echo '$(srcdir)/'`gstpromise.c
 
 libgstreamer_@GST_API_VERSION@_la-gstsample.lo: gstsample.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstreamer_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstreamer_@GST_API_VERSION@_la-gstsample.lo -MD -MP -MF $(DEPDIR)/libgstreamer_@GST_API_VERSION@_la-gstsample.Tpo -c -o libgstreamer_@GST_API_VERSION@_la-gstsample.lo `test -f 'gstsample.c' || echo '$(srcdir)/'`gstsample.c
@@ -2012,9 +2023,9 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 
 gstenumtypes.h: $(gst_headers)
 	$(AM_V_GEN)$(GLIB_MKENUMS) \
-	--fhead "#ifndef __GST_ENUM_TYPES_H__\n#define __GST_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+	--fhead "#ifndef __GST_ENUM_TYPES_H__\n#define __GST_ENUM_TYPES_H__\n\n#include <glib-object.h>\n#include <gst/gstconfig.h>\n\nG_BEGIN_DECLS\n" \
 	--fprod "\n/* enumerations from \"@filename@\" */\n" \
-	--vhead "GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+	--vhead "GST_EXPORT GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
 	--ftail "G_END_DECLS\n\n#endif /* __GST_ENUM_TYPES_H__ */" \
 	$^ > gstenumtypes.h
 
@@ -2033,7 +2044,7 @@ gstenumtypes.c: $(gst_headers)
 gcov: $(libgstreamer_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
 @HAVE_INTROSPECTION_TRUE@Gst-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstreamer-@GST_API_VERSION@.la
-@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no GI_SCANNER_DISABLE_CACHE=yes \
+@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes GI_SCANNER_DISABLE_CACHE=yes \
 @HAVE_INTROSPECTION_TRUE@		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 @HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace Gst \
 @HAVE_INTROSPECTION_TRUE@		--nsversion=@GST_API_VERSION@ \

@@ -121,6 +121,7 @@ check_PROGRAMS =				\
 	gst/gstcapsfeatures    			\
 	$(CXX_CHECKS)			     	\
 	gst/gstdatetime     			\
+	gst/gstdeinit				\
 	gst/gstdevice				\
 	gst/gstinfo		 		\
 	gst/gstiterator 			\
@@ -133,6 +134,7 @@ check_PROGRAMS =				\
 	gst/gstpoll     			\
 	gst/gstprotection     			\
 	$(PRINTF_CHECKS)			\
+	gst/gstpromise				\
 	gst/gstsegment				\
 	gst/gstsystemclock			\
 	gst/gstclock				\
@@ -150,6 +152,7 @@ check_PROGRAMS =				\
 	$(REGISTRY_CHECKS)			\
 	$(LIBSABI_CHECKS)		     	\
 	libs/adapter				\
+	libs/aggregator				\
 	libs/bitreader				\
 	libs/bytereader				\
 	libs/bytewriter				\
@@ -179,11 +182,13 @@ noinst_HEADERS = \
 	gst/capslist.h \
 	gst/struct_arm.h \
 	gst/struct_i386.h \
+	gst/struct_i386w.h \
 	gst/struct_hppa.h \
 	gst/struct_ppc32.h \
 	gst/struct_ppc64.h \
 	gst/struct_sparc.h \
 	gst/struct_x86_64.h \
+	gst/struct_x86_64w.h \
 	libs/struct_arm.h \
 	libs/struct_i386.h \
 	libs/struct_hppa.h \

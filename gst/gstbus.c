@@ -229,9 +229,6 @@ gst_bus_init (GstBus * bus)
   g_mutex_init (&bus->priv->queue_lock);
   bus->priv->queue = gst_atomic_queue_new (32);
 
-  /* clear floating flag */
-  gst_object_ref_sink (bus);
-
   GST_DEBUG_OBJECT (bus, "created");
 }
 
@@ -287,6 +284,9 @@ gst_bus_new (void)
 
   result = g_object_new (gst_bus_get_type (), NULL);
   GST_DEBUG_OBJECT (result, "created new bus");
+
+  /* clear floating flag */
+  gst_object_ref_sink (result);
 
   return result;
 }
@@ -761,6 +761,31 @@ no_replace:
   }
 }
 
+/**
+ * gst_bus_get_pollfd:
+ * @bus: A #GstBus
+ * @fd: A GPollFD to fill
+ *
+ * Gets the file descriptor from the bus which can be used to get notified about
+ * messages being available with functions like g_poll(), and allows integration
+ * into other event loops based on file descriptors.
+ * Whenever a message is available, the POLLIN / %G_IO_IN event is set.
+ *
+ * Warning: NEVER read or write anything to the returned fd but only use it
+ * for getting notifications via g_poll() or similar and then use the normal
+ * GstBus API, e.g. gst_bus_pop().
+ *
+ * Since: 1.14
+ */
+void
+gst_bus_get_pollfd (GstBus * bus, GPollFD * fd)
+{
+  g_return_if_fail (GST_IS_BUS (bus));
+  g_return_if_fail (bus->priv->poll != NULL);
+
+  *fd = bus->priv->pollfd;
+}
+
 /* GSource for the bus
  */
 typedef struct
@@ -863,7 +888,7 @@ static GSourceFuncs gst_bus_source_funcs = {
  * a message is on the bus. After the GSource is dispatched, the
  * message is popped off the bus and unreffed.
  *
- * Returns: (transfer full): a #GSource that can be added to a mainloop.
+ * Returns: (transfer full) (nullable): a #GSource that can be added to a mainloop.
  */
 GSource *
 gst_bus_create_watch (GstBus * bus)
@@ -949,6 +974,9 @@ gst_bus_add_watch_full_unlocked (GstBus * bus, gint priority,
  * from @func. If the watch was added to the default main context it is also
  * possible to remove the watch using g_source_remove().
  *
+ * The bus watch will take its own reference to the @bus, so it is safe to unref
+ * @bus using gst_object_unref() after setting the bus watch.
+ *
  * MT safe.
  *
  * Returns: The event source id or 0 if @bus already got an event source.
@@ -990,9 +1018,12 @@ gst_bus_add_watch_full (GstBus * bus, gint priority,
  * from @func. If the watch was added to the default main context it is also
  * possible to remove the watch using g_source_remove().
  *
- * Returns: The event source id or 0 if @bus already got an event source.
+ * The bus watch will take its own reference to the @bus, so it is safe to unref
+ * @bus using gst_object_unref() after setting the bus watch.
  *
  * MT safe.
+ *
+ * Returns: The event source id or 0 if @bus already got an event source.
  */
 guint
 gst_bus_add_watch (GstBus * bus, GstBusFunc func, gpointer user_data)

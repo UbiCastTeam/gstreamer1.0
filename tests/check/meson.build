@@ -17,6 +17,7 @@ core_tests = [
   [ 'gst/gstcaps.c' ],
   [ 'gst/gstcapsfeatures.c' ],
   [ 'gst/gstdatetime.c' ],
+  [ 'gst/gstdeinit.c' ],
   [ 'gst/gstdevice.c' ],
   [ 'gst/gstelement.c', not have_registry ],
   [ 'gst/gstelementfactory.c', not have_registry ],
@@ -38,6 +39,7 @@ core_tests = [
   [ 'gst/gstprotection.c' ],
   [ 'gst/gstquery.c', not have_registry ],
   [ 'gst/gstregistry.c', not have_registry ],
+  [ 'gst/gstpromise.c'],
   [ 'gst/gstsegment.c' ],
   [ 'gst/gststream.c' ],
   [ 'gst/gststructure.c' ],
@@ -47,12 +49,13 @@ core_tests = [
   [ 'gst/gsttask.c' ],
   [ 'gst/gsttoc.c' ],
   [ 'gst/gsttocsetter.c' ],
-  [ 'gst/gsttracerrecord.c' ],
+  [ 'gst/gsttracerrecord.c', disable_tracer_hooks or disable_gst_debug],
   [ 'gst/gsturi.c' ],
   [ 'gst/gstutils.c', not have_registry ],
   [ 'gst/gstvalue.c' ],
   [ 'generic/states.c', not have_registry ],
   [ 'libs/adapter.c' ],
+  [ 'libs/aggregator.c' ],
   [ 'libs/baseparse.c' ],
   [ 'libs/basesrc.c', not have_registry ],
   [ 'libs/basesink.c', not have_registry ],
@@ -105,9 +108,15 @@ core_tests = [
   [ 'gst/gstevent.c', not have_registry ],
   [ 'pipelines/stress.c', not have_registry ],
   [ 'generic/sinks.c', not have_registry ],
-  [ 'gst/gstcpp.cc', not have_registry ],
-  [ 'libs/gstlibscpp.cc', false ],
 ]
+
+# Make sure our headers are C++ clean
+if add_languages('cpp', required : false)
+  core_tests += [
+    [ 'gst/gstcpp.cc', not have_registry ],
+    [ 'libs/gstlibscpp.cc', false ],
+  ]
+endif
 
 test_defines = [
   '-UG_DISABLE_ASSERT',
@@ -115,14 +124,15 @@ test_defines = [
   '-DGST_CHECK_TEST_ENVIRONMENT_BEACON="GST_STATE_IGNORE_ELEMENTS"',
   '-DTESTFILE="' + meson.current_source_dir() + '/meson.build"',
   '-DGST_USE_UNSTABLE_API',
+  '-DGST_DISABLE_DEPRECATED',
 ]
 
 glib_deps = [gio_dep, gobject_dep, gmodule_dep, glib_dep]
 gst_deps = [gst_dep, gst_base_dep, gst_check_dep, gst_net_dep, gst_controller_dep]
 
 foreach t : core_tests
-  fname = t.get(0)
-  test_name = fname.split('.').get(0)
+  fname = t[0]
+  test_name = fname.split('.')[0].underscorify()
   skip_test = t.get(1, false)
   link_with_libs = t.get(2, [])
 

@@ -3,6 +3,8 @@
   <chapters>
     <sub name="GStreamer Libraries" link="gstreamer-libs.html">
       <sub name="GStreamer Base and Utillity Classes" link="gstreamer-base.html">
+        <sub name="GstAggregator" link="GstAggregator.html"/>
+        <sub name="GstAggregatorPad" link="GstAggregatorPad.html"/>
         <sub name="GstBaseParse" link="GstBaseParse.html"/>
         <sub name="GstBaseSrc" link="GstBaseSrc.html"/>
         <sub name="GstBaseSink" link="GstBaseSink.html"/>
@@ -46,15 +48,34 @@
     <sub name="Object Hierarchy" link="gstreamer-hierarchy.html"/>
     <sub name="API Index" link="ix01.html"/>
     <sub name="Index of deprecated API" link="ix02.html"/>
-    <sub name="Index of new API in 1.10" link="ix03.html"/>
-    <sub name="Index of new API in 1.8" link="ix04.html"/>
-    <sub name="Index of new API in 1.6" link="ix05.html"/>
-    <sub name="Index of new API in 1.4" link="ix06.html"/>
-    <sub name="Index of new API in 1.2" link="ix07.html"/>
-    <sub name="Index of new API in 1.0.1" link="ix08.html"/>
+    <sub name="Index of new API in 1.14" link="ix03.html"/>
+    <sub name="Index of new API in 1.12.1" link="ix04.html"/>
+    <sub name="Index of new API in 1.12" link="ix05.html"/>
+    <sub name="Index of new API in 1.10" link="ix06.html"/>
+    <sub name="Index of new API in 1.8" link="ix07.html"/>
+    <sub name="Index of new API in 1.6" link="ix08.html"/>
+    <sub name="Index of new API in 1.4" link="ix09.html"/>
+    <sub name="Index of new API in 1.2" link="ix10.html"/>
+    <sub name="Index of new API in 1.0.1" link="ix11.html"/>
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
   <functions>
+    <keyword type="function" name="gst_aggregator_finish_buffer ()" link="GstAggregator.html#gst-aggregator-finish-buffer"/>
+    <keyword type="function" name="gst_aggregator_set_src_caps ()" link="GstAggregator.html#gst-aggregator-set-src-caps"/>
+    <keyword type="function" name="gst_aggregator_get_latency ()" link="GstAggregator.html#gst-aggregator-get-latency"/>
+    <keyword type="function" name="gst_aggregator_get_buffer_pool ()" link="GstAggregator.html#gst-aggregator-get-buffer-pool"/>
+    <keyword type="function" name="gst_aggregator_get_allocator ()" link="GstAggregator.html#gst-aggregator-get-allocator"/>
+    <keyword type="struct" name="struct GstAggregator" link="GstAggregator.html#GstAggregator-struct"/>
+    <keyword type="struct" name="struct GstAggregatorClass" link="GstAggregator.html#GstAggregatorClass"/>
+    <keyword type="property" name="The “latency” property" link="GstAggregator.html#GstAggregator--latency"/>
+    <keyword type="property" name="The “start-time” property" link="GstAggregator.html#GstAggregator--start-time"/>
+    <keyword type="property" name="The “start-time-selection” property" link="GstAggregator.html#GstAggregator--start-time-selection"/>
+    <keyword type="function" name="gst_aggregator_pad_pop_buffer ()" link="GstAggregatorPad.html#gst-aggregator-pad-pop-buffer"/>
+    <keyword type="function" name="gst_aggregator_pad_peek_buffer ()" link="GstAggregatorPad.html#gst-aggregator-pad-peek-buffer"/>
+    <keyword type="function" name="gst_aggregator_pad_drop_buffer ()" link="GstAggregatorPad.html#gst-aggregator-pad-drop-buffer"/>
+    <keyword type="function" name="gst_aggregator_pad_is_eos ()" link="GstAggregatorPad.html#gst-aggregator-pad-is-eos"/>
+    <keyword type="struct" name="struct GstAggregatorPad" link="GstAggregatorPad.html#GstAggregatorPad-struct"/>
+    <keyword type="struct" name="struct GstAggregatorPadClass" link="GstAggregatorPad.html#GstAggregatorPadClass"/>
     <keyword type="function" name="gst_base_parse_merge_tags ()" link="GstBaseParse.html#gst-base-parse-merge-tags" since="1.6"/>
     <keyword type="function" name="gst_base_parse_set_duration ()" link="GstBaseParse.html#gst-base-parse-set-duration"/>
     <keyword type="function" name="gst_base_parse_set_average_bitrate ()" link="GstBaseParse.html#gst-base-parse-set-average-bitrate"/>
@@ -106,6 +127,7 @@
     <keyword type="function" name="gst_base_src_get_buffer_pool ()" link="GstBaseSrc.html#gst-base-src-get-buffer-pool"/>
     <keyword type="function" name="gst_base_src_is_async ()" link="GstBaseSrc.html#gst-base-src-is-async"/>
     <keyword type="function" name="gst_base_src_set_async ()" link="GstBaseSrc.html#gst-base-src-set-async"/>
+    <keyword type="function" name="gst_base_src_submit_buffer_list ()" link="GstBaseSrc.html#gst-base-src-submit-buffer-list" since="1.14"/>
     <keyword type="macro" name="GST_BASE_SRC_PAD()" link="GstBaseSrc.html#GST-BASE-SRC-PAD:CAPS"/>
     <keyword type="macro" name="GST_BASE_SRC_IS_STARTED()" link="GstBaseSrc.html#GST-BASE-SRC-IS-STARTED:CAPS"/>
     <keyword type="macro" name="GST_BASE_SRC_IS_STARTING()" link="GstBaseSrc.html#GST-BASE-SRC-IS-STARTING:CAPS"/>
@@ -489,6 +511,8 @@
     <keyword type="enum" name="enum GstCollectPadsStateFlags" link="GstCollectPads.html#GstCollectPadsStateFlags"/>
     <keyword type="function" name="gst_flow_combiner_new ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-new" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_free ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-free" since="1.4"/>
+    <keyword type="function" name="gst_flow_combiner_ref ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-ref" since="1.12.1"/>
+    <keyword type="function" name="gst_flow_combiner_unref ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-unref" since="1.12.1"/>
     <keyword type="function" name="gst_flow_combiner_update_flow ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-update-flow" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_add_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-add-pad" since="1.4"/>
     <keyword type="function" name="gst_flow_combiner_remove_pad ()" link="gstreamer-libs-GstFlowCombiner.html#gst-flow-combiner-remove-pad" since="1.4"/>
@@ -588,6 +612,7 @@
     <keyword type="property" name="The “internal-clock” property" link="GstNetClientClock.html#GstNetClientClock--internal-clock"/>
     <keyword type="property" name="The “minimum-update-interval” property" link="GstNetClientClock.html#GstNetClientClock--minimum-update-interval"/>
     <keyword type="property" name="The “port” property" link="GstNetClientClock.html#GstNetClientClock--port"/>
+    <keyword type="property" name="The “qos-dscp” property" link="GstNetClientClock.html#GstNetClientClock--qos-dscp"/>
     <keyword type="property" name="The “round-trip-limit” property" link="GstNetClientClock.html#GstNetClientClock--round-trip-limit"/>
     <keyword type="function" name="gst_buffer_add_net_control_message_meta ()" link="gstreamer-libs-GstNetControlMessageMeta.html#gst-buffer-add-net-control-message-meta"/>
     <keyword type="macro" name="gst_buffer_get_net_control_message_meta()" link="gstreamer-libs-GstNetControlMessageMeta.html#gst-buffer-get-net-control-message-meta"/>
@@ -607,6 +632,7 @@
     <keyword type="property" name="The “address” property" link="GstNetTimeProvider.html#GstNetTimeProvider--address"/>
     <keyword type="property" name="The “clock” property" link="GstNetTimeProvider.html#GstNetTimeProvider--clock"/>
     <keyword type="property" name="The “port” property" link="GstNetTimeProvider.html#GstNetTimeProvider--port"/>
+    <keyword type="property" name="The “qos-dscp” property" link="GstNetTimeProvider.html#GstNetTimeProvider--qos-dscp"/>
     <keyword type="function" name="gst_ptp_init ()" link="GstPtpClock.html#gst-ptp-init" since="1.6"/>
     <keyword type="function" name="gst_ptp_deinit ()" link="GstPtpClock.html#gst-ptp-deinit" since="1.6"/>
     <keyword type="function" name="gst_ptp_is_initialized ()" link="GstPtpClock.html#gst-ptp-is-initialized" since="1.6"/>
@@ -725,6 +751,9 @@
     <keyword type="function" name="gst_harness_buffers_in_queue ()" link="gstreamer-libs-GstHarness.html#gst-harness-buffers-in-queue" since="1.6"/>
     <keyword type="function" name="gst_harness_set_drop_buffers ()" link="gstreamer-libs-GstHarness.html#gst-harness-set-drop-buffers" since="1.6"/>
     <keyword type="function" name="gst_harness_dump_to_file ()" link="gstreamer-libs-GstHarness.html#gst-harness-dump-to-file" since="1.6"/>
+    <keyword type="function" name="gst_harness_take_all_data ()" link="gstreamer-libs-GstHarness.html#gst-harness-take-all-data" since="1.14"/>
+    <keyword type="function" name="gst_harness_take_all_data_as_buffer ()" link="gstreamer-libs-GstHarness.html#gst-harness-take-all-data-as-buffer" since="1.14"/>
+    <keyword type="function" name="gst_harness_take_all_data_as_bytes ()" link="gstreamer-libs-GstHarness.html#gst-harness-take-all-data-as-bytes" since="1.14"/>
     <keyword type="function" name="gst_harness_get_last_pushed_timestamp ()" link="gstreamer-libs-GstHarness.html#gst-harness-get-last-pushed-timestamp" since="1.6"/>
     <keyword type="function" name="gst_harness_push_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-push-event" since="1.6"/>
     <keyword type="function" name="gst_harness_pull_event ()" link="gstreamer-libs-GstHarness.html#gst-harness-pull-event" since="1.6"/>
@@ -821,6 +850,26 @@
     <keyword type="constant" name="GST_LFO_WAVEFORM_SAW" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-SAW:CAPS"/>
     <keyword type="constant" name="GST_LFO_WAVEFORM_REVERSE_SAW" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-REVERSE-SAW:CAPS"/>
     <keyword type="constant" name="GST_LFO_WAVEFORM_TRIANGLE" link="GstLFOControlSource.html#GST-LFO-WAVEFORM-TRIANGLE:CAPS"/>
+    <keyword type="member" name="GstAggregatorClass.flush" link="GstAggregator.html#GstAggregatorClass.flush"/>
+    <keyword type="member" name="GstAggregatorClass.clip" link="GstAggregator.html#GstAggregatorClass.clip"/>
+    <keyword type="member" name="GstAggregatorClass.finish-buffer" link="GstAggregator.html#GstAggregatorClass.finish-buffer"/>
+    <keyword type="member" name="GstAggregatorClass.sink-event" link="GstAggregator.html#GstAggregatorClass.sink-event"/>
+    <keyword type="member" name="GstAggregatorClass.sink-query" link="GstAggregator.html#GstAggregatorClass.sink-query"/>
+    <keyword type="member" name="GstAggregatorClass.src-event" link="GstAggregator.html#GstAggregatorClass.src-event"/>
+    <keyword type="member" name="GstAggregatorClass.src-query" link="GstAggregator.html#GstAggregatorClass.src-query"/>
+    <keyword type="member" name="GstAggregatorClass.src-activate" link="GstAggregator.html#GstAggregatorClass.src-activate"/>
+    <keyword type="member" name="GstAggregatorClass.aggregate" link="GstAggregator.html#GstAggregatorClass.aggregate"/>
+    <keyword type="member" name="GstAggregatorClass.stop" link="GstAggregator.html#GstAggregatorClass.stop"/>
+    <keyword type="member" name="GstAggregatorClass.start" link="GstAggregator.html#GstAggregatorClass.start"/>
+    <keyword type="member" name="GstAggregatorClass.get-next-time" link="GstAggregator.html#GstAggregatorClass.get-next-time"/>
+    <keyword type="member" name="GstAggregatorClass.create-new-pad" link="GstAggregator.html#GstAggregatorClass.create-new-pad"/>
+    <keyword type="member" name="GstAggregatorClass.update-src-caps" link="GstAggregator.html#GstAggregatorClass.update-src-caps"/>
+    <keyword type="member" name="GstAggregatorClass.fixate-src-caps" link="GstAggregator.html#GstAggregatorClass.fixate-src-caps"/>
+    <keyword type="member" name="GstAggregatorClass.negotiated-src-caps" link="GstAggregator.html#GstAggregatorClass.negotiated-src-caps"/>
+    <keyword type="member" name="GstAggregatorClass.decide-allocation" link="GstAggregator.html#GstAggregatorClass.decide-allocation"/>
+    <keyword type="member" name="GstAggregatorClass.propose-allocation" link="GstAggregator.html#GstAggregatorClass.propose-allocation"/>
+    <keyword type="member" name="GstAggregatorPadClass.flush" link="GstAggregatorPad.html#GstAggregatorPadClass.flush"/>
+    <keyword type="member" name="GstAggregatorPadClass.skip-buffer" link="GstAggregatorPad.html#GstAggregatorPadClass.skip-buffer"/>
     <keyword type="member" name="GstBaseParse-struct.element" link="GstBaseParse.html#GstBaseParse-struct.element"/>
     <keyword type="member" name="GstBaseParseClass.start" link="GstBaseParse.html#GstBaseParseClass.start"/>
     <keyword type="member" name="GstBaseParseClass.stop" link="GstBaseParse.html#GstBaseParseClass.stop"/>

@@ -210,7 +210,7 @@ gst_stream_finalize (GObject * object)
  * Create a new #GstStream for the given @stream_id, @caps, @type
  * and @flags
  *
- * Returns: The new #GstStream
+ * Returns: (transfer full): The new #GstStream
  *
  * Since: 1.10
  */
@@ -218,8 +218,15 @@ GstStream *
 gst_stream_new (const gchar * stream_id, GstCaps * caps, GstStreamType type,
     GstStreamFlags flags)
 {
-  return g_object_new (GST_TYPE_STREAM, "stream-id", stream_id, "caps", caps,
+  GstStream *stream;
+
+  stream = g_object_new (GST_TYPE_STREAM, "stream-id", stream_id, "caps", caps,
       "stream-type", type, "stream-flags", flags, NULL);
+
+  /* Clear floating flag */
+  gst_object_ref_sink (stream);
+
+  return stream;
 }
 
 static void
@@ -518,7 +525,7 @@ gst_stream_get_property (GObject * object, guint prop_id,
  *
  * Get a descriptive string for a given #GstStreamType
  *
- * Returns: A string describing the stream type
+ * Returns: (nullable): A string describing the stream type
  *
  * Since: 1.10
  */

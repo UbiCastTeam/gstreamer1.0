@@ -106,6 +106,12 @@
 #define WIN32_LEAN_AND_MEAN     /* prevents from including too many things */
 #include <windows.h>            /* GetStdHandle, windows console */
 #endif
+#if defined (__APPLE__)
+#include "TargetConditionals.h"
+#if !TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR && !TARGET_OS_EMBEDDED
+#include <libproc.h>            /* proc_pidpath, PROC_PIDPATHINFO_MAXSIZE */
+#endif
+#endif
 
 #include "gst-i18n-lib.h"
 #include <locale.h>             /* for LC_ALL */
@@ -132,6 +138,8 @@ GList *_priv_gst_plugin_paths = NULL;   /* for delayed processing in init_post *
 extern gboolean _priv_gst_disable_registry;
 extern gboolean _priv_gst_disable_registry_update;
 #endif
+
+gchar *_gst_executable_path = NULL;
 
 #ifndef GST_DISABLE_GST_DEBUG
 const gchar *priv_gst_dump_dot_dir;
@@ -229,7 +237,7 @@ DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
  * threading system as one of the very first things in your program
  * (see the example at the beginning of this section).
  *
- * Returns: (transfer full): a pointer to GStreamer's option group.
+ * Returns: (transfer full) (nullable): a pointer to GStreamer's option group.
  */
 
 GOptionGroup *
@@ -309,6 +317,73 @@ gst_init_get_option_group (void)
 #else
   return NULL;
 #endif
+}
+
+#if defined(__linux__)
+static void
+find_executable_path (void)
+{
+  GError *error = NULL;
+
+  if (_gst_executable_path)
+    return;
+
+  _gst_executable_path = g_file_read_link ("/proc/self/exe", &error);
+  if (error)
+    g_error_free (error);
+}
+#elif defined(G_OS_WIN32)
+static void
+find_executable_path (void)
+{
+  char buffer[MAX_PATH];
+
+  if (!GetModuleFileName (NULL, buffer, MAX_PATH))
+    return;
+
+  _gst_executable_path = g_strdup (buffer);
+}
+#elif defined(__APPLE__) && !TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR && !TARGET_OS_EMBEDDED
+static void
+find_executable_path (void)
+{
+  int ret;
+  pid_t pid;
+  char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
+
+  pid = getpid ();
+  ret = proc_pidpath (pid, pathbuf, sizeof (pathbuf));
+  if (ret > 0)
+    _gst_executable_path = g_strdup (pathbuf);
+}
+#else
+static void
+find_executable_path (void)
+{
+  GST_FIXME ("Couldn't look up executable path, add support for this platform");
+}
+#endif
+
+/**
+ * gst_get_main_executable_path:
+ *
+ * This helper is mostly helpful for plugins that need to
+ * inspect the folder of the main executable to determine
+ * their set of features.
+ *
+ * When a plugin is initialized from the gst-plugin-scanner
+ * external process, the returned path will be the same as from the
+ * parent process.
+ *
+ * Returns: (transfer none) (nullable): The path of the executable that
+ *   initialized GStreamer, or %NULL if it could not be determined.
+ *
+ * Since: 1.14
+ */
+const gchar *
+gst_get_main_executable_path (void)
+{
+  return _gst_executable_path;
 }
 
 /**
@@ -417,7 +492,8 @@ gst_is_initialized (void)
   return gst_initialized;
 }
 
-#ifndef GST_DISABLE_REGISTRY
+#ifndef GST_DISABLE_OPTION_PARSING
+#  ifndef GST_DISABLE_REGISTRY
 static void
 add_path_func (gpointer data, gpointer user_data)
 {
@@ -425,6 +501,7 @@ add_path_func (gpointer data, gpointer user_data)
   _priv_gst_plugin_paths =
       g_list_append (_priv_gst_plugin_paths, g_strdup (data));
 }
+#  endif
 #endif
 
 #ifndef GST_DISABLE_OPTION_PARSING
@@ -473,6 +550,8 @@ init_pre (GOptionContext * context, GOptionGroup * group, gpointer data,
     GST_DEBUG ("already initialized");
     return TRUE;
   }
+
+  find_executable_path ();
 
   _priv_gst_start_time = gst_util_get_timestamp ();
 
@@ -687,6 +766,7 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   g_type_class_ref (gst_stream_flags_get_type ());
   g_type_class_ref (gst_stream_type_get_type ());
   g_type_class_ref (gst_stack_trace_flags_get_type ());
+  g_type_class_ref (gst_promise_result_get_type ());
 
   _priv_gst_event_initialize ();
   _priv_gst_buffer_initialize ();
@@ -736,7 +816,8 @@ init_post (GOptionContext * context, GOptionGroup * group, gpointer data,
   return TRUE;
 }
 
-#ifndef GST_DISABLE_GST_DEBUG
+#ifndef GST_DISABLE_OPTION_PARSING
+#  ifndef GST_DISABLE_GST_DEBUG
 static gboolean
 select_all (GstPlugin * plugin, gpointer user_data)
 {
@@ -858,7 +939,8 @@ gst_debug_help (void)
   g_slist_free (list);
   g_print ("\n");
 }
-#endif
+#  endif /* GST_DISABLE_OPTION_PARSING */
+#endif /* GST_DISABLE_GST_DEBUG */
 
 #ifndef GST_DISABLE_OPTION_PARSING
 static gboolean
@@ -995,6 +1077,9 @@ gst_deinit (void)
   GstBinClass *bin_class;
   GstClock *clock;
 
+  if (!gst_initialized)
+    return;
+
   GST_INFO ("deinitializing GStreamer");
 
   if (gst_deinitialized) {
@@ -1002,7 +1087,7 @@ gst_deinit (void)
     return;
   }
   g_thread_pool_set_max_unused_threads (0);
-  bin_class = GST_BIN_CLASS (g_type_class_peek (gst_bin_get_type ()));
+  bin_class = (GstBinClass *) g_type_class_peek (gst_bin_get_type ());
   if (bin_class && bin_class->pool != NULL) {
     g_thread_pool_free (bin_class->pool, FALSE, TRUE);
     bin_class->pool = NULL;
@@ -1018,6 +1103,11 @@ gst_deinit (void)
   g_list_free (_priv_gst_plugin_paths);
   _priv_gst_plugin_paths = NULL;
 #endif
+
+  if (_gst_executable_path) {
+    g_free (_gst_executable_path);
+    _gst_executable_path = NULL;
+  }
 
   clock = gst_system_clock_obtain ();
   gst_object_unref (clock);
@@ -1135,6 +1225,7 @@ gst_deinit (void)
   g_type_class_unref (g_type_class_peek (gst_stream_flags_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_debug_color_mode_get_type ()));
   g_type_class_unref (g_type_class_peek (gst_stack_trace_flags_get_type ()));
+  g_type_class_unref (g_type_class_peek (gst_promise_result_get_type ()));
 
   gst_deinitialized = TRUE;
   GST_INFO ("deinitialized GStreamer");

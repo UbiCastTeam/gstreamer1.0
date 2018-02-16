@@ -171,6 +171,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 am_libgstbase_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstbase_@GST_API_VERSION@_la-gstadapter.lo \
+	libgstbase_@GST_API_VERSION@_la-gstaggregator.lo \
 	libgstbase_@GST_API_VERSION@_la-gstbaseparse.lo \
 	libgstbase_@GST_API_VERSION@_la-gstbasesink.lo \
 	libgstbase_@GST_API_VERSION@_la-gstbasesrc.lo \
@@ -309,6 +310,7 @@ EGREP = @EGREP@
 ENABLE_SUBUNIT = @ENABLE_SUBUNIT@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 FLEX_PATH = @FLEX_PATH@
@@ -363,7 +365,6 @@ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
 GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
@@ -546,6 +547,7 @@ libgstbase_@GST_API_VERSION@_la_DEPENDENCIES = \
 
 libgstbase_@GST_API_VERSION@_la_SOURCES = \
 	gstadapter.c		\
+	gstaggregator.c		\
 	gstbaseparse.c		\
 	gstbasesink.c		\
 	gstbasesrc.c		\
@@ -569,6 +571,7 @@ libgstbase_@GST_API_VERSION@includedir = \
 libgstbase_@GST_API_VERSION@include_HEADERS = \
 	base.h			\
 	gstadapter.h		\
+	gstaggregator.h		\
 	gstbaseparse.h		\
 	gstbasesink.h		\
 	gstbasesrc.h		\
@@ -680,6 +683,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstadapter.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstaggregator.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstbaseparse.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstbasesink.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstbasesrc.Plo@am__quote@
@@ -724,6 +728,13 @@ libgstbase_@GST_API_VERSION@_la-gstadapter.lo: gstadapter.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstadapter.c' object='libgstbase_@GST_API_VERSION@_la-gstadapter.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstbase_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstbase_@GST_API_VERSION@_la-gstadapter.lo `test -f 'gstadapter.c' || echo '$(srcdir)/'`gstadapter.c
+
+libgstbase_@GST_API_VERSION@_la-gstaggregator.lo: gstaggregator.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstbase_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstbase_@GST_API_VERSION@_la-gstaggregator.lo -MD -MP -MF $(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstaggregator.Tpo -c -o libgstbase_@GST_API_VERSION@_la-gstaggregator.lo `test -f 'gstaggregator.c' || echo '$(srcdir)/'`gstaggregator.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstaggregator.Tpo $(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstaggregator.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstaggregator.c' object='libgstbase_@GST_API_VERSION@_la-gstaggregator.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstbase_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstbase_@GST_API_VERSION@_la-gstaggregator.lo `test -f 'gstaggregator.c' || echo '$(srcdir)/'`gstaggregator.c
 
 libgstbase_@GST_API_VERSION@_la-gstbaseparse.lo: gstbaseparse.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstbase_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstbase_@GST_API_VERSION@_la-gstbaseparse.lo -MD -MP -MF $(DEPDIR)/libgstbase_@GST_API_VERSION@_la-gstbaseparse.Tpo -c -o libgstbase_@GST_API_VERSION@_la-gstbaseparse.lo `test -f 'gstbaseparse.c' || echo '$(srcdir)/'`gstbaseparse.c
@@ -1111,7 +1122,7 @@ gcov: $(libgstbase_@GST_API_VERSION@_la_SOURCES:=.gcov)
 
 @HAVE_INTROSPECTION_TRUE@GstBase-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstbase-@GST_API_VERSION@.la
 @HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-@HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+@HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes \
 @HAVE_INTROSPECTION_TRUE@		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 @HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace GstBase \
 @HAVE_INTROSPECTION_TRUE@		--nsversion=@GST_API_VERSION@ \

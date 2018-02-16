@@ -48,6 +48,7 @@ gst_sources = [
   'gstquery.c',
   'gstregistry.c',
   'gstregistrychunks.c',
+  'gstpromise.c',
   'gstsample.c',
   'gstsegment.c',
   'gststreamcollection.c',
@@ -122,6 +123,7 @@ gst_headers = [
   'gstpreset.h',
   'gstprotection.h',
   'gstquery.h',
+  'gstpromise.h',
   'gstsample.h',
   'gstsegment.h',
   'gststreamcollection.h',
@@ -148,20 +150,51 @@ gst_headers = [
 ]
 install_headers(gst_headers, subdir : 'gstreamer-1.0/gst')
 
-if not get_option('disable_registry')
+disable_registry = get_option('disable_registry')
+if not disable_registry
   gst_registry = ['gstregistrybinary.c']
 else
   gst_registry = []
 endif
 
+# Make copy so configure_file consumes the copy and we can
+# still add to the original cdata later.
+gst_cdata = cdata
+
+if disable_gst_debug
+  gst_cdata.set('GST_DISABLE_GST_DEBUG_DEFINE', '#define GST_DISABLE_GST_DEBUG 1')
+else
+  gst_cdata.set('GST_DISABLE_GST_DEBUG_DEFINE', '#undef GST_DISABLE_GST_DEBUG')
+endif
+
+if disable_registry
+  gst_cdata.set('GST_DISABLE_REGISTRY_DEFINE', '#define GST_DISABLE_REGISTRY 1')
+else
+  gst_cdata.set('GST_DISABLE_REGISTRY_DEFINE', '#undef GST_DISABLE_REGISTRY')
+endif
+
+# FIXME: add --disable-parse option? (but autotools doesn't seem to set this
+# define properly at all either even though it does expose the option)
+gst_cdata.set('GST_DISABLE_PARSE_DEFINE', '#undef GST_DISABLE_PARSE')
+
+# FIXME: add --disable-plugin option?
+gst_cdata.set('GST_DISABLE_PLUGIN_DEFINE', '#undef GST_DISABLE_PLUGIN')
+
 configure_file(input : 'gstconfig.h.in',
   output : 'gstconfig.h',
   install_dir : 'include/gstreamer-1.0/gst',
-  configuration : cdata)
+  configuration : gst_cdata)
+
+version_cdata = configuration_data()
+version_cdata.set('GST_VERSION_MAJOR', gst_version_major)
+version_cdata.set('GST_VERSION_MINOR', gst_version_minor)
+version_cdata.set('GST_VERSION_MICRO', gst_version_micro)
+version_cdata.set('GST_VERSION_NANO', gst_version_nano)
+
 gst_version_h = configure_file(input : 'gstversion.h.in',
   output : 'gstversion.h',
   install_dir : 'include/gstreamer-1.0/gst',
-  configuration : cdata)
+  configuration : version_cdata)
 
 gst_enums = gnome.mkenums('gstenumtypes',
   sources : gst_headers,
@@ -183,6 +216,11 @@ libgst_c_args = gst_c_args + [
   '-DG_LOG_DOMAIN=g_log_domain_gstreamer',
   '-DGST_DISABLE_DEPRECATED',
 ]
+
+disable_tracer_hooks = get_option('disable_tracer_hooks')
+if disable_tracer_hooks
+  libgst_c_args += ['-DGST_DISABLE_GST_TRACER_HOOKS']
+endif
 
 # Make it possible to build both static and shared versions
 # at the same time. By default use shared for unit tests etc.
@@ -217,7 +255,6 @@ if libtype != 'static'
     install : true,
     dependencies : [gobject_dep, gmodule_dep, glib_dep, mathlib, dl_dep] + backtrace_deps
                      + platform_deps,
-    vs_module_defs: vs_module_defs_dir + 'libgstreamer.def',
   )
   libgst = libgst_shared
   if build_gir

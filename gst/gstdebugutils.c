@@ -58,7 +58,7 @@ extern const gchar *priv_gst_dump_dot_dir;      /* NULL *//* set from gst.c */
 
 #define PARAM_MAX_LENGTH 80
 
-const gchar spaces[] = {
+static const gchar spaces[] = {
   "                                "    /* 32 */
       "                                "        /* 64 */
       "                                "        /* 96 */
@@ -822,7 +822,7 @@ gst_debug_bin_to_dot_data (GstBin * bin, GstDebugGraphDetails details)
 /*
  * gst_debug_bin_to_dot_file:
  * @bin: the top-level pipeline that should be analyzed
- * @file_name: output base filename (e.g. "myplayer")
+ * @file_name: (type filename): output base filename (e.g. "myplayer")
  *
  * To aid debugging applications one can use this method to write out the whole
  * network of gstreamer elements that form the pipeline into an dot file.
@@ -872,7 +872,7 @@ gst_debug_bin_to_dot_file (GstBin * bin, GstDebugGraphDetails details,
 /*
  * gst_debug_bin_to_dot_file_with_ts:
  * @bin: the top-level pipeline that should be analyzed
- * @file_name: output base filename (e.g. "myplayer")
+ * @file_name: (type filename): output base filename (e.g. "myplayer")
  *
  * This works like gst_debug_bin_to_dot_file(), but adds the current timestamp
  * to the filename, so that it can be used to take multiple snapshots.

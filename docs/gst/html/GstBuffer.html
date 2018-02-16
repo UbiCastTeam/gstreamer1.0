@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstBin.html" title="GstBin">
 <link rel="next" href="GstBufferList.html" title="GstBufferList">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -518,6 +518,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-get-n-meta" title="gst_buffer_get_n_meta ()">gst_buffer_get_n_meta</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="returnvalue">GstMeta</span></a> *
 </td>
 <td class="function_name">
@@ -576,6 +584,22 @@
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstBuffer.html#gst-buffer-get-parent-buffer-meta" title="gst_buffer_get_parent_buffer_meta()">gst_buffer_get_parent_buffer_meta</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="returnvalue">GstReferenceTimestampMeta</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-add-reference-timestamp-meta" title="gst_buffer_add_reference_timestamp_meta ()">gst_buffer_add_reference_timestamp_meta</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="returnvalue">GstReferenceTimestampMeta</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstBuffer.html#gst-buffer-get-reference-timestamp-meta" title="gst_buffer_get_reference_timestamp_meta ()">gst_buffer_get_reference_timestamp_meta</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -648,6 +672,10 @@
 <tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta">GstParentBufferMeta</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta">GstReferenceTimestampMeta</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -937,7 +965,7 @@ presentation time (pts)</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1669,7 +1697,7 @@ together to make room for the new block.</p>
 <a name="gst-buffer-get-max-memory.returns"></a><h4>Returns</h4>
 <p> the maximum amount of memory blocks that a buffer can hold.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1710,7 +1738,7 @@ any call that modifies the memory in <em class="parameter"><code>buffer</code></
 <a name="gst-buffer-peek-memory.returns"></a><h4>Returns</h4>
 <p>the <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> at <em class="parameter"><code>idx</code></em>
 . </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1884,7 +1912,7 @@ be merged into one large <a class="link" href="GstMemory.html" title="GstMemory"
 <p>a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> that contains the merged data of <em class="parameter"><code>length</code></em>
 blocks starting at <em class="parameter"><code>idx</code></em>
 . Use <a class="link" href="GstMemory.html#gst-memory-unref" title="gst_memory_unref ()"><code class="function">gst_memory_unref()</code></a> after usage. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2192,7 +2220,7 @@ gst_buffer_get_memory (<em class="parameter"><code><a class="link" href="GstBuff
 <p>a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> that contains the data of the
 memory block at <em class="parameter"><code>idx</code></em>
 . Use <a class="link" href="GstMemory.html#gst-memory-unref" title="gst_memory_unref ()"><code class="function">gst_memory_unref()</code></a> after usage. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2222,7 +2250,7 @@ into one large <a class="link" href="GstMemory.html" title="GstMemory"><span cla
 <a name="gst-buffer-get-all-memory.returns"></a><h4>Returns</h4>
 <p>a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> that contains the merged memory.
 Use <a class="link" href="GstMemory.html#gst-memory-unref" title="gst_memory_unref ()"><code class="function">gst_memory_unref()</code></a> after usage. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2310,7 +2338,7 @@ gst_buffer_is_all_memory_writable (<em class="parameter"><code><a class="link" h
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if all memory blocks in <em class="parameter"><code>buffer</code></em>
 are writable</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2360,7 +2388,7 @@ gst_buffer_is_memory_range_writable (<em class="parameter"><code><a class="link"
 <a name="gst-buffer-is-memory-range-writable.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory range is writable</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2667,7 +2695,7 @@ newly-allocated memory. <em class="parameter"><code>dest</code></em>
 <tr>
 <td class="parameter_name"><p>dest</p></td>
 <td class="parameter_description"><p>A pointer where
-the destination array will be written. </p></td>
+the destination array will be written. Might be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the size is 0. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=dest_size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -2679,7 +2707,7 @@ can be written. </p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.0.10">1.0.10</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.0.10">1.0.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2972,7 +3000,7 @@ copy of the data the source buffer contains.</p>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3233,6 +3261,42 @@ on
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-buffer-get-n-meta"></a><h3>gst_buffer_get_n_meta ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_buffer_get_n_meta (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> api_type</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-buffer-get-n-meta.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>api_type</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of an API</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-get-n-meta.returns"></a><h4>Returns</h4>
+<p> number of metas of type <em class="parameter"><code>api_type</code></em>
+on <em class="parameter"><code>buffer</code></em>
+.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-buffer-add-meta"></a><h3>gst_buffer_add_meta ()</h3>
 <pre class="programlisting"><a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="returnvalue">GstMeta</span></a> *
 gst_buffer_add_meta (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
@@ -3275,7 +3339,7 @@ gst_buffer_add_meta (<em class="parameter"><code><a class="link" href="GstBuffer
 <p>the metadata for the api in <em class="parameter"><code>info</code></em>
 on <em class="parameter"><code>buffer</code></em>
 . </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3409,7 +3473,7 @@ type <em class="parameter"><code>meta_api_type</code></em>
 or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there are no more items. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3544,9 +3608,9 @@ gst_buffer_add_parent_buffer_meta (<em class="parameter"><code><a class="link" h
 <div class="refsect3">
 <a name="gst-buffer-add-parent-buffer-meta.returns"></a><h4>Returns</h4>
 <p>The <a class="link" href="GstBuffer.html#GstParentBufferMeta" title="struct GstParentBufferMeta"><span class="type">GstParentBufferMeta</span></a> that was added to the buffer. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3569,6 +3633,106 @@ buffer</p>
 </tr></tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-add-reference-timestamp-meta"></a><h3>gst_buffer_add_reference_timestamp_meta ()</h3>
+<pre class="programlisting"><a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="returnvalue">GstReferenceTimestampMeta</span></a> *
+gst_buffer_add_reference_timestamp_meta
+                               (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *reference</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> duration</code></em>);</pre>
+<p>Add a <a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> to <em class="parameter"><code>buffer</code></em>
+ that holds a <em class="parameter"><code>timestamp</code></em>
+ and
+optionally <em class="parameter"><code>duration</code></em>
+ based on a specific timestamp <em class="parameter"><code>reference</code></em>
+. See the
+documentation of <a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> for details.</p>
+<div class="refsect3">
+<a name="gst-buffer-add-reference-timestamp-meta.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>reference</p></td>
+<td class="parameter_description"><p>identifier for the timestamp reference. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timestamp</p></td>
+<td class="parameter_description"><p>timestamp</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>duration</p></td>
+<td class="parameter_description"><p>duration, or <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><code class="literal">GST_CLOCK_TIME_NONE</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-add-reference-timestamp-meta.returns"></a><h4>Returns</h4>
+<p>The <a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> that was added to the buffer. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-buffer-get-reference-timestamp-meta"></a><h3>gst_buffer_get_reference_timestamp_meta ()</h3>
+<pre class="programlisting"><a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="returnvalue">GstReferenceTimestampMeta</span></a> *
+gst_buffer_get_reference_timestamp_meta
+                               (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *reference</code></em>);</pre>
+<p>Find the first <a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> on <em class="parameter"><code>buffer</code></em>
+ that conforms to
+<em class="parameter"><code>reference</code></em>
+. Conformance is tested by checking if the meta's reference is a
+subset of <em class="parameter"><code>reference</code></em>
+.</p>
+<p>Buffers can contain multiple <a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> metadata items.</p>
+<div class="refsect3">
+<a name="gst-buffer-get-reference-timestamp-meta.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>reference</p></td>
+<td class="parameter_description"><p>a reference <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-get-reference-timestamp-meta.returns"></a><h4>Returns</h4>
+<p>the <a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when there
+is no such metadata on <em class="parameter"><code>buffer</code></em>
+. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3595,7 +3759,7 @@ gst_buffer_get_flags (<em class="parameter"><code><a class="link" href="GstBuffe
 <a name="gst-buffer-get-flags.returns"></a><h4>Returns</h4>
 <p> the flags set on this buffer.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3631,7 +3795,7 @@ gst_buffer_set_flags (<em class="parameter"><code><a class="link" href="GstBuffe
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>flags</code></em>
 were successfully set on buffer.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3667,7 +3831,7 @@ gst_buffer_unset_flags (<em class="parameter"><code><a class="link" href="GstBuf
 <p> true if <em class="parameter"><code>flags</code></em>
 is successfully cleared from buffer.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3774,7 +3938,7 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-LIVE:CAPS"></a>GST_BUFFER_FLAG_LIVE</p></td>
 <td class="enum_member_description">
 <p>the buffer is live data and should be discarded in
-                              the PAUSED state.</p>
+                                the PAUSED state.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3782,9 +3946,9 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-DECODE-ONLY:CAPS"></a>GST_BUFFER_FLAG_DECODE_ONLY</p></td>
 <td class="enum_member_description">
 <p>the buffer contains data that should be dropped
-                              because it will be clipped against the segment
-                              boundaries or because it does not contain data
-                              that should be shown to the user.</p>
+                                because it will be clipped against the segment
+                                boundaries or because it does not contain data
+                                that should be shown to the user.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3792,8 +3956,8 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-DISCONT:CAPS"></a>GST_BUFFER_FLAG_DISCONT</p></td>
 <td class="enum_member_description">
 <p>the buffer marks a data discontinuity in the stream.
-                              This typically occurs after a seek or a dropped buffer
-                              from a live or network source.</p>
+                                This typically occurs after a seek or a dropped buffer
+                                from a live or network source.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3801,7 +3965,7 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-RESYNC:CAPS"></a>GST_BUFFER_FLAG_RESYNC</p></td>
 <td class="enum_member_description">
 <p>the buffer timestamps might have a discontinuity
-                              and this buffer is a good point to resynchronize.</p>
+                                and this buffer is a good point to resynchronize.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3816,8 +3980,8 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-MARKER:CAPS"></a>GST_BUFFER_FLAG_MARKER</p></td>
 <td class="enum_member_description">
 <p>the buffer contains a media specific marker. for
-                              video this is typically the end of a frame boundary, for audio
-                              this is usually the start of a talkspurt.</p>
+                                video this is typically the end of a frame boundary, for audio
+                                this is usually the start of a talkspurt.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3825,7 +3989,7 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-HEADER:CAPS"></a>GST_BUFFER_FLAG_HEADER</p></td>
 <td class="enum_member_description">
 <p>the buffer contains header information that is
-                              needed to decode the following data.</p>
+                                needed to decode the following data.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3833,9 +3997,9 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-GAP:CAPS"></a>GST_BUFFER_FLAG_GAP</p></td>
 <td class="enum_member_description">
 <p>the buffer has been created to fill a gap in the
-                              stream and contains media neutral data (elements can
-                              switch to optimized code path that ignores the buffer
-                              content).</p>
+                                stream and contains media neutral data (elements can
+                                switch to optimized code path that ignores the buffer
+                                content).</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3843,7 +4007,7 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-DROPPABLE:CAPS"></a>GST_BUFFER_FLAG_DROPPABLE</p></td>
 <td class="enum_member_description">
 <p>the buffer can be dropped without breaking the
-                              stream, for example to reduce bandwidth.</p>
+                                stream, for example to reduce bandwidth.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3858,7 +4022,7 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-TAG-MEMORY:CAPS"></a>GST_BUFFER_FLAG_TAG_MEMORY</p></td>
 <td class="enum_member_description">
 <p>this flag is set when memory of the buffer
-                              is added/removed</p>
+                                is added/removed</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3872,10 +4036,21 @@ format as <em class="parameter"><code>offset</code></em>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-NON-DROPPABLE:CAPS"></a>GST_BUFFER_FLAG_NON_DROPPABLE</p></td>
+<td class="enum_member_description">
+<p>This buffer is important and should not be dropped.
+                                This can be used to mark important buffers, e.g. to flag
+                                RTP packets carrying keyframes or codec setup data for RTP
+                                Forward Error Correction purposes, or to prevent still video
+                                frames from being dropped by elements due to QoS. (Since 1.14)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-BUFFER-FLAG-LAST:CAPS"></a>GST_BUFFER_FLAG_LAST</p></td>
 <td class="enum_member_description">
 <p>additional media specific flags can be added starting from
-                              this flag.</p>
+                                this flag.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -4018,7 +4193,61 @@ for re-use.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstReferenceTimestampMeta"></a><h3>struct GstReferenceTimestampMeta</h3>
+<pre class="programlisting">struct GstReferenceTimestampMeta {
+  GstMeta parent;
+
+  GstCaps *reference;
+  GstClockTime timestamp, duration;
+};
+</pre>
+<p><a class="link" href="GstBuffer.html#GstReferenceTimestampMeta" title="struct GstReferenceTimestampMeta"><span class="type">GstReferenceTimestampMeta</span></a> can be used to attach alternative timestamps and
+possibly durations to a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>. These are generally not according to
+the pipeline clock and could be e.g. the NTP timestamp when the media was
+captured.</p>
+<p>The reference is stored as a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> in <em class="parameter"><code>reference</code></em>
+. Examples of valid
+references would be "timestamp/x-drivername-stream" for timestamps that are locally
+generated by some driver named "drivername" when generating the stream,
+e.g. based on a frame counter, or "timestamp/x-ntp, host=pool.ntp.org,
+port=123" for timestamps based on a specific NTP server.</p>
+<div class="refsect3">
+<a name="GstReferenceTimestampMeta.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> <em class="structfield"><code><a name="GstReferenceTimestampMeta.parent"></a>parent</code></em>;</p></td>
+<td class="struct_member_description"><p>the parent <a class="link" href="gstreamer-GstMeta.html#GstMeta" title="struct GstMeta"><span class="type">GstMeta</span></a> structure</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstReferenceTimestampMeta.reference"></a>reference</code></em>;</p></td>
+<td class="struct_member_description"><p>identifier for the timestamp reference.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> <em class="structfield"><code><a name="GstReferenceTimestampMeta.timestamp"></a>timestamp</code></em>;</p></td>
+<td class="struct_member_description"><p>timestamp</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstClock.html#GstClockTime" title="GstClockTime"><span class="type">GstClockTime</span></a> <em class="structfield"><code><a name="GstReferenceTimestampMeta.duration"></a>duration</code></em>;</p></td>
+<td class="struct_member_description"><p>duration, or <a class="link" href="GstClock.html#GST-CLOCK-TIME-NONE:CAPS" title="GST_CLOCK_TIME_NONE"><code class="literal">GST_CLOCK_TIME_NONE</code></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -4027,6 +4256,6 @@ for re-use.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

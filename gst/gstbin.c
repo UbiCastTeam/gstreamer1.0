@@ -496,6 +496,7 @@ gst_bin_init (GstBin * bin)
 
   /* Set up a bus for listening to child elements */
   bus = g_object_new (GST_TYPE_BUS, "enable-async", FALSE, NULL);
+  gst_object_ref_sink (bus);
   bin->child_bus = bus;
   GST_DEBUG_OBJECT (bin, "using bus %" GST_PTR_FORMAT " to listen to children",
       bus);
@@ -1367,6 +1368,8 @@ adding_itself:
     GST_OBJECT_LOCK (bin);
     g_warning ("Cannot add bin '%s' to itself", GST_ELEMENT_NAME (bin));
     GST_OBJECT_UNLOCK (bin);
+    gst_object_ref_sink (element);
+    gst_object_unref (element);
     return FALSE;
   }
 duplicate_name:
@@ -1375,6 +1378,8 @@ duplicate_name:
         elem_name, GST_ELEMENT_NAME (bin));
     GST_OBJECT_UNLOCK (bin);
     g_free (elem_name);
+    gst_object_ref_sink (element);
+    gst_object_unref (element);
     return FALSE;
   }
 had_parent:
@@ -1488,7 +1493,7 @@ gst_bin_deep_element_removed_func (GstBin * bin, GstBin * sub_bin,
 /**
  * gst_bin_add:
  * @bin: a #GstBin
- * @element: (transfer full): the #GstElement to add
+ * @element: (transfer floating): the #GstElement to add
  *
  * Adds the given element to the bin.  Sets the element's parent, and thus
  * takes ownership of the element. An element can only be added to one bin.
@@ -1537,6 +1542,8 @@ no_function:
   {
     g_warning ("adding elements to bin '%s' is not supported",
         GST_ELEMENT_NAME (bin));
+    gst_object_ref_sink (element);
+    gst_object_unref (element);
     return FALSE;
   }
 }
@@ -4542,7 +4549,8 @@ compare_interface (const GValue * velement, GValue * interface)
  *
  * MT safe.  Caller owns returned reference.
  *
- * Returns: (transfer full): A #GstElement inside the bin implementing the interface
+ * Returns: (transfer full) (nullable): A #GstElement inside the bin
+ * implementing the interface
  */
 GstElement *
 gst_bin_get_by_interface (GstBin * bin, GType iface)

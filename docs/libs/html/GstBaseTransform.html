@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseSink.html" title="GstBaseSink">
 <link rel="next" href="GstPushSrc.html" title="GstPushSrc">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -250,9 +250,9 @@ same format on sink and source.</p></li>
 <li class="listitem"><p>Pull mode if the sub-class transform can operate on arbitrary data</p></li>
 </ul></div>
 <div class="refsect2">
-<a name="id-1.2.4.6.8.5"></a><h3>Use Cases</h3>
+<a name="id-1.2.4.8.8.5"></a><h3>Use Cases</h3>
 <div class="refsect3">
-<a name="id-1.2.4.6.8.5.2"></a><h4>Passthrough mode</h4>
+<a name="id-1.2.4.8.8.5.2"></a><h4>Passthrough mode</h4>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Element has no interest in modifying the buffer. It may want to inspect it,
 in which case the element should have a transform_ip function. If there
@@ -274,7 +274,7 @@ only inspect data (such as level)</p></li>
 </ul></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.6.8.5.3"></a><h4>Modifications in-place - input buffer and output buffer are the same thing.</h4>
+<a name="id-1.2.4.8.8.5.3"></a><h4>Modifications in-place - input buffer and output buffer are the same thing.</h4>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>The element must implement a transform_ip function.</p></li>
 <li class="listitem"><p>Output buffer size must &lt;= input buffer size</p></li>
@@ -297,7 +297,7 @@ immediately.</p></li>
 </ul></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.6.8.5.4"></a><h4>Modifications only to the caps/metadata of a buffer</h4>
+<a name="id-1.2.4.8.8.5.4"></a><h4>Modifications only to the caps/metadata of a buffer</h4>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>The element does not require writable data, but non-writable buffers
 should be subbuffered so that the meta-information can be replaced.</p></li>
@@ -316,7 +316,7 @@ datarate.</p></li>
 </ul></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.6.8.5.5"></a><h4>Normal mode</h4>
+<a name="id-1.2.4.8.8.5.5"></a><h4>Normal mode</h4>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>always_in_place flag is not set, or there is no transform_ip function</p></li>
 <li class="listitem"><p>Element will receive an input buffer and output buffer to operate on.</p></li>
@@ -329,7 +329,7 @@ scaling/conversions</p></li></ul></div>
 </ul></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.4.6.8.5.6"></a><h4>Special output buffer allocations</h4>
+<a name="id-1.2.4.8.8.5.6"></a><h4>Special output buffer allocations</h4>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>Elements which need to do special allocation of their output buffers
 beyond allocating output buffers via the negotiated allocator or
@@ -343,7 +343,7 @@ buffer pool should implement the prepare_output_buffer method.</p></li>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.4.6.8.6"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
+<a name="id-1.2.4.8.8.6"></a><h3>Sub-class settable flags on GstBaseTransform</h3>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
 <p>passthrough</p>
@@ -467,7 +467,7 @@ capsfilter.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.0.1">1.0.1</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.0.1">1.0.1</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -834,7 +834,7 @@ downstream</p></td>
 <a name="gst-base-transform-update-src-caps.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the caps could be send downstream <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -920,12 +920,19 @@ downstream</p></td>
   gboolean      (*propose_allocation) (GstBaseTransform *trans, GstQuery *decide_query,
                                        GstQuery *query);
 
-  /* transform size */
+  /**
+   * GstBaseTransformClass::transform_size:
+   * @othersize: (out):
+   */
   gboolean      (*transform_size) (GstBaseTransform *trans,
                                    GstPadDirection direction,
                                    GstCaps *caps, gsize size,
                                    GstCaps *othercaps, gsize *othersize);
 
+  /**
+   * GstBaseTransformClass::get_unit_size:
+   * @size: (out):
+   */
   gboolean      (*get_unit_size)  (GstBaseTransform *trans, GstCaps *caps,
                                    gsize *size);
 
@@ -937,6 +944,10 @@ downstream</p></td>
   gboolean      (*sink_event)   (GstBaseTransform *trans, GstEvent *event);
   gboolean      (*src_event)    (GstBaseTransform *trans, GstEvent *event);
 
+  /**
+   * GstBaseTransformClass::prepare_output_buffer:
+   * @outbuf: (out):
+   */
   GstFlowReturn (*prepare_output_buffer) (GstBaseTransform * trans,
                                           GstBuffer *input, GstBuffer **outbuf);
 
@@ -954,6 +965,11 @@ downstream</p></td>
   GstFlowReturn (*transform_ip) (GstBaseTransform *trans, GstBuffer *buf);
 
   GstFlowReturn (*submit_input_buffer) (GstBaseTransform *trans, gboolean is_discont, GstBuffer *input);
+
+  /**
+   * GstBaseTransformClass::generate_output:
+   * @outbuf: (out):
+   */
   GstFlowReturn (*generate_output) (GstBaseTransform *trans, GstBuffer **outbuf);
 };
 </pre>
@@ -1166,7 +1182,7 @@ QoS if needed, and places the input buffer into the <em class="parameter"><code>
 member variable. If the buffer is dropped due to QoS, it returns
 GST_BASE_TRANSFORM_FLOW_DROPPED. If this input buffer is not
 contiguous with any previous input buffer, then <em class="parameter"><code>is_discont</code></em>
-is set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>. (Since 1.6)</p></td>
+is set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. (Since 1.6)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -1229,6 +1245,6 @@ indicate that no output buffer was generated.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

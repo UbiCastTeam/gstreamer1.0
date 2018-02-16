@@ -96,6 +96,7 @@ libgstreamer_@GST_API_VERSION@_la_SOURCES = \
 	gstquery.c		\
 	gstregistry.c		\
 	gstregistrychunks.c	\
+	gstpromise.c	\
 	gstsample.c		\
 	gstsegment.c		\
 	gststreamcollection.c	\
@@ -209,6 +210,7 @@ gst_headers =			\
 	gstpreset.h             \
 	gstprotection.h         \
 	gstquery.h		\
+	gstpromise.h   \
 	gstsample.h		\
 	gstsegment.h		\
 	gststreamcollection.h	\
@@ -252,9 +254,9 @@ noinst_HEADERS = 		\
 
 gstenumtypes.h: $(gst_headers)
 	$(AM_V_GEN)$(GLIB_MKENUMS) \
-	--fhead "#ifndef __GST_ENUM_TYPES_H__\n#define __GST_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+	--fhead "#ifndef __GST_ENUM_TYPES_H__\n#define __GST_ENUM_TYPES_H__\n\n#include <glib-object.h>\n#include <gst/gstconfig.h>\n\nG_BEGIN_DECLS\n" \
 	--fprod "\n/* enumerations from \"@filename@\" */\n" \
-	--vhead "GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
+	--vhead "GST_EXPORT GType @enum_name@_get_type (void);\n#define GST_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"         \
 	--ftail "G_END_DECLS\n\n#endif /* __GST_ENUM_TYPES_H__ */" \
 	$^ > gstenumtypes.h
 
@@ -282,7 +284,7 @@ gir_sources=$(patsubst %,$(srcdir)/%, $(libgstreamer_@GST_API_VERSION@_la_SOURCE
 gir_sources+=$(patsubst %,$(builddir)/%, $(built_source_make))
 
 Gst-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstreamer-@GST_API_VERSION@.la
-	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no GI_SCANNER_DISABLE_CACHE=yes \
+	$(AM_V_GEN)GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes GI_SCANNER_DISABLE_CACHE=yes \
 		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 		$(INTROSPECTION_SCANNER) -v --namespace Gst \
 		--nsversion=@GST_API_VERSION@ \

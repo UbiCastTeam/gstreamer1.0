@@ -18,6 +18,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/check/gstcheck.h>
 
@@ -130,6 +133,7 @@ GST_START_TEST (test_set_default)
   /* set a new default clock to a different instance which should replace the
    * static clock with this one, and unref the static clock */
   clock = g_object_new (GST_TYPE_SYSTEM_CLOCK, "name", "TestClock", NULL);
+  gst_object_ref_sink (clock);
   gst_system_clock_set_default (clock);
   g_assert_cmpint (GST_OBJECT_REFCOUNT (static_clock), ==, 1);
   g_object_unref (static_clock);
@@ -680,7 +684,9 @@ GST_START_TEST (test_async_full)
   /* create master and slave */
   master =
       g_object_new (GST_TYPE_SYSTEM_CLOCK, "name", "TestClockMaster", NULL);
+  gst_object_ref_sink (master);
   slave = g_object_new (GST_TYPE_SYSTEM_CLOCK, "name", "TestClockMaster", NULL);
+  gst_object_ref_sink (slave);
   GST_OBJECT_FLAG_SET (slave, GST_CLOCK_FLAG_CAN_SET_MASTER);
   g_object_set (slave, "timeout", 50 * GST_MSECOND, NULL);
 
@@ -821,10 +827,13 @@ unschedule_thread_func (gpointer data)
 
 GST_START_TEST (test_stress_cleanup_unschedule)
 {
-  WaitUnscheduleData data[50];
-  gint i;
+  WaitUnscheduleData *data;
+  gint i, num;
 
-  for (i = 0; i < G_N_ELEMENTS (data); i++) {
+  num = g_get_num_processors () * 6;
+  data = g_newa (WaitUnscheduleData, num);
+
+  for (i = 0; i < num; i++) {
     WaitUnscheduleData *d = &data[i];
 
     /* Don't unschedule waits with positive offsets in order to trigger
@@ -848,7 +857,7 @@ GST_START_TEST (test_stress_cleanup_unschedule)
   g_usleep (G_USEC_PER_SEC);
 
   /* Stop and free test data */
-  for (i = 0; i < G_N_ELEMENTS (data); i++) {
+  for (i = 0; i < num; i++) {
     WaitUnscheduleData *d = &data[i];
     d->running = FALSE;
     g_thread_join (d->thread_wait);
@@ -862,10 +871,13 @@ GST_END_TEST;
 
 GST_START_TEST (test_stress_reschedule)
 {
-  WaitUnscheduleData data[50];
-  gint i;
+  WaitUnscheduleData *data;
+  gint i, num;
 
-  for (i = 0; i < G_N_ELEMENTS (data); i++) {
+  num = g_get_num_processors () * 6;
+  data = g_newa (WaitUnscheduleData, num);
+
+  for (i = 0; i < num; i++) {
     WaitUnscheduleData *d = &data[i];
 
     /* Try to unschedule all waits */
@@ -887,7 +899,7 @@ GST_START_TEST (test_stress_reschedule)
   g_usleep (G_USEC_PER_SEC);
 
   /* Stop and free test data */
-  for (i = 0; i < G_N_ELEMENTS (data); i++) {
+  for (i = 0; i < num; i++) {
     WaitUnscheduleData *d = &data[i];
     d->running = FALSE;
     g_thread_join (d->thread_wait);

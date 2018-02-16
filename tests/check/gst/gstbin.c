@@ -19,6 +19,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/check/gstcheck.h>
 #include <gst/base/gstbasesrc.h>
@@ -278,6 +281,7 @@ GST_START_TEST (test_message_state_changed)
   ASSERT_OBJECT_REFCOUNT (bin, "bin", 1);
 
   bus = g_object_new (gst_bus_get_type (), NULL);
+  gst_object_ref_sink (bus);
   gst_element_set_bus (GST_ELEMENT_CAST (bin), bus);
 
   /* change state, spawning a message, causing an incref on the bin */
@@ -321,6 +325,7 @@ GST_START_TEST (test_message_state_changed_child)
   ASSERT_OBJECT_REFCOUNT (bin, "bin", 1);
 
   bus = g_object_new (gst_bus_get_type (), NULL);
+  gst_object_ref_sink (bus);
   gst_element_set_bus (GST_ELEMENT_CAST (bin), bus);
 
   src = gst_element_factory_make ("fakesrc", NULL);
@@ -542,6 +547,7 @@ GST_START_TEST (test_watch_for_state_change)
   fail_unless (bin != NULL, "Could not create bin");
 
   bus = g_object_new (gst_bus_get_type (), NULL);
+  gst_object_ref_sink (bus);
   gst_element_set_bus (GST_ELEMENT_CAST (bin), bus);
 
   src = gst_element_factory_make ("fakesrc", NULL);
@@ -606,6 +612,7 @@ GST_START_TEST (test_state_change_error_message)
   fail_unless (bin != NULL, "Could not create bin");
 
   bus = g_object_new (gst_bus_get_type (), NULL);
+  gst_object_ref_sink (bus);
   gst_element_set_bus (GST_ELEMENT_CAST (bin), bus);
 
   src = gst_element_factory_make ("fakesrc", NULL);

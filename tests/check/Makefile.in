@@ -96,12 +96,13 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	gst/gstmemory$(EXEEXT) gst/gstbus$(EXEEXT) \
 	gst/gstcaps$(EXEEXT) gst/gstcapsfeatures$(EXEEXT) \
 	$(am__EXEEXT_2) gst/gstdatetime$(EXEEXT) \
-	gst/gstdevice$(EXEEXT) gst/gstinfo$(EXEEXT) \
-	gst/gstiterator$(EXEEXT) gst/gstmessage$(EXEEXT) \
-	gst/gstminiobject$(EXEEXT) gst/gstobject$(EXEEXT) \
-	gst/gstpad$(EXEEXT) gst/gstparamspecs$(EXEEXT) \
-	gst/gstpipeline$(EXEEXT) gst/gstpoll$(EXEEXT) \
-	gst/gstprotection$(EXEEXT) $(am__EXEEXT_3) \
+	gst/gstdeinit$(EXEEXT) gst/gstdevice$(EXEEXT) \
+	gst/gstinfo$(EXEEXT) gst/gstiterator$(EXEEXT) \
+	gst/gstmessage$(EXEEXT) gst/gstminiobject$(EXEEXT) \
+	gst/gstobject$(EXEEXT) gst/gstpad$(EXEEXT) \
+	gst/gstparamspecs$(EXEEXT) gst/gstpipeline$(EXEEXT) \
+	gst/gstpoll$(EXEEXT) gst/gstprotection$(EXEEXT) \
+	$(am__EXEEXT_3) gst/gstpromise$(EXEEXT) \
 	gst/gstsegment$(EXEEXT) gst/gstsystemclock$(EXEEXT) \
 	gst/gstclock$(EXEEXT) gst/gststream$(EXEEXT) \
 	gst/gststructure$(EXEEXT) gst/gsttag$(EXEEXT) \
@@ -109,9 +110,9 @@ check_PROGRAMS = $(am__EXEEXT_1) gst/gstatomicqueue$(EXEEXT) \
 	gst/gsttask$(EXEEXT) gst/gsttoc$(EXEEXT) \
 	gst/gsttocsetter$(EXEEXT) gst/gstvalue$(EXEEXT) \
 	generic/states$(EXEEXT) $(am__EXEEXT_4) $(am__EXEEXT_5) \
-	$(am__EXEEXT_6) libs/adapter$(EXEEXT) libs/bitreader$(EXEEXT) \
-	libs/bytereader$(EXEEXT) libs/bytewriter$(EXEEXT) \
-	libs/bitreader-noinline$(EXEEXT) \
+	$(am__EXEEXT_6) libs/adapter$(EXEEXT) libs/aggregator$(EXEEXT) \
+	libs/bitreader$(EXEEXT) libs/bytereader$(EXEEXT) \
+	libs/bytewriter$(EXEEXT) libs/bitreader-noinline$(EXEEXT) \
 	libs/bytereader-noinline$(EXEEXT) \
 	libs/bytewriter-noinline$(EXEEXT) libs/flowcombiner$(EXEEXT) \
 	libs/sparsefile$(EXEEXT) libs/collectpads$(EXEEXT) \
@@ -444,6 +445,12 @@ gst_gstdatetime_LDADD = $(LDADD)
 gst_gstdatetime_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
+gst_gstdeinit_SOURCES = gst/gstdeinit.c
+gst_gstdeinit_OBJECTS = gst/gstdeinit.$(OBJEXT)
+gst_gstdeinit_LDADD = $(LDADD)
+gst_gstdeinit_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 gst_gstdevice_SOURCES = gst/gstdevice.c
 gst_gstdevice_OBJECTS = gst/gstdevice.$(OBJEXT)
 gst_gstdevice_LDADD = $(LDADD)
@@ -560,6 +567,12 @@ am__DEPENDENCIES_2 = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION
 gst_gstprintf_DEPENDENCIES =  \
 	$(top_builddir)/gst/printf/libgstprintf.la \
 	$(am__DEPENDENCIES_2)
+gst_gstpromise_SOURCES = gst/gstpromise.c
+gst_gstpromise_OBJECTS = gst/gstpromise.$(OBJEXT)
+gst_gstpromise_LDADD = $(LDADD)
+gst_gstpromise_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
 gst_gstprotection_SOURCES = gst/gstprotection.c
 gst_gstprotection_OBJECTS = gst/gstprotection.$(OBJEXT)
 gst_gstprotection_LDADD = $(LDADD)
@@ -663,6 +676,12 @@ libs_adapter_SOURCES = libs/adapter.c
 libs_adapter_OBJECTS = libs/adapter.$(OBJEXT)
 libs_adapter_LDADD = $(LDADD)
 libs_adapter_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
+	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1)
+libs_aggregator_SOURCES = libs/aggregator.c
+libs_aggregator_OBJECTS = libs/aggregator.$(OBJEXT)
+libs_aggregator_LDADD = $(LDADD)
+libs_aggregator_DEPENDENCIES = $(top_builddir)/libs/gst/check/libgstcheck-@GST_API_VERSION@.la \
 	$(top_builddir)/libs/gst/base/libgstbase-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1)
 libs_baseparse_SOURCES = libs/baseparse.c
@@ -912,21 +931,22 @@ SOURCES = elements/capsfilter.c elements/concat.c \
 	gst/gstbufferlist.c gst/gstbufferpool.c gst/gstbus.c \
 	gst/gstcaps.c gst/gstcapsfeatures.c gst/gstchildproxy.c \
 	gst/gstclock.c gst/gstcontext.c gst/gstcontroller.c \
-	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstdevice.c \
-	gst/gstelement.c gst/gstelementfactory.c gst/gstevent.c \
-	gst/gstghostpad.c gst/gstinfo.c gst/gstiterator.c \
-	gst/gstmemory.c gst/gstmessage.c gst/gstmeta.c \
-	gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
+	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstdeinit.c \
+	gst/gstdevice.c gst/gstelement.c gst/gstelementfactory.c \
+	gst/gstevent.c gst/gstghostpad.c gst/gstinfo.c \
+	gst/gstiterator.c gst/gstmemory.c gst/gstmessage.c \
+	gst/gstmeta.c gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
 	gst/gstparamspecs.c gst/gstpipeline.c gst/gstplugin.c \
-	gst/gstpoll.c gst/gstpreset.c gst/gstprintf.c \
+	gst/gstpoll.c gst/gstpreset.c gst/gstprintf.c gst/gstpromise.c \
 	gst/gstprotection.c gst/gstquery.c gst/gstregistry.c \
 	gst/gstsegment.c gst/gststream.c gst/gststructure.c \
 	gst/gstsystemclock.c gst/gsttag.c gst/gsttagsetter.c \
 	gst/gsttask.c gst/gsttoc.c gst/gsttocsetter.c \
 	gst/gsttracerrecord.c gst/gsturi.c gst/gstutils.c \
-	gst/gstvalue.c libs/adapter.c libs/baseparse.c libs/basesink.c \
-	libs/basesrc.c libs/bitreader.c libs/bitreader-noinline.c \
-	libs/bytereader.c libs/bytereader-noinline.c libs/bytewriter.c \
+	gst/gstvalue.c libs/adapter.c libs/aggregator.c \
+	libs/baseparse.c libs/basesink.c libs/basesrc.c \
+	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
+	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c libs/gstharness.c \
 	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
@@ -948,21 +968,22 @@ DIST_SOURCES = elements/capsfilter.c elements/concat.c \
 	gst/gstbufferlist.c gst/gstbufferpool.c gst/gstbus.c \
 	gst/gstcaps.c gst/gstcapsfeatures.c gst/gstchildproxy.c \
 	gst/gstclock.c gst/gstcontext.c gst/gstcontroller.c \
-	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstdevice.c \
-	gst/gstelement.c gst/gstelementfactory.c gst/gstevent.c \
-	gst/gstghostpad.c gst/gstinfo.c gst/gstiterator.c \
-	gst/gstmemory.c gst/gstmessage.c gst/gstmeta.c \
-	gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
+	$(gst_gstcpp_SOURCES) gst/gstdatetime.c gst/gstdeinit.c \
+	gst/gstdevice.c gst/gstelement.c gst/gstelementfactory.c \
+	gst/gstevent.c gst/gstghostpad.c gst/gstinfo.c \
+	gst/gstiterator.c gst/gstmemory.c gst/gstmessage.c \
+	gst/gstmeta.c gst/gstminiobject.c gst/gstobject.c gst/gstpad.c \
 	gst/gstparamspecs.c gst/gstpipeline.c gst/gstplugin.c \
-	gst/gstpoll.c gst/gstpreset.c gst/gstprintf.c \
+	gst/gstpoll.c gst/gstpreset.c gst/gstprintf.c gst/gstpromise.c \
 	gst/gstprotection.c gst/gstquery.c gst/gstregistry.c \
 	gst/gstsegment.c gst/gststream.c gst/gststructure.c \
 	gst/gstsystemclock.c gst/gsttag.c gst/gsttagsetter.c \
 	gst/gsttask.c gst/gsttoc.c gst/gsttocsetter.c \
 	gst/gsttracerrecord.c gst/gsturi.c gst/gstutils.c \
-	gst/gstvalue.c libs/adapter.c libs/baseparse.c libs/basesink.c \
-	libs/basesrc.c libs/bitreader.c libs/bitreader-noinline.c \
-	libs/bytereader.c libs/bytereader-noinline.c libs/bytewriter.c \
+	gst/gstvalue.c libs/adapter.c libs/aggregator.c \
+	libs/baseparse.c libs/basesink.c libs/basesrc.c \
+	libs/bitreader.c libs/bitreader-noinline.c libs/bytereader.c \
+	libs/bytereader-noinline.c libs/bytewriter.c \
 	libs/bytewriter-noinline.c libs/collectpads.c \
 	libs/controller.c libs/flowcombiner.c libs/gstharness.c \
 	$(libs_gstlibscpp_SOURCES) libs/gstnetclientclock.c \
@@ -1255,6 +1276,7 @@ EGREP = @EGREP@
 ENABLE_SUBUNIT = @ENABLE_SUBUNIT@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 FLEX_PATH = @FLEX_PATH@
@@ -1309,7 +1331,6 @@ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
 GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
 GST_PKG_CONFIG_PATH = @GST_PKG_CONFIG_PATH@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PLUGIN_SCANNER_INSTALLED = @GST_PLUGIN_SCANNER_INSTALLED@
 GST_PTP_HELPER_INSTALLED = @GST_PTP_HELPER_INSTALLED@
 GST_REGISTRY_DOC_TYPES = @GST_REGISTRY_DOC_TYPES@
@@ -1577,11 +1598,13 @@ noinst_HEADERS = \
 	gst/capslist.h \
 	gst/struct_arm.h \
 	gst/struct_i386.h \
+	gst/struct_i386w.h \
 	gst/struct_hppa.h \
 	gst/struct_ppc32.h \
 	gst/struct_ppc64.h \
 	gst/struct_sparc.h \
 	gst/struct_x86_64.h \
+	gst/struct_x86_64w.h \
 	libs/struct_arm.h \
 	libs/struct_i386.h \
 	libs/struct_hppa.h \
@@ -1944,6 +1967,12 @@ gst/gstdatetime.$(OBJEXT): gst/$(am__dirstamp) \
 gst/gstdatetime$(EXEEXT): $(gst_gstdatetime_OBJECTS) $(gst_gstdatetime_DEPENDENCIES) $(EXTRA_gst_gstdatetime_DEPENDENCIES) gst/$(am__dirstamp)
 	@rm -f gst/gstdatetime$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(gst_gstdatetime_OBJECTS) $(gst_gstdatetime_LDADD) $(LIBS)
+gst/gstdeinit.$(OBJEXT): gst/$(am__dirstamp) \
+	gst/$(DEPDIR)/$(am__dirstamp)
+
+gst/gstdeinit$(EXEEXT): $(gst_gstdeinit_OBJECTS) $(gst_gstdeinit_DEPENDENCIES) $(EXTRA_gst_gstdeinit_DEPENDENCIES) gst/$(am__dirstamp)
+	@rm -f gst/gstdeinit$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(gst_gstdeinit_OBJECTS) $(gst_gstdeinit_LDADD) $(LIBS)
 gst/gstdevice.$(OBJEXT): gst/$(am__dirstamp) \
 	gst/$(DEPDIR)/$(am__dirstamp)
 
@@ -2058,6 +2087,12 @@ gst/gstprintf.$(OBJEXT): gst/$(am__dirstamp) \
 gst/gstprintf$(EXEEXT): $(gst_gstprintf_OBJECTS) $(gst_gstprintf_DEPENDENCIES) $(EXTRA_gst_gstprintf_DEPENDENCIES) gst/$(am__dirstamp)
 	@rm -f gst/gstprintf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(gst_gstprintf_OBJECTS) $(gst_gstprintf_LDADD) $(LIBS)
+gst/gstpromise.$(OBJEXT): gst/$(am__dirstamp) \
+	gst/$(DEPDIR)/$(am__dirstamp)
+
+gst/gstpromise$(EXEEXT): $(gst_gstpromise_OBJECTS) $(gst_gstpromise_DEPENDENCIES) $(EXTRA_gst_gstpromise_DEPENDENCIES) gst/$(am__dirstamp)
+	@rm -f gst/gstpromise$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(gst_gstpromise_OBJECTS) $(gst_gstpromise_LDADD) $(LIBS)
 gst/gstprotection.$(OBJEXT): gst/$(am__dirstamp) \
 	gst/$(DEPDIR)/$(am__dirstamp)
 
@@ -2166,6 +2201,12 @@ libs/adapter.$(OBJEXT): libs/$(am__dirstamp) \
 libs/adapter$(EXEEXT): $(libs_adapter_OBJECTS) $(libs_adapter_DEPENDENCIES) $(EXTRA_libs_adapter_DEPENDENCIES) libs/$(am__dirstamp)
 	@rm -f libs/adapter$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(libs_adapter_OBJECTS) $(libs_adapter_LDADD) $(LIBS)
+libs/aggregator.$(OBJEXT): libs/$(am__dirstamp) \
+	libs/$(DEPDIR)/$(am__dirstamp)
+
+libs/aggregator$(EXEEXT): $(libs_aggregator_OBJECTS) $(libs_aggregator_DEPENDENCIES) $(EXTRA_libs_aggregator_DEPENDENCIES) libs/$(am__dirstamp)
+	@rm -f libs/aggregator$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(libs_aggregator_OBJECTS) $(libs_aggregator_LDADD) $(LIBS)
 libs/baseparse.$(OBJEXT): libs/$(am__dirstamp) \
 	libs/$(DEPDIR)/$(am__dirstamp)
 
@@ -2413,6 +2454,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstcontroller.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstcpp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstdatetime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstdeinit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstdevice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstelement.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstelementfactory.Po@am__quote@
@@ -2432,6 +2474,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstpoll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstpreset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstprintf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstpromise.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstprotection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstquery.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstregistry.Po@am__quote@
@@ -2448,6 +2491,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstutils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@gst/$(DEPDIR)/gstvalue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/adapter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/aggregator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/baseparse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/basesink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/basesrc.Po@am__quote@
@@ -2866,6 +2910,13 @@ gst/gstdatetime.log: gst/gstdatetime$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+gst/gstdeinit.log: gst/gstdeinit$(EXEEXT)
+	@p='gst/gstdeinit$(EXEEXT)'; \
+	b='gst/gstdeinit'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 gst/gstdevice.log: gst/gstdevice$(EXEEXT)
 	@p='gst/gstdevice$(EXEEXT)'; \
 	b='gst/gstdevice'; \
@@ -2946,6 +2997,13 @@ gst/gstprotection.log: gst/gstprotection$(EXEEXT)
 gst/gstprintf.log: gst/gstprintf$(EXEEXT)
 	@p='gst/gstprintf$(EXEEXT)'; \
 	b='gst/gstprintf'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+gst/gstpromise.log: gst/gstpromise$(EXEEXT)
+	@p='gst/gstpromise$(EXEEXT)'; \
+	b='gst/gstpromise'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -3384,6 +3442,13 @@ libs/adapter.log: libs/adapter$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+libs/aggregator.log: libs/aggregator$(EXEEXT)
+	@p='libs/aggregator$(EXEEXT)'; \
+	b='libs/aggregator'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 libs/bitreader.log: libs/bitreader$(EXEEXT)
 	@p='libs/bitreader$(EXEEXT)'; \
 	b='libs/bitreader'; \
@@ -3769,7 +3834,11 @@ LOOPS ?= 10
 	@$(AM_TESTS_ENVIRONMENT)					\
 	CK_FORK=no						\
 	$(LIBTOOL) --mode=execute				\
-	gdb $*
+	gdb $(GDB_ARGS) $*
+
+%.gdb-forever: %
+	@while $(MAKE) GDB_ARGS="-ex run -ex quit" $*.gdb ; do	\
+	  sleep 1; done
 
 %.lcov-reset:
 	$(MAKE) $*.lcov-run

@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-device-probing.html" title="GStreamer Device Discovery and Device Probing">
 <link rel="prev" href="gstreamer-GstDevice.html" title="GstDevice">
 <link rel="next" href="GstDeviceProviderFactory.html" title="GstDeviceProviderFactory">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -127,6 +127,13 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstDeviceProvider.html#gst-device-provider-get-metadata" title="gst_device_provider_get_metadata ()">gst_device_provider_get_metadata</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="function_type">
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
@@ -233,7 +240,7 @@ gst_device_provider_class_add_metadata
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -279,7 +286,7 @@ dynamically loaded plugins.)</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -315,10 +322,11 @@ gst_device_provider_class_get_metadata
 </div>
 <div class="refsect3">
 <a name="gst-device-provider-class-get-metadata.returns"></a><h4>Returns</h4>
-<p> the metadata for <em class="parameter"><code>key</code></em>
-.</p>
+<p>the metadata for <em class="parameter"><code>key</code></em>
+. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -374,7 +382,7 @@ multiple author metadata. E.g: "Joe Bloggs &lt;joe.blogs at foo.com&gt;"</p></td
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -438,7 +446,7 @@ foo.com&gt;". </p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -449,6 +457,9 @@ gst_device_provider_device_add (<em class="parameter"><code><a class="link" href
 <p>Posts a message on the provider's <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a> to inform applications that
 a new device has been added.</p>
 <p>This is for use by subclasses.</p>
+<p><em class="parameter"><code>device</code></em>
+'s reference count will be incremented, and any floating reference
+will be removed (see <a class="link" href="GstObject.html#gst-object-ref-sink" title="gst_object_ref_sink ()"><code class="function">gst_object_ref_sink()</code></a>).</p>
 <div class="refsect3">
 <a name="gst-device-provider-device-add.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -466,12 +477,12 @@ a new device has been added.</p>
 <tr>
 <td class="parameter_name"><p>device</p></td>
 <td class="parameter_description"><p>a <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a> that has been added. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -504,7 +515,7 @@ a device has been removed.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -532,7 +543,7 @@ gst_device_provider_get_bus (<em class="parameter"><code><a class="link" href="g
 <p>a <a class="link" href="GstBus.html" title="GstBus"><span class="type">GstBus</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -562,7 +573,7 @@ probe the hardware if the provider is not currently started.</p>
 <a class="link" href="gstreamer-GstDevice.html#GstDevice" title="struct GstDevice"><span class="type">GstDevice</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GstDevice]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -591,7 +602,45 @@ gst_device_provider_get_factory (<em class="parameter"><code><a class="link" hre
 creating this device provider. no refcounting is needed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-device-provider-get-metadata"></a><h3>gst_device_provider_get_metadata ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_device_provider_get_metadata (<em class="parameter"><code><a class="link" href="gstreamer-GstDeviceProvider.html#GstDeviceProvider" title="struct GstDeviceProvider"><span class="type">GstDeviceProvider</span></a> *provider</code></em>,
+                                  <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>);</pre>
+<p>Get metadata with <em class="parameter"><code>key</code></em>
+ in <em class="parameter"><code>provider</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-device-provider-get-metadata.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>provider</p></td>
+<td class="parameter_description"><p>provider to get metadata for</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>key</p></td>
+<td class="parameter_description"><p>the key to get</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-device-provider-get-metadata.returns"></a><h4>Returns</h4>
+<p> the metadata for <em class="parameter"><code>key</code></em>
+.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -642,7 +691,7 @@ a static device provider. </p></td>
 <a name="gst-device-provider-register.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the registering succeeded, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on error</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -675,7 +724,7 @@ number of times.</p>
 <a name="gst-device-provider-start.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the device providering could be started</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -700,7 +749,7 @@ called the same number of times that <a class="link" href="gstreamer-GstDevicePr
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -737,7 +786,7 @@ called the same number of times that <a class="link" href="gstreamer-GstDevicePr
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -790,7 +839,7 @@ the <code class="function">start()</code> method need to implement this method.<
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -799,6 +848,6 @@ the <code class="function">start()</code> method need to implement this method.<
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

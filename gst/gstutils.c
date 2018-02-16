@@ -86,6 +86,24 @@ gst_util_dump_mem (const guchar * mem, guint size)
   g_string_free (chars, TRUE);
 }
 
+/**
+ * gst_util_dump_buffer:
+ * @buf: a #GstBuffer whose memory to dump
+ *
+ * Dumps the buffer memory into a hex representation. Useful for debugging.
+ *
+ * Since: 1.14
+ */
+void
+gst_util_dump_buffer (GstBuffer * buf)
+{
+  GstMapInfo map;
+
+  if (gst_buffer_map (buf, &map, GST_MAP_READ)) {
+    gst_util_dump_mem (map.data, map.size);
+    gst_buffer_unmap (buf, &map);
+  }
+}
 
 /**
  * gst_util_set_value_from_string:
@@ -770,15 +788,23 @@ gst_util_uint64_scale_int_ceil (guint64 val, gint num, gint denom)
  * on a segment-done message to be the same as that of the last seek event, to
  * indicate that event and the message correspond to the same segment.
  *
+ * This function never returns %GST_SEQNUM_INVALID (which is 0).
+ *
  * Returns: A constantly incrementing 32-bit unsigned integer, which might
- * overflow back to 0 at some point. Use gst_util_seqnum_compare() to make sure
+ * overflow at some point. Use gst_util_seqnum_compare() to make sure
  * you handle wraparound correctly.
  */
 guint32
 gst_util_seqnum_next (void)
 {
-  static gint counter = 0;
-  return g_atomic_int_add (&counter, 1);
+  static gint counter = 1;
+  gint ret = g_atomic_int_add (&counter, 1);
+
+  /* Make sure we don't return 0 */
+  if (G_UNLIKELY (ret == GST_SEQNUM_INVALID))
+    ret = g_atomic_int_add (&counter, 1);
+
+  return ret;
 }
 
 /**
@@ -1257,6 +1283,46 @@ gst_element_state_change_return_get_name (GstStateChangeReturn state_ret)
   }
 }
 
+/**
+ * gst_state_change_get_name:
+ * @transition: a #GstStateChange to get the name of.
+ *
+ * Gets a string representing the given state transition.
+ *
+ * Returns: (transfer none): a string with the name of the state
+ *    result.
+ *
+ * Since: 1.14
+ */
+const gchar *
+gst_state_change_get_name (GstStateChange transition)
+{
+  switch (transition) {
+    case GST_STATE_CHANGE_NULL_TO_READY:
+      return "NULL->READY";
+    case GST_STATE_CHANGE_READY_TO_PAUSED:
+      return "READY->PAUSED";
+    case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
+      return "PAUSED->PLAYING";
+    case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
+      return "PLAYING->PAUSED";
+    case GST_STATE_CHANGE_PAUSED_TO_READY:
+      return "PAUSED->READY";
+    case GST_STATE_CHANGE_READY_TO_NULL:
+      return "READY->NULL";
+    case GST_STATE_CHANGE_NULL_TO_NULL:
+      return "NULL->NULL";
+    case GST_STATE_CHANGE_READY_TO_READY:
+      return "READY->READY";
+    case GST_STATE_CHANGE_PAUSED_TO_PAUSED:
+      return "PAUSED->PAUSED";
+    case GST_STATE_CHANGE_PLAYING_TO_PLAYING:
+      return "PLAYING->PLAYING";
+  }
+
+  return "Unknown state return";
+}
+
 
 static gboolean
 gst_element_factory_can_accept_all_caps_in_direction (GstElementFactory *
@@ -1475,7 +1541,6 @@ ghost_up (GstElement * e, GstPad * pad)
   if (!gst_element_add_pad ((GstElement *) parent, gpad)) {
     g_warning ("Pad named %s already exists in element %s\n",
         GST_OBJECT_NAME (gpad), GST_OBJECT_NAME (parent));
-    gst_object_unref ((GstObject *) gpad);
     GST_STATE_UNLOCK (parent);
     return NULL;
   }
@@ -2059,7 +2124,6 @@ gst_element_link_pads_filtered (GstElement * src, const gchar * srcpadname,
 
     if (!gst_bin_add (GST_BIN (parent), capsfilter)) {
       GST_ERROR ("Could not add capsfilter");
-      gst_object_unref (capsfilter);
       gst_object_unref (parent);
       return FALSE;
     }
@@ -2567,10 +2631,10 @@ gst_object_default_error (GstObject * source, const GError * error,
 }
 
 /**
- * gst_bin_add_many:
+ * gst_bin_add_many: (skip)
  * @bin: a #GstBin
- * @element_1: (transfer full): the #GstElement element to add to the bin
- * @...: (transfer full): additional elements to add to the bin
+ * @element_1: (transfer floating): the #GstElement element to add to the bin
+ * @...: additional elements to add to the bin
  *
  * Adds a %NULL-terminated list of elements to a bin.  This function is
  * equivalent to calling gst_bin_add() for each member of the list. The return
@@ -2596,7 +2660,7 @@ gst_bin_add_many (GstBin * bin, GstElement * element_1, ...)
 }
 
 /**
- * gst_bin_remove_many:
+ * gst_bin_remove_many: (skip)
  * @bin: a #GstBin
  * @element_1: (transfer none): the first #GstElement to remove from the bin
  * @...: (transfer none): %NULL-terminated list of elements to remove from the bin
@@ -3311,7 +3375,7 @@ gst_parse_bin_from_description (const gchar * bin_description,
  * and want them all ghosted, you will have to create the ghost pads
  * yourself).
  *
- * Returns: (transfer floating) (type Gst.Element): a newly-created
+ * Returns: (transfer floating) (type Gst.Element) (nullable): a newly-created
  *   element, which is guaranteed to be a bin unless
  *   GST_FLAG_NO_SINGLE_ELEMENT_BINS was passed, or %NULL if an error
  *   occurred.
@@ -3397,10 +3461,7 @@ gst_util_get_timestamp (void)
   clock_gettime (CLOCK_MONOTONIC, &now);
   return GST_TIMESPEC_TO_TIME (now);
 #else
-  GTimeVal now;
-
-  g_get_current_time (&now);
-  return GST_TIMEVAL_TO_TIME (now);
+  return g_get_monotonic_time () * 1000;
 #endif
 }
 
@@ -4113,14 +4174,22 @@ gst_pad_get_stream (GstPad * pad)
  * This function is used to generate a new group-id for the
  * stream-start event.
  *
+ * This function never returns %GST_GROUP_ID_INVALID (which is 0)
+ *
  * Returns: A constantly incrementing unsigned integer, which might
  * overflow back to 0 at some point.
  */
 guint
 gst_util_group_id_next (void)
 {
-  static gint counter = 0;
-  return g_atomic_int_add (&counter, 1);
+  static gint counter = 1;
+  gint ret = g_atomic_int_add (&counter, 1);
+
+  /* Make sure we don't return GST_GROUP_ID_INVALID */
+  if (G_UNLIKELY (ret == GST_GROUP_ID_INVALID))
+    ret = g_atomic_int_add (&counter, 1);
+
+  return ret;
 }
 
 /* Compute log2 of the passed 64-bit number by finding the highest set bit */
@@ -4144,7 +4213,7 @@ gst_log2 (GstClockTime in)
 }
 
 /**
- * gst_calculate_linear_regression:
+ * gst_calculate_linear_regression: (skip)
  * @xy: Pairs of (x,y) values
  * @temp: Temporary scratch space used by the function
  * @n: number of (x,y) pairs

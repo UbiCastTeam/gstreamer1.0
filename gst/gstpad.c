@@ -1039,12 +1039,15 @@ post_activate (GstPad * pad, GstPadMode new_mode)
 {
   switch (new_mode) {
     case GST_PAD_MODE_NONE:
+      GST_OBJECT_LOCK (pad);
+      pad->priv->in_activation = FALSE;
+      g_cond_broadcast (&pad->priv->activation_cond);
+      GST_OBJECT_UNLOCK (pad);
+
       /* ensures that streaming stops */
       GST_PAD_STREAM_LOCK (pad);
       GST_DEBUG_OBJECT (pad, "stopped streaming");
       GST_OBJECT_LOCK (pad);
-      pad->priv->in_activation = FALSE;
-      g_cond_broadcast (&pad->priv->activation_cond);
       remove_events (pad);
       GST_OBJECT_UNLOCK (pad);
       GST_PAD_STREAM_UNLOCK (pad);
@@ -1303,11 +1306,19 @@ gst_pad_activate_mode (GstPad * pad, GstPadMode mode, gboolean active)
 {
   GstObject *parent;
   gboolean res;
+  GstPadMode old, new;
 
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
 
   GST_OBJECT_LOCK (pad);
+
+  old = GST_PAD_MODE (pad);
+  new = active ? mode : GST_PAD_MODE_NONE;
+  if (old == new)
+    goto was_ok;
+
   ACQUIRE_PARENT (pad, parent, no_parent);
+
   GST_OBJECT_UNLOCK (pad);
 
   res = activate_mode_internal (pad, parent, mode, active);
@@ -1316,6 +1327,13 @@ gst_pad_activate_mode (GstPad * pad, GstPadMode mode, gboolean active)
 
   return res;
 
+was_ok:
+  {
+    GST_OBJECT_UNLOCK (pad);
+    GST_CAT_DEBUG_OBJECT (GST_CAT_PADS, pad, "already %s in %s mode",
+        active ? "activated" : "deactivated", gst_pad_mode_get_name (mode));
+    return TRUE;
+  }
 no_parent:
   {
     GST_WARNING_OBJECT (pad, "no parent");
@@ -2741,7 +2759,7 @@ gst_pad_get_pad_template_caps (GstPad * pad)
  * Gets the peer of @pad. This function refs the peer pad so
  * you need to unref it after use.
  *
- * Returns: (transfer full): the peer #GstPad. Unref after usage.
+ * Returns: (transfer full) (nullable): the peer #GstPad. Unref after usage.
  *
  * MT safe.
  */
@@ -5887,7 +5905,7 @@ gst_pad_set_element_private (GstPad * pad, gpointer priv)
  * Gets the private data of a pad.
  * No locking is performed in this function.
  *
- * Returns: (transfer none): a #gpointer to the private data.
+ * Returns: (transfer none) (nullable): a #gpointer to the private data.
  */
 gpointer
 gst_pad_get_element_private (GstPad * pad)
@@ -6119,6 +6137,9 @@ gst_pad_pause_task (GstPad * pad)
   if (task == NULL)
     goto no_task;
   res = gst_task_set_state (task, GST_TASK_PAUSED);
+  /* unblock activation waits if any */
+  pad->priv->in_activation = FALSE;
+  g_cond_broadcast (&pad->priv->activation_cond);
   GST_OBJECT_UNLOCK (pad);
 
   /* wait for task function to finish, this lock is recursive so it does nothing
@@ -6204,6 +6225,9 @@ gst_pad_stop_task (GstPad * pad)
     goto no_task;
   GST_PAD_TASK (pad) = NULL;
   res = gst_task_set_state (task, GST_TASK_STOPPED);
+  /* unblock activation waits if any */
+  pad->priv->in_activation = FALSE;
+  g_cond_broadcast (&pad->priv->activation_cond);
   GST_OBJECT_UNLOCK (pad);
 
   GST_PAD_STREAM_LOCK (pad);
@@ -6247,7 +6271,7 @@ join_failed:
  * gst_pad_probe_info_get_event:
  * @info: a #GstPadProbeInfo
  *
- * Returns: (transfer none): The #GstEvent from the probe
+ * Returns: (transfer none) (nullable): The #GstEvent from the probe
  */
 
 GstEvent *
@@ -6264,7 +6288,7 @@ gst_pad_probe_info_get_event (GstPadProbeInfo * info)
  * gst_pad_probe_info_get_query:
  * @info: a #GstPadProbeInfo
  *
- * Returns: (transfer none): The #GstQuery from the probe
+ * Returns: (transfer none) (nullable): The #GstQuery from the probe
  */
 
 GstQuery *
@@ -6280,7 +6304,7 @@ gst_pad_probe_info_get_query (GstPadProbeInfo * info)
  * gst_pad_probe_info_get_buffer:
  * @info: a #GstPadProbeInfo
  *
- * Returns: (transfer none): The #GstBuffer from the probe
+ * Returns: (transfer none) (nullable): The #GstBuffer from the probe
  */
 
 GstBuffer *
@@ -6295,7 +6319,7 @@ gst_pad_probe_info_get_buffer (GstPadProbeInfo * info)
  * gst_pad_probe_info_get_buffer_list:
  * @info: a #GstPadProbeInfo
  *
- * Returns: (transfer none): The #GstBufferList from the probe
+ * Returns: (transfer none) (nullable): The #GstBufferList from the probe
  */
 
 GstBufferList *

@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstBus.html" title="GstBus">
 <link rel="next" href="GstCapsFeatures.html" title="GstCapsFeatures">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -885,7 +885,7 @@ not modify <em class="parameter"><code>features</code></em>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the foreach operation should continue, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
 the foreach operation should stop with <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1268,10 +1268,11 @@ gst_static_caps_get (<em class="parameter"><code><a class="link" href="GstCaps.h
 </div>
 <div class="refsect3">
 <a name="gst-static-caps-get.returns"></a><h4>Returns</h4>
-<p>a pointer to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. Unref after usage.
-Since the core holds an additional ref to the returned caps,
-use <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a> on the returned caps to modify it. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p>a pointer to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. Unref
+after usage. Since the core holds an additional ref to the
+returned caps, use <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a> on the returned caps
+to modify it. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1454,7 +1455,7 @@ becomes the owner of <em class="parameter"><code>structure</code></em>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1521,10 +1522,10 @@ contained in <em class="parameter"><code>caps</code></em>
 </div>
 <div class="refsect3">
 <a name="gst-caps-steal-structure.returns"></a><h4>Returns</h4>
-<p>a pointer to the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> corresponding
-to <em class="parameter"><code>index</code></em>
+<p>a pointer to the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a>
+corresponding to <em class="parameter"><code>index</code></em>
 . </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -1609,7 +1610,7 @@ gst_caps_merge_structure_full (<em class="parameter"><code><a class="link" href=
 <p>the merged caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1733,12 +1734,12 @@ belongs to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="
 </div>
 <div class="refsect3">
 <a name="gst-caps-get-features.returns"></a><h4>Returns</h4>
-<p>a pointer to the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> corresponding
-to <em class="parameter"><code>index</code></em>
+<p>a pointer to the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a>
+corresponding to <em class="parameter"><code>index</code></em>
 . </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1777,7 +1778,7 @@ gst_caps_set_features (<em class="parameter"><code><a class="link" href="GstCaps
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1937,7 +1938,7 @@ Also see <a class="link" href="GstCaps.html#gst-caps-map-in-place" title="gst_ca
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the supplied function returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for each call,
 <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1981,7 +1982,7 @@ delete the structures and features. The caps must be mutable.</p>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the supplied function returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for each call,
 <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2023,7 +2024,7 @@ The caps must be mutable.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2377,7 +2378,7 @@ for more information.</p>
 is a subset of <em class="parameter"><code>caps</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2733,7 +2734,7 @@ when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span 
 <div class="refsect3">
 <a name="gst-caps-from-string.returns"></a><h4>Returns</h4>
 <p>a newly allocated <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -3125,6 +3126,6 @@ This can be used in pad templates.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

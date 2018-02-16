@@ -97,7 +97,7 @@ G_GNUC_INTERNAL  gboolean priv_gst_plugin_loading_have_whitelist (void);
 
 G_GNUC_INTERNAL  guint32  priv_gst_plugin_loading_get_whitelist_hash (void);
 
-G_GNUC_INTERNAL  gboolean priv_gst_plugin_desc_is_whitelisted (GstPluginDesc * desc,
+G_GNUC_INTERNAL  gboolean priv_gst_plugin_desc_is_whitelisted (const GstPluginDesc * desc,
                                                                const gchar   * filename);
 
 G_GNUC_INTERNAL  gboolean _priv_plugin_deps_env_vars_changed (GstPlugin * plugin);
@@ -144,6 +144,7 @@ gboolean _priv_gst_registry_remove_cache_plugins (GstRegistry *registry);
 
 G_GNUC_INTERNAL  void _priv_gst_registry_cleanup (void);
 
+GST_EXPORT
 gboolean _gst_plugin_loader_client_run (void);
 
 G_GNUC_INTERNAL  GstPlugin * _priv_gst_plugin_load_file_for_registry (const gchar *filename,
@@ -224,8 +225,13 @@ GstCapsFeatures * __gst_caps_get_features_unchecked (const GstCaps * caps, guint
 
 #ifndef GST_DISABLE_REGISTRY
 /* Secret variable to initialise gst without registry cache */
+
 GST_EXPORT gboolean _gst_disable_registry_cache;
 #endif
+
+/* Secret variable to let the plugin scanner use the same base path
+ * as the main application in order to determine dependencies */
+GST_EXPORT gchar *_gst_executable_path;
 
 /* provide inline gst_g_value_get_foo_unchecked(), used in gststructure.c */
 #define DEFINE_INLINE_G_VALUE_GET_UNCHECKED(ret_type,name_type,v_field) \
@@ -352,8 +358,6 @@ struct _GstPlugin {
 
   /*< private >*/
   GstPluginDesc	desc;
-
-  GstPluginDesc *orig_desc;
 
   gchar *	filename;
   gchar *	basename;       /* base name (non-dir part) of plugin path */

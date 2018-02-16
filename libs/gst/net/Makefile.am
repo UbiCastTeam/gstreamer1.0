@@ -18,9 +18,10 @@ libgstnet_@GST_API_VERSION@_la_SOURCES = \
     gstnettimepacket.c \
     gstnettimeprovider.c \
     gstptpclock.c \
-    gstntppacket.c
+    gstntppacket.c \
+    gstnetutils.c
 
-noinst_HEADERS = gstptp_private.h gstntppacket.h
+noinst_HEADERS = gstptp_private.h gstntppacket.h gstnetutils.h
 
 libgstnet_@GST_API_VERSION@_la_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
 libgstnet_@GST_API_VERSION@_la_LIBADD = $(GST_OBJ_LIBS) $(GIO_LIBS) \
@@ -56,7 +57,7 @@ gir_cincludes=--c-include="gst/net/net.h"
 
 GstNet-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstnet-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes \
 		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 		$(INTROSPECTION_SCANNER) -v --namespace GstNet \
 		--identifier-prefix=Gst \

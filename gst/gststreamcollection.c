@@ -184,15 +184,23 @@ gst_stream_collection_finalize (GObject * object)
  *
  * Create a new #GstStreamCollection.
  *
- * Returns: The new #GstStreamCollection.
+ * Returns: (transfer full): The new #GstStreamCollection.
  *
  * Since: 1.10
  */
 GstStreamCollection *
 gst_stream_collection_new (const gchar * upstream_id)
 {
-  return g_object_new (GST_TYPE_STREAM_COLLECTION, "upstream-id", upstream_id,
+  GstStreamCollection *collection;
+
+  collection =
+      g_object_new (GST_TYPE_STREAM_COLLECTION, "upstream-id", upstream_id,
       NULL);
+
+  /* Clear floating flag */
+  g_object_ref_sink (collection);
+
+  return collection;
 }
 
 static void
@@ -334,7 +342,7 @@ gst_stream_collection_get_size (GstStreamCollection * collection)
  *
  * The caller should not modify the returned #GstStream
  *
- * Returns: (transfer none): A #GstStream
+ * Returns: (transfer none) (nullable): A #GstStream
  *
  * Since: 1.10
  */

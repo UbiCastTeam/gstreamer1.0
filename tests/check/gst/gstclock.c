@@ -16,6 +16,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/check/gstcheck.h>
 
@@ -76,7 +79,9 @@ GST_START_TEST (test_set_master_refcount)
 
   /* create master and slave */
   master = g_object_new (TYPE_TEST_CLOCK, "name", "TestClockMaster", NULL);
+  gst_object_ref_sink (master);
   slave = g_object_new (TYPE_TEST_CLOCK, "name", "TestClockSlave", NULL);
+  gst_object_ref_sink (slave);
   GST_OBJECT_FLAG_SET (slave, GST_CLOCK_FLAG_CAN_SET_MASTER);
 
   fail_unless_equals_int (GST_OBJECT_REFCOUNT (master), 1);

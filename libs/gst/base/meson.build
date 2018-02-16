@@ -1,5 +1,6 @@
 gst_base_sources = [
   'gstadapter.c',
+  'gstaggregator.c',
   'gstbaseparse.c',
   'gstbasesink.c',
   'gstbasesrc.c',
@@ -18,6 +19,7 @@ gst_base_sources = [
 gst_base_headers = [
   'base.h',
   'gstadapter.h',
+  'gstaggregator.h',
   'gstbaseparse.h',
   'gstbasesink.h',
   'gstbasesrc.h',
@@ -55,7 +57,6 @@ if libtype != 'static'
     install : true,
     include_directories : [configinc, libsinc],
     dependencies : [gobject_dep, glib_dep, gst_dep],
-    vs_module_defs: vs_module_defs_dir + 'libgstbase.def',
   )
   gst_base = gst_base_shared
   if build_gir
@@ -83,6 +84,7 @@ gst_base_dep = declare_dependency(link_with : gst_base,
 
 install_headers('base.h',
   'gstadapter.h',
+  'gstaggregator.h',
   'gstbaseparse.h',
   'gstbasesink.h',
   'gstbasesrc.h',

@@ -8,7 +8,7 @@
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstUriHandler.html" title="GstUriHandler">
 <link rel="next" href="gstreamer-GstValue.html" title="GstValue">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -400,6 +400,14 @@
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
+<a class="link" href="gstreamer-GstUtils.html#gst-util-dump-buffer" title="gst_util_dump_buffer ()">gst_util_dump_buffer</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
 <a class="link" href="gstreamer-GstUtils.html#gst-util-dump-mem" title="gst_util_dump_mem ()">gst_util_dump_mem</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -589,10 +597,20 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstUtils.html#GST-SEQNUM-INVALID:CAPS" title="GST_SEQNUM_INVALID">GST_SEQNUM_INVALID</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstUtils.html#GST-GROUP-ID-INVALID:CAPS" title="GST_GROUP_ID_INVALID">GST_GROUP_ID_INVALID</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gstreamer-GstUtils.html#GstSearchMode" title="enum GstSearchMode">GstSearchMode</a></td>
-</tr></tbody>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -1517,7 +1535,7 @@ GST_WRITE_DOUBLE_BE (<em class="parameter"><code><a href="/usr/share/gtk-doc/htm
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1704,7 +1722,7 @@ power of two.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2031,6 +2049,29 @@ converted to a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdoub
 <p> <em class="parameter"><code>value</code></em>
 converted to a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a>.</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-util-dump-buffer"></a><h3>gst_util_dump_buffer ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_util_dump_buffer (<em class="parameter"><code><a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);</pre>
+<p>Dumps the buffer memory into a hex representation. Useful for debugging.</p>
+<div class="refsect3">
+<a name="gst-util-dump-buffer.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>buf</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a> whose memory to dump</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2732,10 +2773,11 @@ gst_util_seqnum_next (<em class="parameter"><code><span class="type">void</span>
 events and messages are "the same". For example, elements may set the seqnum
 on a segment-done message to be the same as that of the last seek event, to
 indicate that event and the message correspond to the same segment.</p>
+<p>This function never returns <a class="link" href="gstreamer-GstUtils.html#GST-SEQNUM-INVALID:CAPS" title="GST_SEQNUM_INVALID"><code class="literal">GST_SEQNUM_INVALID</code></a> (which is 0).</p>
 <div class="refsect3">
 <a name="gst-util-seqnum-next.returns"></a><h4>Returns</h4>
 <p> A constantly incrementing 32-bit unsigned integer, which might
-overflow back to 0 at some point. Use <a class="link" href="gstreamer-GstUtils.html#gst-util-seqnum-compare" title="gst_util_seqnum_compare ()"><code class="function">gst_util_seqnum_compare()</code></a> to make sure
+overflow at some point. Use <a class="link" href="gstreamer-GstUtils.html#gst-util-seqnum-compare" title="gst_util_seqnum_compare ()"><code class="function">gst_util_seqnum_compare()</code></a> to make sure
 you handle wraparound correctly.</p>
 </div>
 </div>
@@ -2789,6 +2831,7 @@ gst_util_group_id_next (<em class="parameter"><code><span class="type">void</spa
 <p>Return a constantly incrementing group id.</p>
 <p>This function is used to generate a new group-id for the
 stream-start event.</p>
+<p>This function never returns <a class="link" href="gstreamer-GstUtils.html#GST-GROUP-ID-INVALID:CAPS" title="GST_GROUP_ID_INVALID"><code class="literal">GST_GROUP_ID_INVALID</code></a> (which is 0)</p>
 <div class="refsect3">
 <a name="gst-util-group-id-next.returns"></a><h4>Returns</h4>
 <p> A constantly incrementing unsigned integer, which might
@@ -2907,7 +2950,7 @@ properties which are otherwise not an accessible type.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2946,7 +2989,7 @@ properties which are otherwise not an accessible type.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3043,6 +3086,26 @@ element or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:
 <div class="refsect1">
 <a name="gstreamer-GstUtils.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
+<a name="GST-SEQNUM-INVALID:CAPS"></a><h3>GST_SEQNUM_INVALID</h3>
+<pre class="programlisting">#define GST_SEQNUM_INVALID (0)
+</pre>
+<p>A value which is guaranteed to never be returned by
+<a class="link" href="gstreamer-GstUtils.html#gst-util-seqnum-next" title="gst_util_seqnum_next ()"><code class="function">gst_util_seqnum_next()</code></a>.</p>
+<p>Can be used as a default value in variables used to store seqnum.</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GROUP-ID-INVALID:CAPS"></a><h3>GST_GROUP_ID_INVALID</h3>
+<pre class="programlisting">#define GST_GROUP_ID_INVALID (0)
+</pre>
+<p>A value which is guaranteed to never be returned by
+<a class="link" href="gstreamer-GstUtils.html#gst-util-group-id-next" title="gst_util_group_id_next ()"><code class="function">gst_util_group_id_next()</code></a>.</p>
+<p>Can be used as a default value in variables used to store group_id.</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstSearchMode"></a><h3>enum GstSearchMode</h3>
 <p>The different search modes.</p>
 <div class="refsect3">
@@ -3082,6 +3145,6 @@ element or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

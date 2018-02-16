@@ -22,7 +22,7 @@
  * SECTION:gstharness
  * @title: GstHarness
  * @short_description: A test-harness for writing GStreamer unit tests
- * @see_also: #GstTestClock,\
+ * @see_also: #GstTestClock
  *
  * #GstHarness is meant to make writing unit test for GStreamer much easier.
  * It can be thought of as a way of treating a #GstElement as a black box,
@@ -912,16 +912,19 @@ gst_harness_add_parse (GstHarness * h, const gchar * launchline)
   GstPad *pad;
   GstIterator *iter;
   gboolean done = FALSE;
+  GError *error = NULL;
 
   g_return_if_fail (launchline != NULL);
 
   desc = g_strdup_printf ("bin.( %s )", launchline);
   bin =
-      (GstBin *) gst_parse_launch_full (desc, NULL, GST_PARSE_FLAG_NONE, NULL);
-  g_free (desc);
+      (GstBin *) gst_parse_launch_full (desc, NULL, GST_PARSE_FLAG_FATAL_ERRORS,
+      &error);
 
-  if (G_UNLIKELY (bin == NULL))
-    return;
+  if (G_UNLIKELY (error != NULL)) {
+    g_error ("Unable to create pipeline '%s': %s", desc, error->message);
+  }
+  g_free (desc);
 
   /* find pads and ghost them if necessary */
   if ((pad = gst_bin_find_unlinked_pad (bin, GST_PAD_SRC)) != NULL) {
@@ -1558,7 +1561,7 @@ gst_harness_create_buffer (GstHarness * h, gsize size)
 /**
  * gst_harness_push:
  * @h: a #GstHarness
- * @buffer: a #GstBuffer to push
+ * @buffer: (transfer full): a #GstBuffer to push
  *
  * Pushes a #GstBuffer on the #GstHarness srcpad. The standard way of
  * interacting with an harnessed element.
@@ -1588,7 +1591,7 @@ gst_harness_push (GstHarness * h, GstBuffer * buffer)
  *
  * MT safe.
  *
- * Returns: a #GstBuffer or %NULL if timed out.
+ * Returns: (transfer full): a #GstBuffer or %NULL if timed out.
  *
  * Since: 1.6
  */
@@ -1618,7 +1621,7 @@ gst_harness_pull (GstHarness * h)
  *
  * MT safe.
  *
- * Returns: a #GstBuffer or %NULL if no buffers are present in the #GAsyncQueue
+ * Returns: (transfer full): a #GstBuffer or %NULL if no buffers are present in the #GAsyncQueue
  *
  * Since: 1.6
  */
@@ -1640,7 +1643,7 @@ gst_harness_try_pull (GstHarness * h)
 /**
  * gst_harness_push_and_pull:
  * @h: a #GstHarness
- * @buffer: a #GstBuffer to push
+ * @buffer: (transfer full): a #GstBuffer to push
  *
  * Basically a gst_harness_push and a gst_harness_pull in one line. Reflects
  * the fact that you often want to do exactly this in your test: Push one buffer
@@ -1648,7 +1651,7 @@ gst_harness_try_pull (GstHarness * h)
  *
  * MT safe.
  *
- * Returns: a #GstBuffer or %NULL if timed out.
+ * Returns: (transfer full): a #GstBuffer or %NULL if timed out.
  *
  * Since: 1.6
  */
@@ -1719,6 +1722,99 @@ gst_harness_set_drop_buffers (GstHarness * h, gboolean drop_buffers)
 }
 
 /**
+ * gst_harness_take_all_data_as_buffer:
+ * @h: a #GstHarness
+ *
+ * Pulls all pending data from the harness and returns it as a single buffer.
+ *
+ * Returns: (transfer full): the data as a buffer. Unref with gst_buffer_unref()
+ *     when no longer needed.
+ *
+ * Since: 1.14
+ */
+GstBuffer *
+gst_harness_take_all_data_as_buffer (GstHarness * h)
+{
+  GstHarnessPrivate *priv;
+  GstBuffer *ret, *buf;
+
+  g_return_val_if_fail (h != NULL, NULL);
+
+  priv = h->priv;
+
+  g_async_queue_lock (priv->buffer_queue);
+
+  ret = g_async_queue_try_pop_unlocked (priv->buffer_queue);
+
+  if (ret == NULL) {
+    ret = gst_buffer_new ();
+  } else {
+    /* buffer appending isn't very efficient for larger numbers of buffers
+     * or lots of memories, but this function is not performance critical and
+     * we can still improve it if and when the need arises. For now KISS. */
+    while ((buf = g_async_queue_try_pop_unlocked (priv->buffer_queue)))
+      ret = gst_buffer_append (ret, buf);
+  }
+
+  g_async_queue_unlock (priv->buffer_queue);
+
+  return ret;
+}
+
+/**
+ * gst_harness_take_all_data: (skip)
+ * @h: a #GstHarness
+ * @size: (out): the size of the data in bytes
+ *
+ * Pulls all pending data from the harness and returns it as a single
+ * data slice.
+ *
+ * Returns: (transfer full): a pointer to the data, newly allocated. Free
+ *     with g_free() when no longer needed. Will return %NULL if there is no
+ *     data.
+ *
+ * Since: 1.14
+ */
+guint8 *
+gst_harness_take_all_data (GstHarness * h, gsize * size)
+{
+  GstBuffer *buf;
+  guint8 *data = NULL;
+
+  g_return_val_if_fail (h != NULL, NULL);
+  g_return_val_if_fail (size != NULL, NULL);
+
+  buf = gst_harness_take_all_data_as_buffer (h);
+  gst_buffer_extract_dup (buf, 0, -1, (gpointer *) & data, size);
+  gst_buffer_unref (buf);
+  return data;
+}
+
+/**
+ * gst_harness_take_all_data_as_bytes: (rename-to gst_harness_take_all_data)
+ * @h: a #GstHarness
+ *
+ * Pulls all pending data from the harness and returns it as a single #GBytes.
+ *
+ * Returns: (transfer full): a pointer to the data, newly allocated. Free
+ *     with g_free() when no longer needed.
+ *
+ * Since: 1.14
+ */
+GBytes *
+gst_harness_take_all_data_as_bytes (GstHarness * h)
+{
+  guint8 *data;
+  gsize size = 0;
+
+  g_return_val_if_fail (h != NULL, NULL);
+
+  data = gst_harness_take_all_data (h, &size);
+  return g_bytes_new_take (data, size);
+}
+
+
+/**
  * gst_harness_dump_to_file:
  * @h: a #GstHarness
  * @filename: a #gchar with a the name of a file
@@ -1733,25 +1829,16 @@ gst_harness_set_drop_buffers (GstHarness * h, gboolean drop_buffers)
 void
 gst_harness_dump_to_file (GstHarness * h, const gchar * filename)
 {
-  GstHarnessPrivate *priv = h->priv;
-  FILE *fd;
-  GstBuffer *buf;
-  fd = fopen (filename, "wb");
-  g_assert (fd);
+  GError *err = NULL;
+  gpointer data;
+  gsize size;
 
-  while ((buf = g_async_queue_try_pop (priv->buffer_queue))) {
-    GstMapInfo info;
-    if (gst_buffer_map (buf, &info, GST_MAP_READ)) {
-      fwrite (info.data, 1, info.size, fd);
-      gst_buffer_unmap (buf, &info);
-    } else {
-      GST_ERROR ("failed to map buffer %p", buf);
-    }
-    gst_buffer_unref (buf);
+  data = gst_harness_take_all_data (h, &size);
+  if (!g_file_set_contents (filename, data ? data : "", size, &err)) {
+    g_error ("GstHarness: Failed to write data to file: %s", err->message);
+    g_clear_error (&err);
   }
-
-  fflush (fd);
-  fclose (fd);
+  g_free (data);
 }
 
 /**

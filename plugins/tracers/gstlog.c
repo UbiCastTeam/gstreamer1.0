@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 /**
- * SECTION:gstlog
+ * SECTION:element-logtracer
  * @short_description: log hook event
  *
  * A tracing module that logs all data from all hooks.
@@ -30,8 +30,6 @@
 #endif
 
 #include "gstlog.h"
-
-#include <gst/printf/printf.h>
 
 GST_DEBUG_CATEGORY_STATIC (gst_log_debug);
 #define GST_CAT_DEFAULT gst_log_debug
