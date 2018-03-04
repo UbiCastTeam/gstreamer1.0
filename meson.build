@@ -1,5 +1,5 @@
 project('gstreamer', 'c',
-  version : '1.13.1',
+  version : '1.13.90',
   meson_version : '>= 0.40.1',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
@@ -45,7 +45,6 @@ if cc.get_id() == 'msvc'
 elif cc.has_argument('-Wl,-Bsymbolic-functions')
   # FIXME: Add an option for this if people ask for it
   add_project_link_arguments('-Wl,-Bsymbolic-functions', language : 'c')
-  # FIXME: Add FATAL_WARNINGS from configure.ac
 endif
 
 # Symbol visibility
@@ -82,6 +81,10 @@ cdata.set_quoted('GST_PLUGIN_SCANNER_INSTALLED', join_paths(prefix, helpers_inst
 cdata.set_quoted('GST_PTP_HELPER_INSTALLED', join_paths(prefix, helpers_install_dir, 'gst-ptp-helper'))
 cdata.set_quoted('GST_PLUGIN_SCANNER_SUBDIR', libexecdir,
   description: 'libexecdir path component, used to find plugin-scanner on relocatable builds on windows')
+
+if host_system == 'darwin'
+  cdata.set_quoted('GST_EXTRA_MODULE_SUFFIX', '.dylib')
+endif
 
 if gst_version_nano > 0
     # Have GST_ERROR message printed when running from git
@@ -334,6 +337,33 @@ disable_gst_debug = get_option('disable_gst_debug')
 if disable_gst_debug
   add_project_arguments(['-Wno-unused'], language: 'c')
 endif
+
+warning_flags = [
+  '-Wmissing-declarations',
+  '-Wmissing-prototypes',
+  '-Wredundant-decls',
+  '-Wundef',
+  '-Wwrite-strings',
+  '-Wformat',
+  '-Wformat-nonliteral',
+  '-Wformat-security',
+  '-Wold-style-definition',
+  '-Winit-self',
+  '-Wmissing-include-dirs',
+  '-Waddress',
+  '-Waggregate-return',
+  '-Wno-multichar',
+  '-Wnested-externs',
+  '-Wdeclaration-after-statement',
+  '-Wvla',
+  '-Wpointer-arith',
+]
+
+foreach extra_arg : warning_flags
+  if cc.has_argument (extra_arg)
+    add_project_arguments([extra_arg], language: 'c')
+  endif
+endforeach
 
 # Used by the gstutils test
 gmp_dep = cc.find_library('gmp', required : false)
