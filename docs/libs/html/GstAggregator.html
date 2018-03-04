@@ -175,6 +175,9 @@ implementation.</p></li>
 these into gap buffers with matching PTS and duration. It will also
 flag these buffers with GST_BUFFER_FLAG_GAP and GST_BUFFER_FLAG_DROPPABLE
 to ease their identification and subsequent processing.</p></li>
+<li class="listitem"><p>Subclasses must use (a subclass of) <a class="link" href="GstAggregatorPad.html" title="GstAggregatorPad"><span class="type">GstAggregatorPad</span></a> for both their
+sink and source pads.
+See <a href="../html/GstElement.html#gst-element-class-add-static-pad-template-with-gtype"><code class="function">gst_element_class_add_static_pad_template_with_gtype()</code></a>.</p></li>
 </ul></div>
 <p>This class used to live in gst-plugins-bad and was moved to core.</p>
 </div>

@@ -627,12 +627,17 @@ gst_ghost_pad_new_full (const gchar * name, GstPadDirection dir,
     GstPadTemplate * templ)
 {
   GstGhostPad *ret;
-
   g_return_val_if_fail (dir != GST_PAD_UNKNOWN, NULL);
 
   /* OBJECT CREATION */
   if (templ) {
-    ret = g_object_new (GST_TYPE_GHOST_PAD, "name", name,
+    GType pad_type =
+        GST_PAD_TEMPLATE_GTYPE (templ) ==
+        G_TYPE_NONE ? GST_TYPE_GHOST_PAD : GST_PAD_TEMPLATE_GTYPE (templ);
+
+    g_return_val_if_fail (g_type_is_a (pad_type, GST_TYPE_GHOST_PAD), NULL);
+
+    ret = g_object_new (pad_type, "name", name,
         "direction", dir, "template", templ, NULL);
   } else {
     ret = g_object_new (GST_TYPE_GHOST_PAD, "name", name,

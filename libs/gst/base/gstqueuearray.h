@@ -44,6 +44,12 @@ GST_EXPORT
 gpointer        gst_queue_array_peek_head (GstQueueArray * array);
 
 GST_EXPORT
+gpointer        gst_queue_array_pop_tail  (GstQueueArray * array);
+
+GST_EXPORT
+gpointer        gst_queue_array_peek_tail (GstQueueArray * array);
+
+GST_EXPORT
 void            gst_queue_array_push_tail (GstQueueArray * array,
                                            gpointer        data);
 GST_EXPORT
@@ -77,6 +83,8 @@ GST_EXPORT
 gboolean        gst_queue_array_drop_struct      (GstQueueArray * array,
                                                   guint           idx,
                                                   gpointer        p_struct);
+GST_EXPORT
+gpointer        gst_queue_array_peek_tail_struct (GstQueueArray * array);
 
 G_END_DECLS
 
