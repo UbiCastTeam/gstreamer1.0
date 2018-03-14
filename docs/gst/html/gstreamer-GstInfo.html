@@ -3388,6 +3388,30 @@ evaluated more than once.</p>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_debug_bin_to_dot_data (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
                            <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>);</pre>
+<p>To aid debugging applications one can use this method to obtain the whole
+network of gstreamer elements that form the pipeline into an dot file.
+This data can be processed with graphviz to get an image.</p>
+<div class="refsect3">
+<a name="gst-debug-bin-to-dot-data.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>the top-level pipeline that should be analyzed</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-debug-bin-to-dot-data.returns"></a><h4>Returns</h4>
+<p>a string containing the pipeline in graphviz
+dot format. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -3396,6 +3420,42 @@ gst_debug_bin_to_dot_data (<em class="parameter"><code><a class="link" href="Gst
 gst_debug_bin_to_dot_file (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
                            <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
                            <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+<p>To aid debugging applications one can use this method to write out the whole
+network of gstreamer elements that form the pipeline into an dot file.
+This file can be processed with graphviz to get an image.</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">dot <span class="gtkdoc opt">-</span>Tpng <span class="gtkdoc opt">-</span>oimage<span class="gtkdoc opt">.</span>png graph_lowlevel<span class="gtkdoc opt">.</span>dot</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="refsect3">
+<a name="gst-debug-bin-to-dot-file.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>the top-level pipeline that should be analyzed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>file_name</p></td>
+<td class="parameter_description"><p>output base filename (e.g. "myplayer"). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> filename]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -3404,6 +3464,30 @@ gst_debug_bin_to_dot_file (<em class="parameter"><code><a class="link" href="Gst
 gst_debug_bin_to_dot_file_with_ts (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
                                    <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
                                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+<p>This works like <a class="link" href="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file" title="gst_debug_bin_to_dot_file ()"><code class="function">gst_debug_bin_to_dot_file()</code></a>, but adds the current timestamp
+to the filename, so that it can be used to take multiple snapshots.</p>
+<div class="refsect3">
+<a name="gst-debug-bin-to-dot-file-with-ts.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>bin</p></td>
+<td class="parameter_description"><p>the top-level pipeline that should be analyzed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>file_name</p></td>
+<td class="parameter_description"><p>output base filename (e.g. "myplayer"). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> filename]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -4141,7 +4225,7 @@ function signature in C++ code.</p>
 <hr>
 <div class="refsect2">
 <a name="GST-CAT-DEFAULT:CAPS"></a><h3>GST_CAT_DEFAULT</h3>
-<pre class="programlisting">GST_EXPORT GstDebugCategory * GST_CAT_DEFAULT;
+<pre class="programlisting">GST_API GstDebugCategory * GST_CAT_DEFAULT;
 </pre>
 <p>Default gstreamer core debug log category. Please define your own.</p>
 </div>

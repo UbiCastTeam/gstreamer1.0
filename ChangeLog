@@ -1,7 +1,250 @@
+=== release 1.13.91 ===
+
+2018-03-13 19:08:54 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.13.91
+
+2018-03-13 19:08:54 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* docs/plugins/inspect/plugin-coretracers.xml:
+	  Update docs
+
+2018-03-13 11:54:42 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/gst/meson.build:
+	* docs/libs/meson.build:
+	  meson: docs: update api decorators to ignore
+
+2018-03-12 23:12:13 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/libs/Makefile.am:
+	  docs: fixup for new libs API export decorators
+
+2018-03-12 23:03:26 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* libs/gst/net/Makefile.am:
+	* libs/gst/net/gstnet.h:
+	* libs/gst/net/gstnetaddressmeta.h:
+	* libs/gst/net/gstnetclientclock.h:
+	* libs/gst/net/gstnetcontrolmessagemeta.h:
+	* libs/gst/net/gstnettimepacket.h:
+	* libs/gst/net/gstnettimeprovider.h:
+	* libs/gst/net/gstptpclock.h:
+	* libs/gst/net/meson.build:
+	* libs/gst/net/net-prelude.h:
+	* libs/gst/net/net.h:
+	  net: GST_EXPORT -> GST_NET_API
+	  We need different export decorators for the different libs.
+	  For now no actual change though, just rename before the release,
+	  and add prelude headers to define the new decorator to GST_EXPORT.
+
+2018-03-12 23:03:26 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* common:
+	* libs/gst/controller/Makefile.am:
+	* libs/gst/controller/controller-prelude.h:
+	* libs/gst/controller/controller.h:
+	* libs/gst/controller/controller_mkenum.py:
+	* libs/gst/controller/gstargbcontrolbinding.h:
+	* libs/gst/controller/gstdirectcontrolbinding.h:
+	* libs/gst/controller/gstinterpolationcontrolsource.h:
+	* libs/gst/controller/gstlfocontrolsource.h:
+	* libs/gst/controller/gstproxycontrolbinding.h:
+	* libs/gst/controller/gsttimedvaluecontrolsource.h:
+	* libs/gst/controller/gsttriggercontrolsource.h:
+	* libs/gst/controller/meson.build:
+	  controller: GST_EXPORT -> GST_CONTROLLER_API
+	  We need different export decorators for the different libs.
+	  For now no actual change though, just rename before the release,
+	  and add prelude headers to define the new decorator to GST_EXPORT.
+
+2018-03-12 23:03:26 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* libs/gst/check/Makefile.am:
+	* libs/gst/check/check-prelude.h:
+	* libs/gst/check/check.h:
+	* libs/gst/check/gstbufferstraw.h:
+	* libs/gst/check/gstcheck.h:
+	* libs/gst/check/gstconsistencychecker.h:
+	* libs/gst/check/gstharness.h:
+	* libs/gst/check/gsttestclock.h:
+	* libs/gst/check/meson.build:
+	  check: GST_EXPORT -> GST_CHECK_API
+	  We need different export decorators for the different libs.
+	  For now no actual change though, just rename before the release,
+	  and add prelude headers to define the new decorator to GST_EXPORT.
+
+2018-03-12 23:03:26 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* libs/gst/base/Makefile.am:
+	* libs/gst/base/base-prelude.h:
+	* libs/gst/base/base.h:
+	* libs/gst/base/gstadapter.h:
+	* libs/gst/base/gstaggregator.h:
+	* libs/gst/base/gstbaseparse.h:
+	* libs/gst/base/gstbasesink.h:
+	* libs/gst/base/gstbasesrc.h:
+	* libs/gst/base/gstbasetransform.h:
+	* libs/gst/base/gstbitreader.h:
+	* libs/gst/base/gstbytereader.h:
+	* libs/gst/base/gstbytewriter.h:
+	* libs/gst/base/gstcollectpads.h:
+	* libs/gst/base/gstdataqueue.h:
+	* libs/gst/base/gstflowcombiner.h:
+	* libs/gst/base/gstindex.h:
+	* libs/gst/base/gstpushsrc.h:
+	* libs/gst/base/gstqueuearray.h:
+	* libs/gst/base/gsttypefindhelper.h:
+	* libs/gst/base/meson.build:
+	  base: GST_EXPORT -> GST_BASE_API
+	  We need different export decorators for the different libs.
+	  For now no actual change though, just rename before the release,
+	  and add prelude headers to define the new decorator to GST_EXPORT.
+
+2018-03-12 23:03:26 +0000  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/gst/Makefile.am:
+	* gst/Makefile.am:
+	* gst/gst.h:
+	* gst/gst_private.h:
+	* gst/gstallocator.h:
+	* gst/gstatomicqueue.h:
+	* gst/gstbin.h:
+	* gst/gstbuffer.h:
+	* gst/gstbufferlist.h:
+	* gst/gstbufferpool.h:
+	* gst/gstbus.h:
+	* gst/gstcaps.h:
+	* gst/gstcapsfeatures.h:
+	* gst/gstchildproxy.h:
+	* gst/gstclock.h:
+	* gst/gstconfig.h.in:
+	* gst/gstcontext.h:
+	* gst/gstcontrolbinding.h:
+	* gst/gstcontrolsource.h:
+	* gst/gstdatetime.h:
+	* gst/gstdebugutils.h:
+	* gst/gstdevice.h:
+	* gst/gstdevicemonitor.h:
+	* gst/gstdeviceprovider.h:
+	* gst/gstdeviceproviderfactory.h:
+	* gst/gstdynamictypefactory.h:
+	* gst/gstelement.h:
+	* gst/gstelementfactory.h:
+	* gst/gstenumtypes.h.template:
+	* gst/gsterror.h:
+	* gst/gstevent.h:
+	* gst/gstformat.h:
+	* gst/gstghostpad.h:
+	* gst/gstinfo.h:
+	* gst/gstiterator.h:
+	* gst/gstmemory.h:
+	* gst/gstmessage.h:
+	* gst/gstmeta.h:
+	* gst/gstminiobject.h:
+	* gst/gstobject.h:
+	* gst/gstpad.h:
+	* gst/gstpadtemplate.h:
+	* gst/gstparamspecs.h:
+	* gst/gstparse.h:
+	* gst/gstpipeline.h:
+	* gst/gstplugin.h:
+	* gst/gstpluginfeature.h:
+	* gst/gstpoll.h:
+	* gst/gstpreset.h:
+	* gst/gstpromise.h:
+	* gst/gstprotection.h:
+	* gst/gstquery.h:
+	* gst/gstregistry.h:
+	* gst/gstsample.h:
+	* gst/gstsegment.h:
+	* gst/gststreamcollection.h:
+	* gst/gststreams.h:
+	* gst/gststructure.h:
+	* gst/gstsystemclock.h:
+	* gst/gsttaglist.h:
+	* gst/gsttagsetter.h:
+	* gst/gsttask.h:
+	* gst/gsttaskpool.h:
+	* gst/gsttoc.h:
+	* gst/gsttocsetter.h:
+	* gst/gsttracer.h:
+	* gst/gsttracerfactory.h:
+	* gst/gsttracerrecord.h:
+	* gst/gsttypefind.h:
+	* gst/gsttypefindfactory.h:
+	* gst/gsturi.h:
+	* gst/gstutils.h:
+	* gst/gstvalue.h:
+	  gst: GST_EXPORT -> GST_API
+	  We need different export decorators for the different libs.
+	  For now no actual change though, just rename before the release,
+	  and add prelude headers to define the new decorator to GST_EXPORT.
+
+2018-03-08 13:30:30 +1100  Matthew Waters <matthew@centricular.com>
+
+	* gst/gstpromise.c:
+	  promise: be more explicit in docs about who/when to use reply/interrupt/expire
+	  https://bugzilla.gnome.org/show_bug.cgi?id=794153
+
+2018-03-07 11:19:25 -0500  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* libs/gst/base/gstbasesrc.c:
+	  basesrc: Balance unlock/unlock_stop in _src_stop()
+	  Otherwise it's possible that we won't be able to start again
+	  depending the implementation. We do start/stop in normal use cases
+	  whenever GST_QUERY_SCHEDULING happens before we are started.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=794149
+
+2018-03-07 11:16:00 -0500  Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+	* libs/gst/base/gstbasesrc.c:
+	  basesrc: No need to stop flushing in start_complete
+	  The flushing state is handled a bit differently, there is no need
+	  to stop flushing in start_complete. This would other result in
+	  unlock_stop being called without unlock_start.
+	  Unlike what the old comment says, there is no need to take the live
+	  lock here, we are still single threaded at this point (app thread
+	  or the state change thread). Also, we will wait for playing state
+	  in create/getrange, no need to do that twice.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=794149
+
+2018-03-05 11:52:24 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstdebugutils.c:
+	  debugutils: Change dot-file functions documentation to proper gtk-doc
+	  This way gobject-introspection also picks it up and handles our
+	  annotations.
+	  See https://gitlab.gnome.org/GNOME/gobject-introspection/issues/194
+
+2018-03-04 10:53:10 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* docs/libs/gstreamer-libs-sections.txt:
+	* libs/gst/base/gstqueuearray.c:
+	* libs/gst/base/gstqueuearray.h:
+	* win32/common/libgstbase.def:
+	  queuearray: Implement pop_tail_struct() for completeness
+	  All other variants of {peek,pop}_{head,tail}_{,struct} were already
+	  implemented.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=794035
+
+2018-03-04 10:24:49 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpreset.c:
+	* gst/gsturi.c:
+	  gst: Add some more (type filename) annotations
+
 === release 1.13.90 ===
 
 2018-03-03 21:51:49 +0000  Tim-Philipp Müller <tim@centricular.com>
 
+	* ChangeLog:
 	* NEWS:
 	* RELEASE:
 	* configure.ac:

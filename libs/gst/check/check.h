@@ -22,6 +22,8 @@
 #ifndef __GST_CHECK__H__
 #define __GST_CHECK__H__
 
+#include <gst/check/check-prelude.h>
+
 #include <gst/check/gstbufferstraw.h>
 #include <gst/check/gstcheck.h>
 #include <gst/check/gstconsistencychecker.h>

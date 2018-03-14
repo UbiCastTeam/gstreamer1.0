@@ -914,7 +914,9 @@ update: scanobj-update
 @ENABLE_GTK_DOC_TRUE@	@if test x"$(srcdir)" != x. ; then				\
 @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
 @ENABLE_GTK_DOC_TRUE@	    do								\
-@ENABLE_GTK_DOC_TRUE@	        if test -e $(srcdir)/$$f; then cp -u $(srcdir)/$$f . ; fi;	\
+@ENABLE_GTK_DOC_TRUE@	        if test -e $(srcdir)/$$f; then				\
+@ENABLE_GTK_DOC_TRUE@	            cp -u $(srcdir)/$$f . || cp $(srcdir)/$$f . ;	\
+@ENABLE_GTK_DOC_TRUE@	        fi;							\
 @ENABLE_GTK_DOC_TRUE@	    done;							\
 @ENABLE_GTK_DOC_TRUE@	fi;								\
 @ENABLE_GTK_DOC_TRUE@	mkdir -p $(INSPECT_DIR); \
@@ -948,7 +950,9 @@ update: scanobj-update
 @ENABLE_GTK_DOC_TRUE@	@if test x"$(srcdir)" != x. ; then				\
 @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES) $(SCAN_FILES);			\
 @ENABLE_GTK_DOC_TRUE@	    do								\
-@ENABLE_GTK_DOC_TRUE@	        if test -e $(srcdir)/$$f; then cp -u $(srcdir)/$$f . ; fi;	\
+@ENABLE_GTK_DOC_TRUE@	        if test -e $(srcdir)/$$f; then				\
+@ENABLE_GTK_DOC_TRUE@	            cp -u $(srcdir)/$$f . || cp $(srcdir)/$$f .;	\
+@ENABLE_GTK_DOC_TRUE@	        fi;							\
 @ENABLE_GTK_DOC_TRUE@	    done;							\
 @ENABLE_GTK_DOC_TRUE@	fi
 @ENABLE_GTK_DOC_TRUE@	@_source_dir='' ;						\
