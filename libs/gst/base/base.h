@@ -22,6 +22,8 @@
 #ifndef __GST_BASE_H__
 #define __GST_BASE_H__
 
+#include <gst/base/base-prelude.h>
+
 #include <gst/base/gstadapter.h>
 #include <gst/base/gstaggregator.h>
 #include <gst/base/gstbaseparse.h>
