@@ -86,6 +86,8 @@ Depends: @GST_LIB@ (= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends},
          gir1.2-gstreamer-@GST_ABI@ (= ${binary:Version})
+Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
+Replaces: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
 Recommends: debhelper
 Suggests: @GST_PKGNAME@-doc
 Description: GStreamer core development files
