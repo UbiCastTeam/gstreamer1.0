@@ -1,3 +1,167 @@
+=== release 1.14.1 ===
+
+2018-05-17 13:17:26 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.14.1
+
+2018-05-17 13:17:26 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/plugins/gstreamer-plugins.hierarchy:
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* docs/plugins/inspect/plugin-coretracers.xml:
+	  Update docs
+
+2018-05-17 12:37:20 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* po/hr.po:
+	  Update translations
+
+2018-05-10 00:05:51 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: Fix race condition causing the same probe to be called multiple times
+	  Probes were remembering a cookie that was used to check if the probe was
+	  already called this time before the probes list changed. However the
+	  same probes could've been called by another thread in between and thus
+	  gotten a new cookie, and would then be called a second time.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=795987
+
+2018-05-04 09:29:22 +0200  Edward Hervey <edward@centricular.com>
+
+	* gst/gstregistrybinary.c:
+	* libs/gst/helpers/gst-ptp-helper.c:
+	  gst: Use memcpy() instead of strncpy() where appropriate
+	  strncpy() is assumed to be for strings so the compiler assumes that
+	  it will need an extra byte for the string-terminaning NULL.
+	  For cases where we know it's actually "binary" data, just copy it
+	  with memcpy.
+	  Fixes compiler warnings with gcc 8.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=795756
+
+2018-05-05 16:16:45 +0200  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstbufferlist.c:
+	* tests/check/gst/gstbufferlist.c:
+	  bufferlist: fix abort due to underflow when creating 0-sized list
+	  gst_buffer_list_new_sized(0) will cause an underflow in a calculation
+	  which then makes it try to allocate huge amounts of memory, which
+	  may lead to aborts.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=795758
+
+2018-05-05 11:32:12 +0200  Tim-Philipp Müller <tim@centricular.com>
+
+	* libs/gst/base/gstaggregator.c:
+	* win32/common/libgstbase.def:
+	  aggregator: fix exports and since marker for new API
+	  https://bugzilla.gnome.org/show_bug.cgi?id=795332
+
+2018-04-23 11:34:19 -0400  Olivier Crête <olivier.crete@collabora.com>
+
+	* docs/libs/gstreamer-libs-sections.txt:
+	* libs/gst/base/gstaggregator.c:
+	* libs/gst/base/gstaggregator.h:
+	  aggregator: Add API to check if a pad has a new buffer
+	  https://bugzilla.gnome.org/show_bug.cgi?id=795332
+
+2018-04-20 12:30:24 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* meson.build:
+	  meson: fix invalid keyword argument warnings
+	  cc.compiles() doesn't have a 'prefix' argument (yet) and the
+	  prefix has already been prepended to the source code snippets.
+	  https://github.com/mesonbuild/meson/issues/2364
+
+2018-04-17 11:24:31 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* plugins/elements/gstinputselector.c:
+	* plugins/elements/gstmultiqueue.c:
+	  multiqueue, inputselector: show pad properties in gst-inspect-1.0
+
+2018-04-13 20:15:46 +0200  Mark Nauwelaerts <mnauw@users.sourceforge.net>
+
+	* libs/gst/base/gstbaseparse.c:
+	* libs/gst/base/gstbytereader.c:
+	* libs/gst/base/gstbytewriter.c:
+	* libs/gst/base/gstcollectpads.c:
+	* libs/gst/base/gstcollectpads.h:
+	* libs/gst/base/gsttypefindhelper.c:
+	* libs/gst/base/gsttypefindhelper.h:
+	  base: fix some GIR annotations
+	  Mostly related to out parameters and their transfer
+
+2018-03-29 18:59:43 +0200  Mark Nauwelaerts <mnauw@users.sourceforge.net>
+
+	* gst/gstbuffer.c:
+	* gst/gstutils.c:
+	  gst: add some GIR array annotations
+
+2018-04-11 19:56:01 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gstinfo.c:
+	  gstdebug: fix occasional deadlocks on windows when outputting debug logging
+	  When outputting debug logs on Windows, some sections are protected
+	  with a non-recursive lock. Turns out though that gst_debug_message_get()
+	  might indirectly, via our printf format extensions, call code which
+	  in turn would try to log something when it can't handle something. If
+	  that happens we end up in gst_debug_log_default() again recursively and
+	  try to again take the lock that's already taken, thus deadlocking.
+	  Format the debug message string outside of the critical section
+	  instead to avoid this.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=784382
+
+2018-04-09 14:19:19 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* gst/gsturi.h:
+	  gsturi: include gstconfig.h earlier for GST_API define
+
+2018-03-27 10:25:46 +0200  Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+
+	* gst/gstinfo.c:
+	* tests/check/gst/gstinfo.c:
+	  gstinfo: fix debug levels being applied in the wrong order
+	  Remove unneeded reapplication of patterns. Besides being
+	  superfluous (gst_debug_reset_threshold already applies
+	  patterns) it was also wrong and didn't stop checking patterns
+	  after the first match (broken in 67e9d139).
+	  Also fix up unit test which checked for the wrong order.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=794717
+
+2018-03-29 12:36:11 +1100  Matthew Waters <matthew@centricular.com>
+
+	* gst/gstbin.c:
+	  bin: fix deep-element-added signal debug log message
+	  Adding the bin to the child element doesn't really make sense.
+
+2018-03-20 16:11:01 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstchildproxy.c:
+	* gst/parse/grammar.y:
+	  gst: Fix compilation with latest GLib
+	  g_object_ref() forwards the type of its argument nowadays.
+	  ./grammar.y:409:14: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
+	  gstchildproxy.c:212:7: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
+
+2018-03-21 10:20:14 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/net/net.h:
+	  net: Include gstnetcontrolmessagemeta.h in net.h
+
+2018-03-21 10:13:44 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstparamspecs.h:
+	  paramspecs: Set g-i annotation values for GST_PARAM_* constants
+
+2018-03-21 10:11:30 +0200  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstelementfactory.h:
+	  elementfactory: GST_ELEMENT_FACTORY_TYPE_DECODABLE had DECRYPTOR added, update g-i annotation value
+
 === release 1.14.0 ===
 
 2018-03-19 20:09:51 +0000  Tim-Philipp Müller <tim@centricular.com>
