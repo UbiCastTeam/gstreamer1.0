@@ -1,3 +1,49 @@
+=== release 1.14.2 ===
+
+2018-07-20 00:46:55 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.14.2
+
+2018-07-20 00:46:55 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* docs/plugins/inspect/plugin-coretracers.xml:
+	  Update docs
+
+2018-07-18 21:13:57 -0400  Thibault Saunier <tsaunier@igalia.com>
+
+	* libs/gst/base/gstbasetransform.c:
+	  basetransform: Do not check if NULL is an emtpy caps
+	  gst_base_transform_transform_caps can return NULL in various conditions
+	  thus we should not treat its result as valid caps.
+	  In all other places NULL is properly handled.
+
+2018-06-18 16:29:18 +0200  Edward Hervey <edward@centricular.com>
+
+	* plugins/elements/gstconcat.c:
+	  concat: Properly forward the SEGMENT seqnum
+
+2018-05-21 09:14:37 +0200  Mark Nauwelaerts <mnauw@users.sourceforge.net>
+
+	* gst/gstmeta.c:
+	* gst/gstprotection.c:
+	  gst: add some GIR array annotations
+
+2018-05-20 13:53:31 +0200  Christoph Reiter <reiter.christoph@gmail.com>
+
+	* libs/gst/controller/controller_mkenum.py:
+	  meson: Fix detection of glib-mkenums under MSYS2
+	  Under MSYS2 glib-mkenums is an executable and has a .exe extension and
+	  the path does not end with "glib-mkenums".
+	  Make the script compare the path without the file extension instead.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=796273
+
 === release 1.14.1 ===
 
 2018-05-17 13:17:26 +0100  Tim-Philipp Müller <tim@centricular.com>
