@@ -71,7 +71,8 @@ init();
 
 my $deb_host_multiarch = `dpkg-architecture -qDEB_HOST_MULTIARCH`;
 chop $deb_host_multiarch;
-$::pluginlibdirprefix = '/usr/lib/'.$deb_host_multiarch.'/gstreamer-';
+my $libdir = '/usr/lib/'.$deb_host_multiarch;
+$::pluginlibdirprefix = $libdir.'/gstreamer-';
 $::pluginlibdirlegacy = '/usr/lib/gstreamer-';
 
 foreach my $package (@{$dh{DOPACKAGES}}) {
@@ -92,7 +93,7 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
     my (undef, $tmpfile) = File::Temp::tempfile("/tmp/".basename($0).".XXXX", UNLINK => 1);
     my (undef, $registryfile) = File::Temp::tempfile("/tmp/".basename($0).".XXXX", UNLINK => 1);
 
-    my $command="GST_REGISTRY=$registryfile GST_PLUGIN_SYSTEM_PATH= GST_PLUGIN_PATH=$sodir gst-codec-info-$gstversion " . join(' ', (glob "$sodir/*.so")) . " > $tmpfile";
+    my $command="GST_REGISTRY=$registryfile GST_PLUGIN_SYSTEM_PATH= GST_PLUGIN_PATH=$sodir $libdir/gstreamer$gstversion/gstreamer-$gstversion/gst-codec-info-$gstversion " . join(' ', (glob "$sodir/*.so")) . " > $tmpfile";
 
     system($command);
     if ($?) {
