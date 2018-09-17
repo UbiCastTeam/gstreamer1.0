@@ -1,3 +1,158 @@
+=== release 1.14.3 ===
+
+2018-09-16 16:13:01 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.14.3
+
+2018-09-16 16:13:00 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* docs/plugins/inspect/plugin-coretracers.xml:
+	  Update docs
+
+2018-08-27 22:32:01 +1000  Jan Schmidt <jan@centricular.com>
+
+	* tests/check/gst/gstsegment.c:
+	  gstsegment: Add check for gst_segment_offset_running_time()
+	  Add a check for gst_segment_offset_running_time() that values
+	  are taken directly from the segment base if possible.
+
+2018-08-23 22:34:47 +1000  Jan Schmidt <jan@centricular.com>
+
+	* gst/gstsegment.c:
+	* tests/check/gst/gstsegment.c:
+	  gstsegment: Handle positions before the segment properly
+	  Fixes for gst_segment_position_from_running_time_full() when
+	  converting running_times that precede the segment start (or
+	  stop in a negative rate segment)
+	  The return value was incorrectly negated in those cases.
+	  Add some more unit test checks for those cases, and especially
+	  for segments with offsets.
+
+2018-09-08 13:05:13 +0100  Philippe Normand <philn@igalia.com>
+
+	* gst/gstbin.c:
+	  bin: Fix use-after-free issue in gst_bin_add()
+	  gst_element_post_message() takes ownership of the message so we need to increase
+	  its refcount until we no longer require access to its data (context_type).
+	  https://bugzilla.gnome.org/show_bug.cgi?id=797099
+
+2018-09-03 12:06:35 +0100  Philippe Normand <philn@igalia.com>
+
+	* gst/gstutils.c:
+	  utils: Set default values for position and duration query results
+	  https://bugzilla.gnome.org/show_bug.cgi?id=797066
+
+2018-08-30 17:44:07 +0100  Philippe Normand <philn@igalia.com>
+
+	* libs/gst/base/gstbaseparse.c:
+	  baseparse: avg_bitrate calculation critical warning fix
+	  The avg_bitrate is an unsigned int, so the gst_util_uin64_scale() function can't
+	  be used for it, as it expects signed integers for the fraction parts arguments.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=797054
+
+2018-08-31 12:15:16 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* plugins/elements/gstinputselector.c:
+	  input-selector: Bring latency handling in sync with GstPad code
+
+2018-08-31 12:12:13 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  Revert "pad: Don't drop LATENCY queries with default implementation"
+	  This reverts commit 794944f779f954375fc74a3fffcc2067bba6a3e5.
+	  Accumulating non-live latency values generally makes no sense and often
+	  gives invalid results with min>max
+
+2018-08-31 12:12:09 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  Revert "pad: Accumulate live/non-live latency values separately"
+	  This reverts commit f5783e1cacb09867d81ba089b229faa7dd0edd0c.
+
+2018-08-31 11:47:03 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* plugins/elements/gstinputselector.c:
+	  input-selector: Apply GstPad default latency handler fixes here too
+
+2018-08-31 11:41:47 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: Accumulate live/non-live latency values separately
+	  And only ever use the non-live values if all pads are non-live,
+	  otherwise only use the results of all live pads.
+	  It's unclear what one would use the values for in the non-live case, but
+	  by this we at least pass them through correctly then.
+	  This is a follow-up for 794944f779f954375fc74a3fffcc2067bba6a3e5, which
+	  causes wrong latency calculations if the first pad is non-live but a
+	  later pad is actually live. In that case the live values would be
+	  accumulated together with the values of the non-live first pad,
+	  generally causing wrong min/max latencies to be calculated.
+
+2018-08-02 10:55:40 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/base/gsttypefindhelper.c:
+	  typefindhelper: Mark gst_type_find_helper_get_range_full() as Since 1.14.3
+
+2018-07-30 18:51:35 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: Ensure that the pad is blocked for IDLE probes if they are called from the streaming thread too
+	  IDLE probes that are directly called when being added will increase /
+	  decrease the "number of IDLE probes running" counter around the call,
+	  but when running from the streaming thread this won't happen.
+	  This has the effect that when running from a streaming thread it is
+	  possible to push serialized events or data out of the pad without
+	  problems, but otherwise it would deadlock because serialized data would
+	  wait for the IDLE probe to finish first (it is blocking after all!).
+	  With this change it will now always consistently deadlock instead of
+	  just every once in a while, which should make it obvious why this
+	  happens and prevent racy deadlocks in application code.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=796895
+
+2018-07-30 18:10:31 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/base/gsttypefindhelper.c:
+	* libs/gst/base/gsttypefindhelper.h:
+	* plugins/elements/gsttypefindelement.c:
+	* win32/common/libgstbase.def:
+	  typefind: Add new gst_type_find_helper_get_range_full() that returns flow return
+	  And make use of it in the typefind element. It's useful to distinguish
+	  between the different errors why typefinding can fail, and especially to
+	  not consider GST_FLOW_FLUSHING as an actual error.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=796894
+
+2018-07-31 16:46:25 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* gst/gstpad.c:
+	  pad: Update pad offsets on the current event if the offset changed in pad probes
+	  https://bugzilla.gnome.org/show_bug.cgi?id=796898
+
+2018-07-31 19:25:03 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* plugins/elements/gstinputselector.c:
+	  inputselector: Forward LATENCY query to all sinkpads
+	  Otherwise downstream will consider the pipeline not live if the active
+	  pad is live, even though some inactive pads might be live and might
+	  require a non-zero latency configuration.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=796901
+
+2018-07-27 23:22:42 +0200  Mathieu Duponchelle <mathieu@centricular.com>
+
+	* libs/gst/base/gstaggregator.h:
+	  aggregator: annotate GstAggregatorClass::update_src_caps
+
+2018-07-26 02:31:05 +0300  Sebastian Dröge <sebastian@centricular.com>
+
+	* libs/gst/base/gstaggregator.c:
+	  aggregator: Don't leak peer pad of inactive pads when (not) forwarding QoS events to them
+
 === release 1.14.2 ===
 
 2018-07-20 00:46:55 +0100  Tim-Philipp Müller <tim@centricular.com>
