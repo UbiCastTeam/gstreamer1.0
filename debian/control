@@ -80,6 +80,7 @@ Description: Core GStreamer libraries and elements
 
 Package: libgstreamer1.0-dev
 Architecture: any
+Multi-Arch: same
 Section: libdevel
 Depends: libgstreamer1.0-0 (= ${binary:Version}),
          libc6-dev | libc-dev,
@@ -129,7 +130,7 @@ Architecture: any
 Section: utils
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         libgstreamer1.0-0 (>= 1.14.2)
+         libgstreamer1.0-0 (>= 1.14.3)
 Suggests: gstreamer1.0-plugins-base
 Description: Tools for use with GStreamer
  GStreamer is a streaming media framework, based on graphs of filters
@@ -144,10 +145,10 @@ Description: Tools for use with GStreamer
 Package: gir1.2-gstreamer-1.0
 Section: introspection
 Architecture: any
+Multi-Arch: same
 Depends: ${gir:Depends},
          ${shlibs:Depends},
-         ${misc:Depends},
-         ${gir:Depends}
+         ${misc:Depends}
 Description: GObject introspection data for the GStreamer library
  This package contains introspection data for the GStreamer streaming media
  framework.
