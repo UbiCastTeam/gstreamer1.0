@@ -176,7 +176,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstStructure.html#gst-structure-id-get-value" title="gst_structure_id_get_value ()">gst_structure_id_get_value</a> <span class="c_punctuation">()</span>
@@ -215,7 +215,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstStructure.html#gst-structure-get-value" title="gst_structure_get_value ()">gst_structure_get_value</a> <span class="c_punctuation">()</span>
@@ -681,7 +681,7 @@ behavior when using serialization features, such as <a class="link" href="GstCap
 <a name="GstStructureForeachFunc"></a><h3>GstStructureForeachFunc ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstStructureForeachFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_id</code></em>,
-                            <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
+                            <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called in <a class="link" href="GstStructure.html#gst-structure-foreach" title="gst_structure_foreach ()"><code class="function">gst_structure_foreach()</code></a>. The function may
 not modify <em class="parameter"><code>value</code></em>
@@ -702,7 +702,7 @@ not modify <em class="parameter"><code>value</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of the field</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> of the field</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -724,7 +724,7 @@ the foreach operation should stop with <a href="/usr/share/gtk-doc/html/glib/gli
 <a name="GstStructureMapFunc"></a><h3>GstStructureMapFunc ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstStructureMapFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_id</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>,
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called in <a class="link" href="GstStructure.html#gst-structure-map-in-place" title="gst_structure_map_in_place ()"><code class="function">gst_structure_map_in_place()</code></a>. The function
 may modify <em class="parameter"><code>value</code></em>
@@ -745,7 +745,7 @@ may modify <em class="parameter"><code>value</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of the field</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> of the field</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -767,7 +767,7 @@ the map operation should stop with <a href="/usr/share/gtk-doc/html/glib/glib-St
 <a name="GstStructureFilterMapFunc"></a><h3>GstStructureFilterMapFunc ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstStructureFilterMapFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field_id</code></em>,
-                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>,
                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>A function that will be called in <a class="link" href="GstStructure.html#gst-structure-filter-and-map-in-place" title="gst_structure_filter_and_map_in_place ()"><code class="function">gst_structure_filter_and_map_in_place()</code></a>.
 The function may modify <em class="parameter"><code>value</code></em>
@@ -789,7 +789,7 @@ the structure if <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html
 </tr>
 <tr>
 <td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of the field</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> of the field</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1312,7 +1312,7 @@ valist-variant of <a class="link" href="GstStructure.html#gst-structure-id-get" 
 <hr>
 <div class="refsect2">
 <a name="gst-structure-id-get-value"></a><h3>gst_structure_id_get_value ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 gst_structure_id_get_value (<em class="parameter"><code>const <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field</code></em>);</pre>
 <p>Get the value of the field with GQuark <em class="parameter"><code>field</code></em>
@@ -1341,7 +1341,7 @@ gst_structure_id_get_value (<em class="parameter"><code>const <a class="link" hr
 </div>
 <div class="refsect3">
 <a name="gst-structure-id-get-value.returns"></a><h4>Returns</h4>
-<p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> corresponding to the field with the given
+<p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> corresponding to the field with the given
 name identifier. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -1352,7 +1352,7 @@ name identifier. </p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_structure_id_set_value (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field</code></em>,
-                            <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                            <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the field with the given GQuark <em class="parameter"><code>field</code></em>
  to <em class="parameter"><code>value</code></em>
 .  If the field
@@ -1392,7 +1392,7 @@ value is replaced and freed.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_structure_id_take_value (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> field</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the field with the given GQuark <em class="parameter"><code>field</code></em>
  to <em class="parameter"><code>value</code></em>
 .  If the field
@@ -1522,7 +1522,7 @@ valist-variant of <a class="link" href="GstStructure.html#gst-structure-get" tit
 <hr>
 <div class="refsect2">
 <a name="gst-structure-get-value"></a><h3>gst_structure_get_value ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 gst_structure_get_value (<em class="parameter"><code>const <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>);</pre>
 <p>Get the value of the field with name <em class="parameter"><code>fieldname</code></em>
@@ -1551,7 +1551,7 @@ gst_structure_get_value (<em class="parameter"><code>const <a class="link" href=
 </div>
 <div class="refsect3">
 <a name="gst-structure-get-value.returns"></a><h4>Returns</h4>
-<p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> corresponding to the field with the given
+<p>the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> corresponding to the field with the given
 name. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -1562,7 +1562,7 @@ name. </p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_structure_set_value (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
-                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the field with the given name <em class="parameter"><code>field</code></em>
  to <em class="parameter"><code>value</code></em>
 .  If the field
@@ -1602,13 +1602,13 @@ value is replaced and freed.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_structure_set_array (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
-                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> *array</code></em>);</pre>
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a> *array</code></em>);</pre>
 <p>This is useful in language bindings where unknown GValue types are not
 supported. This function will convert a <em class="parameter"><code>array</code></em>
  to <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and set
 the field specified by <em class="parameter"><code>fieldname</code></em>
 .  Be aware that this is slower then using
-<a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> in a <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> in a <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> directly.</p>
 <p>Since 1.12</p>
 <div class="refsect3">
 <a name="gst-structure-set-array.parameters"></a><h4>Parameters</h4>
@@ -1631,7 +1631,7 @@ the field specified by <em class="parameter"><code>fieldname</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>array</p></td>
-<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a></p></td>
+<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1644,13 +1644,13 @@ the field specified by <em class="parameter"><code>fieldname</code></em>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_structure_set_list (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
-                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> *array</code></em>);</pre>
+                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a> *array</code></em>);</pre>
 <p>This is useful in language bindings where unknown GValue types are not
 supported. This function will convert a <em class="parameter"><code>array</code></em>
  to <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and set
 the field specified by <em class="parameter"><code>fieldname</code></em>
 . Be aware that this is slower then using
-<a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> in a <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> in a <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> directly.</p>
 <p>Since 1.12</p>
 <div class="refsect3">
 <a name="gst-structure-set-list.parameters"></a><h4>Parameters</h4>
@@ -1673,7 +1673,7 @@ the field specified by <em class="parameter"><code>fieldname</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>array</p></td>
-<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a></p></td>
+<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1686,7 +1686,7 @@ the field specified by <em class="parameter"><code>fieldname</code></em>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_structure_take_value (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                           <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
-                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the field with the given name <em class="parameter"><code>field</code></em>
  to <em class="parameter"><code>value</code></em>
 .  If the field
@@ -2031,7 +2031,7 @@ returned.</p>
 </div>
 <div class="refsect3">
 <a name="gst-structure-get-field-type.returns"></a><h4>Returns</h4>
-<p> the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> of the field</p>
+<p> the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> of the field</p>
 </div>
 </div>
 <hr>
@@ -2949,12 +2949,12 @@ function returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_structure_get_array (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
-                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> **array</code></em>);</pre>
-<p>This is useful in language bindings where unknown <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> types are not
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a> **array</code></em>);</pre>
+<p>This is useful in language bindings where unknown <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> types are not
 supported. This function will convert the <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and
-<a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><code class="literal">GST_TYPE_LIST</code></a> into a newly allocated <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> and return it through
+<a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><code class="literal">GST_TYPE_LIST</code></a> into a newly allocated <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a> and return it through
 <em class="parameter"><code>array</code></em>
-. Be aware that this is slower then getting the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+. Be aware that this is slower then getting the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> directly.</p>
 <div class="refsect3">
 <a name="gst-structure-get-array.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -2976,7 +2976,7 @@ supported. This function will convert the <a class="link" href="gstreamer-GstVal
 </tr>
 <tr>
 <td class="parameter_name"><p>array</p></td>
-<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>. </p></td>
+<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -2996,12 +2996,12 @@ returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CA
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_structure_get_list (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> **array</code></em>);</pre>
-<p>This is useful in language bindings where unknown <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> types are not
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a> **array</code></em>);</pre>
+<p>This is useful in language bindings where unknown <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> types are not
 supported. This function will convert the <a class="link" href="gstreamer-GstValue.html#GST-TYPE-ARRAY:CAPS" title="GST_TYPE_ARRAY"><code class="literal">GST_TYPE_ARRAY</code></a> and
 <a class="link" href="gstreamer-GstValue.html#GST-TYPE-LIST:CAPS" title="GST_TYPE_LIST"><code class="literal">GST_TYPE_LIST</code></a> into a newly allocated GValueArray and return it through
 <em class="parameter"><code>array</code></em>
-. Be aware that this is slower then getting the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> directly.</p>
+. Be aware that this is slower then getting the <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> directly.</p>
 <div class="refsect3">
 <a name="gst-structure-get-list.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -3023,7 +3023,7 @@ supported. This function will convert the <a class="link" href="gstreamer-GstVal
 </tr>
 <tr>
 <td class="parameter_name"><p>array</p></td>
-<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>. </p></td>
+<td class="parameter_description"><p>a pointer to a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>

@@ -344,7 +344,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstTagList.html#gst-tag-list-get-value-index" title="gst_tag_list_get_value_index ()">gst_tag_list_get_value_index</a> <span class="c_punctuation">()</span>
@@ -988,8 +988,8 @@ not modify the tag list.</p>
 <div class="refsect2">
 <a name="GstTagMergeFunc"></a><h3>GstTagMergeFunc ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-<span class="c_punctuation">(</span>*GstTagMergeFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest</code></em>,
-                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *src</code></em>);</pre>
+<span class="c_punctuation">(</span>*GstTagMergeFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *dest</code></em>,
+                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *src</code></em>);</pre>
 <p>A function for merging multiple values of a tag used when registering
 tags.</p>
 <div class="refsect3">
@@ -1003,12 +1003,12 @@ tags.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>dest</p></td>
-<td class="parameter_description"><p>the destination <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a></p></td>
+<td class="parameter_description"><p>the destination <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>src</p></td>
-<td class="parameter_description"><p>the source <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a></p></td>
+<td class="parameter_description"><p>the source <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1151,8 +1151,8 @@ even from dynamically loaded plugins.)</p>
 <div class="refsect2">
 <a name="gst-tag-merge-use-first"></a><h3>gst_tag_merge_use_first ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_tag_merge_use_first (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest</code></em>,
-                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *src</code></em>);</pre>
+gst_tag_merge_use_first (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *dest</code></em>,
+                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *src</code></em>);</pre>
 <p>This is a convenience function for the func argument of <a class="link" href="GstTagList.html#gst-tag-register" title="gst_tag_register ()"><code class="function">gst_tag_register()</code></a>.
 It creates a copy of the first value from the list.</p>
 <div class="refsect3">
@@ -1182,8 +1182,8 @@ It creates a copy of the first value from the list.</p>
 <div class="refsect2">
 <a name="gst-tag-merge-strings-with-comma"></a><h3>gst_tag_merge_strings_with_comma ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_tag_merge_strings_with_comma (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest</code></em>,
-                                  <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *src</code></em>);</pre>
+gst_tag_merge_strings_with_comma (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *dest</code></em>,
+                                  <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *src</code></em>);</pre>
 <p>This is a convenience function for the func argument of <a class="link" href="GstTagList.html#gst-tag-register" title="gst_tag_register ()"><code class="function">gst_tag_register()</code></a>.
 It concatenates all given strings using a comma. The tag must be registered
 as a G_TYPE_STRING or this function will fail.</p>
@@ -2027,7 +2027,7 @@ gst_tag_list_add (<em class="parameter"><code><a class="link" href="GstTagList.h
 gst_tag_list_add_value (<em class="parameter"><code><a class="link" href="GstTagList.html" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                         <em class="parameter"><code><a class="link" href="GstTagList.html#GstTagMergeMode" title="enum GstTagMergeMode"><span class="type">GstTagMergeMode</span></a> mode</code></em>,
                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
-                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                        <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the GValue for a given tag using the specified mode.</p>
 <div class="refsect3">
 <a name="gst-tag-list-add-value.parameters"></a><h4>Parameters</h4>
@@ -2258,7 +2258,7 @@ is no tag, the function won't be called at all.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-tag-list-get-value-index"></a><h3>gst_tag_list_get_value_index ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 gst_tag_list_get_value_index (<em class="parameter"><code>const <a class="link" href="GstTagList.html" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>,
                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
@@ -2303,7 +2303,7 @@ doesn't have as many entries. </p>
 <div class="refsect2">
 <a name="gst-tag-list-copy-value"></a><h3>gst_tag_list_copy_value ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_tag_list_copy_value (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *dest</code></em>,
+gst_tag_list_copy_value (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *dest</code></em>,
                          <em class="parameter"><code>const <a class="link" href="GstTagList.html" title="GstTagList"><span class="type">GstTagList</span></a> *list</code></em>,
                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tag</code></em>);</pre>
 <p>Copies the contents for the given tag into the value,
@@ -2321,7 +2321,7 @@ You must <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-
 <tbody>
 <tr>
 <td class="parameter_name"><p>dest</p></td>
-<td class="parameter_description"><p>uninitialized <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> to copy into. </p></td>
+<td class="parameter_description"><p>uninitialized <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> to copy into. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span></td>
 </tr>
 <tr>
