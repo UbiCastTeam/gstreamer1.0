@@ -710,7 +710,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstMessage.html#gst-message-get-stream-status-object" title="gst_message_get_stream_status_object ()">gst_message_get_stream_status_object</a> <span class="c_punctuation">()</span>
@@ -4428,7 +4428,7 @@ should thus not be unreffed.</p>
 <a name="gst-message-set-stream-status-object"></a><h3>gst_message_set_stream_status_object ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_message_set_stream_status_object (<em class="parameter"><code><a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
-                                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *object</code></em>);</pre>
+                                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *object</code></em>);</pre>
 <p>Configures the object handling the streaming thread. This is usually a
 GstTask object but other objects might be added in the future.</p>
 <div class="refsect3">
@@ -4457,7 +4457,7 @@ GstTask object but other objects might be added in the future.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-message-get-stream-status-object"></a><h3>gst_message_get_stream_status_object ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="returnvalue">GValue</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="returnvalue">GValue</span></a> *
 gst_message_get_stream_status_object (<em class="parameter"><code><a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> *message</code></em>);</pre>
 <p>Extracts the object managing the streaming thread from <em class="parameter"><code>message</code></em>
 .</p>
@@ -4873,7 +4873,7 @@ pointer to the removed <a class="link" href="gstreamer-GstDevice.html#GstDevice"
 <pre class="programlisting"><a class="link" href="GstMessage.html" title="GstMessage"><span class="returnvalue">GstMessage</span></a> *
 gst_message_new_property_notify (<em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> *src</code></em>,
                                  <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *property_name</code></em>,
-                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *val</code></em>);</pre>
+                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> *val</code></em>);</pre>
 <div class="refsect3">
 <a name="gst-message-new-property-notify.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -4914,7 +4914,7 @@ gst_message_new_property_notify (<em class="parameter"><code><a class="link" hre
 gst_message_parse_property_notify (<em class="parameter"><code><a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a> *message</code></em>,
                                    <em class="parameter"><code><a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a> **object</code></em>,
                                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **property_name</code></em>,
-                                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> **property_value</code></em>);</pre>
+                                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue-struct"><span class="type">GValue</span></a> **property_value</code></em>);</pre>
 <p>Parses a property-notify message. These will be posted on the bus only
 when set up with <a class="link" href="GstElement.html#gst-element-add-property-notify-watch" title="gst_element_add_property_notify_watch ()"><code class="function">gst_element_add_property_notify_watch()</code></a> or
 <a class="link" href="GstElement.html#gst-element-add-property-deep-notify-watch" title="gst_element_add_property_deep_notify_watch ()"><code class="function">gst_element_add_property_deep_notify_watch()</code></a>.</p>

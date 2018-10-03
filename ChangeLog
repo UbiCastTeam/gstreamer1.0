@@ -1,3 +1,31 @@
+=== release 1.14.4 ===
+
+2018-10-02 22:53:01 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* ChangeLog:
+	* NEWS:
+	* RELEASE:
+	* configure.ac:
+	* gstreamer.doap:
+	* meson.build:
+	  Release 1.14.4
+
+2018-10-02 22:53:00 +0100  Tim-Philipp Müller <tim@centricular.com>
+
+	* docs/plugins/inspect/plugin-coreelements.xml:
+	* docs/plugins/inspect/plugin-coretracers.xml:
+	  Update docs
+
+2018-09-17 22:13:22 +1000  Jan Schmidt <jan@centricular.com>
+
+	* tests/check/gst/gstsegment.c:
+	  tests: Use a different rate in a segment test.
+	  Using a rate of 1.1 in the test is causing the test to
+	  fail on 32-bit because ceil(1.1 * 10) can round to 12.
+	  Instead use a rate 2.0 that can be expressed as floating
+	  point number and doesn't trigger the problem.
+	  https://bugzilla.gnome.org/show_bug.cgi?id=797154
+
 === release 1.14.3 ===
 
 2018-09-16 16:13:01 +0100  Tim-Philipp Müller <tim@centricular.com>
