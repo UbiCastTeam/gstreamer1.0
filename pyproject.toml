@@ -1,0 +1,69 @@
+[project]
+authors = [
+    { name="The GStreamer team", email="tsaunier@igalia.com" }
+]
+name="GStreamer"
+summary="GStreamer, a framework for streaming media."
+home-page="https://gstreamer.freedesktop.org/"
+requires-python="~=3.7"
+readme="README.md"
+classifiers = [
+    "Intended Audience :: Developers",
+    "OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+    "Programming Language :: Python :: 3",
+]
+
+dependencies = [
+    "pygobject@git+https://gitlab.gnome.org/thiblahute/pygobject.git@wheel",
+]
+
+[tool.mesonpep517.metadata]
+meson-options = [
+    "--default-library=static",
+
+    "-Dgst-examples=disabled",
+    "-Ddoc=disabled",
+    "-Dtests=disabled",
+
+    "-Dglib:tests=false",
+
+    "-Dpython=enabled",
+    "-Dges=enabled",
+    "-Drtsp_server=enabled",
+    "-Ddevtools=disabled",
+    "-Dintrospection=enabled",
+
+    "-Dgst-python:libpython-dir=/usr/lib64/libpython{py}.so", # It should alway use the already loaded python
+
+    "-Dgst-editing-services:libpython-dir='/usr/lib64/libpython{py}.so'",
+
+    "-Dbad=enabled",
+    # It is currently failling
+    "-Dlibsoup:introspection=disabled",
+    "-Ddv:tools=disabled",
+    "-Ddv:tests=disabled",
+
+    "-Dgst-full-libraries=*",
+]
+
+[project.urls]
+repository = "https://gitlab.freedesktop.org/gstreamer/gstreamer/"
+documentation = "https://gstreamer.freedesktop.org/documentation/"
+
+[build-system]
+requires = ["mesonpep517@git+https://gitlab.com/thiblahute/mesonpep517.git@gst_wheel"]
+build-backend = "mesonpep517.buildapi"
+
+[tool.cibuildwheel]
+archs = ["x86_64"]
+build-frontend = "pip"
+build = "cp*_x86_64"
+skip = "cp36-*"
+
+manylinux-x86_64-image = "manylinux2014"
+
+[tool.cibuildwheel.linux]
+repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
+before-all = [
+    "yum install -y flex bison ninja-build python36-gobject python36-gobject-devel gobject-introspection-devel",
+]
