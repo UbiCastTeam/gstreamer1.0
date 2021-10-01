@@ -1,0 +1,205 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+
+export HOME=$(CURDIR)/fake-home
+export GI_SCANNER_DISABLE_CACHE=1
+
+# debian package version
+version=$(shell dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2)
+# upstream version
+gst_version=$(shell echo $(version) | cut -d '-' -f 1)
+
+CFLAGS += -Wno-error
+CXXFLAGS += -Wno-error
+LDFLAGS += -Wl,-O1 -Wl,--as-needed
+
+# Let's decide the package name and url depending on the distribution
+DISTRO = "$(shell dpkg-vendor --query vendor)"
+
+GST_PACKAGE_NAME := "GStreamer Ubicast build"
+GST_PACKAGE_ORIGIN="https://git.ubicast.net/mediaserver/ubicast-gstreamer-toolkit/"
+
+conf_flags = --libdir=lib/$(DEB_HOST_MULTIARCH) --libexecdir=lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0
+conf_flags += -Dpackage-name=$(GST_PACKAGE_NAME) -Dpackage-origin=$(GST_PACKAGE_ORIGIN)
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+conf_flags += -Dgstreamer:ptp-helper-permissions=capabilities
+else
+conf_flags += -Dgstreamer:ptp-helper-permissions=setuid-root \
+	-Dptp-helper-setuid-user=nobody -Dptp-helper-setuid-group=nobody
+endif
+
+%:
+	dh $@ --with gir --buildsystem=meson
+
+core_opts=-Dgstreamer:gobject-cast-checks=enabled \
+            -Dgstreamer:check=enabled \
+            -Dgstreamer:glib-asserts=enabled \
+            -Dgstreamer:glib-checks=enabled \
+            -Dgstreamer:extra-checks=enabled
+
+validate_opts=-Ddevtools=enabled \
+                -Dgst-devtools:validate=enabled
+
+ges_opts=-Dges=enabled \
+	-Dgst-editing-services:validate=enabled \
+	-Dgst-editing-services:libpython-dir='/usr/lib64/libpython{py}.so'
+
+python_opts=-Dpython=enabled \
+	-Dgst-python:python='["python3.7","/usr/local/bin/python3.9"]' \
+	-Dgst-python:libpython-dir=/usr/lib64/libpython{py}.so
+
+base_opts=-Dbase=enabled \
+    -Dgst-plugins-base:adder=enabled \
+    -Dgst-plugins-base:app=enabled \
+    -Dgst-plugins-base:audioconvert=enabled \
+    -Dgst-plugins-base:audiomixer=enabled \
+    -Dgst-plugins-base:audiorate=enabled \
+    -Dgst-plugins-base:audioresample=enabled \
+    -Dgst-plugins-base:audiotestsrc=enabled \
+    -Dgst-plugins-base:compositor=enabled \
+    -Dgst-plugins-base:encoding=enabled \
+    -Dgst-plugins-base:gio=enabled \
+    -Dgst-plugins-base:overlaycomposition=enabled \
+    -Dgst-plugins-base:pbtypes=enabled \
+    -Dgst-plugins-base:playback=enabled \
+    -Dgst-plugins-base:rawparse=enabled \
+    -Dgst-plugins-base:subparse=enabled \
+    -Dgst-plugins-base:tcp=enabled \
+    -Dgst-plugins-base:typefind=enabled \
+    -Dgst-plugins-base:videoconvert=enabled \
+    -Dgst-plugins-base:videorate=enabled \
+    -Dgst-plugins-base:videoscale=enabled \
+    -Dgst-plugins-base:videotestsrc=enabled \
+    -Dgst-plugins-base:volume=enabled \
+    -Dgst-plugins-base:opus=enabled \
+    -Dgst-plugins-base:vorbis=enabled
+
+bad_opts=-Dbad=enabled \
+    -Dgst-plugins-bad:audiobuffersplit=enabled \
+    -Dgst-plugins-bad:audiofxbad=enabled \
+    -Dgst-plugins-bad:audiomixmatrix=enabled \
+    -Dgst-plugins-bad:audiolatency=enabled \
+    -Dgst-plugins-bad:autoconvert=enabled \
+    -Dgst-plugins-bad:bayer=enabled \
+    -Dgst-plugins-bad:debugutils=enabled \
+    -Dgst-plugins-bad:faceoverlay=enabled \
+    -Dgst-plugins-bad:fdkaac=enabled \
+    -Dgst-plugins-bad:fieldanalysis=enabled \
+    -Dgst-plugins-bad:gaudieffects=enabled \
+    -Dgst-plugins-bad:id3tag=enabled \
+    -Dgst-plugins-bad:interlace=enabled \
+    -Dgst-plugins-bad:ivfparse=enabled \
+    -Dgst-plugins-bad:ivtc=enabled \
+    -Dgst-plugins-bad:jpegformat=enabled \
+    -Dgst-plugins-bad:librfb=enabled \
+    -Dgst-plugins-bad:midi=enabled \
+    -Dgst-plugins-bad:mpegdemux=enabled \
+    -Dgst-plugins-bad:mpegpsmux=enabled \
+    -Dgst-plugins-bad:mpegtsdemux=enabled \
+    -Dgst-plugins-bad:mpegtsmux=enabled \
+    -Dgst-plugins-bad:mxf=enabled \
+    -Dgst-plugins-bad:subenc=enabled \
+    -Dgst-plugins-bad:timecode=enabled \
+    -Dgst-plugins-bad:transcode=enabled \
+    -Dgst-plugins-bad:videofilters=enabled \
+    -Dgst-plugins-bad:videoframe_audiolevel=enabled \
+    -Dgst-plugins-bad:videoparsers=enabled \
+    -Dgst-plugins-bad:videosignal=enabled \
+    -Dgst-plugins-bad:openh264=enabled \
+    -Dgst-plugins-bad:hls=enabled \
+    -Dgst-plugins-bad:opus=enabled
+
+good_opts=-Dgood=enabled \
+    -Dgst-plugins-good:lame=enabled \
+    -Dgst-plugins-good:soup=enabled \
+    -Dgst-plugins-good:alpha=enabled \
+    -Dgst-plugins-good:audiofx=enabled \
+    -Dgst-plugins-good:audioparsers=enabled \
+    -Dgst-plugins-good:avi=enabled \
+    -Dgst-plugins-good:deinterlace=enabled \
+    -Dgst-plugins-good:dtmf=enabled \
+    -Dgst-plugins-good:flv=enabled \
+    -Dgst-plugins-good:id3demux=enabled \
+    -Dgst-plugins-good:imagefreeze=enabled \
+    -Dgst-plugins-good:interleave=enabled \
+    -Dgst-plugins-good:isomp4=enabled \
+    -Dgst-plugins-good:law=enabled \
+    -Dgst-plugins-good:level=enabled \
+    -Dgst-plugins-good:matroska=enabled \
+    -Dgst-plugins-good:monoscope=enabled \
+    -Dgst-plugins-good:multifile=enabled \
+    -Dgst-plugins-good:multipart=enabled \
+    -Dgst-plugins-good:shapewipe=enabled \
+    -Dgst-plugins-good:smpte=enabled \
+    -Dgst-plugins-good:spectrum=enabled \
+    -Dgst-plugins-good:udp=enabled \
+    -Dgst-plugins-good:videobox=enabled \
+    -Dgst-plugins-good:videocrop=enabled \
+    -Dgst-plugins-good:videofilter=enabled \
+    -Dgst-plugins-good:videomixer=enabled \
+    -Dgst-plugins-good:wavenc=enabled \
+    -Dgst-plugins-good:wavparse=enabled \
+    -Dgst-plugins-good:y4m=enabled \
+    -Dgst-plugins-good:oss=disabled \
+    -Dgst-plugins-good:oss4=disabled \
+    -Dgst-plugins-good:v4l2=enabled \
+    -Dgst-plugins-good:vpx=enabled \
+    -Dgst-plugins-good:jpeg=enabled
+
+av_opts=-Dlibav=enabled
+
+fdk_aac_opts=-Dfdk-aac:remove-date=true
+ugly_opts=-Dugly=enabled -Dgst-plugins-ugly:x264=enabled
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+    --default-library=static \
+	--auto-features=disabled \
+    --wrap-mode=default \
+    -Dgst-examples=disabled \
+    -Ddoc=disabled \
+    -Dgpl=enabled \
+    -Dtests=disabled \
+    -Djson-glib:tests=false \
+    -Dcairo:tests=disabled \
+    -Dglib:tests=false \
+    -Dintrospection=enabled \
+    -Dgst-full-libraries=* \
+	$(python_opts) \
+    $(core_opts) \
+	$(base_opts) \
+	$(good_opts) \
+	$(bad_opts) \
+	$(validate_opts) \
+	$(ges_opts) \
+	$(av_opts) \
+    $(fdk_aac_opts) \
+	$(ugly_opts) \
+	$(conf_flags)
+
+override_dh_auto_clean:
+	rm -rf $(CURDIR)/fake-home
+	set -e; for file in $(infiles); do \
+		rm -f debian/$$file; \
+	done
+	dh_auto_clean
+
+override_dh_auto_install:
+	dh_auto_install && env && mv debian/tmp/usr/lib/python3.9/site-packages/gi/overrides/_gi_gst*.so debian/tmp/usr/lib/python3/dist-packages/gi/overrides/
+
+override_dh_auto_test:
+	dh_auto_test || true
+
+override_dh_strip:
+	dh_strip --dbgsym-migration='gstreamer-full1.0-dbg (<< 1.17.1-1~)'
+
+override_dh_makeshlibs:
+	dh_makeshlibs -pgstreamer-full1.0 -X "/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0" -V 'gstreamer-full1.0 (>= $(gst_version))' -- -c4
+
+override_dh_install:
+	dh_install
+	set -e; for file in $(infiles); do \
+		sed -e"s/@MULTIARCH@/$(DEB_HOST_MULTIARCH)/g" \
+		debian/$${file}.in > debian/$$file; \
+	done

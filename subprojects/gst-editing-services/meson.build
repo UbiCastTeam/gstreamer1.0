@@ -285,8 +285,11 @@ if pygi_override_dir == ''
   )
 endif
 
-message('pygobject overrides directory = @0@'.format(pygi_override_dir))
-subdir('bindings/python')
+python = pymod.find_installation(required: get_option('introspection'))
+if pygi_override_dir != ''
+  message('pygobject overrides directory ' + pygi_override_dir)
+  subdir('bindings/python')
+endif
 
 # Set release date
 if gst_version_nano == 0
