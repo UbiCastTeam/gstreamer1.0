@@ -582,8 +582,8 @@ smart_encoder_get_caps (GstSmartEncoder * self, GstCaps * original_caps)
 
     if (!gst_structure_has_field (original_struct, field)) {
       const GValue *v = gst_structure_get_value (_struct, field);
-      g_assert (v);
-      gst_structure_set_value (out_struct, field, v);
+      if (v)
+        gst_structure_set_value (out_struct, field, v);
     }
   }
   gst_caps_unref (caps);
