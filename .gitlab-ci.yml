@@ -1,13 +1,27 @@
+---
+stages:
+  - 'build-docker'
+  - 'build-debs'
+
+
+build_docker:
+  image: registry.ubicast.net/docker/dind-compose
+  stage: 'build-docker'
+  # Docker images are built manually on demand
+  when: manual
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $IMAGE_TAG -f ci/debian/Dockerfile .
+    - echo "Pushing $IMAGE_TAG"
+    - docker push $IMAGE_TAG
+
 build:
-  image: debian:buster
+  image: registry.ubicast.net/public-projects/gstreamer1.0:1-19-3-ubicast
+  stage: 'build-debs'
   script:
     - export GI_SCANNER_DISABLE_CACHE=1
-    - rm -f ../*.deb
-    - find /etc/apt/sources.list* -type f -exec sed -i 'p; s/^deb /deb-src /' '{}' +
-    - apt update
-    - apt-get install --no-install-recommends -yV build-essential devscripts equivs wget git
-    - wget http://ftp.us.debian.org/debian/pool/main/m/meson/meson_0.60.2-1_all.deb
-    - apt install -f $PWD/meson_*.deb -y && rm meson*.deb
     - mk-build-deps -irt 'apt-get --no-install-recommends -yV' debian/control > install-deps.log || (cat install-deps.log && exit 1)
     - debuild -i -us -uc -b > debuild.log || (cat debuild.log && exit 1)
     - apt install -f $PWD/../*.deb -y > install.log || (cat install.log && exit 1)
