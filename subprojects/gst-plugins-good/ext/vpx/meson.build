@@ -40,7 +40,7 @@ vpx_features = [
 ]
 
 vpx_option = get_option('vpx')
-vpx_dep = dependency('vpx', version : '>=1.7.0', required : vpx_option, allow_fallback: true)
+vpx_dep = dependency('vpx', version : '>=1.7.0', required : vpx_option, allow_fallback: true, static: true)
 
 if vpx_dep.found()
   vpx_args = []
