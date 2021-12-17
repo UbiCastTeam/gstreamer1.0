@@ -35,7 +35,6 @@ build:
     - apt install -f $PWD/../*.deb -y > install.log || (cat install.log && exit 1)
     - mv $PWD/../*.deb .
     - gst-inspect-1.0
-    - cp ../*.deb .
 
   artifacts:
     expire_in: 30 day
