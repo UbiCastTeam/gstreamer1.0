@@ -153,6 +153,9 @@ av_opts=-Dlibav=enabled
 fdk_aac_opts=-Dfdk-aac:remove-date=true
 ugly_opts=-Dugly=enabled -Dgst-plugins-ugly:x264=enabled
 
+# INFO: Use `,` as separator between project names
+extra_projects=gst_change_detect
+
 override_dh_auto_configure:
 	dh_auto_configure -- \
     --default-library=static \
@@ -177,6 +180,7 @@ override_dh_auto_configure:
 	$(av_opts) \
     $(fdk_aac_opts) \
 	$(ugly_opts) \
+	-Dcustom_subprojects=$(extra_projects) \
 	$(conf_flags)
 
 override_dh_auto_clean:
