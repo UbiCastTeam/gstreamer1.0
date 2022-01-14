@@ -6,7 +6,7 @@
  * Copyright (C) 2011 Stefan Sauer <ensonic@users.sf.net>
  * Copyright (C) 2011 Robert Jobbagy <jobbagy.robert@gmail.com>
  * Copyright (C) 2018 Nicola Murino <nicola.murino@gmail.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -100,6 +100,8 @@ struct _GstFaceDetect
   gint flags;
   gint min_size_width;
   gint min_size_height;
+  gint max_size_width;
+  gint max_size_height;
   gint min_stddev;
   gint updates;
 
