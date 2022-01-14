@@ -102,6 +102,8 @@ GST_DEBUG_CATEGORY_STATIC (gst_face_detect_debug);
 #define DEFAULT_MIN_NEIGHBORS 3
 #define DEFAULT_MIN_SIZE_WIDTH 30
 #define DEFAULT_MIN_SIZE_HEIGHT 30
+#define DEFAULT_MAX_SIZE_WIDTH 0
+#define DEFAULT_MAX_SIZE_HEIGHT 0
 #define DEFAULT_MIN_STDDEV 0
 
 using namespace cv;
@@ -125,6 +127,8 @@ enum
   PROP_FLAGS,
   PROP_MIN_SIZE_WIDTH,
   PROP_MIN_SIZE_HEIGHT,
+  PROP_MAX_SIZE_WIDTH,
+  PROP_MAX_SIZE_HEIGHT,
   PROP_UPDATES,
   PROP_MIN_STDDEV
 };
@@ -339,6 +343,16 @@ gst_face_detect_class_init (GstFaceDetectClass * klass)
           "Minimum area height to be recognized as a face", 0, G_MAXINT,
           DEFAULT_MIN_SIZE_HEIGHT,
           (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+  g_object_class_install_property (gobject_class, PROP_MAX_SIZE_WIDTH,
+      g_param_spec_int ("max-size-width", "Maximum face width",
+          "Maximum area width to be recognized as a face", 0, G_MAXINT,
+          DEFAULT_MAX_SIZE_WIDTH,
+          (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+  g_object_class_install_property (gobject_class, PROP_MAX_SIZE_HEIGHT,
+      g_param_spec_int ("max-size-height", "Maximum face height",
+          "Maximum area height to be recognized as a face", 0, G_MAXINT,
+          DEFAULT_MAX_SIZE_HEIGHT,
+          (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
   g_object_class_install_property (gobject_class, PROP_UPDATES,
       g_param_spec_enum ("updates", "Updates",
           "When send update bus messages, if at all",
@@ -383,6 +397,8 @@ gst_face_detect_init (GstFaceDetect * filter)
   filter->flags = DEFAULT_FLAGS;
   filter->min_size_width = DEFAULT_MIN_SIZE_WIDTH;
   filter->min_size_height = DEFAULT_MIN_SIZE_HEIGHT;
+  filter->max_size_width = DEFAULT_MAX_SIZE_WIDTH;
+  filter->max_size_height = DEFAULT_MAX_SIZE_HEIGHT;
   filter->min_stddev = DEFAULT_MIN_STDDEV;
   filter->cvFaceDetect =
       gst_face_detect_load_profile (filter, filter->face_profile);
@@ -452,6 +468,12 @@ gst_face_detect_set_property (GObject * object, guint prop_id,
     case PROP_MIN_SIZE_HEIGHT:
       filter->min_size_height = g_value_get_int (value);
       break;
+    case PROP_MAX_SIZE_WIDTH:
+      filter->max_size_width = g_value_get_int (value);
+      break;
+    case PROP_MAX_SIZE_HEIGHT:
+      filter->max_size_height = g_value_get_int (value);
+      break;
     case PROP_MIN_STDDEV:
       filter->min_stddev = g_value_get_int (value);
       break;
@@ -500,6 +522,12 @@ gst_face_detect_get_property (GObject * object, guint prop_id,
       break;
     case PROP_MIN_SIZE_HEIGHT:
       g_value_set_int (value, filter->min_size_height);
+      break;
+    case PROP_MAX_SIZE_WIDTH:
+      g_value_set_int (value, filter->max_size_width);
+      break;
+    case PROP_MAX_SIZE_HEIGHT:
+      g_value_set_int (value, filter->max_size_height);
       break;
     case PROP_MIN_STDDEV:
       g_value_set_int (value, filter->min_stddev);
@@ -557,7 +585,8 @@ gst_face_detect_message_new (GstFaceDetect * filter, GstBuffer * buf)
 static void
 gst_face_detect_run_detector (GstFaceDetect * filter,
     CascadeClassifier * detector, gint min_size_width,
-    gint min_size_height, Rect r, vector < Rect > &faces)
+    gint min_size_height, gint max_size_width, gint max_size_height, Rect r, vector < Rect > &faces
+    )
 {
   double img_stddev = 0;
   if (filter->min_stddev > 0) {
@@ -569,7 +598,7 @@ gst_face_detect_run_detector (GstFaceDetect * filter,
     Mat roi (filter->cvGray, r);
     detector->detectMultiScale (roi, faces, filter->scale_factor,
         filter->min_neighbors, filter->flags, Size (min_size_width,
-            min_size_height), Size (0, 0));
+            min_size_height), Size (max_size_width, max_size_height));
   } else {
     GST_LOG_OBJECT (filter,
         "Calculated stddev %f lesser than min_stddev %d, detection not performed",
@@ -601,6 +630,7 @@ gst_face_detect_transform_ip (GstOpencvVideoFilter * base, GstBuffer * buf,
 
     gst_face_detect_run_detector (filter, filter->cvFaceDetect,
         filter->min_size_width, filter->min_size_height,
+        filter->max_size_width, filter->max_size_height,
         Rect (0, 0,
             filter->cvGray.size ().width, filter->cvGray.size ().height),
         faces);
@@ -643,8 +673,10 @@ gst_face_detect_transform_ip (GstOpencvVideoFilter * base, GstBuffer * buf,
 
     for (unsigned int i = 0; i < faces.size (); ++i) {
       Rect r = faces[i];
-      guint mw = filter->min_size_width / 8;
-      guint mh = filter->min_size_height / 8;
+      guint minw = filter->min_size_width / 8;
+      guint minh = filter->min_size_height / 8;
+      guint maxw = r.width;
+      guint maxh = r.height;
       guint rnx = 0, rny = 0, rnw, rnh;
       guint rmx = 0, rmy = 0, rmw, rmh;
       guint rex = 0, rey = 0, rew, reh;
@@ -658,8 +690,8 @@ gst_face_detect_transform_ip (GstOpencvVideoFilter * base, GstBuffer * buf,
         rny = r.y + r.height / 4;
         rnw = r.width / 2;
         rnh = rhh;
-        gst_face_detect_run_detector (filter, filter->cvNoseDetect, mw, mh,
-            Rect (rnx, rny, rnw, rnh), nose);
+        gst_face_detect_run_detector (filter, filter->cvNoseDetect, minw, minh,
+            maxw, maxh, Rect (rnx, rny, rnw, rnh), nose);
         have_nose = !nose.empty ();
       } else {
         have_nose = FALSE;
@@ -670,8 +702,8 @@ gst_face_detect_transform_ip (GstOpencvVideoFilter * base, GstBuffer * buf,
         rmy = r.y + r.height / 2;
         rmw = r.width;
         rmh = rhh;
-        gst_face_detect_run_detector (filter, filter->cvMouthDetect, mw,
-            mh, Rect (rmx, rmy, rmw, rmh), mouth);
+        gst_face_detect_run_detector (filter, filter->cvMouthDetect, minw,
+            minh, maxw, maxh, Rect (rmx, rmy, rmw, rmh), mouth);
         have_mouth = !mouth.empty ();
       } else {
         have_mouth = FALSE;
@@ -682,8 +714,8 @@ gst_face_detect_transform_ip (GstOpencvVideoFilter * base, GstBuffer * buf,
         rey = r.y;
         rew = r.width;
         reh = rhh;
-        gst_face_detect_run_detector (filter, filter->cvEyesDetect, mw, mh,
-            Rect (rex, rey, rew, reh), eyes);
+        gst_face_detect_run_detector (filter, filter->cvEyesDetect, minw, minh,
+            maxw, maxh, Rect (rex, rey, rew, reh), eyes);
         have_eyes = !eyes.empty ();
       } else {
         have_eyes = FALSE;
