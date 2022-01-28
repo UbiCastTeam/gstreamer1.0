@@ -8,7 +8,7 @@ RUN apt-get update \
  && apt-get install --no-install-recommends -yV build-essential devscripts \
     equivs wget git zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev \
     libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev cmake ninja-build \
-    pkg-config
+    openssh-client pkg-config
 
 RUN wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz \
     && tar -xf Python-3.9.1.tgz \
