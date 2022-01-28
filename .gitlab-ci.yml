@@ -20,6 +20,9 @@ build_docker:
 build:
   image: registry.ubicast.net/public-projects/gstreamer1.0:1-19-3-ubicast
   stage: 'build-debs'
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$GST_CHANGE_DETECT_KEY" | tr -d '\r' | ssh-add - > /dev/null
   script:
     - export GI_SCANNER_DISABLE_CACHE=1
     - mk-build-deps -irt 'apt-get --no-install-recommends -yV' debian/control > install-deps.log || (cat install-deps.log && exit 1)
