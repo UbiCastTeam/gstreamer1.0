@@ -18,7 +18,7 @@ build_docker:
     - docker push $IMAGE_TAG
 
 build:
-  image: registry.ubicast.net/public-projects/gstreamer1.0:1-19-3-ubicast
+  image: registry.ubicast.net/public-projects/gstreamer1.0:t34808-gst-full-1-20-0
   stage: 'build-debs'
   before_script:
     - eval $(ssh-agent -s)
