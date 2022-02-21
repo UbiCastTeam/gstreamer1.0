@@ -129,7 +129,7 @@ endif
 foreach custom_subproj: get_option('custom_subprojects').split(',')
     if custom_subproj != ''
         message ('Adding custom subproject ' + custom_subproj)
-        subprojects += [[custom_subproj, {'match_gst_version': false}]]
+        subprojects += [[custom_subproj, {'match_gst_version': false, 'option': false}]]
     endif
 endforeach
 
