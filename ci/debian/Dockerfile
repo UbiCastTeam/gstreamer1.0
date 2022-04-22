@@ -106,5 +106,5 @@ RUN export OPENCV_VERSION=4.5.4 \
     && sed -i "s/-lIconv::Iconv//g" /usr/lib/x86_64-linux-gnu/pkgconfig/opencv4.pc \
     && pkg-config --list-all
 
-RUN wget http://ftp.us.debian.org/debian/pool/main/m/meson/meson_0.61.1-1_all.deb \
+RUN wget http://ftp.us.debian.org/debian/pool/main/m/meson/meson_0.61.2-1_all.deb \
     && apt install -f $PWD/meson_*.deb -y && rm meson*.deb
