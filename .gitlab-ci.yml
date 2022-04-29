@@ -2,9 +2,11 @@
 stages:
   - 'build-docker'
   - 'build-debs'
+  - 'publish'
 
 variables:
   DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+  NUDGIS_BRANCH_PUBLISH: ng_unstable/bullseye
 
 build_docker:
   image: registry.ubicast.net/docker/dind-compose
@@ -39,3 +41,16 @@ build:
     paths:
       - "*.log"
       - "*.deb"
+
+publish:
+  stage: 'publish'
+  image: registry.ubicast.net/sys/debian-packaging-helper:latest
+  when: manual
+  script:
+    - |
+      VERSION=$(dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2)
+      DEBFILE=gstreamer-full1.0_${VERSION}_amd64.deb
+      curl -X POST -H "api-key: ${SKYREACH_API_KEY}" -F "project=nudgis" -F "md5sum=$(md5sum ${DEBFILE} | awk '{print $1}')" -F "branch=${NUDGIS_BRANCH_PUBLISH}" -F "file=@${DEBFILE}" "https://skyreach.ubicast.net/api/v3/packaging/inbox/add/"
+
+  dependencies:
+    - build
