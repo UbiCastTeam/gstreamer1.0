@@ -3,22 +3,22 @@ stages:
   - 'build-docker'
   - 'build-debs'
 
+variables:
+  DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
 
 build_docker:
   image: registry.ubicast.net/docker/dind-compose
   stage: 'build-docker'
   # Docker images are built manually on demand
   when: manual
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $IMAGE_TAG -f ci/debian/Dockerfile .
-    - echo "Pushing $IMAGE_TAG"
-    - docker push $IMAGE_TAG
+    - docker build -t $DOCKER_IMAGE_TAG -f ci/debian/Dockerfile .
+    - echo "Pushing $DOCKER_IMAGE_TAG"
+    - docker push $DOCKER_IMAGE_TAG
 
 build:
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  image: $DOCKER_IMAGE_TAG
   stage: 'build-debs'
   before_script:
     - eval $(ssh-agent -s)
