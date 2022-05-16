@@ -23,10 +23,11 @@ build:
   before_script:
     - eval $(ssh-agent -s)
     - echo "$GST_CHANGE_DETECT_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - sed -i -Ee '$a\StrictHostKeyChecking accept-new' /etc/ssh/ssh_config
   script:
     - export GI_SCANNER_DISABLE_CACHE=1
     - mk-build-deps -irt 'apt-get --no-install-recommends -yV' debian/control > install-deps.log || (cat install-deps.log && exit 1)
-    - debuild -i -us -uc -b > debuild.log || (cat debuild.log && exit 1)
+    - debuild -e SSH_AUTH_SOCK -i -us -uc -b > debuild.log || (cat debuild.log && exit 1)
     - apt install -f $PWD/../*.deb -y > install.log || (cat install.log && exit 1)
     - mv $PWD/../*.deb .
     - gst-inspect-1.0
