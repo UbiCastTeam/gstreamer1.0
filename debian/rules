@@ -119,7 +119,22 @@ good_opts=-Dgood=enabled \
 
 json_glib_opts=-Djson-glib:introspection=disabled -Djson-glib:tests=false
 
-ffmpeg_opts=-DFFmpeg:h264_decoder=enabled -DFFmpeg:hevc_decoder=enabled
+
+# only for tests
+ffmpeg_opts=-DFFmpeg:h264_decoder=enabled -DFFmpeg:hevc_decoder=enabled\
+    -DFFmpeg:wmv1_decoder=enabled \
+    -DFFmpeg:wmv2_decoder=enabled \
+    -DFFmpeg:vc1_decoder=enabled \
+    -DFFmpeg:wmv3_decoder=enabled \
+    -DFFmpeg:wmav1_decoder=enabled \
+    -DFFmpeg:wmav2_decoder=enabled \
+    -DFFmpeg:wmavoice_decoder=enabled \
+    -DFFmpeg:h263_decoder=enabled \
+    -DFFmpeg:h263_parser=enabled \
+    -DFFmpeg:mpeg4_decoder=enabled \
+    -DFFmpeg:mpeg4video_parser=enabled \
+    -DFFmpeg:ac3_decoder=enabled \
+    -DFFmpeg:ac3_parser=enabled
 
 av_opts=-Dlibav=enabled
 
