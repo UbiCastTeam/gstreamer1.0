@@ -6,7 +6,6 @@ Uploaders: Thibault Saunier <tsaunier@igalia.com>
 Build-Depends: debhelper,
                debhelper-compat (= 12),
                dpkg-dev (>= 1.15.1),
-               meson (>= 0.48),
                pkg-config (>= 0.11.0),
                perl-doc,
                zlib1g-dev (>= 1:1.1.4),
@@ -41,8 +40,7 @@ Multi-Arch: same
 Section: libs
 Essential: yes
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
+Depends: ${misc:Depends},
           python3-gi (>= 3.8),
           libsoup2.4-1
 Replaces: ges1.0-tools,

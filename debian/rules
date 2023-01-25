@@ -62,9 +62,8 @@ base_opts=-Dbase=enabled \
     -Dgst-plugins-base:pbtypes=enabled \
     -Dgst-plugins-base:playback=enabled \
     -Dgst-plugins-base:typefind=enabled \
-    -Dgst-plugins-base:videoconvert=enabled \
+    -Dgst-plugins-base:videoconvertscale=enabled \
     -Dgst-plugins-base:videorate=enabled \
-    -Dgst-plugins-base:videoscale=enabled \
     -Dgst-plugins-base:videotestsrc=enabled \
     -Dgst-plugins-base:volume=enabled \
     -Dgst-plugins-base:opus=enabled \
@@ -119,6 +118,8 @@ good_opts=-Dgood=enabled \
     -Dgst-plugins-good:vpx=enabled \
     -Dgst-plugins-good:jpeg=enabled
 
+json_glib_opts=-Djson-glib:introspection=disabled -Djson-glib:tests=false
+
 av_opts=-Dlibav=enabled
 
 fdk_aac_opts=-Dfdk-aac:remove-date=true
@@ -132,15 +133,16 @@ override_dh_auto_configure:
     --default-library=static \
 	--auto-features=disabled \
     --wrap-mode=default \
+    -Dtools=enabled \
     -Dgst-examples=disabled \
     -Ddoc=disabled \
     -Dgpl=enabled \
     -Dtests=disabled \
-    -Djson-glib:tests=false \
     -Dcairo:tests=disabled \
     -Dglib:tests=false \
     -Dintrospection=enabled \
     -Dgst-full-libraries=* \
+    $(json_glib_opts) \
 	$(python_opts) \
     $(core_opts) \
 	$(base_opts) \
@@ -162,7 +164,10 @@ override_dh_auto_clean:
 	dh_auto_clean
 
 override_dh_auto_install:
-	dh_auto_install && env && mv debian/tmp/usr/lib/python3.9/site-packages/gi/overrides/_gi_gst*.so debian/tmp/usr/lib/python3/dist-packages/gi/overrides/
+	dh_auto_install && env && \
+        mv debian/tmp/usr/lib/python3.9/site-packages/gi/overrides/_gi_gst*.so debian/tmp/usr/lib/python3/dist-packages/gi/overrides/ && \
+        rm debian/tmp/usr/share/aclocal/glib-2.0.m4 debian/tmp/usr/share/aclocal/glib-gettext.m4 debian/tmp/usr/share/aclocal/gsettings.m4
+
 
 override_dh_auto_test:
 	dh_auto_test || true
