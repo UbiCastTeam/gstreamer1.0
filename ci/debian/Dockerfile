@@ -8,12 +8,12 @@ RUN apt-get update \
  && apt-get install --no-install-recommends -yV build-essential devscripts \
     equivs wget git zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev \
     libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev cmake ninja-build \
-    openssh-client pkg-config
+    openssh-client pkg-config liblzma-dev
 
 RUN wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz \
     && tar -xf Python-3.9.1.tgz \
     && cd Python-3.9.1 \
-    && ./configure --enable-optimizations \
+    && ./configure --enable-optimizations --enable-shared \
     && make && make altinstall \
     && python3.9 --version
     && cd / \
@@ -105,6 +105,3 @@ RUN export OPENCV_VERSION=4.5.4 \
     && echo "==> Hacking openCV PC file to make linking statically working" \
     && sed -i "s/-lIconv::Iconv//g" /usr/lib/x86_64-linux-gnu/pkgconfig/opencv4.pc \
     && pkg-config --list-all
-
-RUN wget http://ftp.debian.org/debian/pool/main/m/meson/meson_0.61.1-1~bpo11+1_all.deb \
-    && apt install -f $PWD/meson_*.deb -y && rm meson*.deb
