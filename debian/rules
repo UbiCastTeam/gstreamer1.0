@@ -46,7 +46,6 @@ ges_opts=-Dges=enabled \
 	-Dgst-editing-services:libpython-dir='/usr/lib64/libpython{py}.so'
 
 python_opts=-Dpython=enabled \
-	-Dgst-python:python='["python3.7","/usr/local/bin/python3.9"]' \
 	-Dgst-python:libpython-dir=/usr/lib64/libpython{py}.so
 
 base_opts=-Dbase=enabled \
@@ -163,12 +162,6 @@ override_dh_auto_clean:
 	done
 	dh_auto_clean
 
-override_dh_auto_install:
-	dh_auto_install && env && \
-        mv debian/tmp/usr/lib/python3.9/site-packages/gi/overrides/_gi_gst*.so debian/tmp/usr/lib/python3/dist-packages/gi/overrides/ && \
-        rm debian/tmp/usr/share/aclocal/glib-2.0.m4 debian/tmp/usr/share/aclocal/glib-gettext.m4 debian/tmp/usr/share/aclocal/gsettings.m4
-
-
 override_dh_auto_test:
 	dh_auto_test || true
 
@@ -184,3 +177,7 @@ override_dh_install:
 		sed -e"s/@MULTIARCH@/$(DEB_HOST_MULTIARCH)/g" \
 		debian/$${file}.in > debian/$$file; \
 	done
+
+override_dh_dwz:
+    # working around https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1692743.html
+    dh_dwz || :
