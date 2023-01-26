@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bullseye
 
 # Add deb-src to sources.list
 RUN find /etc/apt/sources.list* -type f -exec sed -i 'p; s/^deb /deb-src /' '{}' +
@@ -8,16 +8,7 @@ RUN apt-get update \
  && apt-get install --no-install-recommends -yV build-essential devscripts \
     equivs wget git zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev \
     libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev cmake ninja-build \
-    openssh-client pkg-config liblzma-dev
-
-RUN wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz \
-    && tar -xf Python-3.9.1.tgz \
-    && cd Python-3.9.1 \
-    && ./configure --enable-optimizations --enable-shared \
-    && make && make altinstall \
-    && python3.9 --version
-    && cd / \
-    && rm -Rf Python-3.9.1*
+    openssh-client pkg-config liblzma-dev python3-pip
 
 RUN export OPENCV_VERSION=4.5.4 \
     && git clone https://github.com/opencv/opencv.git --branch $OPENCV_VERSION \
