@@ -119,6 +119,8 @@ good_opts=-Dgood=enabled \
 
 json_glib_opts=-Djson-glib:introspection=disabled -Djson-glib:tests=false
 
+ffmpeg_opts=-DFFmpeg:h264_decoder=enabled -DFFmpeg:hevc_decoder=enabled
+
 av_opts=-Dlibav=enabled
 
 fdk_aac_opts=-Dfdk-aac:remove-date=true
@@ -142,6 +144,7 @@ override_dh_auto_configure:
     -Dintrospection=enabled \
     -Dgst-full-libraries=* \
     $(json_glib_opts) \
+    $(ffmpeg_opts) \
 	$(python_opts) \
     $(core_opts) \
 	$(base_opts) \
