@@ -523,6 +523,15 @@ gst_codec_timestamper_chain (GstPad * pad, GstObject * parent,
 
   GST_LOG_OBJECT (self, "Handle %" GST_PTR_FORMAT, buffer);
 
+  ret = klass->handle_buffer (self, buffer);
+  if (ret != GST_FLOW_OK) {
+    GST_INFO_OBJECT (self, "Handle buffer returned %s",
+        gst_flow_get_name (ret));
+
+    gst_buffer_unref (buffer);
+    return ret;
+  }
+
   pts = GST_BUFFER_PTS (buffer);
   dts = GST_BUFFER_DTS (buffer);
 
@@ -554,15 +563,6 @@ gst_codec_timestamper_chain (GstPad * pad, GstObject * parent,
       pts += priv->time_adjustment;
     if (GST_CLOCK_TIME_IS_VALID (dts))
       dts += priv->time_adjustment;
-  }
-
-  ret = klass->handle_buffer (self, buffer);
-  if (ret != GST_FLOW_OK) {
-    GST_INFO_OBJECT (self, "Handle buffer returned %s",
-        gst_flow_get_name (ret));
-
-    gst_buffer_unref (buffer);
-    return ret;
   }
 
   /* workaround h264/5parse producing pts=NONE buffers when provided with
