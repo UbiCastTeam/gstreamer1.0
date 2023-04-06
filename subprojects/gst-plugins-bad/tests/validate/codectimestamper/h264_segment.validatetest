@@ -1,0 +1,10 @@
+meta,
+    args = {
+        "videotestsrc num-buffers=5 ! videoscale  ! openh264enc ! h264timestamper ! fakesink name=sink",
+    },
+    configs = {
+        "$(validateflow), pad=sink:sink, buffers-checksum=as-id, caps-properties={width, height}, ignored-event-types={tag}",
+    }
+
+
+
