@@ -8,7 +8,12 @@ RUN apt-get update \
  && apt-get install --no-install-recommends -yV build-essential devscripts \
     equivs wget git zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev \
     libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev cmake ninja-build \
-    openssh-client pkg-config liblzma-dev python3-pip
+    openssh-client pkg-config liblzma-dev python3-venv
+
+# Setup Python venv
+RUN python3 -m venv /opt/venv --system-site-packages
+ENV VIRTUAL_ENV="/opt/venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN export OPENCV_VERSION=4.5.4 \
     && git clone https://github.com/opencv/opencv.git --branch $OPENCV_VERSION \
