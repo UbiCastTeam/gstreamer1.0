@@ -8,7 +8,7 @@ DOCKER_SSH_AGENT_PARAM :=
 endif
 
 build_debs:
-	docker run -v $$PWD:/work/gst -w /work/gst ${DOCKER_SSH_AGENT_PARAM} registry.ubicast.net/public-projects/gstreamer1.0:bullseye /bin/bash -c " \
+	docker run -v $$PWD:/work/gst -w /work/gst ${DOCKER_SSH_AGENT_PARAM} registry.ubicast.net/public-projects/gstreamer1.0:bookworm /bin/bash -c " \
 		export GI_SCANNER_DISABLE_CACHE=1; \
 		python3 -m pip install meson && \
 		sed -i -Ee '\$$a\StrictHostKeyChecking accept-new' /etc/ssh/ssh_config && \
