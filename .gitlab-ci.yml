@@ -5,8 +5,8 @@ stages:
   - 'publish'
 
 variables:
-  DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:bullseye
-  NUDGIS_BRANCH_PUBLISH: ng_unstable/bullseye
+  DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:bookworm
+  NUDGIS_BRANCH_PUBLISH: ng_unstable/bookworm
 
 build_docker:
   image: registry.ubicast.net/docker/dind-compose
@@ -45,7 +45,7 @@ build:
 
 publish:
   stage: 'publish'
-  image: registry.ubicast.net/sys/debian-packaging-helper:latest
+  image: registry.ubicast.net/sys/debian-packaging-helper:bookworm
   when: manual
   script:
     - |
