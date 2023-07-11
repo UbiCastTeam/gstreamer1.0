@@ -1218,7 +1218,11 @@ _capsfilter_force_format (GstPad * pad,
             G_TYPE_STRING, "avc3", NULL);
 
         gst_structure_remove_fields (structure, "codec_data", "profile",
-            "level", NULL);
+            "level",
+            /* Do not force fields that are part of the avc3 bitstream */
+            "colorimetry", "chroma-format", "bit-depth-luma",
+            "bit-depth-chroma", NULL);
+
       } else if (gst_structure_has_name (structure, "video/x-h265") &&
           !gst_structure_has_field (structure, "stream_format")) {
         gst_structure_set (structure, "stream-format",
