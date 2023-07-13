@@ -30,7 +30,7 @@ build:
     - export GI_SCANNER_DISABLE_CACHE=1
     - mk-build-deps -irt 'apt-get --no-install-recommends -yV' debian/control > install-deps.log || (cat install-deps.log && exit 1)
     # We need https://github.com/mesonbuild/meson/pull/11337
-    - pip install git+https://github.com/thiblahute/meson@1.0.0+includedir_fix
+    - pip install meson
     - debuild -e SSH_AUTH_SOCK -i -us -uc -b > debuild.log || (cat debuild.log && exit 1)
     - apt install -f $PWD/../*.deb -y > install.log || (cat install.log && exit 1)
     - mv $PWD/../*.deb .
