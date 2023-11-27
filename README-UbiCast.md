@@ -71,6 +71,8 @@ It generally consists in:
   `debian-revision` and set the correct date:
 
   ```
+  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -i
+  # add your changelog then to finalize,
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r
   ```
 
