@@ -59,7 +59,7 @@ It generally consists in:
 
 * switching to our latest branch: ``git switch X.Y+ubicast+bookworm`` (e.g. ``git switch 1.22-ubicast+bookworm``)
 
-* fetching the upstream: ``git fetch --all upstream``
+* fetching the upstream: ``git fetch upstream``
 
 * rebasing against the new bug fix tag: ``git rebase X.Y.Z`` (e.g. ``git rebase 1.22.3``)
 
