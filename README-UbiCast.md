@@ -65,7 +65,7 @@ It generally consists in:
 
 * resolve any merge conflicts :-)
 
-* update the debian/changelog (add new paragraph, with new version)
+* update the debian/changelog (add new paragraph, and reset the version)
 
   You may use `debchange` to that, it will automatically update the
   `debian-revision` and set the correct date:
