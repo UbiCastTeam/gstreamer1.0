@@ -71,10 +71,11 @@ It generally consists in:
   `debian-revision` and set the correct date:
 
   ```
-  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -i
+  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v 1.22.X-deb12+ubicast1
   # add your changelog then to finalize,
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r
   ```
+* commit the new `debian/changelog`
 
 * push the updated branch: ``git push --force-with-lease``
 
@@ -119,5 +120,7 @@ It generally consists in:
 
   > **Note:** The convention is to reset `debian-revion` number to 1 on upstream
   > change (so we reset to `deb12-ubuntu1`)
+
+* commit the new `debian/changelog`
 
 * push the updated branch: ``git push origin``
