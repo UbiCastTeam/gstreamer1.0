@@ -75,6 +75,7 @@ It generally consists in:
   # add your changelog then to finalize,
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r
   ```
+
 * commit the new `debian/changelog`
 
 * push the updated branch: ``git push --force-with-lease``
