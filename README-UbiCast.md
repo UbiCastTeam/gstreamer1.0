@@ -61,6 +61,17 @@ It generally consists in:
 
 * fetching the upstream: ``git fetch upstream``
 
+* Add a tag in case of fallback, as this operation will rewrite history you may
+  add a tag `ubicast-X.Y.Z` before the rebase, so that we can still restore the
+  old version. (do not forget to push it to the server).
+
+  For instance before updating from 1.22.1 -> 1.22.2 a tag
+  `1.22.1+ubicast+bookworm` can be set.
+
+  ```
+  git tag X.Y.Z+ubicast+bookworm
+  ```
+
 * rebasing against the new bug fix tag: ``git rebase X.Y.Z`` (e.g. ``git rebase 1.22.3``)
 
 * resolve any merge conflicts :-)
@@ -84,12 +95,6 @@ This way we keep a clean history which show our modification on top.
 
 The `debian-version` will be increased and the `debian-revision` reset to 1
 
-As this operation will rewrite history you may add a tag `ubicast-X.Y.Z` before
-the rebase, so that we can still restore the old version. (do not forget to push
-it to the server).
-
-For instance before updating from 1.22.1 -> 1.22.2 a tag `ubicast-1.22.1` can be
-set.
 
 #### Upgrading to a new GStreamer stable branch
 
