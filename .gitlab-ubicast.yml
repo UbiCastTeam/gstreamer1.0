@@ -5,8 +5,8 @@ stages:
   - 'publish'
 
 variables:
+  NUDGIS_PUBLISH_RELEASE: nudgis/dev.bookworm
   DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:bookworm
-  NUDGIS_BRANCH_PUBLISH: ng_unstable/bookworm
 
 build_docker:
   image: registry.ubicast.net/docker/dind-compose
@@ -51,7 +51,7 @@ publish:
     - |
       VERSION=$(dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2)
       DEBFILE=gstreamer-full1.0_${VERSION}_amd64.deb
-      curl -X POST -H "api-key: ${SKYREACH_API_KEY}" -F "project=nudgis" -F "md5sum=$(md5sum ${DEBFILE} | awk '{print $1}')" -F "branch=${NUDGIS_BRANCH_PUBLISH}" -F "file=@${DEBFILE}" "https://skyreach.ubicast.net/api/v3/packaging/inbox/add/"
+      curl -X POST -H "api-key: ${SKYREACH_API_KEY}" -F "md5sum=$(md5sum ${DEBFILE} | awk '{print $1}')" -F "releases=${NUDGIS_PUBLISH_RELEASE}" -F "path=@${DEBFILE}" "https://skyreach.ubicast.net/api/v4/packaging/packages/"
 
   dependencies:
     - build
