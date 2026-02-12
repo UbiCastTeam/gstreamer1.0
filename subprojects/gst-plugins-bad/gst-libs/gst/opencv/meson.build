@@ -30,9 +30,9 @@ libopencv_headers = [
 
 
 gstopencv_cargs = []
-opencv_dep = dependency('opencv', version : ['>= 3.0.0', '< 3.5.0'], required : false, include_type: 'system' )
+opencv_dep = dependency('opencv', version : ['>= 3.0.0', '< 3.5.0'], required : false, include_type: 'system', static: true)
 if not opencv_dep.found()
-  opencv_dep = dependency('opencv4', version : ['>= 4.0.0'], required : opencv_opt, include_type: 'system')
+  opencv_dep = dependency('opencv4', version : ['>= 4.0.0'], required : opencv_opt, include_type: 'system', static: true)
   if not opencv_dep.found()
     subdir_done()
   endif
