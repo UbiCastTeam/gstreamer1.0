@@ -1,0 +1,61 @@
+---
+stages:
+  - 'build-container'
+  - 'build-debs'
+  - 'publish'
+
+variables:
+  NUDGIS_PUBLISH_RELEASE: nudgis/dev.trixie
+  CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:trixie
+
+build_container:
+  # Container image is an OCI image that can used with OCI-compliant container
+  # management tool like podman and docker.
+  image: registry.ubicast.net/docker/dind-compose
+  stage: 'build-container'
+  # Container image are built manually on demand
+  when: manual
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CONTAINER_IMAGE_TAG -f ubicast/containers/Containerfile .
+    - echo "Pushing $CONTAINER_IMAGE_TAG"
+    - docker push $CONTAINER_IMAGE_TAG
+
+build:
+  image: $CONTAINER_IMAGE_TAG
+  stage: 'build-debs'
+  before_script:
+    # unfortunalty we need to use an SSH key instead of more secure and
+    # versatile gitlab job token as in trixie git rely on libcurl 8.14 and using
+    # env variable NETRC (passed as -e NETRC on debuild) is only available since
+    # 8.16...
+    - eval $(ssh-agent -s)
+    - echo "$GST_CHANGE_DETECT_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - sed -i -Ee '$a\StrictHostKeyChecking accept-new' /etc/ssh/ssh_config
+  script:
+    - export GI_SCANNER_DISABLE_CACHE=1
+    - mk-build-deps -irt 'apt-get --no-install-recommends -yV' debian/control > install-deps.log || (cat install-deps.log && exit 1)
+    - debuild -e SSH_AUTH_SOCK -i -us -uc -b > debuild.log || (cat debuild.log && exit 1)
+    - apt install -f $PWD/../*.deb -y > install.log || (cat install.log && exit 1)
+    - mv $PWD/../*.deb .
+    - gst-inspect-1.0
+
+  artifacts:
+    expire_in: 30 day
+    when: always
+    paths:
+      - "*.log"
+      - "*.deb"
+
+publish:
+  stage: 'publish'
+  image: registry.ubicast.net/sys/debian-packaging-helper:trixie
+  when: manual
+  script:
+    - |
+      VERSION=$(dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2)
+      DEBFILE=gstreamer-full1.0_${VERSION}_amd64.deb
+      curl -X POST -H "api-key: ${SKYREACH_API_KEY}" -F "md5sum=$(md5sum ${DEBFILE} | awk '{print $1}')" -F "releases=${NUDGIS_PUBLISH_RELEASE}" -F "path=@${DEBFILE}" "https://skyreach.ubicast.net/api/v4/packaging/packages/"
+
+  dependencies:
+    - build
