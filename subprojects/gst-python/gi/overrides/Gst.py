@@ -1277,6 +1277,10 @@ def init_check(argv: typing.Optional[list[str]] = None) -> typing.Tuple[bool, ty
     if Gst.is_initialized():
         return True, argv
 
+    # FIXME: Workaround for pygobject handling nullability wrong
+    if argv is None:
+        argv = []
+
     return real_init_check(argv)
 
 
