@@ -111,6 +111,7 @@ good_opts = \
   -Dgst-plugins-good:wavparse=enabled \
   -Dgst-plugins-good:vpx=enabled \
   -Dgst-plugins-good:jpeg=enabled \
+  -Dgst-plugins-good:adaptivedemux2=enabled \
   #
 
 json_glib_opts = \
