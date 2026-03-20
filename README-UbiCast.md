@@ -1,12 +1,10 @@
 # UbiCast GStreamer repo
 
-This repo is used to build a custom static (dependency less) GStreamer build
-(see https://dabrain34.github.io/2021/10/04/shrinking_gstreamer.html) that
-fulfills UbiCast needs.
+This repo is used to build a custom static (with minimal dependencies) GStreamer
+full build  that fulfills UbiCast needs.
 
 It targets Debian distributions, and is compatible with the debian version indicated
-per branch. (i.e.: for `X.Y+ubicast+bookworm` is Gstreamer X for debian bookworm, where
-`X.Y` could be `1.22` for example)
+per branch. (i.e.: for `debianX`)
 
 The CI of this repo builds the `gstreamer-full1.0` Debian package is created with the
 following version format (see `man deb-version`):
@@ -15,16 +13,23 @@ following version format (see `man deb-version`):
 
 For example:
 
-        1.22.0-deb12-ubicast1
+        1.28.1-ubicast-deb13+20260320
 
-With `1.22.0` corresponding to the upstream version, and `deb12-ubicast1` to the
-debian version.
+With `1.28.1` corresponding to the upstream version, and
+`ubicast-deb13+20260320` to the custom UbiCast debian revision.
 
 ## What this repository contains
 
-This repository mirrors each GStreamer branch and applies custom modification on them,
-which may consist of:
+This repository contains debianized version of GStreamer for each of UbiCast
+supported debian version.
 
+Basically each branch will contains:
+
+* GStreamer upstream code
+
+UbiCast modifications (commit log with prefix `ubicast:`):
+
+* Ubicast debianization modification (in ./debian folder)
 * UbiCast patches/features that cannot be upstreamed (too specific, hence rejected by upstream)
 * GStreamer backported fixes or features that are needed
 
@@ -34,6 +39,10 @@ It also includes the custom `.gitlab-ubicast.yml` file which runs the build in t
 > `.gitlab-ubicast.yml` in the Gitlab project configuration UI
 
 ## Git workflow
+
+Disclamer: this workflow it not optimal as it rewrite history, check for
+`git-debrebase` for a better option and update this doc if it improve the
+situation.
 
 The workflow is different depending on the target GStreamer version upgrade (bugfix or upgrade).
 
@@ -51,18 +60,18 @@ official GStreamer repository
 
         git remote add upstream https://gitlab.freedesktop.org/gstreamer/gstreamer.git
 
-### Updating to the latest GStreamer bug fix release
+### Updating to the latest GStreamer bug fix (patch version) release
 
-The corresponding branch is rebased against the bug fix tag `X.Y.Z` (e.g. `1.22.3`).
+This is the case when a new bug fix release is released like 1.28.1 -> 1.28.2
 
 It generally consists in:
 
-* switching to our latest branch: ``git switch X.Y+ubicast+bookworm`` (e.g. ``git switch 1.22-ubicast+bookworm``)
+* switching to the wished debian branch: ``git switch debianX`` (e.g. ``git switch debian13``)
 
 * fetching the upstream: ``git fetch upstream``
 
 * Add a tag in case of fallback, as this operation will rewrite history you may
-  add a tag `ubicast-X.Y.Z` before the rebase, so that we can still restore the
+  add a tag corresponding to the version `ubicast-X.Y.Z` before the rebase, so that we can still restore the
   old version. (do not forget to push it to the server).
 
   For instance before updating from 1.22.1 -> 1.22.2 a tag
@@ -82,51 +91,22 @@ It generally consists in:
   `debian-revision` and set the correct date:
 
   ```
-  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v 1.22.X-deb12+ubicast1
+  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v 1.28.X-ubicast-deb13+$(date +%Y%m%d)
   # add your changelog then to finalize,
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r
   ```
-
 * commit the new `debian/changelog`
 
 * push the updated branch: ``git push --force-with-lease``
 
 This way we keep a clean history which show our modification on top.
 
-The `debian-version` will be increased and the `debian-revision` reset to 1
-
-
-#### Upgrading to a new GStreamer stable branch
+### Upgrading to a new GStreamer stable branch
 
 A new branch shall be created from the new stable tag UbiCast modification shall
 be applied on it.
 
-It generally consists in:
+It is the same procedure as for bug fix release but you have to change the MINOR
+version.
 
-* fetching the upstream: ``git fetch --all upstream``
-
-* create  a new stable branch from the new upstream branch: ``git switch --no-track -c X.Y+ubicast+bookworm upstream/X.Y``, e.g. ``git switch --no-track -c 1.22+ubicast+bookworm upstream/1.22``
-
-* rebase the needed commit onto this branch: ``git rebase -i --onto X.Y+ubicast+bookworm X.(Y-1).Z X.(Y-1)+ubicast+bookworm``
-
-  With:
-  `X.(Y-1).Z`: the "last" bugfix tag from the previous branch, for instance when
-  updating to 1.24: is will be 1.22.6 (if 1.22.6 is the latest tag)
-
-  During this step some backport commits shall disappear
-
-* update the debian/changelog, change the version
-
-  You may use `debchange` to that, it will automatically set the correct date,
-  but you have to set the new version, ex:
-
-  ```
-  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r -v 1.22.6-deb12-ubuntu1
-  ```
-
-  > **Note:** The convention is to reset `debian-revion` number to 1 on upstream
-  > change (so we reset to `deb12-ubuntu1`)
-
-* commit the new `debian/changelog`
-
-* push the updated branch: ``git push origin``
+Don't forget to set tags to be able to rebuild specific release
