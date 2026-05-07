@@ -709,7 +709,7 @@ _pad_sink_acceptcaps (GstPad * pad, GstSmartEncoder * self, GstCaps * caps)
     if (gst_structure_has_name (s, "video/x-h264") ||
         gst_structure_has_name (s, "video/x-h265")) {
       gst_structure_remove_fields (s, "codec_data", "tier", "profile", "level",
-          NULL);
+          "colorimetry", NULL);
     } else if (gst_structure_has_name (s, "video/x-vp8")
         || gst_structure_has_name (s, "video/x-vp9")) {
       gst_structure_remove_field (s, "streamheader");
@@ -724,7 +724,7 @@ _pad_sink_acceptcaps (GstPad * pad, GstSmartEncoder * self, GstCaps * caps)
     if (gst_structure_has_name (s, "video/x-h264") ||
         gst_structure_has_name (s, "video/x-h265")) {
       gst_structure_remove_fields (s, "codec_data", "tier", "profile", "level",
-          NULL);
+          "colorimetry", NULL);
     } else if (gst_structure_has_name (s, "video/x-vp8")
         || gst_structure_has_name (s, "video/x-vp9")) {
       gst_structure_remove_field (s, "streamheader");
