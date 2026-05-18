@@ -74,11 +74,11 @@ It generally consists in:
   add a tag corresponding to the version `ubicast-X.Y.Z` before the rebase, so that we can still restore the
   old version. (do not forget to push it to the server).
 
-  For instance before updating from 1.22.1 -> 1.22.2 a tag
-  `1.22.1+ubicast+bookworm` can be set.
+  For instance before updating from 1.28.2 -> 1.28.3 a tag
+  `1.28.2-ubicast-deb13+20260513` can be set.
 
   ```
-  git tag X.Y.Z+ubicast+bookworm
+  git tag $(dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2)
   ```
 
 * rebasing against the new bug fix tag: ``git rebase X.Y.Z`` (e.g. ``git rebase 1.22.3``)
