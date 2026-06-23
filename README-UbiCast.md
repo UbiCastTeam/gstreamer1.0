@@ -90,6 +90,8 @@ It generally consists in:
   You may use `debchange` to that, it will automatically update the
   `debian-revision` and set the correct date:
 
+ ⚠️ don't forget to increase the patch level manually
+
   ```
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v 1.28.X-ubicast-deb13+$(date +%Y%m%d)
   # add your changelog then to finalize,
