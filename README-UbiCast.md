@@ -90,13 +90,15 @@ It generally consists in:
   You may use `debchange` to that, it will automatically update the
   `debian-revision` and set the correct date:
 
- ⚠️ don't forget to increase the patch level manually
+ ⚠️ don't forget to check the patch level manually
 
   ```
-  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v 1.28.X-ubicast-deb13+$(date +%Y%m%d)
+  NEXT_TAG=$(git describe --abbrev=0 | awk -F. '{printf("%d.%d.%d\n", $1, $2, $3 + 1)}')
+  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v ${NEXT_TAG}-ubicast-deb13+$(date +%Y%m%d)
   # add your changelog then to finalize,
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r
   ```
+
 * commit the new `debian/changelog`
 
 * push the updated branch: ``git push --force-with-lease``
