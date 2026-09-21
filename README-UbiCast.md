@@ -93,13 +93,12 @@ It generally consists in:
  ⚠️ don't forget to check the patch level manually
 
   ```
-  NEXT_TAG=$(git describe --abbrev=0 | awk -F. '{printf("%d.%d.%d\n", $1, $2, $3 + 1)}')
-  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v ${NEXT_TAG}-ubicast-deb13+$(date +%Y%m%d)
+  DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -v $(git describe --abbrev=0)-ubicast-deb13+$(date +%Y%m%d)
   # add your changelog then to finalize,
   DEBEMAIL=dev@ubicast.eu DEBFULLNAME="UbiCast team" dch -r
   ```
 
-* commit the new `debian/changelog`
+* ``git add`` all, and commit ``git commit``
 
 * push the updated branch: ``git push --force-with-lease``
 
